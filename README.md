@@ -29,7 +29,7 @@ python3 -m http.server 8080 --directory dist
 - `web/ja/`・`web/en/` — 日本語・英語のカリキュラム目次
 - `web/ja/games/`・`web/en/games/` — 12段階のゲーム教材ページ
 - `web/*/games/flappy/` — 現在プレイできるFlappy Bird教材
-- `web/ja/tracks/`・`web/en/tracks/` — 7つの専門コースと43段階の発展教材
+- `web/ja/tracks/`・`web/en/tracks/` — 10の専門コースと61段階の発展教材
 - `web/*/guides/game-data/` — アセットデータとゲーム構成を学ぶ横断ガイド
 - `examples/data-driven/` — `go:embed`とJSONによるデータ読み込みの実例
 - `web/game.html` — 両言語で共有するWASMローダー
