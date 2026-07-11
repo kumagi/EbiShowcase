@@ -1,1 +1,81 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>お菓子カウンター | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/clicker/tap-counter/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 放置クリッカー</a><span>STEP 01 / 05</span></div><section class="overview-hero"><p class="eyebrow">Cookie Clicker型ゲームを作る</p><h1>お菓子カウンター</h1><p>大きなボタンを押すたびに数が増える、最小のクリッカーを作ります。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>クリック入力と数値表示</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../first-shop/">STEP 02 →<strong>はじめてのお店</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="クリック入力とカウンターを学ぶ、Ebitengine版クリッカー入門レッスン。">
+  <title>STEP 01 — お菓子カウンター | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/clicker/tap-counter/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 放置クリッカー</a><span>STEP 01 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
+      <h1>お菓子カウンター</h1>
+      <p>大きなお菓子を押すたびに数が1増えます。「押した瞬間」だけを検出するのがポイント。クリッカーゲームの最小完成形です。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>クリック入力とカウンター</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>お菓子を30個焼こう。</h2></div><p>タップ・クリック・スペースキーで大きなお菓子を押します。30回で完成です。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="お菓子カウンター" src="../../../../play/tap-counter/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / INPUT</p>
+        <h2>なぜタップした瞬間だけ、<br>数が増えるの？</h2>
+        <p class="lesson-lead">Ebitengine の <strong>inpututil.IsMouseButtonJustPressed</strong> は、そのフレームで初めてボタンが押されたときだけ <code>true</code> を返します。長押しでも毎フレーム増えない理由はここにあります。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>「押した瞬間」を見つける</h3><p>IsPressed は押し続けている間ずっと true ですが、JustPressed は押し始めた1フレームだけ true です。クリッカーでは JustPressed を使わないと、ボタンを押しっぱなしにするだけで数が増え続けてしまいます。</p><code>inpututil.IsMouseButtonJustPressed(...)</code></article>
+        <article><span class="concept-number">2</span><h3>カウンター変数</h3><p>「今何個か」を表す整数変数 <code>count</code> に 1 を足すだけです。表示のときは <code>fmt.Sprintf("%03d", g.count)</code> で 3桁ゼロ埋めにすると、数字の位置がずれず読みやすくなります。</p><code>g.count++</code></article>
+        <article><span class="concept-number">3</span><h3>パルスで視覚フィードバック</h3><p>押した瞬間に <code>pulse = 10</code> をセットし、毎フレーム 1 ずつ減らします。その値で円の半径を少し大きくすると「ぷにっ」と膨らむアニメになります。</p><code>scale := 1 + float64(g.pulse)*.012</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE INPUT RULE</p>
+        <div class="formula-lines"><code>IsPressed     → 押している間ずっと true</code><span>vs</span><code>IsJustPressed → 押し始めた1フレームだけ true</code></div>
+        <p>タッチ対応は <code>inpututil.AppendJustPressedTouchIDs(nil)</code> で取得します。スマホでも同じ「瞬間」ルールが使えます。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>押した → 数える → 光らせる</h3>
+          <p>pressed() 関数がキー・マウス・タッチをまとめて調べます。true なら count を増やし、pulse をセット。30個になったら clear フラグを立てます。</p>
+        </div>
+        <pre><code><span>func</span> pressed() bool {
+    return inpututil.IsKeyJustPressed(ebiten.KeySpace) ||
+        inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) ||
+        len(inpututil.AppendJustPressedTouchIDs(nil)) &gt; 0
+}
+
+<span>if</span> pressed() {
+    g.count++
+    g.pulse = 10
+    <span>if</span> g.count &gt;= 30 {
+        g.clear = true
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT JUSTPRESSED</p><h3>押しっぱなしで∞カウント</h3><p>IsPressed を使ってしまうと、ボタンを1秒握るだけで60回カウントされ、ゲームにならなくなります。</p></article>
+        <article><p class="eyebrow">WITH JUSTPRESSED</p><h3>1タップ = 1個の保証</h3><p>JustPressed は同じフレームには2度目が来ません。どんな入力デバイスでも「1操作 = 1イベント」が成立します。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>目標数と光り方を変えよう</h3><p>クリア条件 <code>30</code> を増やしたり、pulse の初期値や係数 <code>.012</code> を変えると、もっと大きく弾むボタンにできます。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><span></span><a href="../first-shop/">STEP 02 →<strong>はじめてのお店</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

@@ -1,1 +1,79 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 05 — Pong | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/games/pong/" lang="ja">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 05</span></div><section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Pong</h1><p>Reverse a ball's direction with walls and paddles.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Reflection and vectors</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Pong</h2></div><p>A playable Ebitengine game for desktop and mobile.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Pong" src="../../../play/pong/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Reverse velocity across the surface</h2><p>Reverse X velocity at side walls and Y velocity at paddles. Add the hit offset to X velocity to aim the return.</p></div><pre><code>velocityY = -velocityY\nvelocityX += hitOffset * anglePower</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>What this lesson will contain</h2><div class="overview-steps"><article><b>01</b><h3>Play first</h3><p>Discover the rules and feel before reading an explanation.</p></article><article><b>02</b><h3>See the system</h3><p>Follow the new idea through a frame-by-frame visual.</p></article><article><b>03</b><h3>Build the code</h3><p>Connect the same behavior to Ebitengine Update and Draw.</p></article></div></section><nav class="lesson-pager"><a href="../flappy/">← LEVEL 04<strong>Ebi Flight</strong></a><a href="../breakout/">LEVEL 06 →<strong>Breakout</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn ball reflection and velocity vectors with an Ebitengine Pong lesson.">
+  <title>LEVEL 05 — Pong | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../ja/games/pong/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>Pong</h1>
+      <p>The ball moves with two speeds: how far right and how far down. Hit a wall or paddle, flip only that direction’s sign. That is reflection in its simplest form.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Reflection and vectors</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Return the ball with your paddle.</h2></div><p>Move with arrows, WASD, or drag. Score against the CPU.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Pong" src="../../../play/pong/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / REFLECTION</p>
+        <h2>Why does the ball<br>bounce back?</h2>
+        <p class="lesson-lead">Ball motion is a pair: <strong>vx</strong> (left/right) and <strong>vy</strong> (up/down). Flip the sign of vx on side walls, and vy on paddles. Keep the magnitude, change only the direction.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>Velocity vector</h3><p>Store how far to move each frame as separate X and Y. Diagonal motion is just both additions together.</p><code>ballX += vx</code></article>
+        <article><span class="concept-number">2</span><h3>Bounce per face</h3><p>Invert only the component perpendicular to the face you hit. Vertical walls flip vx; horizontal paddles flip vy.</p><code>vx = -vx</code></article>
+        <article><span class="concept-number">3</span><h3>Hit offset</h3><p>Hitting near a paddle edge adds the offset into vx so the return angle changes. That is aimed play.</p><code>vx += offset * 0.055</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE BOUNCE RULE</p>
+        <div class="formula-lines"><code>wall: vx = -vx</code><span>paddle</span><code>vy = -vy (optionally a bit faster)</code></div>
+        <p>Before flipping, push the ball just outside the surface. That prevents getting stuck and bouncing forever inside the same edge.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Move → collide → flip</h3>
+          <p>Each frame, advance position first, then test walls and paddles. On the player paddle, force an upward vy and nudge vx from the hit offset.</p>
+        </div>
+        <pre><code>g.ballX += g.vx
+g.ballY += g.vy
+
+<span>if</span> g.ballX &lt; 14 || g.ballX &gt; width-14 {
+    g.vx = -g.vx
+}
+
+<span>if</span> hitPlayerPaddle() {
+    g.vy = -math.Abs(g.vy) * 1.025
+    g.vx += (g.ballX - g.playerX) * 0.055
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT VECTORS</p><h3>One number cannot aim a bounce</h3><p>Without separate axes, clean wall reflections are hard to express.</p></article>
+        <article><p class="eyebrow">WITH REFLECTION</p><h3>Sign flips are a physics shortcut</h3><p>You do not need a full physics engine. Negating a component already feels like a bounce.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Change serve speed and angle power</h3><p>Serve <code>vx, vy</code> and the hit factor <code>0.055</code> turn a calm match into a sharp duel.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../flappy/">← LEVEL 04<strong>Ebi Flight</strong></a><a href="../breakout/">LEVEL 06 →<strong>Breakout</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

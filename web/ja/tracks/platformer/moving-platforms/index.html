@@ -1,1 +1,132 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>動く足場の谷 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/platformer/moving-platforms/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 横スクロールアクション</a><span>STEP 02 / 05</span></div><section class="overview-hero"><p class="eyebrow">マリオ型ゲームを作る</p><h1>動く足場の谷</h1><p>上下左右に動く足場へ乗り、足場の移動量をプレイヤーへ伝えます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>相対移動と片方向床</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><a href="../tiny-platformer/">← STEP 01<strong>1画面プラットフォーマー</strong></a><a href="../patrol-enemies/">STEP 03 →<strong>踏める敵の庭</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="動く足場に乗る仕組みを学ぶEbitengineレッスン。前フレームの位置との差をプレイヤーに加えることで、足場の動きに追従します。">
+  <title>STEP 02 — 動く足場の谷 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コース</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/platformer/moving-platforms/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 横スクロールアクション</a><span>STEP 02 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>動く足場の谷</h1>
+      <p>上下左右に動く足場へ乗り、足場の移動量をプレイヤーへ伝えます。前フレームの位置を覚えておくだけで、複雑な動きにも追従できます。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>相対移動と片方向床</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>動く足場に乗って旗を目指そう。</h2></div>
+        <p>A・D または画面下タッチで左右移動。スペースまたは画面上タッチでジャンプ。足場が動いても乗り続けられるか挑戦してみましょう。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="動く足場の谷" src="../../../../play/moving-platforms/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / MOVING PLATFORMS</p>
+        <h2>足場が動くのに、<br>なぜ落ちないの？</h2>
+        <p class="lesson-lead">足場は <code>math.Sin</code> でなめらかに往復します。コツは <strong>「動かす前の位置を記録」</strong> すること。動かしたあとに差を計算し、プレイヤーが乗っていればその差をプレイヤーにも加えます。プレイヤーは足場の動きを「もらって」一緒に動くのです。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>サイン波の往復</h3>
+          <p>時間を <code>math.Sin</code> に通すと -1〜+1 をなめらかに往復する値が出ます。これに移動幅を掛けると、足場がゆっくり振れます。</p>
+          <code>x = baseX + sin(t)*rangeX</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>古い位置を保存</h3>
+          <p>足場を動かす直前に <code>oldX, oldY</code> へ座標を保存します。動かしたあとに現在位置から引くと、このフレームの移動量が求まります。</p>
+          <code>p.oldX, p.oldY = p.x, p.y</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>乗客を運ぶ</h3>
+          <p>プレイヤーが乗っている足場の移動量を、そのままプレイヤー座標に加えます。プレイヤーが独自の動きをしながら足場と一緒に進めます。</p>
+          <code>player.x += p.x - p.oldX</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE ONE-LINE RULE</p>
+        <div class="formula-lines">
+          <code>delta = currentPos - oldPos</code>
+          <span>そして</span>
+          <code>player.pos += delta  // 乗っているとき</code>
+        </div>
+        <p>移動量（デルタ）の計算は引き算だけです。sin の速さが変わっても、ジャンプしている最中の別の足場に乗り直しても、この式は変わりません。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>乗り判定と<br>デルタ転送</h3>
+          <p>動かす前に <code>oldX, oldY</code> を記録し、sin で座標を更新。プレイヤーの足が古い足場上面に近ければ乗客と判定し、移動量を加えます。</p>
+        </div>
+        <pre><code><span>for</span> i := <span>range</span> g.platforms {
+    p := &amp;g.platforms[i]
+    p.oldX, p.oldY = p.x, p.y <i>// 古い位置を保存</i>
+    t := float64(g.frame)*.025 + p.phase
+    p.x = p.baseX + math.Sin(t)*p.rangeX
+    p.y = p.baseY + math.Sin(t)*p.rangeY
+    <i>// 足がこの足場上に近ければ乗客とする</i>
+    <span>if</span> math.Abs((g.player.y+g.player.h)-p.oldY) &lt; 3 &amp;&amp;
+        g.player.x+g.player.w &gt; p.oldX &amp;&amp; g.player.x &lt; p.oldX+p.w {
+        standing = i
+    }
+}
+<span>if</span> standing >= 0 {
+    p := g.platforms[standing]
+    g.player.x += p.x - p.oldX <i>// デルタを渡す</i>
+    g.player.y += p.y - p.oldY
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT DELTA TRANSFER</p>
+          <h3>足場が動いても残り続けてしまう</h3>
+          <p>デルタを渡さないと、プレイヤーは自分の座標のまま止まります。足場が動いて下から抜けると落下してしまいます。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH OLD-POSITION TRICK</p>
+          <h3>どんな動きにも同じコードで対応</h3>
+          <p>Sin 以外の経路（直線・楕円・ランダム）でも、古い位置を保存するだけで同じデルタ計算が使えます。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>足場の速さと振れ幅を変えよう</h3>
+          <p>フレーム係数 <code>.025</code> を大きくすると足場が速くなり、<code>rangeX / rangeY</code> を大きくすると移動幅が広くなります。どこまで難しくできますか？</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../tiny-platformer/">← STEP 01<strong>1画面プラットフォーマー</strong></a>
+      <a href="../patrol-enemies/">STEP 03 →<strong>踏める敵の庭</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

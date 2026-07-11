@@ -1,1 +1,132 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>踏める敵の庭 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/platformer/patrol-enemies/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 横スクロールアクション</a><span>STEP 03 / 05</span></div><section class="overview-hero"><p class="eyebrow">マリオ型ゲームを作る</p><h1>踏める敵の庭</h1><p>巡回する敵を上から踏み、横から触れたときはダメージにします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>敵の状態と踏み判定</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><a href="../moving-platforms/">← STEP 02<strong>動く足場の谷</strong></a><a href="../scrolling-stage/">STEP 04 →<strong>スクロールする丘</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="巡回する敵キャラとマリオ式踏み付け判定を学ぶEbitengineレッスン。端で折り返し、上から踏むと倒せる仕組みをGoコードで解説します。">
+  <title>STEP 03 — 踏める敵の庭 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コース</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/platformer/patrol-enemies/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 横スクロールアクション</a><span>STEP 03 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>踏める敵の庭</h1>
+      <p>足場を巡回する丸い敵を踏んで倒し、一番上の旗を目指します。上から踏むと倒せる、それ以外は体力を失う、というマリオ式判定のしくみを学びます。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>敵の巡回と踏み判定</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>敵を全部踏み倒して旗を目指そう。</h2></div>
+        <p>A・D または画面下タッチで移動。スペースまたは画面上タッチでジャンプ。ライフは3回。敵に横から当たるとダメージを受けます。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="踏める敵の庭" src="../../../../play/patrol-enemies/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / PATROL &amp; STOMP</p>
+        <h2>どうして上から踏むと<br>倒せるの？</h2>
+        <p class="lesson-lead">接触判定は「重なっているか」だけでなく <strong>「どの方向から当たったか」</strong> も見ます。プレイヤーが落下中（vy &gt; 0）で、かつ接触前に敵の頭より上にいた場合に限り「踏んだ」と判定します。それ以外の接触はダメージです。敵は足場の端に来たら向きをひっくり返し、サポートがなければ折り返します。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>巡回（パトロール）</h3>
+          <p>敵は毎フレーム <code>vx</code> だけ動きます。足場の端（左端・右端）に達したら <code>vx = -vx</code> で向きを反転。足場の外に出ると支えがなくなるので、その前に折り返します。</p>
+          <code>e.vx = -e.vx // 折り返し</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>踏み判定</h3>
+          <p>重なりを検知したとき、落下中（vy &gt; 1）かつ前フレームの足が敵の頭付近より上なら「踏んだ」。<code>alive = false</code> にして敵を消します。</p>
+          <code>if vy &gt; 1 &amp;&amp; oldBottom &lt;= e.y+8</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>ダメージ処理</h3>
+          <p>踏み以外の接触はライフを1減らし、プレイヤーを初期位置へ戻します。ライフが0になるとゲームオーバー。</p>
+          <code>g.life--; g.player.x = 30</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE ONE-LINE RULE</p>
+        <div class="formula-lines">
+          <code>if vy &gt; 1 &amp;&amp; oldBottom &lt;= e.y+8 { 踏んだ！ }</code>
+          <span>それ以外</span>
+          <code>else { ダメージ }</code>
+        </div>
+        <p>「上から」という条件を oldBottom（前フレームの足の位置）と敵の頭（e.y+8）を比較して判断します。重なり判定より少し余裕を持たせることで、ギリギリの踏みも気持ちよく成立します。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>接触の種類を<br>ひとつの if-else で分ける</h3>
+          <p>重なりが確認できてから、落下速度と前フレームの足位置で踏んだか否かを判断します。踏んだら跳ね返り（vy = -8）で連続踏みも可能です。</p>
+        </div>
+        <pre><code><span>if</span> overlap(g.player, e.rect) {
+    <span>if</span> g.vy > 1 &amp;&amp; oldBottom &lt;= e.y+8 {
+        <i>// 踏んだ！</i>
+        e.alive = <span>false</span>
+        g.player.y = e.y - g.player.h
+        g.vy = -8 <i>// 踏んだら少し跳ね返る</i>
+    } <span>else</span> {
+        <i>// 横または下から当たった</i>
+        g.life--
+        g.player.x = 30
+        g.player.y = 590
+        g.vx, g.vy = 0, 0
+        <span>if</span> g.life &lt;= 0 {
+            g.over = <span>true</span>
+        }
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT DIRECTION CHECK</p>
+          <h3>踏んでもダメージになってしまう</h3>
+          <p>単純な重なり判定だけでは、上から踏んでもダメージを受けます。方向チェックで接触の「種類」を分けることが必須です。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH EDGE PATROL</p>
+          <h3>敵が自動で足場を往復する</h3>
+          <p>足場の端を調べて折り返す処理を入れると、マップに合わせた巡回パターンが自動的にできます。配置を変えるだけで難易度が変わります。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>敵の速さとライフを変えよう</h3>
+          <p>各敵の <code>vx</code> を大きくするとすばやくなり、<code>g.life</code> を増やすと余裕が生まれます。敵を増やしたり、足場に乗せる位置を変えると難しさが大きく変わります。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../moving-platforms/">← STEP 02<strong>動く足場の谷</strong></a>
+      <a href="../scrolling-stage/">STEP 04 →<strong>横スクロールの丘</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

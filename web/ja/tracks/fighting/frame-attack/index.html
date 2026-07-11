@@ -1,1 +1,133 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>3段階パンチ | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/fighting/frame-attack/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D格闘ゲーム</a><span>STEP 02 / 07</span></div><section class="overview-hero"><p class="eyebrow">判定矩形から対戦格闘を作る</p><h1>3段階パンチ</h1><p>攻撃を発生、持続、硬直に分け、攻撃判定が出る時間を制御します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>発生・持続・硬直</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>難しい仕組みを、<br>遊べる大きさに分ける。</h2><div class="overview-steps"><article><b>01</b><h3>観察する</h3><p>判定、数値、状態を画面に表示し、何が起きているか見えるようにします。</p></article><article><b>02</b><h3>最小実装を作る</h3><p>今回の概念だけをEbitengineのUpdateとDrawで動かします。</p></article><article><b>03</b><h3>前の仕組みと統合する</h3><p>前のステップのコードへ加え、完成ゲームに一歩近づけます。</p></article></div></section><nav class="lesson-pager"><a href="../box-viewer/">← STEP 01<strong>判定矩形ビューワー</strong></a><a href="../hit-reaction/">STEP 03 →<strong>ヒットリアクション道場</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="発生・持続・硬直の3段階フレームデータを学ぶ、Ebitengine版格闘ゲームレッスン。">
+  <title>3段階パンチ | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コース</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/fighting/frame-attack/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 2D格闘ゲーム</a><span>STEP 02 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>3段階パンチ</h1>
+      <p>攻撃には「腕を伸ばす時間」「当たる時間」「戻る時間」の3段階があります。フレーム番号で区切ることで、技の速さや硬さをプログラムで表現できます。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>発生・持続・硬直（フレームデータ）</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>タイミングよくパンチを当てよう。</h2></div>
+        <p>スペース・X・タップでパンチ。赤い ACTIVE の4フレームで動く的に5回当てるとクリアです。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="3段階パンチ" src="../../../../play/frame-attack/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / FRAME DATA</p>
+        <h2>どうしてボタンを押した<br>瞬間に当たらないの？</h2>
+        <p class="lesson-lead">技には <strong>発生（Startup）</strong>・<strong>持続（Active）</strong>・<strong>硬直（Recovery）</strong> の3段階があります。ボタンを押すと「発生」が始まり、腕が伸びきるまでの間（フレーム1〜8）は当たりません。フレーム9〜12の4フレームだけ赤い攻撃判定が生まれ、フレーム13〜30は元の姿勢に戻るまで次の行動ができません。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>発生（Startup）</h3>
+          <p>フレーム1〜8は腕を伸ばす準備中です。攻撃判定はまだ出ていません。この時間が長いと「遅い技」、短いと「速い技」になります。</p>
+          <code>frame &lt;= 8  → STARTUP（黄色）</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>持続（Active）</h3>
+          <p>フレーム9〜12の4フレームだけ赤い攻撃判定が存在します。この時間に相手の喰らい判定と重なったときだけヒットです。</p>
+          <code>frame 9〜12 → ACTIVE（赤）</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>硬直（Recovery）</h3>
+          <p>フレーム13〜30は姿勢を元に戻す時間です。この間は次のボタン入力を受け付けません。硬直が長いと「隙が大きい技」になります。</p>
+          <code>frame &gt;= 13 → RECOVERY（青）</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">FRAME RANGES</p>
+        <div class="formula-lines">
+          <code>STARTUP   フレーム  1 〜  8  // まだ攻撃できない</code>
+          <span>↓</span>
+          <code>ACTIVE    フレーム  9 〜 12  // 攻撃判定が存在する</code>
+          <span>↓</span>
+          <code>RECOVERY  フレーム 13 〜 30  // 次の行動ができない</code>
+        </div>
+        <p>フレームは毎秒60回カウントされます（Ebitengineのデフォルト）。1フレームは約16.7ミリ秒です。フレーム9のときボタンを押しても、この技のカウンターが先に動くため同じフレームでは当たりません。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>押す → カウンターを進める → ACTIVE で当たりを調べる</h3>
+          <p>ボタンを押したフレームで <code>g.frame = 1</code> にし、毎フレーム1ずつ増やします。フレーム9〜12のときだけ攻撃判定を作り、相手の喰らい判定と重なるか調べます。</p>
+        </div>
+        <pre><code><span>if</span> g.frame == 0 &amp;&amp; press() {
+    g.frame = 1        // ボタンを押したら開始
+    g.hitThis = false
+} <span>else if</span> g.frame &gt; 0 {
+    g.frame++
+    <span>if</span> g.frame &gt;= 31 { g.frame = 0 }  // 技終了
+}
+
+// ACTIVE フレームだけ攻撃判定を作る
+<span>if</span> g.frame &gt;= 9 &amp;&amp; g.frame &lt;= 12 &amp;&amp; !g.hitThis {
+    attack := rect{235, 495, 105, 35}
+    <span>if</span> overlap(attack, g.target()) {
+        g.hits++
+        g.hitThis = true    // 同じ技で2回当たらないよう
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT FRAME DATA</p>
+          <h3>ボタンを押したら即当たりになってしまう</h3>
+          <p>フレーム分割がなければすべての技が瞬時に当たります。読み合いや反応の面白さが生まれません。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH FRAME DATA</p>
+          <h3>技に「個性」が生まれる</h3>
+          <p>発生が速い技は隙が大きく、発生が遅い技は当たったときのリターンが大きいなど、バランス設計の基礎になります。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>ACTIVE フレームの長さを変えてみよう</h3>
+          <p><code>g.frame &lt;= 12</code> を <code>g.frame &lt;= 16</code> にすると ACTIVE が8フレームに延び、当てやすい技になります。逆に <code>10</code> にすると瞬間的な技になります。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../box-viewer/">← STEP 01<strong>判定矩形</strong></a>
+      <a href="../hit-reaction/">STEP 03 →<strong>ヒットリアクション</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

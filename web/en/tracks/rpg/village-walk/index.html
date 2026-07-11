@@ -1,1 +1,140 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Walk Through a Village | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/rpg/village-walk/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Command RPG</a><span>STEP 01 / 07</span></div><section class="overview-hero"><p class="eyebrow">Build a Dragon Quest-style game</p><h1>Walk Through a Village</h1><p>Walk around a tiled village, block walls, and remember facing direction.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Tile collision and facing</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Play it, unpack it, build it.</h2><div class="overview-steps"><article><b>01</b><h3>Feel the rule</h3><p>Play the finished mini game and discover the rule added in this step.</p></article><article><b>02</b><h3>Inspect one frame</h3><p>Trace values through input, state update, and drawing.</p></article><article><b>03</b><h3>Tune and extend</h3><p>Read the Ebitengine code, tune its values, and make the rule your own.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../dialogue-flags/">STEP 02 →<strong>Village Conversations</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Walk a grid village, block walls, and record facing direction in this Ebitengine lesson.">
+  <title>STEP 01 — Village Walk | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Command RPG</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/rpg/village-walk/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Command RPG</a><span>STEP 01 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>Village Walk</h1>
+      <p>Walk a grid village, stop at walls, and remember the last facing direction. Storing the facing lets the player talk to an NPC across a wall without any extra code.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Tile collision and facing</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
+          <h2>Collect three stars and reach the green shrine.</h2>
+        </div>
+        <p>Use arrow keys, WASD, or directional taps to collect three stars and reach the green shrine.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div>
+        <div id="game-wrap">
+          <iframe class="lesson-game-frame" title="Village Walk" src="../../../../play/village-walk/" allow="autoplay; fullscreen"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / TILE COLLISION</p>
+        <h2>Check the next tile<br>before moving</h2>
+        <p class="lesson-lead">The map is a <strong>slice of strings</strong>. A <code>'#'</code> character marks a wall; everything else is open floor. Before the player moves, the code checks whether the destination tile is a wall. Position updates only when it is not. The facing direction updates even at a wall, which later lets the player talk across it.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Map as a string table</h3>
+          <p>A slice of strings doubles as the tile map. <code>'#'</code> is a wall, space is floor. Array indices directly equal tile coordinates — no conversion needed.</p>
+          <code>rows[y][x] == '#'</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Check before moving</h3>
+          <p>Input produces a direction vector <code>d</code>. Add it to the current position to get the next tile <code>n</code>. Only update coordinates when <code>n</code> is not a wall.</p>
+          <code>n := point{p.x+d.x, p.y+d.y}</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Always update facing</h3>
+          <p>Even when a wall blocks movement, the facing direction still changes. Later steps use <code>facing</code> to find the tile directly in front and trigger NPC dialogue.</p>
+          <code>g.facing = d</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE MOVEMENT RULE</p>
+        <div class="formula-lines">
+          <code>g.facing = d</code>
+          <span>compute next tile</span>
+          <code>n := point{g.p.x + d.x, g.p.y + d.y}</code>
+          <span>move only if open</span>
+          <code>if !g.walls[n] { g.p = n }</code>
+        </div>
+        <p>Updating facing first means the talk system in later steps can always add <code>facing</code> to the player position to find the NPC in front, regardless of whether the player moved.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Input → facing → movement check</h3>
+          <p>The real code translates input into a direction vector, records the facing, then decides whether to move. Stepping on a star removes it and increments the counter. Reaching the shrine with all three stars triggers the clear state.</p>
+        </div>
+        <pre><code><span>if</span> d.x != 0 || d.y != 0 {
+    g.facing = d
+    n := point{g.p.x + d.x, g.p.y + d.y}
+    <span>if</span> !g.walls[n] {
+        g.p = n
+        <span>if</span> g.stars[n] {
+            delete(g.stars, n)
+            g.collected++
+        }
+    }
+}
+<span>if</span> g.p == (point{8, 1}) &amp;&amp; g.collected == 3 {
+    g.clear = true
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT TILE CHECK</p>
+          <h3>No check means walking through walls</h3>
+          <p>Incrementing coordinates blindly lets the player walk through walls or off the edge of the map, breaking the game world.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH FACING</p>
+          <h3>One field unlocks talk-across-walls</h3>
+          <p>In a later step, adding <code>facing</code> to the player position gives the NPC tile instantly. No raycasting or special logic required.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Redesign the map layout</h3>
+          <p>Edit the <code>rows</code> slice of strings. Any <code>'#'</code> you add becomes a wall immediately. Try creating a maze or a completely open field.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <span></span>
+      <a href="../dialogue-flags/">STEP 02 →<strong>Talking Villagers</strong></a>
+    </nav>
+  </main>
+  <footer>
+    <div class="brand"><span>EBI</span> SHOWCASE</div>
+    <p>Made with Go + Ebitengine.</p>
+    <a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a>
+  </footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

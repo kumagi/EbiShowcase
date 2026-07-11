@@ -1,1 +1,142 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>装備屋と道具袋 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/rpg/inventory-shop/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>STEP 05 / 07</span></div><section class="overview-hero"><p class="eyebrow">ドラゴンクエスト型ゲームを作る</p><h1>装備屋と道具袋</h1><p>道具の個数、装備スロット、お金、店の価格を管理します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>所持品・装備・売買</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><a href="../stats-status/">← STEP 04<strong>能力値と状態変化</strong></a><a href="../world-encounters/">STEP 06 →<strong>世界地図とエンカウント</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="所持品・装備スロット・お金・ショップの購入処理を学ぶEbitengineレッスン。">
+  <title>STEP 05 — 装備屋と道具袋 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コマンドRPG</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/rpg/inventory-shop/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>STEP 05 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>装備屋と道具袋</h1>
+      <p>道具の個数・装備スロット・お金・店の価格を管理します。「武器は1つしか装備できない」「お金が足りない」「すでに持っている」の3つの判定がショップのすべてです。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>所持品・装備・売買</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
+          <h2>剣・盾・薬草ポーション2個を揃えよう。</h2>
+        </div>
+        <p>1〜3キーまたは列タップで商品を購入します。150ゴールドで装備を揃えてクリアしよう。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div>
+        <div id="game-wrap">
+          <iframe class="lesson-game-frame" title="装備屋と道具袋" src="../../../../play/inventory-shop/" allow="autoplay; fullscreen"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / INVENTORY &amp; SHOP</p>
+        <h2>ショップは<br>3つの判定だけ</h2>
+        <p class="lesson-lead">ショップ処理のルールはシンプルです。①<strong>すでに装備済みか</strong> → 断る、②<strong>お金が足りるか</strong> → 足りなければ断る、③<strong>スロットの種類で分岐</strong> → 武器はフラグ、盾はフラグ、消耗品は個数を増やす。この3ステップを守れば、どんな複雑なショップも書けます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>商品をスライスで定義する</h3>
+          <p>商品情報を構造体のスライスにまとめます。名前・スロット・価格・効果値をセットで持つと、ループで画面描画とロジック両方に使えます。</p>
+          <code>shop = []item{{"Coral Sword", "weapon", 60, ...}}</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>装備スロットをboolで管理</h3>
+          <p>武器と盾はそれぞれ <code>bool</code> で持ちます。<code>sword = true</code> にしたら以後は「すでに装備済み」と判定できます。個数制限がある消耗品はカウンターで管理します。</p>
+          <code>g.sword = true</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>ゴールドを引いて購入する</h3>
+          <p>購入可能と判定したら <code>gold -= price</code> し、スロットを更新します。この順序が重要です。先にスロットを更新してからゴールドを引くと、お金チェックのバグで二重購入が起きます。</p>
+          <code>g.gold -= it.price</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE PURCHASE RULE</p>
+        <div class="formula-lines">
+          <code>owned := (choice == 0 &amp;&amp; g.sword) || (choice == 1 &amp;&amp; g.shield)</code>
+          <span>すでに持っている？</span>
+          <code>if owned { message = "already equipped" }</code>
+          <span>お金が足りる？</span>
+          <code>else if g.gold &lt; it.price { message = "not enough gold" }</code>
+          <span>購入成立</span>
+          <code>else { g.gold -= it.price; ... }</code>
+        </div>
+        <p>スロット別の分岐は <code>switch choice</code> で書きます。武器スロットは <code>g.sword = true</code>、消耗品は <code>g.potions++</code> と、スロットの性質に合わせて処理を変えます。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>購入判定とスロット更新</h3>
+          <p>プレイヤーが商品を選ぶと、所持チェック・ゴールドチェックを順に行い、どちらも通過したら購入します。装備は <code>bool</code>、消耗品はカウンターで管理しているため、スロットごとに違う処理が必要です。</p>
+        </div>
+        <pre><code>owned := (choice == 0 &amp;&amp; g.sword) || (choice == 1 &amp;&amp; g.shield)
+<span>if</span> owned {
+    g.message = it.name + " is already equipped."
+} <span>else if</span> g.gold &lt; it.price {
+    g.message = "Not enough gold."
+} <span>else</span> {
+    g.gold -= it.price
+    <span>switch</span> choice {
+    <span>case</span> 0: g.sword = true
+    <span>case</span> 1: g.shield = true
+    <span>case</span> 2: g.potions++
+    }
+    g.message = "Bought " + it.name + "!"
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT SLOT CHECK</p>
+          <h3>チェックなしだと二重購入される</h3>
+          <p>所持チェックがないと、同じ装備を何度でも買えてしまいます。ゴールドが無限に減り、ゲームが壊れます。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH SLOTS</p>
+          <h3>スロット種別で柔軟に拡張できる</h3>
+          <p>武器・防具は bool、消耗品はカウンターという区別を最初から設計しておくと、後で「装備を外して売る」機能を追加するときも構造が崩れません。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>新しい商品を追加してみよう</h3>
+          <p><code>shop</code> スライスに構造体を1つ追加するだけで商品が増えます。「魔法の杖 weapon 80ゴールド ATK+15」を加えてみましょう。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../stats-status/">← STEP 04<strong>能力値と状態変化</strong></a>
+      <a href="../world-encounters/">STEP 06 →<strong>世界地図とエンカウント</strong></a>
+    </nav>
+  </main>
+  <footer>
+    <div class="brand"><span>EBI</span> SHOWCASE</div>
+    <p>Made with Go + Ebitengine.</p>
+    <a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a>
+  </footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

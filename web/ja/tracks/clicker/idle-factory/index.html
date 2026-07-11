@@ -1,1 +1,75 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>自動生産工場 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/clicker/idle-factory/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 放置クリッカー</a><span>STEP 03 / 05</span></div><section class="overview-hero"><p class="eyebrow">Cookie Clicker型ゲームを作る</p><h1>自動生産工場</h1><p>フレーム数ではなく経過時間から、毎秒の生産量を計算します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>時間差分と毎秒生産</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><a href="../first-shop/">← STEP 02<strong>はじめてのお店</strong></a><a href="../growth-curves/">STEP 04 →<strong>桁が増える研究所</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="デルタタイムと毎秒生産量を学ぶ、Ebitengine版クリッカー第3回レッスン。">
+  <title>STEP 03 — アイドルファクトリー | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/clicker/idle-factory/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 放置クリッカー</a><span>STEP 03 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>アイドルファクトリー</h1>
+      <p>自動オーブンを買うと、何もしなくてもお菓子が増え続けます。「何秒経ったか」を計算して毎フレーム少しずつ足す――デルタタイムの仕組みです。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>デルタタイムと自動生産（CPS）</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>200個のお菓子を作ろう。</h2></div><p>手でタップしてお菓子を貯め、自動オーブンを買えば放置でも増え続けます。Bキーで購入。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="アイドルファクトリー" src="../../../../play/idle-factory/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / DELTA TIME</p>
+        <h2>なぜ放置してても<br>お菓子が増えるの？</h2>
+        <p class="lesson-lead">毎フレーム「前のフレームからの経過秒数 <strong>dt</strong>」を求め、<strong>machines × dt</strong> をお菓子に足します。60fps でも30fps でも同じ速度で増えるのは、フレーム数ではなく秒数を基準にしているからです。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>デルタタイム（dt）</h3><p>前フレームの時刻を <code>last</code> に保存し、今フレームとの差を秒で計算します。60fps なら約0.0167秒、重い処理で30fpsに落ちても約0.033秒になります。</p><code>dt := now.Sub(g.last).Seconds()</code></article>
+        <article><span class="concept-number">2</span><h3>毎秒生産量（CPS）</h3><p>「1台のオーブンが1秒に1個作る」という定義にすると、machines × dt 個/フレームで足し算できます。台数を増やすほど1秒あたりの増加量が増えます。</p><code>g.sweets += float64(g.machines) * dt</code></article>
+        <article><span class="concept-number">3</span><h3>dt の上限キャップ</h3><p>ブラウザのタブを隠すと長時間 Update が呼ばれず、復帰した瞬間に巨大な dt になることがあります。<code>0.25</code> 秒でキャップして、一気に何百個も増えないようにします。</p><code>if dt &gt; .25 { dt = .25 }</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE IDLE FORMULA</p>
+        <div class="formula-lines"><code>増加量 = machines × dt</code><span>例：台数3、dt＝0.0167秒</span><code>0.0167 × 3 ≈ 0.050 個/フレーム</code></div>
+        <p>1秒間に60フレームあるとすると、0.050 × 60 ≈ 3.0 個/秒。台数＝CPS になります。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>時刻を記録 → dt を計算 → 生産する</h3>
+          <p>Update の先頭で now を取得し、g.last と差分を計算。dt を 0.25秒でキャップしてから sweets に足します。その後 g.last を now に更新して次フレームに備えます。</p>
+        </div>
+        <pre><code>now := time.Now()
+dt := now.Sub(g.last).Seconds()
+g.last = now
+<span>if</span> dt &gt; .25 {
+    dt = .25
+}
+g.sweets += float64(g.machines) * dt</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT DELTA TIME</p><h3>fps が変わると速度が変わる</h3><p>毎フレーム固定値を足す方法だと、60fps と30fps で生産速度が2倍変わります。重いPCでは遅く、軽いPCでは速くなってしまいます。</p></article>
+        <article><p class="eyebrow">WITH DELTA TIME</p><h3>どの環境でも同じ速度</h3><p>経過秒数をベースにすることで、fps がどう変動しても1秒あたりの増加量が一定になります。モバイルでも一致します。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>コスト増加量と初期コストを変えよう</h3><p>コスト上昇幅 <code>+= 10</code> や初期値 <code>15</code> を調整すると、難度のバランスが変わります。CPS が machines × 1 ではなく machines × 2 にしてみましょう。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../first-shop/">← STEP 02<strong>はじめてのお店</strong></a><a href="../growth-curves/">STEP 04 →<strong>成長曲線ラボ</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

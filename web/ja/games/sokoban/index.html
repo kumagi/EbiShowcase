@@ -1,5 +1,90 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 09 — Sokoban | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/games/sokoban/" lang="en">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← 全レベル</a><span>LEVEL 09</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Sokoban</h1><p>数値で書けるステージと、箱を押せる条件を扱います。</p><div class="overview-concept"><small>このゲームで学ぶこと</small><strong>タイルマップ</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Sokoban</h2></div><p>方向キー・WASD・画面タップで移動。Zで1手戻し、Rでやり直せます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 09</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Sokoban" src="../../../play/sokoban/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>絵ではなく、マスの意味を読む</h2><p>ステージは文字の表として保存できます。#は壁、$は箱、.はゴールです。移動先が箱なら、その1マス先まで空いている時だけ箱と人を動かします。</p></div><pre><code>next := player.Add(direction)
-if boxAt(next) &amp;&amp; isEmpty(next.Add(direction)) {
-    moveBox(next, direction)
-}
-movePlayer(next)</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>データからステージを組み立てる</h2><div class="overview-steps"><article><b>01</b><h3>マップを読む</h3><p>文字ごとに壁・床・箱・ゴールを配置します。</p></article><article><b>02</b><h3>先を調べる</h3><p>箱の向こうが壁や別の箱なら、その移動を止めます。</p></article><article><b>03</b><h3>状態を保存する</h3><p>動く直前の人と箱の位置を保存すると、1手戻す機能が作れます。</p></article></div></section><nav class="lesson-pager"><a href="../space-shooter/">← LEVEL 08<strong>Space Shooter</strong></a><a href="../platformer/">LEVEL 10 →<strong>Platformer</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="GoとEbitengineで作った倉庫番から、タイルマップ（文字列でステージを定義しタイル座標で管理する方法）を学ぶレッスンです。">
+  <title>LEVEL 09 — Sokoban | Ebi Showcase</title>
+  <link rel="canonical" href="./">
+  <link rel="alternate" hreflang="ja" href="../../../ja/games/sokoban/">
+  <link rel="alternate" hreflang="en" href="../../../en/games/sokoban/">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../en/games/sokoban/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← 全レベル</a><span>LEVEL 09</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Sokoban</h1>
+      <p>文字列の配列でステージを設計し、「どこが壁でどこが床か」をタイル座標で管理します。Undo機能では、操作のたびに状態のスナップショットを履歴に積んでいきます。</p>
+      <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>タイルマップ</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>箱をすべてゴールへ押せ。</h2></div><p>矢印キーまたはWASDで移動します。箱に向かって進むと押せます。Z/BackspaceでUndo、Rでリセットです。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 09</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Sokoban" src="../../../play/sokoban/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / TILE MAP</p>
+        <h2>ステージは、<br>どうやって作るの？</h2>
+        <p class="lesson-lead">答えは<strong>タイルマップ</strong>です。ステージを文字列の配列で書き、<code>#</code> が壁、<code>@</code> がプレイヤー、<code>$</code> が箱、<code>.</code> がゴールを表します。起動時にこの文字列を1文字ずつ読み、「どのタイル座標に何があるか」をデータへ変換します。絵は後からタイル座標を元に描けばよいので、ステージ設計とコードが完全に分離できます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>文字列でステージ</h3><p>ステージはGoの文字列スライス。<code>#</code> や <code>$</code> を読んで壁・箱のデータを作ります。見た目がそのままマップになるので設計しやすいです。</p><code>var level = []string{…}</code></article>
+        <article><span class="concept-number">2</span><h3>mapで壁を管理</h3><p>壁の集合は <code>map[point]bool</code>。「このタイルは壁か？」を <code>g.walls[p]</code> の1行で確認できます。スライスを検索するより高速です。</p><code>walls map[point]bool</code></article>
+        <article><span class="concept-number">3</span><h3>Undoは履歴スタック</h3><p>動く前にプレイヤーと箱の位置をスナップショットとして保存します。Undoで最後の状態を取り出して復元します。</p><code>history []snapshot</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE PARSE RECIPE</p>
+        <div class="formula-lines"><code>for y, row := range level</code><span>内側</span><code>for x, c := range row</code></div>
+        <p>外側のループが行（y座標）、内側のループが列（x座標）を与えます。文字 <code>c</code> で壁・箱・ゴールを振り分けるだけで、ステージデータが完成します。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>moveでタイル座標を<br>1マス動かす</h3>
+          <p>移動先が壁なら無視、箱があれば箱の向こうをチェックしてから押す。動く前に履歴へ保存するので、Undoが常に機能します。</p>
+        </div>
+        <pre><code><span>func</span> (g *game) move(d point) {
+    next := point{g.player.x + d.x, g.player.y + d.y}
+    <span>if</span> g.walls[next] {
+        <span>return</span> <i>// 壁は通れない</i>
+    }
+    boxIndex := g.boxAt(next)
+    <span>if</span> boxIndex >= 0 {
+        beyond := point{next.x + d.x, next.y + d.y}
+        <span>if</span> g.walls[beyond] || g.boxAt(beyond) >= 0 {
+            <span>return</span> <i>// 箱を押せない</i>
+        }
+        g.save() <i>// 動く前に履歴へ保存</i>
+        g.boxes[boxIndex] = beyond
+    } <span>else</span> {
+        g.save()
+    }
+    g.player = next
+    g.moves++
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT A TILE MAP</p><h3>ピクセル設計は大変</h3><p>壁の位置をピクセル座標で書くと、少し変えるだけで数十個の数字を直す必要があります。タイル座標なら1文字変えるだけです。</p></article>
+        <article><p class="eyebrow">WITH A TILE MAP</p><h3>文字がそのままマップ</h3><p>文字列を眺めるだけでステージの形がわかります。新しいステージを追加するのも文字列を1つ書くだけです。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>自分のステージを作ろう</h3><p><code>level</code> 文字列を書き換えてオリジナルのステージを作れます。<code>#</code> で壁、<code>$</code> で箱、<code>.</code> でゴール、<code>@</code> でプレイヤーの位置を決めましょう。箱とゴールの数が一致していることを確認してください。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../space-shooter/">← LEVEL 08<strong>Space Shooter</strong></a><a href="../platformer/">LEVEL 10 →<strong>Platformer</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

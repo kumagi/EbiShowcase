@@ -1,1 +1,127 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>スクロールする丘 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/platformer/scrolling-stage/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 横スクロールアクション</a><span>STEP 04 / 05</span></div><section class="overview-hero"><p class="eyebrow">マリオ型ゲームを作る</p><h1>スクロールする丘</h1><p>画面より広いステージをカメラで追い、見える範囲だけ描画します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>カメラ・カリング・チェックポイント</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><a href="../patrol-enemies/">← STEP 03<strong>踏める敵の庭</strong></a><a href="../powerup-adventure/">STEP 05 →<strong>Ebi Adventure</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="カメラスクロールとカリングのしくみを学ぶEbitengineレッスン。ワールド座標からカメラ値を引くだけで大きなステージを表示できます。">
+  <title>STEP 04 — 横スクロールの丘 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コース</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/platformer/scrolling-stage/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 横スクロールアクション</a><span>STEP 04 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>横スクロールの丘</h1>
+      <p>2500ピクセルの広いステージを走り抜けます。カメラはプレイヤーを追いかけ、画面外のオブジェクトは描画をスキップします。緑の旗はチェックポイントになります。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>カメラスクロールとカリング</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>丘を走り抜けてゴールへ。</h2></div>
+        <p>A・D または画面下タッチで移動。スペースまたは画面上タッチでジャンプ。緑の旗を通過するとそこからやり直せます。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="横スクロールの丘" src="../../../../play/scrolling-stage/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / CAMERA SCROLL</p>
+        <h2>広いステージを、<br>どうやって表示するの？</h2>
+        <p class="lesson-lead">ゲーム内部ではすべての座標を <strong>ワールド座標</strong> で管理します。描画するときだけカメラの値（<code>camera</code>）を引くと、画面上の座標（スクリーン座標）が求まります。カメラはプレイヤーを少し遅れて追いかけることで、なめらかなスクロール感を生み出します。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>ワールド座標</h3>
+          <p>ゲームのロジックはすべてワールド座標で計算します。プレイヤーの <code>x</code> は 0〜2470 の範囲を動き、画面サイズには縛られません。</p>
+          <code>g.p.x = clamp(g.p.x+g.vx, 0, 2470)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>カメラの追従</h3>
+          <p>目標カメラ位置（プレイヤーより少し前）に対して、毎フレーム差の 8% だけ近づきます。一定速度でなく割合で動くので、自然な滑らかさが出ます。</p>
+          <code>camera += (target-camera)*.08</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>カリング</h3>
+          <p>描画前にスクリーン X を求め、マイナスまたは画面幅を超えていたら <code>continue</code> でスキップします。見えないものを描かないと処理が速くなります。</p>
+          <code>if x+w &lt; 0 || x &gt; width { continue }</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE ONE-LINE RULE</p>
+        <div class="formula-lines">
+          <code>screenX = worldX - camera</code>
+          <span>それだけ</span>
+          <code>// ロジックはワールド座標のまま</code>
+        </div>
+        <p>引き算1つでワールドとスクリーンを橋渡しします。カメラが動いても衝突判定はワールド座標で行うため、ロジックをいじる必要がありません。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>カメラ計算と<br>カリング付き描画</h3>
+          <p>Update ではワールド座標で物理演算。カメラ更新もここで行います。Draw ではスクリーン X を計算し、範囲外なら <code>continue</code> でスキップします。</p>
+        </div>
+        <pre><code><i>// Update: カメラをプレイヤーに追従させる</i>
+target := g.p.x - width*.4
+g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
+
+<i>// Draw: ワールド座標をスクリーンに変換して描画</i>
+<span>for</span> _, b := <span>range</span> g.grounds {
+    x := b.x - g.camera <i>// スクリーンX</i>
+    <span>if</span> x+b.w &lt; 0 || x &gt; width {
+        <span>continue</span> <i>// 画面外はスキップ</i>
+    }
+    vector.DrawFilledRect(s, float32(x), float32(b.y), ...)
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT WORLD COORDS</p>
+          <h3>ステージがスクロールできない</h3>
+          <p>すべてをスクリーン座標で管理すると、カメラが動いたときに全オブジェクトの座標を書き換えなければなりません。ワールド座標が分離の鍵です。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH SMOOTH CAMERA</p>
+          <h3>割合追従がゲームらしさを出す</h3>
+          <p>差の 8% ずつ追いかけることで、ステージのつなぎ目や方向転換でもカメラがぎこちなくジャンプしません。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>カメラの追従速度を変えよう</h3>
+          <p><code>.08</code> を大きくするとカメラがピタリついてきて視認しやすくなります。小さくするとゆっくり追いかけ、速く動いたときにスクリーンの端ギリギリになります。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../patrol-enemies/">← STEP 03<strong>踏める敵の庭</strong></a>
+      <a href="../powerup-adventure/">STEP 05 →<strong>エビアドベンチャー</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

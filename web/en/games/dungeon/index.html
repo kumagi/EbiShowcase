@@ -1,4 +1,92 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 11 — Top-down Dungeon | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/games/dungeon/" lang="ja">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 11</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Top-down Dungeon</h1><p>Split enemy thinking into states and make discovered players get chased.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Enemy AI and state transitions</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Top-down Dungeon</h2></div><p>Move with WASD or the lower screen. Swing with Space or the upper screen, defeat all enemies, then reach the exit.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 11</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Top-down Dungeon" src="../../../play/dungeon/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Represent what an enemy is doing as state</h2><p>Each enemy can be patrolling or chasing. Switch to chase when the player comes close and return to patrol when they escape. Changing Update behavior by state creates an enemy that appears to think.</p></div><pre><code>switch enemy.State {
-case Patrol: enemy.walkRoute()
-case Chase:  enemy.moveToward(player)
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>Split AI into small decisions</h2><div class="overview-steps"><article><b>01</b><h3>Sense</h3><p>Measure the distance from the enemy to the player.</p></article><article><b>02</b><h3>Decide</h3><p>Use distance to switch between patrol and chase.</p></article><article><b>03</b><h3>Act</h3><p>Run the movement that belongs to the selected state.</p></article></div></section><nav class="lesson-pager"><a href="../platformer/">← LEVEL 10<strong>Platformer</strong></a><a href="../bullet-hell/">LEVEL 12 →<strong>Bullet Hell Boss</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn enemy AI and state transitions in Go and Ebitengine: patrol versus chase modes switched by distance to the player.">
+  <title>LEVEL 11 — Dungeon | Ebi Showcase</title>
+  <link rel="canonical" href="./">
+  <link rel="alternate" hreflang="ja" href="../../../ja/games/dungeon/">
+  <link rel="alternate" hreflang="en" href="../../../en/games/dungeon/">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../ja/games/dungeon/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 11</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Dungeon</h1>
+      <p>An enemy that charges straight at you from the start feels unfair. Switch between a patrol state and a chase state triggered by distance, and suddenly the enemy feels alive.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Enemy AI and state transitions</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Defeat every monster and escape.</h2></div><p>WASD or arrow keys to move, Space or upper touch to swing the sword. Defeat all enemies to open the exit. Running out of life ends the run.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 11</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Dungeon" src="../../../play/dungeon/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / ENEMY AI AND STATE TRANSITIONS</p>
+        <h2>How does the enemy<br>know when to chase?</h2>
+        <p class="lesson-lead">With a <strong>state machine</strong>. Each enemy holds an integer that says what it is doing right now: 0 means patrol, 1 means chase. Every frame the game measures the distance to the player and flips that integer when the threshold is crossed. One <code>if / else</code> then picks the right movement rule for that state. A single integer, two rules — and the enemy feels alive.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>state field</h3><p>The enemy struct stores <code>state int</code>. Zero is patrol; one is chase. That one integer is the entire "mind" of the enemy.</p><code>state, timer int</code></article>
+        <article><span class="concept-number">2</span><h3>Distance triggers</h3><p>Every frame, compute the distance to the player. Below 165 pixels, switch to chase. Above 230, return to patrol. The gap between thresholds prevents jittery switching.</p><code>if dist &lt; 165 { e.state = 1 }</code></article>
+        <article><span class="concept-number">3</span><h3>One rule per state</h3><p>Patrol rotates velocity by 90 degrees on a timer. Chase normalizes the vector toward the player and applies a constant speed.</p><code>if e.state == 0 { … } else { … }</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE CHASE DIRECTION</p>
+        <div class="formula-lines"><code>dx, dy := (player.x - enemy.x), (player.y - enemy.y)</code><span>normalize then scale</span><code>vx, vy = dx/dist * speed, dy/dist * speed</code></div>
+        <p>Dividing by the distance produces a unit vector that points toward the player regardless of angle. Multiplying by <code>speed</code> then sets an exact constant velocity in that direction.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Measure distance, update state,<br>apply the matching rule</h3>
+          <p>Every living enemy goes through this sequence once per frame: check distance, maybe change state, then move according to the current state.</p>
+        </div>
+        <pre><code><span>for</span> i := range g.enemies {
+    e := &amp;g.enemies[i]
+    <span>if</span> !e.alive { <span>continue</span> }
+    dist := math.Hypot((g.player.x+14)-e.x, (g.player.y+14)-e.y)
+    <i>// update state based on distance</i>
+    <span>if</span> dist < 165 {
+        e.state = 1 <i>// switch to chase</i>
+    } <span>else</span> <span>if</span> dist > 230 {
+        e.state = 0 <i>// return to patrol</i>
+    }
+    <span>if</span> e.state == 0 { <i>// patrol: rotate velocity on timer</i>
+        e.timer--
+        <span>if</span> e.timer <= 0 {
+            e.vx, e.vy = -e.vy, e.vx <i>// 90-degree turn</i>
+            e.timer = 100
+        }
+    } <span>else</span> { <i>// chase: move toward player</i>
+        e.vx = ((g.player.x+14) - e.x) / dist * 1.35
+        e.vy = ((g.player.y+14) - e.y) / dist * 1.35
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT A STATE MACHINE</p><h3>Always chasing</h3><p>An enemy that charges from the moment it spawns is easy to predict and hard to balance. The player always knows exactly what to expect.</p></article>
+        <article><p class="eyebrow">WITH A STATE MACHINE</p><h3>Patrol, notice, then chase</h3><p>Enemies feel like they have intent. The moment they spot the player creates a recognizable beat of tension that makes encounters memorable.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Experiment with the numbers</h3><p>Raise the chase threshold <code>165</code> for earlier detection and more pressure. Increase chase speed <code>1.35</code> for harder enemies. Shorten the patrol timer <code>100</code> for more erratic wandering.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../platformer/">← LEVEL 10<strong>Platformer</strong></a><a href="../bullet-hell/">LEVEL 12 →<strong>Bullet Hell</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

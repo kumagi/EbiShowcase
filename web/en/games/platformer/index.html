@@ -1,5 +1,100 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 10 — Platformer | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/games/platformer/" lang="ja">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 10</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Platformer</h1><p>Resolve overlaps with floors and walls in a world with gravity, then follow a larger course with a camera.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Collision resolution and camera</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Platformer</h2></div><p>Move with A/D or the lower screen. Jump with Space or the upper screen.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 10</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Platformer" src="../../../play/platformer/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Resolve horizontal and vertical movement separately</h2><p>Move along X and push the player out of overlapping walls, then do the same along Y for floors. Subtracting the camera position while drawing makes the world scroll.</p></div><pre><code>player.X += vx
-resolveHorizontal()
-player.Y += vy
-resolveVertical()
-screenX := player.X - cameraX</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>The base of a Mario-like action game</h2><div class="overview-steps"><article><b>01</b><h3>Accelerate</h3><p>Add horizontal input to velocity and gravity to vertical velocity each frame.</p></article><article><b>02</b><h3>Push out</h3><p>Move out of overlapping terrain in the opposite direction to stop at floors and walls.</p></article><article><b>03</b><h3>Show the world</h3><p>Use a following camera to render a course wider than the screen.</p></article></div></section><nav class="lesson-pager"><a href="../sokoban/">← LEVEL 09<strong>Sokoban</strong></a><a href="../dungeon/">LEVEL 11 →<strong>Top-down Dungeon</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn collision resolution and camera follow in Go and Ebitengine: separate X/Y axis processing and smooth lerp camera tracking.">
+  <title>LEVEL 10 — Platformer | Ebi Showcase</title>
+  <link rel="canonical" href="./">
+  <link rel="alternate" hreflang="ja" href="../../../ja/games/platformer/">
+  <link rel="alternate" hreflang="en" href="../../../en/games/platformer/">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../ja/games/platformer/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 10</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Platformer</h1>
+      <p>Two techniques power every side-scroller: separating X and Y collision resolution so the player slides correctly against surfaces, and a lerp camera that smoothly follows without jerking.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Collision resolution and camera</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Run, jump, collect every coin.</h2></div><p>A/D or arrow keys to run, Space or tap the upper screen to jump. Collect all 7 coins and reach the goal. Falling off the stage is a miss.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 10</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Platformer" src="../../../play/platformer/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / COLLISION AND CAMERA</p>
+        <h2>How does the player<br>stop exactly at surfaces?</h2>
+        <p class="lesson-lead">The trick is <strong>resolving X and Y separately</strong>. Move horizontally, check every platform, fix only the X coordinate if overlapping. Then move vertically and fix only Y. This two-pass approach lets the player slide along walls, bonk the ceiling without losing horizontal momentum, and land cleanly on floors — all without special cases.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>X collision</h3><p>After moving horizontally, if the player overlaps a platform, push them back to the edge in the direction they came from. Y stays untouched.</p><code>player.x = p.x - player.w</code></article>
+        <article><span class="concept-number">2</span><h3>Y collision</h3><p>After moving vertically, check again. Landing from above sets <code>onGround = true</code> and zeros vertical velocity. Hitting a ceiling from below also zeros velocity.</p><code>onGround = true</code></article>
+        <article><span class="concept-number">3</span><h3>Smooth camera</h3><p>Every frame compute where the camera should be and move 9% of the remaining distance toward it. The larger the gap, the faster the camera catches up.</p><code>camera += (target - camera) * .09</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE CAMERA LERP</p>
+        <div class="formula-lines"><code>target = player.x - width * 0.38</code><span>then every frame</span><code>camera += (target - camera) * 0.09</code></div>
+        <p>The target keeps the player at 38% of the screen width. Each frame the camera moves 9% closer. Big gaps close quickly; small gaps close gently, giving a natural feel.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>X first, then Y —<br>order is everything</h3>
+          <p>Mixing both axes in one pass causes corner-clipping bugs where the player can pass through the edge of a platform. Separate passes make the behavior predictable.</p>
+        </div>
+        <pre><code><i>// move horizontally and resolve</i>
+g.player.x += g.vx
+<span>for</span> _, p := range g.platforms {
+    <span>if</span> overlap(g.player, p) {
+        <span>if</span> g.vx > 0 {
+            g.player.x = p.x - g.player.w
+        } <span>else</span> <span>if</span> g.vx < 0 {
+            g.player.x = p.x + p.w
+        }
+        g.vx = 0
+    }
+}
+<i>// move vertically and resolve</i>
+g.player.y += g.vy
+g.onGround = false
+<span>for</span> _, p := range g.platforms {
+    <span>if</span> overlap(g.player, p) {
+        <span>if</span> g.vy > 0 { <i>// falling → land</i>
+            g.player.y = p.y - g.player.h
+            g.onGround = true
+        } <span>else</span> <span>if</span> g.vy < 0 { <i>// rising → ceiling</i>
+            g.player.y = p.y + p.h
+        }
+        g.vy = 0
+    }
+}
+<i>// lerp camera toward player</i>
+target := g.player.x - width*.38
+g.camera += (target - g.camera) * .09</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT AXIS SEPARATION</p><h3>Corner trapping</h3><p>Resolving both axes together lets the player get stuck on platform edges. Separating them eliminates the whole class of corner bugs.</p></article>
+        <article><p class="eyebrow">WITH AXIS SEPARATION</p><h3>Smooth surfaces, correct jumps</h3><p>The player slides freely along walls. Hitting a ceiling mid-jump stops vertical movement but keeps horizontal momentum intact.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Experiment with the numbers</h3><p>Increase the camera lerp factor <code>0.09</code> for a snappier camera; lower it for a lazier follow. Change the jump velocity <code>-12.5</code> and gravity <code>0.62</code> to drastically alter how the game feels to play.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../sokoban/">← LEVEL 09<strong>Sokoban</strong></a><a href="../dungeon/">LEVEL 11 →<strong>Dungeon</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

@@ -1,1 +1,78 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Arena Dodge | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/survivors/arena-dodge/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Horde Survival</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Vampire Survivors-style game</p><h1>Arena Dodge</h1><p>Build eight-way movement that is not faster on diagonals.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Normalized eight-way movement</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Play it, unpack it, build it.</h2><div class="overview-steps"><article><b>01</b><h3>Feel the rule</h3><p>Play the finished mini game and discover the rule added in this step.</p></article><article><b>02</b><h3>Inspect one frame</h3><p>Trace values through input, state update, and drawing.</p></article><article><b>03</b><h3>Tune and extend</h3><p>Read the Ebitengine code, tune its values, and make the rule your own.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../auto-turret/">STEP 02 →<strong>Auto Turret Survival</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn normalized eight-way movement in this first step of an Ebitengine survivors-style game.">
+  <title>STEP 01 — Arena Dodge | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">TRACK</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/survivors/arena-dodge/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Mass Enemy Survival</a><span>STEP 01 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
+      <h1>Arena Dodge</h1>
+      <p>Dodge enemies flooding in from all sides and survive for 30 seconds. The first challenge is keeping the player equally fast in every direction.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Normalized eight-way movement</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Survive 30 seconds without being caught.</h2></div><p>Move with WASD, arrow keys, or drag. Five hits end the run.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Arena Dodge" src="../../../../play/arena-dodge/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / NORMALIZED MOVEMENT</p>
+        <h2>Why doesn't diagonal<br>movement feel faster?</h2>
+        <p class="lesson-lead">Pressing right and down together gives X=1 and Y=1. Their combined length is <strong>√2 ≈ 1.41</strong>, so diagonal would be 41 % faster. Dividing both components by that length first — <strong>normalization</strong> — shrinks the arrow to exactly length 1 before multiplying by speed.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>Input vector</h3><p>Combine key states into a single direction arrow. Diagonal simply means both axes have a non-zero value at the same time.</p><code>dx += 1; dy += 1</code></article>
+        <article><span class="concept-number">2</span><h3>Normalize</h3><p>Compute the arrow's length with <code>math.Hypot</code> and divide both components by it. The result is a unit vector of length exactly 1.</p><code>dx /= math.Hypot(dx, dy)</code></article>
+        <article><span class="concept-number">3</span><h3>Apply speed</h3><p>Multiply the unit vector by the desired speed constant before adding to position. Direction is preserved; only the magnitude changes.</p><code>g.px += dx / l * 4</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE NORMALIZE RULE</p>
+        <div class="formula-lines"><code>l := math.Hypot(dx, dy)</code><span>then</span><code>g.px += dx / l * 4</code></div>
+        <p>When no key is held, dx and dy are both 0 and <code>l</code> would be 0 too. Always guard with <code>if dx != 0 || dy != 0</code> before dividing to avoid a division-by-zero crash.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Gather input → normalize → move</h3>
+          <p>Both keyboard and touch are mapped to the same dx/dy pair. For touch, the arrow is simply the vector from the player to the finger. Then one normalization handles every input source identically.</p>
+        </div>
+        <pre><code><span>if</span> ids := ebiten.AppendTouchIDs(nil); len(ids) &gt; 0 {
+    x, y := ebiten.TouchPosition(ids[0])
+    dx = float64(x) - g.px
+    dy = float64(y) - g.py
+}
+<span>if</span> dx != 0 || dy != 0 {
+    l := math.Hypot(dx, dy)
+    g.px += dx / l * 4
+    g.py += dy / l * 4
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT NORMALIZATION</p><h3>Diagonal is unfairly fast</h3><p>Without normalizing, diagonal is ≈1.41× faster. Players instinctively exploit it, breaking the intended difficulty curve.</p></article>
+        <article><p class="eyebrow">WITH NORMALIZATION</p><h3>All eight directions feel equal</h3><p>Normalized movement makes every direction identical in speed, giving consistent and predictable feel — the foundation of all survivors-style games.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Try changing the speed constant</h3><p>Replace the <code>4</code> in <code>dx / l * 4</code> with <code>6</code> for a nimble feel or <code>2</code> for sluggish tension. Balance it against the enemy speed constant <code>1.15</code>.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><span></span><a href="../auto-turret/">STEP 02 →<strong>Auto Turret Survival</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

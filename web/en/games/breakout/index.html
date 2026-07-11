@@ -1,1 +1,80 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 06 — Breakout | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/games/breakout/" lang="ja">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 06</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Breakout</h1><p>Manage and destroy many blocks stored in a collection.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Multiple objects</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Breakout</h2></div><p>A playable Ebitengine game for desktop and mobile.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Breakout" src="../../../play/breakout/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Manage repeated blocks in a collection</h2><p>Each block owns a position and alive state. Destroy only the overlapping block and reset when none remain.</p></div><pre><code>for i := range blocks {\n    if blocks[i].alive && hit(ball, blocks[i]) {\n        blocks[i].alive = false\n    }\n}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>What this lesson will contain</h2><div class="overview-steps"><article><b>01</b><h3>Play first</h3><p>Discover the rules and feel before reading an explanation.</p></article><article><b>02</b><h3>See the system</h3><p>Follow the new idea through a frame-by-frame visual.</p></article><article><b>03</b><h3>Build the code</h3><p>Connect the same behavior to Ebitengine Update and Draw.</p></article></div></section><nav class="lesson-pager"><a href="../pong/">← LEVEL 05<strong>Pong</strong></a><a href="../snake/">LEVEL 07 →<strong>Snake</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Manage many bricks in a slice and learn Breakout object lists in Ebitengine.">
+  <title>LEVEL 06 — Breakout | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../ja/games/breakout/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Breakout</h1>
+      <p>Pong’s reflection plus “many identical bricks.” The key is not more variables — it is one slice that holds every brick.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Many objects</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Clear every brick.</h2></div><p>Bounce the ball with the paddle and erase the colored wall. You have three lives.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Breakout" src="../../../play/breakout/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / MANY OBJECTS</p>
+        <h2>How can so many bricks<br>share one rule?</h2>
+        <p class="lesson-lead">A brick is a tiny record: position plus whether it is still alive. Put those records in a slice and inspect them with the same loop every frame. <strong>Repeat one rule many times</strong> — that is the core of multi-object games.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>One record</h3><p>Each brick is a struct with x, y, and alive. Drawing happens later in Draw.</p><code>type brick struct</code></article>
+        <article><span class="concept-number">2</span><h3>A grid of them</h3><p>Nested loops fill rows and columns, appending into a slice. Forty-eight bricks do not mean forty-eight variables.</p><code>bricks []brick</code></article>
+        <article><span class="concept-number">3</span><h3>Breaking</h3><p>Only overlapping bricks set <code>alive = false</code>. Update and draw look only at living ones.</p><code>alive = false</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE GRID RECIPE</p>
+        <div class="formula-lines"><code>for row := 0; row &lt; 6; row++</code><span>inner</span><code>for col := 0; col &lt; 8; col++</code></div>
+        <p>Place with <code>x = origin + col * width</code> and <code>y = origin + row * height</code>. Same idea as spreadsheet cells.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Test collisions inside the loop</h3>
+          <p>After moving the ball, walk every brick. On a hit, destroy it, reverse vy, and stop for that frame.</p>
+        </div>
+        <pre><code><span>for</span> i := range g.bricks {
+    b := &amp;g.bricks[i]
+    <span>if</span> !b.alive {
+        <span>continue</span>
+    }
+    <span>if</span> hitBrick(g.bx, g.by, b) {
+        b.alive = false
+        g.score += 10
+        g.vy = -g.vy
+        <span>break</span>
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT A SLICE</p><h3>brick1, brick2, brick3…</h3><p>Named variables run out fast. Changing the count means rewriting code.</p></article>
+        <article><p class="eyebrow">WITH A SLICE</p><h3>Count is data; the rule is one</h3><p>Ten bricks or a hundred bricks still share the same update and draw loops.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Change rows, columns, and lives</h3><p>More rows densify the wall. Ball speed and paddle width change the feel immediately.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../pong/">← LEVEL 05<strong>Pong</strong></a><a href="../snake/">LEVEL 07 →<strong>Snake</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

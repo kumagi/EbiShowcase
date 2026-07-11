@@ -1,1 +1,81 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Treat Counter | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/clicker/tap-counter/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Idle Clicker</a><span>STEP 01 / 05</span></div><section class="overview-hero"><p class="eyebrow">Build a Cookie Clicker-style game</p><h1>Treat Counter</h1><p>Create the smallest clicker: one large button that increases a number.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Click input and numeric display</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Play it, unpack it, build it.</h2><div class="overview-steps"><article><b>01</b><h3>Feel the rule</h3><p>Play the finished mini game and discover the rule added in this step.</p></article><article><b>02</b><h3>Inspect one frame</h3><p>Trace values through input, state update, and drawing.</p></article><article><b>03</b><h3>Tune and extend</h3><p>Read the Ebitengine code, tune its values, and make the rule your own.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../first-shop/">STEP 02 →<strong>The First Shop</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn click input and counters with an Ebitengine clicker starter lesson.">
+  <title>STEP 01 — Sweet Counter | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/clicker/tap-counter/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Idle Clicker</a><span>STEP 01 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
+      <h1>Sweet Counter</h1>
+      <p>Press the large sweet and the count rises by one. The key is detecting only the instant of a press, not every frame it is held. This is the smallest complete clicker.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Click input and counter</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Bake thirty sweets.</h2></div><p>Tap, click, or press Space on the big sweet. Reach 30 to finish.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Sweet Counter" src="../../../../play/tap-counter/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / INPUT</p>
+        <h2>Why does the count rise<br>only at the instant of a press?</h2>
+        <p class="lesson-lead">Ebitengine's <strong>inpututil.IsMouseButtonJustPressed</strong> returns <code>true</code> only on the first frame a button becomes pressed. Hold the button for ten frames and it still fires exactly once. That is why one tap means one sweet.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>Detect the press instant</h3><p>IsPressed is true on every frame the button is held. IsJustPressed is true only on the very first frame. Clickers need JustPressed; using IsPressed lets players hold the button to score infinitely fast.</p><code>inpututil.IsMouseButtonJustPressed(...)</code></article>
+        <article><span class="concept-number">2</span><h3>Counter variable</h3><p>A single integer <code>count</code> tracks the total. Each confirmed press adds one. Displaying it with <code>fmt.Sprintf("%03d", g.count)</code> pads to three digits so the number stays in place as it grows.</p><code>g.count++</code></article>
+        <article><span class="concept-number">3</span><h3>Pulse for visual feedback</h3><p>On each press, set <code>pulse = 10</code> and decrement it by one every frame. Use that value to scale the circle radius slightly outward. The result is a quick expand-and-shrink animation.</p><code>scale := 1 + float64(g.pulse)*.012</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE INPUT RULE</p>
+        <div class="formula-lines"><code>IsPressed     → true every frame while held</code><span>vs</span><code>IsJustPressed → true on the first frame only</code></div>
+        <p>Touch input uses <code>inpututil.AppendJustPressedTouchIDs(nil)</code>. The same single-frame rule applies on mobile, so one finger tap equals one event.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Press → count → flash</h3>
+          <p>The helper <code>pressed()</code> checks key, mouse, and touch in one call. When it returns true, increment count and set the pulse. Reaching 30 sets the clear flag.</p>
+        </div>
+        <pre><code><span>func</span> pressed() bool {
+    return inpututil.IsKeyJustPressed(ebiten.KeySpace) ||
+        inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) ||
+        len(inpututil.AppendJustPressedTouchIDs(nil)) &gt; 0
+}
+
+<span>if</span> pressed() {
+    g.count++
+    g.pulse = 10
+    <span>if</span> g.count &gt;= 30 {
+        g.clear = true
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT JUSTPRESSED</p><h3>Holding counts forever</h3><p>With plain IsPressed, holding the button for one second at 60 fps adds 60 sweets. The game becomes trivial to cheat without trying.</p></article>
+        <article><p class="eyebrow">WITH JUSTPRESSED</p><h3>One tap, one sweet — always</h3><p>JustPressed cannot fire twice in the same frame. Any input device — keyboard, mouse, or touch — produces exactly one event per deliberate action.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Change the goal and bounce</h3><p>Raise the clear target beyond <code>30</code>, or increase the pulse start value and the coefficient <code>.012</code> to make the sweet bounce more dramatically.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><span></span><a href="../first-shop/">STEP 02 →<strong>First Shop</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

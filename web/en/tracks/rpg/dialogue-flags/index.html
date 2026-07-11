@@ -1,1 +1,145 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Village Conversations | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/rpg/dialogue-flags/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Command RPG</a><span>STEP 02 / 07</span></div><section class="overview-hero"><p class="eyebrow">Build a Dragon Quest-style game</p><h1>Village Conversations</h1><p>Change dialogue according to who is speaking and what has happened.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Dialogue flow and event flags</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Play it, unpack it, build it.</h2><div class="overview-steps"><article><b>01</b><h3>Feel the rule</h3><p>Play the finished mini game and discover the rule added in this step.</p></article><article><b>02</b><h3>Inspect one frame</h3><p>Trace values through input, state update, and drawing.</p></article><article><b>03</b><h3>Tune and extend</h3><p>Read the Ebitengine code, tune its values, and make the rule your own.</p></article></div></section><nav class="lesson-pager"><a href="../village-walk/">← STEP 01<strong>Walk Through a Village</strong></a><a href="../command-battle/">STEP 03 →<strong>One-on-one Command Battle</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn NPC dialogue, text paging, and event flags in this Ebitengine lesson.">
+  <title>STEP 02 — Talking Villagers | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Command RPG</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/rpg/dialogue-flags/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Command RPG</a><span>STEP 02 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>Talking Villagers</h1>
+      <p>Change dialogue based on who is speaking and what has already happened. <strong>Flags</strong> — simple true/false booleans — let the same elder say three different things depending on quest progress.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Dialogue flow and event flags</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
+          <h2>Talk to the elder and find the herb.</h2>
+        </div>
+        <p>Move: arrows / WASD / tap &nbsp;|&nbsp; Talk: Space / X / tap the top area</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div>
+        <div id="game-wrap">
+          <iframe class="lesson-game-frame" title="Talking Villagers" src="../../../../play/dialogue-flags/" allow="autoplay; fullscreen"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / DIALOGUE &amp; FLAGS</p>
+        <h2>How the same NPC<br>says different things</h2>
+        <p class="lesson-lead"><strong>Flags</strong> are true/false switches that record what has happened. Set <code>quest = true</code> when the player accepts the quest, <code>herb = true</code> when the herb is picked up. Every time the player talks to the elder, the code checks the current flag combination and chooses the matching dialogue. Paging through text is just incrementing a line index.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Find the NPC using facing</h3>
+          <p>Add the <code>facing</code> vector to the player position to get the tile directly in front. Look up that tile in the NPC map to find who is standing there.</p>
+          <code>front := p.Add(facing)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Page through text with a slice</h3>
+          <p>Store each line of dialogue in a string slice <code>talk</code>. A <code>line</code> index advances on each button press. When <code>line</code> reaches the end, clear the slice.</p>
+          <code>g.line++</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Branch on flags</h3>
+          <p>Two booleans — <code>quest</code> and <code>herb</code> — create three distinct situations the elder can recognize. Adding more flags scales to arbitrarily complex event trees.</p>
+          <code>if !g.quest { ... }</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE DIALOGUE RULE</p>
+        <div class="formula-lines">
+          <code>front := point{g.p.x + g.facing.x, g.p.y + g.facing.y}</code>
+          <span>is there an NPC in front?</span>
+          <code>who, ok := g.npcs[front]</code>
+          <span>pick dialogue based on flags</span>
+          <code>if !g.quest { g.quest = true; g.talk = [...] }</code>
+        </div>
+        <p>Flags record facts about the world. Without them the elder would say the same thing on every talk, making quests impossible to progress.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>interact() — check flags, set dialogue</h3>
+          <p>Pressing Space or tapping the top of the screen calls <code>interact()</code>. It finds the NPC directly in front and, for the elder, checks the two flags to decide which dialogue lines to load.</p>
+        </div>
+        <pre><code><span>func</span> (g *game) interact() {
+    front := point{g.p.x + g.facing.x, g.p.y + g.facing.y}
+    who, ok := g.npcs[front]
+    <span>if</span> !ok { return }
+    <span>switch</span> who {
+    <span>case</span> "elder":
+        <span>if</span> !g.quest {
+            g.quest = true
+            g.talk = []string{"Elder: A healing herb grows northwest.",
+                              "Please bring it back to me!"}
+        } <span>else if</span> !g.herb {
+            g.talk = []string{"Elder: The herb is in the northwest corner."}
+        } <span>else</span> {
+            g.talk = []string{"Elder: You found it! Thank you, hero!",
+                              "QUEST COMPLETE"}
+            g.clear = true
+        }
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT FLAGS</p>
+          <h3>No memory means no story</h3>
+          <p>Without flags every conversation resets. The elder can never tell whether you have accepted the quest or already returned with the herb.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH FLAGS</p>
+          <h3>Two booleans, three story states</h3>
+          <p>Two flags yield three distinct dialogue branches. Scale to five or ten flags and the same system supports a full story arc.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Give the child quest-aware dialogue</h3>
+          <p>Change the <code>"child"</code> case to check <code>g.quest</code>. The child could cheer you on after you accept the quest, or celebrate when you return with the herb.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../village-walk/">← STEP 01<strong>Village Walk</strong></a>
+      <a href="../command-battle/">STEP 03 →<strong>Command Battle</strong></a>
+    </nav>
+  </main>
+  <footer>
+    <div class="brand"><span>EBI</span> SHOWCASE</div>
+    <p>Made with Go + Ebitengine.</p>
+    <a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a>
+  </footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

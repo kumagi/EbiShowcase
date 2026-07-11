@@ -1,1 +1,110 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 01 — Tap the Target | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/games/tap-target/" lang="ja">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 01</span></div><section class="overview-hero"><p class="eyebrow">★☆☆☆☆ / PLAYABLE</p><h1>Tap the Target</h1><p>Tap each target quickly and learn the smallest useful game loop.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Input and coordinates</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Tap the Target</h2></div><p>An Ebitengine game supporting click, touch, and keyboard input.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Tap the Target" src="../../../play/tap-target/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Distance from the tap to the center</h2><p>Compare the input position with the circle center. A hit occurs when the squared distance is smaller than the squared radius.</p></div><pre><code>dx := touchX - circleX\ndy := touchY - circleY\nif dx*dx+dy*dy < radius*radius {\n    score++\n}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>What this lesson will contain</h2><div class="overview-steps"><article><b>01</b><h3>Play first</h3><p>Discover the rules and feel before reading an explanation.</p></article><article><b>02</b><h3>See the system</h3><p>Follow the new idea through a frame-by-frame visual.</p></article><article><b>03</b><h3>Build the code</h3><p>Connect the same behavior to Ebitengine Update and Draw.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../timing-meter/">LEVEL 02 →<strong>Stop the Meter</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Tap glowing targets and learn input coordinates plus circle hit tests in Ebitengine.">
+  <title>LEVEL 01 — Tap the Target | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../ja/games/tap-target/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 01</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
+      <h1>Tap the Target</h1>
+      <p>A tiny game where you tap glowing circles as they appear. This is where you start treating taps and on-screen positions as the same kind of numbers.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Input and coordinates</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>First, tap the circle.</h2></div><p>Score with click, tap, or touch. How many hits can you land in 30 seconds?</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Tap the Target" src="../../../play/tap-target/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / INPUT &amp; COORDINATES</p>
+        <h2>How does the game<br>know where you tapped?</h2>
+        <p class="lesson-lead">Think of the screen as graph paper without lines. The top-left is <strong>(0, 0)</strong>. X grows to the right, Y grows downward. If the distance from your tap to the circle center is shorter than the radius, it counts as a hit.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>Coordinates</h3><p>Any place on screen is two numbers. The circle center and the tap use the same X and Y.</p><code>circleX, circleY</code></article>
+        <article><span class="concept-number">2</span><h3>Distance</h3><p>The length between two points, from the triangle’s width and height. Comparing squared values avoids a square root.</p><code>hypot(dx, dy)</code></article>
+        <article><span class="concept-number">3</span><h3>Hit test</h3><p>If distance is less than or equal to the radius, score a hit and move the target.</p><code>dist &lt;= radius</code></article>
+      </div>
+
+      <div class="motion-lab" data-lab="hit-test" data-hit="HIT!" data-miss="MISS" data-wait="TAP HERE" aria-labelledby="hit-lab-title">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / HIT TEST</p>
+          <h3 id="hit-lab-title">Tap the board and watch the distance</h3>
+          <p>Tap the board on the right. You will see the difference from the circle center. A distance of 70 or less is a hit.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-sample-hit>Sample hit</button>
+            <button type="button" class="lab-button" data-lab-sample-miss>Sample miss</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">In the real game, mouse and touch are both turned into one “pressed position” before the check.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" data-lab-board data-state="wait" role="img" aria-label="Circle hit-test board">
+            <span class="axis-label axis-top">0 / TOP-LEFT</span>
+            <span class="axis-label axis-bottom">480 × 520</span>
+            <div class="lab-circle" aria-hidden="true"></div>
+            <div class="lab-tap" data-lab-tap hidden aria-hidden="true"></div>
+          </div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>dx</span><strong data-lab-dx>—</strong><small>left/right</small></div>
+            <div><span>dy</span><strong data-lab-dy>—</strong><small>up/down</small></div>
+            <div><span>distance</span><strong data-lab-dist>—</strong><small class="lab-result" data-lab-result data-state="wait">TAP HERE</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE ONE-LINE RULE</p>
+        <div class="formula-lines"><code>dx = touchX - circleX</code><span>then</span><code>dy = touchY - circleY</code></div>
+        <p>A hit happens when <code>dx*dx + dy*dy</code> is smaller than <code>radius*radius</code>. Comparing squares gives the same answer without computing a square root every frame.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Put it inside<br><code>Update</code></h3>
+          <p>Only read the position on the press frame, then check distance. <code>Draw</code> just paints the circle and score. Separating math from drawing makes later changes easier.</p>
+        </div>
+        <pre><code><span>func</span> (g *game) Update() error {
+    px, py, pressed := pressedPosition()
+    <span>if</span> !pressed {
+        <span>return</span> nil
+    }
+
+    <i>// Distance from tap to center</i>
+    dist := math.Hypot(float64(px)-g.x, float64(py)-g.y)
+    <span>if</span> dist &lt;= g.radius {
+        g.score++
+        g.moveTarget()
+    }
+    <span>return</span> nil
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT COORDINATES</p><h3>“Somewhere around here” fails</h3><p>Programs cannot use vague places. Every position must become numbers.</p></article>
+        <article><p class="eyebrow">WITH DISTANCE CHECK</p><h3>One ruler for circle and tap</h3><p>Even when it looks round, the check is center plus radius. The rule stays the same on any screen size.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Experiment with numbers</h3><p>Smaller <code>radius</code> makes it harder. Larger <code>framesLeft</code> makes a calmer round. Game design is hunting for values that feel right.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><span></span><a href="../timing-meter/">LEVEL 02 →<strong>Stop the Meter</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

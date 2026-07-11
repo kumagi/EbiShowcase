@@ -1,1 +1,83 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>桁が増える研究所 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/clicker/growth-curves/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 放置クリッカー</a><span>STEP 04 / 05</span></div><section class="overview-hero"><p class="eyebrow">Cookie Clicker型ゲームを作る</p><h1>桁が増える研究所</h1><p>買うほど高くなる価格と、読みやすい巨大数の表記を作ります。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>指数的コストと大きな数</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><a href="../idle-factory/">← STEP 03<strong>自動生産工場</strong></a><a href="../offline-bakery/">STEP 05 →<strong>Ebi Bakery</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="指数関数的コストと大きな数値フォーマットを学ぶ、Ebitengine版クリッカー第4回レッスン。">
+  <title>STEP 04 — 成長曲線ラボ | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/clicker/growth-curves/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 放置クリッカー</a><span>STEP 04 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>成長曲線ラボ</h1>
+      <p>ラボを買うたびにコストが1.18倍になり、生産速度は台数の二乗で伸びます。最終目標は100万エネルギー。「K・M・B」表記で大きな数も読みやすくします。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>指数コストと大きな数値フォーマット</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>100万エネルギーを目指そう。</h2></div><p>タップでエネルギーを集め、ラボを買うと生産が加速します。Bキーで購入。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="成長曲線ラボ" src="../../../../play/growth-curves/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / EXPONENTIAL</p>
+        <h2>なぜ後半のラボは<br>こんなに高いの？</h2>
+        <p class="lesson-lead">コストは <strong>10 × 1.18<sup>n</sup></strong> で計算します。ラボを買うたびに前のコストの1.18倍になるため、最初は手ごろでも後半は急激に高くなります。これが「指数関数的成長」です。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>指数関数的コスト</h3><p><code>math.Pow(1.18, n)</code> で n 番目のラボのコストを計算します。n=0 で10、n=5 で約23、n=20 で約270 と、最初はゆっくり後半は急激に増えます。</p><code>10 * math.Pow(1.18, float64(g.labs))</code></article>
+        <article><span class="concept-number">2</span><h3>二乗の生産量</h3><p>生産速度は <code>labs × labs × 8</code> です。台数が増えるほど1台あたりの貢献が大きくなる「スケーリング」が楽しさの核心です。1台で8/秒、3台で72/秒、10台で800/秒。</p><code>float64(g.labs*g.labs) * 8</code></article>
+        <article><span class="concept-number">3</span><h3>K・M・B表記</h3><p>1000以上の数字を K、100万以上を M で省略します。<code>short()</code> 関数が変換を担当。「1234567」が「1.23M」と表示され、画面に収まります。</p><code>fmt.Sprintf("%.2fM", v/1e6)</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE GROWTH FORMULA</p>
+        <div class="formula-lines"><code>cost(n) = 10 × 1.18ⁿ</code><span>生産速度</span><code>rate(n) = n² × 8  [/秒]</code></div>
+        <p>コストは指数的に増えますが、生産速度は二乗で増えます。ちょうどいいタイミングで買い続けると、後半でも快適に進めます。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>コスト計算 → 生産 → 数値表示</h3>
+          <p>cost() と rate() はメソッドとして定義し、実際の値を毎フレーム計算します。short() で大きな数字を読みやすくして Draw で表示します。</p>
+        </div>
+        <pre><code><span>func</span> (g *game) cost() float64 {
+    return 10 * math.Pow(1.18, float64(g.labs))
+}
+<span>func</span> (g *game) rate() float64 {
+    return float64(g.labs*g.labs) * 8
+}
+
+<span>func</span> short(v float64) string {
+    <span>switch</span> {
+    <span>case</span> v &gt;= 1e9: return fmt.Sprintf("%.2fB", v/1e9)
+    <span>case</span> v &gt;= 1e6: return fmt.Sprintf("%.2fM", v/1e6)
+    <span>case</span> v &gt;= 1e3: return fmt.Sprintf("%.2fK", v/1e3)
+    default:      return fmt.Sprintf("%.1f", v)
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT EXPONENTIAL</p><h3>コストが固定だとすぐ買い切れる</h3><p>線形コストだと10台買えば終わりになりがちです。指数的上昇があることで、後半の「もう少し！」感が続きます。</p></article>
+        <article><p class="eyebrow">WITH BIG NUMBER FORMAT</p><h3>画面が数字で埋まらない</h3><p>生の数値「1234567.89」を表示すると枠からはみ出します。short() があれば「1.23M」に収まり、すっきり読めます。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>指数の底を変えよう</h3><p><code>1.18</code> を <code>1.10</code> にすると緩やかに、<code>1.30</code> にすると急激に高くなります。rate の係数 <code>8</code> も変えて全体のバランスを確かめましょう。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../idle-factory/">← STEP 03<strong>アイドルファクトリー</strong></a><a href="../offline-bakery/">STEP 05 →<strong>オフラインベーカリー</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

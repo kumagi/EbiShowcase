@@ -1,1 +1,142 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Equipment Shop and Inventory | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/rpg/inventory-shop/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Command RPG</a><span>STEP 05 / 07</span></div><section class="overview-hero"><p class="eyebrow">Build a Dragon Quest-style game</p><h1>Equipment Shop and Inventory</h1><p>Manage item quantities, equipment slots, money, and shop prices.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Inventory, equipment, and trading</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Play it, unpack it, build it.</h2><div class="overview-steps"><article><b>01</b><h3>Feel the rule</h3><p>Play the finished mini game and discover the rule added in this step.</p></article><article><b>02</b><h3>Inspect one frame</h3><p>Trace values through input, state update, and drawing.</p></article><article><b>03</b><h3>Tune and extend</h3><p>Read the Ebitengine code, tune its values, and make the rule your own.</p></article></div></section><nav class="lesson-pager"><a href="../stats-status/">← STEP 04<strong>Stats and Status Effects</strong></a><a href="../world-encounters/">STEP 06 →<strong>World Map and Encounters</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn inventory, equipment slots, gold, and shop purchase logic in this Ebitengine lesson.">
+  <title>STEP 05 — Equipment Shop | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Command RPG</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/rpg/inventory-shop/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Command RPG</a><span>STEP 05 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Equipment Shop</h1>
+      <p>Manage item quantities, equipment slots, gold, and shop prices. Every shop in every RPG boils down to three checks: already owned, not enough gold, or purchase successful.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Inventory, equipment, and trading</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
+          <h2>Buy the sword, shield, and two potions.</h2>
+        </div>
+        <p>Press 1–3 or tap a row to buy. You start with 150 gold — spend it wisely to complete the shopping list.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div>
+        <div id="game-wrap">
+          <iframe class="lesson-game-frame" title="Equipment Shop" src="../../../../play/inventory-shop/" allow="autoplay; fullscreen"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / INVENTORY &amp; SHOP</p>
+        <h2>Every shop is just<br>three checks</h2>
+        <p class="lesson-lead">Shop logic has three sequential gates: ① <strong>already owned?</strong> → reject, ② <strong>enough gold?</strong> → reject if not, ③ <strong>branch by slot type</strong> → toggle a bool for equipment, increment a counter for consumables. Nail these three steps and you can build any shop in any RPG.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Define items as a slice of structs</h3>
+          <p>Bundling name, slot, price, and stat bonuses into a struct lets you loop through the shop list for both rendering and purchase logic without duplicating data.</p>
+          <code>shop = []item{{"Coral Sword", "weapon", 60, ...}}</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Equipment slots as booleans</h3>
+          <p>Weapon and armor each get a single <code>bool</code>. Once <code>sword = true</code>, any later purchase attempt hits the "already owned" gate. Consumables use a counter instead because you can own more than one.</p>
+          <code>g.sword = true</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Deduct gold after all checks pass</h3>
+          <p>Only subtract gold after both ownership and affordability checks succeed. Deducting first and checking afterward risks silent bugs where gold goes negative without the purchase completing.</p>
+          <code>g.gold -= it.price</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE PURCHASE RULE</p>
+        <div class="formula-lines">
+          <code>owned := (choice == 0 &amp;&amp; g.sword) || (choice == 1 &amp;&amp; g.shield)</code>
+          <span>gate 1: already owned?</span>
+          <code>if owned { message = "already equipped" }</code>
+          <span>gate 2: enough gold?</span>
+          <code>else if g.gold &lt; it.price { message = "not enough gold" }</code>
+          <span>gate 3: purchase succeeds</span>
+          <code>else { g.gold -= it.price; ... }</code>
+        </div>
+        <p>After passing both gates, a <code>switch choice</code> branches on slot type. Weapon sets a bool, armor sets another bool, consumable increments a counter — each slot stores state in the shape that makes sense for it.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Purchase check and slot update</h3>
+          <p>When the player selects an item, the code runs the two gate checks in order. On success it deducts gold and updates the matching slot. The <code>switch</code> keeps each slot type's update logic isolated and easy to extend.</p>
+        </div>
+        <pre><code>owned := (choice == 0 &amp;&amp; g.sword) || (choice == 1 &amp;&amp; g.shield)
+<span>if</span> owned {
+    g.message = it.name + " is already equipped."
+} <span>else if</span> g.gold &lt; it.price {
+    g.message = "Not enough gold."
+} <span>else</span> {
+    g.gold -= it.price
+    <span>switch</span> choice {
+    <span>case</span> 0: g.sword = true
+    <span>case</span> 1: g.shield = true
+    <span>case</span> 2: g.potions++
+    }
+    g.message = "Bought " + it.name + "!"
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT SLOT CHECK</p>
+          <h3>No check means duplicate purchases</h3>
+          <p>Without the ownership gate the player can buy the same sword three times, spending gold with no benefit. One boolean prevents the whole problem.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH SLOTS</p>
+          <h3>Slot types make extensions clean</h3>
+          <p>Using bools for equipment and counters for consumables from the start makes future features — like selling back items or wearing two rings — straightforward to add without restructuring the data.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Add a new item to the shop</h3>
+          <p>Append one more struct literal to the <code>shop</code> slice: a "Magic Staff" for 80 gold in the "weapon" slot with <code>attack: 15</code>. The loop-driven rendering and purchase logic will pick it up automatically.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../stats-status/">← STEP 04<strong>Stats and Status Effects</strong></a>
+      <a href="../world-encounters/">STEP 06 →<strong>World Encounters</strong></a>
+    </nav>
+  </main>
+  <footer>
+    <div class="brand"><span>EBI</span> SHOWCASE</div>
+    <p>Made with Go + Ebitengine.</p>
+    <a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a>
+  </footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

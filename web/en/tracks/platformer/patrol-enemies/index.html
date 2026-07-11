@@ -1,1 +1,132 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Stompable Enemy Garden | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/platformer/patrol-enemies/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Side-scrolling Action</a><span>STEP 03 / 05</span></div><section class="overview-hero"><p class="eyebrow">Build a Mario-style game</p><h1>Stompable Enemy Garden</h1><p>Stomp patrolling enemies from above and take damage from the side.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Enemy states and stomp collision</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Play it, unpack it, build it.</h2><div class="overview-steps"><article><b>01</b><h3>Feel the rule</h3><p>Play the finished mini game and discover the rule added in this step.</p></article><article><b>02</b><h3>Inspect one frame</h3><p>Trace values through input, state update, and drawing.</p></article><article><b>03</b><h3>Tune and extend</h3><p>Read the Ebitengine code, tune its values, and make the rule your own.</p></article></div></section><nav class="lesson-pager"><a href="../moving-platforms/">← STEP 02<strong>Moving Platform Valley</strong></a><a href="../scrolling-stage/">STEP 04 →<strong>Scrolling Hills</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn patrol enemies and Mario-style stomp detection in Ebitengine. Enemies reverse at platform edges; landing on top kills them — real Go code explained.">
+  <title>STEP 03 — Stompable Enemy Garden | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/platformer/patrol-enemies/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Side-scrolling Action</a><span>STEP 03 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Stompable Enemy Garden</h1>
+      <p>Stomp patrolling enemies from above and reach the flag. This lesson adds the classic Mario rule: land on top to defeat, touch from the side to take damage.</p>
+      <div class="overview-concept"><small>CONCEPT THIS STEP</small><strong>Enemy patrol and stomp detection</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Stomp every enemy and reach the flag.</h2></div>
+        <p>A/D or tap the lower screen to move. Space or tap the upper screen to jump. You have 3 lives — a side hit costs one.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Stompable Enemy Garden" src="../../../../play/patrol-enemies/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / PATROL &amp; STOMP</p>
+        <h2>Why does jumping on top<br>defeat the enemy?</h2>
+        <p class="lesson-lead">Collision detection doesn't just ask "are they overlapping?" — it also asks <strong>"from which direction?"</strong>. A stomp is only registered when the player is falling (<code>vy &gt; 0</code>) AND their feet were above the enemy's head before the overlap. Any other contact means damage. Enemies patrol by reversing direction at platform edges, or whenever their footing disappears.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Patrol</h3>
+          <p>Each enemy moves by <code>vx</code> every frame. When the enemy reaches a platform edge or loses ground support, <code>vx</code> flips sign. The enemy bounces endlessly within its patrol zone.</p>
+          <code>e.vx = -e.vx // reverse</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Stomp detection</h3>
+          <p>Overlap is confirmed first, then check: is the player falling (<code>vy &gt; 1</code>) and was their foot above the enemy's top (<code>oldBottom &lt;= e.y+8</code>)? If yes, it's a stomp.</p>
+          <code>if vy &gt; 1 &amp;&amp; oldBottom &lt;= e.y+8</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Damage</h3>
+          <p>Any non-stomp contact deducts one life and respawns the player at the start position. Three losses trigger game over.</p>
+          <code>g.life--; g.player.x = 30</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE ONE-LINE RULE</p>
+        <div class="formula-lines">
+          <code>if vy &gt; 1 &amp;&amp; oldBottom &lt;= e.y+8 { stomp! }</code>
+          <span>otherwise</span>
+          <code>else { take damage }</code>
+        </div>
+        <p>The "from above" direction is determined by comparing <code>oldBottom</code> (the player's foot position last frame) with the enemy's top (<code>e.y + 8</code>). A small tolerance makes close calls feel satisfying rather than unfair.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>One if-else branches<br>stomp vs damage</h3>
+          <p>Once overlap is confirmed, falling speed and last-frame foot position decide the outcome. A stomp bounces the player upward (<code>vy = -8</code>), enabling multi-stomps in a single jump.</p>
+        </div>
+        <pre><code><span>if</span> overlap(g.player, e.rect) {
+    <span>if</span> g.vy > 1 &amp;&amp; oldBottom &lt;= e.y+8 {
+        <i>// stomp!</i>
+        e.alive = <span>false</span>
+        g.player.y = e.y - g.player.h
+        g.vy = -8 <i>// bounce the player up</i>
+    } <span>else</span> {
+        <i>// side or bottom contact</i>
+        g.life--
+        g.player.x = 30
+        g.player.y = 590
+        g.vx, g.vy = 0, 0
+        <span>if</span> g.life &lt;= 0 {
+            g.over = <span>true</span>
+        }
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT DIRECTION CHECK</p>
+          <h3>Jumping on top still damages you</h3>
+          <p>A plain overlap check can't tell stomp from side hit. Without the direction condition, every contact deals damage and the game feels broken.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH EDGE PATROL</p>
+          <h3>Enemies patrol automatically</h3>
+          <p>Checking for platform edge support means enemies reverse course on their own. Just change starting positions and speeds to create varied difficulty.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Adjust enemy speed and life count</h3>
+          <p>Raise individual <code>vx</code> values for faster enemies, or increase <code>g.life</code> for more forgiveness. Adding more enemies or changing their starting platforms dramatically shifts difficulty.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../moving-platforms/">← STEP 02<strong>Moving Platform Valley</strong></a>
+      <a href="../scrolling-stage/">STEP 04 →<strong>Scrolling Hills</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

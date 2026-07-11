@@ -1,1 +1,83 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>100体の群れ | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/survivors/swarm/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 大量敵サバイバル</a><span>STEP 03 / 06</span></div><section class="overview-hero"><p class="eyebrow">Vampire Survivors型ゲームを作る</p><h1>100体の群れ</h1><p>大量の敵を再利用し、近くにいる相手だけを調べて処理を軽くします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>プールと空間分割</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><a href="../auto-turret/">← STEP 02<strong>自動砲台サバイバル</strong></a><a href="../experience-draft/">STEP 04 →<strong>経験値と三択強化</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="固定サイズの配列で100体の敵をメモリ効率よく管理するEbitengine版サバイバルゲームの第3ステップ。">
+  <title>STEP 03 — 100体の群れ | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/survivors/swarm/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 大量敵サバイバル</a><span>STEP 03 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>100体の群れ</h1>
+      <p>常に100体の敵が画面にいます。倒すとすぐ別の場所に再出現。固定サイズの配列で毎フレーム全員を更新しても速いのはなぜでしょうか？</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>オブジェクトプール（固定配列）</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>100体の敵を100体倒すまで生き残れ！</h2></div><p>WASD・方向キー・ドラッグで移動。金色のオーラに敵が入ると倒せます。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="100体の群れ" src="../../../../play/swarm/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / OBJECT POOL</p>
+        <h2>なぜ100体でも<br>処理が重くならないの？</h2>
+        <p class="lesson-lead">スライスはメモリを動的に確保するため、追加・削除のたびに少し時間がかかります。最初から<strong>固定サイズの配列</strong>を用意して、倒した敵の「席」にすぐ次の敵を上書きすると、メモリ確保のコストがゼロになります。これを<strong>オブジェクトプール</strong>と呼びます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>固定配列</h3><p><code>[100]mob</code> と宣言すると、ちょうど100個の場所が最初からメモリに確保されます。スライスと違い、要素の追加でサイズが変わりません。</p><code>mobs [100]mob</code></article>
+        <article><span class="concept-number">2</span><h3>即時リスポーン</h3><p>敵を倒したとき、配列から「削除」せず同じインデックスに新しい敵を上書きします。常に100体が存在し続けます。</p><code>g.spawn(i)</code></article>
+        <article><span class="concept-number">3</span><h3>オーラ攻撃</h3><p>自機の周囲62ピクセルが攻撃範囲です。18フレームごとに範囲内の敵をキルカウントし、すぐ同じ席に再スポーンします。</p><code>if d &lt; 62 &amp;&amp; frame%18 == 0</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE POOL RULE</p>
+        <div class="formula-lines"><code>mobs [100]mob  // 固定サイズ</code><span>撃破時</span><code>g.mobs[i] = newMob()  // 上書きリスポーン</code></div>
+        <p>配列を使うもう一つの利点はキャッシュ効率です。100個の構造体がメモリ上で連続して並ぶので、CPUが一度に読み込める量が増え、ループが速くなります。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>上書きリスポーンで常に100体</h3>
+          <p>倒した敵（オーラ範囲内かつ18フレームタイミング）は同じインデックスで <code>spawn</code> を呼びます。<code>spawn</code> はランダムな角度と距離で自機の周りに新しい座標を計算して上書きするだけです。</p>
+        </div>
+        <pre><code><span>func</span> (g *game) spawn(i int) {
+    a := g.rng.Float64() * math.Pi * 2
+    r := 280 + g.rng.Float64()*120
+    g.mobs[i] = mob{
+        g.px + math.Cos(a)*r,
+        g.py + math.Sin(a)*r, true,
+    }
+}
+
+<i>// 更新ループ内：倒したらその席に再スポーン</i>
+<span>if</span> d &lt; 62 &amp;&amp; g.frame%18 == 0 {
+    g.kills++
+    g.spawn(i)
+    <span>continue</span>
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT A POOL</p><h3>append/削除でメモリが揺れる</h3><p>スライスへの頻繁な追加・削除はガベージコレクタの仕事を増やします。100体を常に生成・破棄すると処理が重くなります。</p></article>
+        <article><p class="eyebrow">WITH A POOL</p><h3>配列は最初から決まっている</h3><p>固定配列は「席」が常に100個。追加・削除のコストがなく、メモリも断片化しません。大量の敵を扱うゲームの定番技法です。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>100体と18フレームを変えよう</h3><p>配列サイズ <code>[100]mob</code> を <code>[200]mob</code> にするとより激しくなります。オーラ攻撃の間隔 <code>18</code> を小さくするとクリアしやすくなります。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../auto-turret/">← STEP 02<strong>自動砲台サバイバル</strong></a><a href="../experience-draft/">STEP 04 →<strong>経験値ドラフト</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

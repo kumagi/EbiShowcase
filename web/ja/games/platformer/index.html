@@ -1,5 +1,100 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 10 — Platformer | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/games/platformer/" lang="en">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← 全レベル</a><span>LEVEL 10</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Platformer</h1><p>重力のある世界で地面や壁へのめり込みを直し、カメラで広いコースを映します。</p><div class="overview-concept"><small>このゲームで学ぶこと</small><strong>衝突の解決とカメラ</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Platformer</h2></div><p>A・Dまたは画面下半分で移動。スペースまたは画面上半分でジャンプします。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 10</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Platformer" src="../../../play/platformer/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>横と縦を分けて、めり込みを戻す</h2><p>まずXだけ動かして壁と重なった分を戻し、次にYだけ動かして床との重なりを戻します。カメラ座標を引いて描けば、キャラクターを追うスクロールになります。</p></div><pre><code>player.X += vx
-resolveHorizontal()
-player.Y += vy
-resolveVertical()
-screenX := player.X - cameraX</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>マリオ型アクションの土台</h2><div class="overview-steps"><article><b>01</b><h3>加速する</h3><p>左右入力を速度へ足し、重力を毎フレーム縦速度へ足します。</p></article><article><b>02</b><h3>押し戻す</h3><p>地形との重なりを移動方向と反対へ戻して、床や壁で止めます。</p></article><article><b>03</b><h3>世界を映す</h3><p>プレイヤーを追うカメラを使い、画面より広いコースを描きます。</p></article></div></section><nav class="lesson-pager"><a href="../sokoban/">← LEVEL 09<strong>Sokoban</strong></a><a href="../dungeon/">LEVEL 11 →<strong>Top-down Dungeon</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="GoとEbitengineで作った横スクロールアクションから、X軸・Y軸分離の衝突解決とスムーズなカメラ追従を学ぶレッスンです。">
+  <title>LEVEL 10 — Platformer | Ebi Showcase</title>
+  <link rel="canonical" href="./">
+  <link rel="alternate" hreflang="ja" href="../../../ja/games/platformer/">
+  <link rel="alternate" hreflang="en" href="../../../en/games/platformer/">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../en/games/platformer/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← 全レベル</a><span>LEVEL 10</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Platformer</h1>
+      <p>横スクロールアクションの核心は2つです。「X軸とY軸を分けて衝突解決する」こと、そして「カメラがプレイヤーをなめらかに追いかける」こと。どちらも数行のコードで実現できます。</p>
+      <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>衝突の解決とカメラ</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>走って、ジャンプして、コインを集めろ。</h2></div><p>A/D または左右矢印で走り、スペースまたは上タッチでジャンプ。コイン7枚を集めてゴールへ。落ちたらミスです。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 10</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Platformer" src="../../../play/platformer/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / COLLISION AND CAMERA</p>
+        <h2>壁にめり込まず、<br>カメラはどう動くの？</h2>
+        <p class="lesson-lead">衝突解決の秘訣は<strong>X軸とY軸を別々に処理する</strong>ことです。X方向に動かして壁と重なったらX方向だけ戻す、次にY方向に動かして重なったらY方向だけ戻す。この2ステップにより、壁を滑るように歩けて、天井に頭をぶつけてジャンプが止まる、という自然な動きが生まれます。カメラは「目標位置」に向けて毎フレーム少しずつ近づくことで、なめらかな追従を実現します。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>X軸の衝突</h3><p>X方向に動いた後、プラットフォームと重なっていたら押した方向に応じてX座標を戻します。Y座標はそのままなので、床の角で引っかかりません。</p><code>player.x = p.x - player.w</code></article>
+        <article><span class="concept-number">2</span><h3>Y軸の衝突</h3><p>Y方向に動いた後に同じように確認。上から乗ったら <code>onGround = true</code> にしてジャンプを許可し、速度を0にして貫通を防ぎます。</p><code>onGround = true</code></article>
+        <article><span class="concept-number">3</span><h3>カメラの追従</h3><p>目標X座標を計算し、現在位置から目標へ毎フレーム9%だけ近づきます。この「線形補間」により、急激なカメラジャンプがなくなります。</p><code>camera += (target - camera) * .09</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE CAMERA LERP</p>
+        <div class="formula-lines"><code>target = player.x - width * 0.38</code><span>そして毎フレーム</span><code>camera += (target - camera) * 0.09</code></div>
+        <p>プレイヤーが画面の38%の位置にくるような目標を毎フレーム計算し、カメラは目標との差の9%だけ動きます。差が大きいほど速く、近づくほどゆっくりになります。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>X → 衝突 → Y → 衝突<br>の順番が大切</h3>
+          <p>X方向の移動と衝突解決を終えてから、Y方向を処理します。混ぜると「壁の角でコーナーカットできてしまう」バグが起きます。</p>
+        </div>
+        <pre><code><i>// X方向に動かして衝突を解決</i>
+g.player.x += g.vx
+<span>for</span> _, p := range g.platforms {
+    <span>if</span> overlap(g.player, p) {
+        <span>if</span> g.vx > 0 {
+            g.player.x = p.x - g.player.w
+        } <span>else</span> <span>if</span> g.vx < 0 {
+            g.player.x = p.x + p.w
+        }
+        g.vx = 0
+    }
+}
+<i>// Y方向に動かして衝突を解決</i>
+g.player.y += g.vy
+g.onGround = false
+<span>for</span> _, p := range g.platforms {
+    <span>if</span> overlap(g.player, p) {
+        <span>if</span> g.vy > 0 { <i>// 落下中なら接地</i>
+            g.player.y = p.y - g.player.h
+            g.onGround = true
+        } <span>else</span> <span>if</span> g.vy < 0 { <i>// 上昇中なら天井</i>
+            g.player.y = p.y + p.h
+        }
+        g.vy = 0
+    }
+}
+<i>// カメラをなめらかに追従</i>
+target := g.player.x - width*.38
+g.camera += (target - g.camera) * .09</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT AXIS SEPARATION</p><h3>コーナーで詰まる</h3><p>XYを同時に処理すると、壁の角にプレイヤーがはまって動けなくなるバグが起きます。軸を分けるだけで多くのコーナーケースが解決します。</p></article>
+        <article><p class="eyebrow">WITH AXIS SEPARATION</p><h3>滑らかな移動と自然な接触</h3><p>斜面的な壁も角も、X/Y独立の処理なら自然に滑り抜けます。ジャンプ中に天井に当たってもX移動は継続します。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>数字を変えて実験しよう</h3><p>カメラの <code>0.09</code> を大きくするとカメラが素早くなり、小さくするとゆっくりついてきます。ジャンプ速度 <code>-12.5</code> と重力 <code>0.62</code> を変えると、ゲームの手ざわりが大きく変わります。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../sokoban/">← LEVEL 09<strong>Sokoban</strong></a><a href="../dungeon/">LEVEL 11 →<strong>Dungeon</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

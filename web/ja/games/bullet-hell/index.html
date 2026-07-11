@@ -1,3 +1,91 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 12 — Bullet Hell Boss | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/games/bullet-hell/" lang="en">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← 全レベル</a><span>LEVEL 12</span></div><section class="overview-hero"><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>Bullet Hell Boss</h1><p>角度から回転弾幕と狙い撃ち弾を作り、大量の弾を更新します。</p><div class="overview-concept"><small>このゲームで学ぶこと</small><strong>弾幕パターンと最適化</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Bullet Hell Boss</h2></div><p>WASD・方向キー・ドラッグで移動。弾は自動で発射されます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 12</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Bullet Hell Boss" src="../../../play/bullet-hell/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>角度を等分して弾の速度に変える</h2><p>円を弾の数で等分し、cosで横速度、sinで縦速度を作ると円形弾幕になります。開始角度を毎回ずらすだけで、回転して見える模様になります。</p></div><pre><code>angle := spin + i*2*math.Pi/count
-vx := math.Cos(angle) * speed
-vy := math.Sin(angle) * speed</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>大量の弾を規則から生み出す</h2><div class="overview-steps"><article><b>01</b><h3>パターンを作る</h3><p>角度、速さ、発射間隔を組み合わせて弾幕を定義します。</p></article><article><b>02</b><h3>まとめて更新する</h3><p>弾のスライスを1回のループで移動・衝突判定します。</p></article><article><b>03</b><h3>片づける</h3><p>画面外へ出た弾をすぐ削除し、必要な弾だけを残します。</p></article></div></section><nav class="lesson-pager"><a href="../dungeon/">← LEVEL 11<strong>Top-down Dungeon</strong></a><a href="../../">CURRICULUM →<strong>全トラックを見る</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="GoとEbitengineで作った弾幕ゲームから、円形弾・狙い撃ち弾の計算方法と大量オブジェクトの最適化を学ぶレッスンです。">
+  <title>LEVEL 12 — Bullet Hell | Ebi Showcase</title>
+  <link rel="canonical" href="./">
+  <link rel="alternate" hreflang="ja" href="../../../ja/games/bullet-hell/">
+  <link rel="alternate" hreflang="en" href="../../../en/games/bullet-hell/">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../en/games/bullet-hell/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← 全レベル</a><span>LEVEL 12</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Bullet Hell</h1>
+      <p>画面を埋め尽くす弾幕も、1発1発は「位置と速度を持つ小さなデータ」です。円形に並べる計算、自機を狙う計算、そして画面外へ消えた弾を効率よく削除するパターンを学びます。</p>
+      <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>弾幕と最適化</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>ボスを倒せ。弾を避けて。</h2></div><p>WASD・矢印キー・ドラッグで自機を動かします。弾は自動発射です。ボスのHPゲージを0にすれば勝利。ライフが0になるとゲームオーバーです。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 12</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Bullet Hell" src="../../../play/bullet-hell/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / BULLET PATTERNS AND OPTIMIZATION</p>
+        <h2>弾を円形に並べるには<br>どうしたらいいの？</h2>
+        <p class="lesson-lead">答えは<strong>三角関数（さんかくかんすう）</strong>です。難しく聞こえますが、「円の上の点の座標は <code>cos(角度)</code> と <code>sin(角度)</code> で求まる」ということだけ覚えれば十分です。全周360度を弾の数で等分し、それぞれの角度に <code>cos</code>・<code>sin</code> をかけて速度にすれば、完全な円形弾幕が生まれます。さらに回転スピンを加えると、フレームごとに角度がずれて渦巻き弾幕になります。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>円形弾幕</h3><p>全周（2π）を弾の数で割った角度ずつずらして発射します。<code>cos(a)</code> がX方向、<code>sin(a)</code> がY方向の速度成分になります。</p><code>a = i * math.Pi * 2 / count</code></article>
+        <article><span class="concept-number">2</span><h3>狙い撃ち弾</h3><p>ボスから自機へのベクトルを <code>Atan2</code> で角度に変換します。その角度を中心にして扇形に広げると、自機への追尾弾幕になります。</p><code>base = math.Atan2(py-128, px-240)</code></article>
+        <article><span class="concept-number">3</span><h3>後ろから削除</h3><p>画面外に出た弾は毎フレーム削除します。後ろから（大きい添え字から）ループすることで、削除しても添え字がずれません。</p><code>for i := len-1; i &gt;= 0; i--</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE CIRCLE SHOT</p>
+        <div class="formula-lines"><code>a = spin + i * (2π / count)</code><span>速度へ変換</span><code>vx, vy = cos(a) * speed, sin(a) * speed</code></div>
+        <p><code>spin</code> はフレームごとに少しずつ増えるので、次の波では全体が少し回転します。これだけで螺旋・渦巻きパターンが生まれます。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>3種類の弾幕を<br>フレームタイミングで切り替え</h3>
+          <p>フレーム番号を周期で割った余りを見て、どの弾パターンを発射するか決めます。周期を変えるだけで難易度が変わります。</p>
+        </div>
+        <pre><code><i>// 38フレームごとに円形弾幕（スピン付き）</i>
+<span>if</span> g.frame%38 == 0 {
+    count := 18
+    spin := float64(g.frame) * .017 <i>// 回転量</i>
+    <span>for</span> i := 0; i &lt; count; i++ {
+        a := spin + float64(i)*math.Pi*2/float64(count)
+        speed := 2.0 + float64((g.frame/38)%3)*.35
+        g.bullets = append(g.bullets,
+            bullet{240, 128, math.Cos(a)*speed, math.Sin(a)*speed, 6, true})
+    }
+}
+<i>// 91フレームごとに自機狙い扇形弾</i>
+<span>if</span> g.frame%91 == 0 {
+    base := math.Atan2(g.py-128, g.px-240) <i>// 自機への角度</i>
+    <span>for</span> i := -3; i &lt;= 3; i++ {
+        a := base + float64(i)*.11
+        g.bullets = append(g.bullets,
+            bullet{240, 128, math.Cos(a)*3.0, math.Sin(a)*3.0, 7, true})
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT PATTERNS</p><h3>ランダムだけでは単調</h3><p>弾をランダムに飛ばすだけでは、プレイヤーが避ける楽しさを感じにくくなります。規則的なパターンがあるから、「読んで避ける」快感が生まれます。</p></article>
+        <article><p class="eyebrow">WITH BULLET PATTERNS</p><h3>読んで、避ける快感</h3><p>円形弾は壁を作り、狙い弾は圧力をかけます。2種類を組み合わせるだけで、覚えがいのある弾幕になります。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>数字を変えて実験しよう</h3><p>円形弾の <code>count</code> を増やすと密な弾幕になります。<code>spin</code> の係数を大きくすると渦が速く回ります。狙い弾の <code>0.11</code> を変えると扇の広がりが変わります。<code>38</code> や <code>91</code> の周期を変えると発射タイミングが変わります。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../dungeon/">← LEVEL 11<strong>Dungeon</strong></a><span></span></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

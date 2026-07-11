@@ -1,1 +1,81 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>自動砲台サバイバル | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/survivors/auto-turret/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 大量敵サバイバル</a><span>STEP 02 / 06</span></div><section class="overview-hero"><p class="eyebrow">Vampire Survivors型ゲームを作る</p><h1>自動砲台サバイバル</h1><p>一定時間ごとに最も近い敵を探し、自動で弾を発射します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>最も近い敵とクールダウン</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><a href="../arena-dodge/">← STEP 01<strong>アリーナ回避</strong></a><a href="../swarm/">STEP 03 →<strong>100体の群れ</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="最も近い敵を自動で狙いクールダウン付きで発射するEbitengine版サバイバルゲームの第2ステップ。">
+  <title>STEP 02 — 自動砲台サバイバル | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/survivors/auto-turret/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 大量敵サバイバル</a><span>STEP 02 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>自動砲台サバイバル</h1>
+      <p>プレイヤーは動くだけ。砲台が28フレームごとに最も近い敵を探して自動で弾を放ちます。30体倒すとクリアです。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>最近傍探索とクールダウン発射</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>動くだけで砲台が自動的に敵を撃つ！</h2></div><p>WASD・方向キー・ドラッグで移動。砲台は自動で最も近い敵を狙います。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="自動砲台サバイバル" src="../../../../play/auto-turret/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / AUTO AIMING</p>
+        <h2>どうして砲台は<br>勝手に狙えるの？</h2>
+        <p class="lesson-lead">全ての敵との距離を一つずつ比べて、最も近い敵だけを記録します。この「全部と比べる」ループが<strong>最近傍探索</strong>です。その敵への方向を正規化して速度にするだけで、自動照準の完成です。クールダウンで発射間隔を制限すれば、Survivors型攻撃の基本形になります。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>最近傍探索</h3><p>全ての敵との距離を順番に測ります。これまでの最小値より小さければ更新し続けます。最後に残ったのが最近傍です。</p><code>if d &lt; dist { best = i }</code></article>
+        <article><span class="concept-number">2</span><h3>クールダウン</h3><p>毎フレーム発射すると多すぎます。<code>frame%28==0</code> で28フレームに1回だけ照準・発射します。間隔を変えると連射速度が変わります。</p><code>if g.frame%28 == 0</code></article>
+        <article><span class="concept-number">3</span><h3>弾の速度計算</h3><p>「敵の位置 − 自機の位置」を距離で割って正規化し、速さ7を掛けます。これで敵に向かうちょうど良い速度ベクトルになります。</p><code>vx = (e.x - g.px) / dist * 7</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE TARGETING RULE</p>
+        <div class="formula-lines"><code>best, dist := 0, math.MaxFloat64</code><span>全敵をループ → 最近傍に向けて</span><code>vx = (e.x - g.px) / dist * 7</code></div>
+        <p>「最大値から始めて、より小さければ更新」のパターンは最小値を探す定番の書き方です。距離の比較には毎回 <code>math.Hypot</code> を使い、最近傍が決まったら同じ距離を割り算に再利用します。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>探す → 待つ → 狙って撃つ</h3>
+          <p>28フレームごとに最近傍ループを走らせ、その敵への正規化ベクトルに速さを掛けた弾をスライスに追加します。弾は毎フレーム進み、画面外か敵に当たれば削除します。</p>
+        </div>
+        <pre><code><span>if</span> g.frame%28 == 0 &amp;&amp; len(g.enemies) &gt; 0 {
+    best, dist := 0, math.MaxFloat64
+    <span>for</span> i, e := range g.enemies {
+        d := math.Hypot(e.x-g.px, e.y-g.py)
+        <span>if</span> d &lt; dist { best, dist = i, d }
+    }
+    e := g.enemies[best]
+    g.shots = append(g.shots, body{
+        g.px, g.py,
+        (e.x - g.px) / dist * 7,
+        (e.y - g.py) / dist * 7, 5,
+    })
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT TARGETING</p><h3>ランダム方向では当たらない</h3><p>敵の方向を計算せずにランダムに撃つと、敵が増えても弾がほとんど当たらない退屈なゲームになります。</p></article>
+        <article><p class="eyebrow">WITH AUTO AIM</p><h3>プレイヤーは「避ける」に集中できる</h3><p>攻撃を自動化すると、プレイヤーは移動だけを考えればよくなります。これがSurvivors型ゲームの中核設計です。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>クールダウンと弾速を変えよう</h3><p><code>frame%28</code> の <code>28</code> を小さくすると連射になります。弾の速さ <code>7</code> を上げると遠くまで届き、下げると敵が接近してから当たります。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../arena-dodge/">← STEP 01<strong>アリーナ回避</strong></a><a href="../swarm/">STEP 03 →<strong>100体の群れ</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

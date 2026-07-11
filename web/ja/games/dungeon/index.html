@@ -1,4 +1,92 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 11 — Top-down Dungeon | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/games/dungeon/" lang="en">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← 全レベル</a><span>LEVEL 11</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Top-down Dungeon</h1><p>敵の考え方を状態に分け、発見したプレイヤーを追わせます。</p><div class="overview-concept"><small>このゲームで学ぶこと</small><strong>敵AIと状態遷移</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Top-down Dungeon</h2></div><p>WASDまたは画面下で移動。スペースまたは画面上で剣を振り、全敵を倒して出口へ。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 11</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Top-down Dungeon" src="../../../play/dungeon/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>敵の「いま」を状態で表す</h2><p>敵には巡回中と追跡中という状態があります。プレイヤーが近づくと追跡へ、遠ざかると巡回へ戻します。状態ごとにUpdateの行動を切り替えると、考えているような敵になります。</p></div><pre><code>switch enemy.State {
-case Patrol: enemy.walkRoute()
-case Chase:  enemy.moveToward(player)
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>敵AIを小さな判断に分ける</h2><div class="overview-steps"><article><b>01</b><h3>感じる</h3><p>敵からプレイヤーまでの距離を測ります。</p></article><article><b>02</b><h3>決める</h3><p>距離を条件に、巡回と追跡の状態を切り替えます。</p></article><article><b>03</b><h3>行動する</h3><p>選ばれた状態に対応する移動を実行します。</p></article></div></section><nav class="lesson-pager"><a href="../platformer/">← LEVEL 10<strong>Platformer</strong></a><a href="../bullet-hell/">LEVEL 12 →<strong>Bullet Hell Boss</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="GoとEbitengineで作ったダンジョン探索ゲームから、敵AIの状態遷移（巡回・追跡の切り替え）を学ぶレッスンです。">
+  <title>LEVEL 11 — Dungeon | Ebi Showcase</title>
+  <link rel="canonical" href="./">
+  <link rel="alternate" hreflang="ja" href="../../../ja/games/dungeon/">
+  <link rel="alternate" hreflang="en" href="../../../en/games/dungeon/">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../en/games/dungeon/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← 全レベル</a><span>LEVEL 11</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Dungeon</h1>
+      <p>敵はただまっすぐ動くだけでは面白くありません。「普段はランダムに歩き回り、プレイヤーが近づくと追いかける」という状態の切り替えが、生きているような敵AIを生み出します。</p>
+      <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>敵AIと状態遷移</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>全ての敵を倒して脱出せよ。</h2></div><p>WASD または矢印キーで移動、スペースまたは上タッチで剣攻撃。敵を全て倒すと出口が開きます。ライフが0になるとゲームオーバーです。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 11</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Dungeon" src="../../../play/dungeon/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / ENEMY AI AND STATE TRANSITIONS</p>
+        <h2>敵は、どうやって<br>プレイヤーを追いかけるの？</h2>
+        <p class="lesson-lead">答えは<strong>状態遷移（じょうたいせんい）</strong>です。敵は常に「今どの状態か」を整数で持っています。状態0は「巡回」、状態1は「追跡」。プレイヤーとの距離を毎フレーム測り、近ければ状態を1に切り替えます。状態によって動き方のルールを変えるだけで、まるで生きているような敵の動きが生まれます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>stateフィールド</h3><p>敵の構造体に <code>state int</code> を持たせます。0 = 巡回、1 = 追跡。たった1つの整数が敵の「気持ち」を表します。</p><code>state, timer int</code></article>
+        <article><span class="concept-number">2</span><h3>距離で切り替え</h3><p>毎フレーム、プレイヤーとの距離を計算します。165ピクセル以内なら追跡モードへ、230以上離れたら巡回モードに戻ります。</p><code>if dist &lt; 165 { e.state = 1 }</code></article>
+        <article><span class="concept-number">3</span><h3>状態ごとの動き</h3><p>state == 0（巡回）ではタイマーで向きを変えてランダムに動きます。state == 1（追跡）ではプレイヤーの方向へ一定速度で向かいます。</p><code>if e.state == 0 { … } else { … }</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE CHASE DIRECTION</p>
+        <div class="formula-lines"><code>dx, dy := (player.x - enemy.x), (player.y - enemy.y)</code><span>正規化して</span><code>vx, vy = dx/dist * speed, dy/dist * speed</code></article></div>
+        <p>差ベクトル（dx, dy）の長さで割ることで方向だけを取り出し（正規化）、それにスピードを掛けます。どんな方向でも一定の速さで向かわせることができます。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>距離で状態を切り替え、<br>状態で動きを変える</h3>
+          <p>毎フレーム、生きている敵全員について距離を測り、状態を更新し、状態に応じた動きをします。</p>
+        </div>
+        <pre><code><span>for</span> i := range g.enemies {
+    e := &amp;g.enemies[i]
+    <span>if</span> !e.alive { <span>continue</span> }
+    dist := math.Hypot((g.player.x+14)-e.x, (g.player.y+14)-e.y)
+    <i>// 距離で状態を切り替え</i>
+    <span>if</span> dist < 165 {
+        e.state = 1 <i>// 追跡モードへ</i>
+    } <span>else</span> <span>if</span> dist > 230 {
+        e.state = 0 <i>// 巡回モードへ</i>
+    }
+    <span>if</span> e.state == 0 { <i>// 巡回: タイマーで向きを変える</i>
+        e.timer--
+        <span>if</span> e.timer <= 0 {
+            e.vx, e.vy = -e.vy, e.vx <i>// 90度方向転換</i>
+            e.timer = 100
+        }
+    } <span>else</span> { <i>// 追跡: プレイヤーへ向かう</i>
+        e.vx = ((g.player.x+14) - e.x) / dist * 1.35
+        e.vy = ((g.player.y+14) - e.y) / dist * 1.35
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT STATE MACHINE</p><h3>ただ追いかけるだけ</h3><p>常にプレイヤーへ向かうだけの敵は、最初から画面端からまっすぐ突進してきます。予測が簡単すぎて面白くありません。</p></article>
+        <article><p class="eyebrow">WITH STATE MACHINE</p><h3>巡回して、気づいて、追う</h3><p>普段はうろうろしていて、近づいたときだけ追ってくる。この「気づき」が緊張感を生み、ゲームにメリハリをつけます。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>数字を変えて実験しよう</h3><p>追跡開始距離 <code>165</code> を大きくすると、敵が早めに気づいてプレッシャーが増します。追跡速度 <code>1.35</code> を上げると敵が速くなります。巡回の方向転換タイマー <code>100</code> を変えると動きパターンが変わります。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../platformer/">← LEVEL 10<strong>Platformer</strong></a><a href="../bullet-hell/">LEVEL 12 →<strong>Bullet Hell</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

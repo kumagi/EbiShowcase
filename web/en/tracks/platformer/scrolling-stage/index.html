@@ -1,1 +1,127 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Scrolling Hills | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/platformer/scrolling-stage/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Side-scrolling Action</a><span>STEP 04 / 05</span></div><section class="overview-hero"><p class="eyebrow">Build a Mario-style game</p><h1>Scrolling Hills</h1><p>Follow the player through a large stage and draw only what is visible.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Camera, culling, and checkpoints</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Play it, unpack it, build it.</h2><div class="overview-steps"><article><b>01</b><h3>Feel the rule</h3><p>Play the finished mini game and discover the rule added in this step.</p></article><article><b>02</b><h3>Inspect one frame</h3><p>Trace values through input, state update, and drawing.</p></article><article><b>03</b><h3>Tune and extend</h3><p>Read the Ebitengine code, tune its values, and make the rule your own.</p></article></div></section><nav class="lesson-pager"><a href="../patrol-enemies/">← STEP 03<strong>Stompable Enemy Garden</strong></a><a href="../powerup-adventure/">STEP 05 →<strong>Ebi Adventure</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn camera scrolling, culling, and checkpoints in Ebitengine. One subtraction converts world coordinates to screen coordinates — explained with real Go code.">
+  <title>STEP 04 — Scrolling Hills | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/platformer/scrolling-stage/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Side-scrolling Action</a><span>STEP 04 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Scrolling Hills</h1>
+      <p>Run through a 2500-pixel stage. The camera follows the player, off-screen objects are skipped during draw, and green flags become checkpoints.</p>
+      <div class="overview-concept"><small>CONCEPT THIS STEP</small><strong>Camera scroll, culling, and checkpoints</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Run through the hills to the goal.</h2></div>
+        <p>A/D or tap the lower screen to move. Space or tap the upper screen to jump. Pass a green flag to set a checkpoint.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Scrolling Hills" src="../../../../play/scrolling-stage/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / CAMERA SCROLL</p>
+        <h2>How does a small screen<br>show a huge world?</h2>
+        <p class="lesson-lead">All game logic uses <strong>world coordinates</strong>. When drawing, subtract the camera offset to get screen coordinates. The camera smoothly chases a target slightly ahead of the player. Objects that fall outside the screen window are skipped entirely — a technique called <em>culling</em>. These three ideas together make a scrolling platformer.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>World coordinates</h3>
+          <p>Physics and collision always use world X values (0–2470). The screen width never appears in the update logic — only in draw and camera code.</p>
+          <code>g.p.x = clamp(g.p.x+g.vx, 0, 2470)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Smooth camera follow</h3>
+          <p>Each frame the camera moves 8% of the distance toward its target (a point slightly behind the player). The percentage approach produces natural easing with no extra math.</p>
+          <code>camera += (target-camera)*.08</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Culling</h3>
+          <p>Before drawing each object, compute its screen X and skip it with <code>continue</code> if it is fully off screen. Invisible objects cost no draw calls.</p>
+          <code>if x+w &lt; 0 || x &gt; width { continue }</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE ONE-LINE RULE</p>
+        <div class="formula-lines">
+          <code>screenX = worldX - camera</code>
+          <span>that's it</span>
+          <code>// collision logic stays in world space</code>
+        </div>
+        <p>One subtraction bridges world and screen. Collision detection never needs to know about the camera — it always works in world coordinates, so moving the camera costs zero changes to the update logic.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Camera update and<br>culled drawing</h3>
+          <p><code>Update</code> runs all physics in world space and advances the camera. <code>Draw</code> converts each object to screen space and skips anything off screen.</p>
+        </div>
+        <pre><code><i>// Update: ease camera toward player</i>
+target := g.p.x - width*.4
+g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
+
+<i>// Draw: convert and cull</i>
+<span>for</span> _, b := <span>range</span> g.grounds {
+    x := b.x - g.camera <i>// world → screen</i>
+    <span>if</span> x+b.w &lt; 0 || x &gt; width {
+        <span>continue</span> <i>// off screen, skip</i>
+    }
+    vector.DrawFilledRect(s, float32(x), float32(b.y), ...)
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT WORLD COORDS</p>
+          <h3>You'd rewrite every object when scrolling</h3>
+          <p>If you used screen coordinates exclusively, every object's position would need updating whenever the camera moves. World coordinates make scrolling a one-variable change.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH SMOOTH CAMERA</p>
+          <h3>Easing feels natural, not robotic</h3>
+          <p>Moving 8% of the gap each frame means the camera slows as it catches up. Fast movements keep the player on screen; direction changes don't snap the view.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Change the camera lag factor</h3>
+          <p>Raise <code>.08</code> toward 1.0 for a camera that snaps instantly to the player. Lower it toward 0.01 for a dreamy lag that reveals upcoming terrain slowly.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../patrol-enemies/">← STEP 03<strong>Stompable Enemy Garden</strong></a>
+      <a href="../powerup-adventure/">STEP 05 →<strong>Ebi Adventure</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

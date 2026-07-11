@@ -1,3 +1,91 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 12 — Bullet Hell Boss | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/games/bullet-hell/" lang="ja">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 12</span></div><section class="overview-hero"><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>Bullet Hell Boss</h1><p>Create rotating rings and aimed volleys from angles, then update hundreds of shots.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Patterns and optimization</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Bullet Hell Boss</h2></div><p>Move with WASD, arrow keys, or drag. Your ship fires automatically.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 12</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Bullet Hell Boss" src="../../../play/bullet-hell/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Divide angles and turn them into velocity</h2><p>Divide a full circle by the number of shots. Cosine gives horizontal velocity and sine gives vertical velocity. Changing the starting angle for every volley makes the pattern appear to rotate.</p></div><pre><code>angle := spin + i*2*math.Pi/count
-vx := math.Cos(angle) * speed
-vy := math.Sin(angle) * speed</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>Create many shots from a few rules</h2><div class="overview-steps"><article><b>01</b><h3>Make patterns</h3><p>Combine angle, speed, and firing interval to define a barrage.</p></article><article><b>02</b><h3>Update together</h3><p>Move and collide the bullet slice in a single loop.</p></article><article><b>03</b><h3>Clean up</h3><p>Remove off-screen shots immediately so only useful objects remain.</p></article></div></section><nav class="lesson-pager"><a href="../dungeon/">← LEVEL 11<strong>Top-down Dungeon</strong></a><a href="../../">CURRICULUM →<strong>See all tracks</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn bullet patterns and optimization in Go and Ebitengine: circular shots with cos/sin, aimed spreads with Atan2, and safe backward deletion.">
+  <title>LEVEL 12 — Bullet Hell | Ebi Showcase</title>
+  <link rel="canonical" href="./">
+  <link rel="alternate" hreflang="ja" href="../../../ja/games/bullet-hell/">
+  <link rel="alternate" hreflang="en" href="../../../en/games/bullet-hell/">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../ja/games/bullet-hell/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 12</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Bullet Hell</h1>
+      <p>A screen full of bullets is just hundreds of tiny structs, each with a position and a velocity. Learn to arrange them in circles with cosine and sine, aim them at the player with Atan2, and remove the ones that leave the screen without slowing everything down.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Bullet patterns and optimization</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Deplete the boss. Dodge everything.</h2></div><p>WASD, arrow keys, or drag to move. Your ship fires automatically. Drain the boss HP bar to zero. Lose all five lives and it is game over.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 12</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Bullet Hell" src="../../../play/bullet-hell/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / BULLET PATTERNS AND OPTIMIZATION</p>
+        <h2>How do you arrange<br>bullets in a perfect circle?</h2>
+        <p class="lesson-lead">With <strong>cosine and sine</strong>. A point on the unit circle at angle <code>a</code> is exactly <code>(cos(a), sin(a))</code>. Divide the full circle (2π) evenly among the bullet count, compute an angle for each, multiply by speed, and you have a perfect ring of bullets. Add a slowly increasing spin offset and the ring rotates into a spiral every wave.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>Circular burst</h3><p>Divide 2π by the bullet count to get the angular step. Apply <code>cos</code> for the X velocity component and <code>sin</code> for Y.</p><code>a = i * math.Pi * 2 / count</code></article>
+        <article><span class="concept-number">2</span><h3>Aimed spread</h3><p>Use <code>Atan2</code> to convert the vector from the boss to the player into an angle, then fan bullets around that base angle.</p><code>base = math.Atan2(py-128, px-240)</code></article>
+        <article><span class="concept-number">3</span><h3>Backward removal</h3><p>Every frame, remove bullets that have left the screen. Iterating from the last index prevents index shifting when elements are deleted.</p><code>for i := len-1; i &gt;= 0; i--</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE CIRCLE SHOT</p>
+        <div class="formula-lines"><code>a = spin + i * (2π / count)</code><span>convert to velocity</span><code>vx, vy = cos(a) * speed, sin(a) * speed</code></div>
+        <p><code>spin</code> grows a little each wave, so every ring is rotated slightly relative to the last. One line of offset produces the classic spinning spiral without any extra state.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Three patterns, timed<br>by frame modulo</h3>
+          <p>Check the frame counter modulo a period to decide when to fire each pattern. Change the period to shift difficulty without touching the pattern logic.</p>
+        </div>
+        <pre><code><i>// circular burst every 38 frames (with spin)</i>
+<span>if</span> g.frame%38 == 0 {
+    count := 18
+    spin := float64(g.frame) * .017
+    <span>for</span> i := 0; i &lt; count; i++ {
+        a := spin + float64(i)*math.Pi*2/float64(count)
+        speed := 2.0 + float64((g.frame/38)%3)*.35
+        g.bullets = append(g.bullets,
+            bullet{240, 128, math.Cos(a)*speed, math.Sin(a)*speed, 6, true})
+    }
+}
+<i>// aimed spread every 91 frames</i>
+<span>if</span> g.frame%91 == 0 {
+    base := math.Atan2(g.py-128, g.px-240) <i>// angle toward player</i>
+    <span>for</span> i := -3; i &lt;= 3; i++ {
+        a := base + float64(i)*.11
+        g.bullets = append(g.bullets,
+            bullet{240, 128, math.Cos(a)*3.0, math.Sin(a)*3.0, 7, true})
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT PATTERNS</p><h3>Random is just chaos</h3><p>Bullets fired at random angles give the player no visual cues to react to. Structured patterns create the "read and dodge" loop that makes the genre satisfying.</p></article>
+        <article><p class="eyebrow">WITH BULLET PATTERNS</p><h3>Read it, then dodge it</h3><p>The circular burst builds walls; the aimed spread applies pressure. Combining two patterns already produces a layered challenge worth learning.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Experiment with the numbers</h3><p>Increase <code>count</code> in the circular burst for a denser ring. Raise the <code>spin</code> coefficient for a faster spiral. Change <code>0.11</code> to widen or narrow the aimed spread. Adjust the periods <code>38</code> and <code>91</code> to shift the timing of each attack.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../dungeon/">← LEVEL 11<strong>Dungeon</strong></a><span></span></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

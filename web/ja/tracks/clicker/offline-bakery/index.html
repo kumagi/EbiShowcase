@@ -1,1 +1,85 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Bakery | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/clicker/offline-bakery/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 放置クリッカー</a><span>STEP 05 / 05</span></div><section class="overview-hero"><p class="eyebrow">Cookie Clicker型ゲームを作る</p><h1>Ebi Bakery</h1><p>終了時刻を保存し、次回起動時に不在時間ぶんの生産を計算します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>保存・復元・オフライン進行</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><a href="../growth-curves/">← STEP 04<strong>桁が増える研究所</strong></a><a href="../">コース全体へ →<strong>放置クリッカー</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="セーブ・ロード・オフライン進行を学ぶ、Ebitengine版クリッカー完結レッスン。">
+  <title>STEP 05 — オフラインベーカリー | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/clicker/offline-bakery/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 放置クリッカー</a><span>STEP 05 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>オフラインベーカリー</h1>
+      <p>ページを閉じていた時間の分だけお菓子が貯まっています。ブラウザの <code>localStorage</code> にセーブし、次回起動時に「留守中の生産分」を計算して加算します。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>セーブ・ロード・オフライン進行</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>5000個のお菓子を目指そう。</h2></div><p>一度プレイしてページを閉じ、後で戻ると留守中の生産分が加算されます。Rキーでセーブを消去できます。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="オフラインベーカリー" src="../../../../play/offline-bakery/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / SAVE &amp; OFFLINE</p>
+        <h2>閉じている間も<br>お菓子が増えるのはなぜ？</h2>
+        <p class="lesson-lead">ゲームを終了する瞬間、お菓子の数・オーブン台数・現在時刻を <strong>localStorage</strong> に書き込みます。次に起動したとき、保存した時刻と現在時刻の差（留守時間）に生産速度を掛けて、不在中の生産分を一括で加算します。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>localStorage でセーブ</h3><p>WebAssembly からは <code>syscall/js</code> でブラウザのJSを呼べます。<code>js.Global().Get("localStorage")</code> で localStorage を取得し、setItem / getItem でキーと値を読み書きします。</p><code>s.Call("setItem", prefix+"sweets", value)</code></article>
+        <article><span class="concept-number">2</span><h3>オフライン経過時間の計算</h3><p>保存時の Unix タイムスタンプを読み出し、現在時刻との差を秒で求めます。上限は8時間（28800秒）。あまり長くしすぎると、久しぶりに戻った瞬間の「ボーナス」が大きすぎてバランスを壊します。</p><code>away := math.Min(8*3600, float64(now-stamp))</code></article>
+        <article><span class="concept-number">3</span><h3>120フレームごとの自動セーブ</h3><p>毎フレームセーブすると localStorage の書き込みが多すぎます。フレームカウンターが 120 の倍数のときだけ save() を呼ぶことで、約2秒ごとに定期セーブします。</p><code>if g.frame%120 == 0 { g.save() }</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE OFFLINE RULE</p>
+        <div class="formula-lines"><code>offline = min(留守秒数, 28800) × rate()</code><span>ロード時</span><code>g.sweets += offline</code></div>
+        <p>rate() はオーブン台数 × 5 [個/秒] です。留守中の生産量 = 留守秒数 × 5 × 台数 を起動時に一括加算します。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>ロード → オフライン計算 → 加算</h3>
+          <p>load() は起動直後に1回呼ばれます。localStorage からデータを読み取り、保存時刻と現在時刻の差を計算。8時間を上限として留守中の生産分を sweets に足します。</p>
+        </div>
+        <pre><code><span>func</span> (g *game) load() {
+    store := js.Global().Get("localStorage")
+    raw := store.Call("getItem", prefix+"sweets")
+    <span>if</span> raw.Type() != js.TypeString { return }
+    g.sweets, _ = strconv.ParseFloat(raw.String(), 64)
+    g.ovens, _ = strconv.Atoi(
+        store.Call("getItem", prefix+"ovens").String())
+    g.cost = 20 * math.Pow(1.25, float64(g.ovens))
+    stamp, _ := strconv.ParseInt(
+        store.Call("getItem", prefix+"time").String(), 10, 64)
+    away := math.Min(8*3600,
+        float64(time.Now().Unix()-stamp))
+    <span>if</span> away &gt; 0 {
+        g.offline = away * g.rate()
+        g.sweets += g.offline
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT SAVE</p><h3>リロードでリセット</h3><p>セーブがなければページを閉じるたびに最初からです。放置ゲームの楽しさである「戻ってきたら増えていた」体験がなくなります。</p></article>
+        <article><p class="eyebrow">WITH OFFLINE CAP</p><h3>何ヶ月後に戻っても安全</h3><p>上限がなければ数ヶ月後に戻った人が一瞬でゲームをクリアしてしまいます。8時間キャップで「少し得した」程度にとどめます。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>オフライン上限を変えよう</h3><p><code>8*3600</code>（8時間）を変更して、オフラインボーナスの最大量を調整しましょう。自動セーブ間隔 <code>120</code> フレームを短くすると頻繁にセーブします。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../growth-curves/">← STEP 04<strong>成長曲線ラボ</strong></a><span></span></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

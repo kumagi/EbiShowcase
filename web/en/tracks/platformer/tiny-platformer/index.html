@@ -1,4 +1,128 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>One-screen Platformer | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/platformer/tiny-platformer/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Side-scrolling Action</a><span>STEP 01 / 05</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / BUILD A MARIO-STYLE GAME</p><h1>One-screen Platformer</h1><p>Jump across one screen and resolve collisions with floors, walls, and ceilings.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Ground detection and jumping</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>One-screen Platformer</h2></div><p>Move with A/D or the lower screen. Jump with Space or the upper screen and reach the flag.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="One-screen Platformer" src="../../../../play/tiny-platformer/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Jump only while standing on the ground</h2><p>Set grounded to true when the falling player lands. Allow jumping only while grounded is true to prevent unlimited midair jumps.</p></div><pre><code>if hitFloor { grounded = true }
-if jumpPressed &amp;&amp; grounded {
-    velocityY = -jumpPower
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Play it, unpack it, build it.</h2><div class="overview-steps"><article><b>01</b><h3>Detect ground</h3><p>Enter the grounded state only when landing from above.</p></article><article><b>02</b><h3>Jump</h3><p>Apply upward velocity when jump is pressed on the ground.</p></article><article><b>03</b><h3>Split collision</h3><p>Resolve horizontal and vertical movement separately.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../moving-platforms/">STEP 02 →<strong>Moving Platform Valley</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn ground detection and jumping in an Ebitengine side-scroller. Explains why you can only jump from solid ground, with real Go code.">
+  <title>STEP 01 — One-screen Platformer | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/platformer/tiny-platformer/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Side-scrolling Action</a><span>STEP 01 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
+      <h1>One-screen Platformer</h1>
+      <p>Hop between platforms on one screen and reach the flag at the top. Separating horizontal and vertical movement lets you handle floors, walls, and ceilings cleanly.</p>
+      <div class="overview-concept"><small>CONCEPT THIS STEP</small><strong>Ground detection and jumping</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Try climbing to the flag.</h2></div>
+        <p>A/D or tap the lower screen to move. Space or tap the upper screen to jump. Fall off and you restart from the beginning.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="One-screen Platformer" src="../../../../play/tiny-platformer/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / GROUNDED JUMP</p>
+        <h2>Why can't you jump<br>while in the air?</h2>
+        <p class="lesson-lead">The player carries a boolean flag called <strong>grounded</strong>. It is set to <code>true</code> only when the player lands on solid ground and reset to <code>false</code> every single frame before collisions are checked. Jump input is ignored unless <code>grounded</code> is <code>true</code>, so double-jumping is impossible without extra code. Gravity is simulated by adding a small constant to <code>vy</code> each frame — just one line.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Gravity</h3>
+          <p>Add +0.65 to <code>vy</code> every frame. Without any input the player accelerates downward naturally. A cap of 14 prevents infinite speed.</p>
+          <code>vy = min(vy+.65, 14)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Ground detection</h3>
+          <p>After moving vertically, check each block for overlap. If falling (<code>vy &gt; 0</code>) and overlapping, snap the player to the block top and set <code>grounded = true</code>.</p>
+          <code>grounded = true</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Axis separation</h3>
+          <p>Move X, resolve X collisions, then move Y, resolve Y collisions. Doing both at once causes corner-catching bugs where the player gets stuck on platform edges.</p>
+          <code>p.x += vx // horizontal first</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE ONE-LINE RULE</p>
+        <div class="formula-lines">
+          <code>if jump &amp;&amp; grounded { vy = -12 }</code>
+          <span>every frame</span>
+          <code>grounded = false → collision check sets it back</code>
+        </div>
+        <p>Reset <code>grounded</code> to <code>false</code> at the top of each frame, then let the collision loop set it back to <code>true</code> when a landing is detected. Being on the ground must be proved anew every frame.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Vertical collision<br>decides grounded</h3>
+          <p>When falling (<code>vy &gt;= 0</code>) and overlapping a block, snap to the top surface and set <code>grounded = true</code>. When rising (<code>vy &lt; 0</code>) and hitting a ceiling, snap to the bottom surface. Both paths clear <code>vy</code>.</p>
+        </div>
+        <pre><code>g.p.y += g.vy
+g.grounded = <span>false</span>
+<span>for</span> _, b := <span>range</span> g.blocks {
+    <span>if</span> overlap(g.p, b) {
+        <span>if</span> g.vy > 0 {
+            g.p.y = b.y - g.p.h <i>// land on top</i>
+            g.grounded = <span>true</span>
+        } <span>else</span> {
+            g.p.y = b.y + b.h   <i>// bump ceiling</i>
+        }
+        g.vy = 0
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT GROUNDED FLAG</p>
+          <h3>You could jump forever in mid-air</h3>
+          <p>Without the flag, any jump press would always apply upward velocity. Game balance breaks and any height-based puzzle becomes trivial.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH SEPARATE AXES</p>
+          <h3>Corner collisions resolve cleanly</h3>
+          <p>Splitting the axes avoids the classic corner-catch bug where the player gets pinned when sliding along a platform edge.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Tune jump power and gravity</h3>
+          <p>Increase <code>g.vy = -12</code> for a floatier jump, or raise the <code>+.65</code> gravity constant for a snappier, heavier feel. The ratio between the two defines the jump arc.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <span></span>
+      <a href="../moving-platforms/">STEP 02 →<strong>Moving Platform Valley</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

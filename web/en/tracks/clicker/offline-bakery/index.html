@@ -1,1 +1,85 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Bakery | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/clicker/offline-bakery/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Idle Clicker</a><span>STEP 05 / 05</span></div><section class="overview-hero"><p class="eyebrow">Build a Cookie Clicker-style game</p><h1>Ebi Bakery</h1><p>Save timestamps and calculate production earned while the game was closed.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Save, restore, and offline progress</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Play it, unpack it, build it.</h2><div class="overview-steps"><article><b>01</b><h3>Feel the rule</h3><p>Play the finished mini game and discover the rule added in this step.</p></article><article><b>02</b><h3>Inspect one frame</h3><p>Trace values through input, state update, and drawing.</p></article><article><b>03</b><h3>Tune and extend</h3><p>Read the Ebitengine code, tune its values, and make the rule your own.</p></article></div></section><nav class="lesson-pager"><a href="../growth-curves/">← STEP 04<strong>Growth Curve Lab</strong></a><a href="../">BACK TO PATH →<strong>Idle Clicker</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn save, load, and offline progress with an Ebitengine clicker finale lesson.">
+  <title>STEP 05 — Offline Bakery | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/clicker/offline-bakery/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Idle Clicker</a><span>STEP 05 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Offline Bakery</h1>
+      <p>Close the page and come back later — your sweets will have grown. The game writes state to <code>localStorage</code> and on next load computes how much production happened while you were away.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Save, load, and offline progress</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Bake 5,000 sweets.</h2></div><p>Play, close the tab, return later. Your progress persists. Press R to erase the save and start fresh.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Offline Bakery" src="../../../../play/offline-bakery/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / SAVE &amp; OFFLINE</p>
+        <h2>How do sweets keep growing<br>while the page is closed?</h2>
+        <p class="lesson-lead">When the game saves, it writes sweets, oven count, and a <strong>Unix timestamp</strong> to <code>localStorage</code>. On the next load it reads those values back, subtracts the saved timestamp from the current time, and multiplies the elapsed seconds by the production rate to award offline earnings in one go.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>localStorage via syscall/js</h3><p>WebAssembly code can call browser APIs through Go's <code>syscall/js</code> package. <code>js.Global().Get("localStorage")</code> returns the storage object, and <code>Call("setItem", key, value)</code> / <code>Call("getItem", key)</code> read and write string values.</p><code>s.Call("setItem", prefix+"sweets", value)</code></article>
+        <article><span class="concept-number">2</span><h3>Offline elapsed time</h3><p>The saved timestamp is a Unix second count. Subtracting it from <code>time.Now().Unix()</code> gives the seconds the page was closed. That duration is capped at 8 hours (28 800 s) to prevent returning after weeks and instantly winning.</p><code>away := math.Min(8*3600, float64(now-stamp))</code></article>
+        <article><span class="concept-number">3</span><h3>Autosave every 120 frames</h3><p>Saving on every frame would hammer localStorage unnecessarily. A frame counter modulo 120 triggers a save roughly every two seconds — frequent enough that a browser crash loses little progress, rare enough to be cheap.</p><code>if g.frame%120 == 0 { g.save() }</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE OFFLINE RULE</p>
+        <div class="formula-lines"><code>offline = min(away_seconds, 28800) × rate()</code><span>on load</span><code>g.sweets += offline</code></div>
+        <p><code>rate()</code> returns ovens × 5 sweets per second. The offline bonus is a single multiplication applied once at startup, not spread across frames.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Load → compute offline → award</h3>
+          <p><code>load()</code> is called once at game creation. It reads all saved values from localStorage, reconstructs cost from the saved oven count, and awards the offline production lump sum. A non-string getItem result means no save exists yet.</p>
+        </div>
+        <pre><code><span>func</span> (g *game) load() {
+    store := js.Global().Get("localStorage")
+    raw := store.Call("getItem", prefix+"sweets")
+    <span>if</span> raw.Type() != js.TypeString { return }
+    g.sweets, _ = strconv.ParseFloat(raw.String(), 64)
+    g.ovens, _ = strconv.Atoi(
+        store.Call("getItem", prefix+"ovens").String())
+    g.cost = 20 * math.Pow(1.25, float64(g.ovens))
+    stamp, _ := strconv.ParseInt(
+        store.Call("getItem", prefix+"time").String(), 10, 64)
+    away := math.Min(8*3600,
+        float64(time.Now().Unix()-stamp))
+    <span>if</span> away &gt; 0 {
+        g.offline = away * g.rate()
+        g.sweets += g.offline
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT SAVE</p><h3>Every reload resets progress</h3><p>No persistence means players lose all ovens on refresh. The core idle-game loop — return after time away to see growth — is impossible without a save system.</p></article>
+        <article><p class="eyebrow">WITH OFFLINE CAP</p><h3>Months away cannot trivialize the game</h3><p>Without a cap, a player returning after three months would earn millions of sweets in a single load, skipping all mid-game content. Eight hours of offline earnings gives a satisfying but bounded welcome-back bonus.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Adjust the offline cap</h3><p>Change <code>8*3600</code> to a different hour count to set a new maximum offline bonus. Reduce the autosave interval from <code>120</code> frames to <code>60</code> for more frequent saves.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../growth-curves/">← STEP 04<strong>Growth Curves</strong></a><span></span></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

@@ -1,1 +1,140 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>小さな村を歩く | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/rpg/village-walk/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>STEP 01 / 07</span></div><section class="overview-hero"><p class="eyebrow">ドラゴンクエスト型ゲームを作る</p><h1>小さな村を歩く</h1><p>マス目の村を歩き、壁を通れないようにし、向きを記録します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>タイル衝突と向き</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../dialogue-flags/">STEP 02 →<strong>村人との会話</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="マス目の村を歩き、タイル衝突と向きの記録を学ぶEbitengineレッスン。">
+  <title>STEP 01 — 小さな村を歩く | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コマンドRPG</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/rpg/village-walk/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>STEP 01 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>小さな村を歩く</h1>
+      <p>マス目の村を歩き、壁を通れないようにし、最後に向いた方向を記録します。向きを保存しておくと、「壁の向こうへ話しかける」仕組みにもそのまま使えます。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>タイル衝突と向き</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
+          <h2>3つの星を集め、緑のほこらへ行こう。</h2>
+        </div>
+        <p>方向キー・WASD・画面タップで3つの星を集め、緑になったほこらへ向かいます。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div>
+        <div id="game-wrap">
+          <iframe class="lesson-game-frame" title="小さな村を歩く" src="../../../../play/village-walk/" allow="autoplay; fullscreen"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / TILE COLLISION</p>
+        <h2>動く前に、<br>次のマスを調べる</h2>
+        <p class="lesson-lead">マップは <strong>文字列の配列</strong> です。<code>'#'</code> が入ったマスは壁、それ以外は通路です。プレイヤーが動くとき、まず「移動先のマスが壁か？」を確かめ、通路のときだけ座標を変えます。向きは壁の手前でも更新するので、壁の向こうのNPCにも後から話しかけられます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>マップを数字の表で持つ</h3>
+          <p>文字列スライスをそのままマップに使います。<code>'#'</code> は壁、スペースは通路。インデックスが座標になるので変換が要りません。</p>
+          <code>rows[y][x] == '#'</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>移動前に壁チェック</h3>
+          <p>入力から向きベクトル <code>d</code> を作り、現在地に足して次のマス <code>n</code> を得ます。壁でなければ座標を更新します。</p>
+          <code>n := point{p.x+d.x, p.y+d.y}</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>向きは常に更新する</h3>
+          <p>壁に当たっても向きだけは変えます。向きを保存しておくと、後のステップでキャラが「どちらを向いているか」を使った話しかけが書けます。</p>
+          <code>g.facing = d</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE MOVEMENT RULE</p>
+        <div class="formula-lines">
+          <code>g.facing = d</code>
+          <span>次のマスを計算</span>
+          <code>n := point{g.p.x + d.x, g.p.y + d.y}</code>
+          <span>壁でなければ移動</span>
+          <code>if !g.walls[n] { g.p = n }</code>
+        </div>
+        <p>向きを先に更新してから壁を調べることで、「壁の向こうへ話しかける」とき、プレイヤーの座標ではなく <code>facing</code> を使うだけで自然に実現できます。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>入力 → 向き更新 → 移動判定</h3>
+          <p>実際のコードは入力を向きベクトルに変換し、向きを記録してから移動できるか判定します。星を踏んだら収集数を増やし、ほこらに到着して3つ集まっていたらクリアです。</p>
+        </div>
+        <pre><code><span>if</span> d.x != 0 || d.y != 0 {
+    g.facing = d
+    n := point{g.p.x + d.x, g.p.y + d.y}
+    <span>if</span> !g.walls[n] {
+        g.p = n
+        <span>if</span> g.stars[n] {
+            delete(g.stars, n)
+            g.collected++
+        }
+    }
+}
+<span>if</span> g.p == (point{8, 1}) &amp;&amp; g.collected == 3 {
+    g.clear = true
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT TILE CHECK</p>
+          <h3>壁チェックなしだと？</h3>
+          <p>座標をそのまま増減すると、壁の中に入ったり、マップ外にはみ出したりします。ゲームが壊れる原因になります。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH FACING</p>
+          <h3>向きを保存する利点</h3>
+          <p>後のステップでNPCに話しかけるとき、<code>facing</code> を足すだけで「正面のマス」が分かります。複雑な計算は不要です。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>マップの形を変えてみよう</h3>
+          <p><code>rows</code> の文字列を書き換えると、通路の形がそのままゲームに反映されます。<code>#</code> で壁を増やし、迷路を作ってみましょう。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <span></span>
+      <a href="../dialogue-flags/">STEP 02 →<strong>村人との会話</strong></a>
+    </nav>
+  </main>
+  <footer>
+    <div class="brand"><span>EBI</span> SHOWCASE</div>
+    <p>Made with Go + Ebitengine.</p>
+    <a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a>
+  </footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

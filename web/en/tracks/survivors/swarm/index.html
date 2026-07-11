@@ -1,1 +1,83 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>The Hundred-enemy Swarm | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/survivors/swarm/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Horde Survival</a><span>STEP 03 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Vampire Survivors-style game</p><h1>The Hundred-enemy Swarm</h1><p>Reuse many enemies and check only nearby objects to keep updates fast.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Object pools and spatial partitioning</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Play it, unpack it, build it.</h2><div class="overview-steps"><article><b>01</b><h3>Feel the rule</h3><p>Play the finished mini game and discover the rule added in this step.</p></article><article><b>02</b><h3>Inspect one frame</h3><p>Trace values through input, state update, and drawing.</p></article><article><b>03</b><h3>Tune and extend</h3><p>Read the Ebitengine code, tune its values, and make the rule your own.</p></article></div></section><nav class="lesson-pager"><a href="../auto-turret/">← STEP 02<strong>Auto Turret Survival</strong></a><a href="../experience-draft/">STEP 04 →<strong>Experience and Upgrade Draft</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn the object-pool pattern using a fixed-size array of 100 enemies in this third step of an Ebitengine survivors-style game.">
+  <title>STEP 03 — 100-Enemy Swarm | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">TRACK</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/survivors/swarm/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Mass Enemy Survival</a><span>STEP 03 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>100-Enemy Swarm</h1>
+      <p>Exactly 100 enemies are always on screen. Defeat one and it instantly respawns elsewhere. A fixed-size array keeps all 100 updated every frame without extra allocation.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Object pool with a fixed array</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Defeat 100 enemies — the swarm never shrinks.</h2></div><p>WASD, arrow keys, or drag to move. The golden aura defeats enemies inside it every 18 frames.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="100-Enemy Swarm" src="../../../../play/swarm/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / OBJECT POOL</p>
+        <h2>How can 100 enemies update<br>every frame without slowdown?</h2>
+        <p class="lesson-lead">Appending and removing from a slice allocates memory dynamically, which costs time. A <strong>fixed-size array</strong> declared upfront never allocates during the game loop. When an enemy is defeated, overwrite its slot immediately — the pool always stays at exactly 100 and allocation cost is zero.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>Fixed array</h3><p>Declaring <code>[100]mob</code> reserves exactly 100 slots in memory from the start. Unlike a slice, no new memory is allocated when updating or replacing elements.</p><code>mobs [100]mob</code></article>
+        <article><span class="concept-number">2</span><h3>Instant respawn</h3><p>On defeat, do not delete the enemy. Overwrite its slot with fresh coordinates via <code>spawn(i)</code>. The count stays at 100 at all times.</p><code>g.spawn(i)</code></article>
+        <article><span class="concept-number">3</span><h3>Aura attack</h3><p>The 62-pixel radius aura damages any enemy inside it every 18 frames. When killed, the slot is respawned in the same line. No separate bullet objects are needed.</p><code>if d &lt; 62 &amp;&amp; frame%18 == 0</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE POOL RULE</p>
+        <div class="formula-lines"><code>mobs [100]mob  // fixed, never grows</code><span>on defeat</span><code>g.mobs[i] = newMob()  // overwrite the slot</code></div>
+        <p>A second benefit is cache efficiency. One hundred structs packed contiguously in memory let the CPU load many at once. Iterating the same array every frame is much faster than chasing pointers scattered across the heap.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Overwrite to respawn — always 100</h3>
+          <p><code>spawn(i)</code> picks a random angle and radius around the player and writes new coordinates into slot <code>i</code>. Called immediately after a kill inside the update loop, it keeps the pool full without any slice operations.</p>
+        </div>
+        <pre><code><span>func</span> (g *game) spawn(i int) {
+    a := g.rng.Float64() * math.Pi * 2
+    r := 280 + g.rng.Float64()*120
+    g.mobs[i] = mob{
+        g.px + math.Cos(a)*r,
+        g.py + math.Sin(a)*r, true,
+    }
+}
+
+<i>// inside the update loop</i>
+<span>if</span> d &lt; 62 &amp;&amp; g.frame%18 == 0 {
+    g.kills++
+    g.spawn(i)
+    <span>continue</span>
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT A POOL</p><h3>append/remove stresses the GC</h3><p>Frequently adding and deleting slice elements creates garbage for the collector. Constantly spawning and destroying 100 enemies would cause noticeable frame hitches.</p></article>
+        <article><p class="eyebrow">WITH A POOL</p><h3>Fixed slots, zero allocation</h3><p>The array always has exactly 100 slots. Overwriting a slot costs the same as a plain struct assignment — no GC pressure, no memory fragmentation.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Scale the pool or aura interval</h3><p>Change <code>[100]mob</code> to <code>[200]mob</code> for a denser swarm. Lower the aura interval from <code>18</code> for faster kills, or raise it to make survival tense.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../auto-turret/">← STEP 02<strong>Auto Turret Survival</strong></a><a href="../experience-draft/">STEP 04 →<strong>Experience Draft</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

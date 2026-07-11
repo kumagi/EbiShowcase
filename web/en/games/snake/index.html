@@ -1,1 +1,96 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 07 — Snake | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/games/snake/" lang="ja">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 07</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Snake</h1><p>Move on a grid and preserve position history as the snake's body.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Grids and history</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Snake</h2></div><p>A playable Ebitengine game for desktop and mobile.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 07</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Snake" src="../../../play/snake/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Add a head and remove the tail</h2><p>The snake body is a history of grid positions. Prepend the new head and remove the last tail cell unless food was eaten.</p></div><pre><code>body = append([]Point{newHead}, body...)\nif !ateFood {\n    body = body[:len(body)-1]\n}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>What this lesson will contain</h2><div class="overview-steps"><article><b>01</b><h3>Play first</h3><p>Discover the rules and feel before reading an explanation.</p></article><article><b>02</b><h3>See the system</h3><p>Follow the new idea through a frame-by-frame visual.</p></article><article><b>03</b><h3>Build the code</h3><p>Connect the same behavior to Ebitengine Update and Draw.</p></article></div></section><nav class="lesson-pager"><a href="../breakout/">← LEVEL 06<strong>Breakout</strong></a><a href="../space-shooter/">LEVEL 08 →<strong>Space Shooter</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn how Snake works in Go and Ebitengine: grids, position history, and slice-based body movement.">
+  <title>LEVEL 07 — Snake | Ebi Showcase</title>
+  <link rel="canonical" href="./">
+  <link rel="alternate" hreflang="ja" href="../../../ja/games/snake/">
+  <link rel="alternate" hreflang="en" href="../../../en/games/snake/">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../ja/games/snake/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Snake</h1>
+      <p>Move on a grid and keep every visited position as the snake's body. Prepend a new head and drop the old tail — that two-step swap is everything.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Grids and history</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Eat, grow, don't crash.</h2></div><p>Arrow keys or a tap in any direction turns the snake. Each piece of food adds one body segment. Hit a wall or yourself and the game ends.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 07</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Snake" src="../../../play/snake/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / GRID AND HISTORY</p>
+        <h2>How does the snake<br>know where its body is?</h2>
+        <p class="lesson-lead">The snake's body is a <strong>history of grid positions</strong> — nothing more. Each step, prepend the new head to the list and remove the last entry unless food was eaten. Those two operations produce the familiar winding body.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>Grid coordinates</h3><p>Divide the screen into cells and store positions as integer pairs — column and row. Collision detection is then just checking whether two coordinates are equal.</p><code>const cell = 24</code></article>
+        <article><span class="concept-number">2</span><h3>A slice is the body</h3><p>The body is a <code>[]point</code> slice. Index <code>[0]</code> is the head; the last index is the tail. The length of the slice is the length of the snake.</p><code>body []point</code></article>
+        <article><span class="concept-number">3</span><h3>Prepend and trim</h3><p>Add the new head at position zero, remove the last element if no food was eaten. Two lines of code, complete movement.</p><code>body[:len(body)-1]</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE TWO-LINE MOVE</p>
+        <div class="formula-lines"><code>body = append([]point{head}, body...)</code><span>then</span><code>body = body[:len(body)-1]</code></div>
+        <p>Line one inserts the new head at the front. Line two cuts the old tail. When food is eaten, skip line two and the snake permanently grows by one cell.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Move the body<br>inside Update</h3>
+          <p>The snake does not move every frame — it waits several frames, and that wait shrinks as the score climbs, making the game faster over time.</p>
+        </div>
+        <pre><code><span>func</span> (g *game) Update() error {
+    g.frame++
+    <i>// fewer wait frames as score rises → snake speeds up</i>
+    <span>if</span> g.frame%max(4, 10-g.score/3) != 0 {
+        <span>return</span> nil
+    }
+    g.dir = g.next
+    head := point{g.body[0].x + g.dir.x, g.body[0].y + g.dir.y}
+
+    <i>// wall and self-collision</i>
+    <span>if</span> outOfBounds(head) || selfCollision(head, g.body) {
+        g.over = true
+        <span>return</span> nil
+    }
+
+    <i>// prepend head; drop tail unless food was eaten</i>
+    g.body = append([]point{head}, g.body...)
+    <span>if</span> head == g.food {
+        g.score++
+        g.placeFood()
+    } <span>else</span> {
+        g.body = g.body[:len(g.body)-1]
+    }
+    <span>return</span> nil
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT A GRID</p><h3>Pixel tracking is complex</h3><p>Tracking movement at pixel resolution means the body can drift out of alignment, making collision checks much harder. Integers snapped to a cell remove that entire problem.</p></article>
+        <article><p class="eyebrow">WITH SLICE HISTORY</p><h3>Length equals body length</h3><p>Want to know how long the snake is? Just call <code>len(g.body)</code>. Want every body cell's position? Walk the slice. The data structure is the snake.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Experiment with the numbers</h3><p>Increase <code>cell</code> for a coarser grid and a fatter snake. Adjust the speed formula <code>10-g.score/3</code> to change how quickly the game accelerates. Make the snake start longer by adding more entries to the initial <code>body</code> slice in <code>newGame</code>.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../breakout/">← LEVEL 06<strong>Breakout</strong></a><a href="../space-shooter/">LEVEL 08 →<strong>Space Shooter</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

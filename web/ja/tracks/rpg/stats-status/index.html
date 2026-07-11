@@ -1,1 +1,139 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>能力値と状態変化 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/rpg/stats-status/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>STEP 04 / 07</span></div><section class="overview-hero"><p class="eyebrow">ドラゴンクエスト型ゲームを作る</p><h1>能力値と状態変化</h1><p>攻撃力、防御力、素早さ、毒や強化を計算へ組み込みます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>ダメージ式と一時効果</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><a href="../command-battle/">← STEP 03<strong>1対1コマンドバトル</strong></a><a href="../inventory-shop/">STEP 05 →<strong>装備屋と道具袋</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="ダメージ計算式と毒・強化などの状態変化を学ぶEbitengineレッスン。">
+  <title>STEP 04 — 能力値と状態変化 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コマンドRPG</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/rpg/stats-status/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>STEP 04 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>能力値と状態変化</h1>
+      <p>攻撃力・防御力・強化・毒を計算に組み込みます。<strong>ダメージ = 攻撃 − 防御</strong> という引き算の式に、一時的な効果を足すだけで本格的なバトルになります。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>ダメージ式と一時効果</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
+          <h2>毒スライムを攻略しよう。</h2>
+        </div>
+        <p>1で攻撃、2でパワーアップ（3ターン）、3で解毒剤。毒に気をつけながらスライムを倒そう。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div>
+        <div id="game-wrap">
+          <iframe class="lesson-game-frame" title="能力値と状態変化" src="../../../../play/stats-status/" allow="autoplay; fullscreen"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / DAMAGE FORMULA</p>
+        <h2>ダメージは<br>引き算で決まる</h2>
+        <p class="lesson-lead">RPGの基本公式は <strong>ダメージ = 攻撃力 − 防御力</strong> です。これに「強化中は攻撃+8」「毒でターン毎に3ダメージ」という <strong>一時効果カウンター</strong> を加えると、状態変化のある戦闘が完成します。カウンターを毎ターン1ずつ減らし、ゼロになったら効果が消えます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>ダメージ式</h3>
+          <p>攻撃から防御を引き、乱数で幅を持たせます。結果が1未満になっても最低1ダメージは保証します。<code>max(1, ...)</code> を使うと「防御が高すぎてノーダメ」を防げます。</p>
+          <code>d := max(1, atk - def + rand)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>強化カウンター</h3>
+          <p>パワーアップを選ぶと <code>buff = 3</code> をセット。攻撃時に <code>buff > 0</code> なら攻撃力を加算し、ターン末に <code>buff--</code> します。3ターンで自然消滅します。</p>
+          <code>if g.buff &gt; 0 { atk += 8 }</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>毒カウンター</h3>
+          <p>3ターンごとに毒が付きます。毒中は毎ターン3ダメージを受け、<code>poison--</code> します。解毒剤を使うと即座に <code>poison = 0</code> にリセットします。</p>
+          <code>if g.poison &gt; 0 { g.hp -= 3; g.poison-- }</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE DAMAGE FORMULA</p>
+        <div class="formula-lines">
+          <code>atk := g.attack  // 基本値 15</code>
+          <span>強化中なら加算</span>
+          <code>if g.buff &gt; 0 { atk += 8 }</code>
+          <span>防御を引いて乱数で幅を付ける</span>
+          <code>d := max(1, atk - 6 + g.rng.Intn(5))</code>
+        </div>
+        <p>このゲームでは敵の防御力が固定値 <code>6</code> です。プレイヤーの攻撃力 15 − 防御 6 = 最小9ダメージ。強化すると最小17ダメージになります。数字を変えるだけでバランスが変わります。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>攻撃、強化、毒の処理を一度に見る</h3>
+          <p>コマンド選択後、プレイヤーの行動を処理し、次に敵の攻撃と毒・強化カウンターの更新を行います。カウンターは整数なので、値を見れば「あと何ターン効果が続くか」が一目で分かります。</p>
+        </div>
+        <pre><code><span>// プレイヤーが攻撃を選んだとき</span>
+atk := g.attack
+<span>if</span> g.buff &gt; 0 { atk += 8 }
+d := max(1, atk-6+g.rng.Intn(5))
+g.enemyHP -= d
+
+<span>// 敵の反撃と状態更新</span>
+enemyAttack := 13 + g.rng.Intn(5)
+g.hp -= max(1, enemyAttack-g.defense)
+
+<span>if</span> g.turn%3 == 0 { g.poison = 4 }
+<span>if</span> g.poison &gt; 0 { g.hp -= 3; g.poison-- }
+<span>if</span> g.buff &gt; 0 { g.buff-- }</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT FORMULA</p>
+          <h3>固定ダメージだと？</h3>
+          <p>毎回同じダメージでは戦略が生まれません。攻撃力・防御力の差で結果が変わることで、装備や強化を選ぶ意味が出てきます。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH COUNTERS</p>
+          <h3>カウンターで効果に期限をつける</h3>
+          <p>永続する強化はゲームを壊します。カウンターを使えば「あと2ターン」という有限の効果が自然に実現し、タイミングを考える戦略が生まれます。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>強化の期間と威力を変えてみよう</h3>
+          <p><code>buff = 3</code> を <code>buff = 5</code> に、<code>atk += 8</code> を <code>atk += 12</code> に変えると、強化がより強く長続きします。バランスを崩すほど変えて、RPGの数字設計を体感しましょう。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../command-battle/">← STEP 03<strong>1対1コマンドバトル</strong></a>
+      <a href="../inventory-shop/">STEP 05 →<strong>装備屋と道具袋</strong></a>
+    </nav>
+  </main>
+  <footer>
+    <div class="brand"><span>EBI</span> SHOWCASE</div>
+    <p>Made with Go + Ebitengine.</p>
+    <a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a>
+  </footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

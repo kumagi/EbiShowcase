@@ -1,1 +1,81 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>はじめてのお店 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/clicker/first-shop/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 放置クリッカー</a><span>STEP 02 / 05</span></div><section class="overview-hero"><p class="eyebrow">Cookie Clicker型ゲームを作る</p><h1>はじめてのお店</h1><p>貯めたポイントで生産装置を買い、足りないときは購入を止めます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>購入条件とコスト</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><a href="../tap-counter/">← STEP 01<strong>お菓子カウンター</strong></a><a href="../idle-factory/">STEP 03 →<strong>自動生産工場</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="購入条件とコストを学ぶ、Ebitengine版クリッカー第2回レッスン。">
+  <title>STEP 02 — はじめてのお店 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/clicker/first-shop/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 放置クリッカー</a><span>STEP 02 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>はじめてのお店</h1>
+      <p>お菓子を貯めてオーブンを買う。買うには「持っているか？」という条件を調べ、足りなければ灰色にして弾きます。クリッカーの「お店」の基本形です。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>購入条件とコスト上昇</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>オーブンを5台集めよう。</h2></div><p>上半分をタップでお菓子を焼き、下のボタンで買います。Bキーでも購入できます。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="はじめてのお店" src="../../../../play/first-shop/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / SHOP</p>
+        <h2>なぜ「買えない」ときは<br>ボタンが暗くなるの？</h2>
+        <p class="lesson-lead">ボタンの色は <strong>sweets &gt;= cost</strong> という条件で決まります。お菓子が足りないと暗い色を塗り、足りると明るい色を塗る。これだけで「買える／買えない」の視覚フィードバックが完成します。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>購入条件チェック</h3><p>押したときに「今のお菓子の数がコスト以上か」を調べます。条件を満たしていなければ購入処理をスキップし、代わりにエラーフラッシュをセットします。</p><code>if g.sweets &gt;= g.cost { … }</code></article>
+        <article><span class="concept-number">2</span><h3>タッチ位置で領域を分ける</h3><p>マウスやタッチの y 座標が 470 より上ならベイク、下ならショップ。同じ「押した」イベントを座標で振り分けることで、ボタンなしで2つの操作を分けられます。</p><code>if y &lt; 470 { bake } else { buy }</code></article>
+        <article><span class="concept-number">3</span><h3>コストの段階的上昇</h3><p>買うたびに cost += 5 します。初期値10、1台目は15、2台目は20…と増えるので、同じペースで押し続けるだけでは全台買えなくなります。これがクリッカーの「進む感」の仕組みです。</p><code>g.cost += 5</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE SHOP RULE</p>
+        <div class="formula-lines"><code>sweets &gt;= cost → 購入OK：sweets -= cost; ovens++</code><span>否</span><code>sweets &lt; cost  → 購入NG：エラーフラッシュ</code></div>
+        <p>フラッシュ値 <code>flash</code> は正なら成功の光、負なら失敗の赤テキストを出します。毎フレーム絶対値を1減らしてフェードアウトします。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>条件確認 → 購入 → コスト更新</h3>
+          <p>y 座標で操作を分岐し、ショップ領域なら sweets がコストを上回るか確認。成功したら sweets を減らしてオーブンを増やし、次の cost を加算します。</p>
+        </div>
+        <pre><code><span>if</span> ok {
+    <span>if</span> y &lt; 470 {
+        g.sweets++
+        g.flash = 8
+    } <span>else if</span> g.sweets &gt;= g.cost {
+        g.sweets -= g.cost
+        g.ovens++
+        g.cost += 5
+        g.flash = 12
+    } <span>else</span> {
+        g.flash = -15   <span>// 失敗フラッシュ</span>
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT COST CHECK</p><h3>お金がなくてもタダで買える</h3><p>条件なしに ovens++ するだけだと、無限に増やせます。ゲームとして成立しません。</p></article>
+        <article><p class="eyebrow">WITH RISING COST</p><h3>後半が自然に難しくなる</h3><p>固定コストなら全台買ったら終わりですが、段階的に上がると最後の1台が最も大変になります。プレイ時間が伸びます。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>コスト増加量を変えよう</h3><p><code>g.cost += 5</code> の <code>5</code> を大きくすると難度が増し、小さくすると簡単になります。クリア条件 <code>5</code> 台も変えてみましょう。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../tap-counter/">← STEP 01<strong>お菓子カウンター</strong></a><a href="../idle-factory/">STEP 03 →<strong>アイドルファクトリー</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

@@ -1,1 +1,83 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Growth Curve Lab | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/clicker/growth-curves/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Idle Clicker</a><span>STEP 04 / 05</span></div><section class="overview-hero"><p class="eyebrow">Build a Cookie Clicker-style game</p><h1>Growth Curve Lab</h1><p>Build rising prices and readable formatting for enormous numbers.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Exponential costs and large numbers</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Play it, unpack it, build it.</h2><div class="overview-steps"><article><b>01</b><h3>Feel the rule</h3><p>Play the finished mini game and discover the rule added in this step.</p></article><article><b>02</b><h3>Inspect one frame</h3><p>Trace values through input, state update, and drawing.</p></article><article><b>03</b><h3>Tune and extend</h3><p>Read the Ebitengine code, tune its values, and make the rule your own.</p></article></div></section><nav class="lesson-pager"><a href="../idle-factory/">← STEP 03<strong>Idle Factory</strong></a><a href="../offline-bakery/">STEP 05 →<strong>Ebi Bakery</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn exponential cost curves and big-number formatting with an Ebitengine clicker lesson.">
+  <title>STEP 04 — Growth Curves | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/clicker/growth-curves/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Idle Clicker</a><span>STEP 04 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Growth Curves</h1>
+      <p>Every lab purchase multiplies the next cost by 1.18 while production scales with the square of lab count. Numbers climb into the millions, so a compact K / M / B formatter keeps the display readable.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Exponential cost and big-number format</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Reach one million energy.</h2></div><p>Tap the orb to collect energy, buy labs to automate production. Press B to buy a lab.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Growth Curves" src="../../../../play/growth-curves/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / EXPONENTIAL</p>
+        <h2>Why does every new lab<br>cost so much more?</h2>
+        <p class="lesson-lead">Cost is computed as <strong>10 × 1.18<sup>n</sup></strong>, where <em>n</em> is the number of labs already owned. Each purchase multiplies the next price by 1.18, so costs start affordable and accelerate sharply. That is exponential growth.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>Exponential cost</h3><p><code>math.Pow(1.18, n)</code> raises 1.18 to the power n. At n=0 the cost is 10; at n=5 roughly 23; at n=20 roughly 270. The curve starts gentle and becomes steep, keeping every purchase meaningful.</p><code>10 * math.Pow(1.18, float64(g.labs))</code></article>
+        <article><span class="concept-number">2</span><h3>Quadratic production rate</h3><p>Production is <code>labs × labs × 8</code> energy per second. Doubling your lab count quadruples output. That super-linear scaling is what makes mid-game purchases feel powerful and keeps players motivated to buy more.</p><code>float64(g.labs*g.labs) * 8</code></article>
+        <article><span class="concept-number">3</span><h3>K / M / B number format</h3><p>Raw floats like 1234567.89 overflow any display. The <code>short()</code> helper rounds and appends a suffix — K for thousands, M for millions, B for billions — so every number fits in a compact label.</p><code>fmt.Sprintf("%.2fM", v/1e6)</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE GROWTH FORMULA</p>
+        <div class="formula-lines"><code>cost(n) = 10 × 1.18ⁿ</code><span>production</span><code>rate(n) = n² × 8  [/sec]</code></div>
+        <p>Cost grows exponentially while production grows quadratically. Buy at the right pace and the accelerating production keeps up with the accelerating cost.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Compute cost → produce → format display</h3>
+          <p>Two small methods keep the logic clean. <code>cost()</code> recalculates on every call so it always reflects the current lab count. <code>short()</code> is a pure formatting helper used in Draw.</p>
+        </div>
+        <pre><code><span>func</span> (g *game) cost() float64 {
+    return 10 * math.Pow(1.18, float64(g.labs))
+}
+<span>func</span> (g *game) rate() float64 {
+    return float64(g.labs*g.labs) * 8
+}
+
+<span>func</span> short(v float64) string {
+    <span>switch</span> {
+    <span>case</span> v &gt;= 1e9: return fmt.Sprintf("%.2fB", v/1e9)
+    <span>case</span> v &gt;= 1e6: return fmt.Sprintf("%.2fM", v/1e6)
+    <span>case</span> v &gt;= 1e3: return fmt.Sprintf("%.2fK", v/1e3)
+    default:      return fmt.Sprintf("%.1f", v)
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT EXPONENTIAL</p><h3>Linear cost is bought out quickly</h3><p>Flat or linearly rising costs let players clear the shop in a constant number of taps. There is no late-game tension or the satisfying "almost there" feeling.</p></article>
+        <article><p class="eyebrow">WITH BIG-NUMBER FORMAT</p><h3>Millions fit on one line</h3><p>Without formatting, seven-digit floats overflow the canvas. With <code>short()</code>, even a billion displays as a tidy "1.00B" that fits anywhere.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Adjust the exponential base</h3><p>Change <code>1.18</code> to <code>1.10</code> for gentler growth or <code>1.30</code> for brutal jumps. Try changing the rate multiplier from <code>8</code> to <code>12</code> and see how quickly you reach a million.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../idle-factory/">← STEP 03<strong>Idle Factory</strong></a><a href="../offline-bakery/">STEP 05 →<strong>Offline Bakery</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

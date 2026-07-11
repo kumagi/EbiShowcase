@@ -1,1 +1,106 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 03 — Catch the Stars | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/games/catch-stars/" lang="ja">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 03</span></div><section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Catch the Stars</h1><p>Catch falling stars and build rectangle collision detection.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Movement and collision</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Catch the Stars</h2></div><p>An Ebitengine game supporting click, touch, and keyboard input.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Catch the Stars" src="../../../play/catch-stars/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Overlap falling stars with the basket</h2><p>Every star owns a position and speed. Score when its rectangle overlaps the basket; lose a life when it leaves the screen.</p></div><pre><code>star.y += star.speed\nif overlaps(star, basket) {\n    score++\n}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>What this lesson will contain</h2><div class="overview-steps"><article><b>01</b><h3>Play first</h3><p>Discover the rules and feel before reading an explanation.</p></article><article><b>02</b><h3>See the system</h3><p>Follow the new idea through a frame-by-frame visual.</p></article><article><b>03</b><h3>Build the code</h3><p>Connect the same behavior to Ebitengine Update and Draw.</p></article></div></section><nav class="lesson-pager"><a href="../timing-meter/">← LEVEL 02<strong>Stop the Meter</strong></a><a href="../flappy/">LEVEL 04 →<strong>Ebi Flight</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Catch falling stars and learn movement plus rectangle collision in Ebitengine.">
+  <title>LEVEL 03 — Catch the Stars | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../ja/games/catch-stars/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 03</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>Catch the Stars</h1>
+      <p>Catch falling stars with a basket. Movement, falling objects, and overlap checks — this is the step where “game objects” multiply.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Movement and collision</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Move the basket and catch stars.</h2></div><p>Arrow keys, WASD, and drag all work. Drop three stars and the round ends.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Catch the Stars" src="../../../play/catch-stars/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / MOVEMENT &amp; AABB</p>
+        <h2>How does the game know<br>the star landed in the basket?</h2>
+        <p class="lesson-lead">Treat the star and basket as invisible rectangles (bounding boxes). If those boxes overlap, the catch succeeds. This axis-aligned box test is called AABB.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>Movement</h3><p>Stars add speed to Y every frame. The basket only changes X from keys or a pointer.</p><code>star.y += speed</code></article>
+        <article><span class="concept-number">2</span><h3>Many stars</h3><p>Stars live in a slice (list), not one variable. New stars are appended on a timer.</p><code>stars []star</code></article>
+        <article><span class="concept-number">3</span><h3>Overlap</h3><p>If left/right and top/bottom both overlap, it is a hit. Separated on any side means a miss.</p><code>overlaps(a, b)</code></article>
+      </div>
+
+      <div class="motion-lab" data-lab="aabb" data-yes="OVERLAP!" data-no="not yet" aria-labelledby="aabb-lab-title">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / RECTANGLE OVERLAP</p>
+          <h3 id="aabb-lab-title">Drop the star and watch overlap</h3>
+          <p>“Next frame” lowers the star. The moment its box overlaps the basket, the verdict becomes YES.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>Next frame</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">Even round art often uses a rectangle for hits first. Start with boxes, refine later if needed.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-aabb-board" role="img" aria-label="Rectangle overlap board">
+            <div class="lab-star" data-lab-star aria-hidden="true"></div>
+            <div class="lab-basket" data-lab-basket aria-hidden="true"></div>
+          </div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>star Y</span><strong data-lab-y>80</strong><small>falls each frame</small></div>
+            <div><span>overlap</span><strong data-lab-overlap data-state="miss">not yet</strong><small>AABB</small></div>
+            <div><span>rule</span><strong>4 sides</strong><small>left right top bottom</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE OVERLAP RULE</p>
+        <div class="formula-lines"><code>left &lt; other.right AND right &gt; other.left</code><span>and</span><code>top &lt; other.bottom AND bottom &gt; other.top</code></div>
+        <p>Both axes must overlap for a hit. Overlap on only one axis is a near miss.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Update the list one by one</h3>
+          <p>Separate caught stars, missed stars, and survivors. Keep only survivors in the next list so bookkeeping stays clean.</p>
+        </div>
+        <pre><code><span>for</span> _, s := range g.stars {
+    s.y += s.speed
+    <span>if</span> overlaps(s, g.basket) {
+        g.score++
+        <span>continue</span> <i>// caught, do not keep</i>
+    }
+    <span>if</span> s.y &gt; height {
+        g.lives--
+        <span>continue</span>
+    }
+    next = append(next, s)
+}
+g.stars = next</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT LISTS</p><h3>Only one star</h3><p>One variable per star hits a wall fast. A list lets every star follow the same rule.</p></article>
+        <article><p class="eyebrow">WITH AABB</p><h3>Boxes before polish</h3><p>Even with simple art, correct rectangle overlap already feels like a real catch.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Change speed and spawn rate</h3><p>Star <code>speed</code> and spawn timing <code>frame%45</code> set difficulty. A wider basket is an easy kindness.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../timing-meter/">← LEVEL 02<strong>Stop the Meter</strong></a><a href="../flappy/">LEVEL 04 →<strong>Ebi Flight</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

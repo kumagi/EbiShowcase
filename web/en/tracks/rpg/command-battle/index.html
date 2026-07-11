@@ -1,1 +1,149 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>One-on-one Command Battle | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/rpg/command-battle/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Command RPG</a><span>STEP 03 / 07</span></div><section class="overview-hero"><p class="eyebrow">Build a Dragon Quest-style game</p><h1>One-on-one Command Battle</h1><p>Advance command selection, player action, enemy action, and results in order.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Turns and battle state machines</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Play it, unpack it, build it.</h2><div class="overview-steps"><article><b>01</b><h3>Feel the rule</h3><p>Play the finished mini game and discover the rule added in this step.</p></article><article><b>02</b><h3>Inspect one frame</h3><p>Trace values through input, state update, and drawing.</p></article><article><b>03</b><h3>Tune and extend</h3><p>Read the Ebitengine code, tune its values, and make the rule your own.</p></article></div></section><nav class="lesson-pager"><a href="../dialogue-flags/">← STEP 02<strong>Village Conversations</strong></a><a href="../stats-status/">STEP 04 →<strong>Stats and Status Effects</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn turn-based battle state machines in this Ebitengine lesson.">
+  <title>STEP 03 — Command Battle | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Command RPG</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/rpg/command-battle/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Command RPG</a><span>STEP 03 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Command Battle</h1>
+      <p>Manage command selection, player action, enemy action, and result with a <strong>state machine</strong>. Moving through four states in order gives you the core of any turn-based RPG.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Turns and battle state machines</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
+          <h2>Defeat the slime with Attack, Heal, or Guard.</h2>
+        </div>
+        <p>Press 1 / tap to Attack, 2 to Heal, 3 to Guard. Reduce the slime's HP to zero.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div>
+        <div id="game-wrap">
+          <iframe class="lesson-game-frame" title="Command Battle" src="../../../../play/command-battle/" allow="autoplay; fullscreen"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / STATE MACHINE</p>
+        <h2>How a state machine<br>keeps turns clean</h2>
+        <p class="lesson-lead">A <strong>state machine</strong> stores which phase the battle is in as a single integer, then runs different logic for each phase. This battle cycles through <code>command → playerTurn → enemyTurn → result</code>. Knowing the current state makes it trivial to block input during animations and skip enemy action until the player has acted.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Define states with iota</h3>
+          <p>Use Go's <code>iota</code> to create sequential constants: <code>command=0, playerTurn=1, enemyTurn=2, result=3</code>. One integer variable tracks the entire battle phase.</p>
+          <code>state = command</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Branch on state every frame</h3>
+          <p>A <code>switch g.state</code> at the top of <code>Update()</code> separates input handling (command state) from animation waiting (playerTurn / enemyTurn states).</p>
+          <code>switch g.state { case command: ... }</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Use a timer for animation gaps</h3>
+          <p>After acting, set <code>timer = 35</code> and decrement each frame. When the timer hits zero, advance to the next state. Changing the number changes how long the pause lasts.</p>
+          <code>g.timer--; if g.timer &lt;= 0 { ... }</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE STATE FLOW</p>
+        <div class="formula-lines">
+          <code>command → (player chooses) → playerTurn</code>
+          <span>timer expires</span>
+          <code>playerTurn → (HP check) → enemyTurn or result</code>
+          <span>timer expires</span>
+          <code>enemyTurn → (HP check) → command or result</code>
+        </div>
+        <p>Choosing Guard sets <code>guard = true</code>. In the enemy phase that flag halves the incoming damage — reusing the flag pattern from Step 02.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>switch drives every phase transition</h3>
+          <p>Each call to <code>Update()</code> evaluates the state switch. Selecting Attack calculates damage and transitions to <code>playerTurn</code> with a timer. When the timer drains, the code checks whether the enemy is dead or moves to <code>enemyTurn</code> for the counter-attack.</p>
+        </div>
+        <pre><code><span>switch</span> g.state {
+<span>case</span> command:
+    <span>if</span> c == 0 {  <span>// attack</span>
+        d := 8 + g.rng.Intn(7)
+        g.enemyHP -= d
+        g.state = playerTurn
+        g.timer = 35
+    }
+<span>case</span> playerTurn:
+    g.timer--
+    <span>if</span> g.timer &lt;= 0 {
+        <span>if</span> g.enemyHP &lt;= 0 { g.clear = true }
+        <span>else</span> { g.state = enemyTurn; g.timer = 40 }
+    }
+<span>case</span> enemyTurn:
+    g.timer--
+    <span>if</span> g.timer &lt;= 0 {
+        d := 7 + g.rng.Intn(8)
+        <span>if</span> g.guard { d = (d + 1) / 2 }
+        g.hp -= d
+        g.state = command
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT STATE MACHINE</p>
+          <h3>No state means timing bugs</h3>
+          <p>Without a phase variable you would need nested if chains to block input during animations. Mistakes let the enemy act twice or accept player input mid-animation.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH STATE MACHINE</p>
+          <h3>One variable, clear turn boundaries</h3>
+          <p>The current state immediately tells you what is allowed. Player input is only meaningful in <code>command</code> state; everything else is locked out automatically.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Change the animation timer length</h3>
+          <p>Increase <code>g.timer = 35</code> for slow dramatic pauses, decrease it for fast-paced battles. You could also use different timer lengths for attack, heal, and guard actions.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../dialogue-flags/">← STEP 02<strong>Talking Villagers</strong></a>
+      <a href="../stats-status/">STEP 04 →<strong>Stats and Status Effects</strong></a>
+    </nav>
+  </main>
+  <footer>
+    <div class="brand"><span>EBI</span> SHOWCASE</div>
+    <p>Made with Go + Ebitengine.</p>
+    <a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a>
+  </footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

@@ -1,1 +1,114 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 02 — ストップ・ザ・メーター | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/games/timing-meter/" lang="en">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← 全レベル</a><span>LEVEL 02</span></div><section class="overview-hero"><p class="eyebrow">★☆☆☆☆ / PLAYABLE</p><h1>ストップ・ザ・メーター</h1><p>動くバーを狙った場所で止め、フレームと状態を理解します。</p><div class="overview-concept"><small>このゲームで学ぶこと</small><strong>時間とゲーム状態</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>ストップ・ザ・メーター</h2></div><p>クリック、タップ、キーボードに対応したEbitengine製ゲームです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="ストップ・ザ・メーター" src="../../../play/timing-meter/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>毎フレーム進み、端で向きを反転</h2><p>マーカーへ一定のspeedを足します。端へ着いたら符号を反対にし、押した瞬間だけ中央との距離を採点します。</p></div><pre><code>markerX += speed\nif markerX < minX || markerX > maxX {\n    speed = -speed\n}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>この教材で作るもの</h2><div class="overview-steps"><article><b>01</b><h3>まず遊ぶ</h3><p>説明を読む前に、ルールと手ざわりをゲームから発見します。</p></article><article><b>02</b><h3>仕組みを見る</h3><p>1フレームずつ動かせる図で、今回の考え方を目で追います。</p></article><article><b>03</b><h3>コードで作る</h3><p>同じ動きをEbitengineのUpdateとDrawへつなげます。</p></article></div></section><nav class="lesson-pager"><a href="../tap-target/">← LEVEL 01<strong>光る丸をタッチ</strong></a><a href="../catch-stars/">LEVEL 03 →<strong>落ちものキャッチ</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="動くメーターを止めて、フレーム更新とゲーム状態を学ぶEbitengineレッスン。">
+  <title>LEVEL 02 — ストップ・ザ・メーター | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../en/games/timing-meter/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← 全レベル</a><span>LEVEL 02</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
+      <h1>ストップ・ザ・メーター</h1>
+      <p>左右に動く白い線を、真ん中の帯で止めます。「毎フレーム少し動かす」と「今は動いている／止まっている」の切り替えが、このゲームの心臓です。</p>
+      <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>時間とゲーム状態</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>タイミングをねらって止めよう。</h2></div><p>スペース、クリック、タップで停止。中央に近いほど高得点です。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="ストップ・ザ・メーター" src="../../../play/timing-meter/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / TIME &amp; STATE</p>
+        <h2>どうして線は、<br>行ったり来たりするの？</h2>
+        <p class="lesson-lead">ゲームはパラパラ漫画です。1コマごとに <strong>位置 = 位置 + 速さ</strong> をくり返します。端に着いたら速さの符号をひっくり返すと、行ったり来たりになります。止めるときは「動かない状態」へ切り替えます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>フレーム</h3><p>画面の1コマ。Ebitengineはだいたい毎秒60回 <code>Update</code> を呼びます。少しずつ足すので、なめらかに見えます。</p><code>marker += speed</code></article>
+        <article><span class="concept-number">2</span><h3>反射</h3><p>左端や右端へ着いたら <code>speed = -speed</code>。向きだけ変えて、同じ速さで戻ります。</p><code>speed = -speed</code></article>
+        <article><span class="concept-number">3</span><h3>状態</h3><p>動いているか、止まっているか。止まっているあいだは位置を進めず、中央との距離だけ採点します。</p><code>stopped bool</code></article>
+      </div>
+
+      <div class="motion-lab" data-lab="meter" data-moving="動いている" data-stopped="止まっている" aria-labelledby="meter-lab-title">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p>
+          <h3 id="meter-lab-title">1コマずつ動かして、止めてみよう</h3>
+          <p>「1フレーム進める」で線が動きます。端で向きが変わります。「止める」を押すと中央との距離で得点します。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>1フレーム進める</button>
+            <button type="button" class="lab-button" data-lab-stop>止める / 再開</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームでは、ボタンを押さなくても毎フレーム自動で進みます。ここは仕組みを見るためのスローモーションです。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="メーターの動きを示すボード">
+            <div class="lab-meter-track">
+              <div class="lab-meter-zones"><span class="zone-good"></span><span class="zone-great"></span><span class="zone-perfect"></span></div>
+              <div class="lab-marker" data-lab-marker aria-hidden="true"></div>
+            </div>
+          </div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>位置 X</span><strong data-lab-x>45</strong><small>速さ <span data-lab-speed>8.0</span></small></div>
+            <div><span>状態</span><strong data-lab-state>動いている</strong><small>moving / stopped</small></div>
+            <div><span>SCORE</span><strong data-lab-score>0</strong><small>中央に近いほど高い</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE TWO-MODE RULE</p>
+        <div class="formula-lines"><code>動くとき: marker += speed</code><span>止まるとき</span><code>distance = |marker - center|</code></div>
+        <p>同じボタンでも、状態によって意味が変わります。動いていれば「止める」、止まっていれば「次のラウンドへ」。これが状態機械の入口です。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>状態で処理を分ける</h3>
+          <p>入力を受けたあとに「いま止まっているか？」を見ます。動いているときだけ位置を進め、端で向きを反転します。</p>
+        </div>
+        <pre><code><span>func</span> (g *game) Update() error {
+    <span>if</span> pressed() {
+        <span>if</span> g.stopped {
+            g.stopped = false <i>// 次のラウンド</i>
+        } <span>else</span> {
+            g.stopped = true
+            g.score += scoreFor(g.marker)
+        }
+    }
+    <span>if</span> g.stopped {
+        <span>return</span> nil
+    }
+    g.marker += g.speed
+    <span>if</span> g.marker &lt; 45 || g.marker &gt; width-45 {
+        g.speed = -g.speed
+    }
+    <span>return</span> nil
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT STATE</p><h3>いつも同じ反応</h3><p>ボタンを押すたびに同じ処理だけだと、「止める」と「再開する」を分けられません。</p></article>
+        <article><p class="eyebrow">WITH STATE</p><h3>今のモードで意味が変わる</h3><p><code>stopped</code> ひとつで、入力の意味と更新の有無を切り替えられます。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>速さと帯の幅を変えよう</h3><p><code>speed</code> を大きくするとむずかしく、中央帯を広くするとやさしくなります。ラウンドごとに速くするのも定番です。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../tap-target/">← LEVEL 01<strong>光る丸をタッチ</strong></a><a href="../catch-stars/">LEVEL 03 →<strong>落ちものキャッチ</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

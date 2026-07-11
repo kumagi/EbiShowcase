@@ -1,1 +1,139 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Stats and Status Effects | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/rpg/stats-status/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Command RPG</a><span>STEP 04 / 07</span></div><section class="overview-hero"><p class="eyebrow">Build a Dragon Quest-style game</p><h1>Stats and Status Effects</h1><p>Add attack, defense, speed, poison, and buffs to battle calculations.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Damage formulas and temporary effects</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Play it, unpack it, build it.</h2><div class="overview-steps"><article><b>01</b><h3>Feel the rule</h3><p>Play the finished mini game and discover the rule added in this step.</p></article><article><b>02</b><h3>Inspect one frame</h3><p>Trace values through input, state update, and drawing.</p></article><article><b>03</b><h3>Tune and extend</h3><p>Read the Ebitengine code, tune its values, and make the rule your own.</p></article></div></section><nav class="lesson-pager"><a href="../command-battle/">← STEP 03<strong>One-on-one Command Battle</strong></a><a href="../inventory-shop/">STEP 05 →<strong>Equipment Shop and Inventory</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn damage formulas and temporary status effects in this Ebitengine lesson.">
+  <title>STEP 04 — Stats and Status Effects | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Command RPG</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/rpg/stats-status/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Command RPG</a><span>STEP 04 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Stats and Status Effects</h1>
+      <p>Add attack, defense, power-up buffs, and poison to battle calculations. <strong>damage = attack − defense</strong> is the foundation; countdown integers handle every temporary effect on top of it.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Damage formulas and temporary effects</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
+          <h2>Outsmart the venom slime.</h2>
+        </div>
+        <p>1 to Attack, 2 to Power Up (3 turns), 3 to use Antidote. Watch out for poison every three turns.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div>
+        <div id="game-wrap">
+          <iframe class="lesson-game-frame" title="Stats and Status Effects" src="../../../../play/stats-status/" allow="autoplay; fullscreen"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / DAMAGE FORMULA</p>
+        <h2>Damage is decided<br>by subtraction</h2>
+        <p class="lesson-lead">The core formula is <strong>damage = attack − defense</strong>. Layering temporary effects on top is straightforward: a <strong>countdown integer</strong> tracks how many turns a buff or debuff lasts. Decrement it each turn; when it reaches zero the effect disappears automatically. No special timer or separate cleanup code is needed.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>The damage formula</h3>
+          <p>Subtract defense from attack, add a random spread, then clamp to a minimum of 1. <code>max(1, ...)</code> prevents high-defense enemies from taking zero damage.</p>
+          <code>d := max(1, atk - def + rand)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Buff as a countdown</h3>
+          <p>Power Up sets <code>buff = 3</code>. On attack, if <code>buff &gt; 0</code> add bonus damage. Decrement <code>buff</code> at the end of each turn. It vanishes after three turns with no extra cleanup code.</p>
+          <code>if g.buff &gt; 0 { atk += 8 }</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Poison as a countdown</h3>
+          <p>Every third enemy turn inflicts <code>poison = 4</code>. While <code>poison &gt; 0</code> the player takes 3 damage per turn and <code>poison</code> decrements. Antidote sets it to zero immediately.</p>
+          <code>if g.poison &gt; 0 { g.hp -= 3; g.poison-- }</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE DAMAGE FORMULA</p>
+        <div class="formula-lines">
+          <code>atk := g.attack  // base 15</code>
+          <span>apply power-up bonus</span>
+          <code>if g.buff &gt; 0 { atk += 8 }</code>
+          <span>subtract defense, add spread</span>
+          <code>d := max(1, atk - 6 + g.rng.Intn(5))</code>
+        </div>
+        <p>The enemy's defense is the fixed value <code>6</code>. Base attack 15 − defense 6 = 9 minimum damage. With Power Up that becomes 17 minimum. Changing those two numbers reshapes the entire difficulty curve.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Attack, buff, and poison in one Update pass</h3>
+          <p>After the player chooses a command, the code applies the player's action, runs the enemy counter-attack, then updates both countdown integers. The order matters: buff is read before attack so the bonus applies in the same turn it was started.</p>
+        </div>
+        <pre><code><span>// player chose Attack</span>
+atk := g.attack
+<span>if</span> g.buff &gt; 0 { atk += 8 }
+d := max(1, atk-6+g.rng.Intn(5))
+g.enemyHP -= d
+
+<span>// enemy counter-attack and status updates</span>
+enemyAttack := 13 + g.rng.Intn(5)
+g.hp -= max(1, enemyAttack-g.defense)
+
+<span>if</span> g.turn%3 == 0 { g.poison = 4 }
+<span>if</span> g.poison &gt; 0 { g.hp -= 3; g.poison-- }
+<span>if</span> g.buff &gt; 0 { g.buff-- }</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT FORMULA</p>
+          <h3>Fixed damage means no strategy</h3>
+          <p>If every hit deals the same amount, equipment and buffs have no purpose. The attack-minus-defense formula is what makes equipping a better sword feel meaningful.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH COUNTERS</p>
+          <h3>Countdowns make effects expire naturally</h3>
+          <p>Permanent buffs break game balance. A countdown integer gives every effect a finite lifespan and communicates it clearly on-screen: "POWER UP 2" means two turns remain.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Change buff duration and strength</h3>
+          <p>Set <code>buff = 5</code> and <code>atk += 12</code> to make Power Up last longer and hit harder. Or set enemy defense to 12 and watch the damage floor drop — then think about how to compensate.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../command-battle/">← STEP 03<strong>Command Battle</strong></a>
+      <a href="../inventory-shop/">STEP 05 →<strong>Equipment Shop</strong></a>
+    </nav>
+  </main>
+  <footer>
+    <div class="brand"><span>EBI</span> SHOWCASE</div>
+    <p>Made with Go + Ebitengine.</p>
+    <a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a>
+  </footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

@@ -1,1 +1,149 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>1対1コマンドバトル | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/rpg/command-battle/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>STEP 03 / 07</span></div><section class="overview-hero"><p class="eyebrow">ドラゴンクエスト型ゲームを作る</p><h1>1対1コマンドバトル</h1><p>コマンド選択、味方行動、敵行動、勝敗判定を順番に進めます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>ターンと戦闘状態機械</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><a href="../dialogue-flags/">← STEP 02<strong>村人との会話</strong></a><a href="../stats-status/">STEP 04 →<strong>能力値と状態変化</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="コマンド選択・ターン制戦闘の状態機械を学ぶEbitengineレッスン。">
+  <title>STEP 03 — 1対1コマンドバトル | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コマンドRPG</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/rpg/command-battle/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>STEP 03 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>1対1コマンドバトル</h1>
+      <p>コマンド選択・プレイヤー行動・敵行動・勝敗判定を <strong>状態機械</strong> で管理します。4つの状態を順番に移動するだけで、ターン制RPGの核心部分が完成します。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>ターンと戦闘状態機械</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
+          <h2>攻撃・回復・ガードを使ってスライムを倒せ。</h2>
+        </div>
+        <p>1キー・タップで攻撃、2で回復、3でガード。スライムのHPをゼロにしよう。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div>
+        <div id="game-wrap">
+          <iframe class="lesson-game-frame" title="1対1コマンドバトル" src="../../../../play/command-battle/" allow="autoplay; fullscreen"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / STATE MACHINE</p>
+        <h2>状態機械が<br>ターンを整理する</h2>
+        <p class="lesson-lead"><strong>状態機械</strong> とは「今どの状態にいるか」を1つの変数で管理し、状態ごとに異なる処理をする仕組みです。この戦闘は <code>command → playerTurn → enemyTurn → result</code> の4状態を順番に移り変わります。どの状態にいるかさえ分かれば、入力の受け付けと演出タイマーをシンプルに書けます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>状態を定数で定義する</h3>
+          <p><code>iota</code> で連番の定数を作ります。<code>command=0, playerTurn=1, enemyTurn=2, result=3</code> の4つです。変数1つで「今どの段階か」を管理できます。</p>
+          <code>state = command</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>状態ごとに入力と演出を分ける</h3>
+          <p><code>switch g.state</code> で分岐し、<code>command</code> 状態だけキー入力を受け付けます。他の状態ではタイマーを減らし、アニメーション中であることを示します。</p>
+          <code>switch g.state { case command: ... }</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>タイマーで演出を作る</h3>
+          <p>行動後に <code>timer = 35</code> をセットし、毎フレーム1ずつ減らします。タイマーがゼロになったとき次の状態へ移ります。待ち時間の数字を変えるだけで演出の長さを調整できます。</p>
+          <code>g.timer--; if g.timer &lt;= 0 { ... }</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE STATE FLOW</p>
+        <div class="formula-lines">
+          <code>command → (コマンド選択) → playerTurn</code>
+          <span>timer 消化後</span>
+          <code>playerTurn → (HPチェック) → enemyTurn or result</code>
+          <span>timer 消化後</span>
+          <code>enemyTurn → (HPチェック) → command or result</code>
+        </div>
+        <p>ガードを選ぶと <code>guard = true</code> フラグが立ち、敵ターンのダメージを半分にします。前のステップで学んだフラグがそのまま使えています。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>switch で状態を切り替える</h3>
+          <p>Update() は毎フレーム呼ばれます。<code>command</code> 状態でキーを押すとダメージ計算をして <code>playerTurn</code> へ移行し、タイマーをセットします。タイマーが尽きると敵ターンへ移り、敵がダメージを与えて次のコマンド入力に戻ります。</p>
+        </div>
+        <pre><code><span>switch</span> g.state {
+<span>case</span> command:
+    <span>if</span> c == 0 {  <span>// 攻撃</span>
+        d := 8 + g.rng.Intn(7)
+        g.enemyHP -= d
+        g.state = playerTurn
+        g.timer = 35
+    }
+<span>case</span> playerTurn:
+    g.timer--
+    <span>if</span> g.timer &lt;= 0 {
+        <span>if</span> g.enemyHP &lt;= 0 { g.clear = true }
+        <span>else</span> { g.state = enemyTurn; g.timer = 40 }
+    }
+<span>case</span> enemyTurn:
+    g.timer--
+    <span>if</span> g.timer &lt;= 0 {
+        d := 7 + g.rng.Intn(8)
+        <span>if</span> g.guard { d = (d + 1) / 2 }
+        g.hp -= d
+        g.state = command
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT STATE MACHINE</p>
+          <h3>状態なしだと？</h3>
+          <p>if 文を組み合わせるだけでは、「コマンド選択中に敵が動いてしまう」「演出中に入力できてしまう」など、タイミングのバグが生まれます。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH STATE MACHINE</p>
+          <h3>状態変数1つで整理できる</h3>
+          <p>現在の状態だけを見れば、何が起きていいか・悪いかが明確です。アニメーション中は入力を無視し、コマンド中は敵が動かない、が自然に実現します。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>タイマーの長さを変えてみよう</h3>
+          <p><code>g.timer = 35</code> や <code>g.timer = 40</code> の数字を大きくすると演出がゆっくりに、小さくすると素早い戦闘になります。テンポを調整してみましょう。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../dialogue-flags/">← STEP 02<strong>村人との会話</strong></a>
+      <a href="../stats-status/">STEP 04 →<strong>能力値と状態変化</strong></a>
+    </nav>
+  </main>
+  <footer>
+    <div class="brand"><span>EBI</span> SHOWCASE</div>
+    <p>Made with Go + Ebitengine.</p>
+    <a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a>
+  </footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

@@ -1,1 +1,135 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Collision Box Viewer | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/fighting/box-viewer/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D Fighting Game</a><span>STEP 01 / 07</span></div><section class="overview-hero"><p class="eyebrow">Build a fighter from collision boxes</p><h1>Collision Box Viewer</h1><p>Separate three rectangle types by role and inspect the exact moment they overlap.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Pushboxes, hurtboxes, and hitboxes</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Make a hard system<br>small enough to play.</h2><div class="overview-steps"><article><b>01</b><h3>Observe</h3><p>Display collisions, values, and states so the system is visible.</p></article><article><b>02</b><h3>Build the minimum</h3><p>Implement only this step's concept with Ebitengine Update and Draw.</p></article><article><b>03</b><h3>Integrate</h3><p>Add it to the previous step and move closer to the complete game.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../frame-attack/">STEP 02 →<strong>Three-phase Punch</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn push, hurt, and attack collision boxes — the building blocks of 2D fighting game hit detection — in this Ebitengine lesson.">
+  <title>Collision Box Viewer | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/fighting/box-viewer/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 2D Fighting Game</a><span>STEP 01 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>Collision Box Viewer</h1>
+      <p>Assign three invisible rectangles to every fighter — push, hurt, and attack — and watch how each one's overlap test produces a different result. This is the foundation of all 2D fighting-game collision.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Push, hurt, and attack boxes</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Watch the three coloured boxes overlap.</h2></div>
+        <p>Move with A/D or lower touch, punch with Space/X or upper touch. Land five hits to clear.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Collision Box Viewer" src="../../../../play/box-viewer/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / HITBOXES</p>
+        <h2>How does the game know<br>when a punch lands?</h2>
+        <p class="lesson-lead">Every character carries three invisible rectangles at all times. The <strong>blue push box</strong> keeps bodies from passing through each other. The <strong>green hurt box</strong> is the area that receives attacks. The <strong>red hit box</strong> exists only during active attack frames. A hit registers only when the red box overlaps the opponent's green hurt box.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Push Box</h3>
+          <p>Blue boxes stop characters from overlapping. When the two push boxes intersect, the player's position is corrected back out — exactly like a solid wall.</p>
+          <code>if overlap(push1, push2) { p1 = p2 - 36 }</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Hurt Box</h3>
+          <p>The area that can receive an attack. Setting it slightly larger than the visible sprite creates a generous, satisfying hit feel with fewer "missed" attacks.</p>
+          <code>hurt := rect{p2 - 24, 500, 48, 105}</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Hit Box</h3>
+          <p>The attack area, created only during the active window. If it overlaps the opponent's hurt box, the hit is registered. A shorter active window makes the attack sharper and harder to time.</p>
+          <code>hit := rect{p1 + 15, 535, 90, 32}</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">AABB OVERLAP TEST</p>
+        <div class="formula-lines">
+          <code>a.x &lt; b.x+b.w   // a's left is before b's right</code>
+          <span>AND</span>
+          <code>a.x+a.w &gt; b.x   // a's right is after b's left</code>
+          <span>repeat on the Y axis</span>
+          <code>a.y &lt; b.y+b.h &amp;&amp; a.y+a.h &gt; b.y</code>
+        </div>
+        <p>All four conditions must be true simultaneously. This test is called the <em>Axis-Aligned Bounding Box (AABB)</em> check. It works for any pair of upright rectangles and is used throughout 2D game development — not just fighting games.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Separate → Spawn box → Test overlap</h3>
+          <p>Each frame: first resolve push-box overlap so bodies stay apart. Then, when the attack reaches the right frame, spawn a hit box and run the AABB test against the opponent's hurt box.</p>
+        </div>
+        <pre><code>push1 := rect{g.p1 - 18, 510, 36, 100}
+push2 := rect{g.p2 - 18, 510, 36, 100}
+<span>if</span> overlap(push1, push2) {
+    g.p1 = g.p2 - 36   // push p1 back out
+}
+
+<span>if</span> g.attack == 12 {   // active attack frame
+    hit  := rect{g.p1 + 15, 535, 90, 32}
+    hurt := rect{g.p2 - 24, 500, 48, 105}
+    <span>if</span> overlap(hit, hurt) {
+        g.hits++
+    }
+}
+
+func overlap(a, b rect) bool {
+    return a.x &lt; b.x+b.w &amp;&amp; a.x+a.w &gt; b.x &amp;&amp;
+           a.y &lt; b.y+b.h &amp;&amp; a.y+a.h &gt; b.y
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT BOXES</p>
+          <h3>No way to separate collision from graphics</h3>
+          <p>A single position point cannot express area. Rectangles let you test two regions simultaneously, and adjust them independently of the visible sprite.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH SEPARATE BOXES</p>
+          <h3>Each concern is tuned in one place</h3>
+          <p>Widening the hurt box makes the fighter easier to hit; shrinking the hit box tightens the attack range — all without touching the sprite's visual dimensions.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Resize the hit box width</h3>
+          <p>Edit <code>rect{p1 + 15, 535, 90, 32}</code> — try <code>120</code> for a long-range punch or <code>50</code> for a close-range jab and feel the difference.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <span></span>
+      <a href="../frame-attack/">STEP 02 →<strong>Three-phase Punch</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

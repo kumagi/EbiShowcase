@@ -1,1 +1,135 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>判定矩形ビューワー | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/fighting/box-viewer/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D格闘ゲーム</a><span>STEP 01 / 07</span></div><section class="overview-hero"><p class="eyebrow">判定矩形から対戦格闘を作る</p><h1>判定矩形ビューワー</h1><p>3種類の矩形を色と役割で分け、重なった瞬間を目で確認します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>押し合い・喰らい・攻撃判定</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>難しい仕組みを、<br>遊べる大きさに分ける。</h2><div class="overview-steps"><article><b>01</b><h3>観察する</h3><p>判定、数値、状態を画面に表示し、何が起きているか見えるようにします。</p></article><article><b>02</b><h3>最小実装を作る</h3><p>今回の概念だけをEbitengineのUpdateとDrawで動かします。</p></article><article><b>03</b><h3>前の仕組みと統合する</h3><p>前のステップのコードへ加え、完成ゲームに一歩近づけます。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../frame-attack/">STEP 02 →<strong>3段階パンチ</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="押し合い・喰らい・攻撃の3種類の矩形（ヒットボックス）でキャラクターの衝突を管理するEbitengine格闘ゲームレッスン。">
+  <title>判定矩形ビューワー | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コース</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/fighting/box-viewer/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 2D格闘ゲーム</a><span>STEP 01 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>判定矩形ビューワー</h1>
+      <p>3種類の矩形を色と役割で分けると、「ぶつかった」「防いだ」「当てた」の3つが独立して管理できます。押し合い・喰らい・攻撃のヒットボックス設計の入口です。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>押し合い・喰らい・攻撃判定</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3色の箱を重ねてみよう。</h2></div>
+        <p>A・D または画面下で移動、スペース・X または画面上でパンチ。5回命中でクリアです。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="判定矩形ビューワー" src="../../../../play/box-viewer/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / HITBOXES</p>
+        <h2>どうして「当たった」が<br>わかるの？</h2>
+        <p class="lesson-lead">ゲームの中では見えない <strong>矩形（箱）</strong> を3種類用意します。<strong>青い押し合い判定</strong> は体同士が通り抜けないよう押し返し、<strong>緑の喰らい判定</strong> は攻撃を受ける面積を決め、<strong>赤い攻撃判定</strong> は技が出ている瞬間だけ現れます。赤と緑が重なった時にだけヒットが成立します。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>押し合い判定（Push Box）</h3>
+          <p>青い矩形が重なるとキャラクターを押し戻します。壁と同じように体が通り抜けるのを防ぎます。押し合いは毎フレーム調べ続けます。</p>
+          <code>if overlap(push1, push2) { p1 = p2 - 36 }</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>喰らい判定（Hurt Box）</h3>
+          <p>攻撃を受ける領域です。体より少し大きめに設定すると当たりやすい爽快感が出ます。相手の攻撃判定と比べる対象です。</p>
+          <code>hurt := rect{p2 - 24, 500, 48, 105}</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>攻撃判定（Hit Box）</h3>
+          <p>技が有効なフレームにだけ生成します。判定が出ている間に喰らい判定と重なったらヒットです。存在時間が短いほど技は鋭くなります。</p>
+          <code>hit := rect{p1 + 15, 535, 90, 32}</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">AABB OVERLAP TEST</p>
+        <div class="formula-lines">
+          <code>a.x &lt; b.x+b.w   // aの左端 &lt; bの右端</code>
+          <span>かつ</span>
+          <code>a.x+a.w &gt; b.x   // aの右端 &gt; bの左端</code>
+          <span>Y軸も同じように判定する</span>
+          <code>a.y &lt; b.y+b.h &amp;&amp; a.y+a.h &gt; b.y</code>
+        </div>
+        <p>4つの条件がすべて満たされたとき、2つの矩形は重なっています。この判定を「AABB（軸平行境界ボックス）テスト」と呼び、格闘ゲームだけでなく多くの2Dゲームで使われます。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>押し返す → 判定を出す → 重なりを調べる</h3>
+          <p>まず青同士が重なったらキャラクターを押し戻します。次に技のフレームになったら赤い箱を作り、緑と重なるか調べます。3つの処理を順番に行うのがポイントです。</p>
+        </div>
+        <pre><code>push1 := rect{g.p1 - 18, 510, 36, 100}
+push2 := rect{g.p2 - 18, 510, 36, 100}
+<span>if</span> overlap(push1, push2) {
+    g.p1 = g.p2 - 36   // p1を外へ押し戻す
+}
+
+<span>if</span> g.attack == 12 {   // 技のアクティブフレーム
+    hit  := rect{g.p1 + 15, 535, 90, 32}
+    hurt := rect{g.p2 - 24, 500, 48, 105}
+    <span>if</span> overlap(hit, hurt) {
+        g.hits++
+    }
+}
+
+func overlap(a, b rect) bool {
+    return a.x &lt; b.x+b.w &amp;&amp; a.x+a.w &gt; b.x &amp;&amp;
+           a.y &lt; b.y+b.h &amp;&amp; a.y+a.h &gt; b.y
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT BOXES</p>
+          <h3>「通り抜け」も「当たり」も管理できない</h3>
+          <p>位置の数値だけでは面積を表せません。矩形を使うことで「どこからどこまで」をXY・幅・高さの4つの数値で表現できます。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH SEPARATE BOXES</p>
+          <h3>役割ごとに独立して調整できる</h3>
+          <p>喰らい判定だけ広くする、攻撃判定を短くするなど、見た目を変えずに当たり感を細かく調整できます。これが格闘ゲームの「感触設計」の核心です。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>攻撃判定の幅を変えてみよう</h3>
+          <p><code>rect{p1 + 15, 535, 90, 32}</code> の幅 <code>90</code> を <code>120</code> にすると、遠くからでも当たる技になります。逆に <code>50</code> にすると近接専用の技になります。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <span></span>
+      <a href="../frame-attack/">STEP 02 →<strong>3段階パンチ</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

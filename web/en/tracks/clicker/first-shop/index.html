@@ -1,1 +1,81 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>The First Shop | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/clicker/first-shop/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Idle Clicker</a><span>STEP 02 / 05</span></div><section class="overview-hero"><p class="eyebrow">Build a Cookie Clicker-style game</p><h1>The First Shop</h1><p>Buy producers with saved points and reject purchases that cost too much.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Purchase conditions and costs</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Play it, unpack it, build it.</h2><div class="overview-steps"><article><b>01</b><h3>Feel the rule</h3><p>Play the finished mini game and discover the rule added in this step.</p></article><article><b>02</b><h3>Inspect one frame</h3><p>Trace values through input, state update, and drawing.</p></article><article><b>03</b><h3>Tune and extend</h3><p>Read the Ebitengine code, tune its values, and make the rule your own.</p></article></div></section><nav class="lesson-pager"><a href="../tap-counter/">← STEP 01<strong>Treat Counter</strong></a><a href="../idle-factory/">STEP 03 →<strong>Idle Factory</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn buy conditions and rising costs with an Ebitengine clicker shop lesson.">
+  <title>STEP 02 — First Shop | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/clicker/first-shop/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Idle Clicker</a><span>STEP 02 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>First Shop</h1>
+      <p>Save up sweets and buy an oven. Buying requires a condition check — do you have enough? If not, the button grays out and the purchase is rejected. This is the core shop pattern in every clicker.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Buy condition and rising cost</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Collect five ovens.</h2></div><p>Tap the top half to bake, tap the lower button or press B to buy. Watch the cost rise with each purchase.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="First Shop" src="../../../../play/first-shop/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / SHOP</p>
+        <h2>Why does the button<br>go dark when you can't afford it?</h2>
+        <p class="lesson-lead">The button color is determined by a single condition: <strong>sweets &gt;= cost</strong>. When the player cannot afford a purchase, paint a dim color; when they can, paint a bright one. That one boolean drives all the buy/reject feedback.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>Purchase condition check</h3><p>When the shop area is pressed, test whether current sweets meet or exceed cost. If the condition fails, skip the purchase and set a negative flash counter to show the error message.</p><code>if g.sweets &gt;= g.cost { … }</code></article>
+        <article><span class="concept-number">2</span><h3>Split zones by touch Y</h3><p>One press event can mean two different actions depending on where it landed. A y coordinate below 470 is the bake zone; above it is the shop. No separate buttons needed — the coordinate splits behavior.</p><code>if y &lt; 470 { bake } else { buy }</code></article>
+        <article><span class="concept-number">3</span><h3>Linearly rising cost</h3><p>Each purchase adds 5 to cost. Starting at 10, the second oven costs 15, the third 20. The same baking pace that cleared the first oven will fall short for later ones, giving the game a natural difficulty curve.</p><code>g.cost += 5</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE SHOP RULE</p>
+        <div class="formula-lines"><code>sweets &gt;= cost → buy: sweets -= cost; ovens++</code><span>else</span><code>sweets &lt; cost  → reject: show error flash</code></div>
+        <p>The flash counter is positive for a success glow and negative for a failure message. Each frame its absolute value decreases by one until it reaches zero and fades out.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Check → buy → raise cost</h3>
+          <p>Branch on y coordinate to separate bake from shop. In the shop branch, test affordability. On success, deduct sweets, add an oven, increment cost, and set the success flash. On failure, set the error flash.</p>
+        </div>
+        <pre><code><span>if</span> ok {
+    <span>if</span> y &lt; 470 {
+        g.sweets++
+        g.flash = 8
+    } <span>else if</span> g.sweets &gt;= g.cost {
+        g.sweets -= g.cost
+        g.ovens++
+        g.cost += 5
+        g.flash = 12
+    } <span>else</span> {
+        g.flash = -15   <span>// error flash</span>
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT COST CHECK</p><h3>Free unlimited ovens</h3><p>Without the condition, ovens++ runs on every press regardless of funds. The game collapses into a button-mashing exercise with no economy.</p></article>
+        <article><p class="eyebrow">WITH RISING COST</p><h3>The last oven is the hardest</h3><p>A fixed cost would make every oven equally easy. Linear growth means each purchase demands more effort than the one before, stretching the play session naturally.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Change the cost growth rate</h3><p>Increase <code>g.cost += 5</code> to <code>+= 8</code> for a harder shop, or <code>+= 2</code> for an easy one. Also try changing the oven goal from 5 to see how it feels.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../tap-counter/">← STEP 01<strong>Sweet Counter</strong></a><a href="../idle-factory/">STEP 03 →<strong>Idle Factory</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

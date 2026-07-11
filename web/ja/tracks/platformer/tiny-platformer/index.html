@@ -1,4 +1,128 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>1画面プラットフォーマー | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/platformer/tiny-platformer/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 横スクロールアクション</a><span>STEP 01 / 05</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / マリオ型ゲームを作る</p><h1>1画面プラットフォーマー</h1><p>1画面の足場を飛び移り、床・壁・天井との衝突を解決します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>接地判定とジャンプ</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>1画面プラットフォーマー</h2></div><p>A・Dまたは画面下で移動。スペースまたは画面上でジャンプし、旗を目指します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="1画面プラットフォーマー" src="../../../../play/tiny-platformer/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>地面にいる時だけジャンプする</h2><p>床へ上から着地した時に grounded をtrueにします。ジャンプは grounded の時だけ許可し、空中で何度も跳べないようにします。</p></div><pre><code>if hitFloor { grounded = true }
-if jumpPressed &amp;&amp; grounded {
-    velocityY = -jumpPower
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>接地を調べる</h3><p>落下中に床へ触れた時だけ接地状態にします。</p></article><article><b>02</b><h3>ジャンプする</h3><p>接地中の入力で上向きの速度を与えます。</p></article><article><b>03</b><h3>衝突を分ける</h3><p>横移動と縦移動を別々に解決します。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../moving-platforms/">STEP 02 →<strong>動く足場の谷</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="接地判定とジャンプのしくみを学ぶEbitengine横スクロールアクション入門。地面にいる時だけジャンプできる理由をGoコードで解説します。">
+  <title>STEP 01 — 1画面プラットフォーマー | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コース</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/platformer/tiny-platformer/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 横スクロールアクション</a><span>STEP 01 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
+      <h1>1画面プラットフォーマー</h1>
+      <p>1画面に並んだ足場を飛び移り、一番上の旗を目指します。横移動と縦移動を別々に解くことで、床・壁・天井すべての衝突をきれいに処理します。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>接地判定とジャンプ</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>まずは旗まで登ってみよう。</h2></div>
+        <p>A・D または画面下タッチで左右移動。スペースまたは画面上タッチでジャンプ。落ちたら最初からやり直しです。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="1画面プラットフォーマー" src="../../../../play/tiny-platformer/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / GROUNDED JUMP</p>
+        <h2>どうして、<br>空中でジャンプできないの？</h2>
+        <p class="lesson-lead">ゲームの中のエビは <strong>grounded（地面にいる）</strong> という旗を持っています。地面に着いた瞬間だけ旗を立て、空中では旗を倒します。ジャンプキーは旗が立っているときしか効かないので、二段ジャンプができません。物理の重力は毎フレーム <code>vy</code> に少しずつ足す、たった1行で再現します。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>重力</h3>
+          <p>毎フレーム vy に +0.65 を足します。何もしなければ加速しながら落ちていく感覚を生み出します。上限 14 で速度が頭打ちになります。</p>
+          <code>vy = min(vy+.65, 14)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>接地判定</h3>
+          <p>縦移動のあと、各ブロックと重なっているか調べます。落下中（vy &gt; 0）に重なったら足をブロック上に置き直し、<code>grounded = true</code> にします。</p>
+          <code>grounded = true</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>衝突の分離</h3>
+          <p>横移動 → 横衝突解決 → 縦移動 → 縦衝突解決、の順番が重要です。同時に処理すると斜めの角で引っかかるバグが起きます。</p>
+          <code>p.x += vx // 横を先に</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE ONE-LINE RULE</p>
+        <div class="formula-lines">
+          <code>if jump &amp;&amp; grounded { vy = -12 }</code>
+          <span>毎フレーム</span>
+          <code>grounded = false → 衝突チェックで再び true</code>
+        </div>
+        <p>毎フレーム grounded を false にリセットし、その後の衝突チェックで再び true を立てます。「地面にいる」は毎フレーム証明しなければなりません。この仕組みが「地面にいる時だけジャンプ」を実現します。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>縦の衝突解決が<br>接地を決める</h3>
+          <p>落下中（vy &gt;= 0）でブロックに重なったとき、頂面へスナップして <code>vy = 0</code>、<code>grounded = true</code>。上昇中（vy &lt; 0）に天井へ当たったときは底面へスナップして <code>vy = 0</code>。</p>
+        </div>
+        <pre><code>g.p.y += g.vy
+g.grounded = <span>false</span>
+<span>for</span> _, b := <span>range</span> g.blocks {
+    <span>if</span> overlap(g.p, b) {
+        <span>if</span> g.vy > 0 {
+            g.p.y = b.y - g.p.h <i>// 足をブロック上に</i>
+            g.grounded = <span>true</span>
+        } <span>else</span> {
+            g.p.y = b.y + b.h   <i>// 頭をブロック下に</i>
+        }
+        g.vy = 0
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT GROUNDED FLAG</p>
+          <h3>空中で何度でも跳べてしまう</h3>
+          <p>旗がないと「ジャンプキーを押したら常に上昇」になります。ゲームバランスが崩れ、ジャンプ系のパズルが成立しません。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH SEPARATE AXES</p>
+          <h3>斜め衝突もスムーズに解ける</h3>
+          <p>横・縦を分けることで、プレイヤーが足場の角に引っかかる「コーナー問題」をシンプルに回避できます。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>ジャンプ力と重力を調整しよう</h3>
+          <p><code>g.vy = -12</code> を大きくするとよく飛び、<code>+.65</code> を大きくすると素早く落ちます。この2つのバランスが「気持ちいいジャンプ」を作ります。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <span></span>
+      <a href="../moving-platforms/">STEP 02 →<strong>動く足場の谷</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

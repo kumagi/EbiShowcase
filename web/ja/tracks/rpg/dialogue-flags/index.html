@@ -1,1 +1,145 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>村人との会話 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/rpg/dialogue-flags/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>STEP 02 / 07</span></div><section class="overview-hero"><p class="eyebrow">ドラゴンクエスト型ゲームを作る</p><h1>村人との会話</h1><p>話しかけた相手や出来事によって、会話の内容を変えます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>文章送りとイベントフラグ</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><a href="../village-walk/">← STEP 01<strong>小さな村を歩く</strong></a><a href="../command-battle/">STEP 03 →<strong>1対1コマンドバトル</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="NPCとの会話、テキスト送り、イベントフラグを学ぶEbitengineレッスン。">
+  <title>STEP 02 — 村人との会話 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コマンドRPG</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/rpg/dialogue-flags/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>STEP 02 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>村人との会話</h1>
+      <p>話しかけた相手や出来事によって、会話の内容を変えます。「クエストを受けたか」「薬草を持っているか」という <strong>フラグ</strong> が、同じ長老を何度話しかけても違うセリフを返す秘密です。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>文章送りとイベントフラグ</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
+          <h2>長老に話しかけて、薬草を探そう。</h2>
+        </div>
+        <p>移動：矢印キー・WASD・タップ　会話：スペース・X・画面上部タップ</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div>
+        <div id="game-wrap">
+          <iframe class="lesson-game-frame" title="村人との会話" src="../../../../play/dialogue-flags/" allow="autoplay; fullscreen"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / DIALOGUE &amp; FLAGS</p>
+        <h2>同じ人が、<br>違うことを言う仕組み</h2>
+        <p class="lesson-lead"><strong>フラグ</strong> は true/false のスイッチです。クエストを受けたら <code>quest = true</code>、薬草を拾ったら <code>herb = true</code> と記録します。長老に話しかけるたび、フラグの組み合わせを switch で調べ、その状況に合ったセリフを返します。テキスト送りは行インデックス <code>line</code> を増やすだけです。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>向きで正面のNPCを探す</h3>
+          <p>プレイヤー座標に <code>facing</code> を足すと正面のマスが分かります。そのマスにNPCがいれば会話を始めます。</p>
+          <code>front := p.Add(facing)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>テキストを配列で送る</h3>
+          <p>セリフを文字列スライス <code>talk</code> に入れ、行インデックス <code>line</code> を増やします。配列を使うと複数ページの会話も管理できます。</p>
+          <code>g.line++</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>フラグで分岐する</h3>
+          <p><code>quest</code> と <code>herb</code> の2つのフラグを組み合わせると、長老が3つの異なる状況を認識できます。フラグの数を増やすと、より複雑なイベントも表現できます。</p>
+          <code>if !g.quest { ... }</code>
+        </article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE DIALOGUE RULE</p>
+        <div class="formula-lines">
+          <code>front := point{g.p.x + g.facing.x, g.p.y + g.facing.y}</code>
+          <span>正面にNPCがいる？</span>
+          <code>who, ok := g.npcs[front]</code>
+          <span>フラグで分岐してセリフを設定</span>
+          <code>if !g.quest { g.quest = true; g.talk = [...] }</code>
+        </div>
+        <p>フラグは「出来事が起きた」という事実を記録します。同じキャラに何度でも話しかけられるRPGを作るとき、フラグなしでは毎回同じセリフになってしまいます。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>interact() — フラグを確認してセリフを決める</h3>
+          <p>スペースキーや画面上部タップで <code>interact()</code> が呼ばれます。正面のNPCを調べ、長老なら <code>quest</code> と <code>herb</code> の状態に応じてセリフを切り替えます。</p>
+        </div>
+        <pre><code><span>func</span> (g *game) interact() {
+    front := point{g.p.x + g.facing.x, g.p.y + g.facing.y}
+    who, ok := g.npcs[front]
+    <span>if</span> !ok { return }
+    <span>switch</span> who {
+    <span>case</span> "elder":
+        <span>if</span> !g.quest {
+            g.quest = true
+            g.talk = []string{"Elder: A healing herb grows northwest.",
+                              "Please bring it back to me!"}
+        } <span>else if</span> !g.herb {
+            g.talk = []string{"Elder: The herb is in the northwest corner."}
+        } <span>else</span> {
+            g.talk = []string{"Elder: You found it! Thank you, hero!",
+                              "QUEST COMPLETE"}
+            g.clear = true
+        }
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT FLAGS</p>
+          <h3>フラグなしだと？</h3>
+          <p>状態を記録しないと、何度話しかけても同じセリフが出ます。「薬草を持ってきた後」も「最初に話した時」も区別できません。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH FLAGS</p>
+          <h3>bool 1個でストーリーが分岐する</h3>
+          <p>2つのフラグで長老のセリフが3段階に変わります。フラグを増やせば、クエストの複雑さをいくらでも広げられます。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>子どものセリフを変えてみよう</h3>
+          <p><code>case "child"</code> のセリフを書き換えると、すぐゲームに反映されます。クエストのフラグに合わせて子どものセリフも変化させてみましょう。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../village-walk/">← STEP 01<strong>小さな村を歩く</strong></a>
+      <a href="../command-battle/">STEP 03 →<strong>1対1コマンドバトル</strong></a>
+    </nav>
+  </main>
+  <footer>
+    <div class="brand"><span>EBI</span> SHOWCASE</div>
+    <p>Made with Go + Ebitengine.</p>
+    <a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a>
+  </footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

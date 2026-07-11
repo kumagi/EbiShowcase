@@ -1,5 +1,90 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 09 — Sokoban | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/games/sokoban/" lang="ja">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 09</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Sokoban</h1><p>Represent a stage with simple data and enforce the rules for pushing boxes.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Tile maps</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Sokoban</h2></div><p>Move with arrows, WASD, or a directional tap. Z undoes and R resets.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 09</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Sokoban" src="../../../play/sokoban/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Read the meaning of each tile</h2><p>A stage can be stored as rows of characters: # is a wall, $ is a box, and . is a goal. When the next tile has a box, move the box and player only if the tile beyond is empty.</p></div><pre><code>next := player.Add(direction)
-if boxAt(next) &amp;&amp; isEmpty(next.Add(direction)) {
-    moveBox(next, direction)
-}
-movePlayer(next)</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>Build a stage from data</h2><div class="overview-steps"><article><b>01</b><h3>Read the map</h3><p>Turn each character into a wall, floor, box, or goal.</p></article><article><b>02</b><h3>Look ahead</h3><p>Block a move when a wall or another box is behind the pushed box.</p></article><article><b>03</b><h3>Save state</h3><p>Save the player and box positions before moving to implement undo.</p></article></div></section><nav class="lesson-pager"><a href="../space-shooter/">← LEVEL 08<strong>Space Shooter</strong></a><a href="../platformer/">LEVEL 10 →<strong>Platformer</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn tile maps in Go and Ebitengine: define Sokoban stages as strings, manage walls in a map, and implement undo with a history stack.">
+  <title>LEVEL 09 — Sokoban | Ebi Showcase</title>
+  <link rel="canonical" href="./">
+  <link rel="alternate" hreflang="ja" href="../../../ja/games/sokoban/">
+  <link rel="alternate" hreflang="en" href="../../../en/games/sokoban/">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../ja/games/sokoban/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 09</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Sokoban</h1>
+      <p>Design stages as a string array where <code>#</code> is a wall, <code>$</code> a box, <code>.</code> a goal, and <code>@</code> the player. Parse once at startup, then manage everything in tile coordinates.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Tile map</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Push every box onto a goal.</h2></div><p>Arrow keys or WASD to move. Walk into a box to push it. Z or Backspace to undo, R to reset.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 09</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Sokoban" src="../../../play/sokoban/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / TILE MAP</p>
+        <h2>How is the stage<br>defined in code?</h2>
+        <p class="lesson-lead">With a <strong>tile map</strong>. The stage is a slice of strings. At startup the code reads every character, decides what each tile contains, and fills the game structs. Rendering later reads those structs back and draws each tile. Stage design and game logic stay completely separate.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>String-based stage</h3><p>The level is a <code>[]string</code> where each character encodes one tile. Looking at the source is like looking at the map itself.</p><code>var level = []string{…}</code></article>
+        <article><span class="concept-number">2</span><h3>map for walls</h3><p>Walls are stored in a <code>map[point]bool</code>. Checking whether a tile is a wall is a single map lookup — faster and cleaner than scanning a slice.</p><code>walls map[point]bool</code></article>
+        <article><span class="concept-number">3</span><h3>Undo is a stack</h3><p>Before any move, save the player and box positions as a snapshot. Undo pops the last snapshot and restores it.</p><code>history []snapshot</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE PARSE RECIPE</p>
+        <div class="formula-lines"><code>for y, row := range level</code><span>inner</span><code>for x, c := range row</code></div>
+        <p>The outer loop provides the row (y coordinate) and the inner loop provides the column (x coordinate). A switch on character <code>c</code> fills walls, boxes, goals, and the player start.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>move steps one tile<br>at a time</h3>
+          <p>If the next tile is a wall, do nothing. If a box is there, check the tile beyond before pushing. Always save a snapshot first so undo always works.</p>
+        </div>
+        <pre><code><span>func</span> (g *game) move(d point) {
+    next := point{g.player.x + d.x, g.player.y + d.y}
+    <span>if</span> g.walls[next] {
+        <span>return</span> <i>// wall blocks movement</i>
+    }
+    boxIndex := g.boxAt(next)
+    <span>if</span> boxIndex >= 0 {
+        beyond := point{next.x + d.x, next.y + d.y}
+        <span>if</span> g.walls[beyond] || g.boxAt(beyond) >= 0 {
+            <span>return</span> <i>// box cannot be pushed</i>
+        }
+        g.save() <i>// snapshot before moving</i>
+        g.boxes[boxIndex] = beyond
+    } <span>else</span> {
+        g.save()
+    }
+    g.player = next
+    g.moves++
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT A TILE MAP</p><h3>Pixel coordinates are fragile</h3><p>Hardcoding wall positions in pixels means touching dozens of numbers for a small layout change. Tile coordinates shrink each position to a single integer pair.</p></article>
+        <article><p class="eyebrow">WITH A TILE MAP</p><h3>The string is the map</h3><p>You can read the <code>level</code> string and immediately visualize the stage. Adding a new level is writing one more string.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Design your own stage</h3><p>Edit the <code>level</code> string to create a custom puzzle. Use <code>#</code> for walls, <code>$</code> for boxes, <code>.</code> for goals, and <code>@</code> for the player. Make sure the number of boxes equals the number of goals.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../space-shooter/">← LEVEL 08<strong>Space Shooter</strong></a><a href="../platformer/">LEVEL 10 →<strong>Platformer</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

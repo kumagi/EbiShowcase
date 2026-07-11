@@ -1,1 +1,78 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>アリーナ回避 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/survivors/arena-dodge/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 大量敵サバイバル</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">Vampire Survivors型ゲームを作る</p><h1>アリーナ回避</h1><p>斜めだけ速くならない移動を作り、敵との距離を保ちます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>正規化した8方向移動</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>遊んで、ほどいて、作る。</h2><div class="overview-steps"><article><b>01</b><h3>手ざわりを知る</h3><p>完成したミニゲームを操作し、今回追加されたルールを発見します。</p></article><article><b>02</b><h3>1フレームを見る</h3><p>入力、状態更新、描画の順に、値がどう変わるかを図で追います。</p></article><article><b>03</b><h3>数値を変える</h3><p>実際のEbitengineコードを読み、数字やルールを変えて自分の作品にします。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../auto-turret/">STEP 02 →<strong>自動砲台サバイバル</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="どの向きも同じ速さで動く正規化移動を学ぶ、Ebitengine版サバイバルゲームの第1ステップ。">
+  <title>STEP 01 — アリーナ回避 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/survivors/arena-dodge/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 大量敵サバイバル</a><span>STEP 01 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
+      <h1>アリーナ回避</h1>
+      <p>四方から押し寄せる敵をかわしながら30秒生き残ります。斜めでも横でも、常に同じ速さで動くのが最初の課題です。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>正規化した8方向移動</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>30秒間、敵に捕まらずに逃げろ！</h2></div><p>WASD・方向キー・ドラッグで移動。5回触れるとゲームオーバー。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="アリーナ回避" src="../../../../play/arena-dodge/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / NORMALIZED MOVEMENT</p>
+        <h2>斜め移動が<br>速くならないのはなぜ？</h2>
+        <p class="lesson-lead">右と下を同時に押すと、X方向に1、Y方向に1、合わせた長さは <strong>√2 ≈ 1.41</strong> になります。そのまま足すと斜めだけ速くなるので、長さで割って「長さ1の矢印」に直してから速さを掛けます。これを<strong>正規化</strong>と呼びます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>入力ベクトル</h3><p>上下左右のキーを足して、移動の向きを1本の矢印にします。斜めは縦と横の両方が同時に入った状態です。</p><code>dx += 1; dy += 1</code></article>
+        <article><span class="concept-number">2</span><h3>正規化</h3><p>矢印の長さを <code>math.Hypot</code> で求めて、縦と横の両方をその長さで割ります。これで長さが必ず1になります。</p><code>dx /= math.Hypot(dx, dy)</code></article>
+        <article><span class="concept-number">3</span><h3>速さを掛ける</h3><p>長さ1の矢印に速さ（ここでは4）を掛けてから位置に足します。向きはそのまま、大きさだけが変わります。</p><code>g.px += dx / l * 4</code></article>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE NORMALIZE RULE</p>
+        <div class="formula-lines"><code>l := math.Hypot(dx, dy)</code><span>次に</span><code>g.px += dx / l * 4</code></div>
+        <p>入力がゼロのとき（何も押していないとき）は <code>l</code> もゼロになります。ゼロ除算を避けるため、必ず <code>if dx != 0 || dy != 0</code> で確認してから計算します。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>入力を集めて → 正規化 → 移動</h3>
+          <p>キーとタッチの両方で入力を集め、長さがある場合だけ正規化してから位置に足します。タッチの場合は「指の場所 − 自機の位置」が矢印になります。どちらの入力も同じコードで扱えます。</p>
+        </div>
+        <pre><code><span>if</span> ids := ebiten.AppendTouchIDs(nil); len(ids) &gt; 0 {
+    x, y := ebiten.TouchPosition(ids[0])
+    dx = float64(x) - g.px
+    dy = float64(y) - g.py
+}
+<span>if</span> dx != 0 || dy != 0 {
+    l := math.Hypot(dx, dy)
+    g.px += dx / l * 4
+    g.py += dy / l * 4
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT NORMALIZATION</p><h3>斜めが速いゲームは不公平</h3><p>正規化なしだと斜め移動は約1.41倍速くなります。プレイヤーが無意識に斜め移動だけ使う「斜め問題」が起きます。</p></article>
+        <article><p class="eyebrow">WITH NORMALIZATION</p><h3>どの向きも同じ速さ</h3><p>正規化すると8方向すべてが同じ速さになり、操作が公平になります。Survivors系ゲームの移動の基礎です。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>速さ4を変えてみよう</h3><p><code>dx / l * 4</code> の <code>4</code> を <code>6</code> にするとすばしこく、<code>2</code> にするとゆっくりになります。敵の速さ <code>1.15</code> と合わせて難易度を調整しましょう。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><span></span><a href="../auto-turret/">STEP 02 →<strong>自動砲台サバイバル</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

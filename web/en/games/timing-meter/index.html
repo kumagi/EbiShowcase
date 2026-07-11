@@ -1,1 +1,114 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>LEVEL 02 — Stop the Meter | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/games/timing-meter/" lang="ja">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 02</span></div><section class="overview-hero"><p class="eyebrow">★☆☆☆☆ / PLAYABLE</p><h1>Stop the Meter</h1><p>Stop a moving marker in the target and understand frames and state.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Time and game states</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Stop the Meter</h2></div><p>An Ebitengine game supporting click, touch, and keyboard input.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Stop the Meter" src="../../../play/timing-meter/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Move each frame and reverse at the edge</h2><p>Add a constant speed to the marker. Reverse the sign at either edge and score the distance from the center on a press.</p></div><pre><code>markerX += speed\nif markerX < minX || markerX > maxX {\n    speed = -speed\n}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>What this lesson will contain</h2><div class="overview-steps"><article><b>01</b><h3>Play first</h3><p>Discover the rules and feel before reading an explanation.</p></article><article><b>02</b><h3>See the system</h3><p>Follow the new idea through a frame-by-frame visual.</p></article><article><b>03</b><h3>Build the code</h3><p>Connect the same behavior to Ebitengine Update and Draw.</p></article></div></section><nav class="lesson-pager"><a href="../tap-target/">← LEVEL 01<strong>Tap the Target</strong></a><a href="../catch-stars/">LEVEL 03 →<strong>Catch the Stars</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Stop a moving meter and learn frame updates plus game state in Ebitengine.">
+  <title>LEVEL 02 — Stop the Meter | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../ja/games/timing-meter/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 02</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
+      <h1>Stop the Meter</h1>
+      <p>Stop the bouncing marker inside the center band. The heart of this game is “move a little every frame” plus switching between moving and stopped.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Time and game state</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Stop it on the sweet spot.</h2></div><p>Use space, click, or tap. Closer to the center means a higher score.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Stop the Meter" src="../../../play/timing-meter/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / TIME &amp; STATE</p>
+        <h2>Why does the marker<br>bounce back and forth?</h2>
+        <p class="lesson-lead">A game is a flipbook. Each frame repeats <strong>position = position + speed</strong>. Flip the sign of speed at the edges and it travels back and forth. Stopping means switching into a “do not move” state.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>Frames</h3><p>One page of the flipbook. Ebitengine calls <code>Update</code> about 60 times a second, so tiny steps look smooth.</p><code>marker += speed</code></article>
+        <article><span class="concept-number">2</span><h3>Bounce</h3><p>At the left or right edge, set <code>speed = -speed</code>. Same speed, opposite direction.</p><code>speed = -speed</code></article>
+        <article><span class="concept-number">3</span><h3>State</h3><p>Moving or stopped. While stopped, skip movement and score from the distance to the center.</p><code>stopped bool</code></article>
+      </div>
+
+      <div class="motion-lab" data-lab="meter" data-moving="moving" data-stopped="stopped" aria-labelledby="meter-lab-title">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p>
+          <h3 id="meter-lab-title">Step one frame, then stop</h3>
+          <p>“Next frame” moves the marker. It flips at the edges. “Stop” scores from the distance to the center.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>Next frame</button>
+            <button type="button" class="lab-button" data-lab-stop>Stop / resume</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">In the real game, frames advance automatically. This lab is slow motion so you can see the rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="Meter movement board">
+            <div class="lab-meter-track">
+              <div class="lab-meter-zones"><span class="zone-good"></span><span class="zone-great"></span><span class="zone-perfect"></span></div>
+              <div class="lab-marker" data-lab-marker aria-hidden="true"></div>
+            </div>
+          </div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>position X</span><strong data-lab-x>45</strong><small>speed <span data-lab-speed>8.0</span></small></div>
+            <div><span>state</span><strong data-lab-state>moving</strong><small>moving / stopped</small></div>
+            <div><span>SCORE</span><strong data-lab-score>0</strong><small>closer is better</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE TWO-MODE RULE</p>
+        <div class="formula-lines"><code>moving: marker += speed</code><span>stopped</span><code>distance = |marker - center|</code></div>
+        <p>The same button means different things in different states: stop while moving, start the next round while stopped. That is the doorway to state machines.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Branch on the current state</h3>
+          <p>After reading input, ask “are we stopped?” Only move while active, and flip direction at the edges.</p>
+        </div>
+        <pre><code><span>func</span> (g *game) Update() error {
+    <span>if</span> pressed() {
+        <span>if</span> g.stopped {
+            g.stopped = false <i>// next round</i>
+        } <span>else</span> {
+            g.stopped = true
+            g.score += scoreFor(g.marker)
+        }
+    }
+    <span>if</span> g.stopped {
+        <span>return</span> nil
+    }
+    g.marker += g.speed
+    <span>if</span> g.marker &lt; 45 || g.marker &gt; width-45 {
+        g.speed = -g.speed
+    }
+    <span>return</span> nil
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT STATE</p><h3>One reaction forever</h3><p>If every press does the same work, you cannot separate “stop” from “resume.”</p></article>
+        <article><p class="eyebrow">WITH STATE</p><h3>Meaning depends on the mode</h3><p>One <code>stopped</code> flag can change both input meaning and whether movement runs.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Change speed and band width</h3><p>Larger <code>speed</code> is harder. A wider center band is kinder. Speeding up each round is a classic trick.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../tap-target/">← LEVEL 01<strong>Tap the Target</strong></a><a href="../catch-stars/">LEVEL 03 →<strong>Catch the Stars</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>
