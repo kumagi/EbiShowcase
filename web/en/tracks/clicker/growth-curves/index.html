@@ -37,6 +37,29 @@
         <article><span class="concept-number">3</span><h3>K / M / B number format</h3><p>Raw floats like 1234567.89 overflow any display. The <code>short()</code> helper rounds and appends a suffix — K for thousands, M for millions, B for billions — so every number fits in a compact label.</p><code>fmt.Sprintf("%.2fM", v/1e6)</code></article>
       </div>
 
+      <div class="motion-lab" data-lab="cost" data-base="10" data-growth="1.18" aria-labelledby="cost-lab-title">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / EXPONENTIAL COST</p>
+          <h3 id="cost-lab-title">Watch the price jump</h3>
+          <p>Each “Buy one” raises ownership and multiplies the next cost by 1.18. Production scales with the square of ownership.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-buy>Buy one</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">K / M formatting keeps huge numbers readable.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="Cost curve experiment board" style="display:grid;place-items:center;color:#9db0b7;font:700 14px monospace;padding:24px;text-align:center">
+            cost = 10 × 1.18ⁿ<br><br>rate = n² × 8 /s
+          </div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>owned n</span><strong data-lab-count>0</strong><small>lab count</small></div>
+            <div><span>next cost</span><strong data-lab-cost>10.0</strong><small>×1.18 each</small></div>
+            <div><span>rate</span><strong data-lab-rate>0.0/s</strong><small>n² × 8</small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE GROWTH FORMULA</p>
         <div class="formula-lines"><code>cost(n) = 10 × 1.18ⁿ</code><span>production</span><code>rate(n) = n² × 8  [/sec]</code></div>
@@ -76,6 +99,7 @@
     <nav class="lesson-pager"><a href="../idle-factory/">← STEP 03<strong>Idle Factory</strong></a><a href="../offline-bakery/">STEP 05 →<strong>Offline Bakery</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

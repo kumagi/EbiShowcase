@@ -40,6 +40,30 @@
         <article><span class="concept-number">3</span><h3>Smooth camera</h3><p>Every frame compute where the camera should be and move 9% of the remaining distance toward it. The larger the gap, the faster the camera catches up.</p><code>camera += (target - camera) * .09</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="camera"  aria-labelledby="lab-title-platformer">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-platformer">Camera eases toward the player</h3>
+          <p>Move the player, then ease the camera. Screen X = world − camera.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button" data-lab-left>Left</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-right>Right</button>
+            <button type="button" class="lab-button" data-lab-step>Ease camera</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-actor style="top:50%"></div></div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>camera</span><strong data-lab-cam>0</strong><small></small></div>
+            <div><span>player</span><strong data-lab-player>200</strong><small></small></div>
+            <div><span>screen X</span><strong data-lab-screen>200</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE CAMERA LERP</p>
         <div class="formula-lines"><code>target = player.x - width * 0.38</code><span>then every frame</span><code>camera += (target - camera) * 0.09</code></div>
@@ -93,6 +117,7 @@ g.camera += (target - g.camera) * .09</code></pre>
     <nav class="lesson-pager"><a href="../sokoban/">← LEVEL 09<strong>Sokoban</strong></a><a href="../dungeon/">LEVEL 11 →<strong>Dungeon</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

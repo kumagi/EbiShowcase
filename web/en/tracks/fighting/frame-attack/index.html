@@ -1,5 +1,156 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Three-phase Punch | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/fighting/frame-attack/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D Fighting Game</a><span>STEP 02 / 07</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / BUILD A FIGHTING GAME</p><h1>Three-phase Punch</h1><p>Split an attack into startup, active, and recovery to control when its box exists.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Startup, active, and recovery</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Three-phase Punch</h2></div><p>Time punches against the moving target and land five during the four red active frames.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Three-phase Punch" src="../../../../play/frame-attack/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Divide move time with frame numbers</h2><p>Frames 1–8 prepare, 9–12 own an attack box, and 13–30 recover. Pressing attack does not mean hitting immediately.</p></div><pre><code>switch {
-case frame &lt;= 8:  phase = Startup
-case frame &lt;= 12: phase = Active
-case frame &lt;= 30: phase = Recovery
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>Give time three jobs</h2><div class="overview-steps"><article><b>01</b><h3>Startup</h3><p>Preparation before an attack can hit.</p></article><article><b>02</b><h3>Active</h3><p>A short time when the red attack box exists.</p></article><article><b>03</b><h3>Recovery</h3><p>Return time before another action is possible.</p></article></div></section><nav class="lesson-pager"><a href="../box-viewer/">← STEP 01<strong>Box Viewer</strong></a><a href="../hit-reaction/">STEP 03 →<strong>Hit Reaction</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn startup, active, and recovery attack frames — the frame-data fundamentals of 2D fighting games — in this Ebitengine lesson.">
+  <title>Three-phase Punch | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/fighting/frame-attack/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 2D Fighting Game</a><span>STEP 02 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>Three-phase Punch</h1>
+      <p>Every attack takes time to wind up, connects for a short window, then spends time returning. Divide those phases with a frame counter and you have the core of fighting-game frame data.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Startup, active, and recovery</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Time your punch against the moving target.</h2></div>
+        <p>Press Space/X or tap to punch. Land five hits during the four red ACTIVE frames to clear.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Three-phase Punch" src="../../../../play/frame-attack/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / FRAME DATA</p>
+        <h2>Why doesn't a punch land<br>the instant you press the button?</h2>
+        <p class="lesson-lead">An attack is divided into three phases: <strong>Startup</strong> (frames 1–8), where the arm is still extending and no hit box exists; <strong>Active</strong> (frames 9–12), the four frames when a red attack box is live and a hit can register; and <strong>Recovery</strong> (frames 13–30), when the fighter returns to neutral and cannot act. Pressing the button early just starts the startup clock again.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Startup</h3>
+          <p>Frames 1–8 prepare the arm swing. No hit box exists yet. Short startup means a fast move; long startup gives the opponent more time to react.</p>
+          <code>frame &lt;= 8  → STARTUP (yellow)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Active</h3>
+          <p>Frames 9–12 spawn the red hit box. A hit registers only if it overlaps the opponent's hurt box during this window. Only four frames — timing matters.</p>
+          <code>frame 9–12 → ACTIVE (red)</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Recovery</h3>
+          <p>Frames 13–30 return the fighter to neutral. No new actions can start. Long recovery means a punishable move on whiff or block.</p>
+          <code>frame &gt;= 13 → RECOVERY (blue)</code>
+        </article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="frames" data-startup="startup" data-active="active" data-recovery="recovery" aria-labelledby="lab-title-frame-attack">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-frame-attack">Step startup / active / recovery</h3>
+          <p>Moves have startup, active, and recovery. Only active frames can hit.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>Next frame</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">startup → active → recovery</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>frame</span><strong data-lab-frame>0</strong><small></small></div>
+            <div><span>phase</span><strong data-lab-phase>startup</strong><small></small></div>
+            <div><span>1-8 / 9-12 / 13+</span><strong></strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">FRAME RANGES</p>
+        <div class="formula-lines">
+          <code>STARTUP    frames  1 –  8  // no hit box yet</code>
+          <span>↓</span>
+          <code>ACTIVE     frames  9 – 12  // hit box lives here</code>
+          <span>↓</span>
+          <code>RECOVERY   frames 13 – 30  // cannot act</code>
+        </div>
+        <p>Ebitengine targets 60 frames per second by default, so one frame ≈ 16.7 ms. The total move length here is 30 frames — exactly 500 ms. Adjusting the Active window boundary shifts how strict the timing must be without changing move length.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Press → increment counter → test overlap in Active</h3>
+          <p>On button press, set <code>g.frame = 1</code>. Each update, increment it and wrap at 31. During frames 9–12, spawn the attack rect and run the overlap test. The <code>hitThis</code> flag prevents double-counting within one punch.</p>
+        </div>
+        <pre><code><span>if</span> g.frame == 0 &amp;&amp; press() {
+    g.frame = 1        // begin move on press
+    g.hitThis = false
+} <span>else if</span> g.frame &gt; 0 {
+    g.frame++
+    <span>if</span> g.frame &gt;= 31 { g.frame = 0 }  // move ends
+}
+
+// create attack box only during Active frames
+<span>if</span> g.frame &gt;= 9 &amp;&amp; g.frame &lt;= 12 &amp;&amp; !g.hitThis {
+    attack := rect{235, 495, 105, 35}
+    <span>if</span> overlap(attack, g.target()) {
+        g.hits++
+        g.hitThis = true    // once per punch
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT FRAME DATA</p>
+          <h3>Every button press is an instant hit</h3>
+          <p>Without startup delay, attacks have no timing skill to master. There is no window for the opponent to dodge, block, or counter.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH FRAME DATA</p>
+          <h3>Moves gain distinct character</h3>
+          <p>Fast startup with long recovery trades safety for speed. Slow startup with large damage creates a high-risk, high-reward option. Frame data is the grammar of fighting-game design.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Change the Active window length</h3>
+          <p>Edit <code>g.frame &lt;= 12</code> to <code>g.frame &lt;= 16</code> for an 8-frame Active window that is easier to land, or try <code>10</code> for a precise one-frame window.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../box-viewer/">← STEP 01<strong>Box Viewer</strong></a>
+      <a href="../hit-reaction/">STEP 03 →<strong>Hit Reaction</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

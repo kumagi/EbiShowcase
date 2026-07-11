@@ -1,4 +1,161 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Combo and Cancel | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/fighting/combo-cancel/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D Fighting Game</a><span>STEP 05 / 07</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / BUILD A FIGHTING GAME</p><h1>Combo and Cancel</h1><p>Save slightly early input and connect the next move after a hit.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Input buffers and cancel conditions</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Combo and Cancel</h2></div><p>Connect light, light, heavy with J/J/K, Z/Z/X, or the two touch buttons three times.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Combo and Cancel" src="../../../../play/combo-cancel/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Remember early input for eight frames</h2><p>Put a pressed move in buffer and decrease its lifetime every frame. When the current move hits during a cancel window, immediately start the saved move.</p></div><pre><code>if pressed { buffer = nextMove; bufferLife = 8 }
-if hit &amp;&amp; canCancel &amp;&amp; bufferLife &gt; 0 {
-    start(buffer)
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>Connect press time to execution time</h2><div class="overview-steps"><article><b>01</b><h3>Remember</h3><p>Save the next move and remaining lifetime.</p></article><article><b>02</b><h3>Wait</h3><p>Check hit and cancel-window conditions.</p></article><article><b>03</b><h3>Connect</h3><p>Start the saved move when both become true.</p></article></div></section><nav class="lesson-pager"><a href="../guard-throw/">← STEP 04<strong>Guard and Throw</strong></a><a href="../command-fighter/">STEP 06 →<strong>Command Fighter</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Build input buffers and cancel windows to chain combos — the core of fighting-game flow — in this Ebitengine lesson.">
+  <title>Combo and Cancel | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/fighting/combo-cancel/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 2D Fighting Game</a><span>STEP 05 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Combo and Cancel</h1>
+      <p>Store a slightly early button press in an 8-frame buffer. When the current move hits and enters its cancel window, immediately start the buffered move. That handoff is how fighting-game combos chain together.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Input buffers and cancel windows</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Chain light, light, heavy in rhythm.</h2></div>
+        <p>J/Z for light attack, K/X for heavy (or tap left/right buttons). Complete the light→light→heavy 3-hit combo three times to clear.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Combo and Cancel" src="../../../../play/combo-cancel/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / COMBO CANCEL</p>
+        <h2>How can the next move start<br>before the current one finishes?</h2>
+        <p class="lesson-lead">Two systems work together. An <strong>input buffer</strong> stores the most recently pressed button for up to 8 frames, so pressing slightly early is not wasted. A <strong>cancel window</strong> (frames 8–13) opens when the current move hits — during this window, the move's recovery is skipped and the buffered move starts immediately. Thread both correctly and the combo flows.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Input Buffer</h3>
+          <p>On any button press, store the move type in <code>buffer</code> and set <code>bufferLife = 8</code>. Each frame, decrement the life; when it hits zero, clear the buffer. The 8-frame window ≈ 133 ms of forgiveness.</p>
+          <code>buffer = light; bufferLife = 8</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Cancel Window</h3>
+          <p>Frames 8–13 (six frames) define the cancel window. If the buffer holds the expected next move during this range, the current move is cancelled and the next begins immediately.</p>
+          <code>cancel := frame &gt;= 8 &amp;&amp; frame &lt;= 13</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Combo Progress Counter</h3>
+          <p>The <code>combo</code> integer tracks which hit in the sequence is next. Hits 1 and 2 require light; hit 3 requires heavy. Using the wrong move resets the counter to zero.</p>
+          <code>if combo &lt; 2: expect light; else: heavy</code>
+        </article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="buffer"  aria-labelledby="lab-title-combo-cancel">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-combo-cancel">Buffer early input and cancel</h3>
+          <p>Remember an early press for a few frames, then spend it in the cancel window.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-press>Buffer input</button>
+            <button type="button" class="lab-button" data-lab-step>Next frame</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">bufferLife = 8</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>buffer</span><strong data-lab-buf>none</strong><small></small></div>
+            <div><span>life</span><strong data-lab-life>0</strong><small></small></div>
+            <div><span>note</span><strong data-lab-note>—</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">COMBO TIMING</p>
+        <div class="formula-lines">
+          <code>buffer lasts:  8 frames  (≈ 133 ms forgiveness)</code>
+          <span>move lengths</span>
+          <code>LIGHT:  20 frames  (startup 8 + active 1 + recovery 11)</code>
+          <span>cancel available: frames 8–13 (on hit)</span>
+          <code>HEAVY:  28 frames  (startup 8 + active 1 + recovery 19)</code>
+        </div>
+        <p>The cancel window opens the moment the active frame lands (<code>frame == 8</code>) and stays open until frame 13. If the buffer is empty by then, the current move plays to full recovery and the combo ends. Press the next button any time before the window closes and the buffer handles it.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Press → store → wait → chain</h3>
+          <p>Each frame: decrement the buffer lifetime, then check cancel conditions. When <code>cancel</code> is true and the buffer matches the expected move, call <code>g.start()</code> to interrupt recovery and begin the next move immediately.</p>
+        </div>
+        <pre><code>// store input in buffer
+<span>if</span> in != none {
+    g.buffer = in
+    g.bufferLife = 8
+}
+<span>if</span> g.bufferLife &gt; 0 {
+    g.bufferLife--
+} <span>else</span> {
+    g.buffer = none
+}
+
+// cancel: 6-frame window starting on the hit frame
+cancel := g.frame &gt;= 8 &amp;&amp; g.frame &lt;= 13
+<span>if</span> cancel &amp;&amp; g.buffer != none {
+    expected := light
+    <span>if</span> g.combo &gt;= 2 { expected = heavy }
+    <span>if</span> g.buffer == expected {
+        g.start(g.buffer)   // skip recovery, begin next
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT BUFFER</p>
+          <h3>Players must hit the exact frame</h3>
+          <p>Without a buffer, the cancel window is a one-frame target. Virtually impossible for a human at 60 fps — combos become a frustrating technical barrier instead of an expressive tool.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH BUFFER</p>
+          <h3>Press-ahead creates flow and rhythm</h3>
+          <p>An 8-frame buffer lets players press in rhythm rather than on exact frames. The game feels responsive, and skilled players can tighten their timing without the system fighting them.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Adjust buffer length and cancel window</h3>
+          <p>Set <code>bufferLife = 16</code> for beginner-friendly combos or <code>4</code> for a strict competitive feel. Narrow the cancel range from frames 8–13 to 8–10 to demand tighter timing from advanced players.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../guard-throw/">← STEP 04<strong>Guard and Throw</strong></a>
+      <a href="../command-fighter/">STEP 06 →<strong>Command Fighter</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

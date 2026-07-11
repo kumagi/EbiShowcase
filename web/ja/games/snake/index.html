@@ -40,6 +40,29 @@
         <article><span class="concept-number">3</span><h3>追加と削除</h3><p>新しい頭を先頭に追加し、エサを食べていなければ末尾を1個切り捨てる。この2行でヘビの移動が完成します。</p><code>body[:len(body)-1]</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="snake" data-ate="食べた" data-move="移動" aria-labelledby="lab-title-snake">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / GRID HISTORY</p>
+          <h3 id="lab-title-snake">頭を足して、しっぽを消そう</h3>
+          <p>「進む」は新しい頭を先頭に足して末尾を削ります。「食べる」は末尾を残すので体が伸びます。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>進む</button>
+            <button type="button" class="lab-button" data-lab-eat>食べる</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">体はマス座標のリストです。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board" data-lab-body>(2,2) (1,2) (0,2)</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>長さ</span><strong data-lab-len>3</strong><small>body の要素数</small></div>
+            <div><span>履歴</span><strong data-lab-body>(2,2) (1,2) (0,2)</strong><small>頭 → しっぽ</small></div>
+            <div><span>ルール</span><strong>[]point</strong><small>append + trim</small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE TWO-LINE MOVE</p>
         <div class="formula-lines"><code>body = append([]point{head}, body...)</code><span>そして</span><code>body = body[:len(body)-1]</code></div>
@@ -89,6 +112,7 @@
     <nav class="lesson-pager"><a href="../breakout/">← LEVEL 06<strong>Breakout</strong></a><a href="../space-shooter/">LEVEL 08 →<strong>Space Shooter</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

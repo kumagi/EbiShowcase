@@ -1,5 +1,149 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>World Map and Encounters | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/rpg/world-encounters/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Command RPG</a><span>STEP 06 / 07</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / BUILD AN RPG</p><h1>World Map and Encounters</h1><p>Switch between map and battle and draw enemies from grassland, desert, or snow tables.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Scene transitions and enemy tables</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>World Map and Encounters</h2></div><p>Win three regional battles, then reach the green castle in the northeast.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="World Map and Encounters" src="../../../../play/world-encounters/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Split map and battle into scenes</h2><p>Map scene runs walking only; Battle scene runs commands only. Keep candidate enemies in one list per region and choose from the current region.</p></div><pre><code>switch scene {
-case Map: updateWorld()
-case Battle: updateBattle()
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="RPG lesson on scene switches and enemy tables.">
+  <title>World Map &amp; Encounters | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/rpg/world-encounters/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Command RPG</a><span>STEP 06 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>World Map &amp; Encounters</h1>
+      <p>Switch field and battle with a scene variable. Steps plus randomness spawn foes. Swap regional enemy tables to match the biome.</p>
+      <div class="overview-concept"><small>CONCEPT THIS STEP</small><strong>Scene switches and enemy tables</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Walk regions, win 3 fights, reach the castle.</h2></div>
+        <p>Walk the field, fight on encounters, push toward the castle.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="World Map &amp; Encounters" src="../../../../play/world-encounters/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / SCENES &amp; TABLES</p>
+        <h2>How do you switch between<br>field and battle screens?</h2>
+        <p class="lesson-lead">A <strong>scene</strong> variable. Branch Update/Draw by its value. Enemy kinds come from a table keyed by region id.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Scenes</h3>
+          <p>Store field=0, battle=1 as an int.</p>
+          <code>scene int</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Encounters</h3>
+          <p>Enter battle from step counters and RNG.</p>
+          <code>if steps... { scene = 1 }</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Enemy tables</h3>
+          <p>Per-region candidate lists, then roll.</p>
+          <code>table[region][rng.Intn(n)]</code>
+        </article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="scene" data-field="field" data-battle="battle" aria-labelledby="lab-title-world-encounters">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-world-encounters">Switch field and battle scenes</h3>
+          <p>Switch scene to battle and roll an enemy from the region table.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-walk>Encounter</button>
+            <button type="button" class="lab-button" data-lab-region data-region="grass">Grass</button>
+            <button type="button" class="lab-button" data-lab-region data-region="desert">Desert</button>
+            <button type="button" class="lab-button" data-lab-back>Back to field</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">scene + enemyTable</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>scene</span><strong data-lab-scene>field</strong><small></small></div>
+            <div><span>enemy</span><strong data-lab-enemy>—</strong><small></small></div>
+            <div><span>table</span><strong>region</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE SWITCH RULE</p>
+        <div class="formula-lines">
+          <code>scene == field → walk</code>
+          <span>on encounter</span>
+          <code>scene = battle; enemy = roll(table)</code>
+        </div>
+        <p>Do not run map draw and battle UI together — exclusive scenes cut bugs.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Branch work by scene</h3>
+          <p>Update battle while fighting; otherwise move on the field and test encounters.</p>
+        </div>
+        <pre><code><span>if</span> g.scene == battle {
+    <span>return</span> g.updateBattle()
 }
-enemy := tables[currentRegion].Random()</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>Split a large game into scenes</h2><div class="overview-steps"><article><b>01</b><h3>Select</h3><p>Remember map or battle in scene.</p></article><article><b>02</b><h3>Choose</h3><p>Read the enemy table for the current region.</p></article><article><b>03</b><h3>Return</h3><p>Set scene back to Map after battle.</p></article></div></section><nav class="lesson-pager"><a href="../inventory-shop/">← STEP 05<strong>Inventory Shop</strong></a><a href="../ebi-quest/">STEP 07 →<strong>Ebi Quest</strong></a></nav></main></body></html>
+g.walk()
+<span>if</span> g.shouldEncounter() {
+    g.enemy = g.rollEnemy(g.region)
+    g.scene = battle
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT SCENES</p>
+          <h3>Everything at once</h3>
+          <p>Mixing walk input with battle UI invites broken controls.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH TABLES</p>
+          <h3>Regional flavor</h3>
+          <p>Swap tables to split grassland and desert foes.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Rates and tables</h3>
+          <p>Tune encounter rate and candidates for travel tension.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../inventory-shop/">← STEP 05<strong>Inventory Shop</strong></a>
+      <a href="../ebi-quest/">STEP 07 →<strong>Ebi Quest</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

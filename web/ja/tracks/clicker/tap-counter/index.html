@@ -37,6 +37,28 @@
         <article><span class="concept-number">3</span><h3>パルスで視覚フィードバック</h3><p>押した瞬間に <code>pulse = 10</code> をセットし、毎フレーム 1 ずつ減らします。その値で円の半径を少し大きくすると「ぷにっ」と膨らむアニメになります。</p><code>scale := 1 + float64(g.pulse)*.012</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="click"  aria-labelledby="lab-title-tap-counter">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-tap-counter">押すたびに数を足そう</h3>
+          <p>押した瞬間だけ数を増やします。押しっぱなしでは増えません。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-tap>タップ</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">count++</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>回数</span><strong data-lab-count>0</strong><small></small></div>
+            <div><span>input</span><strong>JustPressed</strong><small></small></div>
+            <div><span>+1</span><strong></strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE INPUT RULE</p>
         <div class="formula-lines"><code>IsPressed     → 押している間ずっと true</code><span>vs</span><code>IsJustPressed → 押し始めた1フレームだけ true</code></div>
@@ -74,6 +96,7 @@
     <nav class="lesson-pager"><span></span><a href="../first-shop/">STEP 02 →<strong>はじめてのお店</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

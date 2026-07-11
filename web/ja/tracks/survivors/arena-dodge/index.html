@@ -37,6 +37,29 @@
         <article><span class="concept-number">3</span><h3>速さを掛ける</h3><p>長さ1の矢印に速さ（ここでは4）を掛けてから位置に足します。向きはそのまま、大きさだけが変わります。</p><code>g.px += dx / l * 4</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="move8"  aria-labelledby="lab-title-arena-dodge">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-arena-dodge">斜め移動を正規化しよう</h3>
+          <p>斜め入力をそのまま足すと √2 倍速になります。長さで割るとどの方向も同じ速さです。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button" data-lab-cardinal>十字方向</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-diag>斜め</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">dx,dy → hypot → unit</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>生の速さ</span><strong data-lab-raw>5.66</strong><small></small></div>
+            <div><span>正規化後</span><strong data-lab-norm>4.00</strong><small></small></div>
+            <div><span>公式</span><strong>v / |v|</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE NORMALIZE RULE</p>
         <div class="formula-lines"><code>l := math.Hypot(dx, dy)</code><span>次に</span><code>g.px += dx / l * 4</code></div>
@@ -71,6 +94,7 @@
     <nav class="lesson-pager"><span></span><a href="../auto-turret/">STEP 02 →<strong>自動砲台サバイバル</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

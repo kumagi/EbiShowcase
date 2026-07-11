@@ -1,4 +1,146 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>コマンド技ファイター | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/fighting/command-fighter/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D格闘ゲーム</a><span>STEP 06 / 07</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / 格闘ゲームを作る</p><h1>コマンド技ファイター</h1><p>方向入力の履歴から波形コマンドを認識し、必殺技を出します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>入力履歴とコマンド認識</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>コマンド技ファイター</h2></div><p>下→右下→右→パンチを入力してEbi Waveを5回当てます。画面下ボタンでも入力できます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="コマンド技ファイター" src="../../../../play/command-fighter/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>最近の入力を短いリストに残す</h2><p>方向が変わるたびD、DR、Rの記号を履歴へ追加します。パンチを押した時、履歴の最後がD・DR・Rなら必殺技にします。古い履歴は30フレームで消します。</p></div><pre><code>history = append(history, direction)
-if punch &amp;&amp; history.EndsWith([]Input{Down, DownRight, Right}) {
-    startSpecialMove()
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>動きを文字列のように読む</h2><div class="overview-steps"><article><b>01</b><h3>記録する</h3><p>方向変化を順番に履歴へ追加します。</p></article><article><b>02</b><h3>期限を付ける</h3><p>古すぎる入力を消します。</p></article><article><b>03</b><h3>照合する</h3><p>履歴の末尾とコマンド表を比べます。</p></article></div></section><nav class="lesson-pager"><a href="../combo-cancel/">← STEP 05<strong>コンボ</strong></a><a href="../ebi-fighters/">STEP 07 →<strong>Ebi Fighters</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="入力履歴で必殺技コマンドを学ぶ格闘レッスン。">
+  <title>コマンド技ファイター | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コース</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/fighting/command-fighter/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 2D格闘ゲーム</a><span>STEP 06 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>コマンド技ファイター</h1>
+      <p>下→右下→右＋パンチのような波形コマンドは、入力を短い履歴に残し、末尾が決まった並びか照合して認識します。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>入力履歴とコマンド認識</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Ebi Wave を5回決めよう。</h2></div>
+        <p>下→右下→右→パンチ。画面下ボタンでも入力できます。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="コマンド技ファイター" src="../../../../play/command-fighter/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / COMMAND BUFFER</p>
+        <h2>どうして連続入力が<br>必殺技になるの？</h2>
+        <p class="lesson-lead">答えは<strong>入力履歴</strong>です。方向を記号（D, DR, R）にして並べ、パンチ時に末尾がコマンド表と一致すれば必殺技。古い入力は age で消えます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>履歴</h3>
+          <p>方向が変わるたびトークンを append。長さ上限で古いものを捨てます。</p>
+          <code>history = append(history, token)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>有効期限</h3>
+          <p>age を減らし、0 で履歴を空にします。</p>
+          <code>if age == 0 { history = nil }</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>末尾照合</h3>
+          <p>パンチ時に ends(history, {D,DR,R}) なら必殺技。</p>
+          <code>ends(history, []string{"D","DR","R"})</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="command" aria-labelledby="lab-title-command">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / COMMAND</p>
+          <h3 id="lab-title-command">↓↘→ を履歴に積もう</h3>
+          <p>方向ボタンで履歴を作ります。末尾が ↓↘→ になると HADOKEN と判定されます。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button" data-lab-dir="↓">↓</button>
+            <button type="button" class="lab-button" data-lab-dir="↘">↘</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-dir="→">→</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームでは D / DR / R の記号列を照合します。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board"><div class="lab-mono-board">D → DR → R + Punch</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>履歴</span><strong data-lab-hist>—</strong><small>末尾3つ</small></div>
+            <div><span>照合</span><strong data-lab-match>—</strong><small>endsWith</small></div>
+            <div><span>窓</span><strong>age</strong><small>古い入力は消える</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE MATCH RULE</p>
+        <div class="formula-lines">
+          <code>history ends with D, DR, R</code>
+          <span>かつ</span>
+          <code>punch pressed → special</code>
+        </div>
+        <p>途中の余分な入力は末尾一致なら許します。期限切れでリセットするので、ゆっくりすぎる入力は失敗します。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>パンチで末尾を照合</h3>
+          <p>履歴へ方向を足し、パンチ時に ends で必殺技判定します。</p>
+        </div>
+        <pre><code><span>if</span> punch {
+    <span>if</span> ends(g.history, []string{"D", "DR", "R"}) {
+        g.projectile = 35
+        g.message = "EBI WAVE!"
+    }
+    g.history = nil
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT HISTORY</p>
+          <h3>同時押ししかできない</h3>
+          <p>1フレームの完璧な同時入力は人間にはきついです。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH A BUFFER</p>
+          <h3>動きの形を読める</h3>
+          <p>順番さえ合えば必殺技になり、操作が楽しくなります。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>履歴の長さと期限</h3>
+          <p>age や履歴上限を変えると、やさしい／きびしいコマンド感になります。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../combo-cancel/">← STEP 05<strong>コンボとキャンセル</strong></a>
+      <a href="../ebi-fighters/">STEP 07 →<strong>Ebi Fighters</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

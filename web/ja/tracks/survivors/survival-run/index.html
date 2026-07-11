@@ -1,3 +1,107 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Survivors | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/survivors/survival-run/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 大量敵サバイバル</a><span>STEP 06 / 06</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / Survivors型ゲームを作る</p><h1>Ebi Survivors</h1><p>制限時間、敵ウェーブ、ボス、自動攻撃を統合した1プレイです。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>ウェーブ・ボス・難易度曲線</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Ebi Survivors</h2></div><p>45秒の3ウェーブを生き残り、最後のボスを金色のオーラで倒します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Survivors" src="../../../../play/survival-run/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>時間をゲームの台本にする</h2><p>経過秒数からウェーブ番号を求めます。時間が進むほど敵の出現間隔を短く、移動を速くします。35秒になったらHPを持つボスを1体だけ登場させます。</p></div><pre><code>wave := elapsedSeconds / 15
-spawnInterval := max(14, 42-elapsedSeconds/2)
-if elapsedSeconds == 35 { spawnBoss() }</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>1プレイに山を作る</h2><div class="overview-steps"><article><b>01</b><h3>時間を測る</h3><p>フレーム数を60で割って秒にします。</p></article><article><b>02</b><h3>少しずつ難しくする</h3><p>時間から敵の速さと出現間隔を決めます。</p></article><article><b>03</b><h3>最後にボスを置く</h3><p>通常敵とは違うHPと大きさを持つ敵で締めくくります。</p></article></div></section><nav class="lesson-pager"><a href="../weapon-evolution/">← STEP 05<strong>武器進化ラボ</strong></a><a href="../">PATH COMPLETE →<strong>大量敵サバイバル</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="ウェーブ・ボス・難易度曲線を組み合わせたEbitengine版サバイバルゲームの最終ステップ。">
+  <title>STEP 06 — サバイバルラン（最終） | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/survivors/survival-run/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 大量敵サバイバル</a><span>STEP 06 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>サバイバルラン（最終）</h1>
+      <p>3つのウェーブで難易度が上昇し、35秒後にボスが登場します。スポーン間隔と移動速度を時間から計算することで、1本の関数が全難易度曲線を表現します。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>ウェーブ設計・ボス・難易度曲線</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3ウェーブを乗り越えてボスを倒せ！</h2></div><p>WASD・方向キー・ドラッグで移動。金色のオーラが自動攻撃。45秒以内にボスを倒すとクリア。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="サバイバルラン" src="../../../../play/survival-run/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / WAVES AND DIFFICULTY</p>
+        <h2>どうして時間とともに<br>ゲームが難しくなるの？</h2>
+        <p class="lesson-lead">スポーン間隔と移動速度を経過秒数から計算します。<code>interval = max(14, 42 - sec/2)</code> で間隔が徐々に短くなり、<code>speed = 0.85 + sec * 0.018</code> で速度が線形に上昇します。式1本が難易度曲線全体を決めるのが<strong>時間ベースの難易度スケーリング</strong>です。ボスは固定秒数で登場し、HPバーとともに別の脅威を加えます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>スポーン間隔の縮小</h3><p>42フレームから始まり、経過秒数の半分ずつ短くなります。ただし14フレームを下限にして無限スポーンを防ぎます。</p><code>interval := max(14, 42-sec/2)</code></article>
+        <article><span class="concept-number">2</span><h3>速度の線形上昇</h3><p>敵の移動速度は0.85から始まり1秒ごとに0.018増えます。35秒後には約1.48、ウェーブ3では明らかに速くなっています。</p><code>speed := .85 + float64(sec)*.018</code></article>
+        <article><span class="concept-number">3</span><h3>ボスとHPバー</h3><p>35秒で出現する紫の大きな敵は HP 60 です。オーラが14フレームごとに1ずつ削り、ゼロになったらクリアです。HPバーは矩形2つで描きます。</p><code>g.mobs = append(g.mobs, mob{..., 60, 38, true})</code></article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="curve"  aria-labelledby="lab-title-survival-run">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-survival-run">秒数が間隔と速度を変える</h3>
+          <p>経過秒で出現間隔を短くし、敵速度を上げます。難しさは時間の関数です。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>+5秒</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">max(14, 42-sec/2)</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>sec</span><strong data-lab-sec>0</strong><small></small></div>
+            <div><span>interval</span><strong data-lab-interval>42</strong><small></small></div>
+            <div><span>speed</span><strong data-lab-speed>0.85</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE DIFFICULTY CURVE</p>
+        <div class="formula-lines"><code>interval := max(14, 42 - sec/2)</code><span>そして</span><code>speed := .85 + float64(sec) * .018</code></div>
+        <p>この2式でウェーブ1〜3の難易度差が生まれます。<code>42 - sec/2</code> は放物線ではなく直線なので、難易度上昇のペースが予測しやすく、プレイヤーが「慣れ→緊張」のリズムを体感できます。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>時間→間隔→速度→ボス出現</h3>
+          <p>毎フレーム経過秒数を計算し、スポーン間隔と移動速度を更新します。35秒に達したらボスを1体追加。ボスはスピードが遅い代わりにHP 60 を持ちます。</p>
+        </div>
+        <pre><code>sec := g.frame / 60
+interval := max(14, 42-sec/2)
+<span>if</span> g.frame%interval == 0 &amp;&amp; sec &lt; 35 {
+    g.mobs = append(g.mobs, mob{..., 1, 13, false})
+}
+<span>if</span> sec &gt;= 35 &amp;&amp; !g.bossSpawned {
+    g.bossSpawned = true
+    g.mobs = append(g.mobs, mob{240, 95, 60, 38, true})
+}
+speed := .85 + float64(sec)*.018
+<span>for</span> i := range g.mobs {
+    m := &amp;g.mobs[i]
+    ms := speed
+    <span>if</span> m.boss { ms = .65 }
+    m.x += (g.px - m.x) / d * ms
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT SCALING</p><h3>一定の難易度はすぐ飽きる</h3><p>スポーン間隔も速度も固定だと、プレイヤーが最初の30秒で「このゲームはこれだけ」と判断してしまいます。</p></article>
+        <article><p class="eyebrow">WITH DIFFICULTY CURVE</p><h3>緊張のリズムが続きを促す</h3><p>時間とともに圧力が増すと、プレイヤーは「もう少しだけ」と耐えようとします。ボス出現がその緊張の頂点になります。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>ウェーブの長さとボスHPを変えよう</h3><p><code>42 - sec/2</code> の <code>2</code> を大きくすると急加速します。ボスの HP <code>60</code> を増やせばボス戦が長くなり、ゲームに重みが増します。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../weapon-evolution/">← STEP 05<strong>武器進化ラボ</strong></a><span></span></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

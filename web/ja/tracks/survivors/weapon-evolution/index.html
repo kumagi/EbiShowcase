@@ -1,4 +1,142 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>武器進化ラボ | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/survivors/weapon-evolution/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 大量敵サバイバル</a><span>STEP 05 / 06</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / Survivors型ゲームを作る</p><h1>武器進化ラボ</h1><p>武器の数値をひとまとめのデータにし、条件を満たすと別の武器へ進化させます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>データ駆動の強化と合成</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>武器進化ラボ</h2></div><p>10体倒して青いコアを拾い、20体でEbi Stormへ進化。50体撃破を目指します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="武器進化ラボ" src="../../../../play/weapon-evolution/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>武器を「名前と数字のセット」にする</h2><p>連射間隔、弾速、弾数をWeaponデータにまとめます。必要な武器レベルとアイテムがそろったら、Ebi NeedleのデータをEbi Stormのデータへ交換します。</p></div><pre><code>type Weapon struct { Name string; Cooldown, Shots int }
-if kills &gt;= 20 &amp;&amp; hasCore {
-    weapon = Weapon{Name: "Ebi Storm", Cooldown: 16, Shots: 3}
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>データを交換して振る舞いを変える</h2><div class="overview-steps"><article><b>01</b><h3>まとめる</h3><p>武器の違いを構造体の数値で表します。</p></article><article><b>02</b><h3>条件を調べる</h3><p>撃破数と必要アイテムがそろったか確認します。</p></article><article><b>03</b><h3>交換する</h3><p>進化後のデータを代入し、同じ発射処理で強い武器を動かします。</p></article></div></section><nav class="lesson-pager"><a href="../experience-draft/">← STEP 04<strong>経験値と三択強化</strong></a><a href="../survival-run/">STEP 06 →<strong>Ebi Survivors</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="武器データを差し替えて進化を学ぶレッスン。">
+  <title>武器進化ラボ | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コース</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/survivors/weapon-evolution/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 大量敵サバイバル</a><span>STEP 05 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>武器進化ラボ</h1>
+      <p>武器のクールダウン・弾速・弾数・ダメージを1つのデータにまとめます。条件を満たしたら、別の武器データへ差し替えるだけで進化が完成します。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>データ駆動の強化と合成</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>コアを拾って、嵐へ進化。</h2></div>
+        <p>移動して敵を倒し、10体でコア出現、拾って20体で Ebi Storm へ。50体でクリア。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="武器進化ラボ" src="../../../../play/weapon-evolution/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / DATA-DRIVEN WEAPONS</p>
+        <h2>進化って、<br>コードを書き直すの？</h2>
+        <p class="lesson-lead">いいえ。<strong>武器データ</strong>を取り替えるだけです。発射処理は同じループのまま、cooldown や count が変わるので見た目も強さも変わります。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>武器struct</h3>
+          <p>名前と数値をひとまとめにします。</p>
+          <code>type weapon struct{ cooldown, speed, count, damage int }</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>条件</h3>
+          <p>キル数やアイテム取得など、進化の鍵をフラグで管理します。</p>
+          <code>if kills >= 20 && itemTaken</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>差し替え</h3>
+          <p>新しい weapon{...} を代入するだけで進化完了です。</p>
+          <code>weapon = weapon{"Ebi Storm", 16, 9, 3, 2}</code>
+        </article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="evolve"  aria-labelledby="lab-title-weapon-evolution">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-weapon-evolution">武器データを差し替えて進化</h3>
+          <p>発射ループはそのまま。weapon 構造体を差し替えるだけで進化します。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-evolve>進化させる</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">weapon = storm</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>武器</span><strong data-lab-name>Ebi Needle</strong><small></small></div>
+            <div><span>count</span><strong data-lab-wcount>1</strong><small></small></div>
+            <div><span>cooldown</span><strong data-lab-wcd>32</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE SWAP RULE</p>
+        <div class="formula-lines">
+          <code>same fire loop</code>
+          <span>データだけ</span>
+          <code>weapon = evolvedWeapon</code>
+        </div>
+        <p>発射・狙い・衝突のコードを複製しないことがコツです。数値テーブルを育てると、武器追加が楽になります。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>条件がそろったら<br>データを代入</h3>
+          <p>コア取得後、キル20で Storm に差し替えます。弾数3・間隔短縮で一気に強く見えます。</p>
+        </div>
+        <pre><code><span>if</span> g.kills &gt;= 20 &amp;&amp; g.itemTaken &amp;&amp; !g.evolved {
+    g.evolved = true
+    g.weapon = weapon{"Ebi Storm", 16, 9, 3, 2}
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT DATA</p>
+          <h3>ifの山</h3>
+          <p>武器ごとに発射コードをコピーすると、バグ修正が何倍にもなります。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH STRUCTS</p>
+          <h3>追加が表計算になる</h3>
+          <p>新しい行を足す感覚で武器を増やせます。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>進化条件と数値</h3>
+          <p>必要キルや count/cooldown を変えて、進化のドラマを調整しましょう。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../experience-draft/">← STEP 04<strong>経験値ドラフト</strong></a>
+      <a href="../survival-run/">STEP 06 →<strong>サバイバルラン（最終）</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

@@ -37,6 +37,28 @@
         <article><span class="concept-number">3</span><h3>Shot velocity</h3><p>Subtract player position from enemy position, divide by the already-computed distance, then multiply by shot speed. The result is a normalized direction scaled to the right magnitude.</p><code>vx = (e.x - g.px) / dist * 7</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="aim"  aria-labelledby="lab-title-auto-turret">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-auto-turret">Cooldown nearest foe on cooldown</h3>
+          <p>Each frame pick the nearest foe; fire only when the cooldown hits zero.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>Next frame</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">nearest enemy</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>target</span><strong data-lab-target>B</strong><small></small></div>
+            <div><span>cooldown</span><strong data-lab-cd>0</strong><small></small></div>
+            <div><span>shots</span><strong data-lab-shots>0</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE TARGETING RULE</p>
         <div class="formula-lines"><code>best, dist := 0, math.MaxFloat64</code><span>loop all enemies, then fire</span><code>vx = (e.x - g.px) / dist * 7</code></div>
@@ -74,6 +96,7 @@
     <nav class="lesson-pager"><a href="../arena-dodge/">← STEP 01<strong>Arena Dodge</strong></a><a href="../swarm/">STEP 03 →<strong>100-Enemy Swarm</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

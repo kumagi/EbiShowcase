@@ -37,6 +37,29 @@
         <article><span class="concept-number">3</span><h3>K・M・B表記</h3><p>1000以上の数字を K、100万以上を M で省略します。<code>short()</code> 関数が変換を担当。「1234567」が「1.23M」と表示され、画面に収まります。</p><code>fmt.Sprintf("%.2fM", v/1e6)</code></article>
       </div>
 
+      <div class="motion-lab" data-lab="cost" data-base="10" data-growth="1.18" aria-labelledby="cost-lab-title">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / EXPONENTIAL COST</p>
+          <h3 id="cost-lab-title">買うたびに値段が跳ねる</h3>
+          <p>「1台買う」を押すたびに所有数が増え、次の価格は ×1.18 されます。生産速度は所有数の二乗で伸びます。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-buy>1台買う</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">大きな数は K / M 表記にすると読みやすくなります。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="価格曲線の実験ボード" style="display:grid;place-items:center;color:#9db0b7;font:700 14px monospace;padding:24px;text-align:center">
+            cost = 10 × 1.18ⁿ<br><br>rate = n² × 8 /s
+          </div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>所有 n</span><strong data-lab-count>0</strong><small>研究所の数</small></div>
+            <div><span>次の価格</span><strong data-lab-cost>10.0</strong><small>×1.18 ずつ</small></div>
+            <div><span>生産</span><strong data-lab-rate>0.0/s</strong><small>n² × 8</small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE GROWTH FORMULA</p>
         <div class="formula-lines"><code>cost(n) = 10 × 1.18ⁿ</code><span>生産速度</span><code>rate(n) = n² × 8  [/秒]</code></div>
@@ -76,6 +99,7 @@
     <nav class="lesson-pager"><a href="../idle-factory/">← STEP 03<strong>アイドルファクトリー</strong></a><a href="../offline-bakery/">STEP 05 →<strong>オフラインベーカリー</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

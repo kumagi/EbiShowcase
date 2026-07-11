@@ -40,6 +40,29 @@
         <article><span class="concept-number">3</span><h3>One rule per state</h3><p>Patrol rotates velocity by 90 degrees on a timer. Chase normalizes the vector toward the player and applies a constant speed.</p><code>if e.state == 0 { … } else { … }</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="ai" data-patrol="patrol" data-chase="chase" aria-labelledby="lab-title-dungeon">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-dungeon">Switch patrol/chase by distance</h3>
+          <p>Distance under 120 means chase; otherwise patrol.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-closer>Closer</button>
+            <button type="button" class="lab-button" data-lab-farther>Farther</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">dist &lt; 120 → chase</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>state</span><strong data-lab-state>patrol</strong><small></small></div>
+            <div><span>distance</span><strong data-lab-dist>180</strong><small></small></div>
+            <div><span>閾値</span><strong>120</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE CHASE DIRECTION</p>
         <div class="formula-lines"><code>dx, dy := (player.x - enemy.x), (player.y - enemy.y)</code><span>normalize then scale</span><code>vx, vy = dx/dist * speed, dy/dist * speed</code></div>
@@ -85,6 +108,7 @@
     <nav class="lesson-pager"><a href="../platformer/">← LEVEL 10<strong>Platformer</strong></a><a href="../bullet-hell/">LEVEL 12 →<strong>Bullet Hell</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

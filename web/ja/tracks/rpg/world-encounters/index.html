@@ -1,5 +1,168 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>世界地図とエンカウント | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/rpg/world-encounters/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>STEP 06 / 07</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / RPGを作る</p><h1>世界地図とエンカウント</h1><p>地図と戦闘を切り替え、草原・砂漠・雪原ごとの敵を抽選します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>シーン遷移と敵テーブル</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>世界地図とエンカウント</h2></div><p>地域ごとの敵と戦って3勝し、北東の緑になった城へ向かいます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="世界地図とエンカウント" src="../../../../play/world-encounters/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>地図と戦闘を2つの場面に分ける</h2><p>sceneがMapなら歩く処理、Battleならコマンド処理だけを動かします。敵候補は地域ごとのリストにし、現在地域のリストから1体を選びます。</p></div><pre><code>switch scene {
-case Map: updateWorld()
-case Battle: updateBattle()
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="シーン遷移と地域ごとの敵テーブルによるランダムエンカウントを学ぶEbitengineレッスン。">
+  <title>STEP 06 — 世界地図とエンカウント | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コマンドRPG</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/rpg/world-encounters/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>STEP 06 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>世界地図とエンカウント</h1>
+      <p>フィールドマップと戦闘画面を <strong>シーン変数</strong> で切り替え、歩いた歩数と乱数で敵が出現します。地域ごとの <strong>敵テーブル</strong> に切り替えるだけで、草原・砂漠・雪山で違う敵が出るRPGになります。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>シーン遷移と敵テーブル</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
+          <h2>3勝してから城へたどり着こう。</h2>
+        </div>
+        <p>矢印キー・WASD・タップで移動。5歩ごとに65%でエンカウント。城は右上です。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div>
+        <div id="game-wrap">
+          <iframe class="lesson-game-frame" title="世界地図とエンカウント" src="../../../../play/world-encounters/" allow="autoplay; fullscreen"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / SCENE &amp; ENCOUNTER</p>
+        <h2>シーン変数が<br>マップと戦闘を分ける</h2>
+        <p class="lesson-lead"><strong>シーン変数</strong> は状態機械の兄弟です。<code>scene == mapScene</code> ならフィールドの移動とエンカウント判定を動かし、<code>scene == battleScene</code> なら戦闘UIを表示します。シーンが変わるだけで入力もグラフィックも丸ごと切り替わります。<strong>敵テーブル</strong> は地域ごとの敵スライスで、プレイヤーのX座標から地域を計算してテーブルを選びます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>シーン変数で画面を切り替える</h3>
+          <p><code>scene</code> に <code>mapScene=0</code> か <code>battleScene=1</code> を入れるだけで、Update と Draw が完全に別のコードを実行します。戦闘が終わったら <code>scene = mapScene</code> に戻すだけです。</p>
+          <code>g.scene = battleScene</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>歩数で出現確率を制御する</h3>
+          <p>毎歩 <code>steps++</code> し、5の倍数のときだけ乱数でエンカウント判定します。確率を <code>65</code>（65%）に設定しています。数字を変えるだけでエンカウント率を調整できます。</p>
+          <code>if g.steps%5 == 0 &amp;&amp; rng.Intn(100) &lt; 65</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>地域ごとの敵テーブル</h3>
+          <p>X座標で3つのバイオームに分け、各バイオームの敵リストからランダムに選びます。テーブルに敵を追加するだけで、地域の雰囲気を変えられます。</p>
+          <code>tables[g.biome()][rng.Intn(len(list))]</code>
+        </article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="scene" data-field="フィールド" data-battle="戦闘" aria-labelledby="lab-title-world-encounters">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-world-encounters">フィールドと戦闘を切り替える</h3>
+          <p>シーンを戦闘へ切り替え、地域テーブルから敵を抽選します。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-walk>エンカウント</button>
+            <button type="button" class="lab-button" data-lab-region data-region="grass">草原</button>
+            <button type="button" class="lab-button" data-lab-region data-region="desert">砂漠</button>
+            <button type="button" class="lab-button" data-lab-back>フィールドへ</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">scene + enemyTable</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>シーン</span><strong data-lab-scene>フィールド</strong><small></small></div>
+            <div><span>敵</span><strong data-lab-enemy>—</strong><small></small></div>
+            <div><span>table</span><strong>region</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE ENCOUNTER RULE</p>
+        <div class="formula-lines">
+          <code>g.steps++</code>
+          <span>5歩ごとに判定</span>
+          <code>if g.steps%5 == 0 &amp;&amp; g.rng.Intn(100) &lt; 65 {</code>
+          <span>地域に合った敵を選ぶ</span>
+          <code>    g.foe = tables[g.biome()][g.rng.Intn(len(list))]</code>
+          <span>戦闘シーンへ</span>
+          <code>    g.scene = battleScene</code>
+        </div>
+        <p>バイオーム判定は <code>biome()</code> 関数が担います。X座標が4未満なら草原（0）、7未満なら砂漠（1）、以降は雪山（2）です。座標を見るだけでテーブル番号が決まります。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>エンカウント判定とシーン切り替え</h3>
+          <p>移動するたび歩数を増やし、条件を満たしたときにバイオームから敵を選んでシーンを切り替えます。戦闘が終わると <code>scene = mapScene</code> に戻り、マップの操作が再開されます。</p>
+        </div>
+        <pre><code><span>if</span> dx != 0 || dy != 0 {
+    g.steps++
+    <span>if</span> g.steps%5 == 0 &amp;&amp; g.rng.Intn(100) &lt; 65 {
+        biome := g.biome()
+        list := tables[biome]
+        g.foe = list[g.rng.Intn(len(list))]
+        g.scene = battleScene
+    }
 }
-enemy := tables[currentRegion].Random()</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>大きなゲームを場面に分ける</h2><div class="overview-steps"><article><b>01</b><h3>場面を選ぶ</h3><p>今が地図か戦闘かをsceneで覚えます。</p></article><article><b>02</b><h3>敵を選ぶ</h3><p>地域に対応した敵テーブルを読みます。</p></article><article><b>03</b><h3>戻る</h3><p>戦闘終了後にsceneをMapへ戻します。</p></article></div></section><nav class="lesson-pager"><a href="../inventory-shop/">← STEP 05<strong>装備屋</strong></a><a href="../ebi-quest/">STEP 07 →<strong>Ebi Quest</strong></a></nav></main></body></html>
+<span>func</span> (g *game) biome() int {
+    <span>if</span> g.x &lt; 4 { return 0 }  <span>// 草原</span>
+    <span>if</span> g.x &lt; 7 { return 1 }  <span>// 砂漠</span>
+    return 2                    <span>// 雪山</span>
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT SCENE VARIABLE</p>
+          <h3>シーンなしだと？</h3>
+          <p>マップ移動と戦闘をフラグで切り替えると、条件分岐がどんどん増えます。シーン変数1つで「今どこにいるか」を明確にすることで、コードが整理されます。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH ENEMY TABLES</p>
+          <h3>テーブルで地域感を演出する</h3>
+          <p>テーブルを変えるだけで「この森にはゴブリンが多い」「砂漠にはサソリが出る」という世界観を作れます。コードを増やさず、データを追加するだけです。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>バイオームの境界を変えてみよう</h3>
+          <p><code>biome()</code> の <code>g.x &lt; 4</code> を <code>g.x &lt; 6</code> に変えると草原が広くなります。敵テーブルに新しい敵構造体を加えれば、その地域の出現ラインナップも変わります。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../inventory-shop/">← STEP 05<strong>装備屋と道具袋</strong></a>
+      <a href="../ebi-quest/">STEP 07 →<strong>Ebi Quest</strong></a>
+    </nav>
+  </main>
+  <footer>
+    <div class="brand"><span>EBI</span> SHOWCASE</div>
+    <p>Made with Go + Ebitengine.</p>
+    <a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a>
+  </footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

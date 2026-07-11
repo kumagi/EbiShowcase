@@ -1,5 +1,109 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Experience Draft | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/survivors/experience-draft/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Mass Enemy Survival</a><span>STEP 04 / 06</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / BUILD A SURVIVORS-STYLE GAME</p><h1>Experience Draft</h1><p>Collect experience and choose movement, attack range, or life upgrades on level up.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Drops, levels, and choice screens</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Experience Draft</h2></div><p>Collect blue experience, choose with 1–3 or a card tap, and reach level five.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Experience Draft" src="../../../../play/experience-draft/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Pause game time while choosing</h2><p>Set draft to true when experience reaches the requirement. At the start of Update, wait for a choice instead of moving enemies. Apply its value and return to battle.</p></div><pre><code>if draft {
-    updateChoice()
-    return nil
-}
-updateBattle()</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>Turn growth into a game loop</h2><div class="overview-steps"><article><b>01</b><h3>Drop</h3><p>Place experience where an enemy was defeated.</p></article><article><b>02</b><h3>Collect</h3><p>Enter choice state when enough experience is gathered.</p></article><article><b>03</b><h3>Grow</h3><p>Increase the chosen value and return to battle.</p></article></div></section><nav class="lesson-pager"><a href="../swarm/">← STEP 03<strong>100 Enemy Swarm</strong></a><a href="../weapon-evolution/">STEP 05 →<strong>Weapon Evolution Lab</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Collect XP gems, trigger level-up draft cards, and upgrade stats in this fourth step of an Ebitengine survivors-style game.">
+  <title>STEP 04 — Experience Draft | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">TRACK</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/survivors/experience-draft/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Mass Enemy Survival</a><span>STEP 04 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Experience Draft</h1>
+      <p>Defeating enemies drops blue XP gems. Collect enough and a three-card draft pauses the game so you can upgrade a stat. This is the core loop that makes survivors-style games compelling.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>XP collection, level-up threshold, draft choice</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Reach level 5 by collecting XP gems.</h2></div><p>WASD, arrow keys, or drag to move. Blue gems are magnetized when close. Press 1, 2, or 3 (or tap a card) to choose an upgrade.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Experience Draft" src="../../../../play/experience-draft/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / XP AND LEVEL-UP</p>
+        <h2>How does a single number<br>make a character grow?</h2>
+        <p class="lesson-lead">When <code>xp</code> reaches the <code>need</code> threshold, the game sets <code>draft = true</code> and switches to a separate update function that only reads card input. Choosing a card directly rewrites a stat field (<code>speed</code>, <code>radius</code>, or <code>life</code>). The threshold then rises, so the next level-up requires more XP.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>Gem magnetism</h3><p>Gems within 90 pixels of the player are pulled toward them every frame. Reaching within 18 pixels picks up the gem and increments <code>xp</code>.</p><code>if d &lt; 90 { pull gem closer }</code></article>
+        <article><span class="concept-number">2</span><h3>Level-up trigger</h3><p>The moment <code>xp &gt;= need</code>, set <code>draft = true</code>. The main Update delegates to <code>updateDraft</code>, freezing all game simulation until a card is chosen.</p><code>if g.xp &gt;= g.need { g.draft = true }</code></article>
+        <article><span class="concept-number">3</span><h3>Draft choice</h3><p>One of three upgrade cards is selected by key press or tap. The chosen stat field is incremented, <code>need</code> grows by 3, and <code>draft</code> is cleared to resume play.</p><code>g.speed += .65 // etc.</code></article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="draft" data-combat="combat" data-draft="draft" aria-labelledby="lab-title-experience-draft">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-experience-draft">Enter draft mode on level-up</h3>
+          <p>Level-up enters draft mode. Picking a card returns to combat.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-level>Level up</button>
+            <button type="button" class="lab-button" data-lab-card data-card="A">A</button>
+            <button type="button" class="lab-button" data-lab-card data-card="B">B</button>
+            <button type="button" class="lab-button" data-lab-card data-card="C">C</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">pause while drafting</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>mode</span><strong data-lab-mode>combat</strong><small></small></div>
+            <div><span>pick</span><strong data-lab-pick>—</strong><small></small></div>
+            <div><span>flag</span><strong>drafting</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE LEVEL-UP RULE</p>
+        <div class="formula-lines"><code>if g.xp &gt;= g.need { g.draft = true }</code><span>after choice</span><code>g.level++; g.xp = 0; g.need += 3</code></div>
+        <p>Incrementing <code>need</code> each level creates an accelerating curve: later levels demand more XP, making early decisions feel impactful and late-game tension feel earned.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Choose → rewrite stat → resume</h3>
+          <p>The draft handler reads a single key or tap event, runs a switch to apply the right stat delta, then resets the XP counter and clears the flag. No other code needs to know about levels — every system just reads the current stat values.</p>
+        </div>
+        <pre><code><span>func</span> (g *game) updateDraft() error {
+    choice := -1
+    <span>if</span> inpututil.IsKeyJustPressed(ebiten.Key1) { choice = 0 }
+    <span>if</span> inpututil.IsKeyJustPressed(ebiten.Key2) { choice = 1 }
+    <span>if</span> inpututil.IsKeyJustPressed(ebiten.Key3) { choice = 2 }
+    <span>if</span> choice &lt; 0 { <span>return</span> nil }
+    <span>switch</span> choice {
+    <span>case</span> 0: g.speed += .65
+    <span>case</span> 1: g.radius += 14
+    <span>case</span> 2: g.life++
+    }
+    g.level++; g.xp = 0; g.need += 3
+    g.draft = false
+    <span>return</span> nil
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT DRAFT</p><h3>Flat games feel over too soon</h3><p>Without growth, players repeat the same actions the whole run. Level-up moments create anticipation and a sense of progression that keeps players engaged.</p></article>
+        <article><p class="eyebrow">WITH DRAFT</p><h3>Each run plays differently</h3><p>Choosing different card combinations each run produces distinct playstyles. The decision itself — not just the upgrade — is the fun.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Adjust card values and XP curve</h3><p>Change <code>+.65</code> speed or <code>+14</code> radius to feel the power difference. Raise <code>need += 3</code> to make later levels a grind, or lower it for rapid-fire upgrades.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../swarm/">← STEP 03<strong>100-Enemy Swarm</strong></a><a href="../weapon-evolution/">STEP 05 →<strong>Weapon Evolution Lab</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

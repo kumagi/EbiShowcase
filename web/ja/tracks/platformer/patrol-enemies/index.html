@@ -65,6 +65,29 @@
         </article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="stomp" data-stomp="踏みつけ" data-hurt="ダメージ" aria-labelledby="lab-title-patrol-enemies">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-patrol-enemies">落下中だけ踏みつけ</h3>
+          <p>vy がプラス（落下）のときだけ踏みつけ成功。上昇中はダメージです。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-fall>落下中</button>
+            <button type="button" class="lab-button" data-lab-rise>上昇中</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">上から当たった？</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>vy</span><strong data-lab-vy>4.0</strong><small></small></div>
+            <div><span>判定</span><strong data-lab-result>踏みつけ</strong><small></small></div>
+            <div><span>規則</span><strong>vy > 0</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE ONE-LINE RULE</p>
         <div class="formula-lines">
@@ -125,6 +148,7 @@
     </nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

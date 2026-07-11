@@ -40,6 +40,28 @@
         <article><span class="concept-number">3</span><h3>Undoは履歴スタック</h3><p>動く前にプレイヤーと箱の位置をスナップショットとして保存します。Undoで最後の状態を取り出して復元します。</p><code>history []snapshot</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="push" data-blocked="壁／押せない" data-pushed="箱を押した" aria-labelledby="lab-title-sokoban">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-sokoban">箱を1マス押してみよう</h3>
+          <p>P がプレイヤー、B が箱です。右へ進むとき、先が箱ならその先が空いているときだけ押せます。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-right>右へ</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board" data-lab-map>. P . B .</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>マス</span><strong data-lab-map>. P . B .</strong><small></small></div>
+            <div><span>結果</span><strong data-lab-note>—</strong><small></small></div>
+            <div><span>P/B</span><strong>player/box</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE PARSE RECIPE</p>
         <div class="formula-lines"><code>for y, row := range level</code><span>内側</span><code>for x, c := range row</code></div>
@@ -83,6 +105,7 @@
     <nav class="lesson-pager"><a href="../space-shooter/">← LEVEL 08<strong>Space Shooter</strong></a><a href="../platformer/">LEVEL 10 →<strong>Platformer</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

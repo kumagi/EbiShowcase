@@ -37,6 +37,29 @@
         <article><span class="concept-number">3</span><h3>dt の上限キャップ</h3><p>ブラウザのタブを隠すと長時間 Update が呼ばれず、復帰した瞬間に巨大な dt になることがあります。<code>0.25</code> 秒でキャップして、一気に何百個も増えないようにします。</p><code>if dt &gt; .25 { dt = .25 }</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="idle"  aria-labelledby="lab-title-idle-factory">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-idle-factory">時間差分で自動生産</h3>
+          <p>経過時間 dt に機械数をかけて自動生産します。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>0.25秒進める</button>
+            <button type="button" class="lab-button" data-lab-buy>機械+1</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">points += rate * dt</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>ポイント</span><strong data-lab-points>0.0</strong><small></small></div>
+            <div><span>生産</span><strong data-lab-rate>2/s</strong><small></small></div>
+            <div><span>dt</span><strong>0.25</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE IDLE FORMULA</p>
         <div class="formula-lines"><code>増加量 = machines × dt</code><span>例：台数3、dt＝0.0167秒</span><code>0.0167 × 3 ≈ 0.050 個/フレーム</code></div>
@@ -68,6 +91,7 @@ g.sweets += float64(g.machines) * dt</code></pre>
     <nav class="lesson-pager"><a href="../first-shop/">← STEP 02<strong>はじめてのお店</strong></a><a href="../growth-curves/">STEP 04 →<strong>成長曲線ラボ</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

@@ -65,6 +65,31 @@
         </article>
       </div>
 
+      <div class="motion-lab" data-lab="hitbox" data-hit="HIT!" data-miss="MISS" aria-labelledby="hitbox-lab-title">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / HIT BOXES</p>
+          <h3 id="hitbox-lab-title">赤と緑を重ねてみよう</h3>
+          <p>赤い攻撃判定と緑の喰らい判定が重なったときだけヒットです。「近づける／離す」で距離を変えられます。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-closer>近づける</button>
+            <button type="button" class="lab-button" data-lab-farther>離す</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">押し合い判定（青）は別枠です。ここでは攻撃と喰らいだけに注目します。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="ヒットボックス実験ボード">
+            <div class="lab-hit-attack" data-lab-attack aria-hidden="true"></div>
+            <div class="lab-hit-hurt" data-lab-hurt aria-hidden="true"></div>
+          </div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>距離</span><strong data-lab-sep>90</strong><small>小さいほど近い</small></div>
+            <div><span>判定</span><strong data-lab-result data-state="miss">MISS</strong><small>赤∩緑</small></div>
+            <div><span>閾値</span><strong>70</strong><small>これ未満でHIT</small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">AABB OVERLAP TEST</p>
         <div class="formula-lines">
@@ -128,6 +153,7 @@ func overlap(a, b rect) bool {
     </nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

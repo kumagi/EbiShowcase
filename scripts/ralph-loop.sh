@@ -17,10 +17,14 @@ case "${1:-next}" in
     test -f dist/play/timing-meter/game.wasm
     test -f dist/play/catch-stars/game.wasm
     test -f dist/play/flappy/game.wasm
+    node scripts/check-lessons.mjs
     echo "Ralph verification passed"
     ;;
+  lessons)
+    node scripts/check-lessons.mjs "${@:2}"
+    ;;
   *)
-    echo "usage: $0 {next|status|verify}" >&2
+    echo "usage: $0 {next|status|verify|lessons}" >&2
     exit 2
     ;;
 esac

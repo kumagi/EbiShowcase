@@ -40,6 +40,29 @@
         <article><span class="concept-number">3</span><h3>Prepend and trim</h3><p>Add the new head at position zero, remove the last element if no food was eaten. Two lines of code, complete movement.</p><code>body[:len(body)-1]</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="snake"  aria-labelledby="lab-title-snake">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / GRID HISTORY</p>
+          <h3 id="lab-title-snake">Add a head, drop a tail</h3>
+          <p>“Move” prepends a head and trims the tail. “Eat” keeps the tail so the body grows.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>Move</button>
+            <button type="button" class="lab-button" data-lab-eat>Eat</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">The body is a list of grid points.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board" data-lab-body>(2,2) (1,2) (0,2)</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>length</span><strong data-lab-len>3</strong><small>body size</small></div>
+            <div><span>history</span><strong data-lab-body>(2,2) (1,2) (0,2)</strong><small>head → tail</small></div>
+            <div><span>rule</span><strong>[]point</strong><small>append + trim</small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE TWO-LINE MOVE</p>
         <div class="formula-lines"><code>body = append([]point{head}, body...)</code><span>then</span><code>body = body[:len(body)-1]</code></div>
@@ -89,6 +112,7 @@
     <nav class="lesson-pager"><a href="../breakout/">← LEVEL 06<strong>Breakout</strong></a><a href="../space-shooter/">LEVEL 08 →<strong>Space Shooter</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

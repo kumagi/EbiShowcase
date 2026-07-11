@@ -40,6 +40,29 @@
         <article><span class="concept-number">3</span><h3>Delete backward</h3><p>Remove off-screen or dead entities by iterating from the last index toward zero. Deleting an element does not shift earlier indices, so nothing is skipped.</p><code>bullets[:i], bullets[i+1:]</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="entities"  aria-labelledby="lab-title-space-shooter">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-space-shooter">Fire, step, and cull bullets</h3>
+          <p>Fire appends a shot; Step moves them up. Shots with y≤0 leave the list.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-fire>Fire</button>
+            <button type="button" class="lab-button" data-lab-step>Step</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">shots []</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>shots</span><strong data-lab-count>0</strong><small></small></div>
+            <div><span>list</span><strong data-lab-list>—</strong><small></small></div>
+            <div><span>y</span><strong>↑</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE DELETE PATTERN</p>
         <div class="formula-lines"><code>for i := len(g.bullets) - 1; i &gt;= 0; i--</code><span>when ready</span><code>g.bullets = append(g.bullets[:i], g.bullets[i+1:]...)</code></div>
@@ -80,6 +103,7 @@
     <nav class="lesson-pager"><a href="../snake/">← LEVEL 07<strong>Snake</strong></a><a href="../sokoban/">LEVEL 09 →<strong>Sokoban</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

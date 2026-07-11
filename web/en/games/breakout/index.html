@@ -37,6 +37,27 @@
         <article><span class="concept-number">3</span><h3>Breaking</h3><p>Only overlapping bricks set <code>alive = false</code>. Update and draw look only at living ones.</p><code>alive = false</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="bricks"  aria-labelledby="lab-title-bricks">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / MANY OBJECTS</p>
+          <h3 id="lab-title-bricks">Tap bricks to break them</h3>
+          <p>Twelve bricks are entries in one array. Tap sets alive to false and adds score.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">Remaining count and score update on the right.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-brick-grid" data-lab-grid></div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>alive</span><strong data-lab-alive>12</strong><small>still standing</small></div>
+            <div><span>SCORE</span><strong data-lab-score>0</strong><small>+10 each</small></div>
+            <div><span>rule</span><strong>for i := range</strong><small>loop the array</small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE GRID RECIPE</p>
         <div class="formula-lines"><code>for row := 0; row &lt; 6; row++</code><span>inner</span><code>for col := 0; col &lt; 8; col++</code></div>
@@ -73,6 +94,7 @@
     <nav class="lesson-pager"><a href="../pong/">← LEVEL 05<strong>Pong</strong></a><a href="../snake/">LEVEL 07 →<strong>Snake</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

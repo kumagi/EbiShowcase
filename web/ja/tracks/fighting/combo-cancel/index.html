@@ -1,4 +1,161 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>コンボとキャンセル | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/fighting/combo-cancel/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D格闘ゲーム</a><span>STEP 05 / 07</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / 格闘ゲームを作る</p><h1>コンボとキャンセル</h1><p>少し早い入力を保存し、当たった技から次の技へつなげます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>入力バッファとキャンセル条件</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>コンボとキャンセル</h2></div><p>弱・弱・強をJ/J/K、Z/Z/X、または左右ボタンでつなぎ、3回完成させます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="コンボとキャンセル" src="../../../../play/combo-cancel/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>早すぎた入力を8フレームだけ覚える</h2><p>ボタンを押すとbufferへ技を入れ、毎フレーム残り時間を減らします。今の技が当たり、キャンセル可能な時間になったら、保存した次の技をすぐ始めます。</p></div><pre><code>if pressed { buffer = nextMove; bufferLife = 8 }
-if hit &amp;&amp; canCancel &amp;&amp; bufferLife &gt; 0 {
-    start(buffer)
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>押した瞬間と実行できる瞬間をつなぐ</h2><div class="overview-steps"><article><b>01</b><h3>覚える</h3><p>次の技と有効な残り時間を保存します。</p></article><article><b>02</b><h3>条件を待つ</h3><p>命中とキャンセル時間を確認します。</p></article><article><b>03</b><h3>つなぐ</h3><p>条件がそろった瞬間に保存技を開始します。</p></article></div></section><nav class="lesson-pager"><a href="../guard-throw/">← STEP 04<strong>ガードと投げ</strong></a><a href="../command-fighter/">STEP 06 →<strong>コマンド技</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="入力バッファとキャンセル条件でコンボをつなぐ、Ebitengine版格闘ゲームレッスン。">
+  <title>コンボとキャンセル | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コース</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/fighting/combo-cancel/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 2D格闘ゲーム</a><span>STEP 05 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>コンボとキャンセル</h1>
+      <p>少し早めに押したボタンを「バッファ」に8フレームだけ保存します。技が当たり、キャンセル可能な時間に入ったら、保存した次の技をすぐ発動します。これがコンボのつながりの仕組みです。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>入力バッファとキャンセルウィンドウ</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>弱・弱・強をテンポよくつなごう。</h2></div>
+        <p>J・Z で弱攻撃、K・X で強攻撃（または画面下左右）。弱→弱→強の3コンボを3回完成させるとクリアです。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="コンボとキャンセル" src="../../../../play/combo-cancel/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / COMBO CANCEL</p>
+        <h2>どうして技の途中に<br>次の技がつながるの？</h2>
+        <p class="lesson-lead">格闘ゲームのコンボは「<strong>入力バッファ</strong>」と「<strong>キャンセルウィンドウ</strong>」の組み合わせで実現します。ボタンを押した瞬間にバッファへ技を保存し、最大8フレームだけ「次の技のリクエスト」を覚えておきます。技が当たり（<code>frame == 8</code>）、キャンセル可能な時間（フレーム8〜13）に入ると、バッファにある技をすぐ開始します。タイミングが合えばコンボがつながります。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>入力バッファ</h3>
+          <p>ボタンを押したフレームに <code>buffer = 技</code> と <code>bufferLife = 8</code> をセットします。毎フレーム残り時間を減らし、0になったら忘れます。</p>
+          <code>buffer = light; bufferLife = 8</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>キャンセルウィンドウ</h3>
+          <p>フレーム8〜13の6フレーム間だけ、今の技を中断して次の技を始められます。バッファに技があり、正しい順序のときだけキャンセルが発動します。</p>
+          <code>cancel := frame &gt;= 8 &amp;&amp; frame &lt;= 13</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>コンボ進行カウンター</h3>
+          <p><code>combo</code> 変数で何段目かを管理します。1段目と2段目は弱攻撃、3段目は強攻撃のみ受け付けます。順序が違うと combo がリセットされます。</p>
+          <code>if combo &lt; 2: expected = light else: heavy</code>
+        </article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="buffer"  aria-labelledby="lab-title-combo-cancel">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-combo-cancel">早め入力をバッファしてキャンセル</h3>
+          <p>早めの入力を数フレーム覚え、キャンセル窓で次の技へつなぎます。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-press>早めに入力</button>
+            <button type="button" class="lab-button" data-lab-step>1F進める</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">bufferLife = 8</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>buffer</span><strong data-lab-buf>none</strong><small></small></div>
+            <div><span>life</span><strong data-lab-life>0</strong><small></small></div>
+            <div><span>メモ</span><strong data-lab-note>—</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">COMBO TIMING</p>
+        <div class="formula-lines">
+          <code>バッファ有効期間: 8フレーム（≈ 133ms）</code>
+          <span>技の構成</span>
+          <code>LIGHT: 20フレーム (発生8 + 持続1 + 硬直11)</code>
+          <span>↓ フレーム8〜13でキャンセル可能</span>
+          <code>HEAVY: 28フレーム (発生8 + 持続1 + 硬直19)</code>
+        </div>
+        <p>キャンセルウィンドウ（フレーム8〜13）は技の当たった直後の6フレームです。ここでバッファに次の技がなければコンボは終了します。バッファは8フレームあるので、少し早めに押しても間に合います。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>押す → 覚える → 条件を待つ → つなぐ</h3>
+          <p>ボタンを押したらバッファへ保存し、毎フレーム減らします。キャンセル条件が整ったとき、期待する技と一致すればすぐ開始します。コンボカウンターで進行状況を追います。</p>
+        </div>
+        <pre><code>// 入力があればバッファに保存
+<span>if</span> in != none {
+    g.buffer = in
+    g.bufferLife = 8   // 8フレーム覚える
+}
+<span>if</span> g.bufferLife &gt; 0 {
+    g.bufferLife--
+} <span>else</span> {
+    g.buffer = none
+}
+
+// キャンセル: 当たったフレームから6フレーム間
+cancel := g.frame &gt;= 8 &amp;&amp; g.frame &lt;= 13
+<span>if</span> cancel &amp;&amp; g.buffer != none {
+    expected := light
+    <span>if</span> g.combo &gt;= 2 { expected = heavy }
+    <span>if</span> g.buffer == expected {
+        g.start(g.buffer)   // 次の技を即開始
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT BUFFER</p>
+          <h3>コンボが繋がらないもどかしさが残る</h3>
+          <p>バッファなしでは技の終わりの1フレームを正確に押す必要があります。人間には難しく、コンボが成立しにくくなります。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH BUFFER</p>
+          <h3>「少し早めに押す」でつながる快感</h3>
+          <p>8フレームの猶予があることで、技の感触を確認しながら次を押せます。スキルの上達に伴って精度を上げる余地も生まれます。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>バッファ期間を変えてみよう</h3>
+          <p><code>bufferLife = 8</code> を <code>16</code> にすると押しやすいコンボに、<code>4</code> にするとシビアな上級者向け仕様になります。<code>cancel := frame &gt;= 8 &amp;&amp; frame &lt;= 13</code> のウィンドウも調整してみましょう。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../guard-throw/">← STEP 04<strong>ガードと投げ</strong></a>
+      <a href="../command-fighter/">STEP 06 →<strong>コマンド技</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

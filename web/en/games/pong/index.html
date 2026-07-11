@@ -37,6 +37,28 @@
         <article><span class="concept-number">3</span><h3>Hit offset</h3><p>Hitting near a paddle edge adds the offset into vx so the return angle changes. That is aimed play.</p><code>vx += offset * 0.055</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="bounce" data-wall="wall" data-paddle="paddle" aria-labelledby="lab-title-bounce">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / BOUNCE</p>
+          <h3 id="lab-title-bounce">Bounce off walls and paddles</h3>
+          <p>“Next frame” moves the ball. Side walls flip vx; the paddle flips vy.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>Next frame</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">Keep the speed magnitude; only the sign changes.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-ball" data-lab-ball aria-hidden="true"></div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>vx</span><strong data-lab-vx>6.0</strong><small>horizontal</small></div>
+            <div><span>vy</span><strong data-lab-vy>4.0</strong><small>vertical</small></div>
+            <div><span>event</span><strong data-lab-note>—</strong><small>last bounce</small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE BOUNCE RULE</p>
         <div class="formula-lines"><code>wall: vx = -vx</code><span>paddle</span><code>vy = -vy (optionally a bit faster)</code></div>
@@ -72,6 +94,7 @@ g.ballY += g.vy
     <nav class="lesson-pager"><a href="../flappy/">← LEVEL 04<strong>Ebi Flight</strong></a><a href="../breakout/">LEVEL 06 →<strong>Breakout</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

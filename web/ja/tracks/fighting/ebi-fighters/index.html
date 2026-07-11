@@ -1,5 +1,149 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Fighters | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/fighting/ebi-fighters/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D格闘ゲーム</a><span>STEP 07 / 07</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / 格闘ゲームを作る</p><h1>Ebi Fighters</h1><p>体力、AI、ラウンド進行、時間切れを統合した2ラウンド先取の対戦です。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>ラウンド・体力・対戦ルール</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Ebi Fighters</h2></div><p>A・Dで移動、J・Xで攻撃、K・Cでガード。画面下の4ボタンでもAIと戦えます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 07</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Fighters" src="../../../../play/ebi-fighters/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>小さな勝負をラウンドで包む</h2><p>各ラウンドは両者のHPと45秒を初期化します。HPが0か時間切れになったら残りHPを比べて勝者へ1点。どちらかが2点になれば試合終了です。</p></div><pre><code>if hp == 0 || timer == 0 {
-    roundWins[winner]++
-    if roundWins[winner] == 2 { matchOver = true }
-    else { resetRound() }
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>対戦を入れ子の状態にする</h2><div class="overview-steps"><article><b>01</b><h3>ラウンドを戦う</h3><p>移動・攻撃・ガード・AIを更新します。</p></article><article><b>02</b><h3>勝者を決める</h3><p>HPか時間を条件にラウンドを終了します。</p></article><article><b>03</b><h3>試合を決める</h3><p>2ラウンド先取でリザルトへ移ります。</p></article></div></section><nav class="lesson-pager"><a href="../command-fighter/">← STEP 06<strong>コマンド技</strong></a><a href="../">PATH COMPLETE →<strong>2D格闘ゲーム</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="ラウンド制マッチルールを学ぶ格闘最終レッスン。">
+  <title>Ebi Fighters | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コース</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/fighting/ebi-fighters/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 2D格闘ゲーム</a><span>STEP 07 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Ebi Fighters</h1>
+      <p>体力・ガード・スタン・ラウンド勝利数をまとめ、先に2ラウンド取った方が勝ちの対戦ルールにします。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>ラウンド・体力・対戦ルール</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>2ラウンド先取で勝利。</h2></div>
+        <p>移動・攻撃・ガードでCPUと対戦。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 07</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Fighters" src="../../../../play/ebi-fighters/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / MATCH RULES</p>
+        <h2>1本取っても試合が<br>終わらないのはなぜ？</h2>
+        <p class="lesson-lead"><strong>ラウンド勝利数</strong>を別に数えるからです。HPが0（やタイムアップ）でラウンドが終わり、pWins / aiWins が2になるまでリセットして続けます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>ファイターデータ</h3>
+          <p>位置・HP・攻撃・スタン・ガードを1体分の struct にまとめます。</p>
+          <code>type fighter struct</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>ラウンドリセット</h3>
+          <p>HPと位置を初期化し、ラウンド番号を進めます。</p>
+          <code>resetRound()</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>マッチ終了</h3>
+          <p>先に2勝で matchOver。</p>
+          <code>if pWins >= 2 || aiWins >= 2</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="rounds" aria-labelledby="lab-title-rounds">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / BEST OF THREE</p>
+          <h3 id="lab-title-rounds">ラウンド勝利を数えよう</h3>
+          <p>HP を減らしてラウンドを取ります。先に2勝でマッチ終了です。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-p1hit>P1が勝つ</button>
+            <button type="button" class="lab-button" data-lab-p2hit>P2が勝つ</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物では HP・タイムアップでも勝者を決めます。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board"><div class="lab-mono-board">best of 3</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>P1 wins</span><strong data-lab-p1>0</strong><small>wins</small></div>
+            <div><span>P2 wins</span><strong data-lab-p2>0</strong><small></small></div>
+            <div><span>round</span><strong data-lab-round>1</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE MATCH RULE</p>
+        <div class="formula-lines">
+          <code>round ends → award win</code>
+          <span>そして</span>
+          <code>wins >= 2 → match over</code>
+        </div>
+        <p>1本勝負より学習しやすいのは、負けても次ラウンドで立て直せるからです。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>ラウンド結果から勝敗を積む</h3>
+          <p>HP比較で勝者を決め、2勝でマッチ終了、さもなくば次ラウンドへ。</p>
+        </div>
+        <pre><code><span>if</span> g.p.hp &gt; g.ai.hp {
+    g.pWins++
+} <span>else</span> {
+    g.aiWins++
+}
+<span>if</span> g.pWins &gt;= 2 || g.aiWins &gt;= 2 {
+    g.matchOver = true
+} <span>else</span> {
+    g.round++
+    g.resetRound()
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT ROUNDS</p>
+          <h3>一撃で終了</h3>
+          <p>ミス1回で試合終了だと練習しづらいです。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH MATCH STATE</p>
+          <h3>ルールがデータになる</h3>
+          <p>勝利数やタイマーを変数にするとUIも判定も簡単です。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>必要勝利数と制限時間</h3>
+          <p>2本先取や45秒を変えるとテンポが変わります。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../command-fighter/">← STEP 06<strong>コマンド技</strong></a>
+      <span></span>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

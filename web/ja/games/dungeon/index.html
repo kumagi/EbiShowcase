@@ -40,6 +40,29 @@
         <article><span class="concept-number">3</span><h3>状態ごとの動き</h3><p>state == 0（巡回）ではタイマーで向きを変えてランダムに動きます。state == 1（追跡）ではプレイヤーの方向へ一定速度で向かいます。</p><code>if e.state == 0 { … } else { … }</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="ai" data-patrol="パトロール" data-chase="追跡" aria-labelledby="lab-title-dungeon">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-dungeon">距離でパトロールと追跡を切替</h3>
+          <p>プレイヤーとの距離が 120 未満で追跡、それ以外はパトロールです。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-closer>近づける</button>
+            <button type="button" class="lab-button" data-lab-farther>離す</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">距離 &lt; 120 → 追跡</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>状態</span><strong data-lab-state>パトロール</strong><small></small></div>
+            <div><span>距離</span><strong data-lab-dist>180</strong><small></small></div>
+            <div><span>閾値</span><strong>120</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE CHASE DIRECTION</p>
         <div class="formula-lines"><code>dx, dy := (player.x - enemy.x), (player.y - enemy.y)</code><span>正規化して</span><code>vx, vy = dx/dist * speed, dy/dist * speed</code></article></div>
@@ -85,6 +108,7 @@
     <nav class="lesson-pager"><a href="../platformer/">← LEVEL 10<strong>Platformer</strong></a><a href="../bullet-hell/">LEVEL 12 →<strong>Bullet Hell</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

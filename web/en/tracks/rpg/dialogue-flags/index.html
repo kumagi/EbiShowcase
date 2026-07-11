@@ -70,6 +70,28 @@
         </article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="flag" data-yes="true" data-no="false" data-before="Hello." data-after="You found it!" aria-labelledby="lab-title-dialogue-flags">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-dialogue-flags">Flags change dialogue lines</h3>
+          <p>The same NPC can speak different lines based on a flag.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-toggle>Toggle flag</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">if flag { … }</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>flag</span><strong data-lab-flag>false</strong><small></small></div>
+            <div><span>line</span><strong data-lab-text>Hello.</strong><small></small></div>
+            <div><span>if</span><strong>flag</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE DIALOGUE RULE</p>
         <div class="formula-lines">
@@ -138,6 +160,7 @@
     <p>Made with Go + Ebitengine.</p>
     <a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a>
   </footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

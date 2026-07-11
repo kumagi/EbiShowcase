@@ -37,6 +37,28 @@
         <article><span class="concept-number">3</span><h3>ヒット位置</h3><p>パドルの端で返すと、中心からのずれを vx に足して角度を変えます。狙い打ちの味です。</p><code>vx += offset * 0.055</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="bounce" data-wall="壁" data-paddle="パドル" aria-labelledby="lab-title-bounce">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / BOUNCE</p>
+          <h3 id="lab-title-bounce">壁とパドルではね返してみよう</h3>
+          <p>「1フレーム進める」でボールが動きます。左右の壁では vx、パドルでは vy の符号が反転します。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>1フレーム進める</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">速さの大きさはそのまま、向きだけ変わります。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-ball" data-lab-ball aria-hidden="true"></div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>vx</span><strong data-lab-vx>6.0</strong><small>左右の速さ</small></div>
+            <div><span>vy</span><strong data-lab-vy>4.0</strong><small>上下の速さ</small></div>
+            <div><span>出来事</span><strong data-lab-note>—</strong><small>いま起きた反射</small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE BOUNCE RULE</p>
         <div class="formula-lines"><code>壁: vx = -vx</code><span>パドル</span><code>vy = -vy （少し速くしてもOK）</code></div>
@@ -72,6 +94,7 @@ g.ballY += g.vy
     <nav class="lesson-pager"><a href="../flappy/">← LEVEL 04<strong>Ebi Flight</strong></a><a href="../breakout/">LEVEL 06 →<strong>Breakout</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

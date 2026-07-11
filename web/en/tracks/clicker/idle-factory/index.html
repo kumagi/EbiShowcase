@@ -37,6 +37,29 @@
         <article><span class="concept-number">3</span><h3>Delta time cap</h3><p>When a browser tab is hidden, Update may not be called for a long time. When the tab is shown again, dt could be several seconds, causing a sudden spike. Capping at 0.25 seconds prevents one hidden-tab visit from producing hundreds of sweets.</p><code>if dt &gt; .25 { dt = .25 }</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="idle"  aria-labelledby="lab-title-idle-factory">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-idle-factory">Produce with delta time</h3>
+          <p>Offline-style production: points += machines × dt.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>Advance 0.25s</button>
+            <button type="button" class="lab-button" data-lab-buy>Machine +1</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">points += rate * dt</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>points</span><strong data-lab-points>0.0</strong><small></small></div>
+            <div><span>rate</span><strong data-lab-rate>2/s</strong><small></small></div>
+            <div><span>dt</span><strong>0.25</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE IDLE FORMULA</p>
         <div class="formula-lines"><code>gain = machines × dt</code><span>example: 3 machines, dt = 0.0167 s</span><code>0.0167 × 3 ≈ 0.050 sweets/frame</code></div>
@@ -68,6 +91,7 @@ g.sweets += float64(g.machines) * dt</code></pre>
     <nav class="lesson-pager"><a href="../first-shop/">← STEP 02<strong>First Shop</strong></a><a href="../growth-curves/">STEP 04 →<strong>Growth Curves</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

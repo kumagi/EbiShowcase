@@ -1,3 +1,147 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Quest | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/rpg/ebi-quest/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>STEP 07 / 07</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / RPGを作る</p><h1>Ebi Quest</h1><p>仲間、目的、進行状況、戦闘、セーブデータを統合した短編RPGです。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>仲間・クエスト・セーブ</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Ebi Quest</h2></div><p>南西でモモを仲間にし、北東の結晶を取り、塔のボスを倒して村へ帰ります。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 07</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Quest" src="../../../../play/ebi-quest/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>クエスト番号が物語のしおりになる</h2><p>questが0なら仲間探し、1なら結晶、2ならボス、3なら帰還です。番号が変わるたび位置・HPと一緒にlocalStorageへ保存し、ページを閉じても続きから始めます。</p></div><pre><code>type SaveData struct { X, Y, HP, Quest int }
-quest++
-save(SaveData{player.X, player.Y, player.HP, quest})</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>小さな仕組みを1本へつなぐ</h2><div class="overview-steps"><article><b>01</b><h3>目的を進める</h3><p>場所へ着くたびクエスト番号を増やします。</p></article><article><b>02</b><h3>仲間と戦う</h3><p>仲間加入を攻撃と回復へ反映します。</p></article><article><b>03</b><h3>保存する</h3><p>進行に必要な状態だけをブラウザへ残します。</p></article></div></section><nav class="lesson-pager"><a href="../world-encounters/">← STEP 06<strong>世界地図</strong></a><a href="../">PATH COMPLETE →<strong>コマンドRPG</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="クエスト進行とセーブを統合したRPG最終レッスン。">
+  <title>Ebi Quest | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コース</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/rpg/ebi-quest/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>STEP 07 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Ebi Quest</h1>
+      <p>仲間・クエスト進行・フィールド・戦闘・セーブを1本にまとめます。大きなRPGも、小さなフラグとシーン変数の組み合わせです。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>仲間・クエスト・セーブ</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>モモと旅してボスを倒そう。</h2></div>
+        <p>移動してイベントを進め、戦闘してセーブ。Rでデータ初期化。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 07</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Quest" src="../../../../play/ebi-quest/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / QUEST + SAVE</p>
+        <h2>長い冒険の進み具合は<br>どこに書いておくの？</h2>
+        <p class="lesson-lead"><strong>クエスト番号</strong>と<strong>セーブデータ</strong>です。今どこまで進んだかを整数で持ち、ブラウザの localStorage に書き出せば、ページを閉じても続きから遊べます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>クエスト番号</h3>
+          <p>0で村、1で同行など、進行を整数で表します。</p>
+          <code>quest int</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>シーン</h3>
+          <p>フィールドと戦闘を scene で切り替えます。</p>
+          <code>if scene == 1 { return battle() }</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>セーブ</h3>
+          <p>quest/x/y/hp を localStorage へ保存・読込します。</p>
+          <code>localStorage.setItem(saveKey+"quest", …)</code>
+        </article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="quest"  aria-labelledby="lab-title-ebi-quest">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-ebi-quest">クエスト番号を保存・読込</h3>
+          <p>進行は整数のクエスト番号。セーブして読めば続きから再開できます。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-advance>クエスト進める</button>
+            <button type="button" class="lab-button" data-lab-save>セーブ</button>
+            <button type="button" class="lab-button" data-lab-load>ロード</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">save(quest)</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>quest</span><strong data-lab-quest>0</strong><small></small></div>
+            <div><span>保存データ</span><strong data-lab-saved>—</strong><small></small></div>
+            <div><span>localStorage</span><strong></strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE SAVE RULE</p>
+        <div class="formula-lines">
+          <code>save(quest, x, y, hp)</code>
+          <span>再開時</span>
+          <code>load() → 同じ世界</code>
+        </div>
+        <p>必要な最小データだけ保存します。全部の敵位置を覚えなくても、クエスト番号があれば物語は復元できます。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>保存と読込を対にする</h3>
+          <p>起動時に load し、イベント後に save します。Rキーで削除して最初からにもできます。</p>
+        </div>
+        <pre><code>func (g *game) save() {
+    s := js.Global().Get("localStorage")
+    s.Call("setItem", saveKey+"quest", strconv.Itoa(g.quest))
+    s.Call("setItem", saveKey+"x", strconv.Itoa(g.x))
+    s.Call("setItem", saveKey+"y", strconv.Itoa(g.y))
+    s.Call("setItem", saveKey+"hp", strconv.Itoa(g.hp))
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT SAVE</p>
+          <h3>毎回はじめから</h3>
+          <p>短いゲームなら許せても、RPGでは続きが命です。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH QUEST FLAGS</p>
+          <h3>物語が枝分かれできる</h3>
+          <p>番号やフラグで会話・出現・戦闘を切り替えられます。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>イベント条件を足そう</h3>
+          <p>quest の分岐を増やすだけで、新しい村の出来事を追加できます。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../world-encounters/">← STEP 06<strong>世界地図とエンカウント</strong></a>
+      <span></span>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

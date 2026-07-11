@@ -40,6 +40,29 @@
         <article><span class="concept-number">3</span><h3>後ろから削除</h3><p>画面外に出た弾や倒した敵は削除します。後ろから削除すると、添え字がずれないので安全です。</p><code>bullets[:i], bullets[i+1:]</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="entities"  aria-labelledby="lab-title-space-shooter">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-space-shooter">弾を撃って進めて消そう</h3>
+          <p>発射で弾を追加し、進めるで上へ動かします。画面外（y≤0）の弾はリストから消えます。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-fire>発射</button>
+            <button type="button" class="lab-button" data-lab-step>進める</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">shots []</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>弾の数</span><strong data-lab-count>0</strong><small></small></div>
+            <div><span>リスト</span><strong data-lab-list>—</strong><small></small></div>
+            <div><span>y</span><strong>↑</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE DELETE PATTERN</p>
         <div class="formula-lines"><code>for i := len(g.bullets) - 1; i &gt;= 0; i--</code><span>条件が合えば</span><code>g.bullets = append(g.bullets[:i], g.bullets[i+1:]...)</code></div>
@@ -80,6 +103,7 @@
     <nav class="lesson-pager"><a href="../snake/">← LEVEL 07<strong>Snake</strong></a><a href="../sokoban/">LEVEL 09 →<strong>Sokoban</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

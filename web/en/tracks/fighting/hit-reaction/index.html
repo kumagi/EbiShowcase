@@ -1,5 +1,145 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Hit Reaction Dojo | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/fighting/hit-reaction/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D Fighting Game</a><span>STEP 03 / 07</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / BUILD A FIGHTING GAME</p><h1>Hit Reaction Dojo</h1><p>Freeze the instant of impact, disable the opponent, and push them backward.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Hit stop, hit stun, and knockback</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Hit Reaction Dojo</h2></div><p>Approach and land five attacks while observing freeze, stun, and pushback.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Hit Reaction Dojo" src="../../../../play/hit-reaction/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Freeze time and disabled time are different</h2><p>During hit stop, end the whole Update immediately. Then block only the opponent during hit stun and add knockback velocity to move them backward.</p></div><pre><code>if hitStop &gt; 0 { hitStop--; return nil }
-if hitStun &gt; 0 {
-    enemy.X += knockbackVelocity
-    hitStun--
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>Split impact feel into three parts</h2><div class="overview-steps"><article><b>01</b><h3>Freeze</h3><p>A short pause makes impact look strong.</p></article><article><b>02</b><h3>Disable</h3><p>Ignore opponent input during hit stun.</p></article><article><b>03</b><h3>Push</h3><p>Move backward with a shrinking velocity.</p></article></div></section><nav class="lesson-pager"><a href="../frame-attack/">← STEP 02<strong>Three-phase Punch</strong></a><a href="../guard-throw/">STEP 04 →<strong>Guard and Throw</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn hitstop, hitstun, and knockback in a fighting lesson.">
+  <title>Hit Reaction Dojo | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/fighting/hit-reaction/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 2D Fighting</a><span>STEP 03 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Hit Reaction Dojo</h1>
+      <p>Freeze the moment of impact, lock the opponent, then push them back. Spectacle comes from three numbers: freeze, stun, and knockback.</p>
+      <div class="overview-concept"><small>CONCEPT THIS STEP</small><strong>Hitstop, hitstun, knockback</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Hit, freeze, and push.</h2></div>
+        <p>Move with A/D or the lower screen. Attack with Space/X or the upper screen. Land 5 hits to clear.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Hit Reaction Dojo" src="../../../../play/hit-reaction/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / HIT REACTION</p>
+        <h2>Why does a hit<br>feel so heavy?</h2>
+        <p class="lesson-lead">The answer is <strong>hitstop</strong>. Freezing the world for a few frames makes the brain register “that connected.” Then <strong>hitstun</strong> locks control and <strong>knockback</strong> slides the foe away.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Hitstop</h3>
+          <p>On hit, early-return from Update for a few frames. A background tint makes the freeze visible.</p>
+          <code>if hitstop > 0 { hitstop--; return nil }</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Hitstun</h3>
+          <p>While stunned, disable normal AI and only allow the reaction motion.</p>
+          <code>if stun > 0 { stun--; p2 += v2 }</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Knockback</h3>
+          <p>Give push velocity v2, then damp it each frame so the slide eases out.</p>
+          <code>v2 = 7; v2 *= .86</code>
+        </article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="react"  aria-labelledby="lab-title-hit-reaction">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-hit-reaction">Hitstop then stun decay</h3>
+          <p>On hit, freeze the world, then decay knockback during stun.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-hit>Hit</button>
+            <button type="button" class="lab-button" data-lab-step>Next frame</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">stop → stun → v*=0.86</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>hitstop</span><strong data-lab-stop>0</strong><small></small></div>
+            <div><span>stun</span><strong data-lab-stun>0</strong><small></small></div>
+            <div><span>v2</span><strong data-lab-v>0.00</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE REACTION CHAIN</p>
+        <div class="formula-lines">
+          <code>hitstop = 8</code>
+          <span>then</span>
+          <code>stun = 25; v2 = 7</code>
+        </div>
+        <p>Order matters. Freeze first, then set stun and knockback. Longer freeze feels heavier; shorter feels snappier.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Set all three<br>on the hit frame</h3>
+          <p>On the active attack frame, check range. On a hit, set stop, stun, and velocity together.</p>
+        </div>
+        <pre><code><span>if</span> g.attack == 12 &amp;&amp; g.p2-g.p1 &lt; 115 {
+    g.hitstop = 8
+    g.stun = 25
+    g.v2 = 7
+    g.hits++
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT HITSTOP</p>
+          <h3>Hits feel soft</h3>
+          <p>Damage without a freeze looks like a graze.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH REACTION</p>
+          <h3>Room for combos</h3>
+          <p>While the foe cannot act, your next input can connect.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Tweak the three numbers</h3>
+          <p>hitstop, stun, and v2 alone turn a light poke into a heavy blow.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../frame-attack/">← STEP 02<strong>Frame Attack</strong></a>
+      <a href="../guard-throw/">STEP 04 →<strong>Guard &amp; Throw</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

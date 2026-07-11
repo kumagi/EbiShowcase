@@ -70,6 +70,28 @@
         </article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="flag" data-yes="true" data-no="false" data-before="こんにちは。" data-after="見つかったね！" aria-labelledby="lab-title-dialogue-flags">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-dialogue-flags">フラグでセリフが変わる</h3>
+          <p>同じNPCでもフラグでセリフが変わります。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-toggle>フラグ切替</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">if flag { … }</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>flag</span><strong data-lab-flag>false</strong><small></small></div>
+            <div><span>セリフ</span><strong data-lab-text>こんにちは。</strong><small></small></div>
+            <div><span>if</span><strong>flag</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE DIALOGUE RULE</p>
         <div class="formula-lines">
@@ -138,6 +160,7 @@
     <p>Made with Go + Ebitengine.</p>
     <a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a>
   </footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

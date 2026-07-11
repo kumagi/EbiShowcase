@@ -70,6 +70,31 @@
         </article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="tile" data-blocked="wall" aria-labelledby="lab-title-village-walk">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-village-walk">Walls block tile steps</h3>
+          <p>If the next tile is a wall, stay put but still update facing.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button" data-lab-up>↑</button>
+            <button type="button" class="lab-button" data-lab-left>←</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-right>→</button>
+            <button type="button" class="lab-button" data-lab-down>↓</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">wall at (2,1)</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>pos</span><strong data-lab-pos>1,1</strong><small></small></div>
+            <div><span>facing</span><strong data-lab-face>S</strong><small></small></div>
+            <div><span>note</span><strong data-lab-note>—</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE MOVEMENT RULE</p>
         <div class="formula-lines">
@@ -133,6 +158,7 @@
     <p>Made with Go + Ebitengine.</p>
     <a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a>
   </footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

@@ -37,6 +37,28 @@
         <article><span class="concept-number">3</span><h3>Autosave every 120 frames</h3><p>Saving on every frame would hammer localStorage unnecessarily. A frame counter modulo 120 triggers a save roughly every two seconds — frequent enough that a browser crash loses little progress, rare enough to be cheap.</p><code>if g.frame%120 == 0 { g.save() }</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="save"  aria-labelledby="lab-title-offline-bakery">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-offline-bakery">Away seconds × rate = offline gain</h3>
+          <p>Reward on return is elapsed away time × production rate.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-add>Away +30s</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">away * rate</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>away</span><strong data-lab-away>0s</strong><small></small></div>
+            <div><span>gained</span><strong data-lab-gained>0</strong><small></small></div>
+            <div><span>rate</span><strong>8/s</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE OFFLINE RULE</p>
         <div class="formula-lines"><code>offline = min(away_seconds, 28800) × rate()</code><span>on load</span><code>g.sweets += offline</code></div>
@@ -78,6 +100,7 @@
     <nav class="lesson-pager"><a href="../growth-curves/">← STEP 04<strong>Growth Curves</strong></a><span></span></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

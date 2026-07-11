@@ -1,7 +1,145 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Adventure | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/platformer/powerup-adventure/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Side-scrolling Action</a><span>STEP 05 / 05</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / BUILD A MARIO-STYLE GAME</p><h1>Ebi Adventure</h1><p>A side-scrolling game combining transformations, collectibles, enemies, goals, and multiple stages.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Power-ups and level transitions</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Ebi Adventure</h2></div><p>Collect coins and the green power-up, stomp enemies, and clear two stages.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Adventure" src="../../../../play/powerup-adventure/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>A game combines small systems</h2><p>Movement, jumping, enemies, coins, and transformations are separate small rules. Call them in order from Update, then increase the stage number and load new data at the goal.</p></div><pre><code>updateMovement()
-updateCollectibles()
-updateEnemies()
-if reachedGoal {
-    stage++
-    loadStage(stage)
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Connect parts into a complete work</h2><div class="overview-steps"><article><b>01</b><h3>Collect</h3><p>A coin adds score and is removed from its slice.</p></article><article><b>02</b><h3>Transform</h3><p>The power-up grows the player and absorbs one hit.</p></article><article><b>03</b><h3>Advance</h3><p>A goal changes the stage number and initializes the next stage.</p></article></div></section><nav class="lesson-pager"><a href="../scrolling-stage/">← STEP 04<strong>Scrolling Hills</strong></a><a href="../">PATH COMPLETE →<strong>Side-scrolling Action</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Lesson on changing collision results with power-up state.">
+  <title>Ebi Adventure | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/platformer/powerup-adventure/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Side-scrolling Action</a><span>STEP 05 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Ebi Adventure</h1>
+      <p>Power-up state changes what a collision means. The same overlap becomes damage or a stomp depending on your status.</p>
+      <div class="overview-concept"><small>CONCEPT THIS STEP</small><strong>Power-ups and state</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Grab the orb and stomp foes.</h2></div>
+        <p>Move and jump to collect coins and the green orb, stomp foes, reach the goal.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Adventure" src="../../../../play/powerup-adventure/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / POWER STATE</p>
+        <h2>Why does the same touch<br>have different results?</h2>
+        <p class="lesson-lead">Because a <strong>powered</strong> flag selects which rule row applies.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>State flag</h3>
+          <p>Track power with a bool.</p>
+          <code>powered bool</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Items</h3>
+          <p>Orb pickup sets the flag and changes look.</p>
+          <code>if overlap(orb) { powered = true }</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Branching results</h3>
+          <p>On enemy touch, stomp if powered else take damage.</p>
+          <code>if powered { stomp } else { hurt }</code>
+        </article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="power" data-yes="ON" data-no="OFF" data-stomp="stomp" data-damage="damage" aria-labelledby="lab-title-powerup-adventure">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-powerup-adventure">Power flag changes collision result</h3>
+          <p>When powered is true, enemy contact becomes a stomp instead of damage.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-toggle>Toggle power</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">same overlap → branch</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>powered</span><strong data-lab-powered>OFF</strong><small></small></div>
+            <div><span>on contact</span><strong data-lab-result>damage</strong><small></small></div>
+            <div><span>flag</span><strong>bool</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE STATE RULE</p>
+        <div class="formula-lines">
+          <code>collision(player, enemy)</code>
+          <span>result depends on</span>
+          <code>powered ? stomp : damage</code>
+        </div>
+        <p>One collision test, branched outcomes — the classic Mario-style power pattern.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Check state after overlap</h3>
+          <p>On enemy overlap, inspect powered first.</p>
+        </div>
+        <pre><code><span>if</span> overlap(player, foe) {
+    <span>if</span> g.powered &amp;&amp; fallingOnto(foe) {
+        stomp(foe)
+    } <span>else</span> {
+        takeDamage()
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT STATE</p>
+          <h3>Same outcome always</h3>
+          <p>Items that do not change strength remove the joy of growth.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH FLAGS</p>
+          <h3>Swap rule rows</h3>
+          <p>New powers are new flags and branches.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Add a timer</h3>
+          <p>A limited powered duration creates tense adventures.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../scrolling-stage/">← STEP 04<strong>Scrolling Stage</strong></a>
+      <span></span>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

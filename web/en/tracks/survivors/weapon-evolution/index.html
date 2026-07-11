@@ -1,4 +1,142 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Weapon Evolution Lab | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/survivors/weapon-evolution/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Mass Enemy Survival</a><span>STEP 05 / 06</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / BUILD A SURVIVORS-STYLE GAME</p><h1>Weapon Evolution Lab</h1><p>Store weapon numbers together as data and evolve into another weapon when conditions are met.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Data-driven upgrades and recipes</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Weapon Evolution Lab</h2></div><p>Defeat ten, collect the blue core, evolve at twenty, and reach fifty defeats.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Weapon Evolution Lab" src="../../../../play/weapon-evolution/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Make a weapon a set of names and numbers</h2><p>Keep cooldown, shot speed, and shot count in Weapon data. When weapon progress and the required item are ready, replace Ebi Needle data with Ebi Storm data.</p></div><pre><code>type Weapon struct { Name string; Cooldown, Shots int }
-if kills &gt;= 20 &amp;&amp; hasCore {
-    weapon = Weapon{Name: "Ebi Storm", Cooldown: 16, Shots: 3}
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>Swap data to change behavior</h2><div class="overview-steps"><article><b>01</b><h3>Group</h3><p>Represent weapon differences with fields in one structure.</p></article><article><b>02</b><h3>Check</h3><p>Test whether progress and the required item are ready.</p></article><article><b>03</b><h3>Replace</h3><p>Assign evolved data and reuse the same firing system.</p></article></div></section><nav class="lesson-pager"><a href="../experience-draft/">← STEP 04<strong>Experience Draft</strong></a><a href="../survival-run/">STEP 06 →<strong>Ebi Survivors</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Learn weapon evolution by swapping data tables.">
+  <title>Weapon Evolution Lab | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/survivors/weapon-evolution/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Survivor Swarm</a><span>STEP 05 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Weapon Evolution Lab</h1>
+      <p>Pack cooldown, speed, count, and damage into one weapon record. Evolution is swapping that record when conditions are met.</p>
+      <div class="overview-concept"><small>CONCEPT THIS STEP</small><strong>Data-driven upgrades and fusion</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Pick up the core and evolve into a storm.</h2></div>
+        <p>Move, defeat foes, spawn a core at 10 kills, evolve at 20 after pickup, clear at 50.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Weapon Evolution Lab" src="../../../../play/weapon-evolution/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / DATA-DRIVEN WEAPONS</p>
+        <h2>Does evolution mean<br>rewriting the shooter code?</h2>
+        <p class="lesson-lead">No. You <strong>swap weapon data</strong>. The firing loop stays the same while cooldown and count change the feel and power.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Weapon struct</h3>
+          <p>Keep name and numbers together.</p>
+          <code>type weapon struct{ cooldown, speed, count, damage int }</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Conditions</h3>
+          <p>Track keys like kills and item pickup with flags.</p>
+          <code>if kills >= 20 && itemTaken</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Swap</h3>
+          <p>Assign a new weapon{...} and evolution is done.</p>
+          <code>weapon = weapon{"Ebi Storm", 16, 9, 3, 2}</code>
+        </article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="evolve"  aria-labelledby="lab-title-weapon-evolution">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-weapon-evolution">Evolve by swapping weapon data</h3>
+          <p>Keep the fire loop; evolution is assigning a new weapon struct.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-evolve>Evolve</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">weapon = storm</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>weapon</span><strong data-lab-name>Ebi Needle</strong><small></small></div>
+            <div><span>count</span><strong data-lab-wcount>1</strong><small></small></div>
+            <div><span>cooldown</span><strong data-lab-wcd>32</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE SWAP RULE</p>
+        <div class="formula-lines">
+          <code>same fire loop</code>
+          <span>data only</span>
+          <code>weapon = evolvedWeapon</code>
+        </div>
+        <p>Avoid cloning fire/aim/collision code. Growing a number table makes new weapons easy.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>When ready,<br>assign new data</h3>
+          <p>After grabbing the core, swap to Storm at 20 kills. Triple shots and a shorter gap feel instantly stronger.</p>
+        </div>
+        <pre><code><span>if</span> g.kills &gt;= 20 &amp;&amp; g.itemTaken &amp;&amp; !g.evolved {
+    g.evolved = true
+    g.weapon = weapon{"Ebi Storm", 16, 9, 3, 2}
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT DATA</p>
+          <h3>Mountains of ifs</h3>
+          <p>Copying fire code per weapon multiplies bug fixes.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH STRUCTS</p>
+          <h3>Adds feel like a spreadsheet</h3>
+          <p>New weapons become new rows of numbers.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Gates and stats</h3>
+          <p>Change kill gates and count/cooldown to tune the evolution drama.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../experience-draft/">← STEP 04<strong>XP Draft</strong></a>
+      <a href="../survival-run/">STEP 06 →<strong>Ebi Survivors</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

@@ -1,5 +1,109 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>経験値と三択強化 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/survivors/experience-draft/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 大量敵サバイバル</a><span>STEP 04 / 06</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / Survivors型ゲームを作る</p><h1>経験値と三択強化</h1><p>経験値を集め、レベルアップ時に移動・攻撃範囲・ライフから強化を選びます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>ドロップ・レベル・選択画面</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>経験値と三択強化</h2></div><p>青い経験値を集め、数字キーまたはカードのタップで強化を選び、LEVEL 5を目指します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="経験値と三択強化" src="../../../../play/experience-draft/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>選んでいる間はゲーム時間を止める</h2><p>経験値が必要量に届いたらdraftをtrueにします。Updateの最初でdraftを調べ、敵を動かす代わりに選択入力だけを待ちます。選択後に数値を変えてゲームへ戻ります。</p></div><pre><code>if draft {
-    updateChoice()
-    return nil
-}
-updateBattle()</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>成長をゲームの循環にする</h2><div class="overview-steps"><article><b>01</b><h3>落とす</h3><p>倒した敵の位置へ経験値を置きます。</p></article><article><b>02</b><h3>集める</h3><p>必要量に届いたら選択状態へ移ります。</p></article><article><b>03</b><h3>強くなる</h3><p>選んだ項目の数値を増やして戦闘へ戻ります。</p></article></div></section><nav class="lesson-pager"><a href="../swarm/">← STEP 03<strong>100体の群れ</strong></a><a href="../weapon-evolution/">STEP 05 →<strong>武器進化ラボ</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="経験値を集めてレベルアップし、ドラフトカードで能力を選ぶEbitengine版サバイバルゲームの第4ステップ。">
+  <title>STEP 04 — 経験値ドラフト | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/survivors/experience-draft/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 大量敵サバイバル</a><span>STEP 04 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>経験値ドラフト</h1>
+      <p>敵を倒すと青い経験値ジェムが落ちます。集めるとレベルアップし、3枚のカードから1つ能力を選べます。これがSurvivors型ゲームの「育つ楽しさ」の核です。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>XP収集・レベルアップ・ドラフト選択</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>経験値を集めてレベル5まで育てよう！</h2></div><p>WASD・方向キー・ドラッグで移動。青いジェムに近づいて経験値を集め、レベルアップ時に1〜3を選択。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="経験値ドラフト" src="../../../../play/experience-draft/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / XP AND LEVEL-UP</p>
+        <h2>レベルアップで<br>ゲームが変わるのはなぜ？</h2>
+        <p class="lesson-lead">経験値 <code>xp</code> が閾値 <code>need</code> を超えると <code>draft = true</code> になり、ゲームの更新が一時停止してカード選択画面になります。カードを選ぶと能力値が書き変わり、<code>need</code> がさらに増えます。数字を変えるだけでキャラクターの「成長」が生まれます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>ジェム引き寄せ</h3><p>自機の90ピクセル以内のジェムは毎フレーム自機に向かって引き寄せられます。18ピクセル以内で取得、XPに加算します。</p><code>if d &lt; 90 { gem に近づける }</code></article>
+        <article><span class="concept-number">2</span><h3>レベルアップ判定</h3><p><code>xp &gt;= need</code> になった瞬間に <code>draft = true</code> を立てます。Updateは別関数 <code>updateDraft</code> に切り替わり、ゲームが一時停止します。</p><code>if g.xp &gt;= g.need { g.draft = true }</code></article>
+        <article><span class="concept-number">3</span><h3>ドラフト選択</h3><p>3枚のカードからキーまたはタッチで選択。選んだ能力値が書き変わり、<code>need</code> を3増やして次のレベルアップをより遠くします。</p><code>g.speed += .65 など</code></article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="draft" data-combat="戦闘" data-draft="選択" aria-labelledby="lab-title-experience-draft">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-experience-draft">レベルアップで選択モードへ</h3>
+          <p>レベルアップで選択モードへ。カードを選ぶと戦闘に戻ります。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-level>レベルアップ</button>
+            <button type="button" class="lab-button" data-lab-card data-card="A">A</button>
+            <button type="button" class="lab-button" data-lab-card data-card="B">B</button>
+            <button type="button" class="lab-button" data-lab-card data-card="C">C</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">drafting 中は戦闘停止</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>モード</span><strong data-lab-mode>戦闘</strong><small></small></div>
+            <div><span>選択</span><strong data-lab-pick>—</strong><small></small></div>
+            <div><span>flag</span><strong>drafting</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE LEVEL-UP RULE</p>
+        <div class="formula-lines"><code>if g.xp &gt;= g.need { g.draft = true }</code><span>選択後</span><code>g.level++; g.xp = 0; g.need += 3</code></div>
+        <p><code>need</code> を毎レベルで増やすことで、レベルが上がるほどたくさん経験値を集める必要が生じます。この「加速的な閾値」がゲームに長さを生み出します。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>選択 → 能力値書き換え → 再開</h3>
+          <p>キーまたはタッチで選択したカードに応じて <code>speed</code>・<code>radius</code>・<code>life</code> のいずれかを直接加算します。フラグを下ろすだけで通常の更新に戻ります。</p>
+        </div>
+        <pre><code><span>func</span> (g *game) updateDraft() error {
+    choice := -1
+    <span>if</span> inpututil.IsKeyJustPressed(ebiten.Key1) { choice = 0 }
+    <span>if</span> inpututil.IsKeyJustPressed(ebiten.Key2) { choice = 1 }
+    <span>if</span> inpututil.IsKeyJustPressed(ebiten.Key3) { choice = 2 }
+    <span>if</span> choice &lt; 0 { <span>return</span> nil }
+    <span>switch</span> choice {
+    <span>case</span> 0: g.speed += .65
+    <span>case</span> 1: g.radius += 14
+    <span>case</span> 2: g.life++
+    }
+    g.level++; g.xp = 0; g.need += 3
+    g.draft = false
+    <span>return</span> nil
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT DRAFT</p><h3>ゲームが最初から最後まで同じ</h3><p>成長要素がないと、プレイヤーは同じ操作を繰り返すだけで飽きます。レベルアップが「変化」を生み、続ける理由になります。</p></article>
+        <article><p class="eyebrow">WITH DRAFT</p><h3>選択がゲームを別物にする</h3><p>3枚のカードの組み合わせで毎回違う強さになります。何を選ぶかの判断が楽しさの本体です。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>カードの効果を変えてみよう</h3><p><code>g.speed += .65</code> の量を変えると速さの成長が変わります。<code>need += 3</code> を大きくするとレベルアップが遅くなり、難易度が上がります。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../swarm/">← STEP 03<strong>100体の群れ</strong></a><a href="../weapon-evolution/">STEP 05 →<strong>武器進化ラボ</strong></a></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

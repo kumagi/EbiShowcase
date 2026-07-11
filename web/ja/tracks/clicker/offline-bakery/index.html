@@ -37,6 +37,28 @@
         <article><span class="concept-number">3</span><h3>120フレームごとの自動セーブ</h3><p>毎フレームセーブすると localStorage の書き込みが多すぎます。フレームカウンターが 120 の倍数のときだけ save() を呼ぶことで、約2秒ごとに定期セーブします。</p><code>if g.frame%120 == 0 { g.save() }</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="save"  aria-labelledby="lab-title-offline-bakery">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-offline-bakery">不在秒数×生産でオフライン報酬</h3>
+          <p>前回終了時刻との差×生産速度が、戻ってきたときの報酬です。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-add>不在 +30秒</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">away * rate</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>不在</span><strong data-lab-away>0s</strong><small></small></div>
+            <div><span>報酬</span><strong data-lab-gained>0</strong><small></small></div>
+            <div><span>rate</span><strong>8/s</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE OFFLINE RULE</p>
         <div class="formula-lines"><code>offline = min(留守秒数, 28800) × rate()</code><span>ロード時</span><code>g.sweets += offline</code></div>
@@ -78,6 +100,7 @@
     <nav class="lesson-pager"><a href="../growth-curves/">← STEP 04<strong>成長曲線ラボ</strong></a><span></span></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

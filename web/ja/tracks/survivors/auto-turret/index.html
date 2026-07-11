@@ -37,6 +37,28 @@
         <article><span class="concept-number">3</span><h3>弾の速度計算</h3><p>「敵の位置 − 自機の位置」を距離で割って正規化し、速さ7を掛けます。これで敵に向かうちょうど良い速度ベクトルになります。</p><code>vx = (e.x - g.px) / dist * 7</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="aim"  aria-labelledby="lab-title-auto-turret">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-auto-turret">一番近い敵へクールダウン発射</h3>
+          <p>毎フレームいちばん近い敵を選び、クールダウン間隔でのみ弾を出します。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>1フレーム</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">最短距離の敵へ</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>狙い</span><strong data-lab-target>B</strong><small></small></div>
+            <div><span>cooldown</span><strong data-lab-cd>0</strong><small></small></div>
+            <div><span>発射数</span><strong data-lab-shots>0</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE TARGETING RULE</p>
         <div class="formula-lines"><code>best, dist := 0, math.MaxFloat64</code><span>全敵をループ → 最近傍に向けて</span><code>vx = (e.x - g.px) / dist * 7</code></div>
@@ -74,6 +96,7 @@
     <nav class="lesson-pager"><a href="../arena-dodge/">← STEP 01<strong>アリーナ回避</strong></a><a href="../swarm/">STEP 03 →<strong>100体の群れ</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

@@ -1,3 +1,147 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Quest | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/rpg/ebi-quest/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Command RPG</a><span>STEP 07 / 07</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / BUILD AN RPG</p><h1>Ebi Quest</h1><p>A short RPG combining a companion, objectives, progress, battle, and save data.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Party, quests, and saves</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Ebi Quest</h2></div><p>Recruit Momo southwest, find the northeast crystal, defeat the tower boss, and return home.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 07</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Quest" src="../../../../play/ebi-quest/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>The quest number is a story bookmark</h2><p>Quest 0 finds a companion, 1 finds the crystal, 2 fights the boss, and 3 returns home. Save it with position and HP whenever it changes so reopening continues from that bookmark.</p></div><pre><code>type SaveData struct { X, Y, HP, Quest int }
-quest++
-save(SaveData{player.X, player.Y, player.HP, quest})</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>Connect small systems into one game</h2><div class="overview-steps"><article><b>01</b><h3>Advance</h3><p>Increase the quest number at each destination.</p></article><article><b>02</b><h3>Fight together</h3><p>Use companion state in attacks and healing.</p></article><article><b>03</b><h3>Save</h3><p>Store only the state needed to continue.</p></article></div></section><nav class="lesson-pager"><a href="../world-encounters/">← STEP 06<strong>World Map</strong></a><a href="../">PATH COMPLETE →<strong>Command RPG</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Final RPG lesson integrating quests and saves.">
+  <title>Ebi Quest | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/rpg/ebi-quest/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Command RPG</a><span>STEP 07 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Ebi Quest</h1>
+      <p>Companions, quest progress, field, battle, and save data in one short RPG. Big adventures are small flags plus scene variables.</p>
+      <div class="overview-concept"><small>CONCEPT THIS STEP</small><strong>Party, quests, and saves</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Travel with Momo and defeat the boss.</h2></div>
+        <p>Move to advance events, fight, and save. Press R to reset save data.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 07</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Quest" src="../../../../play/ebi-quest/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / QUEST + SAVE</p>
+        <h2>Where do you store<br>long adventure progress?</h2>
+        <p class="lesson-lead">A <strong>quest id</strong> plus <strong>save data</strong>. Keep progress as integers and write them to localStorage so closing the page still resumes later.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Quest id</h3>
+          <p>Encode progress as integers (0 village, 1 companion…).</p>
+          <code>quest int</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Scenes</h3>
+          <p>Switch field vs battle with scene.</p>
+          <code>if scene == 1 { return battle() }</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Save</h3>
+          <p>Persist quest/x/y/hp via localStorage.</p>
+          <code>localStorage.setItem(saveKey+"quest", …)</code>
+        </article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="quest"  aria-labelledby="lab-title-ebi-quest">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-ebi-quest">Save and load a quest id</h3>
+          <p>Progress is an integer quest id. Save and load to resume later.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-advance>Advance quest</button>
+            <button type="button" class="lab-button" data-lab-save>Save</button>
+            <button type="button" class="lab-button" data-lab-load>Load</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">save(quest)</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>quest</span><strong data-lab-quest>0</strong><small></small></div>
+            <div><span>saved</span><strong data-lab-saved>—</strong><small></small></div>
+            <div><span>localStorage</span><strong></strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE SAVE RULE</p>
+        <div class="formula-lines">
+          <code>save(quest, x, y, hp)</code>
+          <span>on resume</span>
+          <code>load() → 同じ世界</code>
+        </div>
+        <p>Save the minimum. You rarely need every enemy position — a quest id rebuilds the story.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Pair save and load</h3>
+          <p>load on boot, save after events. R can wipe keys for a fresh start.</p>
+        </div>
+        <pre><code>func (g *game) save() {
+    s := js.Global().Get("localStorage")
+    s.Call("setItem", saveKey+"quest", strconv.Itoa(g.quest))
+    s.Call("setItem", saveKey+"x", strconv.Itoa(g.x))
+    s.Call("setItem", saveKey+"y", strconv.Itoa(g.y))
+    s.Call("setItem", saveKey+"hp", strconv.Itoa(g.hp))
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT SAVE</p>
+          <h3>Always from zero</h3>
+          <p>Fine for tiny games; RPGs need continue.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH QUEST FLAGS</p>
+          <h3>Stories can branch</h3>
+          <p>Ids and flags switch dialogue, spawns, and battles.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Add event gates</h3>
+          <p>More quest branches mean new village moments without a rewrite.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../world-encounters/">← STEP 06<strong>World Encounters</strong></a>
+      <span></span>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

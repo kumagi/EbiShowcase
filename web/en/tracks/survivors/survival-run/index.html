@@ -1,3 +1,107 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Survivors | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/survivors/survival-run/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Mass Enemy Survival</a><span>STEP 06 / 06</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / BUILD A SURVIVORS-STYLE GAME</p><h1>Ebi Survivors</h1><p>A complete run combining a timer, enemy waves, a boss, and automatic attacks.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Waves, bosses, and difficulty curves</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Ebi Survivors</h2></div><p>Survive three waves across forty-five seconds and defeat the final boss with the golden aura.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Survivors" src="../../../../play/survival-run/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Use time as the game's script</h2><p>Calculate the wave from elapsed seconds. As time advances, shorten the spawn interval and raise enemy speed. At thirty-five seconds, create one boss with its own HP.</p></div><pre><code>wave := elapsedSeconds / 15
-spawnInterval := max(14, 42-elapsedSeconds/2)
-if elapsedSeconds == 35 { spawnBoss() }</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>Give one run a dramatic shape</h2><div class="overview-steps"><article><b>01</b><h3>Measure</h3><p>Divide frames by sixty to get seconds.</p></article><article><b>02</b><h3>Raise difficulty</h3><p>Derive enemy speed and spawn interval from time.</p></article><article><b>03</b><h3>Finish with a boss</h3><p>End with an enemy that has unique size and HP.</p></article></div></section><nav class="lesson-pager"><a href="../weapon-evolution/">← STEP 05<strong>Weapon Evolution Lab</strong></a><a href="../">PATH COMPLETE →<strong>Mass Enemy Survival</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Combine waves, a boss, and a time-based difficulty curve in this final step of an Ebitengine survivors-style game.">
+  <title>STEP 06 — Survival Run (Final) | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">TRACK</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/survivors/survival-run/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Mass Enemy Survival</a><span>STEP 06 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Survival Run (Final)</h1>
+      <p>Three waves escalate difficulty, then a boss appears at 35 seconds. Computing spawn interval and enemy speed from elapsed time lets a single formula describe the entire difficulty curve.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Waves, boss, and time-based difficulty scaling</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Survive three waves and defeat the boss.</h2></div><p>WASD, arrow keys, or drag to move. The golden aura attacks automatically. Defeat the boss within 45 seconds to clear.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Survival Run" src="../../../../play/survival-run/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / WAVES AND DIFFICULTY</p>
+        <h2>How does one formula<br>create three waves of tension?</h2>
+        <p class="lesson-lead">Spawn interval and enemy speed are both computed from elapsed seconds. <code>interval = max(14, 42 - sec/2)</code> shrinks the gap between spawns linearly. <code>speed = 0.85 + sec × 0.018</code> raises enemy velocity over time. These two expressions are the entire difficulty curve — a fixed boss appears at 35 seconds as the final threat.</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>Shrinking spawn interval</h3><p>Starting at 42 frames, the interval decreases by half a frame per second. A floor of 14 frames prevents infinite simultaneous spawning as time grows large.</p><code>interval := max(14, 42-sec/2)</code></article>
+        <article><span class="concept-number">2</span><h3>Linear speed ramp</h3><p>Enemy movement speed starts at 0.85 and rises by 0.018 every second. By second 35 it reaches roughly 1.48 — noticeably faster than the opening wave.</p><code>speed := .85 + float64(sec)*.018</code></article>
+        <article><span class="concept-number">3</span><h3>Boss and HP bar</h3><p>At 35 seconds a large purple mob with HP 60 is appended. The aura deals 1 HP every 14 frames. Two rectangles draw the bar: background and a proportional fill.</p><code>g.mobs = append(g.mobs, mob{..., 60, 38, true})</code></article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="curve"  aria-labelledby="lab-title-survival-run">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-survival-run">Seconds reshape interval and speed</h3>
+          <p>Elapsed seconds shorten spawns and raise speed. Difficulty is a function of time.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>+5 sec</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">max(14, 42-sec/2)</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>sec</span><strong data-lab-sec>0</strong><small></small></div>
+            <div><span>interval</span><strong data-lab-interval>42</strong><small></small></div>
+            <div><span>speed</span><strong data-lab-speed>0.85</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE DIFFICULTY CURVE</p>
+        <div class="formula-lines"><code>interval := max(14, 42 - sec/2)</code><span>and</span><code>speed := .85 + float64(sec) * .018</code></div>
+        <p>Both expressions are linear in time, so the difficulty ramp feels predictable — players can sense the pressure growing and mentally prepare for the boss. Non-linear curves (exponential or step-based) are alternatives worth experimenting with.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Time → interval → speed → boss spawn</h3>
+          <p>Each frame, compute elapsed seconds, derive interval and speed, then apply them. Regular mobs stop spawning at 35 seconds. The boss is slower (0.65) but has 60 HP and a proportional health bar drawn with two rects.</p>
+        </div>
+        <pre><code>sec := g.frame / 60
+interval := max(14, 42-sec/2)
+<span>if</span> g.frame%interval == 0 &amp;&amp; sec &lt; 35 {
+    g.mobs = append(g.mobs, mob{..., 1, 13, false})
+}
+<span>if</span> sec &gt;= 35 &amp;&amp; !g.bossSpawned {
+    g.bossSpawned = true
+    g.mobs = append(g.mobs, mob{240, 95, 60, 38, true})
+}
+speed := .85 + float64(sec)*.018
+<span>for</span> i := range g.mobs {
+    m := &amp;g.mobs[i]
+    ms := speed
+    <span>if</span> m.boss { ms = .65 }
+    m.x += (g.px - m.x) / d * ms
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT SCALING</p><h3>Flat difficulty feels predictable</h3><p>If spawn rate and speed never change, players assess the challenge within the first 30 seconds and either coast or give up — no escalating tension to keep them engaged.</p></article>
+        <article><p class="eyebrow">WITH DIFFICULTY CURVE</p><h3>Growing pressure builds to a climax</h3><p>Linear scaling ensures each moment feels slightly harder than the last. The boss arrival transforms accumulated pressure into a definitive climax moment.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Steepen the curve or raise boss HP</h3><p>Change the divisor in <code>42 - sec/2</code> from <code>2</code> to <code>1</code> for a steep early ramp. Raise boss HP from <code>60</code> to <code>120</code> for an epic final confrontation.</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../weapon-evolution/">← STEP 05<strong>Weapon Evolution Lab</strong></a><span></span></nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

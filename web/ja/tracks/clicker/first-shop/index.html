@@ -37,6 +37,29 @@
         <article><span class="concept-number">3</span><h3>コストの段階的上昇</h3><p>買うたびに cost += 5 します。初期値10、1台目は15、2台目は20…と増えるので、同じペースで押し続けるだけでは全台買えなくなります。これがクリッカーの「進む感」の仕組みです。</p><code>g.cost += 5</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="shop" data-bought="購入した" data-cant="足りない" aria-labelledby="lab-title-first-shop">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-first-shop">足りるときだけ買う</h3>
+          <p>足りるときだけ購入し、値段を上げます。足りなければ何もしません。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button" data-lab-earn>稼ぐ +5</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-buy>買う</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">if gold >= cost</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>所持</span><strong data-lab-gold>0</strong><small></small></div>
+            <div><span>値段</span><strong data-lab-cost>10</strong><small></small></div>
+            <div><span>所有</span><strong data-lab-owned>0</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE SHOP RULE</p>
         <div class="formula-lines"><code>sweets &gt;= cost → 購入OK：sweets -= cost; ovens++</code><span>否</span><code>sweets &lt; cost  → 購入NG：エラーフラッシュ</code></div>
@@ -74,6 +97,7 @@
     <nav class="lesson-pager"><a href="../tap-counter/">← STEP 01<strong>お菓子カウンター</strong></a><a href="../idle-factory/">STEP 03 →<strong>アイドルファクトリー</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

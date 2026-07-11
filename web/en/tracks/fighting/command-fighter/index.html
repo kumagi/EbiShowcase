@@ -1,4 +1,146 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Command Fighter | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/fighting/command-fighter/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D Fighting Game</a><span>STEP 06 / 07</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / BUILD A FIGHTING GAME</p><h1>Command Fighter</h1><p>Recognize motion commands from directional input history and launch a special move.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Input history and command recognition</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Command Fighter</h2></div><p>Enter down, down-right, right, punch and land five Ebi Waves. Touch buttons work too.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Command Fighter" src="../../../../play/command-fighter/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Keep recent input in a short list</h2><p>Add D, DR, or R whenever direction changes. On punch, launch the special if the history ends with D, DR, R. Delete history after thirty frames.</p></div><pre><code>history = append(history, direction)
-if punch &amp;&amp; history.EndsWith([]Input{Down, DownRight, Right}) {
-    startSpecialMove()
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>Read movement like a string</h2><div class="overview-steps"><article><b>01</b><h3>Record</h3><p>Add direction changes in order.</p></article><article><b>02</b><h3>Expire</h3><p>Remove input that is too old.</p></article><article><b>03</b><h3>Match</h3><p>Compare the history ending with command data.</p></article></div></section><nav class="lesson-pager"><a href="../combo-cancel/">← STEP 05<strong>Combo</strong></a><a href="../ebi-fighters/">STEP 07 →<strong>Ebi Fighters</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Fighting lesson on command recognition via input history.">
+  <title>Command Fighter | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/fighting/command-fighter/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 2D Fighting</a><span>STEP 06 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Command Fighter</h1>
+      <p>Quarter-circle commands work by keeping a short input history and matching its tail against a fixed pattern.</p>
+      <div class="overview-concept"><small>CONCEPT THIS STEP</small><strong>Input history and command recognition</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Land five Ebi Waves.</h2></div>
+        <p>Down → down-right → right → punch. Bottom buttons work too.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Command Fighter" src="../../../../play/command-fighter/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / COMMAND BUFFER</p>
+        <h2>How does a motion<br>become a special move?</h2>
+        <p class="lesson-lead">An <strong>input history</strong>. Store directions as tokens (D, DR, R). On punch, if the tail matches the table, fire the special. Age clears stale inputs.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>History</h3>
+          <p>Append a token on each direction; trim when too long.</p>
+          <code>history = append(history, token)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Expiry</h3>
+          <p>Tick age down; clear history at zero.</p>
+          <code>if age == 0 { history = nil }</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Tail match</h3>
+          <p>On punch, ends(history, {D,DR,R}) starts the special.</p>
+          <code>ends(history, []string{"D","DR","R"})</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="command" aria-labelledby="lab-title-command">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / COMMAND</p>
+          <h3 id="lab-title-command">Build ↓↘→ in the history</h3>
+          <p>Press directions to fill the buffer. When the tail is ↓↘→, it matches HADOKEN.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button" data-lab-dir="↓">↓</button>
+            <button type="button" class="lab-button" data-lab-dir="↘">↘</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-dir="→">→</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">The real game matches a D / DR / R token sequence.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board"><div class="lab-mono-board">D → DR → R + Punch</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>history</span><strong data-lab-hist>—</strong><small>last 3</small></div>
+            <div><span>match</span><strong data-lab-match>—</strong><small>endsWith</small></div>
+            <div><span>window</span><strong>age</strong><small>old inputs expire</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE MATCH RULE</p>
+        <div class="formula-lines">
+          <code>history ends with D, DR, R</code>
+          <span>and</span>
+          <code>punch pressed → special</code>
+        </div>
+        <p>Extra inputs before the tail can still match. Expiry resets slow motions.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Match the tail on punch</h3>
+          <p>Append directions, then on punch call ends to detect the special.</p>
+        </div>
+        <pre><code><span>if</span> punch {
+    <span>if</span> ends(g.history, []string{"D", "DR", "R"}) {
+        g.projectile = 35
+        g.message = "EBI WAVE!"
+    }
+    g.history = nil
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT HISTORY</p>
+          <h3>Only same-frame chords</h3>
+          <p>Perfect same-frame chords are harsh for humans.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH A BUFFER</p>
+          <h3>Read the motion shape</h3>
+          <p>Order matters more than perfection — specials feel fair.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Length and age</h3>
+          <p>Tweaking age and history length changes how strict commands feel.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../combo-cancel/">← STEP 05<strong>Combo Cancel</strong></a>
+      <a href="../ebi-fighters/">STEP 07 →<strong>Ebi Fighters</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

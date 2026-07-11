@@ -1,7 +1,157 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Adventure | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/platformer/powerup-adventure/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 横スクロールアクション</a><span>STEP 05 / 05</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / マリオ型ゲームを作る</p><h1>Ebi Adventure</h1><p>変身、収集物、敵、ゴール、複数ステージを統合した横スクロール作品です。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>パワーアップとステージ遷移</strong></div></section><section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Ebi Adventure</h2></div><p>コインと緑のパワーアップを集め、敵を踏み、2つのステージをクリアします。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Adventure" src="../../../../play/powerup-adventure/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>ゲームは小さな仕組みの組み合わせ</h2><p>移動、ジャンプ、敵、コイン、変身は別々の小さな規則です。Updateで順番に呼び、ゴールしたらstage番号を増やしてデータを読み直すと、1本の冒険になります。</p></div><pre><code>updateMovement()
-updateCollectibles()
-updateEnemies()
-if reachedGoal {
-    stage++
-    loadStage(stage)
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>部品をつないで作品にする</h2><div class="overview-steps"><article><b>01</b><h3>集める</h3><p>コインの取得でスコアを増やし、配列から消します。</p></article><article><b>02</b><h3>変身する</h3><p>パワーアップ取得中は体を大きくし、1回のダメージを防ぎます。</p></article><article><b>03</b><h3>次へ進む</h3><p>ゴールでステージ番号を変え、次のステージを初期化します。</p></article></div></section><nav class="lesson-pager"><a href="../scrolling-stage/">← STEP 04<strong>スクロールする丘</strong></a><a href="../">PATH COMPLETE →<strong>横スクロールアクション</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="パワーアップとコインを組み合わせたマリオ式アドベンチャーのしくみを学ぶEbitengineレッスン。状態フラグがゲームプレイを豊かにする方法をGoコードで解説します。">
+  <title>STEP 05 — エビアドベンチャー | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コース</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/platformer/powerup-adventure/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 横スクロールアクション</a><span>STEP 05 / 05</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>エビアドベンチャー</h1>
+      <p>コインを集め、緑のオーブでパワーアップし、敵を踏み倒してゴールへ。パワーアップ状態が敵との接触結果を変える、マリオ式アドベンチャーの集大成です。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>パワーアップと状態管理</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>2ステージ走り抜けてクリアしよう。</h2></div>
+        <p>A・D または画面下タッチで移動。スペースまたは画面上タッチでジャンプ。緑のオーブを取ると大きくなり、敵に当たっても1回耐えられます。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="エビアドベンチャー" src="../../../../play/powerup-adventure/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / POWERUP STATE</p>
+        <h2>パワーアップで、<br>ゲームのルールが変わる？</h2>
+        <p class="lesson-lead">ゲームは <strong><code>big</code></strong> というフラグを持っています。緑のオーブに触れると <code>big = true</code> になり、プレイヤーの高さが 38 → 54 に変化します。この状態で敵に横から当たると、ライフを失う代わりに <code>big = false</code> に戻るだけ。ひとつのフラグが「接触の結果」をまるごと書き換えます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>パワーアップ取得</h3>
+          <p>緑オーブとプレイヤーが重なった瞬間に <code>big = true</code> にし、プレイヤーの高さを増やします。オーブは <code>powerTaken</code> フラグで一度しか取れません。</p>
+          <code>g.big = true; g.p.h = 54</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>状態別の接触処理</h3>
+          <p>敵との接触を3通りに分けます。①踏んだ → 敵を消す、②big のまま横当たり → small に戻る、③small で横当たり → ライフ減少。</p>
+          <code>if g.big { g.big = false }</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>コインとスコア</h3>
+          <p>コインと重なるたびにスライスから削除し、100点加算します。踏んだ敵は 200点。ゴール到達で 500点のボーナスです。</p>
+          <code>g.score += 100</code>
+        </article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="power" data-yes="ON" data-no="OFF" data-stomp="踏みつけ" data-damage="ダメージ" aria-labelledby="lab-title-powerup-adventure">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-powerup-adventure">パワー状態で衝突結果が変わる</h3>
+          <p>powered フラグが立つと、敵接触がダメージから踏みつけへ変わります。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-toggle>パワー切替</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">同じ接触 → 状態で分岐</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>powered</span><strong data-lab-powered>OFF</strong><small></small></div>
+            <div><span>衝突結果</span><strong data-lab-result>ダメージ</strong><small></small></div>
+            <div><span>flag</span><strong>bool</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE ONE-LINE RULE</p>
+        <div class="formula-lines">
+          <code>if big { ダメージ1段階緩和 }</code>
+          <span>それ以外</span>
+          <code>else { ライフを減らす }</code>
+        </div>
+        <p>パワーアップは「ダメージを吸収するバッファ」です。big の場合は1段階だけ状態を戻し、small のときと同じ接触処理に移行します。一種のダメージ階層です。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>3段階の接触判定を<br>if-else で管理する</h3>
+          <p>踏みチェック → big チェック → ダメージ、という順番で分岐します。パワーアップ取得もシンプルな overlap でコインと同じ仕組みです。</p>
+        </div>
+        <pre><code><i>// パワーアップ取得</i>
+<span>if</span> !g.powerTaken &amp;&amp; overlap(g.p, g.power) {
+    g.powerTaken = <span>true</span>
+    g.big = <span>true</span>
+    g.p.y -= 16     <i>// 大きくなる分だけ上にずらす</i>
+    g.p.h = 54
+}
+
+<i>// 敵との接触</i>
+<span>if</span> overlap(g.p, e.rect) {
+    <span>if</span> g.vy > 0 &amp;&amp; old &lt;= e.y+8 {
+        e.alive = <span>false</span>; g.vy = -8; g.score += 200
+    } <span>else</span> <span>if</span> g.big {
+        g.big = <span>false</span>; g.p.h = 38  <i>// 1段階ダウン</i>
+        e.vx = -e.vx; g.p.x -= 20
+    } <span>else</span> {
+        g.life--; g.load()          <i>// ライフ減少</i>
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT STATE FLAG</p>
+          <h3>接触がすべてダメージになってしまう</h3>
+          <p>フラグがないと全接触が同じ処理になります。パワーアップの「ワンチャン」感がなく、ゲームプレイの深みが失われます。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH POWER STATE</p>
+          <h3>ひとつのフラグがゲームを変える</h3>
+          <p><code>bool</code> 1つで戦略の幅が広がります。「オーブを先に取る？後で取る？」という判断がゲームに生まれます。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>パワーアップの効果を変えよう</h3>
+          <p>big のとき <code>g.p.h = 54</code> を増やすとさらに大きくなります。速度ボーナス（<code>vx</code> の上限を上げる）や無敵時間（フレームカウンタで管理）なども同じフラグ方式で追加できます。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../scrolling-stage/">← STEP 04<strong>横スクロールの丘</strong></a>
+      <a href="../">コーストップへ →<strong>横スクロールアクション</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

@@ -37,6 +37,29 @@
         <article><span class="concept-number">3</span><h3>Apply speed</h3><p>Multiply the unit vector by the desired speed constant before adding to position. Direction is preserved; only the magnitude changes.</p><code>g.px += dx / l * 4</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="move8"  aria-labelledby="lab-title-arena-dodge">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-arena-dodge">Normalize diagonal movement</h3>
+          <p>Raw diagonal input is √2 faster. Divide by length so every direction shares one speed.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button" data-lab-cardinal>Cardinal</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-diag>Diagonal</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">dx,dy → hypot → unit</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>raw speed</span><strong data-lab-raw>5.66</strong><small></small></div>
+            <div><span>normalized</span><strong data-lab-norm>4.00</strong><small></small></div>
+            <div><span>公式</span><strong>v / |v|</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE NORMALIZE RULE</p>
         <div class="formula-lines"><code>l := math.Hypot(dx, dy)</code><span>then</span><code>g.px += dx / l * 4</code></div>
@@ -71,6 +94,7 @@
     <nav class="lesson-pager"><span></span><a href="../auto-turret/">STEP 02 →<strong>Auto Turret Survival</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

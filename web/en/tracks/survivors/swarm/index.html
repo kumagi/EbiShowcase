@@ -37,6 +37,28 @@
         <article><span class="concept-number">3</span><h3>Aura attack</h3><p>The 62-pixel radius aura damages any enemy inside it every 18 frames. When killed, the slot is respawned in the same line. No separate bullet objects are needed.</p><code>if d &lt; 62 &amp;&amp; frame%18 == 0</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="pool"  aria-labelledby="lab-title-swarm">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-swarm">Overwrite a slot on kill</h3>
+          <p>Do not shrink the array — overwrite the defeated index with a new foe.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-kill>Kill one</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">mobs[i] = spawn()</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>slots</span><strong data-lab-slots>E0 E1 …</strong><small></small></div>
+            <div><span>kills</span><strong data-lab-kills>0</strong><small></small></div>
+            <div><span>規則</span><strong>overwrite</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE POOL RULE</p>
         <div class="formula-lines"><code>mobs [100]mob  // fixed, never grows</code><span>on defeat</span><code>g.mobs[i] = newMob()  // overwrite the slot</code></div>
@@ -76,6 +98,7 @@
     <nav class="lesson-pager"><a href="../auto-turret/">← STEP 02<strong>Auto Turret Survival</strong></a><a href="../experience-draft/">STEP 04 →<strong>Experience Draft</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

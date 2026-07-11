@@ -1,5 +1,167 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Guard and Throw Mind Game | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/fighting/guard-throw/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D Fighting Game</a><span>STEP 04 / 07</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / BUILD A FIGHTING GAME</p><h1>Guard and Throw Mind Game</h1><p>Organize priority between guard, the strikes it blocks, and throws that beat guard.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Defensive states and priority</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Guard and Throw</h2></div><p>Read the enemy telegraph, choose strike, guard, or throw, and score five points.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Guard and Throw" src="../../../../play/guard-throw/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Check overlapping rules in one fixed order</h2><p>Guard beats strike, throw beats guard, and strike beats throw preparation. A single priority table keeps simultaneous conditions consistent.</p></div><pre><code>func wins(a, b Action) bool {
-    return a==Guard &amp;&amp; b==Strike ||
-           a==Throw &amp;&amp; b==Guard ||
-           a==Strike &amp;&amp; b==Throw
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>Make a result table</h2><div class="overview-steps"><article><b>01</b><h3>Choose state</h3><p>Use strike, guard, or throw as the current action.</p></article><article><b>02</b><h3>Prioritize</h3><p>Look up the pair in the result table.</p></article><article><b>03</b><h3>Resolve</h3><p>Add score on a win or remove life on a loss.</p></article></div></section><nav class="lesson-pager"><a href="../hit-reaction/">← STEP 03<strong>Hit Reaction</strong></a><a href="../combo-cancel/">STEP 05 →<strong>Combo and Cancel</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Build the strike-guard-throw triangle and the reading game that makes 2D fighting great — an Ebitengine lesson.">
+  <title>Guard and Throw | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/fighting/guard-throw/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 2D Fighting Game</a><span>STEP 04 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Guard and Throw</h1>
+      <p>Strike, guard, and throw form a rock-paper-scissors triangle. Encode all win conditions in a single <code>wins()</code> function and any combination of actions resolves cleanly — no sprawling if-else chains needed.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Triangle rules and the reading game</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Read the enemy's telegraph and pick the counter.</h2></div>
+        <p>Press 1 to Strike, 2 to Guard, 3 to Throw — or tap the three lower buttons. Score 5 points to win; lose all three lives and it's game over.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Guard and Throw" src="../../../../play/guard-throw/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / GUARD &amp; THROW</p>
+        <h2>How do you build a<br>rock-paper-scissors relationship?</h2>
+        <p class="lesson-lead">The triangle is: <strong>Guard</strong> stops a Strike; <strong>Throw</strong> breaks a Guard; <strong>Strike</strong> stuffs a Throw attempt. Encoding all three win conditions in a single <code>wins(a, b)</code> function means every possible pairing is handled in three readable lines. Same choice? Draw — no special case needed.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Integer constants with iota</h3>
+          <p>Represent strike, guard, and throw as 0, 1, 2 using <code>iota</code>. Integers let you index a name table, pass choices as function arguments, and compare them in one line.</p>
+          <code>strike = iota // 0, guard // 1, throw // 2</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>The wins() function</h3>
+          <p>Three OR conditions cover every winning pair. Putting all win logic in one place means you only need to edit one function when adding options or re-balancing.</p>
+          <code>wins(guard, strike) // guard beats strike</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Enemy telegraph</h3>
+          <p>The enemy's choice is displayed before the player acts. This reaction window creates skill depth: predict correctly, or read the shown action and respond.</p>
+          <code>message = "Enemy prepares " + name(g.enemy)</code>
+        </article>
+      </div>
+
+      
+      <div class="motion-lab" data-lab="rps" data-win="WIN" data-lose="LOSE" data-clash="CLASH" data-enemy="strike" aria-labelledby="lab-title-guard-throw">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-guard-throw">Strike / guard / throw triangle</h3>
+          <p>Set the foe’s pick, then choose yours to see who wins.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button" data-lab-enemy data-enemy="strike">Foe:strike</button>
+            <button type="button" class="lab-button" data-lab-enemy data-enemy="guard">Foe:guard</button>
+            <button type="button" class="lab-button" data-lab-enemy data-enemy="throw">Foe:throw</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-pick="strike">Strike</button>
+            <button type="button" class="lab-button" data-lab-pick="guard">Guard</button>
+            <button type="button" class="lab-button" data-lab-pick="throw">Throw</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">guard &gt; strike &gt; throw</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>result</span><strong data-lab-result>—</strong><small></small></div>
+            <div><span>RPS</span><strong>cycle</strong><small></small></div>
+            <div><span>wins()</span><strong></strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE TRIANGLE RULE</p>
+        <div class="formula-lines">
+          <code>GUARD  beats STRIKE  // blocks the attack</code>
+          <span>BUT</span>
+          <code>THROW  beats GUARD   // breaks the defense</code>
+          <span>BUT</span>
+          <code>STRIKE beats THROW   // stuffs the grab attempt</code>
+        </div>
+        <p>Same choice = clash; no advantage. Because the triangle is cyclic, every option is always at risk — which is exactly what creates the reading game. No option is universally safe.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Enemy picks → player sees → wins() decides</h3>
+          <p>The enemy choice is stored in <code>g.enemy</code> and shown on screen. After the player responds, three branches handle draw, win, and loss. The score and life counters stay clean because all logic routes through <code>wins()</code>.</p>
+        </div>
+        <pre><code>const (
+    strike = iota  // 0
+    guard          // 1
+    throw          // 2
+)
+
+func wins(a, b int) bool {
+    return (a == strike &amp;&amp; b == throw)  ||
+           (a == throw  &amp;&amp; b == guard)  ||
+           (a == guard  &amp;&amp; b == strike)
+}
+
+// resolve the round
+<span>if</span> c == g.enemy {
+    g.message = "Clash!"
+} <span>else if</span> wins(c, g.enemy) {
+    g.score++
+    g.message = name(c) + " beats " + name(g.enemy)
+} <span>else</span> {
+    g.life--
+    g.message = name(g.enemy) + " beats " + name(c)
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT A WINS TABLE</p>
+          <h3>Nine branches, easy to forget one</h3>
+          <p>Writing every pair with nested if-else produces nine cases. <code>wins()</code> collapses that to three readable lines — and a unit test covers the whole table in one loop.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH TELEGRAPH</p>
+          <h3>Both reaction skill and prediction matter</h3>
+          <p>Showing the enemy choice creates a reaction game. Hide it entirely and you get pure prediction. Showing it briefly creates a middle ground that suits most players.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Add a fourth option</h3>
+          <p>Add <code>dodge</code> to the <code>iota</code> and two new lines in <code>wins()</code>. Four-way rock-paper-scissors-lizard-Spock style expansion requires zero changes outside that one function.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../hit-reaction/">← STEP 03<strong>Hit Reaction</strong></a>
+      <a href="../combo-cancel/">STEP 05 →<strong>Combo and Cancel</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

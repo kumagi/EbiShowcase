@@ -37,6 +37,29 @@
         <article><span class="concept-number">3</span><h3>Linearly rising cost</h3><p>Each purchase adds 5 to cost. Starting at 10, the second oven costs 15, the third 20. The same baking pace that cleared the first oven will fall short for later ones, giving the game a natural difficulty curve.</p><code>g.cost += 5</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="shop" data-bought="bought" data-cant="not enough" aria-labelledby="lab-title-first-shop">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-first-shop">Buy only when you can afford it</h3>
+          <p>Buy only when affordable, then raise the price. Otherwise do nothing.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button" data-lab-earn>Earn +5</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-buy>Buy</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">if gold >= cost</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>gold</span><strong data-lab-gold>0</strong><small></small></div>
+            <div><span>cost</span><strong data-lab-cost>10</strong><small></small></div>
+            <div><span>owned</span><strong data-lab-owned>0</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE SHOP RULE</p>
         <div class="formula-lines"><code>sweets &gt;= cost → buy: sweets -= cost; ovens++</code><span>else</span><code>sweets &lt; cost  → reject: show error flash</code></div>
@@ -74,6 +97,7 @@
     <nav class="lesson-pager"><a href="../tap-counter/">← STEP 01<strong>Sweet Counter</strong></a><a href="../idle-factory/">STEP 03 →<strong>Idle Factory</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

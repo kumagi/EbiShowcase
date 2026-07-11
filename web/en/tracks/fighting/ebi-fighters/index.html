@@ -1,5 +1,149 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Fighters | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/fighting/ebi-fighters/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D Fighting Game</a><span>STEP 07 / 07</span></div><section class="overview-hero"><p class="eyebrow">PLAYABLE / BUILD A FIGHTING GAME</p><h1>Ebi Fighters</h1><p>A first-to-two-round match combining health, AI, rounds, and timeout.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Rounds, health, and match rules</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Ebi Fighters</h2></div><p>Move with A/D, attack with J/X, and guard with K/C. Four touch buttons also fight the AI.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 07</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Fighters" src="../../../../play/ebi-fighters/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="implementation-note"><div><p class="eyebrow">HOW IT WORKS</p><h2>Wrap small fights in rounds</h2><p>Each round resets both health bars and 45 seconds. At zero HP or timeout, award one win by remaining HP. Two wins end the match.</p></div><pre><code>if hp == 0 || timer == 0 {
-    roundWins[winner]++
-    if roundWins[winner] == 2 { matchOver = true }
-    else { resetRound() }
-}</code></pre></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON</p><h2>Nest match states</h2><div class="overview-steps"><article><b>01</b><h3>Fight</h3><p>Update movement, attacks, guards, and AI.</p></article><article><b>02</b><h3>Decide</h3><p>End a round from health or time.</p></article><article><b>03</b><h3>Finish</h3><p>Move to results when someone wins twice.</p></article></div></section><nav class="lesson-pager"><a href="../command-fighter/">← STEP 06<strong>Command Fighter</strong></a><a href="../">PATH COMPLETE →<strong>2D Fighting Game</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Final fighting lesson on round-based match rules.">
+  <title>Ebi Fighters | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/fighting/ebi-fighters/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 2D Fighting</a><span>STEP 07 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Ebi Fighters</h1>
+      <p>Combine HP, guard, stun, and round wins into a best-of-three match.</p>
+      <div class="overview-concept"><small>CONCEPT THIS STEP</small><strong>Rounds, health, and match rules</strong></div>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Win two rounds to take the match.</h2></div>
+        <p>Move, attack, and guard against the CPU.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 07</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Fighters" src="../../../../play/ebi-fighters/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / MATCH RULES</p>
+        <h2>Why isn’t one KO<br>the whole match?</h2>
+        <p class="lesson-lead">Because <strong>round wins</strong> are counted separately. HP 0 (or time-up) ends a round; reset until someone reaches two wins.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Fighter record</h3>
+          <p>Pack position, HP, attack, stun, and guard into one struct.</p>
+          <code>type fighter struct</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Round reset</h3>
+          <p>Reset HP and positions, then advance the round number.</p>
+          <code>resetRound()</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Match over</h3>
+          <p>First to two wins sets matchOver.</p>
+          <code>if pWins >= 2 || aiWins >= 2</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="rounds" aria-labelledby="lab-title-rounds">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / BEST OF THREE</p>
+          <h3 id="lab-title-rounds">Count round wins</h3>
+          <p>Reduce HP to take rounds. First to two wins the match.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-p1hit>P1 wins round</button>
+            <button type="button" class="lab-button" data-lab-p2hit>P2 wins round</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">The real game also checks HP and time-up.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board"><div class="lab-mono-board">best of 3</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>P1 wins</span><strong data-lab-p1>0</strong><small>wins</small></div>
+            <div><span>P2 wins</span><strong data-lab-p2>0</strong><small></small></div>
+            <div><span>round</span><strong data-lab-round>1</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE MATCH RULE</p>
+        <div class="formula-lines">
+          <code>round ends → award win</code>
+          <span>then</span>
+          <code>wins >= 2 → match over</code>
+        </div>
+        <p>Best-of-three is kinder for learning — you can recover after a lost round.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Tally wins from round results</h3>
+          <p>Compare HP, award the round, end at two wins or start the next round.</p>
+        </div>
+        <pre><code><span>if</span> g.p.hp &gt; g.ai.hp {
+    g.pWins++
+} <span>else</span> {
+    g.aiWins++
+}
+<span>if</span> g.pWins &gt;= 2 || g.aiWins &gt;= 2 {
+    g.matchOver = true
+} <span>else</span> {
+    g.round++
+    g.resetRound()
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT ROUNDS</p>
+          <h3>One hit ends all</h3>
+          <p>A single mistake ending the match makes practice harsh.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH MATCH STATE</p>
+          <h3>Rules become data</h3>
+          <p>Win counts and timers as variables simplify UI and judging.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>Wins needed and clock</h3>
+          <p>Changing first-to-N or the 45s timer shifts the pace.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../command-fighter/">← STEP 06<strong>Command Fighter</strong></a>
+      <span></span>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

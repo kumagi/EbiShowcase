@@ -65,6 +65,29 @@
         </article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="carry" data-dir="1" aria-labelledby="lab-title-moving-platforms">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-moving-platforms">足場の差分をプレイヤーへ足す</h3>
+          <p>乗っているときだけ、足場の移動差分をプレイヤー座標へ足します。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>足場を動かす</button>
+            <button type="button" class="lab-button" data-lab-toggle>乗る/降りる</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">player += plat - prevPlat</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>足場X</span><strong data-lab-plat>100</strong><small></small></div>
+            <div><span>プレイヤー</span><strong data-lab-player>120</strong><small></small></div>
+            <div><span>delta</span><strong data-lab-delta>0</strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE ONE-LINE RULE</p>
         <div class="formula-lines">
@@ -125,6 +148,7 @@
     </nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>

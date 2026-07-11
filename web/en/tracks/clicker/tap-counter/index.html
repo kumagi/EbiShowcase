@@ -37,6 +37,28 @@
         <article><span class="concept-number">3</span><h3>Pulse for visual feedback</h3><p>On each press, set <code>pulse = 10</code> and decrement it by one every frame. Use that value to scale the circle radius slightly outward. The result is a quick expand-and-shrink animation.</p><code>scale := 1 + float64(g.pulse)*.012</code></article>
       </div>
 
+      
+      <div class="motion-lab" data-lab="click"  aria-labelledby="lab-title-tap-counter">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-tap-counter">Add one on each press</h3>
+          <p>Increment only on the press edge — holding does nothing.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-tap>Tap</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">count++</div></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>count</span><strong data-lab-count>0</strong><small></small></div>
+            <div><span>input</span><strong>JustPressed</strong><small></small></div>
+            <div><span>+1</span><strong></strong><small></small></div>
+          </div>
+        </div>
+      </div>
+
       <div class="formula">
         <p class="eyebrow">THE INPUT RULE</p>
         <div class="formula-lines"><code>IsPressed     → true every frame while held</code><span>vs</span><code>IsJustPressed → true on the first frame only</code></div>
@@ -74,6 +96,7 @@
     <nav class="lesson-pager"><span></span><a href="../first-shop/">STEP 02 →<strong>First Shop</strong></a></nav>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
   <script>
     document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
   </script>
