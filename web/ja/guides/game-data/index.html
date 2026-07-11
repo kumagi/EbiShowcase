@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Ebitengineでシナリオ、マップ、イベントなどのアセットデータを読み込み、ゲームを構成する方法。"><title>ゲームを構成する — データ駆動設計 | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head>
+<body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="#layers">LAYERS</a><a href="#example">EXAMPLE</a><a class="lang" href="../../../en/guides/game-data/">EN</a></nav></header>
+<main><div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>SPECIAL GUIDE</span></div>
+<section class="data-hero"><p class="eyebrow">GAME ARCHITECTURE / DATA-DRIVEN DESIGN</p><h1>ゲームを作るとは、<br><em>世界を構成すること。</em></h1><p>小さなゲームなら、敵の位置も会話もコードへ直接書けます。しかし世界が広がると、「どう動くか」と「何があるか」を分ける必要があります。</p></section>
+
+<section class="composition" id="layers"><div class="guide-heading"><p class="eyebrow">THE SIX LAYERS</p><h2>1本のゲームは、<br>6つの層でできている。</h2></div>
+<div class="composition-flow" role="img" aria-label="アセットデータをローダーが読み、ゲーム世界を組み立て、UpdateとDrawが再生し、進行状態をセーブする流れ">
+<div class="flow-sources"><span>MAP</span><span>SCENARIO</span><span>EVENT</span><span>IMAGE</span><span>AUDIO</span></div><b>↓ 読み込む</b><div class="flow-loader">ASSET LOADER<small>JSON・画像・音を型のあるデータへ</small></div><b>↓ 組み立てる</b><div class="flow-world">GAME WORLD<small>マップ・登場人物・イベントを配置</small></div><b>↓ 毎フレーム再生</b><div class="flow-runtime"><span>UPDATE</span><span>DRAW</span><span>SAVE</span></div></div>
+<div class="layer-grid">
+<article><b>01</b><h3>ゲームループ</h3><p>Ebitengineの<code>Update</code>、<code>Draw</code>、<code>Layout</code>。すべてを動かす土台です。</p></article>
+<article><b>02</b><h3>仕組み</h3><p>移動、戦闘、会話、当たり判定など、「どう動くか」を決めるGoコードです。</p></article>
+<article><b>03</b><h3>コンテンツデータ</h3><p>マップ、セリフ、敵の能力、イベント条件など、「何があるか」を表します。</p></article>
+<article><b>04</b><h3>表現アセット</h3><p>画像、アニメーション、フォント、効果音、音楽。データからIDで参照します。</p></article>
+<article><b>05</b><h3>実行中の状態</h3><p>現在位置、HP、開いた宝箱など、プレイ中に変化する値です。</p></article>
+<article><b>06</b><h3>セーブデータ</h3><p>実行中の状態のうち、次回も必要な値だけを小さく保存します。</p></article>
+</div></section>
+
+<section class="code-vs-data"><div><p class="eyebrow">RULES VS CONTENT</p><h2>コードは「動詞」、<br>データは「名詞」。</h2></div><div class="versus-grid"><article><h3>GO CODE / 仕組み</h3><ul><li>話しかける</li><li>ダメージを計算する</li><li>イベントを順番に実行する</li><li>タイルを描く</li></ul><p>同じ仕組みを何度も再利用します。</p></article><article><h3>ASSET DATA / 中身</h3><ul><li>村長のセリフ</li><li>スライムのHP</li><li>宝箱を開くイベント</li><li>村のタイル配置</li></ul><p>コードを変えずに作品を増やせます。</p></article></div></section>
+
+<section class="data-example" id="example"><div class="guide-heading"><p class="eyebrow">A SMALL VILLAGE</p><h2>村ひとつを、<br>データから組み立てる。</h2><p>コードには「JSONを読む」「タイルを並べる」「イベントを実行する」という仕組みだけを書きます。村の形や会話の内容はアセット側へ置きます。</p></div>
+<div class="asset-tree"><pre><code>assets/
+├── maps/
+│   └── village.json
+├── scenarios/
+│   └── intro.json
+├── events/
+│   └── village.json
+├── images/
+│   ├── tiles.png
+│   └── characters.png
+└── audio/
+    ├── village.ogg
+    └── treasure.wav</code></pre><div><h3>フォルダは役割で分ける</h3><p>プログラムから見れば、すべてはIDでつながります。マップの<code>onEnter</code>がイベントを指し、イベントがシナリオや画像、音を呼び出します。</p></div></div>
+<div class="example-pair"><div><p class="eyebrow">MAP DATA</p><pre><code>{
+  "id": "village",
+  "width": 5,
+  "tiles": [1,1,1,1,1, 1,0,0,2,1],
+  "spawn": {"x": 2, "y": 1},
+  "onEnter": "event.village.arrive"
+}</code></pre></div><div><p class="eyebrow">EVENT DATA</p><pre><code>{
+  "id": "event.village.arrive",
+  "steps": [
+    {"type": "music", "value": "village"},
+    {"type": "say", "speaker": "elder",
+     "text": "scenario.intro.welcome"},
+    {"type": "flag", "key": "met_elder"}
+  ]
+}</code></pre></div></div></section>
+
+<section class="loading-guide"><div><p class="eyebrow">GO + EBITENGINE</p><h2><code>go:embed</code>で<br>WASMへ一緒に入れる。</h2><p>アセットを埋め込むと、デスクトップ版とWeb版で同じ読み込みコードを使えます。起動時に一度JSONを読み、Goの構造体へ変換します。</p></div><pre><code><span>import</span> (
+    "embed"
+    "encoding/json"
+)
+
+<span>//go:embed assets/**/*.json</span>
+<span>var</span> assets embed.FS
+
+<span>func</span> loadMap(id string) (MapData, error) {
+    b, err := assets.ReadFile(
+        "assets/maps/" + id + ".json",
+    )
+    <span>if</span> err != nil {
+        <span>return</span> MapData{}, err
+    }
+
+    <span>var</span> data MapData
+    err = json.Unmarshal(b, &data)
+    <span>return</span> data, err
+}</code></pre></section>
+
+<section class="definitions-state"><div class="guide-heading"><p class="eyebrow">DO NOT MIX THEM</p><h2>設計図と、今の状態を分ける。</h2></div><div class="state-compare"><article><h3>定義データ / 変えない</h3><pre><code>EnemyData {
+  ID: "slime"
+  MaxHP: 8
+  Attack: 3
+}</code></pre><p>ゲームのルールブック。読み込んだ後は基本的に変更しません。</p></article><article><h3>実行状態 / 変わる</h3><pre><code>EnemyState {
+  DataID: "slime"
+  HP: 5
+  X: 120
+  Y: 80
+}</code></pre><p>いま画面にいる個体。ダメージや移動によって変化します。</p></article><article><h3>セーブ / 必要な分だけ</h3><pre><code>SaveData {
+  MapID: "village"
+  PlayerX: 2
+  Flags: ["met_elder"]
+}</code></pre><p>画像やマップ全部ではなく、再開に必要な差分だけを保存します。</p></article></div></section>
+
+<section class="event-runner"><div><p class="eyebrow">EVENT INTERPRETER</p><h2>イベントデータを<br>小さな命令として再生する。</h2><p><code>say</code>、<code>move</code>、<code>wait</code>、<code>flag</code>など少数の命令をGoで実装します。シナリオはその命令を並べるだけです。</p></div><ol><li><span>01</span><strong>現在の命令を読む</strong><small>steps[index]</small></li><li><span>02</span><strong>種類に対応する処理を始める</strong><small>say → メッセージ表示</small></li><li><span>03</span><strong>完了までUpdateで待つ</strong><small>入力や移動の終了</small></li><li><span>04</span><strong>次の命令へ進む</strong><small>index++</small></li></ol></section>
+
+<section class="design-rules"><div class="guide-heading"><p class="eyebrow">PRACTICAL RULES</p><h2>大きくなっても<br>壊れにくい5つの約束。</h2></div><div class="rules-list">
+<article><b>01</b><h3>IDでつなぐ</h3><p>ファイル同士を直接持たせず、<code>slime</code>や<code>event.village.arrive</code>のようなIDで参照します。</p></article>
+<article><b>02</b><h3>読み込み時に検査する</h3><p>存在しない画像ID、範囲外のタイル、重複IDはゲーム開始前にエラーにします。</p></article>
+<article><b>03</b><h3>データへ処理を書きすぎない</h3><p>JSONは内容を表し、複雑な計算や分岐の仕組みは型安全なGoコードへ置きます。</p></article>
+<article><b>04</b><h3>小さな形式から始める</h3><p>最初はJSONで十分です。必要になってからCSV、マップエディタ、専用ツールを追加します。</p></article>
+<article><b>05</b><h3>アセットもテストする</h3><p>全マップ、全イベント、全翻訳キーを自動で読み、参照切れがないことを確認します。</p></article>
+</div></section>
+
+<section class="composition-summary"><p class="eyebrow">THE BIG IDEA</p><h2>ゲームは「書き切る」ものではない。<br><em>部品を組み合わせて、再生するもの。</em></h2><p>Ebitengineが毎フレーム世界を動かし、仕組みのコードがルールを決め、アセットデータが作品の内容を与えます。この分離ができると、プログラマー以外もマップやシナリオを増やせるようになります。</p><a class="cta" href="../../tracks/rpg/">RPGコースで活かす <b>→</b></a></section>
+</main></body></html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="A playable showcase for learning game development with Go and Ebitengine in your browser.">
+  <title>Ebi Showcase — Make games with Go</title>
+  <link rel="canonical" href="./">
+  <link rel="alternate" hreflang="ja" href="../../../ja/games/flappy/">
+  <link rel="alternate" hreflang="en" href="../../../en/games/flappy/">
+  <link rel="alternate" hreflang="x-default" href="../../../">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body>
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="#play">PLAY</a><a href="#learn">HOW IT WORKS</a><a href="#acceleration">ACCELERATION</a><a href="https://ebitengine.org/" rel="noreferrer">EBITENGINE ↗</a><a class="lang" href="../../../ja/games/flappy/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <main id="top"><div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>LEVEL 04</span></div>
+    <section class="hero">
+      <div class="hero-copy"><p class="eyebrow">A TINY GAME ENGINE. A BIG FIRST STEP.</p><h1>Make games.<br><em>Make them move.</em></h1><p class="lead">Write the code, build it, and play in the browser. Ebitengine keeps every step refreshingly straightforward.</p><a class="cta" href="#play">PLAY NOW <b>↓</b></a></div>
+      <div class="code-card" aria-hidden="true"><div class="dots">● ● ●</div><pre><span>func</span> (g *Game) Update() error {
+  <i>// every frame, keep it simple.</i>
+  g.bird.velocity += gravity
+  g.bird.y += g.bird.velocity
+  <span>return</span> nil
+}</pre><div class="run">GO → WASM → BROWSER</div></div>
+    </section>
+
+    <section class="play" id="play">
+      <div class="section-head"><div><p class="eyebrow">GAME 01 / EBI FLIGHT</p><h2>Your first flight starts here.</h2></div><p>Click, tap, or press Space to flap. Every pipe you clear earns one point.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / WEBASSEMBLY</span><button id="fullscreen" type="button">FULL SCREEN ↗</button></div><div id="game-wrap"><iframe id="game" title="Ebi Flight game" src="../../../game.html" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="learn" id="learn">
+      <p class="eyebrow">WHAT'S INSIDE</p><h2>The heart of a game<br>is just three methods.</h2>
+      <div class="steps"><article><b>01</b><h3>UPDATE</h3><p>Handle input, gravity, and collisions. Move the world forward once per frame.</p><code>func (g *Game) Update() error</code></article><article><b>02</b><h3>DRAW</h3><p>Draw the current state. You can build a complete game using only the shape API.</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article><article><b>03</b><h3>LAYOUT</h3><p>Choose the logical resolution. Let the engine scale it to different screen sizes.</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article></div>
+      <div class="recipe"><div><p class="eyebrow">BUILD RECIPE</p><h3>From Go code to a game on the web.</h3></div><ol><li><span>01</span><div><strong>WRITE</strong><small>game/main.go</small></div></li><li><span>02</span><div><strong>BUILD</strong><small>GOOS=js GOARCH=wasm</small></div></li><li><span>03</span><div><strong>SHIP</strong><small>GitHub Pages</small></div></li></ol></div>
+    </section>
+
+    <section class="physics" id="acceleration" data-up="moving up" data-down="moving down" data-still="not moving">
+      <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ACCELERATION</p><h2>Why does the bird<br>fall faster and faster?</h2><p class="lesson-lead">The answer is <strong>acceleration</strong>. It simply means “the amount that changes speed,” like a ball rolling faster down a hill.</p></div>
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>Position</h3><p>Where the bird is now. The top is 0, and the number gets bigger as you move down.</p><code>birdY = 320</code></article>
+        <article><span class="concept-number">2</span><h3>Velocity</h3><p>How far and which way the bird moves each update. Negative goes up; positive goes down.</p><code>velocity = -7.4</code></article>
+        <article><span class="concept-number">3</span><h3>Acceleration</h3><p>How much velocity changes each time. Keep adding <strong>+0.42</strong> as gravity and the bird slows, then falls.</p><code>gravity = +0.42</code></article>
+      </div>
+      <div class="motion-lab" aria-labelledby="motion-lab-title">
+        <div class="lab-copy"><p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p><h3 id="motion-lab-title">Move one frame at a time</h3><p>A game works like a flipbook. Each step adds gravity to velocity, then moves the bird by that velocity.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap>Flap</button><button type="button" class="lab-button" data-lab-step>Next frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div><p class="lab-hint">“Flap” sets the upward velocity to <code>-7.4</code>, then advances one frame.</p></div>
+        <div class="lab-visual"><div class="lab-sky" role="img" aria-label="Diagram of vertical bird movement"><span class="axis-label axis-top">0 / TOP</span><span class="axis-label axis-bottom">720 / BOTTOM</span><div class="lab-bird" data-lab-bird aria-hidden="true"><span></span></div></div><div class="lab-values" aria-live="polite"><div><span>Acceleration</span><strong>+0.42</strong><small>each frame</small></div><div><span>Velocity</span><strong data-lab-velocity>0.00</strong><small data-lab-direction>not moving</small></div><div><span>Position Y</span><strong data-lab-position>320.00</strong><small>from the top</small></div></div></div>
+      </div>
+      <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>velocity = velocity + gravity</code><span>then</span><code>position = position + velocity</code></div><p>Order matters. First gravity changes velocity, then velocity changes position. Repeat every frame to make a natural jumping curve.</p></div>
+      <div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Put it inside<br><code>Update</code></h3><p><code>Update</code> reads input, changes velocity, and moves the bird. <code>Draw</code> paints it at the newly calculated position.</p></div><pre><code><span>const</span> gravity = 0.42
+<span>const</span> flapV   = -7.4
+
+<span>func</span> (g *game) Update() error {
+    <i>// A press gives upward speed.</i>
+    <span>if</span> justPressed() {
+        g.velocity = flapV
+    }
+
+    <i>// 1. Gravity changes velocity.</i>
+    g.velocity += gravity
+
+    <i>// 2. Velocity changes position.</i>
+    g.birdY += g.velocity
+    <span>return</span> nil
+}</code></pre></div>
+      <div class="why-grid"><article><p class="eyebrow">WITHOUT ACCELERATION</p><h3>One constant speed</h3><p>The bird travels up and down in straight lines, so movement feels mechanical.</p></article><article><p class="eyebrow">WITH ACCELERATION</p><h3>A smooth arc</h3><p>Upward velocity weakens, nears zero at the top, then grows downward.</p></article><article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Experiment with numbers</h3><p>Larger <code>gravity</code> makes a heavier bird. A more negative <code>flapV</code> makes a stronger flap. Game design is finding values that feel right.</p></article></div>
+    </section>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine. No game framework JavaScript.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+    const gameWrap = document.querySelector("#game-wrap");
+    const fullscreenButton = document.querySelector("#fullscreen");
+    const requestFullscreen = gameWrap.requestFullscreen || gameWrap.webkitRequestFullscreen;
+    if (!requestFullscreen) fullscreenButton.textContent = "OPEN GAME ↗";
+    fullscreenButton.addEventListener("click", () => {
+      if (requestFullscreen) requestFullscreen.call(gameWrap);
+      else location.href = "../../../game.html";
+    });
+  </script>
+</body>
+</html>

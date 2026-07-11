@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="How to compose an Ebitengine game by loading scenario, map, event, and presentation assets."><title>Composing a Game — Data-driven Design | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head>
+<body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="#layers">LAYERS</a><a href="#example">EXAMPLE</a><a class="lang" href="../../../ja/guides/game-data/">日本語</a></nav></header>
+<main><div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>SPECIAL GUIDE</span></div>
+<section class="data-hero"><p class="eyebrow">GAME ARCHITECTURE / DATA-DRIVEN DESIGN</p><h1>Building a game means<br><em>composing a world.</em></h1><p>A tiny game can keep enemy positions and dialogue in code. As the world grows, separate “how it works” from “what it contains.”</p></section>
+
+<section class="composition" id="layers"><div class="guide-heading"><p class="eyebrow">THE SIX LAYERS</p><h2>A game is built<br>from six layers.</h2></div>
+<div class="composition-flow" role="img" aria-label="Asset data is loaded into a game world, played through Update and Draw, and stored as save state">
+<div class="flow-sources"><span>MAP</span><span>SCENARIO</span><span>EVENT</span><span>IMAGE</span><span>AUDIO</span></div><b>↓ LOAD</b><div class="flow-loader">ASSET LOADER<small>JSON, images, and audio into typed data</small></div><b>↓ COMPOSE</b><div class="flow-world">GAME WORLD<small>Place maps, characters, and events</small></div><b>↓ PLAY EACH FRAME</b><div class="flow-runtime"><span>UPDATE</span><span>DRAW</span><span>SAVE</span></div></div>
+<div class="layer-grid">
+<article><b>01</b><h3>Game loop</h3><p>Ebitengine <code>Update</code>, <code>Draw</code>, and <code>Layout</code> form the foundation.</p></article>
+<article><b>02</b><h3>Systems</h3><p>Go code defines how movement, combat, dialogue, and collision work.</p></article>
+<article><b>03</b><h3>Content data</h3><p>Maps, lines, enemy stats, and event conditions describe what exists.</p></article>
+<article><b>04</b><h3>Presentation assets</h3><p>Images, animations, fonts, sound effects, and music are referenced by ID.</p></article>
+<article><b>05</b><h3>Runtime state</h3><p>Position, HP, and opened chests are values that change while playing.</p></article>
+<article><b>06</b><h3>Save data</h3><p>Store only the parts of runtime state needed to resume later.</p></article>
+</div></section>
+
+<section class="code-vs-data"><div><p class="eyebrow">RULES VS CONTENT</p><h2>Code is the verb.<br>Data is the noun.</h2></div><div class="versus-grid"><article><h3>GO CODE / SYSTEMS</h3><ul><li>Start a conversation</li><li>Calculate damage</li><li>Run event steps</li><li>Draw tiles</li></ul><p>Reuse the same systems many times.</p></article><article><h3>ASSET DATA / CONTENT</h3><ul><li>The elder’s dialogue</li><li>A slime’s HP</li><li>A treasure event</li><li>The village tile layout</li></ul><p>Add content without changing code.</p></article></div></section>
+
+<section class="data-example" id="example"><div class="guide-heading"><p class="eyebrow">A SMALL VILLAGE</p><h2>Compose one village<br>from data.</h2><p>Code only knows how to read JSON, draw tiles, and run events. Assets describe the village layout and dialogue.</p></div>
+<div class="asset-tree"><pre><code>assets/
+├── maps/
+│   └── village.json
+├── scenarios/
+│   └── intro.json
+├── events/
+│   └── village.json
+├── images/
+│   ├── tiles.png
+│   └── characters.png
+└── audio/
+    ├── village.ogg
+    └── treasure.wav</code></pre><div><h3>Organize folders by responsibility</h3><p>Everything connects through IDs. A map’s <code>onEnter</code> points to an event, which references scenario, image, and audio assets.</p></div></div>
+<div class="example-pair"><div><p class="eyebrow">MAP DATA</p><pre><code>{
+  "id": "village",
+  "width": 5,
+  "tiles": [1,1,1,1,1, 1,0,0,2,1],
+  "spawn": {"x": 2, "y": 1},
+  "onEnter": "event.village.arrive"
+}</code></pre></div><div><p class="eyebrow">EVENT DATA</p><pre><code>{
+  "id": "event.village.arrive",
+  "steps": [
+    {"type": "music", "value": "village"},
+    {"type": "say", "speaker": "elder",
+     "text": "scenario.intro.welcome"},
+    {"type": "flag", "key": "met_elder"}
+  ]
+}</code></pre></div></div></section>
+
+<section class="loading-guide"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Bundle assets into WASM<br>with <code>go:embed</code>.</h2><p>Embedded assets use the same loading code on desktop and Web. Read JSON once at startup and decode it into Go structs.</p></div><pre><code><span>import</span> (
+    "embed"
+    "encoding/json"
+)
+
+<span>//go:embed assets/**/*.json</span>
+<span>var</span> assets embed.FS
+
+<span>func</span> loadMap(id string) (MapData, error) {
+    b, err := assets.ReadFile(
+        "assets/maps/" + id + ".json",
+    )
+    <span>if</span> err != nil {
+        <span>return</span> MapData{}, err
+    }
+
+    <span>var</span> data MapData
+    err = json.Unmarshal(b, &data)
+    <span>return</span> data, err
+}</code></pre></section>
+
+<section class="definitions-state"><div class="guide-heading"><p class="eyebrow">DO NOT MIX THEM</p><h2>Separate definitions<br>from current state.</h2></div><div class="state-compare"><article><h3>Definition / immutable</h3><pre><code>EnemyData {
+  ID: "slime"
+  MaxHP: 8
+  Attack: 3
+}</code></pre><p>The rulebook. It normally stays unchanged after loading.</p></article><article><h3>Runtime / mutable</h3><pre><code>EnemyState {
+  DataID: "slime"
+  HP: 5
+  X: 120
+  Y: 80
+}</code></pre><p>A live instance that changes through damage and movement.</p></article><article><h3>Save / only what is needed</h3><pre><code>SaveData {
+  MapID: "village"
+  PlayerX: 2
+  Flags: ["met_elder"]
+}</code></pre><p>Save only the differences needed to resume, not every asset.</p></article></div></section>
+
+<section class="event-runner"><div><p class="eyebrow">EVENT INTERPRETER</p><h2>Play event data<br>as small commands.</h2><p>Implement a small set of commands such as <code>say</code>, <code>move</code>, <code>wait</code>, and <code>flag</code> in Go. A scenario is a sequence of those commands.</p></div><ol><li><span>01</span><strong>Read the current command</strong><small>steps[index]</small></li><li><span>02</span><strong>Start its matching action</strong><small>say → show a message</small></li><li><span>03</span><strong>Wait in Update until complete</strong><small>input or movement finishes</small></li><li><span>04</span><strong>Advance to the next command</strong><small>index++</small></li></ol></section>
+
+<section class="design-rules"><div class="guide-heading"><p class="eyebrow">PRACTICAL RULES</p><h2>Five rules that keep<br>a growing game healthy.</h2></div><div class="rules-list">
+<article><b>01</b><h3>Connect with IDs</h3><p>Reference <code>slime</code> or <code>event.village.arrive</code> instead of linking files directly.</p></article>
+<article><b>02</b><h3>Validate while loading</h3><p>Reject missing image IDs, invalid tiles, and duplicate IDs before play begins.</p></article>
+<article><b>03</b><h3>Keep behavior out of data</h3><p>Let JSON describe content; keep complex calculations in type-safe Go code.</p></article>
+<article><b>04</b><h3>Start with a small format</h3><p>JSON is enough at first. Add CSV, map editors, or custom tools only when needed.</p></article>
+<article><b>05</b><h3>Test assets too</h3><p>Load every map, event, and translation key automatically to catch broken references.</p></article>
+</div></section>
+
+<section class="composition-summary"><p class="eyebrow">THE BIG IDEA</p><h2>A game is not one giant program.<br><em>It is a composition of parts, played by systems.</em></h2><p>Ebitengine advances the world each frame. System code defines the rules, and asset data supplies the content. This separation lets more people add maps and stories without rewriting the engine.</p><a class="cta" href="../../tracks/rpg/">USE IT IN THE RPG PATH <b>→</b></a></section>
+</main></body></html>

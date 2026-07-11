@@ -1,37 +1,27 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="GoとEbitengineで作ったミニゲームを、ブラウザですぐ遊んで学べるショーケース。">
-  <title>Ebi Showcase — Goでゲームを作ろう</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="robots" content="noindex">
+  <title>Ebi Showcase</title>
+  <link rel="alternate" hreflang="ja" href="./ja/">
+  <link rel="alternate" hreflang="en" href="./en/">
+  <link rel="alternate" hreflang="x-default" href="./">
+  <style>html,body{height:100%;margin:0;background:#071426;color:#21d8ba;font:700 12px monospace}body{display:grid;place-items:center}.language-gate{text-align:center;letter-spacing:.12em}.links{margin-top:24px;display:flex;gap:14px;justify-content:center}.links a{border:1px solid #21d8ba;color:#fff;padding:12px 18px;text-decoration:none}</style>
+  <script>
+    (() => {
+      const saved = localStorage.getItem("ebi-language");
+      const preferred = saved || (navigator.languages || [navigator.language || "en"]).find(Boolean);
+      const language = String(preferred).toLowerCase().startsWith("ja") ? "ja" : "en";
+      location.replace("./" + language + "/" + location.hash);
+    })();
+  </script>
 </head>
 <body>
-  <header class="nav"><a class="brand" href="#top"><span>EBI</span> SHOWCASE</a><nav><a href="#play">PLAY</a><a href="#learn">HOW IT WORKS</a><a href="https://ebitengine.org/" rel="noreferrer">EBITENGINE ↗</a></nav></header>
-  <main id="top">
-    <section class="hero">
-      <div class="hero-copy"><p class="eyebrow">A TINY GAME ENGINE. A BIG FIRST STEP.</p><h1>Goで、<br><em>ゲームが動く。</em></h1><p class="lead">コードを書いて、ビルドして、ブラウザで遊ぶ。Ebitengineなら、その全部が驚くほどまっすぐです。</p><a class="cta" href="#play">今すぐプレイ <b>↓</b></a></div>
-      <div class="code-card" aria-hidden="true"><div class="dots">● ● ●</div><pre><span>func</span> (g *Game) Update() error {
-  <i>// every frame, keep it simple.</i>
-  g.bird.velocity += gravity
-  g.bird.y += g.bird.velocity
-  <span>return</span> nil
-}</pre><div class="run">GO → WASM → BROWSER</div></div>
-    </section>
-
-    <section class="play" id="play">
-      <div class="section-head"><div><p class="eyebrow">GAME 01 / EBI FLIGHT</p><h2>まずは、飛んでみよう。</h2></div><p>クリック、タップ、またはスペースキーで上昇。パイプを抜けるたびに1ポイント。</p></div>
-      <div class="game-shell"><div class="game-top"><span>● LIVE / WEBASSEMBLY</span><button id="fullscreen" type="button">FULL SCREEN ↗</button></div><div id="game-wrap"><iframe id="game" title="Ebi Flight game" src="game.html" allow="autoplay; fullscreen"></iframe></div></div>
-    </section>
-
-    <section class="learn" id="learn">
-      <p class="eyebrow">WHAT'S INSIDE</p><h2>ゲームの心臓部は、<br>たった3つのメソッド。</h2>
-      <div class="steps"><article><b>01</b><h3>UPDATE</h3><p>入力、重力、当たり判定。1フレームごとに世界の状態を一歩進めます。</p><code>func (g *Game) Update() error</code></article><article><b>02</b><h3>DRAW</h3><p>現在の状態を画面に描画。画像なしでも図形APIだけでゲームは作れます。</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article><article><b>03</b><h3>LAYOUT</h3><p>ゲーム内の論理解像度を決定。異なる画面サイズへの拡大縮小はエンジンに任せます。</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article></div>
-      <div class="recipe"><div><p class="eyebrow">BUILD RECIPE</p><h3>Goのコードが、Webのゲームになるまで。</h3></div><ol><li><span>01</span><div><strong>WRITE</strong><small>game/main.go</small></div></li><li><span>02</span><div><strong>BUILD</strong><small>GOOS=js GOARCH=wasm</small></div></li><li><span>03</span><div><strong>SHIP</strong><small>GitHub Pages</small></div></li></ol></div>
-    </section>
+  <main class="language-gate">
+    <p>SELECT LANGUAGE</p>
+    <div class="links"><a href="./ja/" lang="ja">日本語</a><a href="./en/" lang="en">English</a></div>
   </main>
-  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine. No game framework JavaScript.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
-  <script>document.querySelector('#fullscreen').addEventListener('click',()=>document.querySelector('#game-wrap').requestFullscreen?.());</script>
 </body>
 </html>

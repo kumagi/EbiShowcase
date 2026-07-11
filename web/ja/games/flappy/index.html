@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="GoとEbitengineで作ったミニゲームを、ブラウザですぐ遊んで学べるショーケース。">
+  <title>Ebi Showcase — Goでゲームを作ろう</title>
+  <link rel="canonical" href="./">
+  <link rel="alternate" hreflang="ja" href="../../../ja/games/flappy/">
+  <link rel="alternate" hreflang="en" href="../../../en/games/flappy/">
+  <link rel="alternate" hreflang="x-default" href="../../../">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body>
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="#play">PLAY</a><a href="#learn">HOW IT WORKS</a><a href="#acceleration">ACCELERATION</a><a href="https://ebitengine.org/" rel="noreferrer">EBITENGINE ↗</a><a class="lang" href="../../../en/games/flappy/" lang="en" data-language="en">EN</a></nav></header>
+  <main id="top"><div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>LEVEL 04</span></div>
+    <section class="hero">
+      <div class="hero-copy"><p class="eyebrow">A TINY GAME ENGINE. A BIG FIRST STEP.</p><h1>Goで、<br><em>ゲームが動く。</em></h1><p class="lead">コードを書いて、ビルドして、ブラウザで遊ぶ。Ebitengineなら、その全部が驚くほどまっすぐです。</p><a class="cta" href="#play">今すぐプレイ <b>↓</b></a></div>
+      <div class="code-card" aria-hidden="true"><div class="dots">● ● ●</div><pre><span>func</span> (g *Game) Update() error {
+  <i>// every frame, keep it simple.</i>
+  g.bird.velocity += gravity
+  g.bird.y += g.bird.velocity
+  <span>return</span> nil
+}</pre><div class="run">GO → WASM → BROWSER</div></div>
+    </section>
+
+    <section class="play" id="play">
+      <div class="section-head"><div><p class="eyebrow">GAME 01 / EBI FLIGHT</p><h2>まずは、飛んでみよう。</h2></div><p>クリック、タップ、またはスペースキーで上昇。パイプを抜けるたびに1ポイント。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / WEBASSEMBLY</span><button id="fullscreen" type="button">FULL SCREEN ↗</button></div><div id="game-wrap"><iframe id="game" title="Ebi Flight game" src="../../../game.html" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="learn" id="learn">
+      <p class="eyebrow">WHAT'S INSIDE</p><h2>ゲームの心臓部は、<br>たった3つのメソッド。</h2>
+      <div class="steps"><article><b>01</b><h3>UPDATE</h3><p>入力、重力、当たり判定。1フレームごとに世界の状態を一歩進めます。</p><code>func (g *Game) Update() error</code></article><article><b>02</b><h3>DRAW</h3><p>現在の状態を画面に描画。画像なしでも図形APIだけでゲームは作れます。</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article><article><b>03</b><h3>LAYOUT</h3><p>ゲーム内の論理解像度を決定。異なる画面サイズへの拡大縮小はエンジンに任せます。</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article></div>
+      <div class="recipe"><div><p class="eyebrow">BUILD RECIPE</p><h3>Goのコードが、Webのゲームになるまで。</h3></div><ol><li><span>01</span><div><strong>WRITE</strong><small>game/main.go</small></div></li><li><span>02</span><div><strong>BUILD</strong><small>GOOS=js GOARCH=wasm</small></div></li><li><span>03</span><div><strong>SHIP</strong><small>GitHub Pages</small></div></li></ol></div>
+    </section>
+
+    <section class="physics" id="acceleration" data-up="上向き" data-down="下向き" data-still="止まっている">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / ACCELERATION</p>
+        <h2>どうして鳥は、<br>だんだん落ちるの？</h2>
+        <p class="lesson-lead">答えは<strong>加速度（かそくど）</strong>です。むずかしそうな名前ですが、「速さを少しずつ変える量」と考えれば大丈夫。坂道を転がるボールが、だんだん速くなるのと同じです。</p>
+      </div>
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>位置</h3><p>鳥が「いま、どこにいるか」。画面の上が0で、下へ行くほど数字が大きくなります。</p><code>birdY = 320</code></article>
+        <article><span class="concept-number">2</span><h3>速度</h3><p>1回の更新で、どちらへどれだけ動くか。マイナスなら上へ、プラスなら下へ進みます。</p><code>velocity = -7.4</code></article>
+        <article><span class="concept-number">3</span><h3>加速度</h3><p>速度を毎回どれだけ変えるか。重力として <strong>+0.42</strong> を足し続けると、上昇が止まり、やがて落下します。</p><code>gravity = +0.42</code></article>
+      </div>
+      <div class="motion-lab" aria-labelledby="motion-lab-title">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p>
+          <h3 id="motion-lab-title">1コマずつ動かしてみよう</h3>
+          <p>ゲームはパラパラ漫画のように、少しずつ計算して描き直します。ボタンを押すたび、重力が速度へ足され、その速度だけ鳥の位置が変わります。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap>はばたく</button><button type="button" class="lab-button" data-lab-step>1フレーム進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button></div>
+          <p class="lab-hint">「はばたく」は、上向きの速度 <code>-7.4</code> をセットしてから1フレーム進めます。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-sky" role="img" aria-label="鳥の上下運動を示す図"><span class="axis-label axis-top">0 / 上</span><span class="axis-label axis-bottom">720 / 下</span><div class="lab-bird" data-lab-bird aria-hidden="true"><span></span></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>加速度</span><strong>+0.42</strong><small>毎フレーム</small></div><div><span>速度</span><strong data-lab-velocity>0.00</strong><small data-lab-direction>止まっている</small></div><div><span>位置 Y</span><strong data-lab-position>320.00</strong><small>画面の上から</small></div></div>
+        </div>
+      </div>
+      <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>速度 = 速度 + 重力</code><span>つぎに</span><code>位置 = 位置 + 速度</code></div><p>順番が大切です。まず重力で速度を変え、次にその速度で位置を変えます。毎フレームくり返すだけで、自然なジャンプの曲線が生まれます。</p></div>
+      <div class="code-lesson">
+        <div><p class="eyebrow">IN THE REAL GAME</p><h3>Ebitengineでは<br><code>Update</code>に書く</h3><p><code>Update</code>はゲームの状態を進める場所です。入力を調べ、速度を変え、位置を動かします。<code>Draw</code>は計算後の位置に鳥を描きます。</p></div>
+        <pre><code><span>const</span> gravity = 0.42
+<span>const</span> flapV   = -7.4
+
+<span>func</span> (g *game) Update() error {
+    <i>// 押した瞬間、上向きの速度にする</i>
+    <span>if</span> justPressed() {
+        g.velocity = flapV
+    }
+
+    <i>// 1. 重力で速度を変える</i>
+    g.velocity += gravity
+
+    <i>// 2. 速度で位置を変える</i>
+    g.birdY += g.velocity
+    <span>return</span> nil
+}</code></pre>
+      </div>
+      <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT ACCELERATION</p><h3>ずっと同じ速さ</h3><p>鳥が直線で上がり、直線で落ちるため、機械のような不自然な動きになります。</p></article>
+        <article><p class="eyebrow">WITH ACCELERATION</p><h3>なめらかな弧を描く</h3><p>上向きの速度が弱まり、頂点で0に近づき、その後は下向きに速くなります。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>数字を変えて実験しよう</h3><p><code>gravity</code>を大きくすると重い鳥に、<code>flapV</code>をより小さなマイナスにすると力強い羽ばたきになります。ゲーム作りは、この「ちょうどいい」を探す作業です。</p></article>
+      </div>
+    </section>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine. No game framework JavaScript.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+    const gameWrap = document.querySelector("#game-wrap");
+    const fullscreenButton = document.querySelector("#fullscreen");
+    const requestFullscreen = gameWrap.requestFullscreen || gameWrap.webkitRequestFullscreen;
+    if (!requestFullscreen) fullscreenButton.textContent = "OPEN GAME ↗";
+    fullscreenButton.addEventListener("click", () => {
+      if (requestFullscreen) requestFullscreen.call(gameWrap);
+      else location.href = "../../../game.html";
+    });
+  </script>
+</body>
+</html>
