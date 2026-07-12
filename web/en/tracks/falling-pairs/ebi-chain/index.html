@@ -1,4 +1,25 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Chain | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/falling-pairs/ebi-chain/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Falling-pair Chain Puzzle</a><span>STEP 06 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Puyo Puyo-style chain puzzle</p><h1>Ebi Chain</h1><p>Combine next-pair preview, all-clear bonuses, and chain-generated garbage.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Preview, garbage, and versus rules</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../chain-score/">← STEP 05<strong>Chain Scoring Lab</strong></a><a href="../">BACK TO PATH →<strong>Falling-pair Chain Puzzle</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Chain | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/falling-pairs/ebi-chain/">日本語</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← Falling-pair Chain Puzzle</a><span>STEP 06 / 06</span></div>
+<section class="overview-hero"><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>Ebi Chain</h1><p>Combine falling pairs, kicked rotation, color search, simultaneous clears, gravity, rescans, chain score, all-clears, and versus garbage.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Integrated resolution phases and versus results</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Build two 2-chains and overflow the rival with 12 garbage.</h2></div><p>Tap LEFT, TURN, RIGHT, and DROP. Keyboard uses Left/Up/Right or A/W/D and Space. White groups clear together and the board rescans after gravity. Three empty moves lose.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Chain cascade and garbage duel" src="../../../../play/ebi-chain/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RESOLUTION STATE MACHINE</p><h2>Lock input and loop until the board settles.</h2><p class="lesson-lead">After a pair locks, control passes from the player to board resolution. Repeat <code>find → clear all → gravity → find again</code> until nothing is found. Only then commit score and garbage and spawn the next pair. These <strong>phase boundaries</strong> connect the previous five systems safely.</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>Separate current and next pair</h3><p>Spawn moves preview data into the active pair, then refills the preview. Draw reads active and NEXT from separate values.</p><code>pivotKind = nextPivotKind; refillNext()</code></article><article><span class="concept-number">2</span><h3>Alternate clear and gravity</h3><p>Collect every four-way group into marked, clear together, compact columns, then rescan. A new group increments chain and returns to CLEAR.</p><code>CLEAR → GRAVITY → RESCAN → CLEAR ...</code></article><article><span class="concept-number">3</span><h3>Send versus results at settle</h3><p>Each chain sends two garbage, plus two if the board becomes empty. A no-chain move instead drops one gray garbage on your board.</p><code>sent := chain*2 + allClearBonus</code></article></div>
+<div class="motion-lab" data-lab="turn" data-states="Pair input,Color search,Clear together,Column gravity,Rescan,Send garbage"><div class="lab-copy"><p class="eyebrow">TRY IT / RESOLUTION PHASES</p><h3>Step until one move settles</h3><p>No new input is accepted during board mutation. Only a rescan with zero groups calculates garbage and returns control.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>Next phase</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Return to input</button></div></div><div class="lab-visual"><div class="lab-board"><div class="lab-mono-board">aim → find → clear → fall → rescan → send</div></div><div class="lab-values"><div><span>Current</span><strong data-lab-state>Pair input</strong></div><div><span>Input</span><strong>routed by phase</strong></div><div><span>Exit</span><strong>zero groups</strong></div></div></div></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>The rescan after gravity decides the chain</h3><p>A nonempty marked set increments chain and returns to CLEAR. An empty set ends the move and converts chain count into garbage.</p></div><pre><code>compactColumns()
+marked = findGroups(board)
+if len(marked) &gt; 0 {
+    chain++
+    phase = phaseClear
+    return
+}
+
+bonus := 0
+if boardEmpty() { bonus = 2 }
+opponentGarbage += chain*2 + bonus
+spawn()</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY LOCK INPUT?</p><h3>Protect the resolving board</h3><p>A pair cannot move during clearing and falling, keeping visuals synchronized with the board array.</p></article><article><p class="eyebrow">WHY CLEAR ADJACENT GARBAGE?</p><h3>Give disruption a counterplay</h3><p>Gray cells never group themselves, but a clearing color beside them can remove them.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Add cancellation</h3><p>Use your outgoing garbage to reduce pending incoming garbage first, then send only the remainder.</p></article></div>
+</section><nav class="lesson-pager"><a href="../chain-score/">← STEP 05<strong>Chain Scoring Lab</strong></a><a href="../">BACK TO PATH →<strong>Falling-pair Chain Puzzle</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -27,32 +48,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

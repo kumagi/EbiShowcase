@@ -1,4 +1,32 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Generate Terrain | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/sandbox/terrain-generation/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D Block Sandbox</a><span>STEP 02 / 07</span></div><section class="overview-hero"><p class="eyebrow">Build a world you can mine and create</p><h1>Generate Terrain</h1><p>Generate reproducible dirt, stone, and caves from a world seed.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Noise, layers, and seeds</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../place-break/">← STEP 01<strong>Place and Break</strong></a><a href="../chunk-world/">STEP 03 →<strong>Chunked World</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Generate Terrain | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/sandbox/terrain-generation/">日本語</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← 2D Block Sandbox</a><span>STEP 02 / 07</span></div>
+<section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Generate Terrain</h1><p>Build smooth heights, dirt and stone layers, and underground caves from a seed so the same number recreates the same world.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Noise, layers, and seeds</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Explore generated land and find three survey beacons.</h2></div><p>Hold the left or right button. On keyboard use Left/Right or A/D. Touch all three within 38 seconds. NEXT SEED or N makes another world; R rebuilds this one.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Explore terrain generated from a seed" src="../../../../play/terrain-generation/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SEEDED VALUE NOISE</p><h2>Rebuild a large world from a number and coordinates.</h2><p class="lesson-lead">Choosing an unrelated height in every column makes needle-like ground. This game makes the same random value from seed and coordinates, then smoothly connects neighboring values with <strong>value noise</strong>. Once height is known, depth selects grass, dirt, or stone.</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>Mix seed and coordinates</h3><p><code>hash(seed, x, y)</code> returns the same value whenever those three numbers match. It does not depend on generation order, so a distant location can be built directly.</p><code>n := hash(seed, x, y)</code></article><article><span class="concept-number">2</span><h3>Smooth between samples</h3><p>Use a random marker every eight columns, then change gradually between them with <code>smooth</code>. Heights are less likely to jump many blocks at once.</p><code>height := 3 + int(valueNoise(seed, x/8)*6)</code></article><article><span class="concept-number">3</span><h3>Choose layers by depth</h3><p>The surface cell is grass, the next three are dirt, and deeper cells are stone. Turning stone with cave noise above 0.70 back into air makes caverns.</p><code>if y &gt; surface+3 { tile = Stone }</code></article></div>
+<div class="motion-lab" data-lab="height-layers" data-sampled="sampled" data-carved="carved" aria-labelledby="lab-title-terrain-generation">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / HEIGHT FIELD</p>
+<h3 id="lab-title-terrain-generation">Sample a height per column</h3>
+<p>Terrain starts as column→height. Sample with noise, carve if needed. A fixed seed rebuilds the same land.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-noise>Sample noise</button><button type="button" class="lab-button" data-lab-carve>Carve 1</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<p class="lab-hint">Layer stone/dirt on top of the height field afterward.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>heights</span><strong data-lab-h>—</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">HEIGHT THEN LAYERS</p><div class="formula-lines"><code>h = noise(x, seed)</code><span>then</span><code>fill cells below h</code></div><p>Heights first beat full 2D noise for starters.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Find height first, then stack layers</h3><p>Computing one surface value per column tells us where air ends. The same surface powers material choice and the explorer's footing.</p></div><pre><code>surfaceY := 3 + int(valueNoise1D(seed, float64(x)/8)*6)
+for y := surfaceY; y &lt; worldH; y++ {
+    switch {
+    case y == surfaceY: tiles[y][x] = grass
+    case y &lt;= surfaceY+3: tiles[y][x] = dirt
+    default: tiles[y][x] = stone
+    }
+}</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY A SEED?</p><h3>A passcode for a world</h3><p>Instead of sharing thousands of cells, one number can recreate the untouched world.</p></article><article><p class="eyebrow">WHY LAYERS?</p><h3>Give depth meaning</h3><p>Materials change below the surface and create a reason to explore downward.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Add a snow line</h3><p>Change surface grass to snow when y is above 4, making only tall mountains white.</p></article></div>
+</section><nav class="lesson-pager"><a href="../place-break/">← STEP 01<strong>Place and Break</strong></a><a href="../chunk-world/">STEP 03 →<strong>Chunked World</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -34,25 +62,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

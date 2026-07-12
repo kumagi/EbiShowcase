@@ -5,8 +5,19 @@
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FAIR QUEUE AND PREDICTION</p><h2>Turn invisible luck into visible data.</h2><p class="lesson-lead">With independent random picks, one needed shape might disappear for dozens of turns. A seven-shape bag shuffles one of each and prevents huge droughts. HOLD and the ghost then let players <strong>make a plan</strong> instead of only reacting to luck.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Fill seven, then shuffle</h3><p>Put I, O, T, S, Z, J, and L into a slice once each and shuffle only their order. Refill only when the bag becomes empty.</p><code>bag = []int{I, O, T, S, Z, J, L}</code></article><article><span class="concept-number">2</span><h3>Swap current with HOLD</h3><p>If storage is empty, save current and draw next. Otherwise swap the two. Allow this only once until a piece locks, preventing endless swaps.</p><code>held, current = current, held</code></article><article><span class="concept-number">3</span><h3>Test a copy downward</h3><p>Leave the real position alone and increase a temporary y. The final y before collision is where the outlined ghost belongs.</p><code>for canPlace(x, ghostY+1) { ghostY++ }</code></article></div>
-<div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / BAG QUEUE</p><h3>Deal shapes from a bag</h3><p>Add candidates, then deal the first one. When zero remain, refill with all seven shapes before shuffling again.</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>Add shape</button><button class="lab-button" data-lab-step>Deal next</button><button class="lab-button lab-button-quiet" data-lab-reset>New bag</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Shapes left</span><strong data-lab-count>0</strong></div><div><span>Deal order</span><strong data-lab-list>—</strong></div></div></div></div>
-<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>The ghost never changes the board</h3><p>It calls the same <code>canPlace</code> as the real piece, but changes only a local variable. Drawing a prediction does not advance game state.</p></div><pre><code>func (g *Game) ghostY() int {
+<div class="motion-lab" data-lab="bag-draw" data-drew="drew {p}" data-held="hold swapped" aria-labelledby="lab-title-bag-hold-ghost">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / 7-BAG</p>
+<h3 id="lab-title-bag-hold-ghost">Draw without replacement</h3>
+<p>Fill a bag with seven pieces and draw until empty—no dups mid-bag. HOLD swaps with the current piece. Classic fair randomizer.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-draw>Draw</button><button type="button" class="lab-button" data-lab-hold>Swap HOLD</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Refill bag</button></div>
+<p class="lab-hint">Refill all seven when the bag empties.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>left in bag</span><strong data-lab-left>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">BAG RANDOM</p><div class="formula-lines"><code>if bag empty { refill 7 }</code><span>then</span><code>draw = remove random</code></div><p>A bag fights droughts better than raw RNG.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>The ghost never changes the board</h3><p>It calls the same <code>canPlace</code> as the real piece, but changes only a local variable. Drawing a prediction does not advance game state.</p></div><pre><code>func (g *Game) ghostY() int {
     y := g.y
     for g.canPlace(g.kind, g.rotation, g.x, y+1) {
         y++
@@ -38,6 +49,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

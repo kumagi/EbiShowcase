@@ -1,4 +1,33 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Pellet Maze | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/maze-chase/pellet-map/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 03 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Pac-Man-style chase</p><h1>Pellet Maze</h1><p>Track each pellet and clear the stage when none remain.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Collectible state and completion</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../buffered-turn/">← STEP 02<strong>Buffered Corner Turns</strong></a><a href="../patrol-chase/">STEP 04 →<strong>Patrol and Chase</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Pellet Maze | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/maze-chase/pellet-map/">日本語</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 03 / 06</span></div>
+<section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Pellet Maze</h1><p>Parse one text map into fixed walls and mutable pellets, updating state and remaining count on collection.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Static layers, collectible state, and count-based completion</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Avoid the red chaser and collect every pellet in 60 seconds.</h2></div><p>Hold LEFT, UP, DOWN, or RIGHT. Keyboard uses Arrows or WASD; mouse can hold the buttons too. Zero remaining clears. Sharing a tile with the enemy or timing out loses.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Maze game with separate wall and pellet layers" src="../../../../play/pellet-map/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / STATIC AND MUTABLE LAYERS</p><h2>Separate “can I walk here?” from “is it still here?”</h2><p class="lesson-lead">Maze walls never change during this run, but a pellet disappears when collected. Instead of forcing both facts into one character, overlay equal-sized <code>walls</code> and <code>pellets</code> arrays. They share position <code>[y][x]</code> while fixed data and <strong>mutable state</strong> have different jobs.</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>Parse text into two layers</h3><p>A <code>#</code> sets walls true and a <code>.</code> sets pellets true. Draw paints walls first, then only pellets that remain.</p><code>walls[y][x] = tile == '#'; pellets[y][x] = tile == '.'</code></article><article><span class="concept-number">2</span><h3>Collection changes pellets only</h3><p>When the player enters a tile, change a true pellet to false. Passing through again cannot score twice.</p><code>if pellets[y][x] { pellets[y][x] = false }</code></article><article><span class="concept-number">3</span><h3>Decrease remaining at the same time</h3><p>Do not recount the whole map every frame. Decrement remaining in the successful collection operation. Zero means stage clear immediately.</p><code>remaining--; if remaining == 0 { clear = true }</code></article></div>
+<div class="motion-lab" data-lab="pellet-count" data-ate="ate" data-clear="all clear!" aria-labelledby="lab-title-pellet-map">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / PELLET LAYER</p>
+<h3 id="lab-title-pellet-map">Clear remaining pellets one by one</h3>
+<p>Pellets are a bool layer beside the maze. Stepping on one sets false; zero left clears the stage. Walls stay untouched.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-eat>Eat one</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Restore</button></div>
+<p class="lab-hint">Initial layout is data; remaining counts are runtime state.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>left</span><strong data-lab-left>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">LAYER STATE</p><div class="formula-lines"><code>if pellet[y][x] { eat; left-- }</code><span>then</span><code>clear if left == 0</code></div><p>Don’t erase pellets by rewriting maze glyphs.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Put successful collection in one function</h3><p>Starting player and enemy tiles use the same function. A false cell does nothing, preventing remaining from decreasing twice.</p></div><pre><code>func (g *Game) removePellet(p Point) {
+    if g.pellets[p.y][p.x] {
+        g.pellets[p.y][p.x] = false
+        g.remaining--
+    }
+}
+
+removePellet(player)
+if remaining == 0 { clear = true }</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY TWO LAYERS?</p><h3>Collect without breaking walls</h3><p>Changing a pellet to false leaves walls untouched, so movement never depends on collection state.</p></article><article><p class="eyebrow">WHY A COUNTER?</p><h3>Constant-time completion</h3><p>Even on a huge map, testing remaining against zero needs one comparison.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Add power pellets</h3><p>Replace bool with small, large, or empty values and score by collected kind.</p></article></div>
+</section><nav class="lesson-pager"><a href="../buffered-turn/">← STEP 02<strong>Buffered Corner Turns</strong></a><a href="../patrol-chase/">STEP 04 →<strong>Patrol and Chase</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -26,33 +55,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

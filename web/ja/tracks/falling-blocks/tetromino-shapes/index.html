@@ -7,8 +7,19 @@
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RELATIVE COORDINATES</p><h2>形は「親の場所＋4個のずれ」で動かせる。</h2><p class="lesson-lead">4個それぞれの画面座標を動かすと、途中で離れてしまうかもしれません。そこで形に一つの基準点 <code>(x, y)</code> を持たせ、各マスはそこからの<strong>ずれ</strong>だけを覚えます。親を1マス動かせば、4個が同時に動きます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>形をデータで書く</h3><p>O形なら、基準から右、下、右下の4地点です。絵ではなく数字なので、同じ描画や当たり判定をどの形にも使えます。</p><code>{{0,0}, {1,0}, {0,1}, {1,1}}</code></article><article><span class="concept-number">2</span><h3>親の座標を足す</h3><p>実際の盤面マスは <code>x + offset.x</code>。左へ動くときは親のxだけを1減らせば十分です。</p><code>cellX := piece.x + offset.x</code></article><article><span class="concept-number">3</span><h3>4マス全部を検査</h3><p>一つでも壁の外へ出るなら、その移動は取り消します。「全員が入れるか」を確かめてから親を動かします。</p><code>for _, p := range shape.blocks { check(x+p.x) }</code></article></div>
-<div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / OFFSET LIST</p><h3>一つの形へマスを集めよう</h3><p>「ずれを追加」で形の部品を増やします。ゲームでも4個のずれを順番に読み、同じ親座標を足します。</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>ずれを追加</button><button class="lab-button" data-lab-step>1個調べる</button><button class="lab-button lab-button-quiet" data-lab-reset>空にする</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>残りのずれ</span><strong data-lab-count>0</strong></div><div><span>読み出す順番</span><strong data-lab-list>—</strong></div></div></div></div>
-<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Drawも衝突判定も同じ配列を読む</h3><p>形データを一か所に置くと、描いた形と当たり判定の形が食い違いません。新しい形も4個の座標を追加するだけです。</p></div><pre><code>type Shape struct {
+<div class="motion-lab" data-lab="shape-cells" data-rotated="回転した" aria-labelledby="lab-title-tetromino-shapes">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / SHAPE DATA</p>
+<h3 id="lab-title-tetromino-shapes">相対座標の4マスを回転させよう</h3>
+<p>形は「中心からの相対マス」のリストです。形を切り替え、回転で (x,y)→(-y,x) を試します。色や名前はデータ、回転は共通の式です。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>次の形</button><button type="button" class="lab-button" data-lab-rot>90°回転</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<p class="lab-hint">O ミノは回転しても見た目が同じになるのが正解です。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>形</span><strong data-lab-name>—</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">RELATIVE CELLS</p><div class="formula-lines"><code>cells = shape[rot]</code><span>つぎに</span><code>world = origin + cell</code></div><p>絶対座標だけで形を持つと回転が地獄です。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Drawも衝突判定も同じ配列を読む</h3><p>形データを一か所に置くと、描いた形と当たり判定の形が食い違いません。新しい形も4個の座標を追加するだけです。</p></div><pre><code>type Shape struct {
     blocks [4]Point
 }
 
@@ -42,6 +53,19 @@ for _, offset := range shape.blocks {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

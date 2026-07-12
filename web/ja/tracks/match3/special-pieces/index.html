@@ -27,11 +27,19 @@
       <article><span class="concept-number">2</span><h3>交差を先に調べる</h3><p>横も縦も3個以上ならL字やT字の曲がった形です。4個並びより先に判定しないと、曲がりをただの直線とまちがえます。</p><code>if horizontal &gt;= 3 &amp;&amp; vertical &gt;= 3</code></article>
       <article><span class="concept-number">3</span><h3>効果範囲を集合にする</h3><p>一列、同じ色全部、中心の3×3など、消すマスをmapへ追加します。同じマスが重なっても一度だけ数えられます。</p><code>affected[point{x, y}] = true</code></article>
     </div>
-    <div class="motion-lab" data-lab="entities">
-      <div class="lab-copy"><p class="eyebrow">TRY IT / EFFECT SET</p><h3>効果に入るマスを集めよう</h3><p>「マスを追加」で爆発の候補を作り、「1マス処理」で順番に消します。重なる効果も、最後は処理するマスの集合になります。</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>マスを追加</button><button class="lab-button" data-lab-step>1マス処理</button><button class="lab-button lab-button-quiet" data-lab-reset>空にする</button></div></div>
-      <div class="lab-visual"><div class="lab-values"><div><span>残りのマス</span><strong data-lab-count>0</strong></div><div><span>処理する順番</span><strong data-lab-list>—</strong></div></div></div>
-    </div>
-    <div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>判定と効果を別の関数にする</h3><p><code>detectSpecial</code>は「何ができたか」を返し、<code>activate</code>は種類を見て「どこへ届くか」を決めます。一つの長いif文にしないのが大切です。</p></div><pre><code>kind, center, ok := detectSpecial(board)
+    <div class="motion-lab" data-lab="match-scan" data-found="効果範囲をマーク" data-none="対象なし" data-cleared="まとめて消去" aria-labelledby="lab-title-special-pieces">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / MARK SPECIALS</p>
+<h3 id="lab-title-special-pieces">消すマスの集合を先に作る</h3>
+<p>特殊ピースも、まず「どのマスを消すか」の集合を作ります。スキャンで集合を見てから消去。爆弾もラインも、最後は同じクリア処理に渡せます。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan>効果範囲を集める</button><button type="button" class="lab-button" data-lab-clear>まとめて消す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<p class="lab-hint">効果ごとに描画を分けても、消去パイプは1本にまとめると安全です。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>対象マス</span><strong data-lab-count>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">SET THEN CLEAR</p><div class="formula-lines"><code>消すマスを Set に入れる</code><span>つぎに</span><code>Set をまとめて空にする</code></div><p>特殊効果は「Set をどう埋めるか」だけ変えれば足せます。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>判定と効果を別の関数にする</h3><p><code>detectSpecial</code>は「何ができたか」を返し、<code>activate</code>は種類を見て「どこへ届くか」を決めます。一つの長いif文にしないのが大切です。</p></div><pre><code>kind, center, ok := detectSpecial(board)
 if ok {
     special.kind = kind
     special.pos = center
@@ -70,6 +78,19 @@ for p := range effectCells(special) {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

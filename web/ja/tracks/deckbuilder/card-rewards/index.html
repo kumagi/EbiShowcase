@@ -1,4 +1,16 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>カード報酬と強化 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/deckbuilder/card-rewards/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← デッキ構築カードゲーム</a><span>STEP 05 / 07</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>カード報酬と強化</h1><p>目標達成後に3枚から1枚を選び、デッキそのものを成長させます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>選択報酬・レア度・デッキ編集</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>強い1枚を選んで、次の目標へ。</h2></div><p>TRAINをタップまたはSpace。報酬は1〜3かカードをタップ。PCではUで強化、Rで古いカードを削除できます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="カード報酬と強化" src="../../../../play/card-rewards/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK EDITING</p><h2>報酬は「数字を増やす」だけでなく、次の遊び方を変える。</h2><p class="lesson-lead">候補をカードデータのリストとして作り、選ばれた<strong>たった1枚だけをdeckへappend</strong>します。レア度は色や出やすさを表すデータで、強さそのものとは分けて考えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>候補を作る</h3><p>戦闘番号に合う報酬表から3枚を表示します。画面に見えるカードと選択時に追加するカードは同じデータです。</p><code>rewards := rewardTable[stage]</code></article><article><span class="concept-number">2</span><h3>1枚だけ追加</h3><p>選ばれた番号のカードをデッキの末尾へ入れます。ほかの2枚は追加しないので選択に意味が生まれます。</p><code>deck = append(deck, rewards[choice])</code></article><article><span class="concept-number">3</span><h3>編集は元データを変える</h3><p>強化はdamageを増やし、削除はスライスから要素を抜きます。次の戦闘は編集後のdeckを読みます。</p><code>deck[i].damage += 3</code></article></div><div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / DECK LIST</p><h3>デッキへカードを足してみよう</h3><p>追加した順番がリストに残ります。実際のゲームでもカードは構造体のスライスなので、保存やシャッフルへそのまま渡せます。</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>報酬を追加</button><button class="lab-button" data-lab-step>先頭を取り除く</button><button class="lab-button lab-button-quiet" data-lab-reset>初期デッキへ</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>デッキ枚数</span><strong data-lab-count>0</strong></div><div><span>カード順</span><strong data-lab-list>—</strong></div></div></div></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>選択番号を境界チェックする</h3><p>入力が候補の範囲内にあるときだけ追加し、報酬画面を閉じて次のステージへ進めます。</p></div><pre><code>if choice &gt;= 0 &amp;&amp; choice &lt; len(rewards) {
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>カード報酬と強化 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/deckbuilder/card-rewards/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← デッキ構築カードゲーム</a><span>STEP 05 / 07</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>カード報酬と強化</h1><p>目標達成後に3枚から1枚を選び、デッキそのものを成長させます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>選択報酬・レア度・デッキ編集</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>強い1枚を選んで、次の目標へ。</h2></div><p>TRAINをタップまたはSpace。報酬は1〜3かカードをタップ。PCではUで強化、Rで古いカードを削除できます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="カード報酬と強化" src="../../../../play/card-rewards/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK EDITING</p><h2>報酬は「数字を増やす」だけでなく、次の遊び方を変える。</h2><p class="lesson-lead">候補をカードデータのリストとして作り、選ばれた<strong>たった1枚だけをdeckへappend</strong>します。レア度は色や出やすさを表すデータで、強さそのものとは分けて考えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>候補を作る</h3><p>戦闘番号に合う報酬表から3枚を表示します。画面に見えるカードと選択時に追加するカードは同じデータです。</p><code>rewards := rewardTable[stage]</code></article><article><span class="concept-number">2</span><h3>1枚だけ追加</h3><p>選ばれた番号のカードをデッキの末尾へ入れます。ほかの2枚は追加しないので選択に意味が生まれます。</p><code>deck = append(deck, rewards[choice])</code></article><article><span class="concept-number">3</span><h3>編集は元データを変える</h3><p>強化はdamageを増やし、削除はスライスから要素を抜きます。次の戦闘は編集後のdeckを読みます。</p><code>deck[i].damage += 3</code></article></div><div class="motion-lab" data-lab="deck-pick" data-cards="Strike,Guard,Rare Heal" data-picked="{c} を追加" aria-labelledby="lab-title-card-rewards">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / REWARD PICK</p>
+<h3 id="lab-title-card-rewards">3枚から1枚をデッキへ足そう</h3>
+<p>報酬は候補配列です。選んだ1枚だけを自分のデッキへ append。レア度は候補の作り方、編集は配列の操作です。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-quiet" data-lab-reset>デッキを戻す</button></div>
+<p class="lab-hint">スキップ（足さない）も同じ画面の選択肢にできます。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>デッキ枚数</span><strong data-lab-deck>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">PICK ONE</p><div class="formula-lines"><code>show candidates[]</code><span>つぎに</span><code>deck = append(deck, choice)</code></div><p>候補と所持デッキは別配列です。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>選択番号を境界チェックする</h3><p>入力が候補の範囲内にあるときだけ追加し、報酬画面を閉じて次のステージへ進めます。</p></div><pre><code>if choice &gt;= 0 &amp;&amp; choice &lt; len(rewards) {
     chosen := rewards[choice]
     deck = append(deck, chosen)
     stage++
@@ -27,6 +39,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

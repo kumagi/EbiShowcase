@@ -1,4 +1,30 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Define One Creature | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/monster-collection/species-data/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Creature Collection RPG</a><span>STEP 01 / 07</span></div><section class="overview-hero"><p class="eyebrow">Build a collect-and-train battle game</p><h1>Define One Creature</h1><p>Separate species definitions from each creature's HP and experience.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Species data and instance state</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../move-battle/">STEP 02 →<strong>Choose-a-move Battle</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Define One Creature | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/monster-collection/species-data/">日本語</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← Creature Collection RPG</a><span>STEP 01 / 07</span></div>
+<section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Define One Creature</h1><p>Share species name, maximum HP, and attack while each individual changes its own HP and experience.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Immutable species definitions and mutable instance state</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Train same-species twins to 9 XP within eight actions.</h2></div><p>Tap a card or press 1/2 to select an individual, then tap TRAIN or REST. Keyboard uses T/Space and R/H. Low-HP BUBBLE will faint without rest.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Species and instance twin training" src="../../../../play/species-data/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DEFINITION VS STATE</p><h2>Separate what the guidebook says once from what each creature remembers.</h2><p class="lesson-lead">Just as <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> changed numbers and rendered them, Update changes instance HP and XP here. But the REEFLET species name and maximum HP match for every member. Separate shared <strong>definitions</strong> from changing <strong>state</strong>.</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>Species is a read-only table</h3><p>The species table stores name, maximum HP, attack, and color once. Training never changes its maximum HP of 10.</p><code>speciesTable[0] = Species{"REEFLET", 10, 3}</code></article><article><span class="concept-number">2</span><h3>Instances point with an ID</h3><p>AQUA and BUBBLE both store <code>speciesID: 0</code> and read one definition. The name is not copied, so there is one place to fix it.</p><code>Creature{nickname: "AQUA", speciesID: 0}</code></article><article><span class="concept-number">3</span><h3>Store HP and XP per individual</h3><p>Current HP and experience change during an adventure, so they belong to each creature. Same-species A can start at HP10 while B starts at HP6.</p><code>creature.hp -= 2; creature.xp += 3</code></article></div>
+<div class="motion-lab" data-lab="species-inst" data-maxhp="8" data-spawned="spawned" data-hit="hit" data-none="none" aria-labelledby="lab-title-species-data">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / DEF vs INST</p>
+<h3 id="lab-title-species-data">Spawn instances from a species def</h3>
+<p>Species data stays constant (maxHP…). Instances reference it but keep their own HP. Spawn adds instances; hit damages only them.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spawn>Spawn</button><button type="button" class="lab-button" data-lab-hit>Hit first</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Clear</button></div>
+<p class="lab-hint">Dex = definitions; party = instances.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>instances</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">DEF ≠ STATE</p><div class="formula-lines"><code>Species.MaxHP</code><span>then</span><code>Instance.HP</code></div><p>Mutating the def corrupts every instance.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Read only the healing cap from species</h3><p>Only the selected creature's <code>hp</code> changes. Its cap comes from the shared table through <code>speciesID</code>.</p></div><pre><code>c := &amp;creatures[selected]
+definition := speciesTable[c.speciesID]
+
+// Change only this instance's state.
+c.hp = min(definition.maxHP, c.hp+3)
+c.xp += 3</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY SHARE?</p><h3>Do not copy identical facts</h3><p>Change one species row instead of fixing the same name and base stats on 100 creatures.</p></article><article><p class="eyebrow">WHY INSTANCES?</p><h3>Remember different journeys</h3><p>Members of one species can separately keep damage, experience, and nicknames.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Add individual personality</h3><p>Add a per-instance <code>mood</code> that changes rest recovery even within one species.</p></article></div>
+</section><nav class="lesson-pager"><span></span><a href="../move-battle/">STEP 02 →<strong>Choose-a-move Battle</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -31,28 +57,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

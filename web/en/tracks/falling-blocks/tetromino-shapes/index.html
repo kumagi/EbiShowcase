@@ -7,8 +7,19 @@
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RELATIVE COORDINATES</p><h2>A shape can move as “one origin plus four offsets.”</h2><p class="lesson-lead">Moving four screen positions separately could pull the cells apart. Instead give the piece one origin <code>(x, y)</code>. Each cell remembers only its <strong>offset</strong> from that origin. Move the origin one cell and all four move together.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Write a shape as data</h3><p>An O stores the origin, right, down, and down-right positions. Because these are numbers rather than a picture, every shape can share drawing and collision code.</p><code>{{0,0}, {1,0}, {0,1}, {1,1}}</code></article><article><span class="concept-number">2</span><h3>Add the origin</h3><p>A board cell is <code>x + offset.x</code>. To move left, decrease only the piece's origin x by one.</p><code>cellX := piece.x + offset.x</code></article><article><span class="concept-number">3</span><h3>Check all four cells</h3><p>If even one cell would leave the board, reject the move. Change the origin only after everyone fits.</p><code>for _, p := range shape.blocks { check(x+p.x) }</code></article></div>
-<div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / OFFSET LIST</p><h3>Collect cells into one shape</h3><p>Add offsets, then inspect them one at a time. The game reads four offsets in the same way and adds one shared origin.</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>Add offset</button><button class="lab-button" data-lab-step>Check one</button><button class="lab-button lab-button-quiet" data-lab-reset>Empty list</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Offsets left</span><strong data-lab-count>0</strong></div><div><span>Read order</span><strong data-lab-list>—</strong></div></div></div></div>
-<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Draw and collision read the same array</h3><p>One source of shape data keeps the visible blocks and collision blocks in agreement. A new shape needs only four new coordinates.</p></div><pre><code>type Shape struct {
+<div class="motion-lab" data-lab="shape-cells" data-rotated="rotated" aria-labelledby="lab-title-tetromino-shapes">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / SHAPE DATA</p>
+<h3 id="lab-title-tetromino-shapes">Rotate four relative cells</h3>
+<p>A piece is a list of cells relative to an origin. Swap shapes, then rotate with (x,y)→(-y,x). Names/colors are data; rotation is shared math.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>Next shape</button><button type="button" class="lab-button" data-lab-rot>Rotate 90°</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<p class="lab-hint">O looking unchanged after rotate is correct.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>shape</span><strong data-lab-name>—</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">RELATIVE CELLS</p><div class="formula-lines"><code>cells = shape[rot]</code><span>then</span><code>world = origin + cell</code></div><p>Absolute-only shapes make rotation miserable.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Draw and collision read the same array</h3><p>One source of shape data keeps the visible blocks and collision blocks in agreement. A new shape needs only four new coordinates.</p></div><pre><code>type Shape struct {
     blocks [4]Point
 }
 
@@ -42,6 +53,19 @@ for _, offset := range shape.blocks {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

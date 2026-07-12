@@ -1,4 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>時限爆弾を置く | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/bomb-maze/timed-bomb/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 爆弾迷路アクション</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">ボンバーマン型の爆風ゲームを作る</p><h1>時限爆弾を置く</h1><p>立っているマスへ爆弾を置き、一定時間後に状態を爆発へ変えます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>設置制限とタイマー</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>データの変化を見て、<br>ルールを組み立てる。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで発見する</h3><p>完成したミニゲームから、入力と結果の関係を見つけます。</p></article><article><b>02</b><h3>内部データを見る</h3><p>マス、状態、探索候補を画面に重ね、処理の途中を見えるようにします。</p></article><article><b>03</b><h3>コードへつなぐ</h3><p>同じルールをEbitengineのUpdateとDraw、アセットデータで再構成します。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../cross-blast/">STEP 02 →<strong>十字に伸びる爆風</strong></a></nav>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>時限爆弾を置く | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/bomb-maze/timed-bomb/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 爆弾迷路アクション</a><span>STEP 01 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">床に置いたものが時間で変わる</p><h1>時限爆弾を置く</h1><p>爆弾は「場所」と「残り時間」を持つゲームデータです。毎フレーム数を減らし、0になったら爆発状態へ切り替えます。</p><div class="lesson-meta"><span>★★☆☆☆</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>印のマスを5つ爆破しよう</h2><p>矢印／WASDで移動、Spaceで設置。クリックとタッチは画面下のボタンを使います。置いたら同じマスから逃げましょう。</p></div><div class="game-frame"><iframe src="../../../../play/timed-bomb/" title="時限爆弾を置くゲーム"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>爆弾を「待つ → 爆発」の状態機械にする</h2><p>見た目だけの丸ではなく、座標・タイマー・状態をひとまとめにします。</p><div class="concept-row"><article><b>01</b><h3>置けるか調べる</h3><p>同じマスに爆弾がなければ、プレイヤーの座標で追加します。</p></article><article><b>02</b><h3>毎回1ずつ減らす</h3><p><code>Update</code>で全爆弾のタイマーを進めます。</p></article><article><b>03</b><h3>0で状態を変える</h3><p>爆発中だけ当たり判定を有効にし、短時間後に削除します。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">TIMER LAB</p><h2>爆弾の一生を進める</h2><p>設置、待機、爆発、削除の順番を確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">設置から開始</p><button type="button" class="lab-action">次の状態へ</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>タイマーと状態を更新する</h2><p>残り時間が0になった瞬間だけ状態を切り替えます。</p></div><pre><code>for i := range bombs {
+    bombs[i].timer--
+    if !bombs[i].blasting &amp;&amp; bombs[i].timer &lt;= 0 {
+        bombs[i].blasting = true
+        bombs[i].timer = blastLife
+    }
+}</code></pre></section><section class="why-grid"><article><h3>なぜ配列にする？</h3><p>複数の爆弾が別々の場所と時間を持てるからです。</p></article><article><h3>設置制限が必要な理由</h3><p>同じマスの重複を防ぎ、描画と当たり判定を分かりやすくします。</p></article><article><h3>チャレンジ</h3><p>同時に置ける数を2個に増やし、起爆時刻の違いを観察しよう。</p></article></section><nav class="lesson-pager"><span></span><a href="../cross-blast/">STEP 02 →<strong>十字に伸びる爆風</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -24,35 +30,4 @@
     </section>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

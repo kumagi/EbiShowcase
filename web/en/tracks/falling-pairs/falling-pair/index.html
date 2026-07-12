@@ -1,4 +1,15 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Drop a Pair | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/falling-pairs/falling-pair/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Falling-pair Chain Puzzle</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Puyo Puyo-style chain puzzle</p><h1>Drop a Pair</h1><p>Drop a pivot piece and a child attached at a relative position.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Pivot and child positions</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../pair-rotation/">STEP 02 →<strong>Rotate the Pair</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Drop a Pair | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/falling-pairs/falling-pair/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Falling-pair Chain Puzzle</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Drop a Pair</h1><p>Move a pivot P and child C one cell above it as a pair, then lock both cells when they land.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Pivot, relative position, and landing</strong></div></section><p class="curriculum-bridge">This continues the shared foundation. If the frame loop is new, begin with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>. Here Update changes pivot coordinates and a fall timer, while Draw places the pivot and child in their current cells.</p><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Lock ten pairs without blocking the entrance.</h2></div><p>Choose a column with LEFT/RIGHT, step with DOWN, or use DROP. Keyboard: ←→↓, A/D/S, and Space. Mouse and touch work too.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Drop a Pair" src="../../../../play/falling-pair/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / PIVOT AND CHILD</p><h2>Do not move two cells separately; derive the child from the pivot.</h2><p class="lesson-lead">The falling state stores pivot x and y. The child is always <strong>child = pivot + (0,-1)</strong>. For sideways input or falling, test both cells at the candidate pivot position.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Build two cells from one pivot</h3><p>The pivot is (pivotX, pivotY); its child is (pivotX, pivotY-1). Their distance remains exactly one cell.</p><code>childX, childY := pivotX, pivotY-1</code></article><article><span class="concept-number">2</span><h3>Test the next position first</h3><p>For sideways movement and natural fall, blocked checks whether both candidate cells are inside and empty. Update only on success.</p><code>if !blocked(x+dx, y+dy) { x += dx; y += dy }</code></article><article><span class="concept-number">3</span><h3>Lock when downward motion fails</h3><p>If the next row is blocked, write pivot and child colors into two board cells, then spawn a fresh pair at the entrance.</p><code>board[y][x] = pivot; board[y-1][x] = child</code></article></div><div class="motion-lab" data-lab="carry" data-dir="1" aria-labelledby="pair-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / MOVE TOGETHER</p><h3 id="pair-lab-title">Give the pivot's movement to its child</h3><p>Advance the pivot. While attached, the child receives the same delta, preserving the relative offset.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>Move pivot one cell</button><button type="button" class="lab-button" data-lab-toggle>Attach / detach</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div></div><div class="lab-visual"><div class="lab-board" role="img" aria-label="Model passing pivot delta to a child"><div class="lab-mono-board">child += pivot - oldPivot</div></div><div class="lab-values"><div><span>Pivot</span><strong data-lab-plat>100</strong></div><div><span>Child</span><strong data-lab-player>120</strong></div><div><span>Movement delta</span><strong data-lab-delta>0</strong></div></div></div></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Use the same move for gravity and input</h3><p>When Update's timer reaches 40 and when DOWN is pressed, both call move(0,1). Failure locks at the current position.</p></div><pre><code>func (g *game) move(dx, dy int) bool {
+    if g.blocked(g.x+dx, g.y+dy) {
+        return false
+    }
+    g.x += dx
+    g.y += dy
+    return true
+}
+
+if !g.move(0, 1) {
+    g.lockPair()
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY RELATIVE?</p><h3>The pair cannot tear apart</h3><p>Updating one stored position prevents the bug where only one of two cells moves.</p></article><article><p class="eyebrow">WHY CHECK BOTH?</p><h3>The child cannot pass through walls</h3><p>An empty pivot cell is not enough if the child overlaps. The whole pair is one candidate.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Attach the child on the right</h3><p>Change the offset to (1,0), then reshape blocked and Draw so both still share the calculation.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../pair-rotation/">STEP 02 →<strong>Rotate the Pair</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -28,31 +39,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

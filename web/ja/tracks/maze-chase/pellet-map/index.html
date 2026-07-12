@@ -1,4 +1,33 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>ドットを食べる迷路 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/maze-chase/pellet-map/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 迷路追跡ゲーム</a><span>STEP 03 / 06</span></div><section class="overview-hero"><p class="eyebrow">パックマン型の追いかけっこを作る</p><h1>ドットを食べる迷路</h1><p>マップ上のドットを個別に管理し、残りが0ならステージクリアにします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>収集状態とクリア判定</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>データの変化を見て、<br>ルールを組み立てる。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで発見する</h3><p>完成したミニゲームから、入力と結果の関係を見つけます。</p></article><article><b>02</b><h3>内部データを見る</h3><p>マス、状態、探索候補を画面に重ね、処理の途中を見えるようにします。</p></article><article><b>03</b><h3>コードへつなぐ</h3><p>同じルールをEbitengineのUpdateとDraw、アセットデータで再構成します。</p></article></div></section><nav class="lesson-pager"><a href="../buffered-turn/">← STEP 02<strong>曲がり角の先行入力</strong></a><a href="../patrol-chase/">STEP 04 →<strong>巡回と追跡</strong></a></nav>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>ドットを食べる迷路 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/maze-chase/pellet-map/">EN</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← 迷路追跡ゲーム</a><span>STEP 03 / 06</span></div>
+<section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>ドットを食べる迷路</h1><p>文字マップから固定の壁と変化するドットを別配列へ作り、取得のたびに状態と残数を更新します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>固定レイヤー・収集状態・残数によるクリア</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>赤い追跡役を避け、60秒以内に全ドットを集めよう。</h2></div><p>LEFT/UP/DOWN/RIGHTを長押し。PCでは矢印またはWASD、マウスでもボタンを長押しできます。残数0でクリア、敵と同じマスまたは時間切れで失敗です。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="壁とドットを別レイヤーで持つ迷路ゲーム" src="../../../../play/pellet-map/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / STATIC AND MUTABLE LAYERS</p><h2>同じマスにある「通れるか」と「まだあるか」を分ける。</h2><p class="lesson-lead">迷路の壁はプレイ中に変わりませんが、ドットは取るたびに消えます。両方を一つの文字へ押し込む代わりに、<code>walls</code>と<code>pellets</code>という2枚の同じ大きさの表を重ねます。位置は同じ<code>[y][x]</code>でも、固定データと<strong>可変状態</strong>の役目が違います。</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>文字列を2レイヤーへ読む</h3><p><code>#</code>ならwallsをtrue、<code>.</code>ならpelletsをtrueにします。Drawは壁を先に、その上へ残っているドットだけを描きます。</p><code>walls[y][x] = tile == '#'; pellets[y][x] = tile == '.'</code></article><article><span class="concept-number">2</span><h3>取得はドットだけを書き換える</h3><p>プレイヤーが新しいタイルへ入った時、pelletsがtrueならfalseへ変えます。同じ場所をもう一度通っても得点は増えません。</p><code>if pellets[y][x] { pellets[y][x] = false }</code></article><article><span class="concept-number">3</span><h3>残数を同時に1減らす</h3><p>毎フレーム盤面全部を数え直さず、取得成功と同じ場所でremainingを減らします。0になった瞬間がステージクリアです。</p><code>remaining--; if remaining == 0 { clear = true }</code></article></div>
+<div class="motion-lab" data-lab="pellet-count" data-ate="取得" data-clear="全消し！" aria-labelledby="lab-title-pellet-map">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / PELLET LAYER</p>
+<h3 id="lab-title-pellet-map">残ドットを1個ずつ消そう</h3>
+<p>ドットは迷路と別レイヤーの bool 配列です。通ったら false にし、残り0でクリア。壁データは変えません。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-eat>1個取る</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>配置を戻す</button></div>
+<p class="lab-hint">初期配置だけマップデータ、実行中の残りは状態です。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>残り</span><strong data-lab-left>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">LAYER STATE</p><div class="formula-lines"><code>if pellet[y][x] { eat; left-- }</code><span>つぎに</span><code>clear if left == 0</code></div><p>迷路文字を直接書き換えて消さない。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>成功した取得を一つの関数にまとめる</h3><p>初期位置や敵位置のドットを消す時も同じ関数を使います。すでにfalseなら何もしないため、残数が二重に減りません。</p></div><pre><code>func (g *Game) removePellet(p Point) {
+    if g.pellets[p.y][p.x] {
+        g.pellets[p.y][p.x] = false
+        g.remaining--
+    }
+}
+
+removePellet(player)
+if remaining == 0 { clear = true }</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY TWO LAYERS?</p><h3>壁を壊さず収集できる</h3><p>ドットをfalseにしてもwallsはそのままなので、通路判定が収集状態に影響されません。</p></article><article><p class="eyebrow">WHY A COUNTER?</p><h3>クリア判定が一定時間</h3><p>マップが大きくなっても、remainingが0かを見るだけなら1回の比較です。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>大ドットを追加</h3><p>boolを小・大・空の数値へ変え、取得した種類で得点を変えてみよう。</p></article></div>
+</section><nav class="lesson-pager"><a href="../buffered-turn/">← STEP 02<strong>曲がり角の先行入力</strong></a><a href="../patrol-chase/">STEP 04 →<strong>巡回と追跡</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -26,33 +55,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

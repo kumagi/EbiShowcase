@@ -19,8 +19,19 @@
       <article><span class="concept-number">2</span><h3>Check intersections first</h3><p>If both directions reach three, the pieces form a bent L or T. Test this before a line of four or you may mistake the bend for a plain line.</p><code>if horizontal &gt;= 3 &amp;&amp; vertical &gt;= 3</code></article>
       <article><span class="concept-number">3</span><h3>Collect an effect set</h3><p>Add a whole row, one color, or a 3-by-3 area to a map. A cell reached twice still appears only once.</p><code>affected[point{x, y}] = true</code></article>
     </div>
-    <div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / EFFECT SET</p><h3>Collect cells touched by an effect</h3><p>Add candidate cells, then process them one at a time. Even overlapping effects become one set of cells to resolve.</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>Add cell</button><button class="lab-button" data-lab-step>Process one</button><button class="lab-button lab-button-quiet" data-lab-reset>Empty set</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Cells left</span><strong data-lab-count>0</strong></div><div><span>Processing order</span><strong data-lab-list>—</strong></div></div></div></div>
-    <div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Separate detection from effects</h3><p><code>detectSpecial</code> says what was made. <code>activate</code> reads that kind and decides where it reaches. Avoid hiding both jobs in one long conditional.</p></div><pre><code>kind, center, ok := detectSpecial(board)
+    <div class="motion-lab" data-lab="match-scan" data-found="marked effect cells" data-none="none" data-cleared="batch cleared" aria-labelledby="lab-title-special-pieces">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / MARK SPECIALS</p>
+<h3 id="lab-title-special-pieces">Build the clear-set first</h3>
+<p>Specials still start as a set of cells to clear. Scan marks the set; then one clear pass handles bombs and lines alike.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan>Collect affected cells</button><button type="button" class="lab-button" data-lab-clear>Clear the set</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<p class="lab-hint">Different FX, one clear pipeline keeps edge cases tame.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>targets</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">SET THEN CLEAR</p><div class="formula-lines"><code>add cells to a Set</code><span>then</span><code>clear the whole Set</code></div><p>New specials only change how the Set is filled.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Separate detection from effects</h3><p><code>detectSpecial</code> says what was made. <code>activate</code> reads that kind and decides where it reaches. Avoid hiding both jobs in one long conditional.</p></div><pre><code>kind, center, ok := detectSpecial(board)
 if ok {
     special.kind = kind
     special.pos = center
@@ -59,6 +70,19 @@ for p := range effectCells(special) {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

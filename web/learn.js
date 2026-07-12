@@ -1734,3 +1734,955 @@ document.querySelectorAll(".full-code").forEach((block) => {
     }, 1600);
   });
 });
+
+/* --- Concept labs for thin track articles (enrichment) --- */
+
+document.querySelectorAll(".motion-lab[data-lab='drop-timer']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const timerOut = bind(lab, "[data-lab-timer]");
+  const yOut = bind(lab, "[data-lab-y]");
+  const note = bind(lab, "[data-lab-note]");
+  if (!board || !timerOut) return;
+  const need = Number(lab.dataset.need || 8);
+  const rows = 8;
+  let timer = 0;
+  let y = 0;
+  let locked = Array.from({ length: rows }, () => false);
+  const render = () => {
+    setText(timerOut, `${timer}/${need}`);
+    if (yOut) setText(yOut, String(y));
+    const fill = Math.min(100, (timer / need) * 100);
+    board.innerHTML = `<div class="lab-drop-bar"><i style="width:${fill}%"></i></div><div class="lab-drop-grid">${locked.map((on, i) => {
+      const cls = on ? "locked" : i === y ? "active" : "";
+      return `<span class="${cls}"></span>`;
+    }).join("")}</div>`;
+  };
+  bind(lab, "[data-lab-step]")?.addEventListener("click", () => {
+    timer += 1;
+    if (timer >= need) {
+      timer = 0;
+      if (y + 1 >= rows || locked[y + 1]) {
+        locked[y] = true;
+        setText(note, lab.dataset.lock || "LOCK");
+        y = 0;
+        if (locked[0]) setText(note, lab.dataset.top || "TOP BLOCKED");
+      } else {
+        y += 1;
+        setText(note, lab.dataset.drop || "DROP");
+      }
+    } else {
+      setText(note, lab.dataset.wait || "wait…");
+    }
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    timer = 0; y = 0; locked = Array.from({ length: rows }, () => false);
+    setText(note, "—");
+    render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='card-play']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const energyOut = bind(lab, "[data-lab-energy]");
+  const hpOut = bind(lab, "[data-lab-hp]");
+  const enemyOut = bind(lab, "[data-lab-enemy]");
+  const note = bind(lab, "[data-lab-note]");
+  if (!energyOut || !enemyOut) return;
+  let energy = 3, hp = 40, enemy = 60, block = 0;
+  const cards = [
+    { id: "damage", cost: 2, value: 12 },
+    { id: "block", cost: 1, value: 8 },
+    { id: "heal", cost: 2, value: 10 },
+  ];
+  const render = () => {
+    setText(energyOut, String(energy));
+    if (hpOut) setText(hpOut, String(hp));
+    setText(enemyOut, String(enemy));
+    if (board) {
+      board.innerHTML = `<div class="lab-card-stage"><div class="lab-card-you"><b>YOU</b><span>HP ${hp}</span><span>BLK ${block}</span></div><div class="lab-card-foe"><b>FOE</b><span>HP ${enemy}</span></div></div><div class="lab-card-energy">⚡ ${energy}</div>`;
+    }
+  };
+  const play = (kind) => {
+    const c = cards.find((x) => x.id === kind);
+    if (!c) return;
+    if (energy < c.cost) {
+      setText(note, lab.dataset.poor || "not enough energy");
+      return;
+    }
+    energy -= c.cost;
+    if (kind === "damage") { enemy = Math.max(0, enemy - c.value); setText(note, `-${c.value} HP`); }
+    if (kind === "block") { block += c.value; setText(note, `+${c.value} block`); }
+    if (kind === "heal") { hp = Math.min(40, hp + c.value); setText(note, `+heal`); }
+    render();
+  };
+  lab.querySelectorAll("[data-lab-card]").forEach((btn) => {
+    btn.addEventListener("click", () => play(btn.dataset.labCard));
+  });
+  bind(lab, "[data-lab-end]")?.addEventListener("click", () => {
+    const hit = Math.max(0, 7 - block);
+    hp = Math.max(0, hp - hit);
+    block = 0;
+    energy = 3;
+    setText(note, lab.dataset.enemy || `enemy hits ${hit}`);
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    energy = 3; hp = 40; enemy = 60; block = 0; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='energy-turn']").forEach((lab) => {
+  const energyOut = bind(lab, "[data-lab-energy]");
+  const turnOut = bind(lab, "[data-lab-turn]");
+  const spentOut = bind(lab, "[data-lab-spent]");
+  const board = lab.querySelector("[data-lab-board]");
+  const note = bind(lab, "[data-lab-note]");
+  if (!energyOut || !turnOut) return;
+  const max = Number(lab.dataset.max || 3);
+  let energy = max, turn = 1, spent = 0;
+  const render = () => {
+    setText(energyOut, `${energy}/${max}`);
+    setText(turnOut, String(turn));
+    if (spentOut) setText(spentOut, String(spent));
+    if (board) {
+      board.innerHTML = `<div class="lab-energy-pips">${Array.from({ length: max }, (_, i) =>
+        `<span class="${i < energy ? "on" : ""}"></span>`).join("")}</div><p class="lab-energy-label">turn ${turn}</p>`;
+    }
+  };
+  bind(lab, "[data-lab-spend]")?.addEventListener("click", () => {
+    if (energy <= 0) { setText(note, lab.dataset.empty || "0 energy"); return; }
+    energy -= 1; spent += 1;
+    setText(note, lab.dataset.spend || "played 1 cost");
+    render();
+  });
+  bind(lab, "[data-lab-end]")?.addEventListener("click", () => {
+    turn += 1; energy = max; spent = 0;
+    setText(note, lab.dataset.refill || "energy refilled");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    energy = max; turn = 1; spent = 0; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='merge-same']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const tierOut = bind(lab, "[data-lab-tier]");
+  const note = bind(lab, "[data-lab-note]");
+  if (!board) return;
+  let left = 1, right = 1;
+  const render = () => {
+    if (tierOut) setText(tierOut, `${left} + ${right}`);
+    board.innerHTML = `<div class="lab-merge-stage"><span class="lab-fruit t${left}" style="--s:${16 + left * 8}px">T${left}</span><span class="lab-merge-plus">+</span><span class="lab-fruit t${right}" style="--s:${16 + right * 8}px">T${right}</span></div>`;
+  };
+  bind(lab, "[data-lab-bump-left]")?.addEventListener("click", () => { left = Math.min(5, left + 1); render(); });
+  bind(lab, "[data-lab-bump-right]")?.addEventListener("click", () => { right = Math.min(5, right + 1); render(); });
+  bind(lab, "[data-lab-merge]")?.addEventListener("click", () => {
+    if (left !== right) { setText(note, lab.dataset.mismatch || "tiers differ — no merge"); return; }
+    const next = Math.min(6, left + 1);
+    setText(note, (lab.dataset.merge || "merged → T{n}").replace("{n}", String(next)));
+    left = next; right = Math.max(1, next - 1);
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => { left = 1; right = 1; setText(note, "—"); render(); });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='match-scan']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const countOut = bind(lab, "[data-lab-count]");
+  const note = bind(lab, "[data-lab-note]");
+  if (!board) return;
+  // 5x5 simple grid of colors 0-3
+  let grid = [
+    [0, 0, 0, 1, 2],
+    [1, 2, 1, 1, 1],
+    [2, 2, 3, 0, 0],
+    [3, 1, 1, 1, 2],
+    [0, 0, 2, 2, 2],
+  ];
+  let marks = new Set();
+  const key = (x, y) => `${x},${y}`;
+  const scan = () => {
+    marks = new Set();
+    const h = grid.length, w = grid[0].length;
+    for (let y = 0; y < h; y++) {
+      let x = 0;
+      while (x < w) {
+        let n = 1;
+        while (x + n < w && grid[y][x + n] === grid[y][x]) n++;
+        if (n >= 3) for (let i = 0; i < n; i++) marks.add(key(x + i, y));
+        x += n;
+      }
+    }
+    for (let x = 0; x < w; x++) {
+      let y = 0;
+      while (y < h) {
+        let n = 1;
+        while (y + n < h && grid[y + n][x] === grid[y][x]) n++;
+        if (n >= 3) for (let i = 0; i < n; i++) marks.add(key(x, y + i));
+        y += n;
+      }
+    }
+  };
+  const render = () => {
+    if (countOut) setText(countOut, String(marks.size));
+    board.innerHTML = `<div class="lab-match-grid">${grid.map((row, y) => row.map((c, x) =>
+      `<span class="c${c}${marks.has(key(x, y)) ? " hit" : ""}"></span>`).join("")).join("")}</div>`;
+  };
+  bind(lab, "[data-lab-scan]")?.addEventListener("click", () => {
+    scan();
+    setText(note, marks.size ? (lab.dataset.found || "match found") : (lab.dataset.none || "no match"));
+    render();
+  });
+  bind(lab, "[data-lab-clear]")?.addEventListener("click", () => {
+    if (!marks.size) scan();
+    if (!marks.size) { setText(note, lab.dataset.none || "no match"); render(); return; }
+    for (const k of marks) {
+      const [x, y] = k.split(",").map(Number);
+      grid[y][x] = -1;
+    }
+    // gravity
+    for (let x = 0; x < 5; x++) {
+      const col = [];
+      for (let y = 4; y >= 0; y--) if (grid[y][x] >= 0) col.push(grid[y][x]);
+      for (let y = 4; y >= 0; y--) grid[y][x] = col[4 - y] ?? Math.floor(Math.random() * 4);
+    }
+    marks = new Set();
+    setText(note, lab.dataset.cleared || "cleared + gravity");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    grid = [
+      [0, 0, 0, 1, 2],
+      [1, 2, 1, 1, 1],
+      [2, 2, 3, 0, 0],
+      [3, 1, 1, 1, 2],
+      [0, 0, 2, 2, 2],
+    ];
+    marks = new Set();
+    setText(note, "—");
+    render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='line-clear']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const clearedOut = bind(lab, "[data-lab-cleared]");
+  const note = bind(lab, "[data-lab-note]");
+  if (!board) return;
+  let rows = [
+    [1, 1, 1, 1, 1, 1],
+    [0, 1, 1, 0, 1, 0],
+    [1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 1, 0, 1],
+  ];
+  let cleared = 0;
+  const render = () => {
+    if (clearedOut) setText(clearedOut, String(cleared));
+    board.innerHTML = `<div class="lab-line-grid">${rows.map((row) => {
+      const full = row.every(Boolean);
+      return `<div class="lab-line-row${full ? " full" : ""}">${row.map((c) => `<span class="${c ? "on" : ""}"></span>`).join("")}</div>`;
+    }).join("")}</div>`;
+  };
+  bind(lab, "[data-lab-clear]")?.addEventListener("click", () => {
+    const keep = [];
+    let n = 0;
+    for (const row of rows) {
+      if (row.every(Boolean)) n += 1;
+      else keep.push(row);
+    }
+    while (keep.length < rows.length) keep.unshift(Array(6).fill(0));
+    rows = keep;
+    cleared += n;
+    setText(note, n ? (lab.dataset.cleared || `cleared ${n}`) : (lab.dataset.none || "no full rows"));
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    rows = [
+      [1, 1, 1, 1, 1, 1],
+      [0, 1, 1, 0, 1, 0],
+      [1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 1, 0, 1],
+    ];
+    cleared = 0; setText(note, "—"); render();
+  });
+  render();
+});
+
+// Enhance plain tile labs with a mini board when [data-lab-board] is present.
+document.querySelectorAll(".motion-lab[data-lab='tile']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  if (!board || board.dataset.enhanced) return;
+  board.dataset.enhanced = "1";
+  const posOut = bind(lab, "[data-lab-pos]");
+  const paint = () => {
+    const raw = posOut?.textContent || "1,1";
+    const [px, py] = raw.split(",").map(Number);
+    const cells = [];
+    for (let y = 0; y < 3; y++) for (let x = 0; x < 3; x++) {
+      const wall = x === 2 && y === 1;
+      const here = x === px && y === py;
+      cells.push(`<span class="${wall ? "wall" : here ? "you" : "path"}"></span>`);
+    }
+    board.innerHTML = `<div class="lab-tile-grid">${cells.join("")}</div>`;
+  };
+  const mo = new MutationObserver(paint);
+  if (posOut) mo.observe(posOut, { childList: true, characterData: true, subtree: true });
+  paint();
+});
+
+/* --- Wipe entities: concept-specific replacements --- */
+
+document.querySelectorAll(".motion-lab[data-lab='bullets']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const countOut = bind(lab, "[data-lab-count]");
+  const note = bind(lab, "[data-lab-note]");
+  if (!countOut) return;
+  let shots = [];
+  let id = 1;
+  const render = () => {
+    setText(countOut, String(shots.length));
+    if (board) {
+      board.innerHTML = `<div class="lab-bullets-stage"><span class="lab-bullets-ship"></span>${shots.map((s) =>
+        `<span class="lab-bullet" style="bottom:${12 + (400 - s.y) * 0.55}%"></span>`).join("")}</div>`;
+    }
+  };
+  bind(lab, "[data-lab-fire]")?.addEventListener("click", () => {
+    shots.push({ id: id++, y: 400 });
+    setText(note, lab.dataset.fire || "pew");
+    render();
+  });
+  bind(lab, "[data-lab-step]")?.addEventListener("click", () => {
+    shots = shots.map((s) => ({ ...s, y: s.y - 50 })).filter((s) => s.y > 0);
+    setText(note, lab.dataset.step || "fly");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    shots = []; id = 1; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='preview-next']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const nextOut = bind(lab, "[data-lab-next]");
+  const note = bind(lab, "[data-lab-note]");
+  let queue = [1, 2, 1];
+  const render = () => {
+    if (nextOut) setText(nextOut, queue[0] ? `T${queue[0]}` : "—");
+    if (board) {
+      board.innerHTML = `<div class="lab-preview-row">${queue.map((t, i) =>
+        `<span class="lab-fruit t${t}${i === 0 ? " next" : ""}" style="--s:${20 + t * 6}px">T${t}</span>`).join("")}</div>`;
+    }
+  };
+  bind(lab, "[data-lab-enqueue]")?.addEventListener("click", () => {
+    queue.push(1 + Math.floor(Math.random() * 3));
+    if (queue.length > 5) queue = queue.slice(-5);
+    setText(note, lab.dataset.enqueued || "queued");
+    render();
+  });
+  bind(lab, "[data-lab-drop]")?.addEventListener("click", () => {
+    if (!queue.length) { setText(note, lab.dataset.empty || "empty"); return; }
+    const t = queue.shift();
+    setText(note, (lab.dataset.dropped || "drop T{n}").replace("{n}", String(t)));
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    queue = [1, 2, 1]; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='status-ticks']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const countOut = bind(lab, "[data-lab-count]");
+  const note = bind(lab, "[data-lab-note]");
+  let effects = [];
+  const render = () => {
+    if (countOut) setText(countOut, String(effects.length));
+    if (board) {
+      board.innerHTML = effects.length
+        ? `<div class="lab-status-row">${effects.map((e) =>
+          `<span class="lab-status-chip">${e.name}<b>${e.left}</b></span>`).join("")}</div>`
+        : `<p class="lab-empty">${lab.dataset.none || "no status"}</p>`;
+    }
+  };
+  bind(lab, "[data-lab-add]")?.addEventListener("click", () => {
+    effects.push({ name: lab.dataset.status || "POISON", left: 3 });
+    setText(note, lab.dataset.added || "applied");
+    render();
+  });
+  bind(lab, "[data-lab-tick]")?.addEventListener("click", () => {
+    effects = effects.map((e) => ({ ...e, left: e.left - 1 })).filter((e) => e.left > 0);
+    setText(note, lab.dataset.ticked || "turn passed");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    effects = []; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='deck-pick']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const deckOut = bind(lab, "[data-lab-deck]");
+  const note = bind(lab, "[data-lab-note]");
+  const pool = (lab.dataset.cards || "Strike,Guard,Heal").split(",");
+  let deck = ["Strike", "Strike", "Guard"];
+  const render = () => {
+    if (deckOut) setText(deckOut, String(deck.length));
+    if (board) {
+      board.innerHTML = `<div class="lab-deck-picks">${pool.map((c, i) =>
+        `<button type="button" class="lab-deck-card" data-pick="${i}">${c}</button>`).join("")}</div>
+        <p class="lab-deck-list">${deck.join(" · ")}</p>`;
+      board.querySelectorAll("[data-pick]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const card = pool[Number(btn.dataset.pick)];
+          deck.push(card);
+          setText(note, (lab.dataset.picked || "added {c}").replace("{c}", card));
+          render();
+        });
+      });
+    }
+  };
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    deck = ["Strike", "Strike", "Guard"]; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='map-nodes']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const pathOut = bind(lab, "[data-lab-path]");
+  const note = bind(lab, "[data-lab-note]");
+  let path = ["start"];
+  let node = "start";
+  const edges = { start: ["fight", "shop"], fight: ["elite", "rest"], shop: ["rest"], elite: ["boss"], rest: ["boss"], boss: [] };
+  const render = () => {
+    if (pathOut) setText(pathOut, path.join(" → "));
+    const next = edges[node] || [];
+    if (board) {
+      board.innerHTML = `<div class="lab-map-now">${node}</div><div class="lab-map-choices">${next.map((n) =>
+        `<button type="button" class="lab-button" data-goto="${n}">→ ${n}</button>`).join("") || `<span class="lab-empty">END</span>`}</div>`;
+      board.querySelectorAll("[data-goto]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          node = btn.dataset.goto;
+          path.push(node);
+          setText(note, node);
+          render();
+        });
+      });
+    }
+  };
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    path = ["start"]; node = "start"; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='stage-goals']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const movesOut = bind(lab, "[data-lab-moves]");
+  const scoreOut = bind(lab, "[data-lab-score]");
+  const note = bind(lab, "[data-lab-note]");
+  const goal = Number(lab.dataset.goal || 30);
+  const startMoves = Number(lab.dataset.moves || 10);
+  let moves = startMoves, score = 0;
+  const render = () => {
+    if (movesOut) setText(movesOut, String(moves));
+    if (scoreOut) setText(scoreOut, `${score}/${goal}`);
+    if (board) {
+      const pct = Math.min(100, (score / goal) * 100);
+      board.innerHTML = `<div class="lab-goal-bar"><i style="width:${pct}%"></i></div><p class="lab-goal-label">${score >= goal ? "CLEAR" : `${moves} moves left`}</p>`;
+    }
+  };
+  bind(lab, "[data-lab-match]")?.addEventListener("click", () => {
+    if (moves <= 0) { setText(note, lab.dataset.out || "no moves"); return; }
+    moves -= 1;
+    score += 8;
+    setText(note, score >= goal ? (lab.dataset.clear || "clear!") : (lab.dataset.hit || "+8"));
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    moves = startMoves; score = 0; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='shape-cells']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const nameOut = bind(lab, "[data-lab-name]");
+  const note = bind(lab, "[data-lab-note]");
+  const shapes = {
+    I: [[0, 1], [1, 1], [2, 1], [3, 1]],
+    O: [[1, 1], [2, 1], [1, 2], [2, 2]],
+    T: [[0, 1], [1, 1], [2, 1], [1, 2]],
+    L: [[1, 0], [1, 1], [1, 2], [2, 2]],
+  };
+  const names = Object.keys(shapes);
+  let idx = 0;
+  let rot = 0;
+  const cells = () => {
+    const base = shapes[names[idx]];
+    return base.map(([x, y]) => {
+      let nx = x - 1.5, ny = y - 1.5;
+      for (let r = 0; r < rot; r++) { const t = nx; nx = -ny; ny = t; }
+      return [Math.round(nx + 1.5), Math.round(ny + 1.5)];
+    });
+  };
+  const render = () => {
+    if (nameOut) setText(nameOut, `${names[idx]} r${rot}`);
+    const set = new Set(cells().map(([x, y]) => `${x},${y}`));
+    if (board) {
+      let html = '<div class="lab-shape-grid">';
+      for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) {
+        html += `<span class="${set.has(`${x},${y}`) ? "on" : ""}"></span>`;
+      }
+      html += "</div>";
+      board.innerHTML = html;
+    }
+  };
+  bind(lab, "[data-lab-next]")?.addEventListener("click", () => {
+    idx = (idx + 1) % names.length; rot = 0;
+    setText(note, names[idx]);
+    render();
+  });
+  bind(lab, "[data-lab-rot]")?.addEventListener("click", () => {
+    rot = (rot + 1) % 4;
+    setText(note, lab.dataset.rotated || "rotated");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    idx = 0; rot = 0; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='kick-try']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const tryOut = bind(lab, "[data-lab-try]");
+  const note = bind(lab, "[data-lab-note]");
+  const kicks = (lab.dataset.kicks || "0,0;1,0;-1,0;0,-1").split(";").map((s) => s.split(",").map(Number));
+  let i = 0;
+  let pos = [2, 2];
+  const wall = new Set(["3,2", "3,1"]);
+  const render = () => {
+    if (tryOut) setText(tryOut, `${i}/${kicks.length}`);
+    if (board) {
+      let html = '<div class="lab-kick-grid">';
+      for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) {
+        const k = `${x},${y}`;
+        const cls = wall.has(k) ? "wall" : (pos[0] === x && pos[1] === y) ? "you" : "";
+        html += `<span class="${cls}"></span>`;
+      }
+      html += "</div>";
+      board.innerHTML = html;
+    }
+  };
+  bind(lab, "[data-lab-kick]")?.addEventListener("click", () => {
+    if (i >= kicks.length) { setText(note, lab.dataset.fail || "all kicks failed"); return; }
+    const [dx, dy] = kicks[i];
+    const nx = 2 + dx, ny = 2 + dy;
+    i += 1;
+    if (wall.has(`${nx},${ny}`) || nx < 0 || ny < 0 || nx > 3 || ny > 3) {
+      setText(note, (lab.dataset.blocked || "kick ({dx},{dy}) blocked").replace("{dx}", dx).replace("{dy}", dy));
+    } else {
+      pos = [nx, ny];
+      setText(note, (lab.dataset.ok || "kick ({dx},{dy}) OK").replace("{dx}", dx).replace("{dy}", dy));
+      i = kicks.length;
+    }
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    i = 0; pos = [2, 2]; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='bag-draw']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const leftOut = bind(lab, "[data-lab-left]");
+  const note = bind(lab, "[data-lab-note]");
+  const refill = () => ["I", "O", "T", "L", "J", "S", "Z"];
+  let bag = refill();
+  let hold = "—";
+  const render = () => {
+    if (leftOut) setText(leftOut, String(bag.length));
+    if (board) {
+      board.innerHTML = `<div class="lab-bag-row">${bag.map((s) => `<span>${s}</span>`).join("")}</div>
+        <p class="lab-bag-hold">HOLD ${hold}</p>`;
+    }
+  };
+  bind(lab, "[data-lab-draw]")?.addEventListener("click", () => {
+    if (!bag.length) bag = refill();
+    const i = Math.floor(Math.random() * bag.length);
+    const piece = bag.splice(i, 1)[0];
+    setText(note, (lab.dataset.drew || "drew {p}").replace("{p}", piece));
+    render();
+  });
+  bind(lab, "[data-lab-hold]")?.addEventListener("click", () => {
+    if (!bag.length) bag = refill();
+    const i = Math.floor(Math.random() * bag.length);
+    const piece = bag.splice(i, 1)[0];
+    const prev = hold;
+    hold = piece;
+    if (prev !== "—") bag.push(prev);
+    setText(note, lab.dataset.held || "swapped hold");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    bag = refill(); hold = "—"; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='pipeline']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const stepOut = bind(lab, "[data-lab-stepn]");
+  const note = bind(lab, "[data-lab-note]");
+  const steps = (lab.dataset.steps || "input,update,draw").split(",");
+  let i = 0;
+  const render = () => {
+    if (stepOut) setText(stepOut, `${i}/${steps.length}`);
+    if (board) {
+      board.innerHTML = `<div class="lab-pipe-row">${steps.map((s, n) =>
+        `<span class="${n < i ? "done" : n === i ? "now" : ""}">${s}</span>`).join("<b>→</b>")}</div>`;
+    }
+  };
+  bind(lab, "[data-lab-next]")?.addEventListener("click", () => {
+    if (i >= steps.length) { i = 0; setText(note, lab.dataset.loop || "next frame"); }
+    else {
+      setText(note, steps[i]);
+      i += 1;
+    }
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    i = 0; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='event-queue']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const countOut = bind(lab, "[data-lab-count]");
+  const note = bind(lab, "[data-lab-note]");
+  let q = [];
+  let n = 1;
+  const render = () => {
+    if (countOut) setText(countOut, String(q.length));
+    if (board) {
+      board.innerHTML = q.length
+        ? `<div class="lab-event-row">${q.map((e) => `<span>${e}</span>`).join("")}</div>`
+        : `<p class="lab-empty">${lab.dataset.empty || "queue empty"}</p>`;
+    }
+  };
+  bind(lab, "[data-lab-push]")?.addEventListener("click", () => {
+    q.push(`${lab.dataset.event || "hit"}#${n++}`);
+    setText(note, lab.dataset.pushed || "queued");
+    render();
+  });
+  bind(lab, "[data-lab-pop]")?.addEventListener("click", () => {
+    if (!q.length) { setText(note, lab.dataset.empty || "empty"); return; }
+    const e = q.shift();
+    setText(note, (lab.dataset.popped || "resolve {e}").replace("{e}", e));
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    q = []; n = 1; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='height-layers']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const hOut = bind(lab, "[data-lab-h]");
+  const note = bind(lab, "[data-lab-note]");
+  let heights = [2, 3, 4, 3, 5, 4, 2];
+  const render = () => {
+    if (hOut) setText(hOut, heights.join(","));
+    if (board) {
+      board.innerHTML = `<div class="lab-height-row">${heights.map((h) =>
+        `<span style="height:${18 + h * 18}px"><i>${h}</i></span>`).join("")}</div>`;
+    }
+  };
+  bind(lab, "[data-lab-noise]")?.addEventListener("click", () => {
+    heights = heights.map(() => 1 + Math.floor(Math.random() * 5));
+    setText(note, lab.dataset.sampled || "sampled");
+    render();
+  });
+  bind(lab, "[data-lab-carve]")?.addEventListener("click", () => {
+    heights = heights.map((h) => Math.max(1, h - 1));
+    setText(note, lab.dataset.carved || "carved");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    heights = [2, 3, 4, 3, 5, 4, 2]; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='craft-recipe']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const invOut = bind(lab, "[data-lab-inv]");
+  const note = bind(lab, "[data-lab-note]");
+  let wood = 0, string = 0, bow = 0;
+  const render = () => {
+    if (invOut) setText(invOut, `W${wood} S${string} B${bow}`);
+    if (board) {
+      board.innerHTML = `<div class="lab-craft-inv"><span>🪵 ${wood}</span><span>🧵 ${string}</span><span>🏹 ${bow}</span></div>
+        <p class="lab-craft-recipe">2 wood + 1 string → bow</p>`;
+    }
+  };
+  bind(lab, "[data-lab-wood]")?.addEventListener("click", () => { wood += 1; setText(note, "+wood"); render(); });
+  bind(lab, "[data-lab-string]")?.addEventListener("click", () => { string += 1; setText(note, "+string"); render(); });
+  bind(lab, "[data-lab-craft]")?.addEventListener("click", () => {
+    if (wood < 2 || string < 1) { setText(note, lab.dataset.need || "need materials"); return; }
+    wood -= 2; string -= 1; bow += 1;
+    setText(note, lab.dataset.made || "crafted bow");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    wood = 0; string = 0; bow = 0; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='light-flood']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const litOut = bind(lab, "[data-lab-lit]");
+  const note = bind(lab, "[data-lab-note]");
+  const size = 5;
+  let light = Array.from({ length: size }, () => Array(size).fill(0));
+  const render = () => {
+    let lit = 0;
+    light.flat().forEach((v) => { if (v > 0) lit += 1; });
+    if (litOut) setText(litOut, String(lit));
+    if (board) {
+      board.innerHTML = `<div class="lab-light-grid">${light.map((row) => row.map((v) =>
+        `<span style="opacity:${0.15 + v * 0.2}" class="${v ? "on" : ""}"></span>`).join("")).join("")}</div>`;
+    }
+  };
+  bind(lab, "[data-lab-torch]")?.addEventListener("click", () => {
+    light = Array.from({ length: size }, () => Array(size).fill(0));
+    light[2][2] = 4;
+    setText(note, lab.dataset.torch || "torch placed");
+    render();
+  });
+  bind(lab, "[data-lab-flood]")?.addEventListener("click", () => {
+    const next = light.map((row) => row.slice());
+    for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+      if (!light[y][x]) continue;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const nx = x + dx, ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= size || ny >= size) continue;
+        next[ny][nx] = Math.max(next[ny][nx], light[y][x] - 1);
+      }
+    }
+    light = next;
+    setText(note, lab.dataset.flooded || "flooded");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    light = Array.from({ length: size }, () => Array(size).fill(0));
+    setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='species-inst']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const countOut = bind(lab, "[data-lab-count]");
+  const note = bind(lab, "[data-lab-note]");
+  const maxHP = Number(lab.dataset.maxhp || 8);
+  let units = [];
+  let id = 1;
+  const render = () => {
+    if (countOut) setText(countOut, String(units.length));
+    if (board) {
+      board.innerHTML = `<p class="lab-species-def">DEF slime maxHP=${maxHP}</p>
+        <div class="lab-species-row">${units.map((u) =>
+          `<span>sl#${u.id} HP${u.hp}</span>`).join("") || `<i class="lab-empty">no instances</i>`}</div>`;
+    }
+  };
+  bind(lab, "[data-lab-spawn]")?.addEventListener("click", () => {
+    units.push({ id: id++, hp: maxHP });
+    setText(note, lab.dataset.spawned || "spawned");
+    render();
+  });
+  bind(lab, "[data-lab-hit]")?.addEventListener("click", () => {
+    if (!units.length) { setText(note, lab.dataset.none || "none"); return; }
+    units[0].hp -= 3;
+    if (units[0].hp <= 0) units.shift();
+    setText(note, lab.dataset.hit || "hit -3");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    units = []; id = 1; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='party-swap']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const activeOut = bind(lab, "[data-lab-active]");
+  const note = bind(lab, "[data-lab-note]");
+  const party = (lab.dataset.party || "Ebi,Shell,Coral").split(",");
+  let active = 0;
+  const render = () => {
+    if (activeOut) setText(activeOut, party[active]);
+    if (board) {
+      board.innerHTML = `<div class="lab-party-row">${party.map((p, i) =>
+        `<span class="${i === active ? "on" : ""}">${p}</span>`).join("")}</div>`;
+    }
+  };
+  bind(lab, "[data-lab-swap]")?.addEventListener("click", () => {
+    active = (active + 1) % party.length;
+    setText(note, (lab.dataset.swapped || "active → {p}").replace("{p}", party[active]));
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    active = 0; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='capture-roll']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const rateOut = bind(lab, "[data-lab-rate]");
+  const note = bind(lab, "[data-lab-note]");
+  let rate = Number(lab.dataset.rate || 35);
+  const render = () => {
+    if (rateOut) setText(rateOut, `${rate}%`);
+    if (board) {
+      board.innerHTML = `<div class="lab-capture-bar"><i style="width:${rate}%"></i></div>
+        <p class="lab-capture-label">${rate}% catch</p>`;
+    }
+  };
+  bind(lab, "[data-lab-bait]")?.addEventListener("click", () => {
+    rate = Math.min(95, rate + 15);
+    setText(note, lab.dataset.baited || "+bait");
+    render();
+  });
+  bind(lab, "[data-lab-roll]")?.addEventListener("click", () => {
+    const roll = Math.floor(Math.random() * 100);
+    const ok = roll < rate;
+    setText(note, ok
+      ? (lab.dataset.caught || "caught! ({r})").replace("{r}", String(roll))
+      : (lab.dataset.missed || "broke free ({r})").replace("{r}", String(roll)));
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    rate = Number(lab.dataset.rate || 35); setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='xp-level']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const levelOut = bind(lab, "[data-lab-level]");
+  const xpOut = bind(lab, "[data-lab-xp]");
+  const note = bind(lab, "[data-lab-note]");
+  let level = 1, xp = 0;
+  const need = () => level * 10;
+  const render = () => {
+    if (levelOut) setText(levelOut, String(level));
+    if (xpOut) setText(xpOut, `${xp}/${need()}`);
+    if (board) {
+      const pct = Math.min(100, (xp / need()) * 100);
+      board.innerHTML = `<div class="lab-xp-bar"><i style="width:${pct}%"></i></div>
+        <p class="lab-xp-label">Lv ${level}${level >= 5 ? " → evolve?" : ""}</p>`;
+    }
+  };
+  bind(lab, "[data-lab-gain]")?.addEventListener("click", () => {
+    xp += 4;
+    while (xp >= need()) { xp -= need(); level += 1; }
+    setText(note, level >= 5 ? (lab.dataset.evolve || "ready to evolve") : (lab.dataset.gained || "+4 XP"));
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    level = 1; xp = 0; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='bfs-flood']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const countOut = bind(lab, "[data-lab-count]");
+  const note = bind(lab, "[data-lab-note]");
+  let grid = [
+    [1, 1, 0, 2],
+    [1, 0, 0, 2],
+    [1, 1, 2, 2],
+    [0, 3, 3, 3],
+  ];
+  let marks = new Set();
+  const key = (x, y) => `${x},${y}`;
+  const render = () => {
+    if (countOut) setText(countOut, String(marks.size));
+    if (board) {
+      board.innerHTML = `<div class="lab-bfs-grid">${grid.map((row, y) => row.map((c, x) =>
+        `<span class="c${c}${marks.has(key(x, y)) ? " hit" : ""}" data-x="${x}" data-y="${y}"></span>`).join("")).join("")}</div>`;
+      board.querySelectorAll("span").forEach((cell) => {
+        cell.addEventListener("click", () => {
+          const x = Number(cell.dataset.x), y = Number(cell.dataset.y);
+          const color = grid[y][x];
+          marks = new Set();
+          const q = [[x, y]];
+          marks.add(key(x, y));
+          while (q.length) {
+            const [cx, cy] = q.shift();
+            for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+              const nx = cx + dx, ny = cy + dy;
+              if (ny < 0 || nx < 0 || ny >= 4 || nx >= 4) continue;
+              if (grid[ny][nx] !== color) continue;
+              const k = key(nx, ny);
+              if (marks.has(k)) continue;
+              marks.add(k);
+              q.push([nx, ny]);
+            }
+          }
+          setText(note, (lab.dataset.group || "group size {n}").replace("{n}", String(marks.size)));
+          render();
+        });
+      });
+    }
+  };
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    marks = new Set(); setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='pellet-count']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const leftOut = bind(lab, "[data-lab-left]");
+  const note = bind(lab, "[data-lab-note]");
+  let dots = Array.from({ length: 12 }, (_, i) => i % 5 !== 2);
+  const render = () => {
+    const left = dots.filter(Boolean).length;
+    if (leftOut) setText(leftOut, String(left));
+    if (board) {
+      board.innerHTML = `<div class="lab-pellet-grid">${dots.map((on) =>
+        `<span class="${on ? "on" : ""}"></span>`).join("")}</div>`;
+    }
+  };
+  bind(lab, "[data-lab-eat]")?.addEventListener("click", () => {
+    const i = dots.findIndex(Boolean);
+    if (i < 0) { setText(note, lab.dataset.clear || "all clear!"); return; }
+    dots[i] = false;
+    const left = dots.filter(Boolean).length;
+    setText(note, left ? (lab.dataset.ate || "ate one") : (lab.dataset.clear || "all clear!"));
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    dots = Array.from({ length: 12 }, (_, i) => i % 5 !== 2);
+    setText(note, "—"); render();
+  });
+  render();
+});

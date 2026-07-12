@@ -1,4 +1,79 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>経験値と進化 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/monster-collection/growth-evolution/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← モンスター収集RPG</a><span>STEP 06 / 07</span></div><section class="overview-hero"><p class="eyebrow">集めて育てるバトルを作る</p><h1>経験値と進化</h1><p>経験値からレベルを求め、条件を満たした個体の種族データを切り替えます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>成長曲線・レベル・進化条件</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>データの変化を見て、<br>ルールを組み立てる。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで発見する</h3><p>完成したミニゲームから、入力と結果の関係を見つけます。</p></article><article><b>02</b><h3>内部データを見る</h3><p>マス、状態、探索候補を画面に重ね、処理の途中を見えるようにします。</p></article><article><b>03</b><h3>コードへつなぐ</h3><p>同じルールをEbitengineのUpdateとDraw、アセットデータで再構成します。</p></article></div></section><nav class="lesson-pager"><a href="../capture/">← STEP 05<strong>捕獲チャレンジ</strong></a><a href="../ebi-monsters/">STEP 07 →<strong>Ebi Monsters</strong></a></nav>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>経験値と進化 | Ebi Showcase</title>
+<link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+<header class="nav">
+<a class="brand" href="../../../">
+<span>EBI</span> SHOWCASE</a>
+<nav>
+<a href="../">コース</a>
+<a href="#learn">HOW IT WORKS</a>
+<a class="lang" href="../../../../en/tracks/monster-collection/growth-evolution/">EN</a>
+</nav>
+</header>
+<main class="overview-main">
+<div class="lesson-breadcrumb">
+<a href="../">← モンスター収集RPG</a>
+<span>STEP 06 / 07</span>
+</div>
+<section class="overview-hero">
+<p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+<h1>経験値と進化</h1>
+<p>経験値からレベルを求め、条件を満たした個体の種族データを切り替えます。</p>
+<div class="overview-concept">
+<small>このステップで学ぶこと</small>
+<strong>成長曲線・レベル・進化条件</strong>
+</div>
+</section>
+<section class="overview-plan">
+<p class="eyebrow">PLAY / INSPECT / BUILD</p>
+<h2>データの変化を見て、<br>ルールを組み立てる。</h2>
+<div class="overview-steps">
+<article>
+<b>01</b>
+<h3>遊んで発見する</h3>
+<p>完成したミニゲームから、入力と結果の関係を見つけます。</p>
+</article>
+<article>
+<b>02</b>
+<h3>内部データを見る</h3>
+<p>マス、状態、探索候補を画面に重ね、処理の途中を見えるようにします。</p>
+</article>
+<article>
+<b>03</b>
+<h3>コードへつなぐ</h3>
+<p>同じルールをEbitengineのUpdateとDraw、アセットデータで再構成します。</p>
+</article>
+</div>
+</section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>育成と休息を計画し、進化して勝とう。</h2></div><p>TRAIN・REST・CHALLENGEをタップ。PCは1〜3またはT/R/C。15ターン以内にレベル4へ育てます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="経験値と進化" src="../../../../play/growth-evolution/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GROWTH CURVE</p><h2>経験値を残し、レベルと能力を計算する。</h2><p class="lesson-lead">経験値を<strong>(次レベル)²×10</strong>の境界と比べます。進化では経験値や現在HPを消さず、基礎能力を持つ種族定義だけを替えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>曲線からレベル</h3><p>次の境界を超える間levelを増やします。</p><code>exp &gt;= (level+1)*(level+1)*10</code></article><article><span class="concept-number">2</span><h3>能力を再計算</h3><p>種族の基礎値へレベル成長を足します。</p><code>attack = baseAttack + level*2</code></article><article><span class="concept-number">3</span><h3>定義だけ切替</h3><p>レベル4でspeciesIDを変更し、expとhpは保持します。</p><code>m.speciesID = evolvedID</code></article></div><div class="motion-lab" data-lab="xp-level" data-gained="+4 XP" data-evolve="進化できる！" aria-labelledby="lab-title-growth-evolution">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / XP CURVE</p>
+<h3 id="lab-title-growth-evolution">経験値をためてレベルを上げよう</h3>
+<p>必要 XP はレベルで増えます。足りたら level++ して余りを持ち越し。進化は「レベルが閾値以上」の判定を同じ場所に足します。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-gain>+4 XP</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Lv1へ</button></div>
+<p class="lab-hint">曲線を変えたいときは need() だけ触ります。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>レベル</span><strong data-lab-level>1</strong></div><div><span>XP</span><strong data-lab-xp>0/10</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">CURVE FUNCTION</p><div class="formula-lines"><code>need = level * 10</code><span>つぎに</span><code>while xp >= need { level++ }</code></div><p>必要量を表にしても、関数でもよいです。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>種族と個体を分ける</h3><p>参照する種族を替えても個体状態は作り直しません。</p></div><pre><code>for exp &gt;= (level+1)*(level+1)*10 { level++ }
+if level &gt;= 4 {
+    m.speciesID = evolvedID // exp, hpは保持
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY CURVE?</p><h3>成長速度を設計</h3><p>高レベルほど多くの経験値が必要です。</p></article><article><p class="eyebrow">WHY KEEP?</p><h3>同じ仲間の続き</h3><p>進化で努力や傷が消えません。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>道具条件</h3><p>レベルと道具の両方を必要にしよう。</p></article></div></section>
+<nav class="lesson-pager">
+<a href="../capture/">← STEP 05<strong>捕獲チャレンジ</strong>
+</a>
+<a href="../ebi-monsters/">STEP 07 →<strong>Ebi Monsters</strong>
+</a>
+</nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -55,4 +130,19 @@
 
 
 
-</main></body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</main><script src="../../../../learn.js"></script>
+</body>
+</html>

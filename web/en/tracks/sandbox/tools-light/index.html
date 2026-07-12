@@ -1,4 +1,32 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Tools and Light | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/sandbox/tools-light/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D Block Sandbox</a><span>STEP 05 / 07</span></div><section class="overview-hero"><p class="eyebrow">Build a world you can mine and create</p><h1>Tools and Light</h1><p>Add material-specific tools and simple light spreading from torches.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Mining speed and tile lighting</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../inventory-crafting/">← STEP 04<strong>Inventory and Crafting</strong></a><a href="../creature-world/">STEP 06 →<strong>A Living World</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Tools and Light | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/sandbox/tools-light/">日本語</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← 2D Block Sandbox</a><span>STEP 05 / 07</span></div>
+<section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Tools and Light</h1><p>Save durability by matching tools to materials, then light the day-night cycle with tile-based torch sources.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Tool matchups, durability, and tile light sources</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Mine four wood and four stone, then light camp with two torches.</h2></div><p>Tap Axe, Pick, or Torch, then a board tile. On PC select with 1, 2, or 3/T and mine with the mouse. At night, place a torch near tiles that are too dark.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Tools and tile lighting mining game" src="../../../../play/tools-light/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / TOOL DATA AND TILE LIGHT</p><h2>Check “what mines it?” and “can I see it?” before changing a tile.</h2><p class="lesson-lead">The tools crafted in the previous step now store preferred material, power, and durability. Before mining, compare tool with material and inspect that tile's light. A torch is not one big bright picture: every tile calculates brightness from its <strong>distance to the source</strong>.</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>Match tool and material</h3><p>Axe on wood or pick on stone gives power 3 for one durability. A mismatch gives power 1 and costs two, wearing out faster for the same job.</p><code>if tool.preferred == block.material { power = 3 }</code></article><article><span class="concept-number">2</span><h3>Store durability as state</h3><p>Subtract durability only when mining. At zero that tool cannot work. If a needed tool breaks before its material goal, the run fails.</p><code>durability[selected] -= cost</code></article><article><span class="concept-number">3</span><h3>Choose the strongest light</h3><p>Compare daylight with every torch and keep the maximum. Torch light loses two units for each tile of distance.</p><code>light = max(daylight, 9-distance*2)</code></article></div>
+<div class="motion-lab" data-lab="light-flood" data-torch="placed" data-flooded="flooded" aria-labelledby="lab-title-tools-light">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / LIGHT BFS</p>
+<h3 id="lab-title-tools-light">Flood brightness from a torch</h3>
+<p>Place a torch to set a bright center. Flood copies to neighbors with decay. Tool durability stays a separate system.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-torch>Place torch</button><button type="button" class="lab-button" data-lab-flood>Flood once</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Lights out</button></div>
+<p class="lab-hint">Block walls by simply never writing light into them.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>lit cells</span><strong data-lab-lit>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">DECAY FLOOD</p><div class="formula-lines"><code>center = power</code><span>then</span><code>neighbor = max(old, power-1)</code></div><p>Additive or max—pick one rule and stick to it.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Build maximum light from day and every torch</h3><p>Brightness is an integer from 0 to 9. DAY/NIGHT and the value are printed too, so information is not carried only by color.</p></div><pre><code>func (g *Game) lightAt(x, y int) int {
+    light := g.daylight()
+    for _, torch := range g.torches {
+        distance := abs(x-torch.x) + abs(y-torch.y)
+        light = max(light, 9-distance*2)
+    }
+    return max(0, min(9, light))
+}</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY TOOL DATA?</p><h3>Grow to new materials</h3><p>Add preferred material and power data instead of adding another separate tool conditional everywhere.</p></article><article><p class="eyebrow">WHY MAX LIGHT?</p><h3>Handle overlapping sources</h3><p>Day and torches do not add forever into white; the strongest source reaching that place wins.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Block light with walls</h3><p>Remove extra light each time it crosses stone, leaving cave corners darker.</p></article></div>
+</section><nav class="lesson-pager"><a href="../inventory-crafting/">← STEP 04<strong>Inventory and Crafting</strong></a><a href="../creature-world/">STEP 06 →<strong>A Living World</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -32,27 +60,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

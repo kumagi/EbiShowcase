@@ -42,29 +42,19 @@
       </div>
 
       
-      <div class="motion-lab" data-lab="entities"  aria-labelledby="lab-title-space-shooter">
-        <div class="lab-copy">
-          <p class="eyebrow">TRY IT / LAB</p>
-          <h3 id="lab-title-space-shooter">Fire, step, and cull bullets</h3>
-          <p>Fire appends a shot; Step moves them up. Shots with y≤0 leave the list.</p>
-          <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-fire>Fire</button>
-            <button type="button" class="lab-button" data-lab-step>Step</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
-          </div>
-          <p class="lab-hint">A slow-motion model of the real game rule.</p>
-        </div>
-        <div class="lab-visual">
-          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">shots []</div></div>
-          <div class="lab-values" aria-live="polite">
-            <div><span>shots</span><strong data-lab-count>0</strong><small></small></div>
-            <div><span>list</span><strong data-lab-list>—</strong><small></small></div>
-            <div><span>y</span><strong>↑</strong><small></small></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="formula">
+      <div class="motion-lab" data-lab="bullets" data-fire="pew" data-step="fly" aria-labelledby="lab-title-space-shooter">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / BULLET LIST</p>
+<h3 id="lab-title-space-shooter">Spawn, move, cull bullets</h3>
+<p>Fire appends to a slice; Step moves every bullet and drops off-screen ones. Separate lists per kind keep updates simple.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fire>Fire</button><button type="button" class="lab-button" data-lab-step>Advance 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<p class="lab-hint">Real games loop append → move → filter the same way.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>bullets</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula">
         <p class="eyebrow">THE DELETE PATTERN</p>
         <div class="formula-lines"><code>for i := len(g.bullets) - 1; i &gt;= 0; i--</code><span>when ready</span><code>g.bullets = append(g.bullets[:i], g.bullets[i+1:]...)</code></div>
         <p>Counting down from the last index is the key. Any deletion only affects positions above <code>i</code>, which have already been visited, so the loop stays correct.</p>
@@ -470,6 +460,19 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

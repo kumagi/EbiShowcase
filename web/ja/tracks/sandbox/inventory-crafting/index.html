@@ -1,4 +1,65 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>道具袋とクラフト | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/sandbox/inventory-crafting/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2Dブロックサンドボックス</a><span>STEP 04 / 07</span></div><section class="overview-hero"><p class="eyebrow">掘って作れる世界を作る</p><h1>道具袋とクラフト</h1><p>集めたブロックを束ね、材料の組み合わせから新しい道具を作ります。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>スタック・レシピ・消費</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>データの変化を見て、<br>ルールを組み立てる。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで発見する</h3><p>完成したミニゲームから、入力と結果の関係を見つけます。</p></article><article><b>02</b><h3>内部データを見る</h3><p>マス、状態、探索候補を画面に重ね、処理の途中を見えるようにします。</p></article><article><b>03</b><h3>コードへつなぐ</h3><p>同じルールをEbitengineのUpdateとDraw、アセットデータで再構成します。</p></article></div></section><nav class="lesson-pager"><a href="../chunk-world/">← STEP 03<strong>チャンクで広い世界</strong></a><a href="../tools-light/">STEP 05 →<strong>道具と明かり</strong></a></nav>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>道具袋とクラフト | Ebi Showcase</title>
+<link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+<header class="nav">
+<a class="brand" href="../../../">
+<span>EBI</span> SHOWCASE</a>
+<nav>
+<a href="../">コース</a>
+<a href="#learn">HOW IT WORKS</a>
+<a class="lang" href="../../../../en/tracks/sandbox/inventory-crafting/">EN</a>
+</nav>
+</header>
+<main class="overview-main">
+<div class="lesson-breadcrumb">
+<a href="../">← 2Dブロックサンドボックス</a>
+<span>STEP 04 / 07</span>
+</div>
+<section class="overview-hero">
+<p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+<h1>道具袋とクラフト</h1>
+<p>集めたブロックを束ね、材料の組み合わせから新しい道具を作ります。</p>
+<div class="overview-concept">
+<small>このステップで学ぶこと</small>
+<strong>スタック・レシピ・消費</strong>
+</div>
+</section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>採取して、ツルハシとビーコンを作ろう。</h2></div><p>上の採取場所をタップし、下のレシピをタップ。PCは1〜3で採取、R/P/Bでクラフト。50秒で2つの道具を完成させます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="道具袋とクラフト" src="../../../../play/inventory-crafting/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RECIPE TRANSACTION</p><h2>材料を確かめてから、まとめて消費し、完成品を足す。</h2><p class="lesson-lead">同じ素材は <strong>種類と個数の組</strong>として在庫へ束ねます。レシピは必要数の表です。全部そろうか先に確認し、成功する時だけ材料を減らして完成品を増やします。</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>採取をスタックへ足す</h3><p>木を2個拾ったら、別々の物体を増やす代わりにwoodの個数へ2を足します。表示も保存も小さくできます。</p><code>inventory[Wood] += 2</code></article><article><span class="concept-number">2</span><h3>レシピ全部を照合</h3><p>木だけでなく、石、繊維、ロープの必要数をすべて比べます。1種類でも不足なら何も消費しません。</p><code>if haveWood &amp;&amp; haveStone &amp;&amp; haveRope</code></article><article><span class="concept-number">3</span><h3>消費と生成を一組にする</h3><p>条件を通った後で必要数を引き、ツルハシなどの完成品を追加します。途中だけ実行しません。</p><code>wood -= 2; stone -= 2; pickaxe = true</code></article></div>
+<div class="motion-lab" data-lab="craft-recipe" data-need="材料不足" data-made="弓を作った" aria-labelledby="lab-title-inventory-crafting">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / RECIPE</p>
+<h3 id="lab-title-inventory-crafting">材料を集めてレシピで作ろう</h3>
+<p>インベントリは個数の辞書、クラフトはレシピ照合です。足りれば材料を減らし成果を足す。スタックも同じ個数管理です。</p>
+<div class="lab-controls"><button type="button" class="lab-button" data-lab-wood>+木</button><button type="button" class="lab-button" data-lab-string>+糸</button><button type="button" class="lab-button lab-button-primary" data-lab-craft>クラフト</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>空にする</button></div>
+<p class="lab-hint">レシピをデータ表にすると、新しい道具が行追加だけで増えます。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>所持</span><strong data-lab-inv>—</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">PAY THEN GAIN</p><div class="formula-lines"><code>if inv has costs</code><span>つぎに</span><code>inv -= costs; inv += result</code></div><p>失敗時に材料だけ減らないよう、先に検査します。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>不足ならreturnして在庫を守る</h3><p>必要数を全部確認してから引くので、失敗したクラフトで一部の材料だけ失いません。</p></div><pre><code>r := recipes[selected]
+if wood &lt; r.wood || stone &lt; r.stone ||
+   fiber &lt; r.fiber || rope &lt; r.rope {
+    return // 何も変えない
+}
+wood -= r.wood; stone -= r.stone
+fiber -= r.fiber; rope -= r.rope
+addOutput(r.name)</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY CHECK FIRST?</p><h3>半分だけ消費しない</h3><p>クラフト全体を成功か失敗のどちらかにできます。</p></article><article><p class="eyebrow">WHY STACK?</p><h3>同じ物を数でまとめる</h3><p>石100個でも1つの種類と個数で表せます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>レシピをデータへ</h3><p>必要数を変えるだけで別の道具になる表を考えよう。</p></article></div></section>
+<nav class="lesson-pager">
+<a href="../chunk-world/">← STEP 03<strong>チャンクで広い世界</strong>
+</a>
+<a href="../tools-light/">STEP 05 →<strong>道具と明かり</strong>
+</a>
+</nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -55,4 +116,19 @@
 
 
 
-</main></body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</main><script src="../../../../learn.js"></script>
+</body>
+</html>

@@ -1,4 +1,36 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Monsters | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/monster-collection/ebi-monsters/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Creature Collection RPG</a><span>STEP 07 / 07</span></div><section class="overview-hero"><p class="eyebrow">Build a collect-and-train battle game</p><h1>Ebi Monsters</h1><p>Combine regional encounters, capture records, parties, storage, and save data.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Encounters, bestiary, and saving</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../growth-evolution/">← STEP 06<strong>Experience and Evolution</strong></a><a href="../">BACK TO PATH →<strong>Creature Collection RPG</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Monsters | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/monster-collection/ebi-monsters/">日本語</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← Creature Collection RPG</a><span>STEP 07 / 07</span></div>
+<section class="overview-hero"><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>Ebi Monsters</h1><p>Explore regions, weaken with moves and matchups, grow captured instances, then save the bestiary, party, and storage box to JSON.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Game-flow state transitions and save boundaries</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Register four species, evolve REEFLET, and save.</h2></div><p>On the map tap a region or use 1–3. In battle tap moves, capture, or switch, or use 1–4. EMBER COVE is a good start. When ready, tap SAVE or press S.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 07</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Monsters regional exploration, battle, capture, and save" src="../../../../play/ebi-monsters/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / INTEGRATED GAME STATE</p><h2>Turn six systems into one adventure flow.</h2><p class="lesson-lead">A complete game is not a row of disconnected features. Region choice selects encounter data, battle results change capture chance, and capture success updates bestiary, EXP, party, and box together. <code>modeMap</code> and <code>modeBattle</code> separate screens while <strong>state transitions</strong> pass results forward.</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>Create an instance from a region</h3><p>Each region's encounter table is a list of species IDs. Visit count selects the next ID, then species data supplies wild HP and type.</p><code>wildSpecies = encounterTables[region][visits[region]%2]</code></article><article><span class="concept-number">2</span><h3>Commit capture as one transaction</h3><p>Move power, accuracy, uses, and matchup reduce HP. Only capture success registers the dex, adds an instance, shares EXP, checks evolution, and returns to map together.</p><code>dex[id]=true; addMonster(); shareEXP(); mode=modeMap</code></article><article><span class="concept-number">3</span><h3>Save only required state</h3><p>Screen colors and buttons are not saved. Copy party species and EXP, box, bestiary, and region visits into <code>saveData</code>, then produce JSON bytes.</p><code>saveSlot, _ = json.Marshal(payload)</code></article></div>
+<div class="motion-lab" data-lab="pipeline" data-steps="field,battle,capture,party,save" data-loop="next outing" aria-labelledby="lab-title-ebi-monsters">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / ADVENTURE FLOW</p>
+<h3 id="lab-title-ebi-monsters">Resolve adventure events in order</h3>
+<p>Dex, capture, growth, and battle still form a pipe. Finish the current event, advance, and save on those edges.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>Next event</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Intro</button></div>
+<p class="lab-hint">Mid-battle saves need finer boundaries.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>progress</span><strong data-lab-stepn>0</strong></div><div><span>now</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">EVENT PIPE</p><div class="formula-lines"><code>finish current</code><span>then</span><code>go next / save</code></div><p>Don’t run every system at once.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Build a save structure from runtime data</h3><p>Runtime monsters also have HP, but this lesson's save chooses species, EXP, bestiary, and region progress. A dedicated structure keeps the JSON contract stable.</p></div><pre><code>payload := saveData{Dex: g.dex, Visits: g.visits}
+for _, m := range g.party {
+    payload.PartySpecies = append(payload.PartySpecies, m.speciesID)
+    payload.PartyExp = append(payload.PartyExp, m.exp)
+}
+for _, m := range g.box {
+    payload.BoxSpecies = append(payload.BoxSpecies, m.speciesID)
+}
+encoded, err := json.Marshal(payload)
+if err == nil {
+    saveSlot = append(saveSlot[:0], encoded...)
+}</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY MODES?</p><h3>Do not mix input meanings</h3><p>Key 1 means a region on the map and a move in battle. Checking mode first routes the same input safely.</p></article><article><p class="eyebrow">WHY ONE CAPTURE TRANSACTION?</p><h3>Prevent split data</h3><p>The game cannot register a dex entry but forget to store the captured instance.</p></article><article class="challenge"><p class="eyebrow">SHIP IT</p><h3>Swap the save destination</h3><p>Keep JSON creation, but design an adapter that sends the in-memory save slot to browser storage or a server.</p></article></div>
+</section><nav class="lesson-pager"><a href="../growth-evolution/">← STEP 06<strong>Experience and Evolution</strong></a><a href="../">BACK TO PATH →<strong>Creature Collection RPG</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -29,30 +61,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

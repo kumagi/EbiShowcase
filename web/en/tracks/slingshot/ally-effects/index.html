@@ -5,8 +5,19 @@
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT EVENT</p><h2>Extract “contact began” from “still touching.”</h2><p class="lesson-lead">Checking overlap every frame could fire an ability 60 times while circles remain together. Compare this frame with the previous one and create an event only when <strong>touching now but separated before</strong>. That event reads the ally's ability data.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Test contact now</h3><p>Contact occurs when center distance is no greater than the two radii added together. It uses the same simple circles visible on screen.</p><code>touching := distance &lt;= playerR + allyR</code></article><article><span class="concept-number">2</span><h3>Emit only on the edge</h3><p>If <code>touching</code> is true and old <code>wasTouching</code> is false, contact just began. Save the new value for next frame.</p><code>if touching &amp;&amp; !wasTouching { activate() }</code></article><article><span class="concept-number">3</span><h3>Dispatch from ability data</h3><p>An ally stores name, kind, and power. Shared <code>activate</code> reads the kind and selects laser, heal, or pulse.</p><code>Ability{Name: "HEAL", Kind: Heal, Power: 2}</code></article></div>
-<div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / EVENT QUEUE</p><h3>Process contact events one at a time</h3><p>When contact begins, append an event to a queue. Game rules run them in order, even if several effects begin together.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fire>Add contact event</button><button type="button" class="lab-button" data-lab-step>Activate one</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Empty queue</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Waiting effects</span><strong data-lab-count>0</strong></div><div><span>Activation order</span><strong data-lab-list>—</strong></div></div></div></div>
-<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>One contact entrance, data-defined results</h3><p>Each ally does not need a new collision test. Pass an ability number through the same entrance, so new effects do not change movement or contact code.</p></div><pre><code>now := circlesTouch(player, ally)
+<div class="motion-lab" data-lab="event-queue" data-event="ally" data-pushed="queued" data-popped="resolve {e}" data-empty="empty" aria-labelledby="lab-title-ally-effects">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / CONTACT QUEUE</p>
+<h3 id="lab-title-ally-effects">Resolve contact events one-by-one</h3>
+<p>On contact, enqueue an event instead of firing instantly. Pop resolves the front. Simultaneous hits keep a stable order.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-push>Queue contact</button><button type="button" class="lab-button" data-lab-pop>Resolve one</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Clear</button></div>
+<p class="lab-hint">Drain the queue inside Update until empty.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>waiting</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">QUEUE THEN RESOLVE</p><div class="formula-lines"><code>on contact: push event</code><span>then</span><code>later: pop & apply</code></div><p>Split the physics moment from effect resolve.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>One contact entrance, data-defined results</h3><p>Each ally does not need a new collision test. Pass an ability number through the same entrance, so new effects do not change movement or contact code.</p></div><pre><code>now := circlesTouch(player, ally)
 if now &amp;&amp; !ally.wasTouching &amp;&amp; ally.cooldown == 0 {
     activate(abilities[ally.ability])
     ally.cooldown = 75
@@ -37,6 +48,19 @@ ally.wasTouching = now</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

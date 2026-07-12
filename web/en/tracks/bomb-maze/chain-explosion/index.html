@@ -1,4 +1,24 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Bomb Chain Reactions | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/bomb-maze/chain-explosion/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Bomb Maze Action</a><span>STEP 04 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Bomberman-style blast game</p><h1>Bomb Chain Reactions</h1><p>Detonate bombs hit by blasts immediately without processing one twice.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Event propagation and deduplication</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../breakable-walls/">← STEP 03<strong>Breakable Walls and Items</strong></a><a href="../escape-ai/">STEP 05 →<strong>Blast-escape AI</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Bomb Chain Reactions | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/bomb-maze/chain-explosion/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Bomb Maze Action</a><span>STEP 04 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">Pass explosion events to the next bomb</p><h1>Bomb Chain Reactions</h1><p>When a blast reaches another bomb, trigger it without waiting for its timer. Add triggered bombs to an event queue and use a processed mark so no bomb explodes twice.</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section>
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Chain three bombs and clear five relays</h2><p>Move with arrows/WASD and place bombs with Space or X. Click or tap the bottom controls. Line up bombs within three open cells of each other, then escape before the first fuse ends.</p></div><div class="game-frame"><iframe src="../../../../play/chain-explosion/" title="Play Bomb Chain Reactions"></iframe></div></section>
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Build a line of bombs to trigger next</h2><p>If A's blast reaches B and B's reaches C, new work keeps appearing. A queue stores that work and handles bombs in the order they were found.</p><div class="concept-row"><article><b>01</b><h3>Queue the starting event</h3><p>When a timer reaches zero, append that bomb's index to the list waiting for processing.</p></article><article><b>02</b><h3>Append bombs in the blast</h3><p>Detonate the front bomb. Any waiting bomb found in its blast cells joins the back of the queue.</p></article><article><b>03</b><h3>Skip processed bombs</h3><p>Two blasts may find the same bomb. A <code>processed</code> mark makes the second event harmless.</p></article></div></section>
+<section class="motion-lab" data-lab="turn"><div><p class="eyebrow">EVENT QUEUE LAB</p><h2>Watch A → B → C propagate</h2><p>Process one front event and append each newly discovered bomb to the back.</p></div><div class="lab-stage" data-states="Start with queue=[A] processed={},Explode A and mark it processed,A's blast finds B so queue=[B],Explode B and append C,Explode C and finish when the queue is empty"><div class="lab-entities" data-count="4"></div><p class="lab-readout" data-lab-state aria-live="polite">Start with queue=[A] processed={}</p><button type="button" data-lab-step>Next stage</button><button type="button" data-lab-reset>Reset</button></div></section>
+<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Propagate until the queue is empty</h2><p>The game queues bomb indexes. A fresh <code>processed</code> map records which bombs have already triggered during this one reaction.</p></div><pre><code>queue := append([]int(nil), starts...)
+processed := map[int]bool{}
+for len(queue) &gt; 0 {
+    index := queue[0]
+    queue = queue[1:]
+    if processed[index] {
+        continue
+    }
+    processed[index] = true
+    bombs[index].blast = blastCells(bombs[index].at)
+    for other := range bombs {
+        if contains(bombs[index].blast, bombs[other].at) {
+            queue = append(queue, other)
+        }
+    }
+}</code></pre></section>
+<section class="why-grid"><article><h3>Why not recurse immediately?</h3><p>A queue exposes how much work remains and gives every event the same ordering rule. Even a long chain stays easy to inspect.</p></article><article><h3>Why prevent duplicates?</h3><p>If both A and C reach B, B might create its blast and score twice. The processed mark keeps the result stable.</p></article><article><h3>Challenge</h3><p>Increase a score multiplier for chain order <code>#1, #2, #3</code> and reward carefully linked routes.</p></article></section><nav class="lesson-pager"><a href="../breakable-walls/">← STEP 03<strong>Breakable Walls and Items</strong></a><a href="../escape-ai/">STEP 05 →<strong>Blast-escape AI</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -22,37 +42,4 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

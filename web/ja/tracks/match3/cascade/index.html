@@ -1,4 +1,16 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>連鎖リアクション | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/match3/cascade/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 3マッチパズル</a><span>STEP 04 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>連鎖リアクション</h1><p>落下と補充のあとにもう一度探索し、マッチが0個になるまで解決を繰り返します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>処理ループと連鎖倍率</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>白い並びを解決し、次の連鎖を見つけよう。</h2></div><p>下ボタンをタップまたはSpace。盤面が止まるまで進め、3手を解決するとクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="連鎖リアクション" src="../../../../play/cascade/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RESOLUTION LOOP</p><h2>「もう一度調べる」が連鎖を生む。</h2><p class="lesson-lead">消去、落下、補充のあとでscanを呼びます。結果が空でなければ同じ処理へ戻り、空なら操作を返します。<strong>盤面が止まる条件</strong>がループの出口です。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>一つの連鎖を解決</h3><p>現在のmarkedを消し、列を詰め、空きを補充します。途中でプレイヤーの交換入力は読みません。</p><code>clear(); fall(); refill()</code></article><article><span class="concept-number">2</span><h3>新しい盤面を再検査</h3><p>落ちた結果は前と違う盤面です。そこでscanを再実行し、新しい3個並びをmarkedへ入れます。</p><code>marked = scan(board)</code></article><article><span class="concept-number">3</span><h3>連鎖数を得点へ</h3><p>1連鎖目は×1、2連鎖目は×2と増やします。偶然続いた大連鎖ほど大きなごほうびになります。</p><code>score += cells * 10 * combo</code></article></div><div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / RESOLUTION QUEUE</p><h3>残っている連鎖を処理しよう</h3><p>連鎖候補を追加し、1個ずつ解決します。残りが0になった瞬間だけ、次の操作を受け付けられます。</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>連鎖を追加</button><button class="lab-button" data-lab-step>1連鎖を解決</button><button class="lab-button lab-button-quiet" data-lab-reset>新しい手</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>未解決</span><strong data-lab-count>0</strong></div><div><span>順番</span><strong data-lab-list>—</strong></div></div></div></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>見つからなくなるまで戻る</h3><p>Updateのphaseとして分ければ、アニメーションをはさみながら同じ循環を進められます。</p></div><pre><code>clearMatches()
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>連鎖リアクション | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/match3/cascade/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 3マッチパズル</a><span>STEP 04 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>連鎖リアクション</h1><p>落下と補充のあとにもう一度探索し、マッチが0個になるまで解決を繰り返します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>処理ループと連鎖倍率</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>白い並びを解決し、次の連鎖を見つけよう。</h2></div><p>下ボタンをタップまたはSpace。盤面が止まるまで進め、3手を解決するとクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="連鎖リアクション" src="../../../../play/cascade/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RESOLUTION LOOP</p><h2>「もう一度調べる」が連鎖を生む。</h2><p class="lesson-lead">消去、落下、補充のあとでscanを呼びます。結果が空でなければ同じ処理へ戻り、空なら操作を返します。<strong>盤面が止まる条件</strong>がループの出口です。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>一つの連鎖を解決</h3><p>現在のmarkedを消し、列を詰め、空きを補充します。途中でプレイヤーの交換入力は読みません。</p><code>clear(); fall(); refill()</code></article><article><span class="concept-number">2</span><h3>新しい盤面を再検査</h3><p>落ちた結果は前と違う盤面です。そこでscanを再実行し、新しい3個並びをmarkedへ入れます。</p><code>marked = scan(board)</code></article><article><span class="concept-number">3</span><h3>連鎖数を得点へ</h3><p>1連鎖目は×1、2連鎖目は×2と増やします。偶然続いた大連鎖ほど大きなごほうびになります。</p><code>score += cells * 10 * combo</code></article></div><div class="motion-lab" data-lab="match-scan" data-found="連鎖の芽！" data-none="そろいなし（連鎖終了）" data-cleared="落下 — もう一度スキャン" aria-labelledby="lab-title-cascade">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / CASCADE</p>
+<h3 id="lab-title-cascade">消す→落とす→もう一度探す</h3>
+<p>スキャンで光らせ、消して落下、もう一度スキャン。落ちたあとに新しいそろいができるのが連鎖です。1回で終わらせないのがポイントです。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan>スキャン</button><button type="button" class="lab-button" data-lab-clear>消して落下</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<p class="lab-hint">本番も while で「そろいがなくなるまで」くり返します。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>光ったマス</span><strong data-lab-count>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">THE CASCADE LOOP</p><div class="formula-lines"><code>scan → clear → gravity</code><span>つぎに</span><code>そろいがある間くり返す</code></div><p>得点は連鎖の深さで倍増させると気持ちよくなります。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>見つからなくなるまで戻る</h3><p>Updateのphaseとして分ければ、アニメーションをはさみながら同じ循環を進められます。</p></div><pre><code>clearMatches()
 fallAndRefill()
 matches = scan(board)
 if len(matches) &gt; 0 {
@@ -30,6 +42,19 @@ if len(matches) &gt; 0 {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

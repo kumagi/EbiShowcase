@@ -1,4 +1,19 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>曲がり角の先行入力 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/maze-chase/buffered-turn/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 迷路追跡ゲーム</a><span>STEP 02 / 06</span></div><section class="overview-hero"><p class="eyebrow">パックマン型の追いかけっこを作る</p><h1>曲がり角の先行入力</h1><p>少し早く押した方向を覚え、次の交差点で自動的に曲がります。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>入力予約と交差点判定</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>データの変化を見て、<br>ルールを組み立てる。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで発見する</h3><p>完成したミニゲームから、入力と結果の関係を見つけます。</p></article><article><b>02</b><h3>内部データを見る</h3><p>マス、状態、探索候補を画面に重ね、処理の途中を見えるようにします。</p></article><article><b>03</b><h3>コードへつなぐ</h3><p>同じルールをEbitengineのUpdateとDraw、アセットデータで再構成します。</p></article></div></section><nav class="lesson-pager"><a href="../tile-runner/">← STEP 01<strong>迷路を走る</strong></a><a href="../pellet-map/">STEP 03 →<strong>ドットを食べる迷路</strong></a></nav>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>曲がり角の先行入力 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/maze-chase/buffered-turn/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 迷路追跡ゲーム</a><span>STEP 02 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">次の曲がり角を予約する</p><h1>曲がり角の先行入力</h1><p>曲がる少し前に方向を押しても、ゲームがその入力を覚えていれば、タイルの中心で気持ちよく曲がれます。</p><div class="lesson-meta"><span>★★☆☆☆</span><strong>PLAYABLE</strong></div></div></section>
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>光るゲートを10個通ろう</h2><p>矢印／WASD、クリック、タッチで次の方向を早めに入力します。CURRENTとQUEUEDの表示を比べてください。</p></div><div class="game-frame"><iframe src="../../../../play/buffered-turn/" title="曲がり角の先行入力を遊ぶ"></iframe></div></section>
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>「いま進む向き」と「次に進みたい向き」を分ける</h2><p>入力ですぐ向きを変えると、壁にめり込んだり中心からずれたりします。そこで<code>current</code>と<code>queued</code>を別々に持ちます。</p><div class="concept-row"><article><b>01</b><h3>押した方向を保存</h3><p>キーやタッチを受けたら、まず<code>queued</code>だけを書き換えます。</p></article><article><b>02</b><h3>中心で予約を試す</h3><p>次のタイルが通路なら<code>queued</code>を<code>current</code>へ移します。</p></article><article><b>03</b><h3>だめなら直進</h3><p>予約方向が壁なら消さずに待ち、今の方向へ進める間は直進します。</p></article></div></section>
+<section class="motion-lab" data-lab="turn"><div><p class="eyebrow">INPUT BUFFER LAB</p><h2>入力から曲がるまでを分ける</h2><p>押す、覚える、中心で判定、曲がる、の順番を1段ずつ確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">早めに方向を押す</p><button type="button" class="lab-action">次の段階へ</button></div></section>
+<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>中心に着いた瞬間だけ向きを決める</h2><p><code>Update</code>は毎フレーム入力を保存できますが、方向変更はタイル到着時だけにします。</p></div><pre><code>if dir, ok := directionInput(); ok {
+    queued = dir
+}
+if reachedTileCenter {
+    if passable(tile.add(queued)) {
+        current = queued
+    } else if !passable(tile.add(current)) {
+        return // 中心で止まる
+    }
+    target = tile.add(current)
+}</code></pre></section>
+<section class="why-grid"><article><h3>なぜ操作しやすくなる？</h3><p>ぴったり1フレームで押さなくてもよくなり、プレイヤーの「曲がりたい」をゲームが少し待てるからです。</p></article><article><h3>予約はいつ消す？</h3><p>このゲームでは成功するまで残します。短い時間で消す方式もあり、操作感を調整できます。</p></article><article><h3>チャレンジ</h3><p>予約を10フレームだけ有効にして、永久保存との遊びやすさを比べてみよう。</p></article></section><nav class="lesson-pager"><a href="../tile-runner/">← STEP 01<strong>迷路を走る</strong></a><a href="../pellet-map/">STEP 03 →<strong>ドットを食べる迷路</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -25,34 +40,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

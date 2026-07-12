@@ -1,4 +1,17 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Patrol and Chase | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/maze-chase/patrol-chase/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 04 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Pac-Man-style chase</p><h1>Patrol and Chase</h1><p>Give enemies patrol, chase, and flee modes with different targets.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Enemy modes and target tiles</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../pellet-map/">← STEP 03<strong>Pellet Maze</strong></a><a href="../junction-ai/">STEP 05 →<strong>Junction AI</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Patrol and Chase | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/maze-chase/patrol-chase/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 04 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Patrol and Chase</h1><p>Split the enemy into PATROL, CHASE, and SEARCH, switching target tiles from distance and straight-line vision.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Enemy modes, sight tests, and target tiles</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Break sight around corners and collect eight research badges.</h2></div><p>Yellow patrols, red chases, and purple searches the last seen place. You are spotted in the same clear corridor within seven tiles. Use arrows/WASD or hold mouse/touch buttons.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Patrol and Chase" src="../../../../play/patrol-chase/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ENEMY MODE MACHINE</p><h2>Change an enemy's destination to change its personality.</h2><p class="lesson-lead">The enemy owns mode and target. PATROL targets the next tile in a route, CHASE targets the current player, and SEARCH targets the last seen tile. Distance and <strong>line of sight</strong> switch modes.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>PATROL follows a stored route</h3><p>patrolRoute stores corner tiles in order. On arrival, increment index and wrap to zero at the end.</p><code>target = patrolRoute[patrolIndex]</code></article><article><span class="concept-number">2</span><h3>Straight sight starts CHASE</h3><p>The enemy sees when x or y matches, no # lies between, and distance is at most seven. Then player becomes the target.</p><code>if lineOfSight &amp;&amp; distance &lt;= 7 { mode = chase }</code></article><article><span class="concept-number">3</span><h3>Losing sight starts SEARCH</h3><p>Update lastSeen while visible. After a corner breaks sight, head there, then return to patrol on arrival or timeout.</p><code>target = lastSeen</code></article></div><div class="motion-lab" data-lab="ai" data-patrol="PATROL" data-chase="CHASE" aria-labelledby="patrol-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / DISTANCE MODE</p><h3 id="patrol-lab-title">Change distance to switch modes</h3><p>This model switches at distance 120. The real game additionally checks for a shared corridor without walls.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-closer>Move closer</button><button type="button" class="lab-button" data-lab-farther>Move farther</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div></div><div class="lab-visual"><div class="lab-board" role="img" aria-label="Model changing patrol to chase by distance"><div class="lab-mono-board">visible &amp;&amp; distance &lt; limit → CHASE</div></div><div class="lab-values"><div><span>mode</span><strong data-lab-state>PATROL</strong></div><div><span>Distance</span><strong data-lab-dist>180</strong></div><div><span>Model limit</span><strong>120</strong></div></div></div></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Separate transition from movement</h3><p>updateMode first selects state and target. moveEnemy then takes one tile toward that target. The label reads the same mode value.</p></div><pre><code>visible := hasLineOfSight(enemy, player) &amp;&amp;
+           manhattan(enemy, player) &lt;= 7
+if visible {
+    mode = chase
+    lastSeen = player
+} else if mode == chase {
+    mode = search
+}
+
+switch mode {
+case patrol: target = patrolRoute[index]
+case chase:  target = player
+case search: target = lastSeen
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY LAST SEEN?</p><h3>No perfect knowledge through walls</h3><p>An enemy that stops tracking your current position after sight breaks makes corner escapes a real strategy.</p></article><article><p class="eyebrow">WHY COLORS AND LABELS?</p><h3>Make states inspectable</h3><p>Text as well as color reveals which condition changed while the learner plays.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Add a hearing state</h3><p>Collecting a nearby badge could start INVESTIGATE with that badge tile as the target.</p></article></div></section><nav class="lesson-pager"><a href="../pellet-map/">← STEP 03<strong>Pellet Maze</strong></a><a href="../junction-ai/">STEP 05 →<strong>Junction AI</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -25,34 +38,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

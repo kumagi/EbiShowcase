@@ -1,4 +1,19 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Buffered Corner Turns | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/maze-chase/buffered-turn/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 02 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Pac-Man-style chase</p><h1>Buffered Corner Turns</h1><p>Remember an early direction press and turn automatically at the next intersection.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Input buffering and intersections</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../tile-runner/">← STEP 01<strong>Run the Maze</strong></a><a href="../pellet-map/">STEP 03 →<strong>Pellet Maze</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Buffered Corner Turns | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/maze-chase/buffered-turn/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 02 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">QUEUE THE NEXT CORNER</p><h1>Buffered Corner Turns</h1><p>When the game remembers a direction pressed slightly early, the runner can take it cleanly at the next tile center.</p><div class="lesson-meta"><span>★★☆☆☆</span><strong>PLAYABLE</strong></div></div></section>
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Cross ten glowing gates</h2><p>Queue the next direction early with arrows/WASD, click, or touch. Compare the CURRENT and QUEUED readouts.</p></div><div class="game-frame"><iframe src="../../../../play/buffered-turn/" title="Play Buffered Corner Turns"></iframe></div></section>
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Separate “moving now” from “want to move next”</h2><p>Turning immediately on input can push the runner into a wall or off a tile center. Keep <code>current</code> and <code>queued</code> as separate state.</p><div class="concept-row"><article><b>01</b><h3>Store the press</h3><p>A key or touch changes only <code>queued</code>.</p></article><article><b>02</b><h3>Try it at a center</h3><p>If the queued neighboring tile is open, copy it into <code>current</code>.</p></article><article><b>03</b><h3>Continue if blocked</h3><p>Keep the request waiting and continue straight while the current direction remains open.</p></article></div></section>
+<section class="motion-lab" data-lab="turn"><div><p class="eyebrow">INPUT BUFFER LAB</p><h2>Split a turn into steps</h2><p>Step through press, remember, center check, and turn.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">Press the direction early</p><button type="button" class="lab-action">Next phase</button></div></section>
+<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Choose direction only at tile centers</h2><p><code>Update</code> may remember input every frame, but it changes direction only when a tile is reached.</p></div><pre><code>if dir, ok := directionInput(); ok {
+    queued = dir
+}
+if reachedTileCenter {
+    if passable(tile.add(queued)) {
+        current = queued
+    } else if !passable(tile.add(current)) {
+        return // stop at the center
+    }
+    target = tile.add(current)
+}</code></pre></section>
+<section class="why-grid"><article><h3>Why does this feel better?</h3><p>The player need not hit one exact frame; the game waits briefly for their intention to become legal.</p></article><article><h3>When does the queue expire?</h3><p>This game keeps it until success. Other games use a short timer to tune the feel.</p></article><article><h3>Challenge</h3><p>Expire the queue after ten frames and compare it with the persistent version.</p></article></section><nav class="lesson-pager"><a href="../tile-runner/">← STEP 01<strong>Run the Maze</strong></a><a href="../pellet-map/">STEP 03 →<strong>Pellet Maze</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -25,34 +40,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

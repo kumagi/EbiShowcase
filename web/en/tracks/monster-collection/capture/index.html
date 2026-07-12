@@ -1,4 +1,25 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Capture Challenge | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/monster-collection/capture/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Creature Collection RPG</a><span>STEP 05 / 07</span></div><section class="overview-hero"><p class="eyebrow">Build a collect-and-train battle game</p><h1>Capture Challenge</h1><p>Calculate capture chance from remaining HP and items, then store the new ally.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Capture probability and storage</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../party-switch/">← STEP 04<strong>Party and Switching</strong></a><a href="../growth-evolution/">STEP 06 →<strong>Experience and Evolution</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Capture Challenge | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/monster-collection/capture/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Creature Collection RPG</a><span>STEP 05 / 07</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Capture Challenge</h1><p>Calculate capture chance from remaining HP, SLEEP, and tools, then save successful creatures into open storage slots.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Conditional probability, failure risk, and storage</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Capture three creatures while protecting HP and tools.</h2></div><p>Lower HP with GENTLE HIT, add SLEEP, inspect the chance, then choose a BASIC or REEF ORB. Click/tap or press 1–4. Failure costs the orb and triggers a counterattack.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Capture Challenge" src="../../../../play/capture/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / VISIBLE PROBABILITY</p><h2>Let preparation improve chance instead of relying on luck alone.</h2><p class="lesson-lead">Capture chance is always visible. Start at 15%, add up to 55% from missing HP, 20% for SLEEP, and 15% for a REEF ORB. Finally compare one 0–99 <strong>roll</strong> with that chance.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Build chance from current conditions</h3><p>HP 100 gives no bonus; HP 20 gives 44. Add status and tool bonuses, then cap the total at 95%.</p><code>chance = min(95, 15+hpBonus+status+item)</code></article><article><span class="concept-number">2</span><h3>Draw one random number</h3><p>Capture succeeds when roll is below chance. Showing both explains a result such as “79 &lt; 84, so success.”</p><code>captured := rng.Intn(100) &lt; chance</code></article><article><span class="concept-number">3</span><h3>Separate success and failure updates</h3><p>Success appends a name to storage. Failure consumes only the tool, removes SLEEP, and allows a counterattack.</p><code>storage = append(storage, wild.name)</code></article></div><div class="motion-lab" data-lab="capture-roll" data-rate="35" data-baited="baited" data-caught="caught! ({r})" data-missed="broke free ({r})" aria-labelledby="lab-title-capture">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / CATCH RATE</p>
+<h3 id="lab-title-capture">Boost the rate, then roll</h3>
+<p>Capture is a percentage. Bait raises it; Roll picks 0–99 and succeeds if below the rate. Failure is the other side of the same RNG.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-bait>Bait +15%</button><button type="button" class="lab-button" data-lab-roll>Roll</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset rate</button></div>
+<p class="lab-hint">Check party capacity before rolling.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>rate</span><strong data-lab-rate>35%</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">RATE THEN RNG</p><div class="formula-lines"><code>rate = base + modifiers</code><span>then</span><code>success if rand < rate</code></div><p>Keep the shown rate identical to the check.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Keep chance calculation separate from saving</h3><p>captureChance only returns a number. tryCapture draws the roll and updates storage only on success.</p></div><pre><code>func captureChance() int {
+    hpBonus := (maxHP-wildHP) * 55 / maxHP
+    statusBonus := 0
+    if sleeping { statusBonus = 20 }
+    return min(95, 15+hpBonus+statusBonus+itemBonus)
+}
+
+if rng.Intn(100) &lt; captureChance() {
+    storage = append(storage, wildName)
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY SHOW THE FORMULA?</p><h3>Plan the next action</h3><p>Visible contributions let players decide whether to attack once more or spend the stronger tool.</p></article><article><p class="eyebrow">WHY FAILURE RISK?</p><h3>Choose when to throw</h3><p>A lost tool and counterattack make repeated low-chance attempts a poor strategy.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Species capture rates</h3><p>Add baseRate to species data so rare creatures can begin with a lower base chance.</p></article></div></section><nav class="lesson-pager"><a href="../party-switch/">← STEP 04<strong>Party and Switching</strong></a><a href="../growth-evolution/">STEP 06 →<strong>Experience and Evolution</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -29,30 +50,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

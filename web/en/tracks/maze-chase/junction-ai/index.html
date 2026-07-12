@@ -1,4 +1,24 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Junction AI | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/maze-chase/junction-ai/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 05 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Pac-Man-style chase</p><h1>Junction AI</h1><p>Compare legal directions at junctions and choose one approaching the target.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Distance evaluation and no-reverse rules</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../patrol-chase/">← STEP 04<strong>Patrol and Chase</strong></a><a href="../ebi-maze/">STEP 06 →<strong>Ebi Maze</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Junction AI | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/maze-chase/junction-ai/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 05 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">Give each enemy a personality</p><h1>Junction AI</h1><p>At each junction, an enemy finds legal directions, removes the way back, and picks the step closest to its target. Change only the target data and its chasing style changes.</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section>
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Dodge two predictions and collect eight chips</h2><p>Move with arrows/WASD, clicks, or touch. The red HUNTER targets your current tile; the cyan AMBUSHER targets three tiles ahead. Colored rings show targets and yellow lines show chosen directions.</p></div><div class="game-frame"><iframe src="../../../../play/junction-ai/" title="Play Junction AI"></iframe></div></section>
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Split chasing into candidates, evaluation, and personality</h2><p>Do not move an enemy straight toward the player. First collect choices that obey the maze. Measure the Manhattan distance from each next tile to the target, then choose the smallest score.</p><div class="concept-row"><article><b>01</b><h3>List legal directions</h3><p>Inspect the four neighboring tiles and keep only directions that are not walls.</p></article><article><b>02</b><h3>Remove reverse</h3><p>When several choices exist, remove the way it came from. Keep reversal at a dead end so it never gets stuck.</p></article><article><b>03</b><h3>Score a personality target</h3><p>HUNTER targets now; AMBUSHER targets three tiles ahead. Both choose the candidate with minimum distance.</p></article></div></section>
+<section class="motion-lab" data-lab="turn"><div><p class="eyebrow">JUNCTION LAB</p><h2>Watch one direction emerge</h2><p>Advance through every decision an enemy makes when it reaches a junction.</p></div><div class="lab-stage" data-states="List legal directions,Remove the way back,Compute target from personality data,Score every candidate,Move along the minimum score"><div class="lab-entities" data-count="4"></div><p class="lab-readout" data-lab-state aria-live="polite">List legal directions</p><button type="button" data-lab-step>Next stage</button><button type="button" data-lab-reset>Reset</button></div></section>
+<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Pass personality targets into one chooser</h2><p>An <code>ahead</code> value of 0 means the current tile; 3 means three tiles along the player's direction. One algorithm supports different enemies through data.</p></div><pre><code>target := player
+if enemy.personality.ahead &gt; 0 {
+    target = player.add(playerDirection.mul(3))
+}
+
+legal := legalDirections(enemy.position)
+if len(legal) &gt; 1 {
+    legal = removeReverse(legal, enemy.direction)
+}
+best := legal[0]
+for _, dir := range legal[1:] {
+    if distance(enemy.position.add(dir), target) &lt;
+       distance(enemy.position.add(best), target) {
+        best = dir
+    }
+}</code></pre></section>
+<section class="why-grid"><article><h3>Why forbid reversal?</h3><p>Picking only the nearest move can make an enemy bounce between two tiles. Moving onward at junctions makes pursuit look intentional.</p></article><article><h3>How is it strategy?</h3><p>Turn away to build distance from HUNTER. Let AMBUSHER predict a straight run, then enter another corridor early. Reading personality becomes play.</p></article><article><h3>Challenge</h3><p>Add a SCATTER personality that chases from far away but retreats toward its own corner when the player gets close.</p></article></section><nav class="lesson-pager"><a href="../patrol-chase/">← STEP 04<strong>Patrol and Chase</strong></a><a href="../ebi-maze/">STEP 06 →<strong>Ebi Maze</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -24,35 +44,4 @@
     </section>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

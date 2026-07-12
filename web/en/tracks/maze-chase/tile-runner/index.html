@@ -1,4 +1,29 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Run the Maze | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/maze-chase/tile-runner/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Pac-Man-style chase</p><h1>Run the Maze</h1><p>Move smoothly along corridor centers and block turns into walls.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Tile centers and direction</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../buffered-turn/">STEP 02 →<strong>Buffered Corner Turns</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Run the Maze | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/maze-chase/tile-runner/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Run the Maze</h1><p>Represent a maze with wall and corridor tiles, moving straight to the center of each legal next tile.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Tile centers, passability, and center-to-center motion</strong></div></section><p class="curriculum-bridge">This continues the shared foundation. If the frame loop is new, begin with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>. Here Update changes the current tile and travel progress; Draw places the runner at the in-between position.</p><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Collect twelve maze pearls within 45 seconds.</h2></div><p>Hold a direction while on a center. A wall direction never starts. Use arrows/WASD or hold the bottom buttons with mouse or touch.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Run the Maze" src="../../../../play/tile-runner/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CENTER TO CENTER</p><h2>Connect free-moving screen coordinates to maze cells.</h2><p class="lesson-lead">Maze data is a maze[y][x] table of characters: # means wall and . means corridor. The runner remembers its tile, adds a direction to make a <strong>candidate tile</strong>, and begins moving only when that tile is open.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Turn a tile into its center</h3><p>Multiply column x by tile width, then add the maze left and half a tile. The same equation for y gives every corridor a center.</p><code>centerX = mazeX + tileX*tileSize + tileSize/2</code></article><article><span class="concept-number">2</span><h3>Check whether the next tile is legal</h3><p>Add a direction such as (-1,0). Movement is legal when the candidate is inside and maze[nextY][nextX] is not #.</p><code>passable := maze[next.y][next.x] != '#'</code></article><article><span class="concept-number">3</span><h3>Interpolate center to center</h3><p>Increase progress from zero to one and draw between from and to. At one, set the current tile to target.</p><code>screenX = fromX + (toX-fromX)*progress</code></article></div><div class="motion-lab" data-lab="tile" data-blocked="wall that way" aria-labelledby="lab-title-tile-runner">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / LEGAL TILE</p>
+<h3 id="lab-title-tile-runner">Walls reject the step</h3>
+<p>Arrows move row/col by integers. Red cells are walls—illegal moves leave you in place. The real game only lerps between two centers.</p>
+<div class="lab-controls"><button type="button" class="lab-button" data-lab-up>↑</button><button type="button" class="lab-button" data-lab-left>←</button><button type="button" class="lab-button" data-lab-right>→</button><button type="button" class="lab-button" data-lab-down>↓</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<p class="lab-hint">Accept a new heading only after arriving at a center to stay in the corridor.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>tile x,y</span><strong data-lab-pos>0</strong></div><div><span>facing</span><strong data-lab-face>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Start new movement only at a center</h3><p>While moving, advance only progress. Once moving becomes false at a center, convert input into a candidate tile.</p></div><pre><code>if moving {
+    progress += 0.105
+    if progress &gt;= 1 {
+        tile = target
+        moving = false
+    }
+    return
+}
+
+next := tile.add(direction)
+if passable(next) {
+    target = next
+    moving = true
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY TILE DATA?</p><h3>Wall tests become one character</h3><p>Instead of comparing many wall rectangles, use row and column to ask whether one character is #.</p></article><article><p class="eyebrow">WHY CENTERS?</p><h3>Never drift out of corridors</h3><p>Every step finishes at an exact center, preventing small errors from accumulating toward a wall.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Remember an early press</h3><p>Save a direction pressed during movement as wantedDir, then test it at the next center for STEP 02 buffering.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../buffered-turn/">STEP 02 →<strong>Buffered Corner Turns</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -26,33 +51,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

@@ -1,4 +1,32 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>道具と明かり | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/sandbox/tools-light/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2Dブロックサンドボックス</a><span>STEP 05 / 07</span></div><section class="overview-hero"><p class="eyebrow">掘って作れる世界を作る</p><h1>道具と明かり</h1><p>道具ごとの得意素材と、松明から広がる簡易的な明るさを計算します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>採掘速度とタイル光源</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>データの変化を見て、<br>ルールを組み立てる。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで発見する</h3><p>完成したミニゲームから、入力と結果の関係を見つけます。</p></article><article><b>02</b><h3>内部データを見る</h3><p>マス、状態、探索候補を画面に重ね、処理の途中を見えるようにします。</p></article><article><b>03</b><h3>コードへつなぐ</h3><p>同じルールをEbitengineのUpdateとDraw、アセットデータで再構成します。</p></article></div></section><nav class="lesson-pager"><a href="../inventory-crafting/">← STEP 04<strong>道具袋とクラフト</strong></a><a href="../creature-world/">STEP 06 →<strong>生き物のいる世界</strong></a></nav>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>道具と明かり | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/sandbox/tools-light/">EN</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← 2Dブロックサンドボックス</a><span>STEP 05 / 07</span></div>
+<section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>道具と明かり</h1><p>素材に合う道具で耐久を節約し、昼夜の暗さを松明から広がるタイル光で照らします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>道具の相性・耐久値・タイル光源</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>木4個・石4個を採掘し、松明2本でキャンプを照らそう。</h2></div><p>斧・ツルハシ・松明をタップして選び、盤面をタップ。PCでは1・2・3/Tで選択しマウスで採掘。夜に暗いマスは、近くへ松明を置いて照らします。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="道具と明かりの採掘ゲーム" src="../../../../play/tools-light/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / TOOL DATA AND TILE LIGHT</p><h2>「何で掘るか」と「見えるか」を、マスを変える前に調べる。</h2><p class="lesson-lead">前のステップで作った道具には、得意素材・威力・耐久値を持たせます。採掘する前に道具と素材の組を調べ、さらにそのマスの光量を調べます。松明は周りを一度に明るくする絵ではなく、各マスが<strong>光源までの距離</strong>から明るさを計算します。</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>道具と素材を照合</h3><p>斧は木、ツルハシは石なら威力3・耐久消費1です。相性が違うと威力1・消費2になり、同じ仕事でも道具が早く壊れます。</p><code>if tool.preferred == block.material { power = 3 }</code></article><article><span class="concept-number">2</span><h3>耐久値も状態として減らす</h3><p>採掘したときだけ耐久値を引き、0ならそれ以上使えません。必要な素材を集める前に対応道具が0になると失敗です。</p><code>durability[selected] -= cost</code></article><article><span class="concept-number">3</span><h3>いちばん強い光を選ぶ</h3><p>昼夜の光と各松明の光を比べ、最大値をそのマスの光量にします。松明は1マス離れるごとに2ずつ暗くなります。</p><code>light = max(daylight, 9-distance*2)</code></article></div>
+<div class="motion-lab" data-lab="light-flood" data-torch="設置" data-flooded="拡散" aria-labelledby="lab-title-tools-light">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / LIGHT BFS</p>
+<h3 id="lab-title-tools-light">光源から明るさを広げよう</h3>
+<p>トーチを置くと中心が明るい値になります。「拡散」で上下左右へ1ずつ減衰してコピー。道具の耐久とは別計算です。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-torch>トーチ設置</button><button type="button" class="lab-button" data-lab-flood>1回拡散</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>消灯</button></div>
+<p class="lab-hint">壁で止めたいときは、壁マスへ値を書き込まないだけでできます。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>明るいマス</span><strong data-lab-lit>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">DECAY FLOOD</p><div class="formula-lines"><code>center = power</code><span>つぎに</span><code>neighbor = max(old, power-1)</code></div><p>光は加算でも上書きでもよいが、ルールを1つに。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>昼夜とすべての松明から最大光量を作る</h3><p>明るさは0〜9の整数です。色だけでなく画面上にもDAY/NIGHTと数値を出し、採掘できない理由が分かるようにしています。</p></div><pre><code>func (g *Game) lightAt(x, y int) int {
+    light := g.daylight()
+    for _, torch := range g.torches {
+        distance := abs(x-torch.x) + abs(y-torch.y)
+        light = max(light, 9-distance*2)
+    }
+    return max(0, min(9, light))
+}</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY TOOL DATA?</p><h3>新しい素材へ広げられる</h3><p>道具ごとのifを増やさず、得意素材と威力のデータを足して種類を増やせます。</p></article><article><p class="eyebrow">WHY MAX LIGHT?</p><h3>光源が重なっても安全</h3><p>昼と松明を足し続けて真っ白にせず、その場所へ届く最も強い光として扱えます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>壁で光を止める</h3><p>石壁を通るたび光をさらに減らし、洞窟の曲がり角を暗くしてみよう。</p></article></div>
+</section><nav class="lesson-pager"><a href="../inventory-crafting/">← STEP 04<strong>道具袋とクラフト</strong></a><a href="../creature-world/">STEP 06 →<strong>生き物のいる世界</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -32,27 +60,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

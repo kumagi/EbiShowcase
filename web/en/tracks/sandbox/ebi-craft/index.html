@@ -1,4 +1,135 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Craft | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/sandbox/ebi-craft/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D Block Sandbox</a><span>STEP 07 / 07</span></div><section class="overview-hero"><p class="eyebrow">Build a world you can mine and create</p><h1>Ebi Craft</h1><p>Save changed chunks, inventory, and player position to restore the world.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>World diffs and restoration</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../creature-world/">← STEP 06<strong>A Living World</strong></a><a href="../">BACK TO PATH →<strong>2D Block Sandbox</strong></a></nav>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ebi Craft | Ebi Showcase</title>
+<link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+<header class="nav">
+<a class="brand" href="../../../">
+<span>EBI</span> SHOWCASE</a>
+<nav>
+<a href="../">PATH</a>
+<a href="#learn">HOW IT WORKS</a>
+<a class="lang" href="../../../../ja/tracks/sandbox/ebi-craft/">日本語</a>
+</nav>
+</header>
+<main class="overview-main">
+<div class="lesson-breadcrumb">
+<a href="../">← 2D Block Sandbox</a>
+<span>STEP 07 / 07</span>
+</div>
+<section class="overview-hero">
+<p class="eyebrow">★★★★☆ / PLAYABLE</p>
+<h1>Ebi Craft</h1>
+<p>Explore three chunks and combine gathering, crafting, building, light, and creatures to protect the world at night.</p>
+<div class="overview-concept">
+<small>NEW CONCEPT</small>
+<strong>Composed world systems and restoration</strong>
+</div>
+</section>
+<section class="play lesson-play">
+<div class="section-head">
+<div>
+<p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
+<h2>Build a lantern in all three chunks.</h2>
+</div>
+<p>Move with arrows/WASD or tap a neighboring cell. First craft a pickaxe from wood and stone, then mine crystal. Gather all three materials per chunk and CRAFT+PLACE. Try K or SAVE/LOAD to restore a checkpoint.</p>
+</div>
+<div class="game-shell">
+<div class="game-top">
+<span>● LIVE / GO + WASM</span>
+<span>STEP 07 / FINAL</span>
+</div>
+<div id="game-wrap">
+<iframe class="lesson-game-frame" title="Ebi Craft" src="../../../../play/ebi-craft/" allow="autoplay; fullscreen">
+</iframe>
+</div>
+</div>
+</section>
+<section class="physics" id="learn">
+<div class="lesson-intro">
+<p class="eyebrow">DEEP DIVE / COMPOSED WORLD STATE</p>
+<h2>Connect separate systems through the same world data.</h2>
+<p class="lesson-lead">Terrain, chunks, inventory, lanterns, creatures, and time of day are separate rules. They all read and write <strong>one game state</strong>. Harvest empties a tile and adds inventory; those items become light; light repels creatures. That chain of cause and effect becomes the game.</p>
+</div>
+<div class="concept-row">
+<article>
+<span class="concept-number">1</span>
+<h3>Split the world into states</h3>
+<p>tiles owns terrain, inventory owns counts, lanterns owns chunk goals, and creature owns AI. Their roles differ, but Update advances them in a clear order.</p>
+<code>world → inventory → light → creatures</code>
+</article>
+<article>
+<span class="concept-number">2</span>
+<h3>Connect rules by handoff</h3>
+<p>Harvest writes zero to tiles and adds items. Crafting spends items and writes a lantern. Nearby lantern tiles remove night creatures.</p>
+<code>tile → item → recipe → light → AI</code>
+</article>
+<article>
+<span class="concept-number">3</span>
+<h3>Save every needed state</h3>
+<p>Saving tiles alone cannot restore the same world if position and inventory reset. Copy every value required to continue into one snapshot.</p>
+<code>snapshot{tiles, player, inventory, lanterns}</code>
+</article>
+</div>
+<div class="motion-lab" data-lab="pipeline" data-steps="seed,chunks,inventory,player" data-loop="saved → reload" aria-labelledby="lab-title-ebi-craft">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / WORLD RESTORE</p>
+<h3 id="lab-title-ebi-craft">Collect savable state in order</h3>
+<p>Restoring a world is a pipe of what to save: seed → chunks → inventory → player. Load in the same order.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>Next field</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Start</button></div>
+<p class="lab-hint">Save seed + diffs, not raw images.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>field</span><strong data-lab-stepn>0</strong></div><div><span>now</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">SAVE BOUNDARY</p><div class="formula-lines"><code>write fields in order</code><span>then</span><code>read fields in same order</code></div><p>Avoid half-old save layouts.</p></div><div class="code-lesson">
+<div>
+<p class="eyebrow">IN THE REAL GAME</p>
+<h3>Save and load travel through the same shape</h3>
+<p>Save copies current values into snapshot; load copies the same fields back into game. Add every new persistent system to this shape.</p>
+</div>
+<pre>
+<code>type snapshot struct {
+    tiles [worldH][worldW]int
+    px, py int
+    wood, stone, crystal int
+    lanterns [3]bool
+    pickaxe bool
+}
+saved = snapshot{tiles, px, py,
+    wood, stone, crystal, lanterns, pickaxe}
+// load copies the same fields back</code>
+</pre>
+</div>
+<div class="why-grid">
+<article>
+<p class="eyebrow">WHY COMPOSE?</p>
+<h3>One change creates the next choice</h3>
+<p>Gathering and AI become a purposeful world when each system consumes another system's result.</p>
+</article>
+<article>
+<p class="eyebrow">WHY CHUNKS?</p>
+<h3>Repeat a goal by region</h3>
+<p>Divide player x by chunkW to record which region received a lantern.</p>
+</article>
+<article class="challenge">
+<p class="eyebrow">TRY NEXT</p>
+<h3>Save only differences</h3>
+<p>Design a list that stores only coordinates and kinds that differ from generated terrain.</p>
+</article>
+</div>
+</section>
+<nav class="lesson-pager">
+<a href="../creature-world/">← STEP 06<strong>A Living World</strong>
+</a>
+<a href="../">BACK TO PATH →<strong>2D Block Sandbox</strong>
+</a>
+</nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -55,4 +186,21 @@
 
 
 
-</main></body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</main>
+<script src="../../../../learn.js">
+</script>
+</body>
+</html>

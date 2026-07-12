@@ -5,8 +5,19 @@
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT EVENT</p><h2>「触れている」から「触れた瞬間」を取り出す。</h2><p class="lesson-lead">円の重なりを毎フレーム調べるだけだと、くっついている間に60回も能力が出ます。今の接触と前の接触を比べ、<strong>今は触れていて、前は離れていた</strong>ときだけイベントを作ります。そのイベントが味方の能力データを読みます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>今の接触を調べる</h3><p>中心どうしの距離が二つの半径の合計以下なら接触です。画面の円と同じ簡単な円判定を使います。</p><code>touching := distance &lt;= playerR + allyR</code></article><article><span class="concept-number">2</span><h3>開始した瞬間だけイベント</h3><p><code>touching</code>がtrueで、前回の<code>wasTouching</code>がfalseなら新しい接触です。最後に今の値を次回用へ保存します。</p><code>if touching &amp;&amp; !wasTouching { activate() }</code></article><article><span class="concept-number">3</span><h3>能力データで処理を選ぶ</h3><p>味方は名前、種類、強さを持ちます。共通の<code>activate</code>が種類を見て、レーザー・回復・衝撃波へ分けます。</p><code>Ability{Name: "HEAL", Kind: Heal, Power: 2}</code></article></div>
-<div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / EVENT QUEUE</p><h3>接触イベントを一つずつ処理しよう</h3><p>接触が始まったらイベントを待ち列へ追加し、ゲームルールが順番に実行します。効果が同時に起きても順序を保てます。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fire>接触イベント追加</button><button type="button" class="lab-button" data-lab-step>1件を発動</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>空にする</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>待っている効果</span><strong data-lab-count>0</strong></div><div><span>発動する順番</span><strong data-lab-list>—</strong></div></div></div></div>
-<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>接触の入口は共通、結果はデータで分岐</h3><p>味方ごとに当たり判定を作り直しません。同じ入口から能力番号を渡すので、新能力を足しても移動や接触コードは変わりません。</p></div><pre><code>now := circlesTouch(player, ally)
+<div class="motion-lab" data-lab="event-queue" data-event="ally" data-pushed="キューへ" data-popped="{e} を解決" data-empty="空" aria-labelledby="lab-title-ally-effects">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / CONTACT QUEUE</p>
+<h3 id="lab-title-ally-effects">接触イベントを1件ずつ処理</h3>
+<p>接触したらすぐ能力を発動せず、イベントをキューへ入れます。「処理」で先頭から1件解決。同時に複数触れても順番が保てます。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-push>接触を追加</button><button type="button" class="lab-button" data-lab-pop>1件処理</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>空にする</button></div>
+<p class="lab-hint">キューが空になるまで Update で消化します。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>待ち</span><strong data-lab-count>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">QUEUE THEN RESOLVE</p><div class="formula-lines"><code>on contact: push event</code><span>つぎに</span><code>later: pop & apply</code></div><p>物理の瞬間と効果解決を分離します。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>接触の入口は共通、結果はデータで分岐</h3><p>味方ごとに当たり判定を作り直しません。同じ入口から能力番号を渡すので、新能力を足しても移動や接触コードは変わりません。</p></div><pre><code>now := circlesTouch(player, ally)
 if now &amp;&amp; !ally.wasTouching &amp;&amp; ally.cooldown == 0 {
     activate(abilities[ally.ability])
     ally.cooldown = 75
@@ -37,6 +48,19 @@ ally.wasTouching = now</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

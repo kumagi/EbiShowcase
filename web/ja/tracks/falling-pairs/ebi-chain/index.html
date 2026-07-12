@@ -1,4 +1,25 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Chain | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/falling-pairs/ebi-chain/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 落下ペア連鎖パズル</a><span>STEP 06 / 06</span></div><section class="overview-hero"><p class="eyebrow">ぷよぷよ型の連鎖を作る</p><h1>Ebi Chain</h1><p>次の組、全消し、連鎖によるおじゃま送信を統合して完成させます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>予告・おじゃま・対戦ルール</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>データの変化を見て、<br>ルールを組み立てる。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで発見する</h3><p>完成したミニゲームから、入力と結果の関係を見つけます。</p></article><article><b>02</b><h3>内部データを見る</h3><p>マス、状態、探索候補を画面に重ね、処理の途中を見えるようにします。</p></article><article><b>03</b><h3>コードへつなぐ</h3><p>同じルールをEbitengineのUpdateとDraw、アセットデータで再構成します。</p></article></div></section><nav class="lesson-pager"><a href="../chain-score/">← STEP 05<strong>連鎖スコア研究所</strong></a><a href="../">コース全体へ →<strong>落下ペア連鎖パズル</strong></a></nav>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Chain | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/falling-pairs/ebi-chain/">EN</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← 落下ペア連鎖パズル</a><span>STEP 06 / 06</span></div>
+<section class="overview-hero"><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>Ebi Chain</h1><p>落下ペア、回転、同色探索、同時消去、重力、再探索、連鎖得点、全消し、おじゃま対戦を一つにします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>解決フェーズと対戦結果の統合</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>2連鎖を2回作り、おじゃま12個で相手リーフを埋めよう。</h2></div><p>LEFT/TURN/RIGHT/DROPをタップ。PCでは←・↑・→/A・W・DとSpace。白枠を同時消去し、重力後に再探索します。不発3回でこちらが敗北です。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Chain 連鎖おじゃま対戦" src="../../../../play/ebi-chain/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RESOLUTION STATE MACHINE</p><h2>操作を止め、盤面が落ち着くまで同じ循環を回す。</h2><p class="lesson-lead">ペアを固定したら、プレイヤー入力から盤面解決へ主役を渡します。<code>find → clear all → gravity → find again</code>を、見つからなくなるまで続けます。止まった時だけ得点とおじゃまを確定し、次のペアを出す。この<strong>フェーズの境界</strong>が、前5段の処理を安全につなぎます。</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>現在と次のペアを分ける</h3><p>spawnは予告データを現在へ移し、その後に次の予告を補充します。Drawは操作中のペアとNEXT欄を別々の値から描きます。</p><code>pivotKind = nextPivotKind; refillNext()</code></article><article><span class="concept-number">2</span><h3>消去と重力を交互にする</h3><p>4連結を全部markedへ入れて同時消去し、列を圧縮してから再探索します。新しい組があればchainを増やしてCLEARへ戻ります。</p><code>CLEAR → GRAVITY → RESCAN → CLEAR ...</code></article><article><span class="concept-number">3</span><h3>停止時に対戦結果を送る</h3><p>1連鎖ごとにおじゃま2個、盤面が空ならさらに2個です。不発なら逆に灰色おじゃまが自分の盤面へ1個落ちます。</p><code>sent := chain*2 + allClearBonus</code></article></div>
+<div class="motion-lab" data-lab="turn" data-states="ペア操作,同色探索,同時消去,列重力,再探索,おじゃま送信"><div class="lab-copy"><p class="eyebrow">TRY IT / RESOLUTION PHASES</p><h3>1手が止まるまで順に進めよう</h3><p>盤面を書き換える段階では新しい操作を受けません。再探索で0組になった時だけ、送信量を決めて次の手へ戻ります。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>次のフェーズ</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>ペア操作へ戻す</button></div></div><div class="lab-visual"><div class="lab-board"><div class="lab-mono-board">aim → find → clear → fall → rescan → send</div></div><div class="lab-values"><div><span>現在</span><strong data-lab-state>ペア操作</strong></div><div><span>入力</span><strong>フェーズで切替</strong></div><div><span>出口</span><strong>グループ0</strong></div></div></div></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>重力後の再探索が連鎖の分かれ道</h3><p>markedが空でなければ連鎖数を増やし、同じCLEARフェーズへ戻ります。空ならこの手を終了し、連鎖数を送信量へ変換します。</p></div><pre><code>compactColumns()
+marked = findGroups(board)
+if len(marked) &gt; 0 {
+    chain++
+    phase = phaseClear
+    return
+}
+
+bonus := 0
+if boardEmpty() { bonus = 2 }
+opponentGarbage += chain*2 + bonus
+spawn()</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY LOCK INPUT?</p><h3>解決中の盤面を守る</h3><p>消去と落下の途中にペアを動かせないため、見た目とboard配列が食い違いません。</p></article><article><p class="eyebrow">WHY CLEAR GARBAGE NEXT TO COLORS?</p><h3>妨害にも攻略方法を作る</h3><p>灰色は自分では4連結になりませんが、消える色の上下左右なら巻き込めます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>相殺を追加</h3><p>受け取る予定のおじゃまを先に自分の送信量で減らし、残りだけ相手へ送るルールを作ろう。</p></article></div>
+</section><nav class="lesson-pager"><a href="../chain-score/">← STEP 05<strong>連鎖スコア研究所</strong></a><a href="../">コース全体へ →<strong>落下ペア連鎖パズル</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -27,32 +48,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

@@ -1,4 +1,15 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Clear and Drop | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/falling-pairs/clear-gravity/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Falling-pair Chain Puzzle</a><span>STEP 04 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Puyo Puyo-style chain puzzle</p><h1>Clear and Drop</h1><p>Clear all qualifying groups together and compact remaining pieces downward.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Group clearing and column compaction</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../color-groups/">← STEP 03<strong>Find Color Groups</strong></a><a href="../chain-score/">STEP 05 →<strong>Chain Scoring Lab</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Clear and Drop | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/falling-pairs/clear-gravity/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Falling-pair Chain Puzzle</a><span>STEP 04 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Clear and Drop</h1><p>Clear every group of four or more together, then compact each column from the bottom.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Simultaneous clearing, holes, and column compaction</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Resolve four boards in the correct two stages.</h2></div><p>Inspect white outlines and press CLEAR ALL, inspect holes and press GRAVITY, then NEXT after settling. Three order errors lose. Click/tap or use C/G/N.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Clear and Drop" src="../../../../play/clear-gravity/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CLEAR THEN COMPACT</p><h2>Do not mix clearing and falling in one loop.</h2><p class="lesson-lead">Collect every four-plus group from the previous step into marked. First turn all marked cells into empty holes. Only after the hole pattern is final should each column be read bottom-up and <strong>compacted</strong>.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Collect all targets first</h3><p>Finish flood fill before changing the board, adding coordinates from every qualifying group to one marked set.</p><code>marked[p] = true</code></article><article><span class="concept-number">2</span><h3>Clear every group together</h3><p>Walk marked and write empty. Never clear during search, where it could break a later group's connections.</p><code>for p := range marked { board[p.y][p.x] = empty }</code></article><article><span class="concept-number">3</span><h3>Compact columns from below</h3><p>Put write on the bottom. Copy only nonempty cells while reading upward, then fill every row above write with empty.</p><code>board[write][x] = board[read][x]; write--</code></article></div><div class="motion-lab" data-lab="turn" data-states="Find groups,Clear together,Compact columns,Check settled" aria-labelledby="clear-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / TWO-STAGE BOARD UPDATE</p><h3 id="clear-lab-title">Advance the board one stage at a time</h3><p>Move through find, clear, compact, and settle. Separate states expose exactly when data changes.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>Next stage</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Start over</button></div></div><div class="lab-visual"><div class="lab-board" role="img" aria-label="Board processing from search to settled"><div class="lab-mono-board">find → clear all → compact columns</div></div><div class="lab-values"><div><span>Current</span><strong data-lab-state>Find groups</strong></div><div><span>Change unit</span><strong>board phase</strong></div><div><span>Order</span><strong>one at a time</strong></div></div></div></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Skip holes with read and write</h3><p>read visits every cell. write marks the next packed row. Empty cells do not move write, so only remaining colors collect at the bottom.</p></div><pre><code>for x := 0; x &lt; cols; x++ {
+    write := rows - 1
+    for read := rows-1; read &gt;= 0; read-- {
+        if board[read][x] == empty { continue }
+        board[write][x] = board[read][x]
+        write--
+    }
+    for write &gt;= 0 {
+        board[write][x] = empty
+        write--
+    }
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY SIMULTANEOUS?</p><h3>Do not alter search results midway</h3><p>Clearing one group at a time changes connections for groups checked later. Mark all, then change all.</p></article><article><p class="eyebrow">WHY PER COLUMN?</p><h3>Preserve horizontal position</h3><p>Gravity moves only downward, so column processing closes holes without changing x.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Record falling distance</h3><p>Save read-write as each cell's travel distance, then animate that distance gradually in Draw.</p></article></div></section><nav class="lesson-pager"><a href="../color-groups/">← STEP 03<strong>Find Color Groups</strong></a><a href="../chain-score/">STEP 05 →<strong>Chain Scoring Lab</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -27,32 +38,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

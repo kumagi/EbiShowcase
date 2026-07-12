@@ -1,4 +1,25 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>捕獲チャレンジ | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/monster-collection/capture/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← モンスター収集RPG</a><span>STEP 05 / 07</span></div><section class="overview-hero"><p class="eyebrow">集めて育てるバトルを作る</p><h1>捕獲チャレンジ</h1><p>残りHPや道具によって変わる確率を計算し、新しい仲間として保存します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>捕獲確率と所持枠</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>データの変化を見て、<br>ルールを組み立てる。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで発見する</h3><p>完成したミニゲームから、入力と結果の関係を見つけます。</p></article><article><b>02</b><h3>内部データを見る</h3><p>マス、状態、探索候補を画面に重ね、処理の途中を見えるようにします。</p></article><article><b>03</b><h3>コードへつなぐ</h3><p>同じルールをEbitengineのUpdateとDraw、アセットデータで再構成します。</p></article></div></section><nav class="lesson-pager"><a href="../party-switch/">← STEP 04<strong>パーティと交代</strong></a><a href="../growth-evolution/">STEP 06 →<strong>経験値と進化</strong></a></nav>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>捕獲チャレンジ | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/monster-collection/capture/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← モンスター収集RPG</a><span>STEP 05 / 07</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>捕獲チャレンジ</h1><p>残りHP、SLEEP、道具から捕獲率を計算し、成功した個体を空いている所持枠へ保存します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>条件つき確率・失敗リスク・所持枠</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>HPと道具を守りながら3体を捕獲しよう。</h2></div><p>GENTLE HITでHPを下げ、SLEEPを付け、捕獲率を見てBASIC/REEF ORBを選びます。クリック/タップ、または1〜4。失敗は反撃と道具消費です。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="捕獲チャレンジ" src="../../../../play/capture/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / VISIBLE PROBABILITY</p><h2>運だけにせず、準備したぶん確率を上げる。</h2><p class="lesson-lead">捕獲率はいつも画面に見えます。基本15%へ、減ったHPから最大55%、SLEEPなら20%、REEF ORBなら15%を足します。最後に0〜99の<strong>roll</strong>が確率より小さいかを比べます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>今の条件から確率を作る</h3><p>HP100ならボーナス0。HP20なら44。SLEEPや道具も足し、強すぎないよう最大95%で止めます。</p><code>chance = min(95, 15+hpBonus+status+item)</code></article><article><span class="concept-number">2</span><h3>乱数を一度だけ引く</h3><p>rollがchance未満なら成功です。画面へ両方を出すと、「79 &lt; 84だから成功」のように結果を説明できます。</p><code>captured := rng.Intn(100) &lt; chance</code></article><article><span class="concept-number">3</span><h3>成功と失敗でデータを分ける</h3><p>成功はstorageへ名前を追加。失敗は道具だけ消え、SLEEPが解けて反撃を受けます。どちらも同じ状態にはしません。</p><code>storage = append(storage, wild.name)</code></article></div><div class="motion-lab" data-lab="capture-roll" data-rate="35" data-baited="エサ" data-caught="捕獲成功 ({r})" data-missed="逃げられた ({r})" aria-labelledby="lab-title-capture">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / CATCH RATE</p>
+<h3 id="lab-title-capture">捕獲率を上げてロールしよう</h3>
+<p>捕獲は確率です。エサで率を上げ、「ロール」で 0–99 を振って率未満なら成功。失敗リスクも同じ乱数の反対側です。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-bait>エサ +15%</button><button type="button" class="lab-button" data-lab-roll>ロール</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>率を戻す</button></div>
+<p class="lab-hint">所持枠チェックはロールの前に行います。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>捕獲率</span><strong data-lab-rate>35%</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">RATE THEN RNG</p><div class="formula-lines"><code>rate = base + modifiers</code><span>つぎに</span><code>success if rand < rate</code></div><p>表示する率と内部判定を一致させます。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>確率計算と保存を別の関数にする</h3><p>captureChanceは数字を返すだけ。tryCaptureが乱数を引き、成功したときだけstorageを更新します。</p></div><pre><code>func captureChance() int {
+    hpBonus := (maxHP-wildHP) * 55 / maxHP
+    statusBonus := 0
+    if sleeping { statusBonus = 20 }
+    return min(95, 15+hpBonus+statusBonus+itemBonus)
+}
+
+if rng.Intn(100) &lt; captureChance() {
+    storage = append(storage, wildName)
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY SHOW THE FORMULA?</p><h3>次の作戦を考えられる</h3><p>どの条件が何%増やしたか見えれば、攻撃をもう1回するか、強い道具を使うかを選べます。</p></article><article><p class="eyebrow">WHY FAILURE RISK?</p><h3>投げどきを選ぶ</h3><p>失敗で反撃と道具消費があるため、低確率で何度も試すだけでは勝ちにくくなります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>種族ごとの捕まりやすさ</h3><p>speciesへbaseRateを追加し、珍しい種族は基本値を低くするデータ設計を考えよう。</p></article></div></section><nav class="lesson-pager"><a href="../party-switch/">← STEP 04<strong>パーティと交代</strong></a><a href="../growth-evolution/">STEP 06 →<strong>経験値と進化</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -29,30 +50,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

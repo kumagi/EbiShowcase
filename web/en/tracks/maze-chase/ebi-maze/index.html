@@ -1,4 +1,24 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Maze | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/maze-chase/ebi-maze/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 06 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Pac-Man-style chase</p><h1>Ebi Maze</h1><p>Combine vulnerable enemies, returning home, speed changes, and multiple stages.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Power states, respawn, and difficulty</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../junction-ai/">← STEP 05<strong>Junction AI</strong></a><a href="../">BACK TO PATH →<strong>Maze Chase</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Maze | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/maze-chase/ebi-maze/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 06 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Maze</h1><p>Integrate center movement, buffered input, a pearl layer, enemy modes, and junction scoring into one maze chase.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Update order across several systems</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Recover twenty pearls before getting caught three times.</h2></div><p>Press the next direction during movement to turn automatically at a center. Two guards switch patrol, chase, and search. Use arrows/WASD or hold mouse/touch buttons.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Maze" src="../../../../play/ebi-maze/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / INTEGRATED UPDATE ORDER</p><h2>A finished game passes small states in a deliberate order.</h2><p class="lesson-lead">Maze, runner, pearls, and guards are separate data. Update processes input buffer, runner motion, pearl collection, enemy mode, junction choice, then contact. This <strong>update order</strong> keeps rules and visuals consistent.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>The runner buffers wanted direction</h3><p>Save input into wanted even during motion. At a center, try wanted; if blocked, continue using current dir.</p><code>wanted = input; chooseAtCenter(wanted, dir)</code></article><article><span class="concept-number">2</span><h3>Pearls use a separate layer</h3><p>Delete pellets[tile] without changing walls. When a catch resets positions, collected pearls stay gone.</p><code>delete(pellets, player.tile)</code></article><article><span class="concept-number">3</span><h3>Mode selects each guard target</h3><p>Choose a patrol point, current runner, or last seen tile, then score legal junction directions by distance while excluding reverse.</p><code>dir = chooseAtJunction(tile, dir, target)</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="input,move,enemy,pellets,draw" data-loop="next frame" aria-labelledby="lab-title-ebi-maze">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / FRAME ORDER</p>
+<h3 id="lab-title-ebi-maze">Run one frame’s jobs in order</h3>
+<p>The full maze game is a pipe: input → move → enemy AI → pellets → draw prep. Fixed order makes edge cases explainable.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>Next job</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Frame start</button></div>
+<p class="lab-hint">Draw last—never touch pixels earlier.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>step</span><strong data-lab-stepn>0</strong></div><div><span>now</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">FIXED ORDER</p><div class="formula-lines"><code>run systems in list order</code><span>then</span><code>draw is last</code></div><p>AI-before-pellets can change who wins a tie.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Keep each system's responsibility small</h3><p>Instead of one giant function, readable Update calls runner, guard, and contact functions in order. Each updates its own state.</p></div><pre><code>func (g *game) Update() error {
+    g.player.wanted = readInput()
+    g.updatePlayer()       // center movement + collect
+    for i := range g.guards {
+        g.updateGuard(i)   // mode + junction choice
+    }
+    g.checkContacts()      // after every position changed
+    return nil
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY COLLECT BEFORE CONTACT?</p><h3>Finalize the arrived tile first</h3><p>Take a pearl on the arrival frame, then test enemy tile contact, making the result deterministic.</p></article><article><p class="eyebrow">WHY KEEP PELLETS?</p><h3>Progress survives a mistake</h3><p>A catch resets only runner and guards, preserving the collection layer and meaningful recovery.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Make stage data</h3><p>Move maze, starts, patrol points, and time limit into a stage struct and load a second map.</p></article></div></section><nav class="lesson-pager"><a href="../junction-ai/">← STEP 05<strong>Junction AI</strong></a><a href="../">BACK TO PATH →<strong>Maze Chase</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -24,35 +44,4 @@
     </section>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

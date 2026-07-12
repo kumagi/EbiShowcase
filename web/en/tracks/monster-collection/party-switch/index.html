@@ -1,4 +1,34 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Party and Switching | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/monster-collection/party-switch/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Creature Collection RPG</a><span>STEP 04 / 07</span></div><section class="overview-hero"><p class="eyebrow">Build a collect-and-train battle game</p><h1>Party and Switching</h1><p>Manage several allies and switch when one falls or strategy changes.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Party composition and switching</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../type-matchup/">← STEP 03<strong>Affinity Matchup Lab</strong></a><a href="../capture/">STEP 05 →<strong>Capture Challenge</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Party and Switching | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/monster-collection/party-switch/">日本語</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← Creature Collection RPG</a><span>STEP 04 / 07</span></div>
+<section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Party and Switching</h1><p>Keep one of three partners in front, store the others in reserve, and switch using type matchups and HP.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Active index, switch turns, and forced switching</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Switch to favorable fronts and win three waves in 12 turns.</h2></div><p>Tap a party card or press 1, 2, or 3 to switch. Tap ATTACK or use A/Space. A planned switch spends a turn; after a faint, you must select a living reserve.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Front and reserve party battle" src="../../../../play/party-switch/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ACTIVE INDEX</p><h2>Keep every party member and change only “who fights now.”</h2><p class="lesson-lead">All three remain in the party slice and keep their own HP. The front is not a second copy; it is an <code>active</code> index. Switching changes that index to a reserve, but a <strong>planned switch</strong> and a <strong>replacement after fainting</strong> spend turns differently.</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>Point to the front by index</h3><p>Only <code>party[active]</code> attacks and receives counters. Reserve HP stays stored and continues where it left off when that member returns.</p><code>front := &amp;party[active]</code></article><article><span class="concept-number">2</span><h3>A planned switch spends an action</h3><p>Selecting a healthy reserve changes <code>active</code>, increments turn, and lets the enemy counter. A better matchup has a time cost.</p><code>active = reserve; turn++; enemyAttack()</code></article><article><span class="concept-number">3</span><h3>HP zero enters forced-switch state</h3><p>When the front faints, stop attacks and set <code>mustSwitch</code>. Normal turns cannot continue until a living reserve is selected.</p><code>if front.hp == 0 { mustSwitch = true }</code></article></div>
+<div class="motion-lab" data-lab="party-swap" data-party="Ebi,Shell,Coral" data-swapped="active → {p}" aria-labelledby="lab-title-party-switch">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / ACTIVE INDEX</p>
+<h3 id="lab-title-party-switch">Rotate the front-line index</h3>
+<p>The party is an array; the front-liner is an index. Swap advances that index. Forced swaps write the same field.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-swap>Switch</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>First</button></div>
+<p class="lab-hint">Disable swap when only one member remains.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>active</span><strong data-lab-active>—</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">INDEX ONLY</p><div class="formula-lines"><code>active = (active+1) % len</code><span>then</span><code>draw party[active]</code></div><p>You can swap without reshuffling the array.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>One switch function handles two transitions</h3><p>A forced switch clears state without another enemy action. A planned switch spends a turn. One entrance also keeps the “cannot select HP zero” check in one place.</p></div><pre><code>func switchTo(next int) {
+    if party[next].hp == 0 { return }
+    active = next
+    if mustSwitch {
+        mustSwitch = false // forced replacement
+        return
+    }
+    turn++                // planned switch
+    enemyAttack()
+}</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY KEEP RESERVES?</p><h3>Remember their damage</h3><p>Reserves stay in the party array, so they return with the correct remaining HP.</p></article><article><p class="eyebrow">WHY SPEND A TURN?</p><h3>Make switching strategic</h3><p>If switching were always free, every turn would simply choose the strongest type. A counter makes timing matter.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Add an entry ability</h3><p>Create a partner that heals two HP whenever it becomes front, for both planned and forced switches.</p></article></div>
+</section><nav class="lesson-pager"><a href="../type-matchup/">← STEP 03<strong>Affinity Matchup Lab</strong></a><a href="../capture/">STEP 05 →<strong>Capture Challenge</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -30,29 +60,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

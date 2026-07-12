@@ -1,4 +1,41 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Breakable Walls and Items | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/bomb-maze/breakable-walls/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Bomb Maze Action</a><span>STEP 03 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Bomberman-style blast game</p><h1>Breakable Walls and Items</h1><p>Turn blasted walls into floor and sometimes reveal power-ups.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Tile changes and random drops</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../cross-blast/">← STEP 02<strong>Cross-shaped Blast</strong></a><a href="../chain-explosion/">STEP 04 →<strong>Bomb Chain Reactions</strong></a></nav>
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Breakable Walls and Items | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head>
+<body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/bomb-maze/breakable-walls/">日本語</a></nav></header>
+<main><div class="lesson-breadcrumb"><a href="../">← Bomb Maze Action</a><span>STEP 03 / 06</span></div>
+<section class="lesson-hero"><div><p class="eyebrow">BOMB MAZE · STEP 03</p><h1>Breakable Walls and Items</h1><p>When a blast hits a wooden wall, change that cell's data from wall to floor. Collect the items that sometimes appear and break ten walls.</p><div class="lesson-meta"><span>DIFFICULTY ★★★☆☆</span><span>PLAYABLE</span></div></div></section>
+<section class="game-stage" id="play"><div class="game-copy"><p class="eyebrow">PLAY FIRST</p><h2>Discover what is inside each wall</h2><p>Move with arrows / WASD and place a bomb with Space / X. On phones and tablets, tap the bottom buttons. Touching a blast or reaching 75 seconds is a loss.</p></div><div class="game-frame-wrap"><iframe class="game-frame" src="../../../../play/breakable-walls/" title="Play Breakable Walls and Items"></iframe></div></section>
+<section class="deep-dive"><p class="eyebrow">DEEP DIVE</p><h2>A cell is state, not just a picture</h2><p>Breaking a wall does not merely erase its picture. It changes a value in a two-dimensional array from <code>softWall</code> to <code>floor</code>. From the next frame onward, movement and drawing both read the new floor value.</p><div class="concept-row"><article><b>01</b><h3>The blast reaches a wall</h3><p>Check cells along each arm. A hard wall stops immediately; a wooden wall receives the final flame.</p></article><article><b>02</b><h3>Wall becomes floor</h3><p><code>board[y][x] = floor</code> turns a blocked cell into a cell the player can enter.</p></article><article><b>03</b><h3>Choose the contents</h3><p>A value made from the coordinates selects fire power, bomb capacity, speed, or nothing.</p></article></div></section>
+<section class="motion-lab" data-lab="pipeline" data-steps="softWall,blast,floor+item" data-loop="next wall cell" aria-labelledby="lab-title-breakable-walls">
+  <div class="lab-copy">
+    <p class="eyebrow">TRY IT / CELL STATE</p>
+    <h3 id="lab-title-breakable-walls">Step one cell’s state change</h3>
+    <p>Wood wall → blast → floor + item. That’s the order of writing array values. Become floor first so the player can walk onto the drop.</p>
+    <div class="lab-controls">
+      <button type="button" class="lab-button lab-button-primary" data-lab-next>Next state</button>
+      <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Back to wall</button>
+    </div>
+    <p class="lab-hint">You’re not erasing art—you’re changing <code>board[y][x]</code>.</p>
+  </div>
+  <div class="lab-visual">
+    <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+    <div class="lab-values" aria-live="polite">
+      <div><span>step</span><strong data-lab-stepn>0/3</strong></div>
+      <div><span>now</span><strong data-lab-note>—</strong></div>
+    </div>
+  </div>
+</section>
+<div class="formula"><p class="eyebrow">THE STATE WRITE</p><div class="formula-lines"><code>softWall + blast</code><span>then</span><code>board[y][x] = floor; maybe item</code></div><p>Movement and draw both read the same array, so look and walkability stay aligned.</p></div>
+<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Change the data, then reveal the item</h2><p>The same coordinate produces the same result on every retry, which makes the code easier to trace. The real game uses a coordinate hash instead of global randomness.</p></div><pre><code>if board[p.y][p.x] == softWall {
+    board[p.y][p.x] = floor
+    destroyed++
+    if drop := deterministicDrop(p); drop != noItem {
+        items[p] = drop
+    }
+    break // do not pass through this wall
+}</code></pre></section>
+<section class="why-grid"><article><p class="eyebrow">WHY IT WORKS</p><h2>Collision and drawing stay together</h2><p>Movement in <code>Update</code> and rendering in <code>Draw</code> read the same array, preventing a wall that looks gone but still blocks the player.</p></article><article><p class="eyebrow">CHALLENGE</p><h2>Change the drop rate</h2><p>Change the remainder cases in <code>deterministicDrop</code> to make a harder version with fewer items. Predict how many of each type will appear before testing it.</p></article></section>
+<nav class="lesson-pager"><a href="../cross-blast/">← STEP 02<strong>Cross-shaped Blast</strong></a><a href="../chain-explosion/">STEP 04 →<strong>Bomb Chain Reactions</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -23,36 +60,4 @@
       </div>
     </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><footer><p>EBI SHOWCASE · Go + WebAssembly + Ebitengine</p></footer><script src="../../../../learn.js"></script></body></html>

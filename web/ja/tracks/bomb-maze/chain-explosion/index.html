@@ -1,4 +1,24 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>爆弾の連鎖爆発 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/bomb-maze/chain-explosion/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 爆弾迷路アクション</a><span>STEP 04 / 06</span></div><section class="overview-hero"><p class="eyebrow">ボンバーマン型の爆風ゲームを作る</p><h1>爆弾の連鎖爆発</h1><p>爆風が別の爆弾へ届いたら即座に爆発させ、同じ爆弾を二度処理しないようにします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>イベント伝播と二重処理防止</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>データの変化を見て、<br>ルールを組み立てる。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで発見する</h3><p>完成したミニゲームから、入力と結果の関係を見つけます。</p></article><article><b>02</b><h3>内部データを見る</h3><p>マス、状態、探索候補を画面に重ね、処理の途中を見えるようにします。</p></article><article><b>03</b><h3>コードへつなぐ</h3><p>同じルールをEbitengineのUpdateとDraw、アセットデータで再構成します。</p></article></div></section><nav class="lesson-pager"><a href="../breakable-walls/">← STEP 03<strong>壊れる壁とアイテム</strong></a><a href="../escape-ai/">STEP 05 →<strong>爆風から逃げる敵</strong></a></nav>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>爆弾の連鎖爆発 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/bomb-maze/chain-explosion/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 爆弾迷路アクション</a><span>STEP 04 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">爆発イベントを次の爆弾へ渡す</p><h1>爆弾の連鎖爆発</h1><p>爆風に別の爆弾が入ったら、その爆弾のタイマーを待たずに起爆します。起爆する爆弾を待ち行列へ追加し、処理済みの印で同じ爆弾を二度爆発させません。</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section>
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>3個以上を連鎖させ、リレーを5個消そう</h2><p>矢印／WASDで移動、SpaceまたはXで爆弾を置きます。クリックとタッチは下のボタンを使います。爆弾を射程3以内の同じ通路へ並べ、最初の爆発前に遠くへ逃げましょう。</p></div><div class="game-frame"><iframe src="../../../../play/chain-explosion/" title="爆弾の連鎖爆発ゲーム"></iframe></div></section>
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>「次に起爆する爆弾」の列を作る</h2><p>爆弾Aの爆風がBへ届き、Bの爆風がCへ届くと、調べるものが次々増えます。そこで先に見つけたものから取り出すキューを使います。</p><div class="concept-row"><article><b>01</b><h3>起点をキューへ入れる</h3><p>タイマーが0になった爆弾の番号を、これから処理する列へ追加します。</p></article><article><b>02</b><h3>爆風内の爆弾を追加</h3><p>先頭を起爆し、その爆風セルに待機中の爆弾があれば列の末尾へつなぎます。</p></article><article><b>03</b><h3>処理済みなら飛ばす</h3><p>複数の爆風から同じ爆弾が見つかっても、<code>processed</code>の印があれば二度目は何もしません。</p></article></div></section>
+<section class="motion-lab" data-lab="turn"><div><p class="eyebrow">EVENT QUEUE LAB</p><h2>A → B → Cの伝わり方を見る</h2><p>キューの先頭を1個ずつ処理し、新しく見つかった爆弾を末尾へ追加します。</p></div><div class="lab-stage" data-states="queue=[A] processed={} で開始,Aを起爆してprocessedへ追加,Aの爆風がBを見つけqueue=[B],Bを起爆してCをqueueへ追加,Cを起爆しqueueが空なら終了"><div class="lab-entities" data-count="4"></div><p class="lab-readout" data-lab-state aria-live="polite">queue=[A] processed={} で開始</p><button type="button" data-lab-step>次の段階へ</button><button type="button" data-lab-reset>最初から</button></div></section>
+<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>キューが空になるまで伝播する</h2><p>ゲーム本体では爆弾の番号をキューに入れます。<code>processed</code>は1回の連鎖ごとに作るので、その連鎖で起爆済みかをすぐ調べられます。</p></div><pre><code>queue := append([]int(nil), starts...)
+processed := map[int]bool{}
+for len(queue) &gt; 0 {
+    index := queue[0]
+    queue = queue[1:]
+    if processed[index] {
+        continue
+    }
+    processed[index] = true
+    bombs[index].blast = blastCells(bombs[index].at)
+    for other := range bombs {
+        if contains(bombs[index].blast, bombs[other].at) {
+            queue = append(queue, other)
+        }
+    }
+}</code></pre></section>
+<section class="why-grid"><article><h3>なぜその場で再帰しない？</h3><p>キューなら「これから何個処理するか」が見え、途中で見つけたイベントも同じ順番で扱えます。長い連鎖でも処理の流れを追いやすくなります。</p></article><article><h3>二重処理で何が困る？</h3><p>AとCの両方がBへ届くと、Bの爆風や得点が二度発生するかもしれません。処理済みの印がゲームの結果を安定させます。</p></article><article><h3>チャレンジ</h3><p>1連鎖の起爆順<code>#1, #2, #3</code>に応じて得点倍率を増やしてみよう。</p></article></section><nav class="lesson-pager"><a href="../breakable-walls/">← STEP 03<strong>壊れる壁とアイテム</strong></a><a href="../escape-ai/">STEP 05 →<strong>爆風から逃げる敵</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -22,37 +42,4 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

@@ -42,29 +42,19 @@
       </div>
 
       
-      <div class="motion-lab" data-lab="entities"  aria-labelledby="lab-title-space-shooter">
-        <div class="lab-copy">
-          <p class="eyebrow">TRY IT / LAB</p>
-          <h3 id="lab-title-space-shooter">弾を撃って進めて消そう</h3>
-          <p>発射で弾を追加し、進めるで上へ動かします。画面外（y≤0）の弾はリストから消えます。</p>
-          <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-fire>発射</button>
-            <button type="button" class="lab-button" data-lab-step>進める</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
-          </div>
-          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
-        </div>
-        <div class="lab-visual">
-          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">shots []</div></div>
-          <div class="lab-values" aria-live="polite">
-            <div><span>弾の数</span><strong data-lab-count>0</strong><small></small></div>
-            <div><span>リスト</span><strong data-lab-list>—</strong><small></small></div>
-            <div><span>y</span><strong>↑</strong><small></small></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="formula">
+      <div class="motion-lab" data-lab="bullets" data-fire="発射！" data-step="飛翔" aria-labelledby="lab-title-space-shooter">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / BULLET LIST</p>
+<h3 id="lab-title-space-shooter">弾を撃って、進めて、消そう</h3>
+<p>「発射」で弾を配列へ追加し、「1フレーム」で全部の y を減らし、画面外を消します。敵も自機も、種類ごとのリストで同じ型を管理します。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fire>発射</button><button type="button" class="lab-button" data-lab-step>1フレーム進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<p class="lab-hint">本物のゲームも bullets = append / 移動 / フィルタ のくり返しです。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>弾の数</span><strong data-lab-count>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula">
         <p class="eyebrow">THE DELETE PATTERN</p>
         <div class="formula-lines"><code>for i := len(g.bullets) - 1; i &gt;= 0; i--</code><span>条件が合えば</span><code>g.bullets = append(g.bullets[:i], g.bullets[i+1:]...)</code></div>
         <p>後ろから（インデックスを大きい方から）見ていくのがポイントです。要素を削除してもそれより前の添え字は変わらないので、削除漏れが起きません。</p>
@@ -469,6 +459,19 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,4 +1,16 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>消して落とす | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/match3/clear-and-fall/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 3マッチパズル</a><span>STEP 03 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>消して落とす</h1><p>そろったマスを空にし、列ごとに下へ詰め、上から新しいピースを補充します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>空きマスと重力詰め</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>消す・落とす・補充を1手ずつ見よう。</h2></div><p>下ボタンをタップまたはSpace。3段階を3回完了するとクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="消して落とす" src="../../../../play/clear-and-fall/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / COLUMN COMPACTION</p><h2>落下は物理計算ではなく、列の中身を下から詰め直せる。</h2><p class="lesson-lead">消すマスへ<strong>-1という空き値</strong>を入れます。各列を下から読み、空きでないピースだけをwrite位置へ書くと、順番を保ったまま下へ集まります。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>消す代わりに空きを置く</h3><p>配列の大きさは変えず、消えたマスだけemptyにします。Drawはemptyなら輪郭だけ描きます。</p><code>board[y][x] = empty</code></article><article><span class="concept-number">2</span><h3>書き込み位置を下から動かす</h3><p>writeを一番下に置き、実物を見つけるたびそこへ移してwriteを1上げます。</p><code>board[write][x] = board[y][x]</code></article><article><span class="concept-number">3</span><h3>残った上を補充</h3><p>詰め終わったあともemptyのマスへ新しい種類番号を入れます。これで盤面サイズが元へ戻ります。</p><code>if cell == empty { cell = randomPiece() }</code></article></div><div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / COMPACT LIST</p><h3>残った要素を詰めよう</h3><p>要素を追加し、1個ずつ処理します。列の重力も「残すものだけ別の位置へ書く」操作です。</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>ピースを追加</button><button class="lab-button" data-lab-step>1個詰める</button><button class="lab-button lab-button-quiet" data-lab-reset>列を戻す</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>残り</span><strong data-lab-count>0</strong></div><div><span>列</span><strong data-lab-list>—</strong></div></div></div></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>1列を下から圧縮する</h3><p>readとwriteを分けると、穴が何個続いても同じループで処理できます。</p></div><pre><code>write := rows - 1
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>消して落とす | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/match3/clear-and-fall/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 3マッチパズル</a><span>STEP 03 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>消して落とす</h1><p>そろったマスを空にし、列ごとに下へ詰め、上から新しいピースを補充します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>空きマスと重力詰め</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>消す・落とす・補充を1手ずつ見よう。</h2></div><p>下ボタンをタップまたはSpace。3段階を3回完了するとクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="消して落とす" src="../../../../play/clear-and-fall/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / COLUMN COMPACTION</p><h2>落下は物理計算ではなく、列の中身を下から詰め直せる。</h2><p class="lesson-lead">消すマスへ<strong>-1という空き値</strong>を入れます。各列を下から読み、空きでないピースだけをwrite位置へ書くと、順番を保ったまま下へ集まります。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>消す代わりに空きを置く</h3><p>配列の大きさは変えず、消えたマスだけemptyにします。Drawはemptyなら輪郭だけ描きます。</p><code>board[y][x] = empty</code></article><article><span class="concept-number">2</span><h3>書き込み位置を下から動かす</h3><p>writeを一番下に置き、実物を見つけるたびそこへ移してwriteを1上げます。</p><code>board[write][x] = board[y][x]</code></article><article><span class="concept-number">3</span><h3>残った上を補充</h3><p>詰め終わったあともemptyのマスへ新しい種類番号を入れます。これで盤面サイズが元へ戻ります。</p><code>if cell == empty { cell = randomPiece() }</code></article></div><div class="motion-lab" data-lab="match-scan" data-found="消せる！" data-none="まだそろっていない" data-cleared="落下した" aria-labelledby="lab-title-clear-and-fall">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / GRAVITY</p>
+<h3 id="lab-title-clear-and-fall">消したあとに落とそう</h3>
+<p>まずスキャンで候補を光らせ、次に「消して落下」。穴の上にあった色が下へ詰まります。マッチ3は「消す」と「落とす」を別ステップにすると安定します。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan>スキャン</button><button type="button" class="lab-button" data-lab-clear>消して落下</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<p class="lab-hint">落下後にもう一度スキャンすると連鎖になります。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>光ったマス</span><strong data-lab-count>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">CLEAR THEN FALL</p><div class="formula-lines"><code>揃ったマスを空にする</code><span>つぎに</span><code>列ごとに下へ詰める</code></div><p>同時にやろうとすると穴の扱いで混乱します。順番を守ると連鎖も書けます。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>1列を下から圧縮する</h3><p>readとwriteを分けると、穴が何個続いても同じループで処理できます。</p></div><pre><code>write := rows - 1
 for read := rows-1; read &gt;= 0; read-- {
     if board[read][x] != empty {
         board[write][x] = board[read][x]
@@ -28,6 +40,19 @@ for read := rows-1; read &gt;= 0; read-- {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -5,8 +5,19 @@
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FAIR QUEUE AND PREDICTION</p><h2>見えない運を、見えるデータに変える。</h2><p class="lesson-lead">完全なくじ引きでは、欲しい形が何十回も来ないことがあります。7種バッグなら7個を一度ずつ混ぜて配るので大きな偏りがありません。さらにHOLDとゴーストを加えると、プレイヤーは運だけでなく<strong>予定を立てる</strong>ことができます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>7個を入れて混ぜる</h3><p>I・O・T・S・Z・J・Lを一つずつsliceへ入れ、順番だけをシャッフルします。空になったときだけ新しい袋を作ります。</p><code>bag = []int{I, O, T, S, Z, J, L}</code></article><article><span class="concept-number">2</span><h3>現在とHOLDを交換</h3><p>棚が空なら現在の形を預けて次を取り、入っていれば二つを交換します。同じ形で何度も交換できないよう、固定するまで一回だけです。</p><code>held, current = current, held</code></article><article><span class="concept-number">3</span><h3>コピーを下へ試す</h3><p>現在位置は変えず、仮のyだけを1ずつ増やします。次が衝突する直前のyが、点線で描くゴースト位置です。</p><code>for canPlace(x, ghostY+1) { ghostY++ }</code></article></div>
-<div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / BAG QUEUE</p><h3>袋から順番に取り出そう</h3><p>「形を袋へ」で候補を追加し、「次を配る」で先頭を取り出します。残りが0になったら7種を入れ直すのがバッグ方式です。</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>形を袋へ</button><button class="lab-button" data-lab-step>次を配る</button><button class="lab-button lab-button-quiet" data-lab-reset>新しい袋</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>袋の残り</span><strong data-lab-count>0</strong></div><div><span>配る順番</span><strong data-lab-list>—</strong></div></div></div></div>
-<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>ゴーストは盤面を変更しない</h3><p>本物の形と同じ<code>canPlace</code>を使いますが、調べるのはローカル変数だけ。予告を描いてもゲーム状態は進みません。</p></div><pre><code>func (g *Game) ghostY() int {
+<div class="motion-lab" data-lab="bag-draw" data-drew="{p} を引いた" data-held="HOLD 交換" aria-labelledby="lab-title-bag-hold-ghost">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / 7-BAG</p>
+<h3 id="lab-title-bag-hold-ghost">袋から重複なしで取り出そう</h3>
+<p>7種を袋に入れ、空になるまで重複なしで引きます。HOLD は今のピースと入れ替え。公平な乱択の基本形です。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-draw>袋から引く</button><button type="button" class="lab-button" data-lab-hold>HOLD と交換</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>袋を詰め直す</button></div>
+<p class="lab-hint">袋が空なら7種を入れ直します。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>袋の残り</span><strong data-lab-left>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="formula"><p class="eyebrow">BAG RANDOM</p><div class="formula-lines"><code>if bag empty { refill 7 }</code><span>つぎに</span><code>draw = remove random</code></div><p>完全な乱数連打より袋の方が偏りにくいです。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>ゴーストは盤面を変更しない</h3><p>本物の形と同じ<code>canPlace</code>を使いますが、調べるのはローカル変数だけ。予告を描いてもゲーム状態は進みません。</p></div><pre><code>func (g *Game) ghostY() int {
     y := g.y
     for g.canPlace(g.kind, g.rotation, g.x, y+1) {
         y++
@@ -38,6 +49,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

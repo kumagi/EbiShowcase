@@ -1,4 +1,21 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Blast-escape AI | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/bomb-maze/escape-ai/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Bomb Maze Action</a><span>STEP 05 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Bomberman-style blast game</p><h1>Blast-escape AI</h1><p>Predict future blast cells and find a path to safety.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Danger maps and safe paths</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../chain-explosion/">← STEP 04<strong>Bomb Chain Reactions</strong></a><a href="../ebi-bomber/">STEP 06 →<strong>Ebi Bomber</strong></a></nav>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Blast-escape AI | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head>
+<body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/bomb-maze/escape-ai/">日本語</a></nav></header><main>
+<div class="lesson-breadcrumb"><a href="../">← Bomb Maze Action</a><span>STEP 05 / 06</span></div>
+<section class="lesson-hero"><div><p class="eyebrow">BOMB MAZE · STEP 05</p><h1>Blast-escape AI</h1><p>The blue scout predicts which cells every bomb will burn and how many frames remain. Breadth-first search then finds a route that reaches a safe cell in time.</p><div class="lesson-meta"><span>DIFFICULTY ★★★★☆</span><span>PLAYABLE</span></div></div></section>
+<section class="game-stage" id="play"><div class="game-copy"><p class="eyebrow">PLAY FIRST</p><h2>Watch the AI's escape route</h2><p>Move the red player with arrows / WASD and place bombs with Space / X. The bottom buttons work with mouse and touch. Help the blue AI survive six explosions. Red numbers show frames until danger; cyan dots show its planned route.</p></div><div class="game-frame-wrap"><iframe class="game-frame" src="../../../../play/escape-ai/" title="Play the blast-escape AI game"></iframe></div></section>
+<section class="deep-dive"><p class="eyebrow">DEEP DIVE</p><h2>Safety combines a place and a time</h2><p>A cell may be safe now but explode exactly when the scout arrives. Build a danger table from every bomb's remaining fuse, then compare each danger time with the AI's arrival time.</p><div class="concept-row"><article><b>01</b><h3>Overlay future blasts</h3><p>List the cross-shaped cells for each bomb. If several bombs reach one cell, store the earliest time.</p></article><article><b>02</b><h3>Search with time attached</h3><p>Each breadth-first step costs movement time. A candidate whose arrival overlaps an explosion never enters the queue.</p></article><article><b>03</b><h3>Require lasting safety</h3><p>The goal is not merely safe on arrival; the scout chooses a cell where it can remain safe for another 50 frames.</p></article></div></section>
+<section class="motion-lab" data-lab="entities"><div><p class="eyebrow">TIME MAP LAB</p><h2>Read a route as a timeline</h2><p>The AI checks not just “the cell to the right,” but “the cell to the right 11 frames from now.” As on-screen numbers shrink, the cyan route is planned again.</p></div><div class="lab-stage"><div class="entity-board"><span>Bomb: 90</span><span>Arrival: 22</span><span>22 + margin &lt; 90 → allowed</span></div></div></section>
+<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Filter candidates by arrival time</h2><p><code>danger</code> maps a cell to the number of frames before its blast. The search considers waiting as well as movement in four directions.</p></div><pre><code>arrival := nextStep * moveEvery
+blastAt, threatened := danger[next]
+safe := !threatened ||
+    arrival+8 &lt; blastAt ||
+    arrival &gt; blastAt+blastLife
+if safe {
+    queue = append(queue, nextNode)
+}</code></pre></section>
+<section class="why-grid"><article><p class="eyebrow">WHY IT WORKS</p><h2>A route in time beats nearest distance</h2><p>An AI that only seeks a nearby cell can wait in a blast at a corner. Adding future time lets it choose a longer route that clears danger before detonation.</p></article><article><p class="eyebrow">CHALLENGE</p><h2>Change its caution</h2><p>Increase the 8 in <code>arrival+8</code> so the AI avoids danger sooner. Then explain why a margin that is too large can leave it with no route.</p></article></section>
+<nav class="lesson-pager"><a href="../chain-explosion/">← STEP 04<strong>Bomb Chain Reactions</strong></a><a href="../ebi-bomber/">STEP 06 →<strong>Ebi Bomber</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -22,37 +39,4 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><footer><p>EBI SHOWCASE · Go + WebAssembly + Ebitengine</p></footer><script src="../../../../learn.js"></script></body></html>

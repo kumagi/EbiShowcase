@@ -1,4 +1,29 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>迷路を走る | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/maze-chase/tile-runner/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 迷路追跡ゲーム</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">パックマン型の追いかけっこを作る</p><h1>迷路を走る</h1><p>通路の中心線を滑らかに進み、壁のある方向へは曲がれないようにします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>タイル中心と進行方向</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>データの変化を見て、<br>ルールを組み立てる。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで発見する</h3><p>完成したミニゲームから、入力と結果の関係を見つけます。</p></article><article><b>02</b><h3>内部データを見る</h3><p>マス、状態、探索候補を画面に重ね、処理の途中を見えるようにします。</p></article><article><b>03</b><h3>コードへつなぐ</h3><p>同じルールをEbitengineのUpdateとDraw、アセットデータで再構成します。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../buffered-turn/">STEP 02 →<strong>曲がり角の先行入力</strong></a></nav>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>迷路を走る | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/maze-chase/tile-runner/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 迷路追跡ゲーム</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>迷路を走る</h1><p>迷路を壁と通路のタイルで表し、通れる次タイルの中心までまっすぐ進みます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>タイル中心・通行判定・中心間移動</strong></div></section><p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。ここではUpdateが現在タイルと移動の進み具合を変え、Drawがその途中位置へ走者を描きます。</p><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>45秒以内に迷路の真珠を12個集めよう。</h2></div><p>中心で進みたい方向を押し続けます。壁方向なら出発しません。矢印/WASD、画面下ボタンのマウス長押し・タッチ長押しに対応。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="迷路を走る" src="../../../../play/tile-runner/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CENTER TO CENTER</p><h2>自由な座標を、迷路のマスへ結びつける。</h2><p class="lesson-lead">迷路データはmaze[y][x]の文字表です。#なら壁、.なら通路。走者は現在タイルを覚え、方向を足した<strong>候補タイル</strong>が通路のときだけ、その中心へ移動を始めます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>タイルから中心座標を作る</h3><p>列xへタイル幅を掛け、盤面左と半マスを足します。行yも同じ式なので、どの通路にも中心があります。</p><code>centerX = mazeX + tileX*tileSize + tileSize/2</code></article><article><span class="concept-number">2</span><h3>次タイルが通れるか調べる</h3><p>現在タイルへ方向(-1,0)などを足します。範囲内でmaze[nextY][nextX]が#でなければ進めます。</p><code>passable := maze[next.y][next.x] != '#'</code></article><article><span class="concept-number">3</span><h3>中心から中心へ補間する</h3><p>progressを0から1へ増やし、fromとtoの間を描きます。1になったら現在タイルをtargetへそろえます。</p><code>screenX = fromX + (toX-fromX)*progress</code></article></div><div class="motion-lab" data-lab="tile" data-blocked="その方向は壁" aria-labelledby="lab-title-tile-runner">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / LEGAL TILE</p>
+<h3 id="lab-title-tile-runner">壁のマスには入れない</h3>
+<p>矢印は行と列を整数で動かします。赤いマスは壁。入れなければ座標は変わりません。本番は通った2つの中心の間だけを滑らかに描きます。</p>
+<div class="lab-controls"><button type="button" class="lab-button" data-lab-up>↑</button><button type="button" class="lab-button" data-lab-left>←</button><button type="button" class="lab-button" data-lab-right>→</button><button type="button" class="lab-button" data-lab-down>↓</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<p class="lab-hint">中心に着いてから次の入力を受け付けると、通路からずれません。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>タイル x,y</span><strong data-lab-pos>0</strong></div><div><span>向き</span><strong data-lab-face>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>中心でだけ新しい移動を始める</h3><p>moving中はprogressだけを進めます。中心へ到着してmoving=falseのときだけ入力を候補タイルへ変換します。</p></div><pre><code>if moving {
+    progress += 0.105
+    if progress &gt;= 1 {
+        tile = target
+        moving = false
+    }
+    return
+}
+
+next := tile.add(direction)
+if passable(next) {
+    target = next
+    moving = true
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY TILE DATA?</p><h3>壁判定が一文字になる</h3><p>複雑な壁の四角を全部比べず、行と列から#かどうかを見るだけで通行を決められます。</p></article><article><p class="eyebrow">WHY CENTERS?</p><h3>通路からずれない</h3><p>毎回中心へ到着してから次へ進むため、長く走っても少しずつ壁側へずれません。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>早押しを覚えよう</h3><p>移動中に押した方向をwantedDirへ保存し、次の中心で試すとSTEP 02の先行入力になります。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../buffered-turn/">STEP 02 →<strong>曲がり角の先行入力</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -26,33 +51,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

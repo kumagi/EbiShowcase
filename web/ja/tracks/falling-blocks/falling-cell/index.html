@@ -75,31 +75,19 @@
 <code>board[y][x] = true; spawn()</code>
 </article>
 </div>
-<div class="motion-lab" data-lab="entities">
+<div class="motion-lab" data-lab="drop-timer" data-need="8" data-drop="落下！" data-lock="固定！" data-wait="まだ待つ…" data-top="天井がふさがった" aria-labelledby="lab-title-falling-cell">
 <div class="lab-copy">
-<p class="eyebrow">TRY IT / UPDATE CLOCK</p>
-<h3>Updateをためて落下を起こそう</h3>
-<p>「1フレーム」で時計の目盛りを追加し、「落下判定」で先頭の目盛りを処理します。実際のゲームでは38個たまった時が落下の合図です。</p>
-<div class="lab-controls">
-<button class="lab-button lab-button-primary" data-lab-fire>1フレーム</button>
-<button class="lab-button" data-lab-step>落下判定</button>
-<button class="lab-button lab-button-quiet" data-lab-reset>時計を0へ</button>
-</div>
+<p class="eyebrow">TRY IT / DROP CLOCK</p>
+<h3 id="lab-title-falling-cell">時計が満ちたときだけ1マス落とす</h3>
+<p>「1フレーム進める」たびにタイマーが増えます。満タンになると1マス落下。下にブロックがあると LOCK して上から再開。毎フレーム落とすと一瞬で床へ着くので、時計で間引きます。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>1フレーム進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>時計を0へ</button></div>
+<p class="lab-hint">本番は 38 フレームで1マス。ラボはわかりやすく 8 で再現しています。</p>
 </div>
 <div class="lab-visual">
-<div class="lab-values">
-<div>
-<span>待った回数</span>
-<strong data-lab-count>0</strong>
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>タイマー</span><strong data-lab-timer>0</strong></div><div><span>行 y</span><strong data-lab-y>0</strong></div><div><span>出来事</span><strong data-lab-note>—</strong></div></div>
 </div>
-<div>
-<span>目盛り</span>
-<strong data-lab-list>—</strong>
-</div>
-</div>
-</div>
-</div>
-<div class="code-lesson">
+</div><div class="formula"><p class="eyebrow">THE TIMER RULE</p><div class="formula-lines"><code>timer++</code><span>つぎに</span><code>timer が満タンなら y++（または固定）</code></div><p>速さを変えたいときは dropFrames を変えるだけ。位置の式は触りません。</p></div><div class="code-lesson">
 <div>
 <p class="eyebrow">IN THE REAL GAME</p>
 <h3>移動できるかを先に聞く</h3>
@@ -165,6 +153,19 @@ if timer &gt;= dropFrames {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

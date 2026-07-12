@@ -1,6 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Bomber | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/bomb-maze/ebi-bomber/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 爆弾迷路アクション</a><span>STEP 06 / 06</span></div><section class="overview-hero"><p class="eyebrow">ボンバーマン型の爆風ゲームを作る</p><h1>Ebi Bomber</h1><p>爆弾数、火力、移動、敵、出口を統合して迷路アクションを完成させます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>能力アップ・敵・ステージ進行</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>データの変化を見て、<br>ルールを組み立てる。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで発見する</h3><p>完成したミニゲームから、入力と結果の関係を見つけます。</p></article><article><b>02</b><h3>内部データを見る</h3><p>マス、状態、探索候補を画面に重ね、処理の途中を見えるようにします。</p></article><article><b>03</b><h3>コードへつなぐ</h3><p>同じルールをEbitengineのUpdateとDraw、アセットデータで再構成します。</p></article></div></section><nav class="lesson-pager"><a href="../escape-ai/">← STEP 05<strong>爆風から逃げる敵</strong></a><a href="../">コース全体へ →<strong>爆弾迷路アクション</strong></a></nav>
-
-
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Bomber | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/bomb-maze/ebi-bomber/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 爆弾迷路アクション</a><span>STEP 06 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">6つの仕組みを1本の進行へ</p><h1>Ebi Bomber</h1><p>海老・天次郎が壁を壊し、能力を集め、敵を倒して出口を開きます。個別に学んだタイマー、爆風、タイル変化、強化、危険回避を同じ更新順序で統合します。</p><div class="lesson-meta"><span>★★★★★</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>敵を倒してEXITへ</h2><p>矢印／WASDで移動、Spaceで爆弾。画面下はクリック／タッチ対応です。壁を8個壊し、敵を爆風で倒すと出口が開きます。</p></div><div class="game-frame"><iframe src="../../../../play/ebi-bomber/" title="Ebi Bomberを遊ぶ"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ゲームは「部品」より「更新する順番」でつながる</h2><p>入力、爆弾、爆風、壁とアイテム、敵、勝敗の順に処理すると、同じフレームの出来事が予測しやすくなります。当たり判定はスプライトではなくタイル座標で行います。</p><div class="concept-row"><article><b>01</b><h3>世界を先に変える</h3><p>爆風で壁を床へ変え、アイテムを出してから取得を調べます。</p></article><article><b>02</b><h3>能力をデータで反映</h3><p>火力、同時爆弾数、移動量を数値として、同じ処理へ渡します。</p></article><article><b>03</b><h3>最後に進行判定</h3><p>敵撃破と壁8個の条件が揃ったら出口を開き、到着でクリアします。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">GAME PIPELINE LAB</p><h2>1フレームの処理順を追う</h2><p>入力から勝敗までを順に進め、前の結果が次の処理へ渡る様子を確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="6"></div><p class="lab-readout" aria-live="polite">入力から開始</p><button type="button" class="lab-action">次の処理へ</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>統合順序をUpdateに書く</h2><p>各関数は小さく保ち、<code>Update</code>がゲーム全体の設計図になります。</p></div><pre><code>readPlayerInput()
+updateBombTimers()
+updateFlames()      // 壁・敵・自分へ作用
+collectItems()      // 能力値を更新
+moveEnemy()         // 危険マスを避ける
+if enemyDown &amp;&amp; broken &gt;= 8 { exitOpen = true }
+checkWinOrLoss()</code></pre></section><section class="why-grid"><article><h3>統合で大切なこと</h3><p>共有するのは同じタイル、爆風セル、能力値です。同じ情報を別々に計算しないようにします。</p></article><article><h3>小さな関数に分ける理由</h3><p>教材ごとの仕組みを保ったまま、順番だけを上位のUpdateで読めるからです。</p></article><article><h3>チャレンジ</h3><p>ステージデータを配列にし、出口到着後に次の壁配置を読み込んでみよう。</p></article></section><nav class="lesson-pager"><a href="../escape-ai/">← STEP 05<strong>爆風から逃げる敵</strong></a><a href="../">コース全体へ →<strong>爆弾迷路アクション</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -22,37 +26,4 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

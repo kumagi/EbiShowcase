@@ -1,4 +1,21 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Cross-shaped Blast | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/bomb-maze/cross-blast/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Bomb Maze Action</a><span>STEP 02 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Bomberman-style blast game</p><h1>Cross-shaped Blast</h1><p>Traverse cells in four directions and stop blasts at hard walls or range.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Four-direction ray traversal</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><a href="../timed-bomb/">← STEP 01<strong>Place a Timed Bomb</strong></a><a href="../breakable-walls/">STEP 03 →<strong>Breakable Walls and Items</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Cross-shaped Blast | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/bomb-maze/cross-blast/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Bomb Maze Action</a><span>STEP 02 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">Build a cross one cell at a time</p><h1>Cross-shaped Blast</h1><p>Walk outward from a bomb in four directions and decide which cells join the blast. Each ray stops when it reaches maximum range or meets a hard wall.</p><div class="lesson-meta"><span>★★★☆☆</span><strong>PLAYABLE</strong></div></div></section>
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Aim blasts to clear six beacons</h2><p>Move with arrows/WASD and place a bomb with Space or X. Click or tap the controls below the board. Thin outlines preview blast cells; escape them before the timer ends.</p></div><div class="game-frame"><iframe src="../../../../play/cross-blast/" title="Play Cross-shaped Blast"></iframe></div></section>
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Extend four cell-checking rays</h2><p>Do not test one large cross-shaped picture. From the center, inspect cells one, two, then three steps away in each direction. That lets every ray stop on the near side of a wall.</p><div class="concept-row"><article><b>01</b><h3>Add the center</h3><p>The bomb's tile always blasts, so put it in the result first.</p></article><article><b>02</b><h3>Walk four directions</h3><p>Multiply each direction vector by 1, 2, and 3, then add it to the center to make the next cell.</p></article><article><b>03</b><h3>Stop at wall or range</h3><p>A hard wall calls <code>break</code> for that direction. The other three rays continue independently.</p></article></div></section>
+<section class="motion-lab" data-lab="turn"><div><p class="eyebrow">RAY LAB</p><h2>Step through one ray</h2><p>Follow a ray moving right and see exactly when a cell is added and when traversal stops.</p></div><div class="lab-stage" data-states="Add the center cell,Step one cell right and inspect it,It is floor so add it to the blast,Step two cells right and inspect it,It is a hard wall so stop only this ray"><div class="lab-entities" data-count="4"></div><p class="lab-readout" data-lab-state aria-live="polite">Add the center cell</p><button type="button" data-lab-step>Next stage</button><button type="button" data-lab-reset>Reset</button></div></section>
+<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Use nested direction and distance loops</h2><p><code>break</code> stops only the inner distance loop. A wall to the right therefore does not prevent the next up, down, or left ray from being checked.</p></div><pre><code>cells := []point{center}
+for _, direction := range rays {
+    for step := 1; step &lt;= blastRange; step++ {
+        next := point{
+            center.x + direction.x*step,
+            center.y + direction.y*step,
+        }
+        if hardWall(next) {
+            break
+        }
+        cells = append(cells, next)
+    }
+}</code></pre></section>
+<section class="why-grid"><article><h3>Why store a cell slice?</h3><p>Drawing, player damage, and beacon hits can all use the very same <code>blast</code> slice.</p></article><article><h3>Why not pass through walls?</h3><p>The loop stops before adding a hard-wall cell. Reordering those two actions would be enough to design a wall that is hit but still blocks cells beyond it.</p></article><article><h3>Challenge</h3><p>Change range to 2 or 4 and compare the preview cell count and how difficult it is to escape.</p></article></section><nav class="lesson-pager"><a href="../timed-bomb/">← STEP 01<strong>Place a Timed Bomb</strong></a><a href="../breakable-walls/">STEP 03 →<strong>Breakable Walls and Items</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -23,36 +40,4 @@
       </div>
     </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>
