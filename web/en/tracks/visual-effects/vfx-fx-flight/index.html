@@ -31,7 +31,7 @@
     <section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Fly through pipes</h2></div>
-        <p>Tap to flap. Physics is play; sparkles are fx. Read the LIVE GO struct.</p>
+        <p>Tap to flap. Passing a gate fires big rings + bursts. Physics is play; sparkles are fx—read LIVE GO.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A04</span></div>
@@ -69,17 +69,19 @@
 
       <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-flight">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / SPLIT</p>
-          <h3 id="lab-title-vfx-fx-flight">Physics switch / FX switch</h3>
-          <p>Imagine turning only one off—the other should still make sense.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Event!</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <p class="eyebrow">TRY IT / PHYSICS vs FX</p>
+          <h3 id="lab-title-vfx-fx-flight">Falling force ≠ fireworks</h3>
+          <p>Same two boxes as the hit lab. Here gravity/pipes are play; flap sparks and gate fireworks are fx. Imagine turning only one off.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Tick FX 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx</h4><ul data-lab-fx-list></ul></div>
+          <div class="lab-fx-col" data-lab-play><h4>play (rules / score)</h4><ul data-lab-play-list></ul></div>
+          <div class="lab-fx-col" data-lab-fx><h4>fx (sparks)</h4><ul data-lab-fx-list></ul></div>
+          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
         </div>
-          <div class="lab-values" aria-live="polite"><div><span>entities</span><strong data-lab-play-n>—</strong></div><div><span>particles</span><strong data-lab-fx-n>—</strong></div></div>
+        <p class="lab-fx-hint" data-lab-fx-hint></p>
+          <div class="lab-values" aria-live="polite"><div><span>score (play)</span><strong data-lab-score>—</strong></div><div><span>sparks (fx)</span><strong data-lab-fx-n>—</strong></div></div>
         </div>
       </div>
 

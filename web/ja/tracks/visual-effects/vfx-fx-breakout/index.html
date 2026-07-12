@@ -69,17 +69,19 @@
 
       <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-breakout">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / SPLIT</p>
+          <p class="eyebrow">TRY IT / TWO BOXES</p>
           <h3 id="lab-title-vfx-fx-breakout">当たり判定は残すな</h3>
           <p>見た目の破片をクリックできない／当たらない。</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>イベント！</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>命中！（play+fx）</button><button type="button" class="lab-button" data-lab-fx-tick>fx だけ 1F進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play（ゲーム）</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx（演出）</h4><ul data-lab-fx-list></ul></div>
+          <div class="lab-fx-col" data-lab-play><h4>play（ルール・点数）</h4><ul data-lab-play-list></ul></div>
+          <div class="lab-fx-col" data-lab-fx><h4>fx（見た目の粒）</h4><ul data-lab-fx-list></ul></div>
+          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
         </div>
-          <div class="lab-values" aria-live="polite"><div><span>エンティティ</span><strong data-lab-play-n>—</strong></div><div><span>粒</span><strong data-lab-fx-n>—</strong></div></div>
+        <p class="lab-fx-hint" data-lab-fx-hint></p>
+          <div class="lab-values" aria-live="polite"><div><span>スコア(play)</span><strong data-lab-score>—</strong></div><div><span>粒(fx)</span><strong data-lab-fx-n>—</strong></div></div>
         </div>
       </div>
 

@@ -254,14 +254,36 @@ footer p{color:#67719c}
 @keyframes lab-ring-grow{0%{opacity:.9;transform:translate(-50%,-50%) scale(.3)}100%{opacity:0;transform:translate(-50%,-50%) scale(2.8)}}
 @keyframes lab-flash{0%{filter:brightness(2.4)}100%{filter:brightness(1)}}
 @media(prefers-reduced-motion:reduce){.lab-vfx-flame,.lab-vfx-ember,.lab-vfx-drop,.lab-vfx-bolt,.lab-vfx-zap,.lab-vfx-ice,.lab-vfx-flare,.lab-vfx-dark,.lab-vfx-ring{animation:none;opacity:.85}}
-.lab-fx-split{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:280px;padding:16px;background:#0a1020}
+.lab-fx-split{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:220px;padding:16px;background:#0a1020}
 .lab-fx-col{border:1px solid #2a3a62;border-radius:12px;padding:12px;background:#10182c}
 .lab-fx-col h4{margin:0 0 8px;font:800 13px var(--font-mono);color:var(--cyan)}
 .lab-fx-col[data-lab-fx] h4{color:#ffb86b}
 .lab-fx-col ul{margin:0;padding-left:18px;color:#c8d4f0;font:600 13px/1.5 var(--font-mono)}
+.lab-fx-empty{list-style:none;margin-left:-18px;opacity:.55}
+.lab-fx-stage{position:relative;grid-column:1/-1;min-height:72px;border-radius:10px;background:radial-gradient(circle at 50% 50%,#1a2748,#0a1020);border:1px dashed #3a4a78;overflow:hidden}
+.lab-fx-dot{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#ffb86b;box-shadow:0 0 12px #ffb86b;pointer-events:none}
+.lab-fx-hint{margin:10px 0 0;font-size:13px;line-height:1.5;color:#9eb0d8}
 .lab-frames{display:flex;flex-wrap:wrap;gap:8px;padding:22px}
 .lab-frames span{display:grid;place-items:center;width:46px;height:46px;border:2px solid #3a4a78;border-radius:10px;color:#8b9ad0;font:800 16px var(--font-mono)}
 .lab-frames span.on{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 16px rgba(46,230,200,.5)}
+.lab-frame-stage{position:relative;min-height:260px;background:linear-gradient(180deg,#1a2a4e,#101736);overflow:hidden}
+.lab-frame-stage[data-phase="ready"]{background:linear-gradient(180deg,#1a2a4e,#101736)}
+.lab-frame-stage[data-phase="発生"],.lab-frame-stage[data-phase="startup"]{background:linear-gradient(180deg,#4a3a18,#101736)}
+.lab-frame-stage[data-phase="持続"],.lab-frame-stage[data-phase="active"]{background:linear-gradient(180deg,#5a1a28,#101736)}
+.lab-frame-stage[data-phase="硬直"],.lab-frame-stage[data-phase="recovery"]{background:linear-gradient(180deg,#1a2a6e,#101736)}
+.lab-frame-fighter{position:absolute;bottom:48px;width:36px;height:72px;border-radius:10px}
+.lab-frame-fighter.you{left:18%;background:#2ee6c8;box-shadow:0 0 16px rgba(46,230,200,.45)}
+.lab-frame-fighter.foe{right:18%;background:#ff8fb0;box-shadow:0 0 16px rgba(255,143,176,.45)}
+.lab-frame-arm,.lab-frame-hitbox{position:absolute;left:calc(18% + 36px);bottom:78px;height:18px;border-radius:8px;max-width:42%}
+.lab-frame-arm{background:#ffd166}
+.lab-frame-hitbox{background:#ff4d6d;box-shadow:0 0 18px rgba(255,77,109,.7);outline:2px solid #fff}
+.lab-frame-label{position:absolute;left:0;right:0;top:18px;text-align:center;font:800 18px var(--font-mono);color:#e8f0ff;letter-spacing:.04em}
+.lab-react-stage{position:relative;min-height:260px;background:linear-gradient(180deg,#1a2a4e,#101736);overflow:hidden}
+.lab-react-stage[data-mode="hitstop"]{filter:brightness(1.35) saturate(.7)}
+.lab-react-stage[data-mode="stun"]{background:linear-gradient(180deg,#3a1a3e,#101736)}
+.lab-react-you{position:absolute;left:18%;bottom:48px;width:36px;height:72px;border-radius:10px;background:#2ee6c8}
+.lab-react-foe{position:absolute;bottom:48px;width:36px;height:72px;margin-left:-18px;border-radius:10px;background:#ff8fb0;transition:left .05s linear}
+.lab-react-label{position:absolute;left:0;right:0;top:18px;text-align:center;font:800 18px var(--font-mono);color:#e8f0ff}
 .lab-button[data-cast='1']{border-color:var(--cyan);color:var(--cyan)}
 .hitbox-stage{position:relative;min-height:280px;background:linear-gradient(180deg,#1a2a5e,#101736);border-right:1px solid var(--space-line)}
 .hitbox-box{position:absolute;top:50%;width:70px;height:70px;margin-top:-35px;display:grid;place-items:center;border-radius:14px;font:800 16px var(--font-mono);color:#0c1235}

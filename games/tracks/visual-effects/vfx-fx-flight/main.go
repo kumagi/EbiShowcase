@@ -136,8 +136,12 @@ func (g *game) updatePlay() {
 		if !p.scored && p.x+pipeW < birdX {
 			p.scored = true
 			g.score++
-			g.fx.Ring(birdX+20, g.birdY, 0.85*k, color.RGBA{120, 240, 220, 255})
-			g.fx.FlashScreen(0.25*k, 80, 200, 220)
+			cx, cy := birdX+18, g.birdY
+			g.fx.Ring(cx, cy, 1.6*k, color.RGBA{120, 255, 230, 255})
+			g.fx.Ring(cx, cy, 0.85*k, color.RGBA{255, 230, 120, 255})
+			g.fx.Burst(cx, cy, int(36*k), 3.6*k, color.RGBA{100, 255, 220, 255}, true)
+			g.fx.Burst(cx, cy, int(18*k), 2.4*k, color.RGBA{255, 220, 100, 255}, true)
+			g.fx.FlashScreen(0.55*k, 90, 230, 210)
 		}
 		if p.x < -pipeW {
 			p.x += 600

@@ -1068,12 +1068,19 @@ function labParts(kind, lang) {
       };
     case "fx-split":
       return {
-        controls: btn("data-lab-fx-ping", lang === "ja" ? "イベント！" : "Event!", "lab-button-primary") + R,
+        controls:
+          btn("data-lab-fx-ping", lang === "ja" ? "命中！（play+fx）" : "Hit! (play+fx)", "lab-button-primary") +
+          btn("data-lab-fx-tick", lang === "ja" ? "fx だけ 1F進める" : "Tick FX 1 frame") +
+          R,
         board: `<div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>${lang === "ja" ? "play（ゲーム）" : "play"}</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>${lang === "ja" ? "fx（演出）" : "fx"}</h4><ul data-lab-fx-list></ul></div>
-        </div>`,
-        values: val("data-lab-play-n", lang === "ja" ? "エンティティ" : "entities") + val("data-lab-fx-n", lang === "ja" ? "粒" : "particles"),
+          <div class="lab-fx-col" data-lab-play><h4>${lang === "ja" ? "play（ルール・点数）" : "play (rules / score)"}</h4><ul data-lab-play-list></ul></div>
+          <div class="lab-fx-col" data-lab-fx><h4>${lang === "ja" ? "fx（見た目の粒）" : "fx (sparks)"}</h4><ul data-lab-fx-list></ul></div>
+          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
+        </div>
+        <p class="lab-fx-hint" data-lab-fx-hint></p>`,
+        values:
+          val("data-lab-score", lang === "ja" ? "スコア(play)" : "score (play)") +
+          val("data-lab-fx-n", lang === "ja" ? "粒(fx)" : "sparks (fx)"),
       };
     default:
       return { controls: R, board: `<div class="lab-board" data-lab-board></div>`, values: val("data-lab-x", "X") };

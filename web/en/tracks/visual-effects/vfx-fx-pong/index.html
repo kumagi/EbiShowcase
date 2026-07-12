@@ -69,17 +69,19 @@
 
       <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-pong">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / SPLIT</p>
+          <p class="eyebrow">TRY IT / TWO BOXES</p>
           <h3 id="lab-title-vfx-fx-pong">Ball stays ball</h3>
           <p>Don’t embed the visual tail inside ball.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Event!</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Tick FX 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx</h4><ul data-lab-fx-list></ul></div>
+          <div class="lab-fx-col" data-lab-play><h4>play (rules / score)</h4><ul data-lab-play-list></ul></div>
+          <div class="lab-fx-col" data-lab-fx><h4>fx (sparks)</h4><ul data-lab-fx-list></ul></div>
+          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
         </div>
-          <div class="lab-values" aria-live="polite"><div><span>entities</span><strong data-lab-play-n>—</strong></div><div><span>particles</span><strong data-lab-fx-n>—</strong></div></div>
+        <p class="lab-fx-hint" data-lab-fx-hint></p>
+          <div class="lab-values" aria-live="polite"><div><span>score (play)</span><strong data-lab-score>—</strong></div><div><span>sparks (fx)</span><strong data-lab-fx-n>—</strong></div></div>
         </div>
       </div>
 

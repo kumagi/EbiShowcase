@@ -915,13 +915,35 @@ document.querySelectorAll(".motion-lab[data-lab='quest']").forEach((lab) => {
 document.querySelectorAll(".motion-lab[data-lab='frames']").forEach((lab) => {
   const frameOut = bind(lab, "[data-lab-frame]");
   const phaseOut = bind(lab, "[data-lab-phase]");
+  const board = lab.querySelector(".lab-board");
   const startup = lab.dataset.startup || "startup";
   const active = lab.dataset.active || "active";
   const recovery = lab.dataset.recovery || "recovery";
   if (!frameOut || !phaseOut) return;
   let frame = 0;
-  const phase = () => (frame <= 8 ? startup : frame <= 12 ? active : recovery);
-  const render = () => { setText(frameOut, String(frame)); setText(phaseOut, phase()); setState(phaseOut, frame > 8 && frame <= 12); };
+  const phase = () => {
+    if (frame === 0) return "ready";
+    if (frame <= 8) return startup;
+    if (frame <= 12) return active;
+    return recovery;
+  };
+  const render = () => {
+    const p = phase();
+    setText(frameOut, String(frame));
+    setText(phaseOut, p);
+    setState(phaseOut, frame > 8 && frame <= 12);
+    if (!board) return;
+    let reach = 0;
+    if (frame >= 1 && frame <= 8) reach = Math.round((frame / 8) * 56);
+    else if (frame >= 9 && frame <= 12) reach = 100;
+    else if (frame >= 13) reach = Math.max(0, 100 - (frame - 12) * 6);
+    const hitbox = frame >= 9 && frame <= 12
+      ? `<div class="lab-frame-hitbox" style="width:${reach}%"></div>`
+      : `<div class="lab-frame-arm" style="width:${reach}%"></div>`;
+    board.className = "lab-board lab-frame-stage";
+    board.dataset.phase = p;
+    board.innerHTML = `<div class="lab-frame-fighter you"></div>${hitbox}<div class="lab-frame-fighter foe"></div><strong class="lab-frame-label">${p.toUpperCase()} · F${frame}</strong>`;
+  };
   bind(lab, "[data-lab-step]")?.addEventListener("click", () => { frame = Math.min(30, frame + 1); render(); });
   bind(lab, "[data-lab-reset]")?.addEventListener("click", () => { frame = 0; render(); });
   render();
@@ -931,16 +953,48 @@ document.querySelectorAll(".motion-lab[data-lab='react']").forEach((lab) => {
   const stopOut = bind(lab, "[data-lab-stop]");
   const stunOut = bind(lab, "[data-lab-stun]");
   const vOut = bind(lab, "[data-lab-v]");
+  const board = lab.querySelector(".lab-board");
   if (!stopOut || !stunOut || !vOut) return;
-  let hitstop = 0, stun = 0, v = 0;
-  const render = () => { setText(stopOut, String(hitstop)); setText(stunOut, String(stun)); setText(vOut, v.toFixed(2)); };
-  bind(lab, "[data-lab-hit]")?.addEventListener("click", () => { hitstop = 8; stun = 25; v = 7; render(); });
-  bind(lab, "[data-lab-step]")?.addEventListener("click", () => {
-    if (hitstop > 0) { hitstop--; render(); return; }
-    if (stun > 0) { stun--; v *= 0.86; }
+  let hitstop = 0, stun = 0, v = 0, x = 58;
+  const render = () => {
+    setText(stopOut, String(hitstop));
+    setText(stunOut, String(stun));
+    setText(vOut, v.toFixed(2));
+    if (!board) return;
+    let mode = "idle";
+    if (hitstop > 0) mode = "hitstop";
+    else if (stun > 0) mode = "stun";
+    board.className = "lab-board lab-react-stage";
+    board.dataset.mode = mode;
+    board.innerHTML = `<div class="lab-react-you"></div><div class="lab-react-foe" style="left:${x}%"></div><strong class="lab-react-label">${mode.toUpperCase()}</strong>`;
+  };
+  bind(lab, "[data-lab-hit]")?.addEventListener("click", () => {
+    hitstop = 8;
+    stun = 25;
+    v = 7;
+    x = 58;
     render();
   });
-  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => { hitstop = 0; stun = 0; v = 0; render(); });
+  bind(lab, "[data-lab-step]")?.addEventListener("click", () => {
+    if (hitstop > 0) {
+      hitstop--;
+      render();
+      return;
+    }
+    if (stun > 0) {
+      stun--;
+      x = Math.min(88, x + v * 0.55);
+      v *= 0.86;
+    }
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    hitstop = 0;
+    stun = 0;
+    v = 0;
+    x = 58;
+    render();
+  });
   render();
 });
 
@@ -1529,24 +1583,63 @@ document.querySelectorAll(".motion-lab[data-lab='fx-split']").forEach((lab) => {
   const fxList = bind(lab, "[data-lab-fx-list]");
   const playN = bind(lab, "[data-lab-play-n]");
   const fxN = bind(lab, "[data-lab-fx-n]");
-  let entities = ["player", "target"];
+  const scoreOut = bind(lab, "[data-lab-score]");
+  const stage = bind(lab, "[data-lab-fx-stage]");
+  let score = 0;
   let particles = [];
+  let pid = 0;
   const render = () => {
-    if (playList) playList.innerHTML = entities.map((e) => `<li>${e}</li>`).join("");
-    if (fxList) fxList.innerHTML = particles.map((p) => `<li>${p}</li>`).join("");
-    if (playN) setText(playN, String(entities.length));
+    if (playList) {
+      playList.innerHTML = [
+        `<li>score = ${score}</li>`,
+        "<li>player</li>",
+        "<li>target</li>",
+      ].join("");
+    }
+    if (fxList) {
+      fxList.innerHTML = particles.length
+        ? particles.map((p) => `<li>${p.name} life=${p.life}</li>`).join("")
+        : `<li class="lab-fx-empty">${lab.closest("[lang]")?.lang === "en" ? "(empty)" : "（空）"}</li>`;
+    }
+    if (playN) setText(playN, String(3));
     if (fxN) setText(fxN, String(particles.length));
+    if (scoreOut) setText(scoreOut, String(score));
+    if (stage) {
+      stage.innerHTML = particles.map((p) => {
+        const left = 20 + (p.id * 17) % 60;
+        const top = 25 + (p.id * 13) % 50;
+        return `<span class="lab-fx-dot" style="left:${left}%;top:${top}%;opacity:${Math.max(0.25, p.life / 8)}"></span>`;
+      }).join("");
+    }
   };
+  const ja = document.documentElement.lang === "ja";
   bind(lab, "[data-lab-fx-ping]")?.addEventListener("click", () => {
-    particles.push(`spark#${particles.length + 1}`);
-    if (particles.length > 12) particles = particles.slice(-12);
+    score += 1;
+    for (let i = 0; i < 4; i++) {
+      pid += 1;
+      particles.push({ id: pid, name: `spark#${pid}`, life: 8 });
+    }
+    if (particles.length > 16) particles = particles.slice(-16);
+    render();
+  });
+  bind(lab, "[data-lab-fx-tick]")?.addEventListener("click", () => {
+    particles = particles
+      .map((p) => ({ ...p, life: p.life - 1 }))
+      .filter((p) => p.life > 0);
     render();
   });
   bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
-    entities = ["player", "target"];
+    score = 0;
     particles = [];
+    pid = 0;
     render();
   });
+  const hint = bind(lab, "[data-lab-fx-hint]");
+  if (hint) {
+    setText(hint, ja
+      ? "「命中！」→ score と spark が増える。「fx 1F」→ spark だけ減る（score はそのまま）。"
+      : "Hit! grows score + sparks. Tick FX ages sparks only — score stays.");
+  }
   render();
 });
 

@@ -39,10 +39,22 @@ func (g *game) Update() error {
 	}
 	left := ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyLeft)
 	right := ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyRight)
-	start := inpututil.IsKeyJustPressed(ebiten.KeySpace) || inpututil.IsKeyJustPressed(ebiten.KeyX)
+	start := inpututil.IsKeyJustPressed(ebiten.KeySpace) || inpututil.IsKeyJustPressed(ebiten.KeyX) ||
+		inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft)
+	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+		mx, my := ebiten.CursorPosition()
+		if my > height*2/3 {
+			start = false // lower third = move zone when held
+			if mx < width/2 {
+				left = true
+			} else {
+				right = true
+			}
+		}
+	}
 	for _, id := range ebiten.AppendTouchIDs(nil) {
 		x, y := ebiten.TouchPosition(id)
-		if y > height/2 {
+		if y > height*2/3 {
 			if x < width/2 {
 				left = true
 			} else {
@@ -52,7 +64,7 @@ func (g *game) Update() error {
 	}
 	for _, id := range inpututil.AppendJustPressedTouchIDs(nil) {
 		_, y := ebiten.TouchPosition(id)
-		if y < height/2 {
+		if y < height*2/3 {
 			start = true
 		}
 	}
@@ -100,7 +112,7 @@ func (g *game) Draw(s *ebiten.Image) {
 	}
 	ebitenutil.DebugPrintAt(s, state, 170, 70)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("HITS %d/5", g.hits), 205, 105)
-	ebitenutil.DebugPrintAt(s, "MOVE: A/D OR LOWER TOUCH   ATTACK: SPACE/X OR TOP", 65, 685)
+	ebitenutil.DebugPrintAt(s, "MOVE: A/D or hold lower third   ATTACK: click / Space / X", 40, 685)
 	if g.clear {
 		overlay(s, "REACTIONS OBSERVED!\n\nTAP / SPACE TO RESET")
 	}

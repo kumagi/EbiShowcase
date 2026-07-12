@@ -22,7 +22,7 @@
     <section class="overview-hero">
       <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
       <h1>Guard and Throw</h1>
-      <p>Strike, guard, and throw form a rock-paper-scissors triangle. Encode all win conditions in a single <code>wins()</code> function and any combination of actions resolves cleanly — no sprawling if-else chains needed.</p>
+      <p>Strike, guard, and throw form a rock-paper-scissors triangle. During the foe’s windup, read the stance hint and counter with the buttons below.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Triangle rules and the reading game</strong></div>
     </section>
 
@@ -32,7 +32,7 @@
     <section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Read the enemy's telegraph and pick the counter.</h2></div>
-        <p>Press 1 to Strike, 2 to Guard, 3 to Throw — or tap the three lower buttons. Score 5 points to win; lose all three lives and it's game over.</p>
+        <p>While the enemy winds up, press 1 Strike / 2 Guard / 3 Throw — or tap the three lower buttons. Read the stance hint; score 5 to clear.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div>
@@ -63,7 +63,7 @@
         <article>
           <span class="concept-number">3</span>
           <h3>Enemy telegraph</h3>
-          <p>The enemy's choice is displayed before the player acts. This reaction window creates skill depth: predict correctly, or read the shown action and respond.</p>
+          <p>The foe telegraphs with stance during windup—not the move name. Reading that window is the fighting-game skill this lesson trains.</p>
           <code>message = "Enemy prepares " + name(g.enemy)</code>
         </article>
       </div>
@@ -183,6 +183,8 @@ func wins(a, b int) bool {
         </form>
       </div>
     </section>
+
+
 
 
 
