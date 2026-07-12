@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Advanced track starts here. Take LEVEL 01’s tap-the-circle and add hit bursts and rings. Notice updatePlay() then a separate fx.Update().">
+  <title>Add Effects to Tap | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Lab home</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/visual-effects/vfx-fx-tap/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>ADV A01</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Add Effects to Tap</h1>
+      <p>Advanced track starts here. Take LEVEL 01’s tap-the-circle and add hit bursts and rings. Notice updatePlay() then a separate fx.Update().</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Spawn FX on events</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Tap for fireworks</h2></div>
+        <p>Tap the circle for Burst+Ring. Drag intensity and read LIVE GO: play vs fx.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A01</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Add Effects to Tap" src="../../../../play/vfx-fx-tap/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / EVENT → FX</p>
+        <h2>Who spawns sparks<br>on a hit?</h2>
+        <p class="lesson-lead">Score and timer live in updatePlay(). Sparks go into g.fx.Burst(). Same Update frame—different jobs. Even in one file, split the fields.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Play</h3>
+          <p>Score, time, target position.</p>
+          <code>updatePlay()</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>FX</h3>
+          <p>Particles, rings, flashes.</p>
+          <code>fx.Burst / Ring</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Order</h3>
+          <p>Advance rules, then effects.</p>
+          <code>play → fx.Update</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-tap">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / SPLIT</p>
+          <h3 id="lab-title-vfx-fx-tap">Two boxes</h3>
+          <p>Play numbers on one side, effect particles on the other—don’t mix them.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Event!</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-fx-split" data-lab-board>
+          <div class="lab-fx-col" data-lab-play><h4>play</h4><ul data-lab-play-list></ul></div>
+          <div class="lab-fx-col" data-lab-fx><h4>fx</h4><ul data-lab-fx-list></ul></div>
+        </div>
+          <div class="lab-values" aria-live="polite"><div><span>entities</span><strong data-lab-play-n>—</strong></div><div><span>particles</span><strong data-lab-fx-n>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE DEMO</p>
+          <h3>Split Update in two</h3>
+          <p>Don’t paste rules and FX into one blob.</p>
+        </div>
+        <pre><code>func (g *Game) Update() error {
+  g.updatePlay() // score, timer, targets
+  g.fx.Update()  // particles live here
+  return nil
+}
+// on hit:
+g.fx.Burst(x, y, n, speed, tint, true)
+g.fx.Ring(x, y, 1.2, tint)</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY SEPARATE?</p>
+          <h3>Different lifetimes</h3>
+          <p>Targets move; sparks die by life timer.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY ON EVENT?</p>
+          <h3>Play owns the trigger</h3>
+          <p>“Hit” is a game test—then call FX.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>Meter</h3>
+          <p>Next: different FX per Perfect/OK/Miss.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-magic-dark/">← STEP 13<strong>Make Cool Dark Magic</strong></a>
+      <a href="../vfx-fx-meter/">STEP A02 →<strong>FX for Timing Grades</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-fx-tap/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

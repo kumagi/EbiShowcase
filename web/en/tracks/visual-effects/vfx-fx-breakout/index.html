@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits.">
+  <title>Break Bricks in Two Steps | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Lab home</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/visual-effects/vfx-fx-breakout/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>ADV A06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Break Bricks in Two Steps</h1>
+      <p>Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Destroy = remove + FX</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Smash bricks</h2></div>
+        <p>Break blocks with the ball. Shards are fx—compare bricks vs fx.parts.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A06</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Break Bricks in Two Steps" src="../../../../play/vfx-fx-breakout/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / DESTROY</p>
+        <h2>What vanishes vs<br>what sprays</h2>
+        <p class="lesson-lead">Leave play space = no more hits. Enter FX space = looks only. That two-step is arcade juice.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Delete</h3>
+          <p>Drop from bricks.</p>
+          <code>bricks = alive</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Shards</h3>
+          <p>Burst/Flame at that spot.</p>
+          <code>fx.FlameBurst</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Split</h3>
+          <p>FX must not collide.</p>
+          <code>FX ≠ collider</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-breakout">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / SPLIT</p>
+          <h3 id="lab-title-vfx-fx-breakout">No hitbox on debris</h3>
+          <p>Pretty shards shouldn’t be clickable/collidable.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Event!</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-fx-split" data-lab-board>
+          <div class="lab-fx-col" data-lab-play><h4>play</h4><ul data-lab-play-list></ul></div>
+          <div class="lab-fx-col" data-lab-fx><h4>fx</h4><ul data-lab-fx-list></ul></div>
+        </div>
+          <div class="lab-values" aria-live="polite"><div><span>entities</span><strong data-lab-play-n>—</strong></div><div><span>particles</span><strong data-lab-fx-n>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE DEMO</p>
+          <h3>Delete, then spawn</h3>
+          <p>Reverse the order and you double for a frame.</p>
+        </div>
+        <pre><code>// brick broken:
+bricks = remove(bricks, i)     // play
+g.fx.FlameBurst(x, y, 12)      // fx only</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY DELETE FIRST?</p>
+          <h3>Truth of rules</h3>
+          <p>The brick is gone—then fireworks.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY NOT DEBRIS COLLIDE?</p>
+          <h3>Fairness</h3>
+          <p>Dying to confetti angers players.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>Snake</h3>
+          <p>Body cells vs sparkles.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-fx-pong/">← STEP A05<strong>Pong Sparks & Trails</strong></a>
+      <a href="../vfx-fx-snake/">STEP A07 →<strong>Snake Eat FX</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-fx-breakout/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

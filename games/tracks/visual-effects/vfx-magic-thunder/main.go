@@ -1,138 +1,105 @@
-// vfx-magic-thunder — Visual Effects Lab STEP 11.
-// Showcase: branching lightning — jagged bolts, afterimage, sparks, white flash.
+// vfx-magic-thunder — STEP 11: branching lightning with live Go knobs.
 package main
 
 import (
-	"fmt"
 	"image/color"
 	"math"
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/hero"
+	"github.com/kumagi/EbiShowcase/internal/vfxlive"
 	"github.com/kumagi/EbiShowcase/internal/vfxmagic"
 	"github.com/kumagi/EbiShowcase/internal/vfxsprites"
-	"github.com/kumagi/EbiShowcase/internal/vfxui"
 )
 
-const width, height = 480, 720
-
-const (
-	castX = 240.0
-	castY = 480.0
-)
-
-type segment struct {
+type seg struct {
 	x0, y0, x1, y1 float64
 	life, max      float64
 	thick          float32
-	branch         bool
 }
 
 type game struct {
-	rng   *rand.Rand
+	shell *vfxlive.Shell
+	segs  []seg
 	parts []vfxmagic.Particle
-	segs  []segment
+	rng   *rand.Rand
 	flash float64
-	casts int
-	t     float64
-	btn   vfxui.Button
 }
 
 func newGame() *game {
 	return &game{
 		rng: rand.New(rand.NewSource(11)),
-		btn: vfxui.Button{X: 120, Y: 640, W: 240, H: 54, Label: "CAST THUNDER", Fill: color.RGBA{40, 40, 90, 235}},
+		shell: vfxlive.New(
+			"Branching bolts",
+			[]string{
+				"nx += (rand()-0.5) * {wobble}",
+				"if depth < 2 && rand() < {branch} { fork() }",
+				"StrokeLine(glow); StrokeLine(body); StrokeLine(core)",
+				"flash = {flash}",
+			},
+			&vfxlive.Param{Key: "wobble", Label: "wobble", Value: 48, Min: 10, Max: 90, Step: 1, Format: "%.0f"},
+			&vfxlive.Param{Key: "branch", Label: "branch%", Value: 0.35, Min: 0, Max: 0.8, Format: "%.2f"},
+			&vfxlive.Param{Key: "thick", Label: "thick", Value: 4.5, Min: 1.5, Max: 8, Format: "%.1f"},
+			&vfxlive.Param{Key: "flash", Label: "flash", Value: 1, Min: 0.2, Max: 1, Format: "%.2f"},
+			&vfxlive.Param{Key: "cast", Label: "CAST", Value: 0, Bool: true},
+		),
 	}
 }
 
 func (g *game) addBolt(x0, y0, x1, y1 float64, depth int, life float64) {
-	segs := 6 + g.rng.Intn(5)
+	segs := 6 + g.rng.Intn(4)
+	wobble := g.shell.Get("wobble")
+	branch := g.shell.Get("branch")
+	baseThick := g.shell.Get("thick")
 	px, py := x0, y0
 	for i := 1; i <= segs; i++ {
 		tt := float64(i) / float64(segs)
-		nx := x0 + (x1-x0)*tt + (g.rng.Float64()-0.5)*48
-		ny := y0 + (y1-y0)*tt + (g.rng.Float64()-0.5)*18
+		nx := x0 + (x1-x0)*tt + (g.rng.Float64()-0.5)*wobble
+		ny := y0 + (y1-y0)*tt + (g.rng.Float64()-0.5)*wobble*0.35
 		if i == segs {
 			nx, ny = x1, y1
 		}
-		thick := float32(4.5 - float64(depth)*1.2)
-		if thick < 1.5 {
-			thick = 1.5
+		th := float32(baseThick - float64(depth)*1.2)
+		if th < 1.2 {
+			th = 1.2
 		}
-		g.segs = append(g.segs, segment{x0: px, y0: py, x1: nx, y1: ny, life: life, max: life, thick: thick, branch: depth > 0})
-		// Occasional branch.
-		if depth < 2 && i > 1 && i < segs && g.rng.Float64() < 0.35 {
-			bx := nx + (g.rng.Float64()-0.5)*120
-			by := ny + 40 + g.rng.Float64()*80
-			g.addBolt(nx, ny, bx, by, depth+1, life*0.7)
+		g.segs = append(g.segs, seg{x0: px, y0: py, x1: nx, y1: ny, life: life, max: life, thick: th})
+		if depth < 2 && i > 1 && i < segs && g.rng.Float64() < branch {
+			g.addBolt(nx, ny, nx+(g.rng.Float64()-0.5)*120, ny+40+g.rng.Float64()*70, depth+1, life*0.7)
 		}
 		px, py = nx, ny
 	}
 }
 
 func (g *game) cast() {
-	g.casts++
-	g.flash = 1
-	// Main sky-to-hand bolt + side strikes.
-	skyX := castX + (g.rng.Float64()-0.5)*100
-	g.addBolt(skyX, 40, castX+(g.rng.Float64()-0.5)*30, castY-30, 0, 18+g.rng.Float64()*10)
-	if g.rng.Float64() < 0.7 {
-		g.addBolt(skyX+(g.rng.Float64()-0.5)*80, 60, castX+(g.rng.Float64()-0.5)*90, castY-80, 0, 14)
-	}
-	// Impact sparks.
-	for i := 0; i < 55; i++ {
-		life := 20 + g.rng.Float64()*35
+	_, sy, _, sh := g.shell.Stage()
+	cx, cy := 240.0, sy+sh*0.75
+	skyX := cx + (g.rng.Float64()-0.5)*90
+	g.addBolt(skyX, sy+10, cx+(g.rng.Float64()-0.5)*20, cy-20, 0, 18)
+	g.flash = g.shell.Get("flash")
+	for i := 0; i < 40; i++ {
+		life := 20 + g.rng.Float64()*30
 		a := g.rng.Float64() * 2 * math.Pi
-		sp := 2 + g.rng.Float64()*7
+		sp := 2 + g.rng.Float64()*6
 		g.parts = append(g.parts, vfxmagic.Particle{
-			X: castX + (g.rng.Float64()-0.5)*40, Y: castY - 40 + (g.rng.Float64()-0.5)*50,
-			VX: math.Cos(a) * sp, VY: math.Sin(a) * sp,
-			Life: life, Max: life, Scale: 0.2 + g.rng.Float64()*0.45,
-			Add: true, Grav: 0.06,
+			X: cx, Y: cy - 30, VX: math.Cos(a) * sp, VY: math.Sin(a) * sp,
+			Life: life, Max: life, Scale: 0.3, Add: true,
 			Tint: color.RGBA{220, 235, 255, 255}, Src: vfxsprites.Spark,
 		})
 	}
-	// Bolt sprites along the main path for texture.
-	y := 70.0
-	x := skyX
-	for y < castY-40 {
-		life := 14 + g.rng.Float64()*10
-		g.parts = append(g.parts, vfxmagic.Particle{
-			X: x, Y: y, Rot: (g.rng.Float64() - 0.5) * 0.6,
-			Life: life, Max: life, Scale: 0.5 + g.rng.Float64()*0.6,
-			Add: true, Tint: color.White, Src: vfxsprites.Bolt, FadeFrom: 0.3, FadeTo: 1,
-		})
-		y += 32 + g.rng.Float64()*20
-		x += (g.rng.Float64() - 0.5) * 50
-	}
-	g.ringsImpact()
-}
-
-func (g *game) ringsImpact() {
-	g.parts = append(g.parts, vfxmagic.Particle{
-		X: castX, Y: castY - 20, Life: 22, Max: 22, Scale: 1.2,
-		Add: true, Tint: color.RGBA{180, 200, 255, 255}, Src: vfxsprites.Ring,
-		FadeFrom: 0.05, FadeTo: 0.9, ScaleMulFrom: 2.8, ScaleMulTo: 0.6,
-	})
 }
 
 func (g *game) Update() error {
-	g.t += 0.1
+	g.shell.Update()
+	if g.shell.Bool("cast") {
+		g.cast()
+		g.shell.Param("cast").Value = 0
+	}
 	if g.flash > 0 {
 		g.flash -= 0.07
 	}
-	if g.btn.Tapped() || inpututil.IsKeyJustPressed(ebiten.KeySpace) || inpututil.IsKeyJustPressed(ebiten.Key1) {
-		g.cast()
-	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
-		*g = *newGame()
-		return nil
-	}
-
 	segs := g.segs[:0]
 	for _, s := range g.segs {
 		s.life--
@@ -141,7 +108,6 @@ func (g *game) Update() error {
 		}
 	}
 	g.segs = segs
-
 	alive := g.parts[:0]
 	for i := range g.parts {
 		p := g.parts[i]
@@ -155,41 +121,28 @@ func (g *game) Update() error {
 
 func (g *game) Draw(s *ebiten.Image) {
 	s.Fill(color.RGBA{8, 8, 18, 255})
-	vector.DrawFilledRect(s, 0, 540, width, 180, color.RGBA{14, 14, 28, 255}, false)
+	g.shell.FillStage(s, color.RGBA{10, 10, 22, 255})
 	vfxmagic.SoftFlash(s, g.flash, 200, 210, 255)
-
-	hero.DrawBottomCentered(s, castX, castY+55, 150)
-
-	// Soft glow under bolts.
+	_, sy, _, sh := g.shell.Stage()
+	hero.DrawBottomCentered(s, 240, sy+sh*0.75+40, 120)
 	for _, seg := range g.segs {
 		f := seg.life / seg.max
-		col := color.RGBA{160, 190, 255, uint8(180 * f)}
-		if seg.branch {
-			col = color.RGBA{120, 160, 255, uint8(120 * f)}
-		}
-		// Outer glow
-		vector.StrokeLine(s, float32(seg.x0), float32(seg.y0), float32(seg.x1), float32(seg.y1), seg.thick*2.2, color.RGBA{80, 120, 255, uint8(80 * f)}, false)
-		vector.StrokeLine(s, float32(seg.x0), float32(seg.y0), float32(seg.x1), float32(seg.y1), seg.thick, col, false)
-		// Hot core
+		vector.StrokeLine(s, float32(seg.x0), float32(seg.y0), float32(seg.x1), float32(seg.y1), seg.thick*2.2, color.RGBA{80, 120, 255, uint8(70 * f)}, false)
+		vector.StrokeLine(s, float32(seg.x0), float32(seg.y0), float32(seg.x1), float32(seg.y1), seg.thick, color.RGBA{160, 190, 255, uint8(200 * f)}, false)
 		vector.StrokeLine(s, float32(seg.x0), float32(seg.y0), float32(seg.x1), float32(seg.y1), seg.thick*0.35, color.RGBA{255, 255, 255, uint8(230 * f)}, false)
 	}
-
 	for i := range g.parts {
 		g.parts[i].Draw(s)
 	}
-
-	ebitenutil.DebugPrintAt(s, "THUNDER MAGIC — BRANCHING BOLTS + AFTERIMAGE", 36, 18)
-	ebitenutil.DebugPrintAt(s, "layers: jagged lines + bolt PNG + sparks + white flash", 16, 44)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("segments %d   particles %d   casts %d", len(g.segs), len(g.parts), g.casts), 60, 610)
-	g.btn.Draw(s, len(g.segs) > 0)
-	ebitenutil.DebugPrintAt(s, "TAP / SPACE   R = reset", 150, 700)
+	g.shell.Hint = "wobble/branch%/thick/flash  ·  tap CAST"
+	g.shell.Draw(s)
 }
 
-func (g *game) Layout(_, _ int) (int, int) { return width, height }
+func (g *game) Layout(_, _ int) (int, int) { return vfxlive.Width, vfxlive.Height }
 
 func main() {
-	ebiten.SetWindowSize(width, height)
-	ebiten.SetWindowTitle("Cool Thunder Magic — Ebitengine")
+	ebiten.SetWindowSize(vfxlive.Width, vfxlive.Height)
+	ebiten.SetWindowTitle("Live Go: Thunder magic — Ebitengine")
 	if err := ebiten.RunGame(newGame()); err != nil {
 		panic(err)
 	}

@@ -1524,6 +1524,32 @@ document.querySelectorAll(".motion-lab[data-lab^='magic-']").forEach((lab) => {
   });
 });
 
+document.querySelectorAll(".motion-lab[data-lab='fx-split']").forEach((lab) => {
+  const playList = bind(lab, "[data-lab-play-list]");
+  const fxList = bind(lab, "[data-lab-fx-list]");
+  const playN = bind(lab, "[data-lab-play-n]");
+  const fxN = bind(lab, "[data-lab-fx-n]");
+  let entities = ["player", "target"];
+  let particles = [];
+  const render = () => {
+    if (playList) playList.innerHTML = entities.map((e) => `<li>${e}</li>`).join("");
+    if (fxList) fxList.innerHTML = particles.map((p) => `<li>${p}</li>`).join("");
+    if (playN) setText(playN, String(entities.length));
+    if (fxN) setText(fxN, String(particles.length));
+  };
+  bind(lab, "[data-lab-fx-ping]")?.addEventListener("click", () => {
+    particles.push(`spark#${particles.length + 1}`);
+    if (particles.length > 12) particles = particles.slice(-12);
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    entities = ["player", "target"];
+    particles = [];
+    render();
+  });
+  render();
+});
+
 const escapeCodeHTML = (value) => value.replace(/[&<>"']/g, (character) => ({
   "&": "&amp;",
   "<": "&lt;",

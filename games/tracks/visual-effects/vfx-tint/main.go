@@ -1,5 +1,4 @@
-// vfx-tint — Visual Effects Lab STEP 03.
-// Change or drain color with op.ColorScale: tint, hit-flash, and silhouette.
+// vfx-tint — STEP 03: ColorScale modes via live Go + mouse.
 package main
 
 import (
@@ -8,156 +7,85 @@ import (
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/hero"
-	"github.com/kumagi/EbiShowcase/internal/vfxui"
-)
-
-const width, height = 480, 720
-
-const (
-	modeNormal = iota
-	modeTint
-	modeFlash
-	modeShadow
-	modeCount
+	"github.com/kumagi/EbiShowcase/internal/vfxlive"
 )
 
 type game struct {
-	mode    int
-	hue     float64
-	visited [modeCount]bool
-	buttons []vfxui.Button
-	clear   bool
-	t       float64
+	shell *vfxlive.Shell
+	t     float64
 }
 
 func newGame() *game {
-	g := &game{}
-	g.visited[modeNormal] = true
-	w := 104.0
-	gap := 10.0
-	x := (width - (w*4 + gap*3)) / 2
-	for _, l := range []string{"NORMAL", "TINT", "FLASH", "SHADOW"} {
-		g.buttons = append(g.buttons, vfxui.Button{X: x, Y: 636, W: w, H: 54, Label: l})
-		x += w + gap
-	}
-	return g
-}
-
-func (g *game) setMode(m int) {
-	g.mode = m
-	g.visited[m] = true
-	allSeen := true
-	for _, v := range g.visited {
-		if !v {
-			allSeen = false
-		}
-	}
-	if allSeen {
-		g.clear = true
+	return &game{
+		shell: vfxlive.New(
+			"ColorScale",
+			[]string{
+				"op := &ebiten.DrawImageOptions{}",
+				"// mode {mode}: 0 normal · 1 tint · 2 flash · 3 shadow",
+				"op.ColorScale.Scale({r}, {g}, {b}, {a})",
+				"screen.DrawImage(tenjiroh, op)",
+			},
+			&vfxlive.Param{Key: "mode", Label: "mode", Value: 1, Min: 0, Max: 3, Step: 1, Format: "%.0f"},
+			&vfxlive.Param{Key: "hue", Label: "hue", Value: 0.2, Min: 0, Max: 1, Format: "%.2f"},
+			&vfxlive.Param{Key: "amount", Label: "amount", Value: 0.85, Min: 0.1, Max: 1, Format: "%.2f"},
+		),
 	}
 }
 
 func (g *game) Update() error {
-	g.t += 0.12
-	if g.clear {
-		if vfxui.AnyPressStart() {
-			*g = *newGame()
-		}
-		return nil
-	}
-	for i := range g.buttons {
-		if g.buttons[i].Tapped() {
-			g.setMode(i)
-		}
-	}
-	if g.mode == modeTint {
-		g.hue += 0.02
-	}
-	for i, key := range []ebiten.Key{ebiten.Key1, ebiten.Key2, ebiten.Key3, ebiten.Key4} {
-		if ebiten.IsKeyPressed(key) {
-			g.setMode(i)
-		}
-	}
+	g.t += 0.03
+	g.shell.Update()
 	return nil
 }
 
-func hueRGB(h float64) (r, gc, b float64) {
-	h = math.Mod(h, 1)
-	switch {
-	case h < 1.0/3:
-		return 1, 0.35, 0.4
-	case h < 2.0/3:
-		return 0.4, 1, 0.6
-	default:
-		return 0.5, 0.6, 1
-	}
-}
-
 func (g *game) Draw(s *ebiten.Image) {
-	s.Fill(color.RGBA{18, 26, 44, 255})
-	cx, cy := float64(width/2), 340.0
+	s.Fill(color.RGBA{10, 14, 28, 255})
+	g.shell.FillStage(s, color.RGBA{14, 18, 36, 255})
+	_, sy, _, sh := g.shell.Stage()
+	cx, cy := 240.0, sy+sh/2
 
-	sprite := hero.Image()
-	b := sprite.Bounds()
-	sw, sh := float64(b.Dx()), float64(b.Dy())
-	scale := 260.0 / sh
-	tx := cx - sw*scale/2
-	ty := cy - sh*scale/2
-
-	desc := "op.ColorScale (none)"
-	switch g.mode {
-	case modeShadow:
-		// Draw a color-drained copy first: RGB scaled to 0 = a shadow.
-		op := &ebiten.DrawImageOptions{}
-		op.Filter = ebiten.FilterLinear
-		op.GeoM.Scale(scale, scale)
-		op.GeoM.Translate(tx+18, ty+22)
-		op.ColorScale.Scale(0, 0, 0, 0.55)
-		s.DrawImage(sprite, op)
-		desc = "op.ColorScale.Scale(0, 0, 0, 0.55)"
+	mode := int(g.shell.Get("mode") + 0.5)
+	amt := g.shell.Get("amount")
+	hue := g.shell.Get("hue")
+	var r, gg, b, a float64 = 1, 1, 1, 1
+	switch mode {
+	case 1:
+		r = 0.4 + 0.6*math.Sin(hue*math.Pi*2)
+		gg = 0.4 + 0.6*math.Sin(hue*math.Pi*2+2.1)
+		b = 0.4 + 0.6*math.Sin(hue*math.Pi*2+4.2)
+		a = amt
+	case 2:
+		f := 1 + 2*amt*(0.5+0.5*math.Sin(g.t*4))
+		r, gg, b, a = f, f, f, 1
+	case 3:
+		r, gg, b, a = amt*0.25, amt*0.25, amt*0.35, amt
 	}
+	g.shell.SetToken("r", fmt.Sprintf("%.2f", r))
+	g.shell.SetToken("g", fmt.Sprintf("%.2f", gg))
+	g.shell.SetToken("b", fmt.Sprintf("%.2f", b))
+	g.shell.SetToken("a", fmt.Sprintf("%.2f", a))
 
+	img := hero.Image()
+	bb := img.Bounds()
+	h := float64(bb.Dy())
+	sc := 160 / h
 	op := &ebiten.DrawImageOptions{}
-	op.Filter = ebiten.FilterLinear
-	op.GeoM.Scale(scale, scale)
-	op.GeoM.Translate(tx, ty)
-	switch g.mode {
-	case modeTint:
-		r, gg, bb := hueRGB(g.hue)
-		op.ColorScale.Scale(float32(r), float32(gg), float32(bb), 1)
-		desc = fmt.Sprintf("op.ColorScale.Scale(%.1f, %.1f, %.1f, 1)", r, gg, bb)
-	case modeFlash:
-		f := 3.0 + math.Abs(math.Sin(g.t))*4
-		op.ColorScale.Scale(float32(f), float32(f), float32(f), 1)
-		desc = "op.ColorScale.Scale(6, 6, 6, 1) // clamps to white"
-	}
-	s.DrawImage(sprite, op)
+	op.GeoM.Translate(-float64(bb.Dx())/2, -h/2)
+	op.GeoM.Scale(sc, sc)
+	op.GeoM.Translate(cx, cy)
+	op.ColorScale.Scale(float32(r), float32(gg), float32(b), float32(a))
+	s.DrawImage(img, op)
 
-	ebitenutil.DebugPrintAt(s, "SAME PIXELS, RECOLORED BY ColorScale", 96, 24)
-	ebitenutil.DebugPrintAt(s, desc, 16, 52)
-	ebitenutil.DebugPrintAt(s, "TAP A MODE (or keys 1-4). SEE ALL 4 TO CLEAR.", 74, 604)
-	for i := range g.buttons {
-		g.buttons[i].Draw(s, i == g.mode)
-	}
-	if g.clear {
-		overlay(s, "YOU TRIED EVERY MODE!\n\nTINT, FLASH, AND SHADOW\nARE ALL ColorScale.\nTAP / SPACE TO RESET")
-	}
+	g.shell.Hint = "drag mode / hue / amount — ColorScale numbers update live"
+	g.shell.Draw(s)
 }
 
-func overlay(s *ebiten.Image, msg string) {
-	vector.DrawFilledRect(s, 55, 250, 370, 170, color.RGBA{8, 16, 32, 240}, false)
-	vector.StrokeRect(s, 55, 250, 370, 170, 3, color.RGBA{120, 240, 220, 255}, false)
-	ebitenutil.DebugPrintAt(s, msg, 95, 285)
-}
-
-func (g *game) Layout(_, _ int) (int, int) { return width, height }
+func (g *game) Layout(_, _ int) (int, int) { return vfxlive.Width, vfxlive.Height }
 
 func main() {
-	ebiten.SetWindowSize(width, height)
-	ebiten.SetWindowTitle("Tint & Drain — Ebitengine")
+	ebiten.SetWindowSize(vfxlive.Width, vfxlive.Height)
+	ebiten.SetWindowTitle("Live Go: ColorScale — Ebitengine")
 	if err := ebiten.RunGame(newGame()); err != nil {
 		panic(err)
 	}

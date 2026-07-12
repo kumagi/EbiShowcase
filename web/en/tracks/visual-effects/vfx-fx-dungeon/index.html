@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Reducing HP is play. Flashes and shards are fx. Choose knockback as physics or juice on purpose.">
+  <title>Dungeon Hit Flashes | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Lab home</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/visual-effects/vfx-fx-dungeon/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>ADV A11</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Dungeon Hit Flashes</h1>
+      <p>Reducing HP is play. Flashes and shards are fx. Choose knockback as physics or juice on purpose.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Hit reactions are FX</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Smack the slime</h2></div>
+        <p>Move and attack. Hit juice is fx; HP is play.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A11</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Dungeon Hit Flashes" src="../../../../play/vfx-fx-dungeon/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / COMBAT FEEDBACK</p>
+        <h2>Painful numbers vs<br>painful looks</h2>
+        <p class="lesson-lead">Split HP truth from flash feedback and i-frames/combos get easier to add.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Damage</h3>
+          <p>Reduce HP.</p>
+          <code>hp -= dmg</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Reaction</h3>
+          <p>Flash and sparks.</p>
+          <code>fx.FlashScreen</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Split</h3>
+          <p>Don't invent HP from blinks.</p>
+          <code>bar from hp</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-dungeon">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / SPLIT</p>
+          <h3 id="lab-title-vfx-fx-dungeon">HP is truth</h3>
+          <p>Don't defeat foes because they blinked.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Event!</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-fx-split" data-lab-board>
+          <div class="lab-fx-col" data-lab-play><h4>play</h4><ul data-lab-play-list></ul></div>
+          <div class="lab-fx-col" data-lab-fx><h4>fx</h4><ul data-lab-fx-list></ul></div>
+        </div>
+          <div class="lab-values" aria-live="polite"><div><span>entities</span><strong data-lab-play-n>—</strong></div><div><span>particles</span><strong data-lab-fx-n>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE DEMO</p>
+          <h3>FX at end of applyDamage</h3>
+          <p>Numbers first, looks second.</p>
+        </div>
+        <pre><code>func applyDamage(e *enemy, dmg int) {
+  e.hp -= dmg
+  g.fx.FlashScreen(0.5, 255, 80, 80)
+  g.fx.Burst(e.x, e.y, 28, 4, tint, true)
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY?</p>
+          <h3>Debug</h3>
+          <p>Log HP without the light show.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY FLASH?</p>
+          <h3>Feedback</h3>
+          <p>No hit feel = feels unfair.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>Bullet hell</h3>
+          <p>Finale: clear bombs vs bullets[].</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-fx-platform/">← STEP A10<strong>Jump & Land Dust</strong></a>
+      <a href="../vfx-fx-bullethell/">STEP A12 →<strong>Bomb Clears Bullets—Explosions Are FX</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-fx-dungeon/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

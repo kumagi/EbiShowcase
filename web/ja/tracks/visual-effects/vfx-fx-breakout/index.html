@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="壊れたブロックは配列から削除（プレイ）。飛び散る破片・炎は fx。『壊れたオブジェクトを破片として残す』のを play 側でやると、当たり判定が残骸に引っかかります。">
+  <title>ブロック破壊を二段にする | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">工房トップ</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/visual-effects/vfx-fx-breakout/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← ビジュアルエフェクト工房</a><span>ADV A06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>ブロック破壊を二段にする</h1>
+      <p>壊れたブロックは配列から削除（プレイ）。飛び散る破片・炎は fx。『壊れたオブジェクトを破片として残す』のを play 側でやると、当たり判定が残骸に引っかかります。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>破壊＝エンティティ削除＋FX</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>ブロックを砕こう</h2></div>
+        <p>ボールでブロックを壊す。破片は fx。bricks の数と fx.parts を見比べよう。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A06</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="ブロック破壊を二段にする" src="../../../../play/vfx-fx-breakout/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / DESTROY</p>
+        <h2>消えるものと、<br>飛び散るもの</h2>
+        <p class="lesson-lead">プレイ空間から消す＝もう当たない。演出空間に出す＝見た目だけ。この二段がアーケード感の正体です。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>削除</h3>
+          <p>bricks から外す。</p>
+          <code>bricks = alive</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>破片</h3>
+          <p>同じ座標で Burst/Flame。</p>
+          <code>fx.FlameBurst</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>分離</h3>
+          <p>残骸に当たり判定を残さない。</p>
+          <code>FX ≠ collider</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-breakout">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / SPLIT</p>
+          <h3 id="lab-title-vfx-fx-breakout">当たり判定は残すな</h3>
+          <p>見た目の破片をクリックできない／当たらない。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>イベント！</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-fx-split" data-lab-board>
+          <div class="lab-fx-col" data-lab-play><h4>play（ゲーム）</h4><ul data-lab-play-list></ul></div>
+          <div class="lab-fx-col" data-lab-fx><h4>fx（演出）</h4><ul data-lab-fx-list></ul></div>
+        </div>
+          <div class="lab-values" aria-live="polite"><div><span>エンティティ</span><strong data-lab-play-n>—</strong></div><div><span>粒</span><strong data-lab-fx-n>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE DEMO</p>
+          <h3>delete してから spawn</h3>
+          <p>順序を逆にすると一瞬二重になる。</p>
+        </div>
+        <pre><code>// brick broken:
+bricks = remove(bricks, i)     // play
+g.fx.FlameBurst(x, y, 12)      // fx only</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY DELETE FIRST?</p>
+          <h3>ルールの真実</h3>
+          <p>もうブロックは無い、が先。花火は後。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY NOT DEBRIS COLLIDE?</p>
+          <h3>理不尽防止</h3>
+          <p>破片に当たって死ぬとプレイヤーは怒る。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>Snakeへ</h3>
+          <p>体のセル配列とキラキラを分離。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-fx-pong/">← STEP A05<strong>ボールに火花とトレイルを足す</strong></a>
+      <a href="../vfx-fx-snake/">STEP A07 →<strong>スネークに捕食演出を足す</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-fx-breakout/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

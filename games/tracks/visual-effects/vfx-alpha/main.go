@@ -1,138 +1,93 @@
-// vfx-alpha — Visual Effects Lab STEP 04.
-// Translucency and draw order: a fading afterimage trail from stacked copies.
+// vfx-alpha — STEP 04: ScaleAlpha + afterimage trail via live Go + mouse.
 package main
 
 import (
 	"fmt"
 	"image/color"
-	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/hero"
+	"github.com/kumagi/EbiShowcase/internal/vfxlive"
 	"github.com/kumagi/EbiShowcase/internal/vfxui"
 )
 
-const width, height = 480, 720
-
-type vec struct{ x, y float64 }
-
 type game struct {
-	pos      vec
-	target   vec
-	trail    []vec
-	trailLen int
-	active   int
-	rings    [2]vec
-	combo    int
-	buttons  []vfxui.Button
-	clear    bool
+	shell *vfxlive.Shell
+	trail [][2]float64
+	x, y  float64
 }
 
 func newGame() *game {
 	g := &game{
-		pos:      vec{width / 2, height / 2},
-		target:   vec{width / 2, height / 2},
-		trailLen: 14,
-		rings:    [2]vec{{100, 250}, {380, 470}},
+		shell: vfxlive.New(
+			"ScaleAlpha + trail",
+			[]string{
+				"for i, p := range trail {",
+				"  a := float32(i) / float32({trail}) * {alpha}",
+				"  op.ColorScale.ScaleAlpha(a)",
+				"  op.GeoM.Translate(p.x, p.y)",
+				"  screen.DrawImage(tenjiroh, op)",
+				"}",
+			},
+			&vfxlive.Param{Key: "trail", Label: "trail", Value: 10, Min: 1, Max: 24, Step: 1, Format: "%.0f"},
+			&vfxlive.Param{Key: "alpha", Label: "alpha", Value: 0.85, Min: 0.15, Max: 1, Format: "%.2f"},
+			&vfxlive.Param{Key: "ease", Label: "ease", Value: 0.2, Min: 0.05, Max: 0.5, Format: "%.2f"},
+		),
 	}
-	w := 130.0
-	gap := 12.0
-	x := (width - (w*2 + gap)) / 2
-	for _, l := range []string{"TRAIL +", "TRAIL -"} {
-		g.buttons = append(g.buttons, vfxui.Button{X: x, Y: 636, W: w, H: 54, Label: l})
-		x += w + gap
-	}
+	_, sy, _, sh := g.shell.Stage()
+	g.x, g.y = 240, sy+sh/2
 	return g
 }
 
 func (g *game) Update() error {
-	if g.clear {
-		if vfxui.AnyPressStart() {
-			*g = *newGame()
-		}
-		return nil
-	}
-	if x, y, ok := vfxui.Held(); ok {
-		if y < 620 {
-			g.target = vec{x, y}
+	ate := g.shell.Update()
+	_, sy, _, sh := g.shell.Stage()
+	if !ate {
+		if x, y, ok := vfxui.Held(); ok && y >= sy && y <= sy+sh {
+			ease := g.shell.Get("ease")
+			g.x += (x - g.x) * ease
+			g.y += (y - g.y) * ease
 		}
 	}
-	if g.buttons[0].Tapped() {
-		g.trailLen = int(math.Min(28, float64(g.trailLen)+2))
-	}
-	if g.buttons[1].Tapped() {
-		g.trailLen = int(math.Max(2, float64(g.trailLen)-2))
-	}
-	// Ease toward the target so motion (and the trail) stays smooth.
-	g.pos.x += (g.target.x - g.pos.x) * 0.2
-	g.pos.y += (g.target.y - g.pos.y) * 0.2
-	g.trail = append(g.trail, g.pos)
-	if len(g.trail) > g.trailLen {
-		g.trail = g.trail[len(g.trail)-g.trailLen:]
-	}
-	r := g.rings[g.active]
-	if math.Hypot(g.pos.x-r.x, g.pos.y-r.y) < 44 {
-		g.active = 1 - g.active
-		g.combo++
-		if g.combo >= 6 {
-			g.clear = true
-		}
+	g.trail = append(g.trail, [2]float64{g.x, g.y})
+	n := int(g.shell.Get("trail") + 0.5)
+	if len(g.trail) > n {
+		g.trail = g.trail[len(g.trail)-n:]
 	}
 	return nil
 }
 
 func (g *game) Draw(s *ebiten.Image) {
-	s.Fill(color.RGBA{14, 22, 38, 255})
-
-	// Glowing rings to visit alternately.
-	for i, r := range g.rings {
-		c := color.RGBA{70, 90, 130, 255}
-		if i == g.active {
-			c = color.RGBA{120, 240, 220, 255}
-		}
-		vector.StrokeCircle(s, float32(r.x), float32(r.y), 40, 4, c, false)
-	}
-
-	// Oldest copies are the most transparent: alpha grows toward the head.
-	sprite := hero.Image()
-	b := sprite.Bounds()
-	sw, sh := float64(b.Dx()), float64(b.Dy())
-	scale := 120.0 / sh
+	s.Fill(color.RGBA{10, 14, 28, 255})
+	g.shell.FillStage(s, color.RGBA{14, 18, 36, 255})
+	amax := g.shell.Get("alpha")
+	n := len(g.trail)
 	for i, p := range g.trail {
-		alpha := float64(i+1) / float64(len(g.trail))
+		a := float32(1)
+		if n > 1 {
+			a = float32(i) / float32(n-1) * float32(amax)
+		}
+		img := hero.Image()
+		bb := img.Bounds()
+		h := float64(bb.Dy())
+		sc := 110 / h
 		op := &ebiten.DrawImageOptions{}
-		op.Filter = ebiten.FilterLinear
-		op.GeoM.Scale(scale, scale)
-		op.GeoM.Translate(p.x-sw*scale/2, p.y-sh*scale/2)
-		op.ColorScale.ScaleAlpha(float32(alpha * 0.9))
-		s.DrawImage(sprite, op)
+		op.GeoM.Translate(-float64(bb.Dx())/2, -h/2)
+		op.GeoM.Scale(sc, sc)
+		op.GeoM.Translate(p[0], p[1])
+		op.ColorScale.ScaleAlpha(a)
+		s.DrawImage(img, op)
 	}
-
-	ebitenutil.DebugPrintAt(s, "DRAG TENJIROH. OLD COPIES FADE OUT.", 108, 24)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("op.ColorScale.ScaleAlpha(i/len)   TRAIL %d", g.trailLen), 16, 52)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("VISIT RINGS: %d/6", g.combo), 16, 74)
-	ebitenutil.DebugPrintAt(s, "MORE / FEWER AFTERIMAGES:", 60, 604)
-	for i := range g.buttons {
-		g.buttons[i].Draw(s, false)
-	}
-	if g.clear {
-		overlay(s, "SIX RINGS, ONE SWOOSH!\n\nSTACKED TRANSPARENT COPIES\n= MOTION BLUR.\nTAP / SPACE TO RESET")
-	}
+	g.shell.SetToken("trail", fmt.Sprintf("%d", int(g.shell.Get("trail")+0.5)))
+	g.shell.Hint = "drag on stage to move  ·  trail/alpha change the afterimage"
+	g.shell.Draw(s)
 }
 
-func overlay(s *ebiten.Image, msg string) {
-	vector.DrawFilledRect(s, 55, 250, 370, 170, color.RGBA{8, 16, 32, 240}, false)
-	vector.StrokeRect(s, 55, 250, 370, 170, 3, color.RGBA{120, 240, 220, 255}, false)
-	ebitenutil.DebugPrintAt(s, msg, 95, 285)
-}
-
-func (g *game) Layout(_, _ int) (int, int) { return width, height }
+func (g *game) Layout(_, _ int) (int, int) { return vfxlive.Width, vfxlive.Height }
 
 func main() {
-	ebiten.SetWindowSize(width, height)
-	ebiten.SetWindowTitle("Alpha & Afterimage — Ebitengine")
+	ebiten.SetWindowSize(vfxlive.Width, vfxlive.Height)
+	ebiten.SetWindowTitle("Live Go: Alpha — Ebitengine")
 	if err := ebiten.RunGame(newGame()); err != nil {
 		panic(err)
 	}

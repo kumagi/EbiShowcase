@@ -13,6 +13,8 @@
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { advancedLessons } from "./vfx-advanced-lessons.mjs";
+import { advancedLessonsPart2 } from "./vfx-advanced-lessons-part2.mjs";
 
 const root = new URL("..", import.meta.url).pathname;
 const track = "visual-effects";
@@ -24,26 +26,27 @@ const hub = {
   ja: {
     title: "ビジュアルエフェクト工房",
     eyebrow: "見た目の魔法をEbitengineで作る",
-    lead: "色・回転・拡大縮小・半透明・加算合成・アニメーション。基本の文法を手で確かめたあと、炎・氷・雷・光・闇のかっこいい魔法で「ここまでできる」を体験します。",
-    pathTitle: "描画の基本から<br>本格魔法まで。",
-    pathLead: "まず DrawImageOptions から色・合成・時間を1歩ずつ。総まとめの炎・水・雷のあと、チャージ炎・結晶氷・枝分かれ雷・フレア光・渦闇のショーケースで表現を伸ばします。",
+    lead: "基本編で描画の文法を手で確かめ、応用編で LEVEL 01〜12 のミニゲームそれぞれに派手な演出を足します。応用編のゴールは、エフェクトをゲーム本編の配列と分けて管理することに自分で気づくこと。",
+    pathTitle: "基本編と応用編。",
+    pathLead: "まず LIVE GO で道具を覚え、次に12本のコアゲームへ演出を足しながら「play と fx を分ける」構造にたどり着きます。",
     breadcrumb: "← 全コース",
     course: "コース",
   },
   en: {
     title: "Visual Effects Lab",
     eyebrow: "Make on-screen magic with Ebitengine",
-    lead: "Color, rotation, scaling, transparency, additive light, and animation. After the grammar toys, showcase fire, ice, lightning, light, and dark magic—how far Ebitengine can go.",
-    pathTitle: "From drawing basics<br>to full magic.",
-    pathLead: "Start from DrawImageOptions, add color, blending, and time. After the fire/water/lightning capstone, stretch into charged fire, crystal ice, branching thunder, flare light, and void dark showcases.",
+    lead: "Basics teach the drawing grammar; Advanced remakes each LEVEL 01–12 mini game with flashy FX. The goal is noticing for yourself that effects belong in a separate system from gameplay entities.",
+    pathTitle: "Basics, then Advanced.",
+    pathLead: "Learn the tools with LIVE GO, then dress up all twelve core games while discovering the play-vs-fx split.",
     breadcrumb: "← ALL PATHS",
     course: "PATHS",
   },
 };
 
-const lessons = [
+const basicLessons = [
   {
     slug: "vfx-stamp",
+    tier: "basic",
     step: "01",
     stars: "★☆☆☆☆",
     labKind: "translate",
@@ -106,6 +109,7 @@ screen.DrawImage(tenjiroh, op)`,
   },
   {
     slug: "vfx-transform",
+    tier: "basic",
     step: "02",
     stars: "★★☆☆☆",
     labKind: "geom",
@@ -171,6 +175,7 @@ screen.DrawImage(sprite, op)`,
   },
   {
     slug: "vfx-tint",
+    tier: "basic",
     step: "03",
     stars: "★★☆☆☆",
     labKind: "colorscale",
@@ -236,6 +241,7 @@ screen.DrawImage(sprite, op)`,
   },
   {
     slug: "vfx-alpha",
+    tier: "basic",
     step: "04",
     stars: "★★★☆☆",
     labKind: "opacity",
@@ -302,6 +308,7 @@ screen.DrawImage(sprite, op)`,
   },
   {
     slug: "vfx-additive",
+    tier: "basic",
     step: "05",
     stars: "★★★☆☆",
     labKind: "blend",
@@ -365,6 +372,7 @@ screen.DrawImage(glow, op)`,
   },
   {
     slug: "vfx-walk",
+    tier: "basic",
     step: "06",
     stars: "★★★☆☆",
     labKind: "sheet",
@@ -451,6 +459,7 @@ screen.DrawImage(frame, op)`,
   },
   {
     slug: "vfx-particles",
+    tier: "basic",
     step: "07",
     stars: "★★★★☆",
     labKind: "spray",
@@ -518,6 +527,7 @@ for i := range ps { // Update
   },
   {
     slug: "vfx-spells",
+    tier: "basic",
     step: "08",
     stars: "★★★★★",
     labKind: "spellbook",
@@ -593,6 +603,7 @@ vector.StrokeLine(screen, ax, ay, bx, by, 5, white, false)`,
   },
   {
     slug: "vfx-magic-fire",
+    tier: "basic",
     step: "09",
     stars: "★★★★★",
     labKind: "magic-fire",
@@ -668,6 +679,7 @@ else if wasHolding {
   },
   {
     slug: "vfx-magic-ice",
+    tier: "basic",
     step: "10",
     stars: "★★★★★",
     labKind: "magic-ice",
@@ -740,6 +752,7 @@ spawn(Ring) // bloom on break`,
   },
   {
     slug: "vfx-magic-thunder",
+    tier: "basic",
     step: "11",
     stars: "★★★★★",
     labKind: "magic-thunder",
@@ -814,6 +827,7 @@ StrokeLine(glow); StrokeLine(body); StrokeLine(core)`,
   },
   {
     slug: "vfx-magic-light",
+    tier: "basic",
     step: "12",
     stars: "★★★★★",
     labKind: "magic-light",
@@ -887,6 +901,7 @@ DrawImage(RingPNG)  // expanding ring`,
   },
   {
     slug: "vfx-magic-dark",
+    tier: "basic",
     step: "13",
     stars: "★★★★★",
     labKind: "magic-dark",
@@ -920,7 +935,7 @@ DrawImage(RingPNG)  // expanding ring`,
       whys: [
         { eyebrow: "WHY INWARD?", h: "属性は向きで決まる", p: "同じ粒でも、外向きなら光・炎、内向きなら闇に見えます。" },
         { eyebrow: "WHY PURPLE?", h: "黒だけだと潰れる", p: "暗い核に彩度のある縁を足すと、形が読めます。" },
-        { eyebrow: "TRY NEXT", h: "自分の属性", p: "向き・色・合成を選んで、オリジナル魔法を発明しよう。" },
+        { eyebrow: "TRY NEXT", h: "自分の属性", p: "向き・色・合成を選んで、オリジナル魔法を発明しよう。次は応用編で、コアゲームに演出を足す。" },
       ],
     },
     en: {
@@ -948,7 +963,7 @@ DrawImage(RingPNG)  // expanding ring`,
       whys: [
         { eyebrow: "WHY INWARD?", h: "Element is direction", p: "Same particles: outward reads as light/fire, inward as dark." },
         { eyebrow: "WHY PURPLE?", h: "Black alone collapses", p: "A saturated fringe keeps the silhouette readable." },
-        { eyebrow: "TRY NEXT", h: "Your element", p: "Pick direction, color, and blend—invent your own spell." },
+        { eyebrow: "TRY NEXT", h: "Advanced track", p: "Next: dress up LEVEL 01–12 games and split play from fx." },
       ],
     },
     code: `dx, dy := SpiralOffset(t, arms, 160, 4.5)
@@ -957,7 +972,9 @@ p.VX += (cx-p.X)*0.004 - (cy-p.Y)*0.0025
 p.VY += (cy-p.Y)*0.004 + (cx-p.X)*0.0025
 DrawImage(DarkPNG) // core normal, fringe additive`,
   },
-];
+].map((l) => ({ ...l, tier: l.tier || "basic" }));
+
+const lessons = [...basicLessons, ...advancedLessons, ...advancedLessonsPart2];
 
 // --- lab markup builders ----------------------------------------------------
 
@@ -1049,6 +1066,15 @@ function labParts(kind, lang) {
         board: `<div class="lab-board lab-spell-stage lab-magic-stage" data-lab-board data-magic="${kind.replace("magic-", "")}"><p class="lab-spell-hint">${lang === "ja" ? "バーストで層を見てみよう" : "Burst to preview the layers"}</p></div>`,
         values: val("data-lab-count", lang === "ja" ? "粒" : "sprites"),
       };
+    case "fx-split":
+      return {
+        controls: btn("data-lab-fx-ping", lang === "ja" ? "イベント！" : "Event!", "lab-button-primary") + R,
+        board: `<div class="lab-board lab-fx-split" data-lab-board>
+          <div class="lab-fx-col" data-lab-play><h4>${lang === "ja" ? "play（ゲーム）" : "play"}</h4><ul data-lab-play-list></ul></div>
+          <div class="lab-fx-col" data-lab-fx><h4>${lang === "ja" ? "fx（演出）" : "fx"}</h4><ul data-lab-fx-list></ul></div>
+        </div>`,
+        values: val("data-lab-play-n", lang === "ja" ? "エンティティ" : "entities") + val("data-lab-fx-n", lang === "ja" ? "粒" : "particles"),
+      };
     default:
       return { controls: R, board: `<div class="lab-board" data-lab-board></div>`, values: val("data-lab-x", "X") };
   }
@@ -1103,7 +1129,7 @@ function stepPage(lesson, idx, lang) {
   const total = lessons.length;
   const courseLabel = lang === "ja" ? "工房トップ" : "Lab home";
   const learnLabel = "HOW IT WORKS";
-  const playEyebrow = "PLAYABLE / WEBASSEMBLY";
+  const playEyebrow = lang === "ja" ? "PLAYABLE / LIVE GO + マウス" : "PLAYABLE / LIVE GO + MOUSE";
   const bridge = lang === "ja"
     ? `このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。`
     : `This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.`;
@@ -1156,7 +1182,7 @@ function stepPage(lesson, idx, lang) {
     </nav>
   </header>
   <main class="overview-main">
-    <div class="lesson-breadcrumb"><a href="../">← ${hub[lang].title}</a><span>STEP ${lesson.step} / ${String(total).padStart(2, "0")}</span></div>
+    <div class="lesson-breadcrumb"><a href="../">← ${hub[lang].title}</a><span>${lesson.tier === "advanced" ? "ADV" : "BASIC"} ${lesson.step}</span></div>
 
     <section class="overview-hero">
       <p class="eyebrow">${lesson.stars} / PLAYABLE</p>
@@ -1224,14 +1250,23 @@ function hubPage(lang) {
   const h = hub[lang];
   const other = lang === "ja" ? "en" : "ja";
   const otherLabel = lang === "ja" ? "EN" : "日本語";
-  const steps = lessons
-    .map((l) => `<a class="path-step" href="${l.slug}/"><span>${l.step}</span><div><h3>${l[lang].title}</h3><p>${l.hubDesc[lang]}</p><strong>${l.concept[lang]}</strong></div><b>→</b></a>`)
-    .join("\n");
+  const basic = lessons.filter((l) => l.tier !== "advanced");
+  const advanced = lessons.filter((l) => l.tier === "advanced");
+  const stepLink = (l) =>
+    `<a class="path-step" href="${l.slug}/"><span>${l.step}</span><div><h3>${l[lang].title}</h3><p>${l.hubDesc[lang]}</p><strong>${l.concept[lang]}</strong></div><b>→</b></a>`;
+  const basicSteps = basic.map(stepLink).join("\n");
+  const advSteps = advanced.map(stepLink).join("\n");
   const bridge = lang === "ja"
     ? `<p class="curriculum-bridge">共通基礎(LEVEL 01〜12)の続きです。<a href="../../games/tap-target/#basics">Update / Draw</a> のループの上に、見た目を作る道具を1つずつ足します。主人公はオリジナルの海老・天次郎です。</p>`
     : `<p class="curriculum-bridge">This continues the core lessons (LEVEL 01–12). On top of the <a href="../../games/tap-target/#basics">Update / Draw</a> loop, add one presentation tool at a time. The hero is original Ebi Tenjiroh (海老・天次郎).</p>`;
+  const basicHead = lang === "ja"
+    ? `<div class="path-intro"><p class="eyebrow">BASIC / 基本編</p><h2>描画の文法を<br>手で確かめる。</h2><p>Translate から魔法ショーケースまで。LIVE GO とスライダーで道具を覚える ${basic.length} ステップ。</p></div>`
+    : `<div class="path-intro"><p class="eyebrow">BASIC</p><h2>Feel the drawing<br>grammar by hand.</h2><p>${basic.length} steps from Translate to magic showcases—LIVE GO + sliders.</p></div>`;
+  const advHead = lang === "ja"
+    ? `<div class="path-intro" id="advanced"><p class="eyebrow">ADVANCED / 応用編</p><h2>12のコアゲームに<br>派手な演出を足す。</h2><p>LEVEL 01〜12 をベースに、play（ルール）と fx（演出）を分けて管理する構造に自分で気づくための ${advanced.length} 章。</p></div>`
+    : `<div class="path-intro" id="advanced"><p class="eyebrow">ADVANCED</p><h2>Dress up all twelve<br>core games.</h2><p>${advanced.length} chapters on LEVEL 01–12 remakes—discover the play vs fx split for yourself.</p></div>`;
 
-  return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>${h.title} | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">${lang === "ja" ? "目次" : "CURRICULUM"}</a><a class="lang" href="../../../${other}/tracks/${track}/">${otherLabel}</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">${h.breadcrumb}</a><span>${lessons.length} STEPS</span></div><section class="track-hero track-visual-effects"><span class="track-letter">${hub.letter}</span><div><p class="eyebrow">${h.eyebrow}</p><h1>${h.title}</h1><p>${h.lead}</p></div>${bridge}</section><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>${h.pathTitle}</h2><p>${h.pathLead}</p></div>${steps}</section></main></body></html>
+  return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>${h.title} | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">${lang === "ja" ? "目次" : "CURRICULUM"}</a><a class="lang" href="../../../${other}/tracks/${track}/">${otherLabel}</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">${h.breadcrumb}</a><span>${basic.length}+${advanced.length} STEPS</span></div><section class="track-hero track-visual-effects"><span class="track-letter">${hub.letter}</span><div><p class="eyebrow">${h.eyebrow}</p><h1>${h.title}</h1><p>${h.lead}</p></div>${bridge}</section><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>${h.pathTitle}</h2><p>${h.pathLead}</p></div>${basicHead}${basicSteps}${advHead}${advSteps}</section></main></body></html>
 `;
 }
 
