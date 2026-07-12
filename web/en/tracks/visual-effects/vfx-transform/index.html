@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Add Rotate and Scale to the same GeoM and the image spins and stretches. Order matters: move the center to the origin first, then rotate to ">
+  <title>Rotate, Scale & the Pivot | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Lab home</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/visual-effects/vfx-transform/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>STEP 02 / 08</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>Rotate, Scale & the Pivot</h1>
+      <p>Add Rotate and Scale to the same GeoM and the image spins and stretches. Order matters: move the center to the origin first, then rotate to spin cleanly about the middle.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>GeoM.Rotate / Scale</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Switch the pivot and spin</h2></div>
+        <p>Rotate and scale with buttons, then switch the pivot between center and corner. The corner pivot flings the image around in a wide swing.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Rotate, Scale & the Pivot" src="../../../../play/vfx-transform/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / PIVOT</p>
+        <h2>Why does spinning<br>fling it away?</h2>
+        <p class="lesson-lead">Transforms are matrix multiplications applied in the order you write them. Rotate while the top-left is the origin and the image swings in a big arc. Move the center to (-w/2,-h/2) first, rotate, then Translate to its place, and it spins in the middle.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>To origin</h3>
+          <p>Bring the center to (0,0).</p>
+          <code>Translate(-w/2,-h/2)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Rotate/Scale</h3>
+          <p>Now spin and stretch.</p>
+          <code>Rotate / Scale</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Back</h3>
+          <p>Carry it to where it belongs.</p>
+          <code>Translate(cx,cy)</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="geom" aria-labelledby="lab-title-vfx-transform">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / GeoM</p>
+          <h3 id="lab-title-vfx-transform">Switch the pivot and spin</h3>
+          <p>Rotate and scale with buttons, then switch the pivot between center and corner. The corner pivot flings the image around in a wide swing.</p>
+          <div class="lab-controls"><button type="button" class="lab-button" data-lab-rotl>Rotate −</button><button type="button" class="lab-button lab-button-primary" data-lab-rotr>Rotate +</button><button type="button" class="lab-button" data-lab-sdown>Scale −</button><button type="button" class="lab-button" data-lab-sup>Scale +</button><button type="button" class="lab-button" data-lab-pivot>Pivot</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" data-lab-board></div>
+          <div class="lab-values" aria-live="polite"><div><span>angle</span><strong data-lab-angle>—</strong></div><div><span>scale</span><strong data-lab-scale>—</strong></div><div><span>pivot</span><strong data-lab-pivot>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Spin about the center</h3>
+          <p>To-origin → rotate/scale → place. That order is the whole trick.</p>
+        </div>
+        <pre><code>op := &amp;ebiten.DrawImageOptions{}
+op.GeoM.Translate(-w/2, -h/2) // 中心を原点へ
+op.GeoM.Scale(1.7, 1.7)
+op.GeoM.Rotate(0.7)           // ラジアンで回す
+op.GeoM.Translate(cx, cy)     // 置きたい場所へ
+screen.DrawImage(sprite, op)</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY ORDER?</p>
+          <h3>Order changes the result</h3>
+          <p>Same commands, different order, completely different look.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY CENTER?</p>
+          <h3>Satisfying spins</h3>
+          <p>A center pivot makes tops and bullets twirl in place.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>Make it pulse</h3>
+          <p>Wobble Scale with sin for a heartbeat-like breathing.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-stamp/">← STEP 01<strong>Stamp & Move</strong></a>
+      <a href="../vfx-tint/">STEP 03 →<strong>Tint & Drain Color</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-transform/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

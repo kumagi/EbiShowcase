@@ -1,4 +1,20 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>バッグ・ホールド・ゴースト | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/falling-blocks/bag-hold-ghost/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 落ちものブロックパズル</a><span>STEP 05 / 06</span></div><section class="overview-hero"><p class="eyebrow">テトリス型ゲームを作る</p><h1>バッグ・ホールド・ゴースト</h1><p>形の偏りを防ぐバッグ方式、形の保留、着地位置の予告を加えます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>公平な抽選と着地点予測</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>盤面や物理の変化を、<br>1手ずつ追いかける。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで予想する</h3><p>次に何が起きるか考えながら、完成したルールを体験します。</p></article><article><b>02</b><h3>途中の状態を見る</h3><p>判定前、処理中、処理後のデータを表示し、変化の順番を確認します。</p></article><article><b>03</b><h3>Ebitengineで再現する</h3><p>Updateでルールを進め、Drawで盤面とフィードバックを描きます。</p></article></div></section><nav class="lesson-pager"><a href="../lock-lines/">← STEP 04<strong>固定とライン消去</strong></a><a href="../ebi-blocks/">STEP 06 →<strong>Ebi Blocks</strong></a></nav>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>バッグ・ホールド・ゴースト | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/falling-blocks/bag-hold-ghost/">EN</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← 落ちものブロックパズル</a><span>STEP 05 / 06</span></div>
+<section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>バッグ・ホールド・ゴースト</h1><p>7種類を公平に配る袋、形を一つ預ける棚、着地点を先に見せる影を組み合わせます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>公平な抽選・状態交換・着地点予測</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>ゴーストを読み、2袋ぶんの14個を置こう。</h2></div><p>左右・回転・落下ボタンをタップ。PCでは←→、↑、Space。HOLDはボタンまたはC/Hで1手に1回です。積み上がる前に14個置けばクリア。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="バッグ・ホールド・ゴースト" src="../../../../play/bag-hold-ghost/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FAIR QUEUE AND PREDICTION</p><h2>見えない運を、見えるデータに変える。</h2><p class="lesson-lead">完全なくじ引きでは、欲しい形が何十回も来ないことがあります。7種バッグなら7個を一度ずつ混ぜて配るので大きな偏りがありません。さらにHOLDとゴーストを加えると、プレイヤーは運だけでなく<strong>予定を立てる</strong>ことができます。</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>7個を入れて混ぜる</h3><p>I・O・T・S・Z・J・Lを一つずつsliceへ入れ、順番だけをシャッフルします。空になったときだけ新しい袋を作ります。</p><code>bag = []int{I, O, T, S, Z, J, L}</code></article><article><span class="concept-number">2</span><h3>現在とHOLDを交換</h3><p>棚が空なら現在の形を預けて次を取り、入っていれば二つを交換します。同じ形で何度も交換できないよう、固定するまで一回だけです。</p><code>held, current = current, held</code></article><article><span class="concept-number">3</span><h3>コピーを下へ試す</h3><p>現在位置は変えず、仮のyだけを1ずつ増やします。次が衝突する直前のyが、点線で描くゴースト位置です。</p><code>for canPlace(x, ghostY+1) { ghostY++ }</code></article></div>
+<div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / BAG QUEUE</p><h3>袋から順番に取り出そう</h3><p>「形を袋へ」で候補を追加し、「次を配る」で先頭を取り出します。残りが0になったら7種を入れ直すのがバッグ方式です。</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>形を袋へ</button><button class="lab-button" data-lab-step>次を配る</button><button class="lab-button lab-button-quiet" data-lab-reset>新しい袋</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>袋の残り</span><strong data-lab-count>0</strong></div><div><span>配る順番</span><strong data-lab-list>—</strong></div></div></div></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>ゴーストは盤面を変更しない</h3><p>本物の形と同じ<code>canPlace</code>を使いますが、調べるのはローカル変数だけ。予告を描いてもゲーム状態は進みません。</p></div><pre><code>func (g *Game) ghostY() int {
+    y := g.y
+    for g.canPlace(g.kind, g.rotation, g.x, y+1) {
+        y++
+    }
+    return y
+}</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY A BAG?</p><h3>ランダムでも約束がある</h3><p>どの7個にも全種類が一度ずつ入り、長すぎる待ち時間を防げます。</p></article><article><p class="eyebrow">WHY ONE HOLD?</p><h3>選択に値段をつける</h3><p>固定まで一回という制限があるから、「今使うか」がゲームの考えどころになります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>次の3個を表示</h3><p>袋の先頭3個を小さく描き、さらに先まで置き方を計画できるようにしよう。</p></article></div>
+</section><nav class="lesson-pager"><a href="../lock-lines/">← STEP 04<strong>固定とライン消去</strong></a><a href="../ebi-blocks/">STEP 06 →<strong>Ebi Blocks</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -23,11 +39,4 @@
       </div>
     </section>
 
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

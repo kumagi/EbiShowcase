@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Sparks, smoke, and sparkle are crowds of tiny dots. Hold an array of particles and each frame just move them, age them, and fade them for ma">
+  <title>Scatter Particles | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Lab home</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/visual-effects/vfx-particles/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>STEP 07 / 08</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Scatter Particles</h1>
+      <p>Sparks, smoke, and sparkle are crowds of tiny dots. Hold an array of particles and each frame just move them, age them, and fade them for many effects.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>[]particle</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Burst them out</h2></div>
+        <p>Press the button and particles fly out and fade. Dozens are born and die with one tap.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 07</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Scatter Particles" src="../../../../play/vfx-particles/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / PARTICLES</p>
+        <h2>How do you build<br>smoke and sparks?</h2>
+        <p class="lesson-lead">One particle is simple: position, velocity, lifetime. Keep many in a slice, move them in Update, and remove them at life zero. Mix in additive blending and scaling for sparks or smoke.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Spawn</h3>
+          <p>Emit particles from the tap point.</p>
+          <code>append(ps, p)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Update</h3>
+          <p>Advance position, add gravity.</p>
+          <code>x+=vx; vy+=g</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Retire</h3>
+          <p>Remove particles at end of life.</p>
+          <code>life--</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="spray" aria-labelledby="lab-title-vfx-particles">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / BURST</p>
+          <h3 id="lab-title-vfx-particles">Burst them out</h3>
+          <p>Press the button and particles fly out and fade. Dozens are born and die with one tap.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-burst>Burst!</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" data-lab-board></div>
+          <div class="lab-values" aria-live="polite"><div><span>count</span><strong data-lab-count>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>A particle's life</h3>
+          <p>Loop the slice, advance position, add gravity, fade by lifetime, remove.</p>
+        </div>
+        <pre><code>type particle struct{ x, y, vx, vy, life float64 }
+
+for i := range ps { // Update
+    ps[i].x += ps[i].vx
+    ps[i].y += ps[i].vy
+    ps[i].vy += gravity
+    ps[i].life--
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY A SLICE?</p>
+          <h3>Express with numbers</h3>
+          <p>Each dot is simple, but the crowd looks rich.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY LIFETIME?</p>
+          <h3>Self-cleaning</h3>
+          <p>A lifetime means you can spawn freely without cleanup worries.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>Blend colors</h3>
+          <p>Shift color red→yellow over life for a more flame-like look.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-walk/">← STEP 06<strong>Sprite Walk (Frame by Frame)</strong></a>
+      <a href="../vfx-spells/">STEP 08 →<strong>Compose: Fire, Water, Lightning</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-particles/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

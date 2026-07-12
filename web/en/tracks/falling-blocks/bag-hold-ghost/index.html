@@ -1,4 +1,20 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Bag, Hold, and Ghost | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/falling-blocks/bag-hold-ghost/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Falling-block Puzzle</a><span>STEP 05 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Tetris-style game</p><h1>Bag, Hold, and Ghost</h1><p>Add bag randomization, held pieces, and a predicted landing ghost.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Fair randomization and landing prediction</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>Follow every change,<br>one move at a time.</h2><div class="overview-steps"><article><b>01</b><h3>Play and predict</h3><p>Experience the finished rule while predicting what happens next.</p></article><article><b>02</b><h3>Inspect each state</h3><p>View data before, during, and after resolution.</p></article><article><b>03</b><h3>Rebuild in Ebitengine</h3><p>Advance rules in Update and draw the board and feedback in Draw.</p></article></div></section><nav class="lesson-pager"><a href="../lock-lines/">← STEP 04<strong>Lock and Clear Lines</strong></a><a href="../ebi-blocks/">STEP 06 →<strong>Ebi Blocks</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Bag, Hold, and Ghost | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/falling-blocks/bag-hold-ghost/">日本語</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← Falling-block Puzzle</a><span>STEP 05 / 06</span></div>
+<section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Bag, Hold, and Ghost</h1><p>Combine a fair seven-shape bag, one storage shelf, and a shadow that predicts each landing.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Fair randomization, state swaps, and landing prediction</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Read the ghost and place two bags: 14 pieces.</h2></div><p>Tap Left, Turn, Drop, and Right. On a keyboard use arrows and Space. HOLD uses its button or C/H once per piece. Place 14 before the reef tops out.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Bag, Hold, and Ghost" src="../../../../play/bag-hold-ghost/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FAIR QUEUE AND PREDICTION</p><h2>Turn invisible luck into visible data.</h2><p class="lesson-lead">With independent random picks, one needed shape might disappear for dozens of turns. A seven-shape bag shuffles one of each and prevents huge droughts. HOLD and the ghost then let players <strong>make a plan</strong> instead of only reacting to luck.</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>Fill seven, then shuffle</h3><p>Put I, O, T, S, Z, J, and L into a slice once each and shuffle only their order. Refill only when the bag becomes empty.</p><code>bag = []int{I, O, T, S, Z, J, L}</code></article><article><span class="concept-number">2</span><h3>Swap current with HOLD</h3><p>If storage is empty, save current and draw next. Otherwise swap the two. Allow this only once until a piece locks, preventing endless swaps.</p><code>held, current = current, held</code></article><article><span class="concept-number">3</span><h3>Test a copy downward</h3><p>Leave the real position alone and increase a temporary y. The final y before collision is where the outlined ghost belongs.</p><code>for canPlace(x, ghostY+1) { ghostY++ }</code></article></div>
+<div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / BAG QUEUE</p><h3>Deal shapes from a bag</h3><p>Add candidates, then deal the first one. When zero remain, refill with all seven shapes before shuffling again.</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>Add shape</button><button class="lab-button" data-lab-step>Deal next</button><button class="lab-button lab-button-quiet" data-lab-reset>New bag</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Shapes left</span><strong data-lab-count>0</strong></div><div><span>Deal order</span><strong data-lab-list>—</strong></div></div></div></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>The ghost never changes the board</h3><p>It calls the same <code>canPlace</code> as the real piece, but changes only a local variable. Drawing a prediction does not advance game state.</p></div><pre><code>func (g *Game) ghostY() int {
+    y := g.y
+    for g.canPlace(g.kind, g.rotation, g.x, y+1) {
+        y++
+    }
+    return y
+}</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY A BAG?</p><h3>Random with a promise</h3><p>Every group of seven has each shape once, preventing an extremely long wait.</p></article><article><p class="eyebrow">WHY ONE HOLD?</p><h3>Give the choice a cost</h3><p>The once-per-lock limit turns “use it now?” into a meaningful decision.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Preview three</h3><p>Draw the first three bag entries as tiny shapes so players can plan farther ahead.</p></article></div>
+</section><nav class="lesson-pager"><a href="../lock-lines/">← STEP 04<strong>Lock and Clear Lines</strong></a><a href="../ebi-blocks/">STEP 06 →<strong>Ebi Blocks</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -23,11 +39,4 @@
       </div>
     </section>
 
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

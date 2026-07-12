@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。エフェクトはすべて、この「置く」から始まります。">
+  <title>スタンプと移動 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">工房トップ</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/visual-effects/vfx-stamp/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← ビジュアルエフェクト工房</a><span>STEP 01 / 08</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
+      <h1>スタンプと移動</h1>
+      <p>画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。エフェクトはすべて、この「置く」から始まります。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>GeoM.Translate</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>タップした場所に置こう</h2></div>
+        <p>盤面をタップすると、その座標へ絵が飛びます。表示される (x, y) が、そのまま GeoM.Translate に渡す数字です。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="スタンプと移動" src="../../../../play/vfx-stamp/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / DRAW ONE IMAGE</p>
+        <h2>絵はどうやって<br>その場所に出る？</h2>
+        <p class="lesson-lead">Ebitengine では、描く絵に「変換」を持たせてから screen.DrawImage します。いちばん基本の変換が平行移動 Translate。同じ絵を、Translate の数字を変えるだけで何個でも置けます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>オプション</h3>
+          <p>描き方をまとめる箱を用意します。</p>
+          <code>&amp;op{}</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>移動</h3>
+          <p>左上を (x, y) までずらします。</p>
+          <code>GeoM.Translate</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>描画</h3>
+          <p>その設定で画面に絵を出します。</p>
+          <code>DrawImage</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="translate" aria-labelledby="lab-title-vfx-stamp">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / TRANSLATE</p>
+          <h3 id="lab-title-vfx-stamp">タップした場所に置こう</h3>
+          <p>盤面をタップすると、その座標へ絵が飛びます。表示される (x, y) が、そのまま GeoM.Translate に渡す数字です。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" data-lab-board></div>
+          <div class="lab-values" aria-live="polite"><div><span>X</span><strong data-lab-x>—</strong></div><div><span>Y</span><strong data-lab-y>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>同じ絵を好きな場所へ</h3>
+          <p>オプションを作って Translate で位置を決め、その設定で描くだけです。</p>
+        </div>
+        <pre><code>op := &amp;ebiten.DrawImageOptions{}
+op.GeoM.Translate(x, y) // 左上を (x, y) へ
+screen.DrawImage(tenjiroh, op)</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY OPTIONS?</p>
+          <h3>描き方を持ち運ぶ</h3>
+          <p>位置や色や合成を1つの箱にまとめて渡せます。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY TRANSLATE?</p>
+          <h3>位置は変換で決まる</h3>
+          <p>絵そのものは動かず、置く場所だけを変えます。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>たくさん置こう</h3>
+          <p>ループで Translate を変えれば、星空も並木も作れます。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../../../games/bullet-hell/">← LEVEL 12<strong>弾幕ボス</strong></a>
+      <a href="../vfx-transform/">STEP 02 →<strong>回転と拡大縮小、そして中心</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-stamp/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

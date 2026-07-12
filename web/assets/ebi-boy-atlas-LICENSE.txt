@@ -1,0 +1,11 @@
+Ebi Tenjiroh (海老・天次郎) Texture Atlas (ebi-boy-atlas.png / .json)
+
+Copyright Ebi Showcase contributors.
+
+To the extent possible under law, the authors have dedicated this sprite atlas
+to the public domain under the Creative Commons CC0 1.0 Universal dedication.
+You may copy, modify, distribute, and use it, even commercially, without asking
+permission. https://creativecommons.org/publicdomain/zero/1.0/
+
+This dedication covers the generated image and metadata only. The Ebi Showcase
+source code remains under the Apache License 2.0.

@@ -12,12 +12,12 @@ import (
 )
 
 //go:embed ebi-boy.png
-var ebiBoyPNG []byte
+var tenjirohPNG []byte
 
 var sprite *ebiten.Image
 
 func init() {
-	img, _, err := image.Decode(bytes.NewReader(ebiBoyPNG))
+	img, _, err := image.Decode(bytes.NewReader(tenjirohPNG))
 	if err != nil {
 		log.Fatal(err)
 	}

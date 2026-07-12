@@ -1,4 +1,147 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Drop One Cell | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/falling-blocks/falling-cell/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Falling-block Puzzle</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Tetris-style game</p><h1>Drop One Cell</h1><p>Move down one cell at fixed intervals and lock into the board at the floor.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Timed updates and grid movement</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>Follow every change,<br>one move at a time.</h2><div class="overview-steps"><article><b>01</b><h3>Play and predict</h3><p>Experience the finished rule while predicting what happens next.</p></article><article><b>02</b><h3>Inspect each state</h3><p>View data before, during, and after resolution.</p></article><article><b>03</b><h3>Rebuild in Ebitengine</h3><p>Advance rules in Update and draw the board and feedback in Draw.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../tetromino-shapes/">STEP 02 →<strong>Four-cell Shapes</strong></a></nav>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Drop One Cell | Ebi Showcase</title>
+<link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+<header class="nav">
+<a class="brand" href="../../../">
+<span>EBI</span> SHOWCASE</a>
+<nav>
+<a href="../">PATH</a>
+<a href="#learn">HOW IT WORKS</a>
+<a class="lang" href="../../../../ja/tracks/falling-blocks/falling-cell/">日本語</a>
+</nav>
+</header>
+<main class="overview-main">
+<div class="lesson-breadcrumb">
+<a href="../">← Falling-block Puzzle</a>
+<span>STEP 01 / 06</span>
+</div>
+<section class="overview-hero">
+<p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+<h1>Drop One Cell</h1>
+<p>Move one cell down at fixed intervals, then lock into the board when the floor or another cell is below.</p>
+<div class="overview-concept">
+<small>NEW CONCEPT</small>
+<strong>Timed updates and grid movement</strong>
+</div>
+</section>
+<section class="play lesson-play">
+<div class="section-head">
+<div>
+<p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
+<h2>Read the drop clock and place 16 cells.</h2>
+</div>
+<p>Move with ← → or the screen buttons. Press ↓ to drop one cell sooner. Lock 16 before the stack reaches the top.</p>
+</div>
+<div class="game-shell">
+<div class="game-top">
+<span>● LIVE / GO + WASM</span>
+<span>STEP 01</span>
+</div>
+<div id="game-wrap">
+<iframe class="lesson-game-frame" title="Drop One Cell" src="../../../../play/falling-cell/" allow="autoplay; fullscreen">
+</iframe>
+</div>
+</div>
+</section>
+<section class="physics" id="learn">
+<div class="lesson-intro">
+<p class="eyebrow">DEEP DIVE / DROP TIMER</p>
+<h2>Do not move every frame. Drop only when the clock fills.</h2>
+<p class="lesson-lead">Ebitengine calls Update about 60 times each second. A block that moved every Update would reach the floor instantly. Instead, <strong>timer counts how many updates have passed</strong>, and the cell moves down once when the count reaches its limit.</p>
+</div>
+<div class="concept-row">
+<article>
+<span class="concept-number">1</span>
+<h3>Count waiting updates</h3>
+<p>Add one to timer on every Update. The yellow bar below the board turns that invisible count into a clock the player can read.</p>
+<code>timer++</code>
+</article>
+<article>
+<span class="concept-number">2</span>
+<h3>Move by grid cells</h3>
+<p>Only when timer reaches 38, add one to row y and reset timer. Position is an integer row and column, not a loose decimal coordinate.</p>
+<code>if timer &gt;= 38 { y++; timer = 0 }</code>
+</article>
+<article>
+<span class="concept-number">3</span>
+<h3>Lock when blocked</h3>
+<p>If the next cell is the floor or an occupied board cell, write the active cell into board[y][x], then spawn a new one at the top.</p>
+<code>board[y][x] = true; spawn()</code>
+</article>
+</div>
+<div class="motion-lab" data-lab="entities">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / UPDATE CLOCK</p>
+<h3>Collect updates until a drop happens</h3>
+<p>“One frame” adds a clock tick and “Check drop” processes the first tick. The real game drops when 38 ticks have collected.</p>
+<div class="lab-controls">
+<button class="lab-button lab-button-primary" data-lab-fire>One frame</button>
+<button class="lab-button" data-lab-step>Check drop</button>
+<button class="lab-button lab-button-quiet" data-lab-reset>Reset clock</button>
+</div>
+</div>
+<div class="lab-visual">
+<div class="lab-values">
+<div>
+<span>Updates waited</span>
+<strong data-lab-count>0</strong>
+</div>
+<div>
+<span>Clock ticks</span>
+<strong data-lab-list>—</strong>
+</div>
+</div>
+</div>
+</div>
+<div class="code-lesson">
+<div>
+<p class="eyebrow">IN THE REAL GAME</p>
+<h3>Ask whether movement is safe first</h3>
+<p>Check the next row before choosing to drop or lock, so the cell never enters an occupied square or leaves the array.</p>
+</div>
+<pre>
+<code>timer++
+if timer &gt;= dropFrames {
+    timer = 0
+    if !blocked(x, y+1) {
+        y++
+    } else {
+        board[y][x] = true
+        spawn()
+    }
+}</code>
+</pre>
+</div>
+<div class="why-grid">
+<article>
+<p class="eyebrow">WHY A TIMER?</p>
+<h3>Speed becomes a number</h3>
+<p>Lower dropFrames to make later levels fall faster without changing the movement rule.</p>
+</article>
+<article>
+<p class="eyebrow">WHY A GRID?</p>
+<h3>Every cell stacks neatly</h3>
+<p>Rows and columns stop blocks from locking halfway between two positions.</p>
+</article>
+<article class="challenge">
+<p class="eyebrow">TRY NEXT</p>
+<h3>Speed it up</h3>
+<p>Reduce dropFrames by three after every three locked cells.</p>
+</article>
+</div>
+</section>
+<nav class="lesson-pager">
+<span>
+</span>
+<a href="../tetromino-shapes/">STEP 02 →<strong>Four-cell Shapes</strong>
+</a>
+</nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -28,6 +171,8 @@
 
 
 
-
-
-</main></body></html>
+</main>
+<script src="../../../../learn.js">
+</script>
+</body>
+</html>

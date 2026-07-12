@@ -1,4 +1,54 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Drag and Launch | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/slingshot/drag-launch/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Slingshot Reflection Action</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Monster Strike-style game</p><h1>Drag and Launch</h1><p>Draw an aim arrow from a drag vector and launch in the opposite direction.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Drag vectors and launch velocity</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>Follow every change,<br>one move at a time.</h2><div class="overview-steps"><article><b>01</b><h3>Play and predict</h3><p>Experience the finished rule while predicting what happens next.</p></article><article><b>02</b><h3>Inspect each state</h3><p>View data before, during, and after resolution.</p></article><article><b>03</b><h3>Rebuild in Ebitengine</h3><p>Advance rules in Update and draw the board and feedback in Draw.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../wall-bounce/">STEP 02 →<strong>Wall-bouncing Ball</strong></a></nav>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Drag and Launch | Ebi Showcase</title>
+<link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+<header class="nav">
+<a class="brand" href="../../../">
+<span>EBI</span> SHOWCASE</a>
+<nav>
+<a href="../">PATH</a>
+<a href="#learn">HOW IT WORKS</a>
+<a class="lang" href="../../../../ja/tracks/slingshot/drag-launch/">日本語</a>
+</nav>
+</header>
+<main class="overview-main">
+<div class="lesson-breadcrumb">
+<a href="../">← Slingshot Reflection Action</a>
+<span>STEP 01 / 06</span>
+</div>
+<section class="overview-hero">
+<p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+<h1>Drag and Launch</h1>
+<p>Draw an aim arrow from a drag vector and launch in the opposite direction.</p>
+<div class="overview-concept">
+<small>NEW CONCEPT</small>
+<strong>Drag vectors and launch velocity</strong>
+</div>
+</section>
+<p class="curriculum-bridge">This continues the shared foundation. If the game loop is new, first visit <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>. Here, input becomes launch velocity.</p>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Pull the pearl into all three signal rings.</h2></div><p>Drag from the pearl and release. You can also change the pull with arrow keys and launch with Space. Reach all rings in six shots.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Drag and Launch" src="../../../../play/drag-launch/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / OPPOSITE VECTOR</p><h2>Flip the pull arrow with a minus sign.</h2><p class="lesson-lead">Store the difference from the pearl's center to the pointer as a <strong>drag vector</strong>. On release, put a minus sign on both X and Y. That makes launch velocity point exactly opposite the pull.</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>Subtract two points</h3><p>Subtract the pearl position from the pointer. Pulling right makes dragX positive; pulling down makes dragY positive.</p><code>dragX = pointerX - ballX</code></article><article><span class="concept-number">2</span><h3>Limit long pulls</h3><p>If length exceeds 160, shrink the vector without changing its direction. Pulling beyond the screen cannot create wild speed.</p><code>drag *= 160 / length</code></article><article><span class="concept-number">3</span><h3>Launch oppositely</h3><p>Only on release, negate dragX and dragY to make velocity. A pearl pulled downward launches upward.</p><code>velocity = -drag * power</code></article></div>
+<div class="motion-lab" data-lab="move8"><div class="lab-copy"><p class="eyebrow">TRY IT / VECTOR LENGTH</p><h3>How does combining directions change length?</h3><p>Compare a horizontal vector with a diagonal one. The game measures length and caps it so an overlong pull stays controlled.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-cardinal>Pull sideways</button><button type="button" class="lab-button" data-lab-diag>Pull diagonally</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Raw length</span><strong data-lab-raw>—</strong></div><div><span>Normalized length</span><strong data-lab-norm>—</strong></div></div></div></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Choose velocity once on release</h3><p>Update the aim while dragging, then convert it to velocity in the one frame where the pointer is released.</p></div><pre><code>dragX := pointerX - ballX
+dragY := pointerY - ballY
+if released {
+    vx = -dragX * 0.092
+    vy = -dragY * 0.092
+    moving = true
+}</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY OPPOSITE?</p><h3>The elastic return direction</h3><p>The farther you pull back, the stronger the pearl travels toward its starting side.</p></article><article><p class="eyebrow">WHY ON RELEASE?</p><h3>Separate aiming from flight</h3><p>The pearl stays still while aiming and commits to the chosen direction only when released.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Ignore tiny pulls</h3><p>Use the game to discover why pulls shorter than 24 do not launch.</p></article></div></section>
+<nav class="lesson-pager">
+<span>
+</span>
+<a href="../wall-bounce/">STEP 02 →<strong>Wall-bouncing Ball</strong>
+</a>
+</nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -30,4 +80,21 @@
 
 
 
-</main></body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</main><script src="../../../../learn.js"></script>
+</body>
+</html>

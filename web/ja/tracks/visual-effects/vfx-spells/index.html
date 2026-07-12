@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="最終章。粒・色・加算・半透明・線を組み合わせ、海老・天次郎が3つの魔法を放ちます。新しい命令はほとんど無し。ここまでの部品の“混ぜ方”がエフェクトの正体です。">
+  <title>炎・水・雷を合成する | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">工房トップ</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/visual-effects/vfx-spells/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← ビジュアルエフェクト工房</a><span>STEP 08 / 08</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>炎・水・雷を合成する</h1>
+      <p>最終章。粒・色・加算・半透明・線を組み合わせ、海老・天次郎が3つの魔法を放ちます。新しい命令はほとんど無し。ここまでの部品の“混ぜ方”がエフェクトの正体です。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>エフェクトの合成</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3つの魔法を唱えよう</h2></div>
+        <p>FIRE / WATER / THUNDER をタップして魔法を放ちます。画面に出る粒・光・線が、これまでの文法の合成です。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="炎・水・雷を合成する" src="../../../../play/vfx-spells/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / COMPOSE</p>
+        <h2>魔法は<br>何でできている？</h2>
+        <p class="lesson-lead">炎＝炎のスプライトを加算合成で上へ。水＝水滴スプライトを半透明＋重力で落とす。雷＝稲妻スプライトを数フレームだけ＋閃光＋粒。同じ道具でも、画像・向き・色・合成・寿命を変えるだけで、まったく違う魔法になります。（画面のキャラクターはオリジナルの海老・天次郎。当たり判定はいつも通り簡単な形です。）</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>炎</h3>
+          <p>炎スプライトを加算で上へ。</p>
+          <code>Fire PNG + BlendLighter</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>水</h3>
+          <p>水滴スプライトを重力で落とす。</p>
+          <code>Water PNG + gravity</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>雷</h3>
+          <p>稲妻スプライトを一瞬だけ。</p>
+          <code>Bolt PNG + flash</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="spellbook" aria-labelledby="lab-title-vfx-spells">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / SPELLBOOK</p>
+          <h3 id="lab-title-vfx-spells">混ぜ方を名前で確認</h3>
+          <p>炎・水・雷のボタンを押すと、炎スプライト／水滴／稲妻の画像が盤面で動きます。3つ全部を見たら達成です。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spell="fire">炎</button><button type="button" class="lab-button" data-lab-spell="water">水</button><button type="button" class="lab-button" data-lab-spell="thunder">雷</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-spell-stage" data-lab-board><p class="lab-spell-hint">ボタンで魔法を唱えてみて</p></div>
+          <div class="lab-values" aria-live="polite"><div><span>習得</span><strong data-lab-done>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>同じ文法で3つの魔法</h3>
+          <p>合成・色・重力を切り替えるだけで、炎・水・雷を作り分けます。</p>
+        </div>
+        <pre><code>// 炎: 加算 + 上向き + オレンジ
+op.Blend = ebiten.BlendLighter
+op.ColorScale.ScaleWithColor(fire)
+// 水: 半透明 + 重力
+op.ColorScale.ScaleAlpha(0.7)
+p.vy += 0.22
+// 雷: 明るい線を数フレームだけ
+vector.StrokeLine(screen, ax, ay, bx, by, 5, white, false)</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY COMPOSE?</p>
+          <h3>部品の掛け合わせ</h3>
+          <p>少ない道具でも、混ぜ方の数だけ表現が増えます。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY TENJIROH?</p>
+          <h3>主役が映える</h3>
+          <p>主人公が魔法を放つと、同じエフェクトも物語になります。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>自分の魔法</h3>
+          <p>色と向きと合成を選び、氷や光の魔法を発明しよう。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-particles/">← STEP 07<strong>粒をばらまく（パーティクル）</strong></a>
+      <a href="../../platformer/">応用トラックへ →<strong>作りたいゲームを選ぶ</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-spells/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

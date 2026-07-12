@@ -1,0 +1,34 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>ビジュアルエフェクト工房 | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/visual-effects/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>8 STEPS</span></div><section class="track-hero track-visual-effects"><span class="track-letter">VFX</span><div><p class="eyebrow">見た目の魔法をEbitengineで作る</p><h1>ビジュアルエフェクト工房</h1><p>色・回転・拡大縮小・半透明・加算合成・アニメーション。ゲーム未満の小さなオモチャで、絵を「動かして光らせる」文法を手で確かめます。</p></div><p class="curriculum-bridge">共通基礎(LEVEL 01〜12)の続きです。<a href="../../games/tap-target/#basics">Update / Draw</a> のループの上に、見た目を作る道具を1つずつ足します。主人公はオリジナルの海老・天次郎です。</p></section><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>描画の基本から<br>魔法まで。</h2><p>難しいことは一度にやりません。DrawImageOptions ひとつを起点に、色と合成と時間を1歩ずつ足して、最後は炎・水・雷にたどり着きます。</p></div><a class="path-step" href="vfx-stamp/"><span>01</span><div><h3>スタンプと移動</h3><p>1枚の絵を、好きな場所にスタンプします。描画の出発点です。</p><strong>GeoM.Translate</strong></div><b>→</b></a>
+<a class="path-step" href="vfx-transform/"><span>02</span><div><h3>回転と拡大縮小、そして中心</h3><p>回転と拡大縮小。そして「どこを軸に回すか」の順番。</p><strong>GeoM.Rotate / Scale</strong></div><b>→</b></a>
+<a class="path-step" href="vfx-tint/"><span>03</span><div><h3>色を変える・色を抜く</h3><p>同じ絵を赤く染めたり、白く光らせたり、影に落としたり。</p><strong>op.ColorScale</strong></div><b>→</b></a>
+<a class="path-step" href="vfx-alpha/"><span>04</span><div><h3>透明と重ね順・残像</h3><p>半透明と重ね順。薄いコピーを並べて残像を作ります。</p><strong>ScaleAlpha</strong></div><b>→</b></a>
+<a class="path-step" href="vfx-additive/"><span>05</span><div><h3>加算合成で光らせる</h3><p>光は足し算。加算合成で、重なるほど白く輝きます。</p><strong>ebiten.BlendLighter</strong></div><b>→</b></a>
+<a class="path-step" href="vfx-walk/"><span>06</span><div><h3>パラパラ歩き（コマ送り）</h3><p>スプライトシートから1コマずつ切り出し、歩かせます。</p><strong>SubImage + タイマー</strong></div><b>→</b></a>
+<a class="path-step" href="vfx-particles/"><span>07</span><div><h3>粒をばらまく（パーティクル）</h3><p>小さな粒をたくさん。生まれて、動いて、消えていきます。</p><strong>[]particle</strong></div><b>→</b></a>
+<a class="path-step" href="vfx-spells/"><span>08</span><div><h3>炎・水・雷を合成する</h3><p>総まとめ。炎・水・雷を、これまでの文法だけで作ります。</p><strong>エフェクトの合成</strong></div><b>→</b></a></section>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+</main></body></html>

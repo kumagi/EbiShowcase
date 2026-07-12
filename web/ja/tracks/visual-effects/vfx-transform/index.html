@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="同じ GeoM に Rotate と Scale を足すと、絵が回って伸び縮みします。大事なのは順番。中心を原点へ寄せてから回すと、真ん中を軸にきれいに回ります。">
+  <title>回転と拡大縮小、そして中心 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">工房トップ</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/visual-effects/vfx-transform/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← ビジュアルエフェクト工房</a><span>STEP 02 / 08</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>回転と拡大縮小、そして中心</h1>
+      <p>同じ GeoM に Rotate と Scale を足すと、絵が回って伸び縮みします。大事なのは順番。中心を原点へ寄せてから回すと、真ん中を軸にきれいに回ります。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>GeoM.Rotate / Scale</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>軸を切り替えて回そう</h2></div>
+        <p>回転と拡大をボタンで操作し、軸を「中心」と「角」で切り替えます。角を軸にすると、絵が大きく振り回されるのが分かります。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="回転と拡大縮小、そして中心" src="../../../../play/vfx-transform/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / PIVOT</p>
+        <h2>なぜ回すと<br>ズレて飛んでいく？</h2>
+        <p class="lesson-lead">変換は「行列のかけ算」で、書いた順に効きます。左上のまま回すと、絵は左上を軸にぐるっと大回り。先に中心を原点(-w/2,-h/2)へ動かしてから回し、最後に置きたい場所へ Translate すると、中心で回ります。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>原点寄せ</h3>
+          <p>中心を (0,0) に持ってきます。</p>
+          <code>Translate(-w/2,-h/2)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>回す・伸ばす</h3>
+          <p>その状態で回転と拡大をします。</p>
+          <code>Rotate / Scale</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>戻す</h3>
+          <p>置きたい場所へ運びます。</p>
+          <code>Translate(cx,cy)</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="geom" aria-labelledby="lab-title-vfx-transform">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / GeoM</p>
+          <h3 id="lab-title-vfx-transform">軸を切り替えて回そう</h3>
+          <p>回転と拡大をボタンで操作し、軸を「中心」と「角」で切り替えます。角を軸にすると、絵が大きく振り回されるのが分かります。</p>
+          <div class="lab-controls"><button type="button" class="lab-button" data-lab-rotl>回転 −</button><button type="button" class="lab-button lab-button-primary" data-lab-rotr>回転 +</button><button type="button" class="lab-button" data-lab-sdown>縮小</button><button type="button" class="lab-button" data-lab-sup>拡大</button><button type="button" class="lab-button" data-lab-pivot>軸を切替</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" data-lab-board></div>
+          <div class="lab-values" aria-live="polite"><div><span>角度</span><strong data-lab-angle>—</strong></div><div><span>倍率</span><strong data-lab-scale>—</strong></div><div><span>軸</span><strong data-lab-pivot>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>中心を軸に回す</h3>
+          <p>原点寄せ→回転・拡大→配置。この順番が回転の要です。</p>
+        </div>
+        <pre><code>op := &amp;ebiten.DrawImageOptions{}
+op.GeoM.Translate(-w/2, -h/2) // 中心を原点へ
+op.GeoM.Scale(1.7, 1.7)
+op.GeoM.Rotate(0.7)           // ラジアンで回す
+op.GeoM.Translate(cx, cy)     // 置きたい場所へ
+screen.DrawImage(sprite, op)</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY ORDER?</p>
+          <h3>順番で結果が変わる</h3>
+          <p>同じ命令でも、書く順が違えば見え方が別物になります。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY CENTER?</p>
+          <h3>気持ちいい回転</h3>
+          <p>中心軸なら、コマや弾がその場でくるくる回ります。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>脈打たせる</h3>
+          <p>Scale を sin で揺らすと、心臓のように拡大縮小します。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-stamp/">← STEP 01<strong>スタンプと移動</strong></a>
+      <a href="../vfx-tint/">STEP 03 →<strong>色を変える・色を抜く</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-transform/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

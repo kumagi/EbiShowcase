@@ -1,4 +1,147 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>1マスを落とす | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/falling-blocks/falling-cell/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 落ちものブロックパズル</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">テトリス型ゲームを作る</p><h1>1マスを落とす</h1><p>一定時間ごとに1マス下へ進み、床に着いたら盤面へ固定します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>一定間隔更新とグリッド移動</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>盤面や物理の変化を、<br>1手ずつ追いかける。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで予想する</h3><p>次に何が起きるか考えながら、完成したルールを体験します。</p></article><article><b>02</b><h3>途中の状態を見る</h3><p>判定前、処理中、処理後のデータを表示し、変化の順番を確認します。</p></article><article><b>03</b><h3>Ebitengineで再現する</h3><p>Updateでルールを進め、Drawで盤面とフィードバックを描きます。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../tetromino-shapes/">STEP 02 →<strong>4マスの形</strong></a></nav>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>1マスを落とす | Ebi Showcase</title>
+<link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+<header class="nav">
+<a class="brand" href="../../../">
+<span>EBI</span> SHOWCASE</a>
+<nav>
+<a href="../">コース</a>
+<a href="#learn">HOW IT WORKS</a>
+<a class="lang" href="../../../../en/tracks/falling-blocks/falling-cell/">EN</a>
+</nav>
+</header>
+<main class="overview-main">
+<div class="lesson-breadcrumb">
+<a href="../">← 落ちものブロックパズル</a>
+<span>STEP 01 / 06</span>
+</div>
+<section class="overview-hero">
+<p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+<h1>1マスを落とす</h1>
+<p>一定時間ごとに1マス下へ進み、床や積み上げたマスに着いたら盤面へ固定します。</p>
+<div class="overview-concept">
+<small>このステップで学ぶこと</small>
+<strong>一定間隔更新とグリッド移動</strong>
+</div>
+</section>
+<section class="play lesson-play">
+<div class="section-head">
+<div>
+<p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
+<h2>落下時計を読み、16マスを置こう。</h2>
+</div>
+<p>← → または画面ボタンで移動、↓で1マス早く落下。積み上げすぎる前に16個固定するとクリアです。</p>
+</div>
+<div class="game-shell">
+<div class="game-top">
+<span>● LIVE / GO + WASM</span>
+<span>STEP 01</span>
+</div>
+<div id="game-wrap">
+<iframe class="lesson-game-frame" title="1マスを落とす" src="../../../../play/falling-cell/" allow="autoplay; fullscreen">
+</iframe>
+</div>
+</div>
+</section>
+<section class="physics" id="learn">
+<div class="lesson-intro">
+<p class="eyebrow">DEEP DIVE / DROP TIMER</p>
+<h2>毎フレーム動かさず、「時計」が満ちた時だけ落とす。</h2>
+<p class="lesson-lead">EbitengineのUpdateは1秒におよそ60回呼ばれます。でもブロックを毎回1マス落とすと一瞬で床へ着きます。そこで<strong>何回待ったかをtimerで数え</strong>、決めた回数で1マスだけ進めます。</p>
+</div>
+<div class="concept-row">
+<article>
+<span class="concept-number">1</span>
+<h3>待った回数を数える</h3>
+<p>Updateのたびにtimerへ1を足します。画面下の黄色い棒は、次の落下までの残り時間を見える形にしたものです。</p>
+<code>timer++</code>
+</article>
+<article>
+<span class="concept-number">2</span>
+<h3>マス単位で進む</h3>
+<p>timerが38になった時だけ行番号yへ1を足し、timerを0へ戻します。座標は小数ではなく盤面の行と列です。</p>
+<code>if timer &gt;= 38 { y++; timer = 0 }</code>
+</article>
+<article>
+<span class="concept-number">3</span>
+<h3>進めないなら固定</h3>
+<p>次のマスが床か置いたブロックなら、動いているマスをboard[y][x]へ書き込み、新しいマスを上から出します。</p>
+<code>board[y][x] = true; spawn()</code>
+</article>
+</div>
+<div class="motion-lab" data-lab="entities">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / UPDATE CLOCK</p>
+<h3>Updateをためて落下を起こそう</h3>
+<p>「1フレーム」で時計の目盛りを追加し、「落下判定」で先頭の目盛りを処理します。実際のゲームでは38個たまった時が落下の合図です。</p>
+<div class="lab-controls">
+<button class="lab-button lab-button-primary" data-lab-fire>1フレーム</button>
+<button class="lab-button" data-lab-step>落下判定</button>
+<button class="lab-button lab-button-quiet" data-lab-reset>時計を0へ</button>
+</div>
+</div>
+<div class="lab-visual">
+<div class="lab-values">
+<div>
+<span>待った回数</span>
+<strong data-lab-count>0</strong>
+</div>
+<div>
+<span>目盛り</span>
+<strong data-lab-list>—</strong>
+</div>
+</div>
+</div>
+</div>
+<div class="code-lesson">
+<div>
+<p class="eyebrow">IN THE REAL GAME</p>
+<h3>移動できるかを先に聞く</h3>
+<p>配列の外や使用中のマスへ入らないよう、次の行を調べてから落下か固定を選びます。</p>
+</div>
+<pre>
+<code>timer++
+if timer &gt;= dropFrames {
+    timer = 0
+    if !blocked(x, y+1) {
+        y++
+    } else {
+        board[y][x] = true
+        spawn()
+    }
+}</code>
+</pre>
+</div>
+<div class="why-grid">
+<article>
+<p class="eyebrow">WHY A TIMER?</p>
+<h3>速さを数字で変えられる</h3>
+<p>dropFramesを小さくすれば、レベルが上がるほど速く落ちるルールも作れます。</p>
+</article>
+<article>
+<p class="eyebrow">WHY A GRID?</p>
+<h3>ぴったり積み上がる</h3>
+<p>行と列で管理すれば、ブロックが半端な位置で止まりません。</p>
+</article>
+<article class="challenge">
+<p class="eyebrow">TRY NEXT</p>
+<h3>だんだん速くする</h3>
+<p>3個固定するたびにdropFramesを3ずつ減らしてみよう。</p>
+</article>
+</div>
+</section>
+<nav class="lesson-pager">
+<span>
+</span>
+<a href="../tetromino-shapes/">STEP 02 →<strong>4マスの形</strong>
+</a>
+</nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -28,6 +171,8 @@
 
 
 
-
-
-</main></body></html>
+</main>
+<script src="../../../../learn.js">
+</script>
+</body>
+</html>

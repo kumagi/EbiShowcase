@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="1枚に並んだ絵(スプライトシート)から、SubImage で1コマだけ切り出して描きます。タイマーで切り出す位置を進めれば、キャラクターが歩いて見えます。">
+  <title>パラパラ歩き（コマ送り） | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">工房トップ</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/visual-effects/vfx-walk/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← ビジュアルエフェクト工房</a><span>STEP 06 / 08</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>パラパラ歩き（コマ送り）</h1>
+      <p>1枚に並んだ絵(スプライトシート)から、SubImage で1コマだけ切り出して描きます。タイマーで切り出す位置を進めれば、キャラクターが歩いて見えます。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>SubImage + タイマー</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>コマを送って再生しよう</h2></div>
+        <p>コマ送りと再生/停止を切り替えます。光っている枠が、今 SubImage で切り出しているコマです。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="パラパラ歩き（コマ送り）" src="../../../../play/vfx-walk/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / FRAMES</p>
+        <h2>静止画が<br>どうして歩く？</h2>
+        <p class="lesson-lead">パラパラ漫画と同じ。少しずつ違うポーズを、一定時間ごとに切り替えるだけです。SubImage はシートの中の「切り取り枠」。枠を右へずらすと、次のコマが出ます。速く歩くときは切り替えも速く。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>シート</h3>
+          <p>コマを横に並べた1枚の絵。</p>
+          <code>sheet</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>切り出し</h3>
+          <p>今のコマだけを枠で抜きます。</p>
+          <code>SubImage(rect)</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>タイマー</h3>
+          <p>一定間隔でコマを進めます。</p>
+          <code>tick / hold</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="sheet" aria-labelledby="lab-title-vfx-walk">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / SUBIMAGE</p>
+          <h3 id="lab-title-vfx-walk">コマを送って再生しよう</h3>
+          <p>コマ送りと再生/停止を切り替えます。光っている枠が、今 SubImage で切り出しているコマです。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>コマ送り</button><button type="button" class="lab-button" data-lab-play>再生 / 停止</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" data-lab-board style="display:grid;place-items:center"><div class="lab-frames"><span data-lab-cell>0</span><span data-lab-cell>1</span><span data-lab-cell>2</span><span data-lab-cell>3</span></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>コマ</span><strong data-lab-frame>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>歩行アニメ</h3>
+          <p>タイマーでコマ番号を進め、その枠を SubImage で切り出して描きます。</p>
+        </div>
+        <pre><code>// One 96×96 cell from the Ebi Tenjiroh atlas.
+const fw, fh = 96, 96
+i := (tick / hold) % framesInRow      // which column (frame)
+x, y := i*fw, row*fh                  // row = action + facing
+rect := image.Rect(x, y, x+fw, y+fh)
+frame := atlas.SubImage(rect).(*ebiten.Image)
+screen.DrawImage(frame, op)</code></pre>
+      </div>
+
+      <div class="atlas-download">
+        <div class="atlas-copy">
+          <p class="eyebrow">無料アセット / CC0</p>
+          <h3>海老・天次郎のアトラスをダウンロード</h3>
+          <p>この工房で歩かせている主人公・海老・天次郎（Ebi Tenjiroh）の一枚絵アトラスです。歩行・走行・攻撃・やられを、下(front)・上(back)・横(side)の3方向ぶん収録。1コマ 96×96px。左向きは横向きを左右反転して使います。CC0 なので、あなたのゲームに自由に使えます。</p>
+          <p class="atlas-actions">
+            <a class="atlas-dl" href="../../../../assets/ebi-boy-atlas.png" download>PNGを保存 ↓</a>
+            <a href="../../../../assets/ebi-boy-atlas.json" download>コマ表(JSON) ↓</a>
+            <a href="../../../../assets/ebi-boy-atlas-LICENSE.txt">ライセンス</a>
+          </p>
+          <p class="atlas-note">行=アクション×向き、列=コマ。JSONに各コマの矩形(x,y,w,h)とおすすめfpsが入っています。</p>
+        </div>
+        <img class="atlas-preview" src="../../../../assets/ebi-boy-atlas.png" alt="Ebi Tenjiroh sprite atlas" loading="lazy" width="192">
+      </div>
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY A SHEET?</p>
+          <h3>まとめて速い</h3>
+          <p>1枚に並べると読み込みも切り替えも軽くなります。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY A TIMER?</p>
+          <h3>速さと同期</h3>
+          <p>移動が速いほど切り替えも速くすると、足が滑りません。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>向きを足す</h3>
+          <p>左右反転(ScaleX=-1)で、進む向きに合わせて歩かせよう。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-additive/">← STEP 05<strong>加算合成で光らせる</strong></a>
+      <a href="../vfx-particles/">STEP 07 →<strong>粒をばらまく（パーティクル）</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-walk/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

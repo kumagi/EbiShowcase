@@ -1,4 +1,24 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Four-cell Shapes | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/falling-blocks/tetromino-shapes/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Falling-block Puzzle</a><span>STEP 02 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Tetris-style game</p><h1>Four-cell Shapes</h1><p>Define shapes as relative coordinates and move each as one object.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Relative coordinates and shape data</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>Follow every change,<br>one move at a time.</h2><div class="overview-steps"><article><b>01</b><h3>Play and predict</h3><p>Experience the finished rule while predicting what happens next.</p></article><article><b>02</b><h3>Inspect each state</h3><p>View data before, during, and after resolution.</p></article><article><b>03</b><h3>Rebuild in Ebitengine</h3><p>Advance rules in Update and draw the board and feedback in Draw.</p></article></div></section><nav class="lesson-pager"><a href="../falling-cell/">← STEP 01<strong>Drop One Cell</strong></a><a href="../rotation-kicks/">STEP 03 →<strong>Rotation and Wall Kicks</strong></a></nav>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Four-cell Shapes | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head>
+<body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/falling-blocks/tetromino-shapes/">日本語</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← Falling-block Puzzle</a><span>STEP 02 / 06</span></div>
+<section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Four-cell Shapes</h1><p>Store four cells as offsets from one origin, keeping them together while the shape falls.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Relative coordinates and shape data</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Deliver four shapes to their dotted docks.</h2></div><p>Move with the left and right buttons or Arrow keys/A/D. Use the center button or Space to hard drop. Fit I, O, T, and S before making three mistakes.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Four-cell Shapes" src="../../../../play/tetromino-shapes/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RELATIVE COORDINATES</p><h2>A shape can move as “one origin plus four offsets.”</h2><p class="lesson-lead">Moving four screen positions separately could pull the cells apart. Instead give the piece one origin <code>(x, y)</code>. Each cell remembers only its <strong>offset</strong> from that origin. Move the origin one cell and all four move together.</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>Write a shape as data</h3><p>An O stores the origin, right, down, and down-right positions. Because these are numbers rather than a picture, every shape can share drawing and collision code.</p><code>{{0,0}, {1,0}, {0,1}, {1,1}}</code></article><article><span class="concept-number">2</span><h3>Add the origin</h3><p>A board cell is <code>x + offset.x</code>. To move left, decrease only the piece's origin x by one.</p><code>cellX := piece.x + offset.x</code></article><article><span class="concept-number">3</span><h3>Check all four cells</h3><p>If even one cell would leave the board, reject the move. Change the origin only after everyone fits.</p><code>for _, p := range shape.blocks { check(x+p.x) }</code></article></div>
+<div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / OFFSET LIST</p><h3>Collect cells into one shape</h3><p>Add offsets, then inspect them one at a time. The game reads four offsets in the same way and adds one shared origin.</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>Add offset</button><button class="lab-button" data-lab-step>Check one</button><button class="lab-button lab-button-quiet" data-lab-reset>Empty list</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Offsets left</span><strong data-lab-count>0</strong></div><div><span>Read order</span><strong data-lab-list>—</strong></div></div></div></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Draw and collision read the same array</h3><p>One source of shape data keeps the visible blocks and collision blocks in agreement. A new shape needs only four new coordinates.</p></div><pre><code>type Shape struct {
+    blocks [4]Point
+}
+
+for _, offset := range shape.blocks {
+    boardX := piece.x + offset.x
+    boardY := piece.y + offset.y
+    drawCell(boardX, boardY)
+}</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY RELATIVE?</p><h3>Move as one object</h3><p>Only the origin moves, so spacing between the four cells never changes.</p></article><article><p class="eyebrow">WHY DATA?</p><h3>Reuse the rules</h3><p>An I and a T can use the same loop for drawing and wall tests.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Rotate coordinates</h3><p>Change <code>(x,y)</code> into <code>(-y,x)</code> to turn a shape 90 degrees.</p></article></div>
+</section><nav class="lesson-pager"><a href="../falling-cell/">← STEP 01<strong>Drop One Cell</strong></a><a href="../rotation-kicks/">STEP 03 →<strong>Rotation and Wall Kicks</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -27,7 +47,4 @@
 
 
 
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

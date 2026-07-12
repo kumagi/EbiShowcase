@@ -215,7 +215,7 @@ func (g *game) drawPipe(screen *ebiten.Image, p pipe) {
 }
 
 func (g *game) drawBird(screen *ebiten.Image) {
-	// オリジナル主人公「Ebi Boy」を鳥の代わりに描く
+	// オリジナル主人公「海老・天次郎（Ebi Tenjiroh）」を鳥の代わりに描く
 	hero.DrawCentered(screen, birdX, g.birdY, 44)
 }
 

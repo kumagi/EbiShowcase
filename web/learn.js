@@ -1089,6 +1089,331 @@ document.querySelectorAll(".motion-lab[data-lab='loop']").forEach((lab) => {
   render();
 });
 
+// ---- Visual Effects Lab handlers -------------------------------------------
+
+function fxBoard(lab) {
+  return lab.querySelector("[data-lab-board]");
+}
+
+document.querySelectorAll(".motion-lab[data-lab='translate']").forEach((lab) => {
+  const board = fxBoard(lab);
+  const xo = bind(lab, "[data-lab-x]");
+  const yo = bind(lab, "[data-lab-y]");
+  if (!board || !xo || !yo) return;
+  const dot = document.createElement("div");
+  dot.className = "lab-fx";
+  dot.hidden = true;
+  board.appendChild(dot);
+  const place = (event) => {
+    const rect = board.getBoundingClientRect();
+    const cx = event.touches ? event.touches[0].clientX : event.clientX;
+    const cy = event.touches ? event.touches[0].clientY : event.clientY;
+    const x = Math.max(0, Math.min(480, ((cx - rect.left) / rect.width) * 480));
+    const y = Math.max(0, Math.min(520, ((cy - rect.top) / rect.height) * 520));
+    dot.style.left = `${(x / 480) * 100}%`;
+    dot.style.top = `${(y / 520) * 100}%`;
+    dot.hidden = false;
+    setText(xo, x.toFixed(0));
+    setText(yo, y.toFixed(0));
+  };
+  board.addEventListener("click", place);
+  board.addEventListener("touchstart", (event) => { event.preventDefault(); place(event); }, { passive: false });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => { dot.hidden = true; setText(xo, "—"); setText(yo, "—"); });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='geom']").forEach((lab) => {
+  const board = fxBoard(lab);
+  const angleOut = bind(lab, "[data-lab-angle]");
+  const scaleOut = bind(lab, "[data-lab-scale]");
+  const pivotOut = bind(lab, "[data-lab-pivot]");
+  if (!board || !angleOut || !scaleOut) return;
+  const dot = document.createElement("div");
+  dot.className = "lab-fx";
+  board.appendChild(dot);
+  let angle = 0, scale = 1, center = true;
+  const render = () => {
+    dot.style.transformOrigin = center ? "center" : "top left";
+    dot.style.transform = `rotate(${angle}deg) scale(${scale})`;
+    setText(angleOut, `${angle}°`);
+    setText(scaleOut, `x${scale.toFixed(2)}`);
+    if (pivotOut) { setText(pivotOut, center ? "center" : "corner"); setState(pivotOut, center); }
+  };
+  bind(lab, "[data-lab-rotl]")?.addEventListener("click", () => { angle -= 15; render(); });
+  bind(lab, "[data-lab-rotr]")?.addEventListener("click", () => { angle += 15; render(); });
+  bind(lab, "[data-lab-sdown]")?.addEventListener("click", () => { scale = Math.max(0.4, scale - 0.15); render(); });
+  bind(lab, "[data-lab-sup]")?.addEventListener("click", () => { scale = Math.min(2.4, scale + 0.15); render(); });
+  bind(lab, "[data-lab-pivot]")?.addEventListener("click", () => { center = !center; render(); });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => { angle = 0; scale = 1; center = true; render(); });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='colorscale']").forEach((lab) => {
+  const board = fxBoard(lab);
+  const modeOut = bind(lab, "[data-lab-mode]");
+  const codeOut = bind(lab, "[data-lab-code]");
+  if (!board || !modeOut) return;
+  const dot = document.createElement("div");
+  dot.className = "lab-fx";
+  board.appendChild(dot);
+  const codes = {
+    normal: "ColorScale (none)",
+    tint: "Scale(1, 0.4, 0.4, 1)",
+    flash: "Scale(6, 6, 6, 1)",
+    shadow: "Scale(0, 0, 0, 0.5)",
+  };
+  const set = (mode) => {
+    dot.className = "lab-fx" + (mode === "tint" ? " is-tint" : mode === "flash" ? " is-flash" : mode === "shadow" ? " is-shadow" : "");
+    setText(modeOut, mode);
+    if (codeOut) setText(codeOut, codes[mode]);
+  };
+  lab.querySelectorAll("[data-lab-mode-set]").forEach((btn) => btn.addEventListener("click", () => set(btn.dataset.labModeSet)));
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => set("normal"));
+  set("normal");
+});
+
+document.querySelectorAll(".motion-lab[data-lab='opacity']").forEach((lab) => {
+  const board = fxBoard(lab);
+  const valOut = bind(lab, "[data-lab-alpha]");
+  if (!board || !valOut) return;
+  const ghosts = [];
+  for (let i = 0; i < 5; i++) {
+    const g = document.createElement("div");
+    g.className = "lab-fx lab-ghost";
+    g.style.left = `${20 + i * 15}%`;
+    board.appendChild(g);
+    ghosts.push(g);
+  }
+  let alpha = 1, trail = 1;
+  const render = () => {
+    ghosts.forEach((g, i) => {
+      const active = i >= ghosts.length - trail;
+      g.style.opacity = active ? String(alpha * ((i + 1) / ghosts.length)) : "0";
+    });
+    setText(valOut, alpha.toFixed(2));
+  };
+  bind(lab, "[data-lab-adown]")?.addEventListener("click", () => { alpha = Math.max(0.1, alpha - 0.15); render(); });
+  bind(lab, "[data-lab-aup]")?.addEventListener("click", () => { alpha = Math.min(1, alpha + 0.15); render(); });
+  bind(lab, "[data-lab-tup]")?.addEventListener("click", () => { trail = Math.min(5, trail + 1); render(); });
+  bind(lab, "[data-lab-tdown]")?.addEventListener("click", () => { trail = Math.max(1, trail - 1); render(); });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => { alpha = 1; trail = 1; render(); });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='blend']").forEach((lab) => {
+  const board = fxBoard(lab);
+  const modeOut = bind(lab, "[data-lab-mode]");
+  if (!board) return;
+  const a = document.createElement("div");
+  a.className = "lab-orb";
+  a.style.left = "38%"; a.style.top = "50%"; a.style.background = "radial-gradient(circle,#ff4661,transparent 70%)";
+  const b = document.createElement("div");
+  b.className = "lab-orb";
+  b.style.left = "62%"; b.style.top = "50%"; b.style.background = "radial-gradient(circle,#46e6c8,transparent 70%)";
+  board.appendChild(a); board.appendChild(b);
+  const set = (mode) => { board.dataset.blend = mode; if (modeOut) setText(modeOut, mode === "add" ? "additive" : "normal"); };
+  bind(lab, "[data-lab-toggle]")?.addEventListener("click", () => set(board.dataset.blend === "add" ? "normal" : "add"));
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => set("add"));
+  set("add");
+});
+
+document.querySelectorAll(".motion-lab[data-lab='sheet']").forEach((lab) => {
+  const frameOut = bind(lab, "[data-lab-frame]");
+  const cells = lab.querySelectorAll("[data-lab-cell]");
+  if (!frameOut || !cells.length) return;
+  let frame = 0, timer = null;
+  const render = () => {
+    setText(frameOut, String(frame));
+    cells.forEach((c, i) => c.classList.toggle("on", i === frame));
+  };
+  const stepFrame = () => { frame = (frame + 1) % cells.length; render(); };
+  bind(lab, "[data-lab-step]")?.addEventListener("click", () => { if (timer) { clearInterval(timer); timer = null; } stepFrame(); });
+  bind(lab, "[data-lab-play]")?.addEventListener("click", () => {
+    if (timer) { clearInterval(timer); timer = null; return; }
+    timer = setInterval(stepFrame, 180);
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => { if (timer) { clearInterval(timer); timer = null; } frame = 0; render(); });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='spray']").forEach((lab) => {
+  const board = fxBoard(lab);
+  const countOut = bind(lab, "[data-lab-count]");
+  if (!board) return;
+  let total = 0;
+  const burst = () => {
+    for (let i = 0; i < 16; i++) {
+      const s = document.createElement("div");
+      s.className = "lab-spark";
+      s.style.left = "50%";
+      s.style.top = "60%";
+      board.appendChild(s);
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 40 + Math.random() * 120;
+      requestAnimationFrame(() => {
+        s.style.transform = `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist}px)`;
+        s.style.opacity = "0";
+      });
+      setTimeout(() => s.remove(), 700);
+    }
+    total += 16;
+    if (countOut) setText(countOut, String(total));
+  };
+  bind(lab, "[data-lab-burst]")?.addEventListener("click", burst);
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => { total = 0; if (countOut) setText(countOut, "0"); });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='spellbook']").forEach((lab) => {
+  const doneOut = bind(lab, "[data-lab-done]");
+  const board = bind(lab, "[data-lab-board]");
+  const cast = new Set();
+  // Lesson pages live at web/{ja,en}/tracks/visual-effects/<slug>/
+  const src = {
+    fire: "../../../../assets/vfx-fire.png",
+    water: "../../../../assets/vfx-water.png",
+    spark: "../../../../assets/vfx-spark.png",
+    bolt: "../../../../assets/vfx-bolt.png",
+  };
+  const recipes = {
+    fire: { ja: "炎 = 炎スプライト + 加算 + 上昇", en: "FIRE = flame PNG + additive + rise" },
+    water: { ja: "水 = 水滴スプライト + 半透明 + 重力", en: "WATER = drop PNG + alpha + gravity" },
+    thunder: { ja: "雷 = 稲妻スプライト + 閃光 + 粒", en: "THUNDER = bolt PNG + flash + sparks" },
+  };
+  const lang = (document.documentElement.lang || "ja").startsWith("en") ? "en" : "ja";
+  const idleHTML = board ? board.innerHTML : "";
+  let animTimer = null;
+
+  const render = () => {
+    if (doneOut) {
+      setText(doneOut, `${cast.size}/3`);
+      setState(doneOut, cast.size === 3);
+    }
+  };
+
+  const clearAnim = () => {
+    if (animTimer) {
+      clearInterval(animTimer);
+      animTimer = null;
+    }
+  };
+
+  const spawnFire = (stage) => {
+    for (let i = 0; i < 16; i++) {
+      const el = document.createElement("img");
+      el.src = src.fire;
+      el.alt = "";
+      el.className = "lab-vfx-sprite lab-vfx-flame";
+      el.style.left = `${42 + Math.random() * 16}%`;
+      el.style.setProperty("--drift", `${(Math.random() - 0.5) * 60}px`);
+      el.style.setProperty("--rise", `${140 + Math.random() * 120}px`);
+      el.style.setProperty("--size", `${48 + Math.random() * 56}px`);
+      el.style.animationDelay = `${Math.random() * 0.5}s`;
+      stage.appendChild(el);
+    }
+    for (let i = 0; i < 18; i++) {
+      const el = document.createElement("img");
+      el.src = src.spark;
+      el.alt = "";
+      el.className = "lab-vfx-sprite lab-vfx-ember";
+      el.style.left = `${40 + Math.random() * 20}%`;
+      el.style.setProperty("--drift", `${(Math.random() - 0.5) * 90}px`);
+      el.style.setProperty("--rise", `${100 + Math.random() * 140}px`);
+      el.style.animationDelay = `${Math.random() * 0.6}s`;
+      stage.appendChild(el);
+    }
+  };
+
+  const spawnWater = (stage) => {
+    for (let i = 0; i < 20; i++) {
+      const el = document.createElement("img");
+      el.src = src.water;
+      el.alt = "";
+      el.className = "lab-vfx-sprite lab-vfx-drop";
+      el.style.left = `${35 + Math.random() * 30}%`;
+      el.style.setProperty("--arc-x", `${(Math.random() - 0.5) * 120}px`);
+      el.style.setProperty("--fall", `${110 + Math.random() * 90}px`);
+      el.style.setProperty("--size", `${28 + Math.random() * 34}px`);
+      el.style.animationDelay = `${Math.random() * 0.45}s`;
+      stage.appendChild(el);
+    }
+  };
+
+  const spawnThunder = (stage) => {
+    stage.classList.add("is-flash");
+    setTimeout(() => stage.classList.remove("is-flash"), 180);
+    for (let i = 0; i < 5; i++) {
+      const el = document.createElement("img");
+      el.src = src.bolt;
+      el.alt = "";
+      el.className = "lab-vfx-sprite lab-vfx-bolt";
+      el.style.left = `${30 + i * 10 + Math.random() * 8}%`;
+      el.style.setProperty("--rot", `${(Math.random() - 0.5) * 28}deg`);
+      el.style.animationDelay = `${i * 0.04}s`;
+      stage.appendChild(el);
+    }
+    for (let i = 0; i < 22; i++) {
+      const el = document.createElement("img");
+      el.src = src.spark;
+      el.alt = "";
+      el.className = "lab-vfx-sprite lab-vfx-zap";
+      el.style.left = `${45 + (Math.random() - 0.5) * 30}%`;
+      el.style.top = `${30 + Math.random() * 40}%`;
+      el.style.setProperty("--dx", `${(Math.random() - 0.5) * 140}px`);
+      el.style.setProperty("--dy", `${(Math.random() - 0.5) * 140}px`);
+      stage.appendChild(el);
+    }
+  };
+
+  const showSpell = (kind) => {
+    if (!board) return;
+    clearAnim();
+    board.className = `lab-board lab-spell-stage is-${kind}`;
+    board.innerHTML = "";
+    const label = document.createElement("p");
+    label.className = "lab-spell-label";
+    label.textContent = recipes[kind][lang];
+    board.appendChild(label);
+    if (kind === "fire") spawnFire(board);
+    else if (kind === "water") spawnWater(board);
+    else spawnThunder(board);
+    if (kind === "fire") {
+      animTimer = setInterval(() => {
+        if (!board.isConnected) return clearAnim();
+        const el = document.createElement("img");
+        el.src = src.fire;
+        el.alt = "";
+        el.className = "lab-vfx-sprite lab-vfx-flame";
+        el.style.left = `${44 + Math.random() * 12}%`;
+        el.style.setProperty("--drift", `${(Math.random() - 0.5) * 50}px`);
+        el.style.setProperty("--rise", `${150 + Math.random() * 100}px`);
+        el.style.setProperty("--size", `${40 + Math.random() * 50}px`);
+        board.appendChild(el);
+        setTimeout(() => el.remove(), 1400);
+      }, 220);
+    }
+  };
+
+  lab.querySelectorAll("[data-lab-spell]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const kind = btn.dataset.labSpell;
+      cast.add(kind);
+      btn.dataset.cast = "1";
+      showSpell(kind);
+      render();
+    });
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    cast.clear();
+    clearAnim();
+    lab.querySelectorAll("[data-lab-spell]").forEach((btn) => (btn.dataset.cast = "0"));
+    if (board) {
+      board.className = "lab-board lab-spell-stage";
+      board.innerHTML = idleHTML;
+    }
+    render();
+  });
+  render();
+});
+
 const escapeCodeHTML = (value) => value.replace(/[&<>"']/g, (character) => ({
   "&": "&amp;",
   "<": "&lt;",

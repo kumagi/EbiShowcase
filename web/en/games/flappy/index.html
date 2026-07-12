@@ -16,14 +16,14 @@
   <main id="top"><div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>LEVEL 04</span></div>
     <div class="overview-concept" style="margin:18px max(24px,7vw)"><small>NEW CONCEPT</small><strong>Velocity and acceleration</strong></div>
     <section class="hero">
-      <div class="hero-copy"><p class="eyebrow">LEVEL 04 / ACCELERATION IN MOTION</p><h1>Make the hero<br><em>fall for real.</em></h1><p class="lead">Change velocity a little each Update and jumps become a natural arc. The sprite is original hero Ebi Boy; the hit test is still a circle. You already met the game loop in LEVEL 01—here we focus on acceleration.</p><a class="cta" href="#play">PLAY NOW <b>↓</b></a></div>
+      <div class="hero-copy"><p class="eyebrow">LEVEL 04 / ACCELERATION IN MOTION</p><h1>Make the hero<br><em>fall for real.</em></h1><p class="lead">Change velocity a little each Update and jumps become a natural arc. The sprite is original hero Ebi Tenjiroh; the hit test is still a circle. You already met the game loop in LEVEL 01—here we focus on acceleration.</p><a class="cta" href="#play">PLAY NOW <b>↓</b></a></div>
       <div class="code-card" aria-hidden="true"><div class="dots">● ● ●</div><pre><span>func</span> (g *Game) Update() error {
   <i>// every frame, keep it simple.</i>
   g.bird.velocity += gravity
   g.bird.y += g.bird.velocity
   <span>return</span> nil
 }</pre><div class="run">GO → WASM → BROWSER</div></div>
-      <p class="cast-note">On screen you see original hero <strong>Ebi Boy</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
+      <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
     </section>
 
     <section class="play" id="play">
@@ -46,7 +46,7 @@
         <article><span class="concept-number">3</span><h3>Acceleration</h3><p>How much velocity changes each time. Keep adding <strong>+0.42</strong> as gravity and the hero slows, then falls.</p><code>gravity = +0.42</code></article>
       </div>
       <div class="motion-lab" aria-labelledby="motion-lab-title">
-        <div class="lab-copy"><p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p><h3 id="motion-lab-title">Move one frame at a time</h3><p>A game works like a flipbook. Each step adds gravity to velocity, then moves the hero by that velocity. Looks like Ebi Boy; hit test is a circle.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap>Flap</button><button type="button" class="lab-button" data-lab-step>Next frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div><p class="lab-hint">“Flap” sets the upward velocity to <code>-7.4</code>, then advances one frame.</p></div>
+        <div class="lab-copy"><p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p><h3 id="motion-lab-title">Move one frame at a time</h3><p>A game works like a flipbook. Each step adds gravity to velocity, then moves the hero by that velocity. Looks like Ebi Tenjiroh; hit test is a circle.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap>Flap</button><button type="button" class="lab-button" data-lab-step>Next frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div><p class="lab-hint">“Flap” sets the upward velocity to <code>-7.4</code>, then advances one frame.</p></div>
         <div class="lab-visual"><div class="lab-sky" role="img" aria-label="Diagram of vertical hero movement"><span class="axis-label axis-top">0 / TOP</span><span class="axis-label axis-bottom">720 / BOTTOM</span><div class="lab-bird" data-lab-bird aria-hidden="true"><span></span></div></div><div class="lab-values" aria-live="polite"><div><span>Acceleration</span><strong>+0.42</strong><small>each frame</small></div><div><span>Velocity</span><strong data-lab-velocity>0.00</strong><small data-lab-direction>not moving</small></div><div><span>Position Y</span><strong data-lab-position>320.00</strong><small>from the top</small></div></div></div>
       </div>
       <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>velocity = velocity + gravity</code><span>then</span><code>position = position + velocity</code></div><p>Order matters. First gravity changes velocity, then velocity changes position. Repeat every frame to make a natural jumping curve.</p></div>
@@ -299,7 +299,7 @@ func (g *game) drawPipe(screen *ebiten.Image, p pipe) {
 }
 
 func (g *game) drawBird(screen *ebiten.Image) {
-	// オリジナル主人公「Ebi Boy」を鳥の代わりに描く
+	// オリジナル主人公「海老・天次郎（Ebi Tenjiroh）」を鳥の代わりに描く
 	hero.DrawCentered(screen, birdX, g.birdY, 44)
 }
 
@@ -349,6 +349,21 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

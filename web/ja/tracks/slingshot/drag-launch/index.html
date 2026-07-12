@@ -1,4 +1,54 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>ひっぱって発射 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/slingshot/drag-launch/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← ひっぱり反射アクション</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">モンスターストライク型ゲームを作る</p><h1>ひっぱって発射</h1><p>指で引いた方向と距離から矢印を描き、反対方向へ速度を与えます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>ドラッグベクトルと発射速度</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>盤面や物理の変化を、<br>1手ずつ追いかける。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで予想する</h3><p>次に何が起きるか考えながら、完成したルールを体験します。</p></article><article><b>02</b><h3>途中の状態を見る</h3><p>判定前、処理中、処理後のデータを表示し、変化の順番を確認します。</p></article><article><b>03</b><h3>Ebitengineで再現する</h3><p>Updateでルールを進め、Drawで盤面とフィードバックを描きます。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../wall-bounce/">STEP 02 →<strong>壁で跳ね返るボール</strong></a></nav>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ひっぱって発射 | Ebi Showcase</title>
+<link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+<header class="nav">
+<a class="brand" href="../../../">
+<span>EBI</span> SHOWCASE</a>
+<nav>
+<a href="../">コース</a>
+<a href="#learn">HOW IT WORKS</a>
+<a class="lang" href="../../../../en/tracks/slingshot/drag-launch/">EN</a>
+</nav>
+</header>
+<main class="overview-main">
+<div class="lesson-breadcrumb">
+<a href="../">← ひっぱり反射アクション</a>
+<span>STEP 01 / 06</span>
+</div>
+<section class="overview-hero">
+<p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+<h1>ひっぱって発射</h1>
+<p>指で引いた方向と距離から矢印を描き、反対方向へ速度を与えます。</p>
+<div class="overview-concept">
+<small>このステップで学ぶこと</small>
+<strong>ドラッグベクトルと発射速度</strong>
+</div>
+</section>
+<p class="curriculum-bridge">これは共通基礎の続きです。まだゲームループを知らない人は、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。ここでは入力から速度を作るところへ進みます。</p>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>真珠を引っぱり、3つのリングへ届けよう。</h2></div><p>真珠からドラッグして離します。矢印キーで引く向きを変え、Spaceで発射することもできます。6発以内でクリア。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="ひっぱって発射" src="../../../../play/drag-launch/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / OPPOSITE VECTOR</p><h2>引いた矢印を、マイナスでひっくり返す。</h2><p class="lesson-lead">真珠の中心から指までの差を<strong>ドラッグベクトル</strong>として保存します。離した瞬間、XとYの両方にマイナスを付けると、引っぱった向きと正反対の発射速度になります。</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>2点の差を取る</h3><p>指の座標から真珠の座標を引きます。右へ引けばdragXは正、下へ引けばdragYは正です。</p><code>dragX = pointerX - ballX</code></article><article><span class="concept-number">2</span><h3>長すぎる引きを制限</h3><p>長さが160を超えたら同じ向きのまま縮めます。画面の外まで引いても速さが暴れません。</p><code>drag *= 160 / length</code></article><article><span class="concept-number">3</span><h3>反対向きへ発射</h3><p>指を離した時だけ、dragXとdragYをマイナスにして速度へ変えます。下へ引いた真珠は上へ飛びます。</p><code>velocity = -drag * power</code></article></div>
+<div class="motion-lab" data-lab="move8"><div class="lab-copy"><p class="eyebrow">TRY IT / VECTOR LENGTH</p><h3>向きの組み合わせで長さはどう変わる？</h3><p>横だけのベクトルと斜めのベクトルを比べます。ゲームでは長さを測って最大値をそろえ、引きすぎを防ぎます。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-cardinal>横へ引く</button><button type="button" class="lab-button" data-lab-diag>斜めへ引く</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>そのままの長さ</span><strong data-lab-raw>—</strong></div><div><span>そろえた長さ</span><strong data-lab-norm>—</strong></div></div></div></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>離した1回だけ速度を決める</h3><p>引いている間は照準を更新し、リリースされたフレームで速度へ変換します。</p></div><pre><code>dragX := pointerX - ballX
+dragY := pointerY - ballY
+if released {
+    vx = -dragX * 0.092
+    vy = -dragY * 0.092
+    moving = true
+}</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY OPPOSITE?</p><h3>ゴムを戻す向き</h3><p>後ろへ引くほど、元の場所へ戻ろうとする向きに強く飛びます。</p></article><article><p class="eyebrow">WHY ON RELEASE?</p><h3>照準と飛行を分ける</h3><p>引いている途中で発射せず、決めた向きが離した瞬間に確定します。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>弱い引きを無効に</h3><p>長さ24未満なら発射しない理由を、操作して確かめよう。</p></article></div></section>
+<nav class="lesson-pager">
+<span>
+</span>
+<a href="../wall-bounce/">STEP 02 →<strong>壁で跳ね返るボール</strong>
+</a>
+</nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -30,4 +80,21 @@
 
 
 
-</main></body></html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</main><script src="../../../../learn.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="絵のピクセルはそのまま、ColorScale で色を「かけ算」します。赤くティント、白フラッシュ、真っ黒なシルエット。1枚の絵から3つの表現が生まれます。">
+  <title>色を変える・色を抜く | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">工房トップ</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/visual-effects/vfx-tint/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← ビジュアルエフェクト工房</a><span>STEP 03 / 08</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>色を変える・色を抜く</h1>
+      <p>絵のピクセルはそのまま、ColorScale で色を「かけ算」します。赤くティント、白フラッシュ、真っ黒なシルエット。1枚の絵から3つの表現が生まれます。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>op.ColorScale</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>モードを切り替えよう</h2></div>
+        <p>NORMAL・TINT・FLASH・SHADOW を切り替えると、同じ四角の色だけが変わります。表示されるコードが、そのときの ColorScale です。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="色を変える・色を抜く" src="../../../../play/vfx-tint/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / COLORSCALE</p>
+        <h2>1枚の絵から<br>何色も作れる？</h2>
+        <p class="lesson-lead">ColorScale は各色チャンネルにかける倍率です。(1,0.4,0.4,1) なら緑と青が減って赤っぽく。(6,6,6,1) なら明るさが振り切れて白フラッシュ。(0,0,0,α) なら色が抜けて影になります。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>ティント</h3>
+          <p>色をかけ算して染めます。</p>
+          <code>Scale(1,.4,.4,1)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>フラッシュ</h3>
+          <p>明るさを上げて白に。</p>
+          <code>Scale(6,6,6,1)</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>シルエット</h3>
+          <p>色を0にして影に。</p>
+          <code>Scale(0,0,0,.5)</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="colorscale" aria-labelledby="lab-title-vfx-tint">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / TINT</p>
+          <h3 id="lab-title-vfx-tint">モードを切り替えよう</h3>
+          <p>NORMAL・TINT・FLASH・SHADOW を切り替えると、同じ四角の色だけが変わります。表示されるコードが、そのときの ColorScale です。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-mode-set="normal">NORMAL</button><button type="button" class="lab-button" data-lab-mode-set="tint">TINT</button><button type="button" class="lab-button" data-lab-mode-set="flash">FLASH</button><button type="button" class="lab-button" data-lab-mode-set="shadow">SHADOW</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" data-lab-board></div>
+          <div class="lab-values" aria-live="polite"><div><span>モード</span><strong data-lab-mode>—</strong></div><div><span>ColorScale</span><strong data-lab-code>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>被弾の白フラッシュ</h3>
+          <p>敵に当たった一瞬だけ倍率を上げれば、白く光って手応えが出ます。</p>
+        </div>
+        <pre><code>op := &amp;ebiten.DrawImageOptions{}
+// 赤く染める（色のかけ算）
+op.ColorScale.Scale(1, 0.4, 0.4, 1)
+// 白フラッシュなら明るさを振り切る
+// op.ColorScale.Scale(6, 6, 6, 1)
+screen.DrawImage(sprite, op)</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY MULTIPLY?</p>
+          <h3>色は倍率で決まる</h3>
+          <p>各チャンネルの掛け算だから、暗くも明るくもできます。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY DRAIN?</p>
+          <h3>影は色抜きコピー</h3>
+          <p>色を0にして半透明で下に敷けば、それだけで影です。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>点滅させる</h3>
+          <p>フレームごとに倍率を上下させ、無敵時間を表現しよう。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-transform/">← STEP 02<strong>回転と拡大縮小、そして中心</strong></a>
+      <a href="../vfx-alpha/">STEP 04 →<strong>透明と重ね順・残像</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-tint/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

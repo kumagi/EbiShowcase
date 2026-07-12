@@ -1,0 +1,401 @@
+{
+  "image": "ebi-boy-atlas.png",
+  "frameWidth": 96,
+  "frameHeight": 96,
+  "sheetWidth": 384,
+  "sheetHeight": 1440,
+  "license": "CC0-1.0",
+  "note": "Ebi Tenjiroh (海老・天次郎) sprite atlas. Left-facing = draw the 'side' frames flipped horizontally.",
+  "animations": [
+    {
+      "name": "idle-down",
+      "action": "idle",
+      "dir": "down",
+      "fps": 4,
+      "frames": [
+        [
+          0,
+          0,
+          96,
+          96
+        ],
+        [
+          96,
+          0,
+          96,
+          96
+        ]
+      ]
+    },
+    {
+      "name": "idle-up",
+      "action": "idle",
+      "dir": "up",
+      "fps": 4,
+      "frames": [
+        [
+          0,
+          96,
+          96,
+          96
+        ],
+        [
+          96,
+          96,
+          96,
+          96
+        ]
+      ]
+    },
+    {
+      "name": "idle-side",
+      "action": "idle",
+      "dir": "side",
+      "fps": 4,
+      "frames": [
+        [
+          0,
+          192,
+          96,
+          96
+        ],
+        [
+          96,
+          192,
+          96,
+          96
+        ]
+      ]
+    },
+    {
+      "name": "walk-down",
+      "action": "walk",
+      "dir": "down",
+      "fps": 10,
+      "frames": [
+        [
+          0,
+          288,
+          96,
+          96
+        ],
+        [
+          96,
+          288,
+          96,
+          96
+        ],
+        [
+          192,
+          288,
+          96,
+          96
+        ],
+        [
+          288,
+          288,
+          96,
+          96
+        ]
+      ]
+    },
+    {
+      "name": "walk-up",
+      "action": "walk",
+      "dir": "up",
+      "fps": 10,
+      "frames": [
+        [
+          0,
+          384,
+          96,
+          96
+        ],
+        [
+          96,
+          384,
+          96,
+          96
+        ],
+        [
+          192,
+          384,
+          96,
+          96
+        ],
+        [
+          288,
+          384,
+          96,
+          96
+        ]
+      ]
+    },
+    {
+      "name": "walk-side",
+      "action": "walk",
+      "dir": "side",
+      "fps": 10,
+      "frames": [
+        [
+          0,
+          480,
+          96,
+          96
+        ],
+        [
+          96,
+          480,
+          96,
+          96
+        ],
+        [
+          192,
+          480,
+          96,
+          96
+        ],
+        [
+          288,
+          480,
+          96,
+          96
+        ]
+      ]
+    },
+    {
+      "name": "run-down",
+      "action": "run",
+      "dir": "down",
+      "fps": 14,
+      "frames": [
+        [
+          0,
+          576,
+          96,
+          96
+        ],
+        [
+          96,
+          576,
+          96,
+          96
+        ],
+        [
+          192,
+          576,
+          96,
+          96
+        ],
+        [
+          288,
+          576,
+          96,
+          96
+        ]
+      ]
+    },
+    {
+      "name": "run-up",
+      "action": "run",
+      "dir": "up",
+      "fps": 14,
+      "frames": [
+        [
+          0,
+          672,
+          96,
+          96
+        ],
+        [
+          96,
+          672,
+          96,
+          96
+        ],
+        [
+          192,
+          672,
+          96,
+          96
+        ],
+        [
+          288,
+          672,
+          96,
+          96
+        ]
+      ]
+    },
+    {
+      "name": "run-side",
+      "action": "run",
+      "dir": "side",
+      "fps": 14,
+      "frames": [
+        [
+          0,
+          768,
+          96,
+          96
+        ],
+        [
+          96,
+          768,
+          96,
+          96
+        ],
+        [
+          192,
+          768,
+          96,
+          96
+        ],
+        [
+          288,
+          768,
+          96,
+          96
+        ]
+      ]
+    },
+    {
+      "name": "attack-down",
+      "action": "attack",
+      "dir": "down",
+      "fps": 14,
+      "frames": [
+        [
+          0,
+          864,
+          96,
+          96
+        ],
+        [
+          96,
+          864,
+          96,
+          96
+        ],
+        [
+          192,
+          864,
+          96,
+          96
+        ]
+      ]
+    },
+    {
+      "name": "attack-up",
+      "action": "attack",
+      "dir": "up",
+      "fps": 14,
+      "frames": [
+        [
+          0,
+          960,
+          96,
+          96
+        ],
+        [
+          96,
+          960,
+          96,
+          96
+        ],
+        [
+          192,
+          960,
+          96,
+          96
+        ]
+      ]
+    },
+    {
+      "name": "attack-side",
+      "action": "attack",
+      "dir": "side",
+      "fps": 14,
+      "frames": [
+        [
+          0,
+          1056,
+          96,
+          96
+        ],
+        [
+          96,
+          1056,
+          96,
+          96
+        ],
+        [
+          192,
+          1056,
+          96,
+          96
+        ]
+      ]
+    },
+    {
+      "name": "hurt-down",
+      "action": "hurt",
+      "dir": "down",
+      "fps": 8,
+      "frames": [
+        [
+          0,
+          1152,
+          96,
+          96
+        ],
+        [
+          96,
+          1152,
+          96,
+          96
+        ]
+      ]
+    },
+    {
+      "name": "hurt-up",
+      "action": "hurt",
+      "dir": "up",
+      "fps": 8,
+      "frames": [
+        [
+          0,
+          1248,
+          96,
+          96
+        ],
+        [
+          96,
+          1248,
+          96,
+          96
+        ]
+      ]
+    },
+    {
+      "name": "hurt-side",
+      "action": "hurt",
+      "dir": "side",
+      "fps": 8,
+      "frames": [
+        [
+          0,
+          1344,
+          96,
+          96
+        ],
+        [
+          96,
+          1344,
+          96,
+          96
+        ]
+      ]
+    }
+  ]
+}

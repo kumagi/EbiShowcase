@@ -1,4 +1,24 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>4マスの形 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/falling-blocks/tetromino-shapes/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 落ちものブロックパズル</a><span>STEP 02 / 06</span></div><section class="overview-hero"><p class="eyebrow">テトリス型ゲームを作る</p><h1>4マスの形</h1><p>中心からの相対座標で複数の形を定義し、ひとつの物体として動かします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>相対座標と形データ</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>盤面や物理の変化を、<br>1手ずつ追いかける。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで予想する</h3><p>次に何が起きるか考えながら、完成したルールを体験します。</p></article><article><b>02</b><h3>途中の状態を見る</h3><p>判定前、処理中、処理後のデータを表示し、変化の順番を確認します。</p></article><article><b>03</b><h3>Ebitengineで再現する</h3><p>Updateでルールを進め、Drawで盤面とフィードバックを描きます。</p></article></div></section><nav class="lesson-pager"><a href="../falling-cell/">← STEP 01<strong>1マスを落とす</strong></a><a href="../rotation-kicks/">STEP 03 →<strong>回転と壁ぎわ補正</strong></a></nav>
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>4マスの形 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head>
+<body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/falling-blocks/tetromino-shapes/">EN</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← 落ちものブロックパズル</a><span>STEP 02 / 06</span></div>
+<section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>4マスの形</h1><p>4個のマスを中心からの相対座標で覚え、ばらばらにせず一つの形として落とします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>相対座標と形データ</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>4種類の形を点線のドックへ届けよう。</h2></div><p>左右ボタンまたは←→・A/Dで移動し、中央ボタンかSpaceですぐ落とします。3回外す前にI・O・T・Sの全部をぴったり置けばクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="4マスの形" src="../../../../play/tetromino-shapes/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RELATIVE COORDINATES</p><h2>形は「親の場所＋4個のずれ」で動かせる。</h2><p class="lesson-lead">4個それぞれの画面座標を動かすと、途中で離れてしまうかもしれません。そこで形に一つの基準点 <code>(x, y)</code> を持たせ、各マスはそこからの<strong>ずれ</strong>だけを覚えます。親を1マス動かせば、4個が同時に動きます。</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>形をデータで書く</h3><p>O形なら、基準から右、下、右下の4地点です。絵ではなく数字なので、同じ描画や当たり判定をどの形にも使えます。</p><code>{{0,0}, {1,0}, {0,1}, {1,1}}</code></article><article><span class="concept-number">2</span><h3>親の座標を足す</h3><p>実際の盤面マスは <code>x + offset.x</code>。左へ動くときは親のxだけを1減らせば十分です。</p><code>cellX := piece.x + offset.x</code></article><article><span class="concept-number">3</span><h3>4マス全部を検査</h3><p>一つでも壁の外へ出るなら、その移動は取り消します。「全員が入れるか」を確かめてから親を動かします。</p><code>for _, p := range shape.blocks { check(x+p.x) }</code></article></div>
+<div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / OFFSET LIST</p><h3>一つの形へマスを集めよう</h3><p>「ずれを追加」で形の部品を増やします。ゲームでも4個のずれを順番に読み、同じ親座標を足します。</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>ずれを追加</button><button class="lab-button" data-lab-step>1個調べる</button><button class="lab-button lab-button-quiet" data-lab-reset>空にする</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>残りのずれ</span><strong data-lab-count>0</strong></div><div><span>読み出す順番</span><strong data-lab-list>—</strong></div></div></div></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Drawも衝突判定も同じ配列を読む</h3><p>形データを一か所に置くと、描いた形と当たり判定の形が食い違いません。新しい形も4個の座標を追加するだけです。</p></div><pre><code>type Shape struct {
+    blocks [4]Point
+}
+
+for _, offset := range shape.blocks {
+    boardX := piece.x + offset.x
+    boardY := piece.y + offset.y
+    drawCell(boardX, boardY)
+}</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY RELATIVE?</p><h3>一つの物体として動く</h3><p>親だけを動かすので、4マスの間隔はいつでも同じです。</p></article><article><p class="eyebrow">WHY DATA?</p><h3>ルールを使い回せる</h3><p>I形でもT形でも、同じループで描画と壁判定ができます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>座標を回す</h3><p><code>(x,y)</code>を<code>(-y,x)</code>へ変えて、形を90度回してみよう。</p></article></div>
+</section><nav class="lesson-pager"><a href="../falling-cell/">← STEP 01<strong>1マスを落とす</strong></a><a href="../rotation-kicks/">STEP 03 →<strong>回転と壁ぎわ補正</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -27,7 +47,4 @@
 
 
 
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

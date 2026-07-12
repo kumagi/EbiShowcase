@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="From images laid out in one sheet, cut a single frame with SubImage and draw it. Advance the cut position with a timer and the character app">
+  <title>Sprite Walk (Frame by Frame) | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Lab home</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/visual-effects/vfx-walk/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>STEP 06 / 08</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Sprite Walk (Frame by Frame)</h1>
+      <p>From images laid out in one sheet, cut a single frame with SubImage and draw it. Advance the cut position with a timer and the character appears to walk.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>SubImage + timer</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Step and play frames</h2></div>
+        <p>Step frames or play/pause. The glowing cell is the frame SubImage is cutting right now.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Sprite Walk (Frame by Frame)" src="../../../../play/vfx-walk/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / FRAMES</p>
+        <h2>How does a still<br>image walk?</h2>
+        <p class="lesson-lead">It is a flipbook. Swap slightly different poses at a steady interval. SubImage is a crop window into the sheet; slide it right and the next frame shows. Walk faster, flip faster.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Sheet</h3>
+          <p>One image with frames in a row.</p>
+          <code>sheet</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>SubImage</h3>
+          <p>Crop out just the current frame.</p>
+          <code>SubImage(rect)</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Timer</h3>
+          <p>Advance frames at an interval.</p>
+          <code>tick / hold</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="sheet" aria-labelledby="lab-title-vfx-walk">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / SUBIMAGE</p>
+          <h3 id="lab-title-vfx-walk">Step and play frames</h3>
+          <p>Step frames or play/pause. The glowing cell is the frame SubImage is cutting right now.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>Step</button><button type="button" class="lab-button" data-lab-play>Play / Pause</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" data-lab-board style="display:grid;place-items:center"><div class="lab-frames"><span data-lab-cell>0</span><span data-lab-cell>1</span><span data-lab-cell>2</span><span data-lab-cell>3</span></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>frame</span><strong data-lab-frame>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>The walk cycle</h3>
+          <p>Advance the frame index with a timer and cut that window with SubImage.</p>
+        </div>
+        <pre><code>// One 96×96 cell from the Ebi Tenjiroh atlas.
+const fw, fh = 96, 96
+i := (tick / hold) % framesInRow      // which column (frame)
+x, y := i*fw, row*fh                  // row = action + facing
+rect := image.Rect(x, y, x+fw, y+fh)
+frame := atlas.SubImage(rect).(*ebiten.Image)
+screen.DrawImage(frame, op)</code></pre>
+      </div>
+
+      <div class="atlas-download">
+        <div class="atlas-copy">
+          <p class="eyebrow">Free asset / CC0</p>
+          <h3>Download the Ebi Tenjiroh atlas</h3>
+          <p>The one-sheet atlas of Ebi Tenjiroh (海老・天次郎), the hero you are walking in this lab. It packs walk, run, attack, and hurt in three facings—down (front), up (back), and side—at 96×96px per frame. Left-facing = flip the side frames. It is CC0, so use it freely in your own game.</p>
+          <p class="atlas-actions">
+            <a class="atlas-dl" href="../../../../assets/ebi-boy-atlas.png" download>Save PNG ↓</a>
+            <a href="../../../../assets/ebi-boy-atlas.json" download>Frame map (JSON) ↓</a>
+            <a href="../../../../assets/ebi-boy-atlas-LICENSE.txt">License</a>
+          </p>
+          <p class="atlas-note">Rows = action × facing, columns = frames. The JSON has each frame rect (x,y,w,h) and a suggested fps.</p>
+        </div>
+        <img class="atlas-preview" src="../../../../assets/ebi-boy-atlas.png" alt="Ebi Tenjiroh sprite atlas" loading="lazy" width="192">
+      </div>
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY A SHEET?</p>
+          <h3>Batched and fast</h3>
+          <p>One image loads and switches more cheaply.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY A TIMER?</p>
+          <h3>Sync to speed</h3>
+          <p>Flip faster when moving faster so the feet don't slide.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>Add facing</h3>
+          <p>Flip horizontally (ScaleX=-1) to walk in the travel direction.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-additive/">← STEP 05<strong>Additive Blending Glow</strong></a>
+      <a href="../vfx-particles/">STEP 07 →<strong>Scatter Particles</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-walk/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

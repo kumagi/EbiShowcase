@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Normal blending hides the back with the front. Additive (BlendLighter) adds color, so overlapping light gets brighter and the middle glows w">
+  <title>Additive Blending Glow | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Lab home</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/visual-effects/vfx-additive/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>STEP 05 / 08</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Additive Blending Glow</h1>
+      <p>Normal blending hides the back with the front. Additive (BlendLighter) adds color, so overlapping light gets brighter and the middle glows white. Fire and magic begin here.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>ebiten.BlendLighter</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Toggle the blend mode</h2></div>
+        <p>Overlap two lights and switch between normal and additive. With additive, only the overlap flares bright.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Additive Blending Glow" src="../../../../play/vfx-additive/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / ADDITIVE</p>
+        <h2>Why is stacked<br>light white?</h2>
+        <p class="lesson-lead">Just like real light, it adds. Red plus green is yellow; add blue and it is white. Set op.Blend = ebiten.BlendLighter and Ebitengine adds colors on top of each other.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Normal</h3>
+          <p>The front hides the back.</p>
+          <code>BlendSourceOver</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Additive</h3>
+          <p>Add colors, get brighter.</p>
+          <code>BlendLighter</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Light orb</h3>
+          <p>Stack circles bright in the center.</p>
+          <code>glow ×N</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="blend" aria-labelledby="lab-title-vfx-additive">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / BLEND</p>
+          <h3 id="lab-title-vfx-additive">Toggle the blend mode</h3>
+          <p>Overlap two lights and switch between normal and additive. With additive, only the overlap flares bright.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-toggle>Toggle blend</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" data-lab-board data-blend="add"></div>
+          <div class="lab-values" aria-live="polite"><div><span>blend</span><strong data-lab-mode>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Stack light orbs</h3>
+          <p>Draw colored circles with BlendLighter and they glow like the core of a flame.</p>
+        </div>
+        <pre><code>op := &amp;ebiten.DrawImageOptions{}
+op.ColorScale.ScaleWithColor(lightColor)
+op.Blend = ebiten.BlendLighter // 光を足し算する
+screen.DrawImage(glow, op)</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY ADD?</p>
+          <h3>Brightness piles up</h3>
+          <p>Overlaps drift toward white, reading as raw energy.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY DARK BG?</p>
+          <h3>Pops on dark</h3>
+          <p>Additive shines most on dark. Perfect for night skies and space.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>Go neon</h3>
+          <p>Layer thin additive lines to make a glowing outline.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-alpha/">← STEP 04<strong>Alpha, Order & Afterimage</strong></a>
+      <a href="../vfx-walk/">STEP 06 →<strong>Sprite Walk (Frame by Frame)</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-additive/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

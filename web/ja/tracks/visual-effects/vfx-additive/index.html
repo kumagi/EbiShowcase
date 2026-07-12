@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="ふつうの合成は「手前が奥を隠す」。加算合成 BlendLighter は「色を足す」。だから光が重なるほど明るくなり、真ん中は白く輝きます。炎も魔法もここから。">
+  <title>加算合成で光らせる | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">工房トップ</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/visual-effects/vfx-additive/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← ビジュアルエフェクト工房</a><span>STEP 05 / 08</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>加算合成で光らせる</h1>
+      <p>ふつうの合成は「手前が奥を隠す」。加算合成 BlendLighter は「色を足す」。だから光が重なるほど明るくなり、真ん中は白く輝きます。炎も魔法もここから。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>ebiten.BlendLighter</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>合成モードを切り替えよう</h2></div>
+        <p>2つの光を重ね、通常合成と加算合成を切り替えます。加算にすると、重なった所だけ明るく輝きます。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="加算合成で光らせる" src="../../../../play/vfx-additive/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / ADDITIVE</p>
+        <h2>なぜ光は<br>重なると白い？</h2>
+        <p class="lesson-lead">現実の光と同じで、光は足し算です。赤い光と緑の光が重なれば黄色、さらに青が乗れば白。op.Blend = ebiten.BlendLighter にすると、Ebitengine が色を上に足していきます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>通常合成</h3>
+          <p>手前の絵が奥を隠します。</p>
+          <code>BlendSourceOver</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>加算合成</h3>
+          <p>色を足して明るくします。</p>
+          <code>BlendLighter</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>光の玉</h3>
+          <p>中心が濃い丸を重ねます。</p>
+          <code>glow ×N</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="blend" aria-labelledby="lab-title-vfx-additive">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / BLEND</p>
+          <h3 id="lab-title-vfx-additive">合成モードを切り替えよう</h3>
+          <p>2つの光を重ね、通常合成と加算合成を切り替えます。加算にすると、重なった所だけ明るく輝きます。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-toggle>合成を切替</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" data-lab-board data-blend="add"></div>
+          <div class="lab-values" aria-live="polite"><div><span>合成</span><strong data-lab-mode>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>光の玉を重ねる</h3>
+          <p>色を付けた丸を BlendLighter で何枚も描くと、炎の芯のように輝きます。</p>
+        </div>
+        <pre><code>op := &amp;ebiten.DrawImageOptions{}
+op.ColorScale.ScaleWithColor(lightColor)
+op.Blend = ebiten.BlendLighter // 光を足し算する
+screen.DrawImage(glow, op)</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY ADD?</p>
+          <h3>明るさが積み上がる</h3>
+          <p>重なるほど白へ近づき、エネルギーの塊に見えます。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY DARK BG?</p>
+          <h3>暗い背景で映える</h3>
+          <p>加算は暗い所ほど目立ちます。夜空や宇宙と相性抜群。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>ネオンにする</h3>
+          <p>細い線を加算で重ね描きして、光る輪郭を作ろう。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-alpha/">← STEP 04<strong>透明と重ね順・残像</strong></a>
+      <a href="../vfx-walk/">STEP 06 →<strong>パラパラ歩き（コマ送り）</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-additive/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

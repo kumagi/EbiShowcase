@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="アルファ(不透明度)を下げると、後ろが透けます。過去の位置に薄いコピーを重ねれば、それだけで速さを感じる残像(モーションブラー)になります。">
+  <title>透明と重ね順・残像 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">工房トップ</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/visual-effects/vfx-alpha/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← ビジュアルエフェクト工房</a><span>STEP 04 / 08</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>透明と重ね順・残像</h1>
+      <p>アルファ(不透明度)を下げると、後ろが透けます。過去の位置に薄いコピーを重ねれば、それだけで速さを感じる残像(モーションブラー)になります。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>ScaleAlpha</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>濃さと残像の数を変えよう</h2></div>
+        <p>不透明度と残像の枚数をボタンで変えます。薄いコピーが増えるほど、動きの尾が長く見えます。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="透明と重ね順・残像" src="../../../../play/vfx-alpha/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / ALPHA</p>
+        <h2>残像って<br>どうやって出す？</h2>
+        <p class="lesson-lead">難しい計算は要りません。少し前の位置を覚えておき、古いものほど薄く（小さいアルファで）重ねて描くだけ。手前ほど濃く、後ろほど透明。重ねる順番が“流れ”を作ります。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>履歴</h3>
+          <p>少し前の位置を覚えます。</p>
+          <code>trail []vec</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>薄める</h3>
+          <p>古いほど小さいアルファに。</p>
+          <code>ScaleAlpha(i/len)</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>重ねる</h3>
+          <p>古い順に描いて流れを作ります。</p>
+          <code>DrawImage ×N</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="opacity" aria-labelledby="lab-title-vfx-alpha">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / ALPHA</p>
+          <h3 id="lab-title-vfx-alpha">濃さと残像の数を変えよう</h3>
+          <p>不透明度と残像の枚数をボタンで変えます。薄いコピーが増えるほど、動きの尾が長く見えます。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-aup>濃く</button><button type="button" class="lab-button" data-lab-adown>薄く</button><button type="button" class="lab-button" data-lab-tup>残像 +</button><button type="button" class="lab-button" data-lab-tdown>残像 −</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" data-lab-board></div>
+          <div class="lab-values" aria-live="polite"><div><span>不透明度</span><strong data-lab-alpha>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>残像トレイル</h3>
+          <p>位置の履歴をループで描き、古いものほどアルファを下げるだけです。</p>
+        </div>
+        <pre><code>for i, p := range trail {
+    op := &amp;ebiten.DrawImageOptions{}
+    op.GeoM.Translate(p.x, p.y)
+    a := float32(i+1) / float32(len(trail))
+    op.ColorScale.ScaleAlpha(a) // 古いほど薄い
+    screen.DrawImage(sprite, op)
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY ALPHA?</p>
+          <h3>重なりで濃くなる</h3>
+          <p>半透明を重ねると、通った所ほど色が濃く残ります。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY ORDER?</p>
+          <h3>手前と奥</h3>
+          <p>後に描いた絵が前に出ます。順番が見え方を決めます。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>フェード演出</h3>
+          <p>アルファを1→0にして、やられた敵をすっと消そう。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-tint/">← STEP 03<strong>色を変える・色を抜く</strong></a>
+      <a href="../vfx-additive/">STEP 05 →<strong>加算合成で光らせる</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-alpha/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

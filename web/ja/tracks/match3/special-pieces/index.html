@@ -1,4 +1,52 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>特殊ピース工房 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/match3/special-pieces/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 3マッチパズル</a><span>STEP 05 / 06</span></div><section class="overview-hero"><p class="eyebrow">キャンディクラッシュ型ゲームを作る</p><h1>特殊ピース工房</h1><p>4個、5個、L字の並びから、行消しや範囲消しの特殊ピースを作ります。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>形の判定と範囲効果</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>盤面や物理の変化を、<br>1手ずつ追いかける。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで予想する</h3><p>次に何が起きるか考えながら、完成したルールを体験します。</p></article><article><b>02</b><h3>途中の状態を見る</h3><p>判定前、処理中、処理後のデータを表示し、変化の順番を確認します。</p></article><article><b>03</b><h3>Ebitengineで再現する</h3><p>Updateでルールを進め、Drawで盤面とフィードバックを描きます。</p></article></div></section><nav class="lesson-pager"><a href="../cascade/">← STEP 04<strong>連鎖リアクション</strong></a><a href="../ebi-match/">STEP 06 →<strong>Ebi Match</strong></a></nav>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>特殊ピース工房 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+<header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/match3/special-pieces/">EN</a></nav></header>
+<main class="overview-main">
+  <div class="lesson-breadcrumb"><a href="../">← 3マッチパズル</a><span>STEP 05 / 06</span></div>
+  <section class="overview-hero">
+    <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+    <h1>特殊ピース工房</h1>
+    <p>4個、5個、L字の形を見つけ、それぞれ違う範囲を消す特殊ピースへ変身させます。</p>
+    <div class="overview-concept"><small>このステップで学ぶこと</small><strong>形の判定と範囲効果</strong></div>
+  </section>
+  <section class="play lesson-play">
+    <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3種類の特殊ピースを作って発動しよう。</h2></div><p>上の形をタップするか1・2・3キーで選びます。下のボタンまたはSpaceで「作る→発動→次へ」。全部にOKが付けばクリアです。</p></div>
+    <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="特殊ピース工房" src="../../../../play/special-pieces/" allow="autoplay; fullscreen"></iframe></div></div>
+  </section>
+  <section class="physics" id="learn">
+    <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / PATTERN TO EFFECT</p><h2>同じ色の「数」と「曲がり方」を、技の設計図にする。</h2><p class="lesson-lead">ふつうの3個並びより難しい形ができたら、ごほうびを作れます。まず盤面を調べて形の種類を決め、次に<strong>消す場所の集合</strong>を作る。この2段階に分けると、特殊ピースを増やしても整理できます。</p></div>
+    <div class="concept-row">
+      <article><span class="concept-number">1</span><h3>縦と横の長さを数える</h3><p>あるマスから同じ色が左右にいくつ、上下にいくつ続くかを数えます。5個なら色消し、4個なら一列消しの材料です。</p><code>if horizontal &gt;= 5 { kind = ColorWave }</code></article>
+      <article><span class="concept-number">2</span><h3>交差を先に調べる</h3><p>横も縦も3個以上ならL字やT字の曲がった形です。4個並びより先に判定しないと、曲がりをただの直線とまちがえます。</p><code>if horizontal &gt;= 3 &amp;&amp; vertical &gt;= 3</code></article>
+      <article><span class="concept-number">3</span><h3>効果範囲を集合にする</h3><p>一列、同じ色全部、中心の3×3など、消すマスをmapへ追加します。同じマスが重なっても一度だけ数えられます。</p><code>affected[point{x, y}] = true</code></article>
+    </div>
+    <div class="motion-lab" data-lab="entities">
+      <div class="lab-copy"><p class="eyebrow">TRY IT / EFFECT SET</p><h3>効果に入るマスを集めよう</h3><p>「マスを追加」で爆発の候補を作り、「1マス処理」で順番に消します。重なる効果も、最後は処理するマスの集合になります。</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>マスを追加</button><button class="lab-button" data-lab-step>1マス処理</button><button class="lab-button lab-button-quiet" data-lab-reset>空にする</button></div></div>
+      <div class="lab-visual"><div class="lab-values"><div><span>残りのマス</span><strong data-lab-count>0</strong></div><div><span>処理する順番</span><strong data-lab-list>—</strong></div></div></div>
+    </div>
+    <div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>判定と効果を別の関数にする</h3><p><code>detectSpecial</code>は「何ができたか」を返し、<code>activate</code>は種類を見て「どこへ届くか」を決めます。一つの長いif文にしないのが大切です。</p></div><pre><code>kind, center, ok := detectSpecial(board)
+if ok {
+    special.kind = kind
+    special.pos = center
+}
+
+for p := range effectCells(special) {
+    board[p.y][p.x] = Empty
+}</code></pre></div>
+    <div class="why-grid">
+      <article><p class="eyebrow">WHY ORDER?</p><h3>特別な形から判定</h3><p>L字の一部には3個の直線もあります。いちばん条件が多い形から調べると、正しいごほうびを選べます。</p></article>
+      <article><p class="eyebrow">WHY A SET?</p><h3>重なりを安全にする</h3><p>行消しと爆弾が同じマスへ届いても、mapなら二重に得点を足したり二度消したりしません。</p></article>
+      <article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>特殊どうしを連鎖</h3><p>効果範囲に別の特殊ピースがあったら、新しい効果を待ち行列へ追加してみよう。</p></article>
+    </div>
+  </section>
+  <nav class="lesson-pager"><a href="../cascade/">← STEP 04<strong>連鎖リアクション</strong></a><a href="../ebi-match/">STEP 06 →<strong>Ebi Match</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -28,6 +76,7 @@
 
 
 
-
-
-</main></body></html>
+</main>
+<script src="../../../../learn.js"></script>
+</body>
+</html>

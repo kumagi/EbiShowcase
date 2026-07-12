@@ -1,4 +1,41 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Special Piece Workshop | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/match3/special-pieces/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Match-three Puzzle</a><span>STEP 05 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Candy Crush-style game</p><h1>Special Piece Workshop</h1><p>Create row-clears and area effects from runs of four, five, and L shapes.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Pattern detection and area effects</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>Follow every change,<br>one move at a time.</h2><div class="overview-steps"><article><b>01</b><h3>Play and predict</h3><p>Experience the finished rule while predicting what happens next.</p></article><article><b>02</b><h3>Inspect each state</h3><p>View data before, during, and after resolution.</p></article><article><b>03</b><h3>Rebuild in Ebitengine</h3><p>Advance rules in Update and draw the board and feedback in Draw.</p></article></div></section><nav class="lesson-pager"><a href="../cascade/">← STEP 04<strong>Cascade Reactions</strong></a><a href="../ebi-match/">STEP 06 →<strong>Ebi Match</strong></a></nav>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Special Piece Workshop | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+<header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/match3/special-pieces/">日本語</a></nav></header>
+<main class="overview-main">
+  <div class="lesson-breadcrumb"><a href="../">← Match-three Puzzle</a><span>STEP 05 / 06</span></div>
+  <section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Special Piece Workshop</h1><p>Find lines of four, lines of five, and L shapes, then transform each into a special piece with a different reach.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Pattern detection and area effects</strong></div></section>
+  <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Forge and activate all three special pieces.</h2></div><p>Tap a shape above or press 1, 2, or 3. Use the bottom button or Space to forge, activate, and continue. Earn OK on all three to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Special Piece Workshop" src="../../../../play/special-pieces/" allow="autoplay; fullscreen"></iframe></div></div></section>
+  <section class="physics" id="learn">
+    <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / PATTERN TO EFFECT</p><h2>Turn a color's count and shape into a move blueprint.</h2><p class="lesson-lead">A shape harder than an ordinary match of three can earn a reward. First inspect the board and name the pattern. Then build <strong>a set of affected cells</strong>. Keeping those jobs separate makes it easy to add more special pieces later.</p></div>
+    <div class="concept-row">
+      <article><span class="concept-number">1</span><h3>Count horizontally and vertically</h3><p>From one cell, count matching colors in both directions. Five can make a color wave, while four can make a row rocket.</p><code>if horizontal &gt;= 5 { kind = ColorWave }</code></article>
+      <article><span class="concept-number">2</span><h3>Check intersections first</h3><p>If both directions reach three, the pieces form a bent L or T. Test this before a line of four or you may mistake the bend for a plain line.</p><code>if horizontal &gt;= 3 &amp;&amp; vertical &gt;= 3</code></article>
+      <article><span class="concept-number">3</span><h3>Collect an effect set</h3><p>Add a whole row, one color, or a 3-by-3 area to a map. A cell reached twice still appears only once.</p><code>affected[point{x, y}] = true</code></article>
+    </div>
+    <div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / EFFECT SET</p><h3>Collect cells touched by an effect</h3><p>Add candidate cells, then process them one at a time. Even overlapping effects become one set of cells to resolve.</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>Add cell</button><button class="lab-button" data-lab-step>Process one</button><button class="lab-button lab-button-quiet" data-lab-reset>Empty set</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Cells left</span><strong data-lab-count>0</strong></div><div><span>Processing order</span><strong data-lab-list>—</strong></div></div></div></div>
+    <div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Separate detection from effects</h3><p><code>detectSpecial</code> says what was made. <code>activate</code> reads that kind and decides where it reaches. Avoid hiding both jobs in one long conditional.</p></div><pre><code>kind, center, ok := detectSpecial(board)
+if ok {
+    special.kind = kind
+    special.pos = center
+}
+
+for p := range effectCells(special) {
+    board[p.y][p.x] = Empty
+}</code></pre></div>
+    <div class="why-grid">
+      <article><p class="eyebrow">WHY ORDER?</p><h3>Test special shapes first</h3><p>An L contains a short straight line. Checking the shape with more conditions first awards the correct reward.</p></article>
+      <article><p class="eyebrow">WHY A SET?</p><h3>Make overlaps safe</h3><p>If a rocket and bomb both reach one cell, a map prevents clearing or scoring that cell twice.</p></article>
+      <article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Chain special pieces</h3><p>When an effect reaches another special piece, add its effect to a waiting queue.</p></article>
+    </div>
+  </section>
+  <nav class="lesson-pager"><a href="../cascade/">← STEP 04<strong>Cascade Reactions</strong></a><a href="../ebi-match/">STEP 06 →<strong>Ebi Match</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -28,6 +65,7 @@
 
 
 
-
-
-</main></body></html>
+</main>
+<script src="../../../../learn.js"></script>
+</body>
+</html>
