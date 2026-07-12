@@ -11,7 +11,7 @@
     <meta property="og:title" content="LEVEL 11 — Dungeon | Ebi Showcase">
     <meta property="og:description" content="Learn enemy AI and state transitions in Go and Ebitengine: patrol versus chase modes switched by distance to the player.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/games/dungeon/">
-    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--dungeon.png">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--dungeon.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Dungeon">
@@ -20,7 +20,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="LEVEL 11 — Dungeon | Ebi Showcase">
     <meta name="twitter:description" content="Learn enemy AI and state transitions in Go and Ebitengine: patrol versus chase modes switched by distance to the player.">
-    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--dungeon.png">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--dungeon.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Dungeon">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/games/dungeon/">
@@ -360,6 +360,9 @@ func (g *game) Update() error {
 				e.timer = 100
 			}
 		} else {
+			if dist &lt; 1 {
+				dist = 1 // 重なったときの 0 割り（NaN）を防ぐ
+			}
 			e.vx = (playerCX - e.x) / dist * 1.35
 			e.vy = (playerCY - e.y) / dist * 1.35
 		}
@@ -487,7 +490,7 @@ func main() {
           <input type="hidden" name="entry.765794446" value="/en/games/dungeon/">
           <label class="feedback-field">
             <span class="sr-only">Feedback</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…" aria-label="Feedback">
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
             <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
@@ -498,6 +501,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

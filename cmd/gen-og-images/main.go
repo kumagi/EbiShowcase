@@ -52,16 +52,33 @@ func loadFaceFile(path string, size float64) (font.Face, error) {
 	if err != nil {
 		return nil, err
 	}
-	// TTC collections: try collection index 0 via sfnt if needed.
 	f, err := opentype.Parse(raw)
 	if err != nil {
-		return nil, err
+		collection, collectionErr := opentype.ParseCollection(raw)
+		if collectionErr != nil {
+			return nil, err
+		}
+		f, err = collection.Font(0)
+		if err != nil {
+			return nil, err
+		}
 	}
 	return opentype.NewFace(f, &opentype.FaceOptions{Size: size, DPI: 72, Hinting: font.HintingFull})
 }
 
+func supportsJapanese(face font.Face) bool {
+	for _, r := range "日本語海老天次郎" {
+		if _, ok := face.GlyphAdvance(r); !ok {
+			return false
+		}
+	}
+	return true
+}
+
 func trySystemFaces(size float64) font.Face {
 	candidates := []string{
+		"/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc",
+		"/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc",
 		"/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
 		"/Library/Fonts/Arial Unicode.ttf",
 		"/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc",
@@ -69,7 +86,7 @@ func trySystemFaces(size float64) font.Face {
 		"/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
 	}
 	for _, p := range candidates {
-		if face, err := loadFaceFile(p, size); err == nil {
+		if face, err := loadFaceFile(p, size); err == nil && supportsJapanese(face) {
 			return face
 		}
 	}
@@ -350,7 +367,14 @@ func main() {
 	regular := mustFace(goregular.TTF, 28)
 	small := mustFace(gobold.TTF, 22)
 	canCJK := false
-	if sys := trySystemFaces(54); sys != nil {
+	bundledFont := filepath.Join(root, "internal/ogfont/NotoSansJP.ttf")
+	if bundledBold, err := loadFaceFile(bundledFont, 54); err == nil && supportsJapanese(bundledBold) {
+		bold = bundledBold
+		regular, _ = loadFaceFile(bundledFont, 28)
+		small, _ = loadFaceFile(bundledFont, 22)
+		canCJK = true
+		fmt.Println("using bundled Noto Sans JP for OG text")
+	} else if sys := trySystemFaces(54); sys != nil {
 		bold = sys
 		if sys2 := trySystemFaces(28); sys2 != nil {
 			regular = sys2

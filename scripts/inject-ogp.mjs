@@ -13,6 +13,9 @@ import { SITE_ORIGIN, absoluteURL } from "./site-origin.mjs";
 
 const root = new URL("..", import.meta.url).pathname;
 const webRoot = join(root, "web");
+// Bump when the rendered card design/font changes so social crawlers do not
+// keep showing a cached image at the otherwise stable per-page URL.
+const OGP_IMAGE_VERSION = "20260713-font1";
 
 function walk(dir, files = []) {
   for (const name of readdirSync(dir)) {
@@ -184,7 +187,7 @@ for (const file of files) {
   const pageURL = absoluteURL(pagePath ? `${pagePath}/` : "");
   // Root language gate uses trailing path without forcing index
   const imagePath = `assets/og/${key}.png`;
-  const imageURL = absoluteURL(imagePath);
+  const imageURL = `${absoluteURL(imagePath)}?v=${OGP_IMAGE_VERSION}`;
 
   const block = buildOgBlock({
     title: info.title,
