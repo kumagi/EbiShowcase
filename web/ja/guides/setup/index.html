@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。">
+  <title>はじめての環境づくり — 空の窓を開くまで | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="../../"><span>EBI</span> SHOWCASE</a>
+  <nav>
+    <a href="#install-go">GO</a>
+    <a href="#run">RUN</a>
+    <a class="lang" href="../../../en/guides/setup/" lang="en" data-language="en">EN</a>
+  </nav>
+</header>
+<main>
+  <div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>SPECIAL GUIDE</span></div>
+
+  <section class="data-hero setup-hero">
+    <p class="eyebrow">START HERE / ENVIRONMENT</p>
+    <h1>まっさらなパソコンから、<br><em>空の窓</em>を開くまで。</h1>
+    <p>このサイトのレッスンはブラウザでも遊べます。でも自分の PC でコードを動かしたいときは、まず Go と Ebitengine の準備が必要です。Windows と Mac、どちらの手順も書きます。最後に「何もしない」暗い青い窓が開けば成功です。</p>
+  </section>
+
+  <section class="setup-goals">
+    <div class="guide-heading">
+      <p class="eyebrow">ゴール</p>
+      <h2>このページが終わると、できること</h2>
+    </div>
+    <div class="setup-goal-grid">
+      <article><b>01</b><h3>ターミナル（黒い文字の画面）を開ける</h3><p>命令を打ち込む場所です</p></article><article><b>02</b><h3>go version が数字を返す</h3><p>Go が入った証拠です</p></article><article><b>03</b><h3>空の Ebitengine 窓が開く</h3><p>ゲームの土台が動いた証拠です</p></article>
+    </div>
+    <nav class="setup-toc" aria-label="toc">
+      <p class="eyebrow">もくじ</p>
+      <ol><li><a href="#terminal">0. ターミナルを開く</a></li><li><a href="#install-go">1. Go を入れる</a></li><li><a href="#compiler">2. Mac だけ：C コンパイラ</a></li><li><a href="#check">3. 動作確認</a></li><li><a href="#project">4. フォルダと go.mod</a></li><li><a href="#code">5. main.go を書く</a></li><li><a href="#run">6. 実行する</a></li><li><a href="#troubleshoot">うまくいかないとき</a></li></ol>
+    </nav>
+  </section>
+
+  <section class="setup-step" id="terminal">
+    <p class="setup-n">STEP 00</p>
+    <h2>命令を打ち込む場所を開く</h2>
+    <p class="setup-lead">ブラウザではなく、パソコンに命令を出す画面を使います。名前は OS で違います。</p>
+    <div class="setup-os-grid">
+      <article class="setup-os"><h3>Windows</h3><ol class="setup-ol"><li>キーボードの Windows キーを押す</li><li>「powershell」と入力する</li><li>「Windows PowerShell」または「ターミナル」を開く</li></ol></article>
+      <article class="setup-os"><h3>macOS</h3><ol class="setup-ol"><li>Command + Space キーを同時に押す</li><li>「ターミナル」と入力する</li><li>「ターミナル」アプリを開く</li></ol></article>
+    </div>
+    <p class="setup-tip">白い画面に文字が点滅していれば OK。これからここにコマンドをコピーして貼り付けます。</p>
+  </section>
+
+  <section class="setup-step" id="install-go">
+    <p class="setup-n">STEP 01</p>
+    <h2>Go をインストールする</h2>
+    <p class="setup-lead">Ebitengine は Go で書かれたゲームエンジンです。先に Go 本体が必要です。いまの公式要件は Go 1.22 以降（このリポジトリは 1.24 向け）。</p>
+    <div class="setup-os-grid">
+      <article class="setup-os"><h3>Windows</h3><ol class="setup-ol"><li>ブラウザで <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a> を開く</li><li>「Microsoft Windows」の <strong>.msi</strong> を選ぶ（だいたい一番上の安定版）</li><li>ダウンロードしたファイルを開き、画面の指示どおり「次へ」で進む</li><li>終わったら PowerShell を<strong>いったん閉じて、もう一度開き直す</strong>（パスを読み直すため）</li></ol></article>
+      <article class="setup-os"><h3>macOS</h3><ol class="setup-ol"><li>ブラウザで <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a> を開く</li><li>自分の Mac に合うパッケージを選ぶ。<strong>Apple Silicon（M1/M2/M3…）</strong>なら ARM64、<strong>Intel</strong> なら x86-64 の <strong>.pkg</strong></li><li>ダウンロードした .pkg を開き、画面の指示どおりインストールする</li><li>終わったらターミナルを<strong>いったん閉じて、もう一度開き直す</strong></li></ol></article>
+    </div>
+    <p class="setup-note">学校や会社の PC では管理者パスワードが必要なことがあります。入れられないときは保護者や先生に相談してください。</p>
+  </section>
+
+  <section class="setup-step" id="compiler">
+    <p class="setup-n">STEP 02</p>
+    <h2>Mac だけ：C コンパイラを入れる</h2>
+    <p class="setup-lead">Ebitengine は中で C の部品も使います。Windows では追加の C コンパイラは不要です。Mac では Apple のコマンドラインツールが必要です。</p>
+    <p class="setup-skip">Windows の人はこのステップを飛ばして「3. 動作確認」へ進んでください。</p>
+    <pre class="setup-code"><code>xcode-select --install</code></pre>
+    <ol class="setup-ol"><li>ターミナルに上のコマンドを貼り付けて Enter</li><li>ダイアログが出たら「インストール」を選ぶ（数分〜十数分かかることがあります）</li><li>すでに入っている場合は「command line tools are already installed」のようなメッセージで大丈夫です</li></ol>
+  </section>
+
+  <section class="setup-step" id="check">
+    <p class="setup-n">STEP 03</p>
+    <h2>本当に入ったか確かめる</h2>
+    <p class="setup-lead">ターミナルに次を打ち、Enter を押します。</p>
+    <pre class="setup-code"><code>go version</code></pre>
+    <p class="setup-ok">例: go version go1.24.4 windows/amd64 のように、go1.22 以上の数字が出れば成功です。</p>
+    <p class="setup-fail">「コマンドが見つかりません」「go は認識されていません」と出たら：インストール後にターミナルを開き直したか確認し、それでもだめなら PC を再起動してからもう一度。</p>
+    <div class="setup-bonus">
+      <h3>さらに安心したい人へ（任意）</h3>
+      <p>公式の回転サンプルを一度走らせると、画面が出るところまでまとめて確認できます。初回はダウンロードに少し時間がかかります。</p>
+      <pre class="setup-code"><code>go run github.com/hajimehoshi/ebiten/v2/examples/rotate@latest</code></pre>
+      <p>ゴファーの絵がくるくる回る窓が開けば、環境はバッチリです。閉じたら次へ進みましょう。</p>
+    </div>
+  </section>
+
+  <section class="setup-step" id="project">
+    <p class="setup-n">STEP 04</p>
+    <h2>ゲーム用のフォルダを作る</h2>
+    <p class="setup-lead">デスクトップでもドキュメントでも構いません。ここでは例として home の直下に ebi-empty を作ります。</p>
+    <ol class="setup-cmd-list"><li><code>mkdir ebi-empty</code><span>フォルダを作る</span></li><li><code>cd ebi-empty</code><span>その中へ入る</span></li><li><code>go mod init example.com/ebi-empty</code><span>このフォルダを Go プロジェクトにする</span></li></ol>
+    <p class="setup-ok">go.mod という小さなファイルができていれば OK です。モジュール名は後から変えられます。</p>
+  </section>
+
+  <section class="setup-step" id="code">
+    <p class="setup-n">STEP 05</p>
+    <h2>main.go を書く（何もしない窓）</h2>
+    <p class="setup-lead">テキストエディタ（メモ帳、メモ帳++、VS Code、Cursor など）で、いまのフォルダに main.go という名前のファイルを作り、次をそのままコピーします。</p>
+    <pre class="setup-code"><code>package main
+
+import (
+	"image/color"
+	"log"
+
+	"github.com/hajimehoshi/ebiten/v2"
+)
+
+// Game は Ebitengine が求める3つのメソッドを持つ箱です。
+type Game struct{}
+
+// Update は数字を進める場所。今は何もしません。
+func (g *Game) Update() error {
+	return nil
+}
+
+// Draw は画面を塗る場所。いまは暗い青一色だけ。
+func (g *Game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{20, 28, 48, 255})
+}
+
+// Layout はゲーム内部の解像度（幅×高さ）を返します。
+func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
+	return 640, 480
+}
+
+func main() {
+	ebiten.SetWindowSize(640, 480)
+	ebiten.SetWindowTitle("Empty Window")
+	if err := ebiten.RunGame(&amp;Game{}); err != nil {
+		log.Fatal(err)
+	}
+}</code></pre>
+    <div class="setup-explain">
+      <div><code>Update</code><span>毎フレームの「数字」担当。今は空。</span></div><div><code>Draw</code><span>毎フレームの「絵」担当。色を一塗り。</span></div><div><code>Layout</code><span>ゲーム内部の幅と高さ。</span></div><div><code>RunGame</code><span>このくり返しを起動するスイッチ。</span></div>
+    </div>
+  </section>
+
+  <section class="setup-step" id="run">
+    <p class="setup-n">STEP 06</p>
+    <h2>依存関係を入れて、実行する</h2>
+    <p class="setup-lead">ターミナルのカレントディレクトリが ebi-empty のまま、次を順番に打ちます。</p>
+    <ol class="setup-cmd-list"><li><code>go mod tidy</code><span>Ebitengine などを自動で取ってくる</span></li><li><code>go run .</code><span>プログラムを動かす</span></li></ol>
+    <p class="setup-success">タイトルが Empty Window の、暗い青い長方形の窓が開けば成功です。閉じるボタンで終了できます。中身はまだ何も動きません——それでも「ゲームの土台」はもう動いています。</p>
+    <p class="setup-lead">次は、この土台の上に Update / Draw の意味を載せる LEVEL 01 へどうぞ。ブラウザ上のデモでも学べます。</p>
+    <a class="cta setup-cta" href="../../games/tap-target/">LEVEL 01 を開く →</a>
+  </section>
+
+  <section class="setup-step setup-trouble" id="troubleshoot">
+    <h2>うまくいかないとき</h2>
+    <div class="setup-trouble-list">
+      <article><h3>go: command not found / 認識されない</h3><p>インストール後にターミナルを開き直す。Windows はスタートメニューから Go が入っているかも確認。それでもだめなら再起動。</p></article><article><h3>xcrun: error: invalid active developer path…（Mac）</h3><p>xcode-select --install をもう一度実行する。</p></article><article><h3>go mod tidy や go run でネットエラー</h3><p>インターネット接続と、会社・学校のプロキシ設定を確認。自宅の回線で試すと通ることがあります。</p></article><article><h3>窓が一瞬で消える / パニック</h3><p>ターミナルに赤いエラー全文が出ています。その文を検索するか、このページ末尾のフィードバックへ貼ってください。</p></article><article><h3>WSL（Windows の Linux）を使っている</h3><p>公式どおり、実行時に GOOS=windows が必要になることがあります。まずは通常の PowerShell での手順を推奨します。</p></article>
+    </div>
+    <p class="setup-footer-note">手順の詳細は公式ドキュメント（Install / Hello, World!）にもあります。このページは「まっさらな PC 向け」に順序を並べ替えた導入です。 <a href="https://ebitengine.org/en/documents/install.html" rel="noreferrer">公式 Install ↗</a></p>
+  </section>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/guides/setup/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+</main>
+<footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+<script src="../../../learn.js"></script>
+<script>
+  document.querySelectorAll("[data-language]").forEach((a) =>
+    a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)),
+  );
+</script>
+</body>
+</html>
