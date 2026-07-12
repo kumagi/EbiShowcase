@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="ショーケース第2弾。タップすると霜が集まり結晶になり、一瞬の静止のあと粉砕します。「見た目」だけでなく「タイミング」が魔法の正体です。">
+  <title>かっこいい氷魔法を作ろう | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">工房トップ</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/visual-effects/vfx-magic-ice/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← ビジュアルエフェクト工房</a><span>STEP 10 / 13</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>かっこいい氷魔法を作ろう</h1>
+      <p>ショーケース第2弾。タップすると霜が集まり結晶になり、一瞬の静止のあと粉砕します。「見た目」だけでなく「タイミング」が魔法の正体です。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>形成→粉砕のタイミング</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>結晶を作って砕け</h2></div>
+        <p>CAST ICE（または Space）。霜が集まり、結晶が割れるまで待ってみよう。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 10</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="かっこいい氷魔法を作ろう" src="../../../../play/vfx-magic-ice/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / ICE</p>
+        <h2>氷は<br>二幕構成</h2>
+        <p class="lesson-lead">幕1（forming）: 周囲の霜を中心へ引き寄せ、氷PNGの核を大きくする。幕2（shatter）: 結晶を消し、氷スプライトを外へ飛ばし、加算のキラキラとリングのブルームを足す。phase と timer の状態機械が、同じ粒子エンジンに「物語」を載せます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>形成</h3>
+          <p>霜を中心へ lerp で引き寄せる。</p>
+          <code>x += (cx-x)*0.06</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>粉砕</h3>
+          <p>外向き速度＋重力で砕片を飛ばす。</p>
+          <code>Ice PNG + gravity</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>ブルーム</h3>
+          <p>割れた瞬間だけ光るリング。</p>
+          <code>Ring + Light PNG</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="magic-ice" aria-labelledby="lab-title-vfx-magic-ice">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / ICE SHARDS</p>
+          <h3 id="lab-title-vfx-magic-ice">結晶の飛び方</h3>
+          <p>バーストで氷スプライトが外へ飛び散ります。本編の「集まる→割れる」二幕はWASMデモで。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-burst>バースト！</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-spell-stage lab-magic-stage" data-lab-board data-magic="ice"><p class="lab-spell-hint">バーストで層を見てみよう</p></div>
+          <div class="lab-values" aria-live="polite"><div><span>粒</span><strong data-lab-count>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE SHOWCASE</p>
+          <h3>phase で二幕を切り替える</h3>
+          <p>forming のあと shatter へ。同じ Particle 型でも役割が変わります。</p>
+        </div>
+        <pre><code>// Act 1: pull frost inward
+f.x += (castX - f.x) * 0.06
+// Act 2: shatter shards outward
+spawn(IcePNG, vx: cos(a)*sp, grav: 0.12)
+spawn(Ring) // bloom on break</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY TWO ACTS?</p>
+          <h3>溜めが印象を作る</h3>
+          <p>いきなり砕くより、一度見せてから壊す方が「魔法っぽい」です。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY ICE PNG?</p>
+          <h3>形が属性を語る</h3>
+          <p>丸い火花では氷に見えません。尖ったテクスチャが属性の半分です。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>雷へ</h3>
+          <p>次は枝分かれする稲妻の線芸です。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-magic-fire/">← STEP 09<strong>かっこいい炎魔法を作ろう</strong></a>
+      <a href="../vfx-magic-thunder/">STEP 11 →<strong>かっこいい雷魔法を作ろう</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-magic-ice/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

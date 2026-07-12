@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Showcase finale. Particles spiral into a void. Fire and light push out; dark pulls in—flip direction to flip the element.">
+  <title>Make Cool Dark Magic | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Lab home</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/visual-effects/vfx-magic-dark/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>STEP 13 / 13</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Make Cool Dark Magic</h1>
+      <p>Showcase finale. Particles spiral into a void. Fire and light push out; dark pulls in—flip direction to flip the element.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Vortex & absorb</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Open a void vortex</h2></div>
+        <p>Tap CAST DARK (or Space). Watch particles wind into the core.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 13</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Make Cool Dark Magic" src="../../../../play/vfx-magic-dark/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / DARK</p>
+        <h2>Dark is<br>a force inward</h2>
+        <p class="lesson-lead">Place dark.png on a spiral, then each frame add centripetal + tangential force. Rim purple sparks with additive blend, plus a ring shockwave. Dark core uses normal blend; purple fringe uses additive—same texture, two jobs.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Spiral seed</h3>
+          <p>Polar coords for spawn points.</p>
+          <code>SpiralOffset(t, arms, r)</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Absorb</h3>
+          <p>Pull to center + swirl.</p>
+          <code>vx += dx*0.004</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Fringe glow</h3>
+          <p>Purple additive outline.</p>
+          <code>Spark + BlendLighter</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="magic-dark" aria-labelledby="lab-title-vfx-magic-dark">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / VOID</p>
+          <h3 id="lab-title-vfx-magic-dark">A dark swirl</h3>
+          <p>Burst to swirl dark sprites. Feel the absorb force in the WASM demo.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-burst>Burst!</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-spell-stage lab-magic-stage" data-lab-board data-magic="dark"><p class="lab-spell-hint">Burst to preview the layers</p></div>
+          <div class="lab-values" aria-live="polite"><div><span>sprites</span><strong data-lab-count>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE SHOWCASE</p>
+          <h3>Spiral + centripetal pull</h3>
+          <p>Seed on a spiral, then yank toward the center each frame.</p>
+        </div>
+        <pre><code>dx, dy := SpiralOffset(t, arms, 160, 4.5)
+// each frame: pull + swirl
+p.VX += (cx-p.X)*0.004 - (cy-p.Y)*0.0025
+p.VY += (cy-p.Y)*0.004 + (cx-p.X)*0.0025
+DrawImage(DarkPNG) // core normal, fringe additive</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY INWARD?</p>
+          <h3>Element is direction</h3>
+          <p>Same particles: outward reads as light/fire, inward as dark.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY PURPLE?</p>
+          <h3>Black alone collapses</h3>
+          <p>A saturated fringe keeps the silhouette readable.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>Your element</h3>
+          <p>Pick direction, color, and blend—invent your own spell.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-magic-light/">← STEP 12<strong>Make Cool Light Magic</strong></a>
+      <a href="../../platformer/">Genre tracks →<strong>Pick a game to build</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-magic-dark/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

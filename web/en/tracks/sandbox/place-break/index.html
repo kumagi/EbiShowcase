@@ -1,4 +1,55 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Place and Break | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/sandbox/place-break/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D Block Sandbox</a><span>STEP 01 / 07</span></div><section class="overview-hero"><p class="eyebrow">Build a world you can mine and create</p><h1>Place and Break</h1><p>Change the selected cell to place and break blocks.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Mutable tile maps</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>See the data change.<br>Compose the rule.</h2><div class="overview-steps"><article><b>01</b><h3>Discover by playing</h3><p>Find the relationship between input and result in the mini game.</p></article><article><b>02</b><h3>Inspect the data</h3><p>Overlay cells, states, and search candidates to expose each step.</p></article><article><b>03</b><h3>Connect to code</h3><p>Rebuild the rule with Ebitengine Update, Draw, and asset data.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../terrain-generation/">STEP 02 →<strong>Generate Terrain</strong></a></nav>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Place and Break | Ebi Showcase</title>
+<link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+<header class="nav">
+<a class="brand" href="../../../">
+<span>EBI</span> SHOWCASE</a>
+<nav>
+<a href="../">PATH</a>
+<a href="#learn">HOW IT WORKS</a>
+<a class="lang" href="../../../../ja/tracks/sandbox/place-break/">日本語</a>
+</nav>
+</header>
+<main class="overview-main">
+<div class="lesson-breadcrumb">
+<a href="../">← 2D Block Sandbox</a>
+<span>STEP 01 / 07</span>
+</div>
+<section class="overview-hero">
+<p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+<h1>Place and Break</h1>
+<p>Change the selected cell to place and break blocks.</p>
+<div class="overview-concept">
+<small>NEW CONCEPT</small>
+<strong>Mutable tile maps</strong>
+</div>
+</section>
+<p class="curriculum-bridge">This continues the shared foundation. If the game loop is new, first visit <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>. Here, input changes board data.</p>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Recover materials and finish the six-cell blueprint.</h2></div><p>Outlines mark the plan. Choose PLACE/BREAK and DIRT/STONE, then tap a bright in-range cell. On PC, use P/B, 1/2, and click.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Place and Break" src="../../../../play/place-break/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / MUTABLE TILE MAP</p><h2>Change a cell's number and the world changes shape.</h2><p class="lesson-lead">The board is a table of numbers called <strong>board[y][x]</strong>. Zero is air, one is dirt, and two is stone. Placing spends one item and writes its number; breaking writes zero and returns the material to inventory.</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>Turn screen into cell</h3><p>Subtract the board's top-left from the pointer, then divide by cell width. This gives integer column x and row y.</p><code>x = (pointerX - boardX) / cell</code></article><article><span class="concept-number">2</span><h3>Check reach and stock</h3><p>Place only within three steps of the builder and when at least one selected block remains. Invalid input changes no data.</p><code>if inReach(x,y) &amp;&amp; stock[kind] &gt; 0</code></article><article><span class="concept-number">3</span><h3>Pair place and break</h3><p>Placing moves material from inventory to board. Breaking moves it from board to inventory. Material does not appear from nowhere.</p><code>board[y][x] = kind; stock[kind]--</code></article></div>
+<div class="motion-lab" data-lab="tile" data-blocked="That cell is a wall"><div class="lab-copy"><p class="eyebrow">TRY IT / GRID POSITION</p><h3>Move one row or column at a time</h3><p>A cell uses integer x,y, not a loose continuous position. Rejecting a wall cell follows the same pattern as rejecting a place action.</p><div class="lab-controls"><button type="button" class="lab-button" data-lab-up>↑</button><button type="button" class="lab-button" data-lab-left>←</button><button type="button" class="lab-button" data-lab-right>→</button><button type="button" class="lab-button" data-lab-down>↓</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Cell x,y</span><strong data-lab-pos>1,1</strong></div><div><span>Facing</span><strong data-lab-face>S</strong></div><div><span>Result</span><strong data-lab-note>—</strong></div></div></div></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Pass every condition before placing</h3><p>Update the board and inventory together only when the cell is empty, in reach, and stocked.</p></div><pre><code>if board[y][x] == empty &amp;&amp;
+   inReach(x, y) &amp;&amp; stock[selected] &gt; 0 {
+    board[y][x] = selected
+    stock[selected]--
+}
+// break: return it to inventory
+stock[board[y][x]]++
+board[y][x] = empty</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY INVENTORY?</p><h3>Choices have a cost</h3><p>Because blocks are limited, you must break existing ones to collect materials.</p></article><article><p class="eyebrow">WHY RANGE?</p><h3>Do not edit everywhere</h3><p>Keeping edits near the builder connects position to world changes.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Add a third material</h3><p>Find every place that needs block number three for wood.</p></article></div></section>
+<nav class="lesson-pager">
+<span>
+</span>
+<a href="../terrain-generation/">STEP 02 →<strong>Generate Terrain</strong>
+</a>
+</nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -45,4 +96,9 @@
 
 
 
-</main></body></html>
+
+
+
+</main><script src="../../../../learn.js"></script>
+</body>
+</html>

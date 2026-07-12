@@ -1,4 +1,23 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Wall-bouncing Ball | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/slingshot/wall-bounce/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Slingshot Reflection Action</a><span>STEP 02 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Monster Strike-style game</p><h1>Wall-bouncing Ball</h1><p>Reflect velocity across wall normals while losing a little energy.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Normal reflection and restitution</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>Follow every change,<br>one move at a time.</h2><div class="overview-steps"><article><b>01</b><h3>Play and predict</h3><p>Experience the finished rule while predicting what happens next.</p></article><article><b>02</b><h3>Inspect each state</h3><p>View data before, during, and after resolution.</p></article><article><b>03</b><h3>Rebuild in Ebitengine</h3><p>Advance rules in Update and draw the board and feedback in Draw.</p></article></div></section><nav class="lesson-pager"><a href="../drag-launch/">← STEP 01<strong>Drag and Launch</strong></a><a href="../circle-battle/">STEP 03 →<strong>Circle Character Collisions</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Wall-bouncing Ball | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/slingshot/wall-bounce/">日本語</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← Slingshot Reflection Action</a><span>STEP 02 / 06</span></div>
+<section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Wall-bouncing Ball</h1><p>Reverse only the velocity aimed into a wall, then reach each pearl after the requested number of bounces.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Normal reflection and restitution</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Bounce the exact number of times and collect three pearls.</h2></div><p>Tap −5° or +5° to aim, then LAUNCH. On keyboard use Left/Right or A/D and Space. Hit after 1, 2, then 3 bounces before six misses.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Wall-bouncing Ball" src="../../../../play/wall-bounce/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / WALL NORMAL</p><h2>Reverse only the speed pointing into the wall.</h2><p class="lesson-lead">Velocity has a horizontal <code>vx</code> and vertical <code>vy</code>. A vertical wall changes only horizontal motion; a floor or ceiling changes only vertical motion. The arrow pointing straight out of a wall is its <strong>normal</strong>, and reflection flips the velocity along that normal.</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>Include the radius</h3><p>Waiting for the center to touch would sink half the circle into the wall. Contact begins when the left edge, center minus radius, crosses the wall.</p><code>if x-radius &lt; leftWall</code></article><article><span class="concept-number">2</span><h3>Reverse one component</h3><p>A side wall changes only the sign of <code>vx</code>. Keeping <code>vy</code> makes the outgoing angle match the incoming angle.</p><code>vx = -vx</code></article><article><span class="concept-number">3</span><h3>Lose a little energy</h3><p>Multiply the reflected speed by 0.92. Restitution 1 keeps all speed; a value near 0 gives most of it to the wall.</p><code>vx = -vx * restitution</code></article></div>
+<div class="motion-lab" data-lab="bounce" data-wall="wall" data-paddle="floor"><div class="lab-copy"><p class="eyebrow">TRY IT / VELOCITY COMPONENTS</p><h3>Watch which velocity changes</h3><p>Advance one frame at a time. At a side wall only vx reverses; at the floor only vy does.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>Advance one frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div></div><div class="lab-visual"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-ball style="position:absolute;border-radius:50%"></div></div><div class="lab-values"><div><span>vx</span><strong data-lab-vx>6.0</strong></div><div><span>vy</span><strong data-lab-vy>4.0</strong></div><div><span>Contact</span><strong data-lab-note>—</strong></div></div></div></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Clamp inside before reflecting</h3><p>A circle left inside the wall collides again next frame and flips repeatedly. Move it to the boundary first, then guarantee an inward velocity.</p></div><pre><code>if x-radius &lt; leftWall {
+    x = leftWall + radius
+    vx = math.Abs(vx) * restitution
+    bounces++
+}
+if y-radius &lt; topWall {
+    y = topWall + radius
+    vy = math.Abs(vy) * restitution
+    bounces++
+}</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY CLAMP?</p><h3>Leave nothing in the wall</h3><p>Returning to the boundary lets one collision count exactly once.</p></article><article><p class="eyebrow">WHY TWO PARTS?</p><h3>Preserve the angle</h3><p>Motion parallel to the wall stays unchanged, making a mirror-like path.</p></article><article class="challenge"><p class="eyebrow">TUNE IT</p><h3>Change restitution</h3><p>Try 0.5 and 1.0, then compare the distance traveled after bounce three.</p></article></div>
+</section><nav class="lesson-pager"><a href="../drag-launch/">← STEP 01<strong>Drag and Launch</strong></a><a href="../circle-battle/">STEP 03 →<strong>Circle Character Collisions</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -25,24 +44,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

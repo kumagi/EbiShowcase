@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Showcase #4. Rays shoot from the center while soft bloom rings expand. Dark backgrounds make additive light sing.">
+  <title>Make Cool Light Magic | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Lab home</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/visual-effects/vfx-magic-light/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>STEP 12 / 13</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Make Cool Light Magic</h1>
+      <p>Showcase #4. Rays shoot from the center while soft bloom rings expand. Dark backgrounds make additive light sing.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Radial flare & bloom</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Cast holy light</h2></div>
+        <p>Tap CAST LIGHT (or Space). Watch rays and bloom stack.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 12</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Make Cool Light Magic" src="../../../../play/vfx-magic-light/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / LIGHT</p>
+        <h2>Light moves<br>out from a core</h2>
+        <p class="lesson-lead">① Radial StrokeLine rays ② Stacked light.png flares for soft bloom ③ Expanding ring.png ④ Outward spark twinkles. Dark BG + BlendLighter sells a light source; gold–white tints feel sacred.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Radial rays</h3>
+          <p>Even angles, growing lines.</p>
+          <code>ang = i * 2π / n</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Bloom</h3>
+          <p>Stack translucent flares.</p>
+          <code>Light PNG × layers</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Twinkles</h3>
+          <p>Tiny outward sparks.</p>
+          <code>Spark + outward vel</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="magic-light" aria-labelledby="lab-title-vfx-magic-light">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / FLARE</p>
+          <h3 id="lab-title-vfx-magic-light">Watch the flare grow</h3>
+          <p>Burst for flare and sparks. Feel ray count in the WASM demo.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-burst>Burst!</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-spell-stage lab-magic-stage" data-lab-board data-magic="light"><p class="lab-spell-hint">Burst to preview the layers</p></div>
+          <div class="lab-values" aria-live="polite"><div><span>sprites</span><strong data-lab-count>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE SHOWCASE</p>
+          <h3>Rays + flare + ring</h3>
+          <p>Expand lines and textures from the same origin.</p>
+        </div>
+        <pre><code>for i := 0; i &lt; n; i++ {
+  ang := base + float64(i)*2*math.Pi/float64(n)
+  StrokeLine(cx,cy, cx+cos(ang)*len, cy+sin(ang)*len, ...)
+}
+DrawImage(LightPNG) // soft bloom layers
+DrawImage(RingPNG)  // expanding ring</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY DARK BG?</p>
+          <h3>Additive’s friend</h3>
+          <p>On a dark screen, bright additive reads as light.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY MANY LAYERS?</p>
+          <h3>Soft bleed</h3>
+          <p>Thin stacked flares beat one hard circle.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>Dark</h3>
+          <p>Finale: a vortex that pulls inward.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-magic-thunder/">← STEP 11<strong>Make Cool Thunder Magic</strong></a>
+      <a href="../vfx-magic-dark/">STEP 13 →<strong>Make Cool Dark Magic</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-magic-light/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

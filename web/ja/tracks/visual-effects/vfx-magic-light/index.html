@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="ショーケース第4弾。中心から光線が走り、柔らかい光の輪が広がります。暗い背景ほど加算合成が効きます。">
+  <title>かっこいい光魔法を作ろう | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">工房トップ</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/visual-effects/vfx-magic-light/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← ビジュアルエフェクト工房</a><span>STEP 12 / 13</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>かっこいい光魔法を作ろう</h1>
+      <p>ショーケース第4弾。中心から光線が走り、柔らかい光の輪が広がります。暗い背景ほど加算合成が効きます。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>放射フレアとブルーム</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>聖なる光を放て</h2></div>
+        <p>CAST LIGHT（または Space）。レイとブルームが重なる様子を見てみよう。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 12</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="かっこいい光魔法を作ろう" src="../../../../play/vfx-magic-light/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / LIGHT</p>
+        <h2>光は<br>中心から外へ</h2>
+        <p class="lesson-lead">①中心から放射する StrokeLine のレイ ②light.png のソフトフレアを複数枚重ねてブルーム風 ③ring.png の拡大輪 ④spark のキラキラ。暗い背景＋ BlendLighter で「光源」に見せるのがコツ。色は白〜金に寄せると神聖さが出ます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>放射レイ</h3>
+          <p>角度を等分して線を伸ばす。</p>
+          <code>ang = i * 2π / n</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>ブルーム</h3>
+          <p>半透明のフレアを重ねる。</p>
+          <code>Light PNG × layers</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>キラキラ</h3>
+          <p>外向きの小さな spark。</p>
+          <code>Spark + outward vel</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="magic-light" aria-labelledby="lab-title-vfx-magic-light">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / FLARE</p>
+          <h3 id="lab-title-vfx-magic-light">光の広がり</h3>
+          <p>バーストでフレアと粒が広がります。放射レイの本数はWASMデモで体感。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-burst>バースト！</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-spell-stage lab-magic-stage" data-lab-board data-magic="light"><p class="lab-spell-hint">バーストで層を見てみよう</p></div>
+          <div class="lab-values" aria-live="polite"><div><span>粒</span><strong data-lab-count>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE SHOWCASE</p>
+          <h3>レイ＋フレア＋リング</h3>
+          <p>線とテクスチャを同じ原点から同時に広げます。</p>
+        </div>
+        <pre><code>for i := 0; i &lt; n; i++ {
+  ang := base + float64(i)*2*math.Pi/float64(n)
+  StrokeLine(cx,cy, cx+cos(ang)*len, cy+sin(ang)*len, ...)
+}
+DrawImage(LightPNG) // soft bloom layers
+DrawImage(RingPNG)  // expanding ring</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY DARK BG?</p>
+          <h3>加算の味方</h3>
+          <p>暗い画面ほど、明るい加算が「光」に見えます。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY MANY LAYERS?</p>
+          <h3>ソフトなにじみ</h3>
+          <p>一枚の大きな円より、薄いフレアを重ねた方が自然です。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>闇へ</h3>
+          <p>最後は内側へ吸い込む渦です。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-magic-thunder/">← STEP 11<strong>かっこいい雷魔法を作ろう</strong></a>
+      <a href="../vfx-magic-dark/">STEP 13 →<strong>かっこいい闇魔法を作ろう</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-magic-light/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

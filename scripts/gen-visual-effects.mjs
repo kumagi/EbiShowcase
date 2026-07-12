@@ -24,18 +24,18 @@ const hub = {
   ja: {
     title: "ビジュアルエフェクト工房",
     eyebrow: "見た目の魔法をEbitengineで作る",
-    lead: "色・回転・拡大縮小・半透明・加算合成・アニメーション。ゲーム未満の小さなオモチャで、絵を「動かして光らせる」文法を手で確かめます。",
-    pathTitle: "描画の基本から<br>魔法まで。",
-    pathLead: "難しいことは一度にやりません。DrawImageOptions ひとつを起点に、色と合成と時間を1歩ずつ足して、最後は炎・水・雷にたどり着きます。",
+    lead: "色・回転・拡大縮小・半透明・加算合成・アニメーション。基本の文法を手で確かめたあと、炎・氷・雷・光・闇のかっこいい魔法で「ここまでできる」を体験します。",
+    pathTitle: "描画の基本から<br>本格魔法まで。",
+    pathLead: "まず DrawImageOptions から色・合成・時間を1歩ずつ。総まとめの炎・水・雷のあと、チャージ炎・結晶氷・枝分かれ雷・フレア光・渦闇のショーケースで表現を伸ばします。",
     breadcrumb: "← 全コース",
     course: "コース",
   },
   en: {
     title: "Visual Effects Lab",
     eyebrow: "Make on-screen magic with Ebitengine",
-    lead: "Color, rotation, scaling, transparency, additive light, and animation. Tiny toys—less than games—let you feel the grammar of making a picture move and glow.",
-    pathTitle: "From drawing basics<br>to spells.",
-    pathLead: "Nothing hard all at once. Start from one DrawImageOptions, add color, blending, and time one step at a time, and finish with fire, water, and lightning.",
+    lead: "Color, rotation, scaling, transparency, additive light, and animation. After the grammar toys, showcase fire, ice, lightning, light, and dark magic—how far Ebitengine can go.",
+    pathTitle: "From drawing basics<br>to full magic.",
+    pathLead: "Start from DrawImageOptions, add color, blending, and time. After the fire/water/lightning capstone, stretch into charged fire, crystal ice, branching thunder, flare light, and void dark showcases.",
     breadcrumb: "← ALL PATHS",
     course: "PATHS",
   },
@@ -551,13 +551,13 @@ for i := range ps { // Update
       whys: [
         { eyebrow: "WHY COMPOSE?", h: "部品の掛け合わせ", p: "少ない道具でも、混ぜ方の数だけ表現が増えます。" },
         { eyebrow: "WHY TENJIROH?", h: "主役が映える", p: "主人公が魔法を放つと、同じエフェクトも物語になります。" },
-        { eyebrow: "TRY NEXT", h: "自分の魔法", p: "色と向きと合成を選び、氷や光の魔法を発明しよう。" },
+        { eyebrow: "TRY NEXT", h: "本格魔法へ", p: "次のショーケースで、炎・氷・雷・光・闇のかっこいい魔法を順番に試そう。" },
       ],
     },
     en: {
       navConcept: "Fire, water, lightning",
       title: "Compose: Fire, Water, Lightning",
-      lead: "The finale. Combine particles, color, additive, transparency, and lines as Ebi Tenjiroh casts three spells. Almost no new commands—an effect is just how you mix the parts.",
+      lead: "The grammar finale. Combine particles, color, additive, transparency, and lines as Ebi Tenjiroh casts three spells. Almost no new commands—an effect is just how you mix the parts.",
       deepEyebrow: "DEEP DIVE / COMPOSE",
       deepH: "What is a spell<br>made of?",
       deepLead: "Fire = flame sprites rising with additive blending. Water = droplet sprites falling under gravity with alpha. Lightning = bolt sprites for a few frames + a flash + sparks. Same tools; change the texture, direction, color, blend, and lifetime for wildly different spells. (The on-screen character is original Ebi Tenjiroh; hit tests stay simple shapes.)",
@@ -579,7 +579,7 @@ for i := range ps { // Update
       whys: [
         { eyebrow: "WHY COMPOSE?", h: "Multiply the parts", p: "Few tools, but as many looks as ways to mix them." },
         { eyebrow: "WHY TENJIROH?", h: "The hero sells it", p: "When the hero casts, the same effect becomes a story." },
-        { eyebrow: "TRY NEXT", h: "Your own spell", p: "Pick color, direction, and blend to invent ice or light magic." },
+        { eyebrow: "TRY NEXT", h: "Showcase magic", p: "Next: cool fire, ice, thunder, light, and dark demos that push the same tools further." },
       ],
     },
     code: `// 炎: 加算 + 上向き + オレンジ
@@ -590,6 +590,372 @@ op.ColorScale.ScaleAlpha(0.7)
 p.vy += 0.22
 // 雷: 明るい線を数フレームだけ
 vector.StrokeLine(screen, ax, ay, bx, by, 5, white, false)`,
+  },
+  {
+    slug: "vfx-magic-fire",
+    step: "09",
+    stars: "★★★★★",
+    labKind: "magic-fire",
+    concept: { ja: "チャージ炎のレイヤー", en: "Charged fire layers" },
+    hubDesc: {
+      ja: "長押しで溜めて放つ。炎スプライト・火の粉・熱リング・画面フラッシュ。",
+      en: "Hold to charge, release to burst: flames, embers, heat ring, screen flash.",
+    },
+    ja: {
+      navConcept: "かっこいい炎",
+      title: "かっこいい炎魔法を作ろう",
+      lead: "ショーケース第1弾。ボタンを長押しして熱を溜め、離すと炎が噴き上がります。小学生向けの簡単さは捨てて、「層を重ねる」ことで迫力を出します。",
+      deepEyebrow: "DEEP DIVE / FIRE",
+      deepH: "炎は<br>何層ある？",
+      deepLead: "①炎PNGを加算で上昇 ②火の粉（spark）を扇状に ③リングPNGで衝撃波 ④画面全体のオレンジフラッシュ。長押し中は charge が0→1に増え、離した瞬間の power で粒の数と高さが変わります。同じ BlendLighter でも、寿命・重力・色のグラデを変えるだけで「焚き火」と「爆発」が分かれます。",
+      concepts: [
+        { h: "チャージ", p: "押し続けている間に数値を溜める。", code: "charge = min(1, charge+0.025)" },
+        { h: "炎レイヤー", p: "大きな炎＋小さな火の粉を同時に。", code: "Fire PNG + Spark PNG" },
+        { h: "熱リング", p: "拡大しながら薄くなる衝撃波。", code: "Ring + ScaleMulFrom" },
+      ],
+      lab: {
+        eyebrow: "TRY IT / FIRE LAYERS",
+        title: "炎の層を見てみよう",
+        p: "バーストすると、炎スプライトと火の粉が同時に上がります。ゲーム本編の「チャージ→解放」はWASMデモで体感してください。",
+      },
+      play: {
+        title: "炎を溜めて放て",
+        p: "CAST FIRE を長押しして離す（または Space）。溜めが長いほど炎が大きくなります。",
+      },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "離した瞬間にバースト", p: "charge を power にして、炎・火の粉・リングを一気に生成します。" },
+      whys: [
+        { eyebrow: "WHY CHARGE?", h: "操作が演出になる", p: "押し続けている時間が「溜め」に見えると、同じエフェクトでも迫力が増えます。" },
+        { eyebrow: "WHY LAYERS?", h: "一枚絵では足りない", p: "大きな形・細かい粒・衝撃波を分けると、脳が「本物の炎」と感じやすくなります。" },
+        { eyebrow: "TRY NEXT", h: "氷へ", p: "次は「溜めて砕く」結晶のタイミング芸です。" },
+      ],
+    },
+    en: {
+      navConcept: "Cool fire",
+      title: "Make Cool Fire Magic",
+      lead: "Showcase #1. Hold to heat up, release for a rising plume. We drop the “keep it elementary” rule and chase punch with stacked layers.",
+      deepEyebrow: "DEEP DIVE / FIRE",
+      deepH: "How many<br>layers is fire?",
+      deepLead: "① Flame PNGs rising with additive blend ② Ember sparks in a fan ③ Ring PNG shockwave ④ Full-screen orange flash. While held, charge climbs 0→1; on release, power scales particle count and height. Same BlendLighter—lifetime, gravity, and color ramps decide “campfire” vs “explosion”.",
+      concepts: [
+        { h: "Charge", p: "Accumulate a value while held.", code: "charge = min(1, charge+0.025)" },
+        { h: "Flame layers", p: "Big flames plus tiny embers together.", code: "Fire PNG + Spark PNG" },
+        { h: "Heat ring", p: "A shockwave that grows and fades.", code: "Ring + ScaleMulFrom" },
+      ],
+      lab: {
+        eyebrow: "TRY IT / FIRE LAYERS",
+        title: "See the fire layers",
+        p: "Burst to watch flame sprites and embers rise together. Feel charge→release in the WASM demo above.",
+      },
+      play: {
+        title: "Charge and release fire",
+        p: "Hold CAST FIRE (or Space), then release. Longer charge = bigger plume.",
+      },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "Burst on release", p: "Turn charge into power, then spawn flames, embers, and a ring at once." },
+      whys: [
+        { eyebrow: "WHY CHARGE?", h: "Input is the show", p: "When hold-time reads as “charging”, the same VFX feels stronger." },
+        { eyebrow: "WHY LAYERS?", h: "One sprite isn’t enough", p: "Split silhouette, grit, and shockwave so the eye reads “real fire”." },
+        { eyebrow: "TRY NEXT", h: "Ice", p: "Next: form a crystal, then shatter it on a beat." },
+      ],
+    },
+    code: `// Hold → charge, release → burst
+if holding { charge = min(1, charge+0.025) }
+else if wasHolding {
+  power := 0.35 + charge*0.65
+  spawnFlames(power)  // Fire PNG + BlendLighter
+  spawnEmbers(power)  // Spark PNG upward
+  spawnRing(power)    // Ring grows & fades
+}`,
+  },
+  {
+    slug: "vfx-magic-ice",
+    step: "10",
+    stars: "★★★★★",
+    labKind: "magic-ice",
+    concept: { ja: "形成→粉砕のタイミング", en: "Form → shatter timing" },
+    hubDesc: {
+      ja: "結晶を集めてから割る。氷スプライト・霜・粉砕・ブルーム。",
+      en: "Gather a crystal, then shatter: ice shards, frost, bloom.",
+    },
+    ja: {
+      navConcept: "かっこいい氷",
+      title: "かっこいい氷魔法を作ろう",
+      lead: "ショーケース第2弾。タップすると霜が集まり結晶になり、一瞬の静止のあと粉砕します。「見た目」だけでなく「タイミング」が魔法の正体です。",
+      deepEyebrow: "DEEP DIVE / ICE",
+      deepH: "氷は<br>二幕構成",
+      deepLead: "幕1（forming）: 周囲の霜を中心へ引き寄せ、氷PNGの核を大きくする。幕2（shatter）: 結晶を消し、氷スプライトを外へ飛ばし、加算のキラキラとリングのブルームを足す。phase と timer の状態機械が、同じ粒子エンジンに「物語」を載せます。",
+      concepts: [
+        { h: "形成", p: "霜を中心へ lerp で引き寄せる。", code: "x += (cx-x)*0.06" },
+        { h: "粉砕", p: "外向き速度＋重力で砕片を飛ばす。", code: "Ice PNG + gravity" },
+        { h: "ブルーム", p: "割れた瞬間だけ光るリング。", code: "Ring + Light PNG" },
+      ],
+      lab: {
+        eyebrow: "TRY IT / ICE SHARDS",
+        title: "結晶の飛び方",
+        p: "バーストで氷スプライトが外へ飛び散ります。本編の「集まる→割れる」二幕はWASMデモで。",
+      },
+      play: {
+        title: "結晶を作って砕け",
+        p: "CAST ICE（または Space）。霜が集まり、結晶が割れるまで待ってみよう。",
+      },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "phase で二幕を切り替える", p: "forming のあと shatter へ。同じ Particle 型でも役割が変わります。" },
+      whys: [
+        { eyebrow: "WHY TWO ACTS?", h: "溜めが印象を作る", p: "いきなり砕くより、一度見せてから壊す方が「魔法っぽい」です。" },
+        { eyebrow: "WHY ICE PNG?", h: "形が属性を語る", p: "丸い火花では氷に見えません。尖ったテクスチャが属性の半分です。" },
+        { eyebrow: "TRY NEXT", h: "雷へ", p: "次は枝分かれする稲妻の線芸です。" },
+      ],
+    },
+    en: {
+      navConcept: "Cool ice",
+      title: "Make Cool Ice Magic",
+      lead: "Showcase #2. Tap to gather frost into a crystal, pause, then shatter. Timing—not just pixels—is the spell.",
+      deepEyebrow: "DEEP DIVE / ICE",
+      deepH: "Ice is<br>a two-act play",
+      deepLead: "Act 1 (forming): pull frost inward and grow an ice-PNG core. Act 2 (shatter): hide the crystal, fling ice sprites outward, add additive sparkles and a bloom ring. A tiny phase/timer state machine puts a story on the same particle engine.",
+      concepts: [
+        { h: "Form", p: "Lerp frost toward the center.", code: "x += (cx-x)*0.06" },
+        { h: "Shatter", p: "Outward velocity + gravity shards.", code: "Ice PNG + gravity" },
+        { h: "Bloom", p: "A ring that flashes on the break.", code: "Ring + Light PNG" },
+      ],
+      lab: {
+        eyebrow: "TRY IT / ICE SHARDS",
+        title: "Watch shards fly",
+        p: "Burst to scatter ice sprites. The gather→break two-act lives in the WASM demo.",
+      },
+      play: {
+        title: "Form and shatter",
+        p: "Tap CAST ICE (or Space). Watch frost gather, then the crystal break.",
+      },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "Switch acts with phase", p: "forming → shatter. Same Particle type, different jobs." },
+      whys: [
+        { eyebrow: "WHY TWO ACTS?", h: "Build-up sells the break", p: "Shattering after a beat feels more magical than an instant burst." },
+        { eyebrow: "WHY ICE PNG?", h: "Shape reads as element", p: "Round sparks don’t say ice—sharp textures do half the work." },
+        { eyebrow: "TRY NEXT", h: "Thunder", p: "Next: branching jagged lightning lines." },
+      ],
+    },
+    code: `// Act 1: pull frost inward
+f.x += (castX - f.x) * 0.06
+// Act 2: shatter shards outward
+spawn(IcePNG, vx: cos(a)*sp, grav: 0.12)
+spawn(Ring) // bloom on break`,
+  },
+  {
+    slug: "vfx-magic-thunder",
+    step: "11",
+    stars: "★★★★★",
+    labKind: "magic-thunder",
+    concept: { ja: "枝分かれ稲妻", en: "Branching lightning" },
+    hubDesc: {
+      ja: "ジグザグ線が枝分かれ。ボルトPNG・火花・白フラッシュ。",
+      en: "Jagged branching bolts, bolt PNGs, sparks, white flash.",
+    },
+    ja: {
+      navConcept: "かっこいい雷",
+      title: "かっこいい雷魔法を作ろう",
+      lead: "ショーケース第3弾。空から手もとへジグザグが走り、途中で枝が分かれます。テクスチャだけでなく vector.StrokeLine の線そのものが主役です。",
+      deepEyebrow: "DEEP DIVE / THUNDER",
+      deepH: "雷は<br>線の再帰",
+      deepLead: "メインの太線を数セグメントに分け、各点をランダムにずらす。途中で確率的に再帰呼び出しして細い枝を生やす。その上にボルトPNGと火花を重ね、画面を白くフラッシュ。外側の青グロー→本体→白い芯の3本線で「太い稲妻」に見せます。",
+      concepts: [
+        { h: "ジグザグ", p: "中間点をランダムにずらす。", code: "nx += (rand-0.5)*wobble" },
+        { h: "枝分かれ", p: "depth 付きで再帰生成。", code: "addBolt(..., depth+1)" },
+        { h: "三重線", p: "グロー・本体・白い芯。", code: "StrokeLine × 3 widths" },
+      ],
+      lab: {
+        eyebrow: "TRY IT / BOLT FLASH",
+        title: "稲妻の一瞬",
+        p: "バーストでボルトと火花が走ります。枝分かれの再帰はWASMデモで確認。",
+      },
+      play: {
+        title: "稲妻を落とせ",
+        p: "CAST THUNDER（または Space）。何度も撃って枝の形の違いを楽しもう。",
+      },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "線＋テクスチャ＋閃光", p: "StrokeLine の枝とボルトPNGを同じ瞬間に重ねます。" },
+      whys: [
+        { eyebrow: "WHY BRANCH?", h: "自然な複雑さ", p: "一本線より、細い枝がある方が雷らしく見えます。" },
+        { eyebrow: "WHY FLASH?", h: "目が追いつく前に", p: "短い寿命＋画面フラッシュで「瞬間」を強調します。" },
+        { eyebrow: "TRY NEXT", h: "光へ", p: "次は放射状のフレアです。" },
+      ],
+    },
+    en: {
+      navConcept: "Cool thunder",
+      title: "Make Cool Thunder Magic",
+      lead: "Showcase #3. A jagged bolt runs sky-to-hand and sprouts side branches. vector.StrokeLine—not only textures—steals the show.",
+      deepEyebrow: "DEEP DIVE / THUNDER",
+      deepH: "Lightning is<br>recursive lines",
+      deepLead: "Split the main stroke into segments, jitter midpoints, and recursively spawn thinner branches. Layer bolt PNGs and sparks, then white-flash the screen. Three strokes (blue glow → body → white core) sell thickness.",
+      concepts: [
+        { h: "Jagged path", p: "Jitter midpoints randomly.", code: "nx += (rand-0.5)*wobble" },
+        { h: "Branches", p: "Recurse with a depth limit.", code: "addBolt(..., depth+1)" },
+        { h: "Triple stroke", p: "Glow, body, and white core.", code: "StrokeLine × 3 widths" },
+      ],
+      lab: {
+        eyebrow: "TRY IT / BOLT FLASH",
+        title: "A bolt for an instant",
+        p: "Burst for bolts and sparks. Recursive branching lives in the WASM demo.",
+      },
+      play: {
+        title: "Drop lightning",
+        p: "Tap CAST THUNDER (or Space). Cast again to see new branch shapes.",
+      },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "Lines + texture + flash", p: "Stack StrokeLine branches and bolt PNGs in the same frame." },
+      whys: [
+        { eyebrow: "WHY BRANCH?", h: "Natural complexity", p: "Thin side forks read as lightning more than a single line." },
+        { eyebrow: "WHY FLASH?", h: "Before the eye catches up", p: "Short life + screen flash sells the “instant”." },
+        { eyebrow: "TRY NEXT", h: "Light", p: "Next: radial flare rays." },
+      ],
+    },
+    code: `func addBolt(x0,y0,x1,y1, depth) {
+  // jittered segments...
+  if depth < 2 && rand() < 0.35 {
+    addBolt(nx,ny, bx,by, depth+1) // branch
+  }
+}
+StrokeLine(glow); StrokeLine(body); StrokeLine(core)`,
+  },
+  {
+    slug: "vfx-magic-light",
+    step: "12",
+    stars: "★★★★★",
+    labKind: "magic-light",
+    concept: { ja: "放射フレアとブルーム", en: "Radial flare & bloom" },
+    hubDesc: {
+      ja: "放射状の光線・ソフトブルーム・キラキラ粒。",
+      en: "Radial rays, soft bloom, twinkling sparks.",
+    },
+    ja: {
+      navConcept: "かっこいい光",
+      title: "かっこいい光魔法を作ろう",
+      lead: "ショーケース第4弾。中心から光線が走り、柔らかい光の輪が広がります。暗い背景ほど加算合成が効きます。",
+      deepEyebrow: "DEEP DIVE / LIGHT",
+      deepH: "光は<br>中心から外へ",
+      deepLead: "①中心から放射する StrokeLine のレイ ②light.png のソフトフレアを複数枚重ねてブルーム風 ③ring.png の拡大輪 ④spark のキラキラ。暗い背景＋ BlendLighter で「光源」に見せるのがコツ。色は白〜金に寄せると神聖さが出ます。",
+      concepts: [
+        { h: "放射レイ", p: "角度を等分して線を伸ばす。", code: "ang = i * 2π / n" },
+        { h: "ブルーム", p: "半透明のフレアを重ねる。", code: "Light PNG × layers" },
+        { h: "キラキラ", p: "外向きの小さな spark。", code: "Spark + outward vel" },
+      ],
+      lab: {
+        eyebrow: "TRY IT / FLARE",
+        title: "光の広がり",
+        p: "バーストでフレアと粒が広がります。放射レイの本数はWASMデモで体感。",
+      },
+      play: {
+        title: "聖なる光を放て",
+        p: "CAST LIGHT（または Space）。レイとブルームが重なる様子を見てみよう。",
+      },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "レイ＋フレア＋リング", p: "線とテクスチャを同じ原点から同時に広げます。" },
+      whys: [
+        { eyebrow: "WHY DARK BG?", h: "加算の味方", p: "暗い画面ほど、明るい加算が「光」に見えます。" },
+        { eyebrow: "WHY MANY LAYERS?", h: "ソフトなにじみ", p: "一枚の大きな円より、薄いフレアを重ねた方が自然です。" },
+        { eyebrow: "TRY NEXT", h: "闇へ", p: "最後は内側へ吸い込む渦です。" },
+      ],
+    },
+    en: {
+      navConcept: "Cool light",
+      title: "Make Cool Light Magic",
+      lead: "Showcase #4. Rays shoot from the center while soft bloom rings expand. Dark backgrounds make additive light sing.",
+      deepEyebrow: "DEEP DIVE / LIGHT",
+      deepH: "Light moves<br>out from a core",
+      deepLead: "① Radial StrokeLine rays ② Stacked light.png flares for soft bloom ③ Expanding ring.png ④ Outward spark twinkles. Dark BG + BlendLighter sells a light source; gold–white tints feel sacred.",
+      concepts: [
+        { h: "Radial rays", p: "Even angles, growing lines.", code: "ang = i * 2π / n" },
+        { h: "Bloom", p: "Stack translucent flares.", code: "Light PNG × layers" },
+        { h: "Twinkles", p: "Tiny outward sparks.", code: "Spark + outward vel" },
+      ],
+      lab: {
+        eyebrow: "TRY IT / FLARE",
+        title: "Watch the flare grow",
+        p: "Burst for flare and sparks. Feel ray count in the WASM demo.",
+      },
+      play: {
+        title: "Cast holy light",
+        p: "Tap CAST LIGHT (or Space). Watch rays and bloom stack.",
+      },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "Rays + flare + ring", p: "Expand lines and textures from the same origin." },
+      whys: [
+        { eyebrow: "WHY DARK BG?", h: "Additive’s friend", p: "On a dark screen, bright additive reads as light." },
+        { eyebrow: "WHY MANY LAYERS?", h: "Soft bleed", p: "Thin stacked flares beat one hard circle." },
+        { eyebrow: "TRY NEXT", h: "Dark", p: "Finale: a vortex that pulls inward." },
+      ],
+    },
+    code: `for i := 0; i < n; i++ {
+  ang := base + float64(i)*2*math.Pi/float64(n)
+  StrokeLine(cx,cy, cx+cos(ang)*len, cy+sin(ang)*len, ...)
+}
+DrawImage(LightPNG) // soft bloom layers
+DrawImage(RingPNG)  // expanding ring`,
+  },
+  {
+    slug: "vfx-magic-dark",
+    step: "13",
+    stars: "★★★★★",
+    labKind: "magic-dark",
+    concept: { ja: "渦と吸い込み", en: "Vortex & absorb" },
+    hubDesc: {
+      ja: "螺旋の闇・紫の縁・中心への吸い込み。",
+      en: "Spiral void, purple fringe, pull toward the core.",
+    },
+    ja: {
+      navConcept: "かっこいい闇",
+      title: "かっこいい闇魔法を作ろう",
+      lead: "ショーケース最終弾。粒が螺旋を描いて中心へ吸い込まれます。炎や光が「外へ」なのに対し、闇は「内へ」。向きを反転するだけで属性が変わります。",
+      deepEyebrow: "DEEP DIVE / DARK",
+      deepH: "闇は<br>内側へ向かう力",
+      deepLead: "螺旋上に dark.png を配置し、毎フレーム中心方向＋接線方向の力を足す。縁には紫の spark を加算で散らし、リングで衝撃波。暗い核は通常合成、紫の縁は加算——同じテクスチャでも合成モードで「穴」と「オーラ」を分けます。",
+      concepts: [
+        { h: "螺旋配置", p: "極座標で初期位置を決める。", code: "SpiralOffset(t, arms, r)" },
+        { h: "吸い込み", p: "中心への加速度＋接線。", code: "vx += dx*0.004" },
+        { h: "縁の光", p: "紫の加算で輪郭を出す。", code: "Spark + BlendLighter" },
+      ],
+      lab: {
+        eyebrow: "TRY IT / VOID",
+        title: "闇の渦",
+        p: "バーストで闇スプライトが渦を巻きます。吸い込み力はWASMデモで。",
+      },
+      play: {
+        title: "虚無の渦を開け",
+        p: "CAST DARK（または Space）。粒が中心へ巻き込まれていく様子を見てみよう。",
+      },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "螺旋＋求心力", p: "初期は螺旋、更新で中心へ引っ張ります。" },
+      whys: [
+        { eyebrow: "WHY INWARD?", h: "属性は向きで決まる", p: "同じ粒でも、外向きなら光・炎、内向きなら闇に見えます。" },
+        { eyebrow: "WHY PURPLE?", h: "黒だけだと潰れる", p: "暗い核に彩度のある縁を足すと、形が読めます。" },
+        { eyebrow: "TRY NEXT", h: "自分の属性", p: "向き・色・合成を選んで、オリジナル魔法を発明しよう。" },
+      ],
+    },
+    en: {
+      navConcept: "Cool dark",
+      title: "Make Cool Dark Magic",
+      lead: "Showcase finale. Particles spiral into a void. Fire and light push out; dark pulls in—flip direction to flip the element.",
+      deepEyebrow: "DEEP DIVE / DARK",
+      deepH: "Dark is<br>a force inward",
+      deepLead: "Place dark.png on a spiral, then each frame add centripetal + tangential force. Rim purple sparks with additive blend, plus a ring shockwave. Dark core uses normal blend; purple fringe uses additive—same texture, two jobs.",
+      concepts: [
+        { h: "Spiral seed", p: "Polar coords for spawn points.", code: "SpiralOffset(t, arms, r)" },
+        { h: "Absorb", p: "Pull to center + swirl.", code: "vx += dx*0.004" },
+        { h: "Fringe glow", p: "Purple additive outline.", code: "Spark + BlendLighter" },
+      ],
+      lab: {
+        eyebrow: "TRY IT / VOID",
+        title: "A dark swirl",
+        p: "Burst to swirl dark sprites. Feel the absorb force in the WASM demo.",
+      },
+      play: {
+        title: "Open a void vortex",
+        p: "Tap CAST DARK (or Space). Watch particles wind into the core.",
+      },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "Spiral + centripetal pull", p: "Seed on a spiral, then yank toward the center each frame." },
+      whys: [
+        { eyebrow: "WHY INWARD?", h: "Element is direction", p: "Same particles: outward reads as light/fire, inward as dark." },
+        { eyebrow: "WHY PURPLE?", h: "Black alone collapses", p: "A saturated fringe keeps the silhouette readable." },
+        { eyebrow: "TRY NEXT", h: "Your element", p: "Pick direction, color, and blend—invent your own spell." },
+      ],
+    },
+    code: `dx, dy := SpiralOffset(t, arms, 160, 4.5)
+// each frame: pull + swirl
+p.VX += (cx-p.X)*0.004 - (cy-p.Y)*0.0025
+p.VY += (cy-p.Y)*0.004 + (cx-p.X)*0.0025
+DrawImage(DarkPNG) // core normal, fringe additive`,
   },
 ];
 
@@ -672,6 +1038,16 @@ function labParts(kind, lang) {
           btn('data-lab-spell="thunder"', lang === "ja" ? "雷" : "Thunder") + R,
         board: `<div class="lab-board lab-spell-stage" data-lab-board><p class="lab-spell-hint">${lang === "ja" ? "ボタンで魔法を唱えてみて" : "Cast a spell with the buttons"}</p></div>`,
         values: val("data-lab-done", lang === "ja" ? "習得" : "learned"),
+      };
+    case "magic-fire":
+    case "magic-ice":
+    case "magic-thunder":
+    case "magic-light":
+    case "magic-dark":
+      return {
+        controls: btn("data-lab-burst", lang === "ja" ? "バースト！" : "Burst!", "lab-button-primary") + R,
+        board: `<div class="lab-board lab-spell-stage lab-magic-stage" data-lab-board data-magic="${kind.replace("magic-", "")}"><p class="lab-spell-hint">${lang === "ja" ? "バーストで層を見てみよう" : "Burst to preview the layers"}</p></div>`,
+        values: val("data-lab-count", lang === "ja" ? "粒" : "sprites"),
       };
     default:
       return { controls: R, board: `<div class="lab-board" data-lab-board></div>`, values: val("data-lab-x", "X") };
@@ -780,7 +1156,7 @@ function stepPage(lesson, idx, lang) {
     </nav>
   </header>
   <main class="overview-main">
-    <div class="lesson-breadcrumb"><a href="../">← ${hub[lang].title}</a><span>STEP ${lesson.step} / 0${total}</span></div>
+    <div class="lesson-breadcrumb"><a href="../">← ${hub[lang].title}</a><span>STEP ${lesson.step} / ${String(total).padStart(2, "0")}</span></div>
 
     <section class="overview-hero">
       <p class="eyebrow">${lesson.stars} / PLAYABLE</p>
@@ -855,7 +1231,7 @@ function hubPage(lang) {
     ? `<p class="curriculum-bridge">共通基礎(LEVEL 01〜12)の続きです。<a href="../../games/tap-target/#basics">Update / Draw</a> のループの上に、見た目を作る道具を1つずつ足します。主人公はオリジナルの海老・天次郎です。</p>`
     : `<p class="curriculum-bridge">This continues the core lessons (LEVEL 01–12). On top of the <a href="../../games/tap-target/#basics">Update / Draw</a> loop, add one presentation tool at a time. The hero is original Ebi Tenjiroh (海老・天次郎).</p>`;
 
-  return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>${h.title} | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">${lang === "ja" ? "目次" : "CURRICULUM"}</a><a class="lang" href="../../../${other}/tracks/${track}/">${otherLabel}</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">${h.breadcrumb}</a><span>8 STEPS</span></div><section class="track-hero track-visual-effects"><span class="track-letter">${hub.letter}</span><div><p class="eyebrow">${h.eyebrow}</p><h1>${h.title}</h1><p>${h.lead}</p></div>${bridge}</section><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>${h.pathTitle}</h2><p>${h.pathLead}</p></div>${steps}</section></main></body></html>
+  return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>${h.title} | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">${lang === "ja" ? "目次" : "CURRICULUM"}</a><a class="lang" href="../../../${other}/tracks/${track}/">${otherLabel}</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">${h.breadcrumb}</a><span>${lessons.length} STEPS</span></div><section class="track-hero track-visual-effects"><span class="track-letter">${hub.letter}</span><div><p class="eyebrow">${h.eyebrow}</p><h1>${h.title}</h1><p>${h.lead}</p></div>${bridge}</section><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>${h.pathTitle}</h2><p>${h.pathLead}</p></div>${steps}</section></main></body></html>
 `;
 }
 

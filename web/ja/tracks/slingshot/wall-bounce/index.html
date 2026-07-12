@@ -1,4 +1,23 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>壁で跳ね返るボール | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/slingshot/wall-bounce/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← ひっぱり反射アクション</a><span>STEP 02 / 06</span></div><section class="overview-hero"><p class="eyebrow">モンスターストライク型ゲームを作る</p><h1>壁で跳ね返るボール</h1><p>壁の向きに対して速度を反射し、少しだけ勢いを失わせます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>法線反射と反発係数</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>盤面や物理の変化を、<br>1手ずつ追いかける。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで予想する</h3><p>次に何が起きるか考えながら、完成したルールを体験します。</p></article><article><b>02</b><h3>途中の状態を見る</h3><p>判定前、処理中、処理後のデータを表示し、変化の順番を確認します。</p></article><article><b>03</b><h3>Ebitengineで再現する</h3><p>Updateでルールを進め、Drawで盤面とフィードバックを描きます。</p></article></div></section><nav class="lesson-pager"><a href="../drag-launch/">← STEP 01<strong>ひっぱって発射</strong></a><a href="../circle-battle/">STEP 03 →<strong>円形キャラクターの衝突</strong></a></nav>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>壁で跳ね返るボール | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/slingshot/wall-bounce/">EN</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← ひっぱり反射アクション</a><span>STEP 02 / 06</span></div>
+<section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>壁で跳ね返るボール</h1><p>壁にぶつかった向きの速度だけを反転し、狙った回数だけ反射して真珠へ届けます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>法線反射と反発係数</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>指定回数だけ跳ねて、3個の真珠を集めよう。</h2></div><p>−5°・＋5°をタップして角度を選び、LAUNCH。PCでは←→またはA/D、Space。6回外す前に1・2・3回反射の順で命中させます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="壁で跳ね返るボール" src="../../../../play/wall-bounce/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / WALL NORMAL</p><h2>壁へ向かう速さだけ、反対向きにする。</h2><p class="lesson-lead">速度は横の<code>vx</code>と縦の<code>vy</code>に分かれています。縦の壁へ当たったら横向きだけ、床や天井なら縦向きだけを反転します。壁からまっすぐ外へ向く矢印を<strong>法線</strong>といい、反射は法線方向の速度をひっくり返す計算です。</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>半径まで含めて接触</h3><p>円の中心が壁へ着いてからでは半分めり込みます。中心から半径を引いた左端が壁を越えたら接触です。</p><code>if x-radius &lt; leftWall</code></article><article><span class="concept-number">2</span><h3>片方の速度を反転</h3><p>左右の壁は<code>vx</code>の符号だけを変えます。<code>vy</code>を残すので、入ってきた角度と同じ角度で出ていきます。</p><code>vx = -vx</code></article><article><span class="concept-number">3</span><h3>少し勢いを失う</h3><p>反転した速さへ0.92を掛けます。この反発係数が1なら同じ速さ、0に近いほど壁へ勢いを渡します。</p><code>vx = -vx * restitution</code></article></div>
+<div class="motion-lab" data-lab="bounce" data-wall="壁" data-paddle="床"><div class="lab-copy"><p class="eyebrow">TRY IT / VELOCITY COMPONENTS</p><h3>どちらの速度が変わるか見よう</h3><p>1フレームずつ進めます。横の壁ではvx、床ではvyだけが反対向きになることを数字で確認してください。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>1フレーム進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div></div><div class="lab-visual"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-ball style="position:absolute;border-radius:50%"></div></div><div class="lab-values"><div><span>vx</span><strong data-lab-vx>6.0</strong></div><div><span>vy</span><strong data-lab-vy>4.0</strong></div><div><span>接触</span><strong data-lab-note>—</strong></div></div></div></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>位置を壁の内側へ戻してから反転</h3><p>めり込んだままだと次のフレームでも接触し、何度も反転します。まず円を境界へ戻し、必ず内向きの速度へ直します。</p></div><pre><code>if x-radius &lt; leftWall {
+    x = leftWall + radius
+    vx = math.Abs(vx) * restitution
+    bounces++
+}
+if y-radius &lt; topWall {
+    y = topWall + radius
+    vy = math.Abs(vy) * restitution
+    bounces++
+}</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY CLAMP?</p><h3>壁の中に残さない</h3><p>位置を境界へ戻すことで、1回の衝突を1回だけ数えられます。</p></article><article><p class="eyebrow">WHY TWO PARTS?</p><h3>角度を保てる</h3><p>壁と平行な速度は変えないので、鏡で光が反射するような軌道になります。</p></article><article class="challenge"><p class="eyebrow">TUNE IT</p><h3>反発係数を変える</h3><p>0.5と1.0を試し、3回目の反射後に進める距離を比べよう。</p></article></div>
+</section><nav class="lesson-pager"><a href="../drag-launch/">← STEP 01<strong>ひっぱって発射</strong></a><a href="../circle-battle/">STEP 03 →<strong>円形キャラクターの衝突</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -25,24 +44,4 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

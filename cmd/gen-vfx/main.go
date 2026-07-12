@@ -1,8 +1,8 @@
 // Command gen-vfx draws soft effect sprites (fire / water / spark / bolt) with
 // pure-Go software rendering and writes them for both WASM embed and the site.
 //
-//	internal/vfxsprites/{fire,water,spark,bolt}.png
-//	web/assets/vfx-{fire,water,spark,bolt}.png
+//	internal/vfxsprites/{fire,water,spark,bolt,ice,light,dark,ring}.png
+//	web/assets/vfx-*.png
 //
 // Run: go run ./cmd/gen-vfx
 package main
@@ -27,7 +27,11 @@ func main() {
 	writeBoth(root, "water.png", "vfx-water.png", drawWater())
 	writeBoth(root, "spark.png", "vfx-spark.png", drawSpark())
 	writeBoth(root, "bolt.png", "vfx-bolt.png", drawBolt())
-	println("Generated vfx sprites: fire, water, spark, bolt")
+	writeBoth(root, "ice.png", "vfx-ice.png", drawIce())
+	writeBoth(root, "light.png", "vfx-light.png", drawLight())
+	writeBoth(root, "dark.png", "vfx-dark.png", drawDark())
+	writeBoth(root, "ring.png", "vfx-ring.png", drawRing())
+	println("Generated vfx sprites: fire, water, spark, bolt, ice, light, dark, ring")
 }
 
 func writeBoth(root, embedName, webName string, img *image.RGBA) {
@@ -198,6 +202,103 @@ func drawBolt() *image.RGBA {
 			b := 255.0
 			a := clamp01(halo*0.5 + core*0.95)
 			img.SetRGBA(x, y, color.RGBA{uint8(r), uint8(g), uint8(b), uint8(255 * a)})
+		}
+	}
+	return img
+}
+
+// drawIce — hexagonal-ish crystal shard, cyan/white.
+func drawIce() *image.RGBA {
+	const W, H = 64, 96
+	img := image.NewRGBA(image.Rect(0, 0, W, H))
+	core := color.RGBA{230, 250, 255, 255}
+	mid := color.RGBA{120, 210, 255, 255}
+	edgeC := color.RGBA{40, 120, 220, 255}
+	cx, cy := float64(W)*0.5, float64(H)*0.55
+	for y := 0; y < H; y++ {
+		for x := 0; x < W; x++ {
+			fx := (float64(x) + 0.5 - cx) / (float64(W) * 0.28)
+			fy := (float64(y) + 0.5 - cy) / (float64(H) * 0.42)
+			// diamond / shard: |fx|+|fy|
+			d := math.Abs(fx) + math.Abs(fy)*0.85
+			if d > 1 {
+				continue
+			}
+			edge := 1 - d
+			col := mixRGBA(edgeC, mid, edge)
+			if edge > 0.65 {
+				col = mixRGBA(mid, core, (edge-0.65)/0.35)
+			}
+			// facet line
+			if math.Abs(fx) < 0.08 {
+				col = mixRGBA(col, core, 0.55)
+			}
+			col.A = uint8(255 * clamp01(edge*1.15))
+			img.SetRGBA(x, y, col)
+		}
+	}
+	return img
+}
+
+// drawLight — soft golden star/flare.
+func drawLight() *image.RGBA {
+	const R = 40
+	size := R * 2
+	img := image.NewRGBA(image.Rect(0, 0, size, size))
+	for y := 0; y < size; y++ {
+		for x := 0; x < size; x++ {
+			dx := float64(x-R) + 0.5
+			dy := float64(y-R) + 0.5
+			d := math.Hypot(dx, dy) / R
+			if d >= 1 {
+				continue
+			}
+			ang := math.Atan2(dy, dx)
+			ray := math.Pow(math.Abs(math.Cos(ang*4)), 8) // 8-point soft star
+			a := (1 - d) * (1 - d) * (0.35 + 0.65*ray)
+			img.SetRGBA(x, y, color.RGBA{255, 236, 180, uint8(255 * clamp01(a))})
+		}
+	}
+	return img
+}
+
+// drawDark — soft purple/black wisp, denser center.
+func drawDark() *image.RGBA {
+	const R = 36
+	size := R * 2
+	img := image.NewRGBA(image.Rect(0, 0, size, size))
+	for y := 0; y < size; y++ {
+		for x := 0; x < size; x++ {
+			d := math.Hypot(float64(x-R)+0.5, float64(y-R)+0.5) / R
+			if d >= 1 {
+				continue
+			}
+			a := math.Pow(1-d, 1.6)
+			// dark core with violet fringe
+			t := d
+			r := uint8(20 + 80*t)
+			g := uint8(0 + 20*t)
+			b := uint8(40 + 120*t)
+			img.SetRGBA(x, y, color.RGBA{r, g, b, uint8(255 * a)})
+		}
+	}
+	return img
+}
+
+// drawRing — soft annular glow for shockwaves.
+func drawRing() *image.RGBA {
+	const R = 64
+	size := R * 2
+	img := image.NewRGBA(image.Rect(0, 0, size, size))
+	for y := 0; y < size; y++ {
+		for x := 0; x < size; x++ {
+			d := math.Hypot(float64(x-R)+0.5, float64(y-R)+0.5) / R
+			band := math.Abs(d - 0.72)
+			if band > 0.22 {
+				continue
+			}
+			a := math.Exp(-band*band*80) * (1 - d*0.3)
+			img.SetRGBA(x, y, color.RGBA{255, 255, 255, uint8(255 * clamp01(a))})
 		}
 	}
 	return img

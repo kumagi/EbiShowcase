@@ -1,4 +1,19 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ally-triggered Effects | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/slingshot/ally-effects/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Slingshot Reflection Action</a><span>STEP 05 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Monster Strike-style game</p><h1>Ally-triggered Effects</h1><p>Trigger data-defined lasers, healing, or other abilities when touching allies.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Contact events and ability data</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>Follow every change,<br>one move at a time.</h2><div class="overview-steps"><article><b>01</b><h3>Play and predict</h3><p>Experience the finished rule while predicting what happens next.</p></article><article><b>02</b><h3>Inspect each state</h3><p>View data before, during, and after resolution.</p></article><article><b>03</b><h3>Rebuild in Ebitengine</h3><p>Advance rules in Update and draw the board and feedback in Draw.</p></article></div></section><nav class="lesson-pager"><a href="../friction-stop/">← STEP 04<strong>Slow Down and Stop</strong></a><a href="../ebi-strike/">STEP 06 →<strong>Ebi Strike</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ally-triggered Effects | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/slingshot/ally-effects/">日本語</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← Slingshot Reflection Action</a><span>STEP 05 / 06</span></div>
+<section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ally-triggered Effects</h1><p>Turn the instant of ally contact into an event, then use ability data to choose laser, healing, or a shockwave.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Contact events and ability data</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Combine three allies to clear the coral guards.</h2></div><p>Hold or tap toward a destination. On keyboard use Arrows or WASD. Laser hits the nearest guard, Heal restores HP, and Pulse hits nearby guards. Clear all within 50 seconds.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ally-triggered Effects" src="../../../../play/ally-effects/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT EVENT</p><h2>Extract “contact began” from “still touching.”</h2><p class="lesson-lead">Checking overlap every frame could fire an ability 60 times while circles remain together. Compare this frame with the previous one and create an event only when <strong>touching now but separated before</strong>. That event reads the ally's ability data.</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>Test contact now</h3><p>Contact occurs when center distance is no greater than the two radii added together. It uses the same simple circles visible on screen.</p><code>touching := distance &lt;= playerR + allyR</code></article><article><span class="concept-number">2</span><h3>Emit only on the edge</h3><p>If <code>touching</code> is true and old <code>wasTouching</code> is false, contact just began. Save the new value for next frame.</p><code>if touching &amp;&amp; !wasTouching { activate() }</code></article><article><span class="concept-number">3</span><h3>Dispatch from ability data</h3><p>An ally stores name, kind, and power. Shared <code>activate</code> reads the kind and selects laser, heal, or pulse.</p><code>Ability{Name: "HEAL", Kind: Heal, Power: 2}</code></article></div>
+<div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / EVENT QUEUE</p><h3>Process contact events one at a time</h3><p>When contact begins, append an event to a queue. Game rules run them in order, even if several effects begin together.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fire>Add contact event</button><button type="button" class="lab-button" data-lab-step>Activate one</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Empty queue</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Waiting effects</span><strong data-lab-count>0</strong></div><div><span>Activation order</span><strong data-lab-list>—</strong></div></div></div></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>One contact entrance, data-defined results</h3><p>Each ally does not need a new collision test. Pass an ability number through the same entrance, so new effects do not change movement or contact code.</p></div><pre><code>now := circlesTouch(player, ally)
+if now &amp;&amp; !ally.wasTouching &amp;&amp; ally.cooldown == 0 {
+    activate(abilities[ally.ability])
+    ally.cooldown = 75
+}
+ally.wasTouching = now</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY AN EDGE?</p><h3>One effect per contact</h3><p>Using contact start prevents repeated firing while two circles stay overlapped.</p></article><article><p class="eyebrow">WHY DATA?</p><h3>Add allies safely</h3><p>Separating movement from ability behavior lets a new effect join the same contact rule.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Combine effects</h3><p>Add an ally that boosts the next laser by changing the next event's power data.</p></article></div>
+</section><nav class="lesson-pager"><a href="../friction-stop/">← STEP 04<strong>Slow Down and Stop</strong></a><a href="../ebi-strike/">STEP 06 →<strong>Ebi Strike</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -24,25 +39,4 @@
     </section>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

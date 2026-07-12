@@ -1,4 +1,14 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Strike | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/slingshot/ebi-strike/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Slingshot Reflection Action</a><span>STEP 06 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Monster Strike-style game</p><h1>Ebi Strike</h1><p>Combine character turns, special moves, enemy AI, and obstacles into a complete stage.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Turns, special moves, and stage gimmicks</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>Follow every change,<br>one move at a time.</h2><div class="overview-steps"><article><b>01</b><h3>Play and predict</h3><p>Experience the finished rule while predicting what happens next.</p></article><article><b>02</b><h3>Inspect each state</h3><p>View data before, during, and after resolution.</p></article><article><b>03</b><h3>Rebuild in Ebitengine</h3><p>Advance rules in Update and draw the board and feedback in Draw.</p></article></div></section><nav class="lesson-pager"><a href="../ally-effects/">← STEP 05<strong>Ally-triggered Effects</strong></a><a href="../">BACK TO PATH →<strong>Slingshot Reflection Action</strong></a></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Strike | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/slingshot/ebi-strike/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Slingshot Reflection Action</a><span>STEP 06 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Strike</h1><p>Combine drag launching, reflection, friction, circle collisions, contact attacks, ally waves, and turns into one rescue game.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Contact events and turn order</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Defeat every reef guard within eight turns.</h2></div><p>Drag backward from the glowing ally and release. Hit an enemy directly or hit your other ally to damage enemies within a 165px wave. Mouse and touch both work.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Strike" src="../../../../play/ebi-strike/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT PIPELINE</p><h2>Turn the same “bump” into events for each target.</h2><p class="lesson-lead">Every moving frame checks walls, rocks, enemies, and allies in order. Push overlapping circles apart and reflect first; then a guard receives direct damage while an ally sends an area wave. It remains one turn until motion stops.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Move and resolve contacts</h3><p>Advance by velocity, then push overlapping circles back to touching distance. Reflecting along the collision normal handles diagonal bounces too.</p><code>move(); bounceWalls(); reflectCircle()</code></article><article><span class="concept-number">2</span><h3>Choose an effect by target</h3><p>An enemy loses one HP. An ally sends one damage to every enemy within 165 pixels of that ally.</p><code>contactEnemy() / contactAlly()</code></article><article><span class="concept-number">3</span><h3>Friction ends the turn</h3><p>Multiply velocity by 0.982 after contacts. Below 0.11, snap to zero and switch active to the other ally.</p><code>if stopped { active = 1 - active }</code></article></div><div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / CONTACT EVENTS</p><h3>Process events from one shot</h3><p>Add wall, enemy, ally, and stop events, then process them one at a time. Do not begin the next turn until none remain.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fire>Add contact</button><button type="button" class="lab-button" data-lab-step>Process next</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>New shot</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Events waiting</span><strong data-lab-count>0</strong></div><div><span>Event order</span><strong data-lab-list>—</strong></div></div></div></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Keep aiming separate from motion</h3><p>Physics and contacts run only while moving is true. Switch turns at the exact stop frame, then accept the next drag.</p></div><pre><code>active.pos = active.pos.add(active.velocity)
+bounceWalls(&amp;active)
+hitEnemies(&amp;active)
+hitAlly(&amp;active)
+active.velocity = active.velocity.scale(0.982)
+
+if active.velocity.length() &lt; stopSpeed {
+    active.velocity = vec{}
+    moving = false
+    activeIndex = 1 - activeIndex
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY COOLDOWN?</p><h3>Count one contact once</h3><p>A short timer on each enemy prevents a circle overlapping for several frames from removing all HP at once.</p></article><article><p class="eyebrow">WHY ONE ALLY WAVE?</p><h3>Keep each shot meaningful</h3><p>One wave per shot prevents two allies bouncing together from creating endless free attacks.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Give allies different effects</h3><p>Make blue fire a straight beam and green make a circle wave, selecting an effect from the touched ally's kind.</p></article></div></section><nav class="lesson-pager"><a href="../ally-effects/">← STEP 05<strong>Ally-triggered Effects</strong></a><a href="../">BACK TO PATH →<strong>Slingshot Reflection Action</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -23,26 +33,4 @@
       </div>
     </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

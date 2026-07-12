@@ -1,4 +1,55 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>置く・壊す | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/sandbox/place-break/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2Dブロックサンドボックス</a><span>STEP 01 / 07</span></div><section class="overview-hero"><p class="eyebrow">掘って作れる世界を作る</p><h1>置く・壊す</h1><p>指したマスの種類を書き換え、ブロックの設置と破壊を作ります。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>変更できるタイルマップ</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / INSPECT / BUILD</p><h2>データの変化を見て、<br>ルールを組み立てる。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで発見する</h3><p>完成したミニゲームから、入力と結果の関係を見つけます。</p></article><article><b>02</b><h3>内部データを見る</h3><p>マス、状態、探索候補を画面に重ね、処理の途中を見えるようにします。</p></article><article><b>03</b><h3>コードへつなぐ</h3><p>同じルールをEbitengineのUpdateとDraw、アセットデータで再構成します。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../terrain-generation/">STEP 02 →<strong>地形を生み出す</strong></a></nav>
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>置く・壊す | Ebi Showcase</title>
+<link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+<header class="nav">
+<a class="brand" href="../../../">
+<span>EBI</span> SHOWCASE</a>
+<nav>
+<a href="../">コース</a>
+<a href="#learn">HOW IT WORKS</a>
+<a class="lang" href="../../../../en/tracks/sandbox/place-break/">EN</a>
+</nav>
+</header>
+<main class="overview-main">
+<div class="lesson-breadcrumb">
+<a href="../">← 2Dブロックサンドボックス</a>
+<span>STEP 01 / 07</span>
+</div>
+<section class="overview-hero">
+<p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+<h1>置く・壊す</h1>
+<p>指したマスの種類を書き換え、ブロックの設置と破壊を作ります。</p>
+<div class="overview-concept">
+<small>このステップで学ぶこと</small>
+<strong>変更できるタイルマップ</strong>
+</div>
+</section>
+<p class="curriculum-bridge">共通基礎の続きです。ゲームループが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。ここでは入力で盤面データを書き換えます。</p>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>素材を回収し、6マスの設計図を完成させよう。</h2></div><p>黄色の枠が設計図。PLACE/BREAKとDIRT/STONEを選び、明るい操作範囲をタップ。PCはP/B、1/2とクリックも使えます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="置く・壊す" src="../../../../play/place-break/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / MUTABLE TILE MAP</p><h2>マスの番号を書き換えると、世界の形が変わる。</h2><p class="lesson-lead">盤面は <strong>board[y][x]</strong> という数字の表です。0は空気、1は土、2は石。置く時は在庫を1減らして番号を書き、壊す時は番号を0へ戻して素材を在庫へ返します。</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>画面をマス番号へ</h3><p>押した座標から盤面左上を引き、1マスの幅で割ります。これで列xと行yが決まります。</p><code>x = (pointerX - boardX) / cell</code></article><article><span class="concept-number">2</span><h3>範囲と在庫を確かめる</h3><p>作業者から3歩以内で、選んだ素材が1個以上の時だけ置けます。失敗した操作ではデータを変えません。</p><code>if inReach(x,y) &amp;&amp; stock[kind] &gt; 0</code></article><article><span class="concept-number">3</span><h3>置く・壊すを対にする</h3><p>設置は在庫から盤面へ、破壊は盤面から在庫へ素材を移します。素材の合計は勝手に増えません。</p><code>board[y][x] = kind; stock[kind]--</code></article></div>
+<div class="motion-lab" data-lab="tile" data-blocked="そのマスは壁"><div class="lab-copy"><p class="eyebrow">TRY IT / GRID POSITION</p><h3>行と列を1マスずつ動かそう</h3><p>マスの位置は連続した座標ではなく、整数のx,yで表します。壁のマスへ進めないのも、置けないマスをはじく処理と同じです。</p><div class="lab-controls"><button type="button" class="lab-button" data-lab-up>↑</button><button type="button" class="lab-button" data-lab-left>←</button><button type="button" class="lab-button" data-lab-right>→</button><button type="button" class="lab-button" data-lab-down>↓</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>マス x,y</span><strong data-lab-pos>1,1</strong></div><div><span>向き</span><strong data-lab-face>S</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div></div></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>置く前に条件を全部確認する</h3><p>空きマス、操作範囲、在庫の3条件を通った時だけ盤面と在庫を同じ操作で更新します。</p></div><pre><code>if board[y][x] == empty &amp;&amp;
+   inReach(x, y) &amp;&amp; stock[selected] &gt; 0 {
+    board[y][x] = selected
+    stock[selected]--
+}
+// break: inventoryへ戻す
+stock[board[y][x]]++
+board[y][x] = empty</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY INVENTORY?</p><h3>選択に意味が生まれる</h3><p>無限に置けないため、先に壊して必要な素材を集めます。</p></article><article><p class="eyebrow">WHY RANGE?</p><h3>どこでも変更させない</h3><p>作業者の近くに限ると、位置と世界変更がつながります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>3種類目を増やす</h3><p>木ブロックを番号3として追加する場所を探そう。</p></article></div></section>
+<nav class="lesson-pager">
+<span>
+</span>
+<a href="../terrain-generation/">STEP 02 →<strong>地形を生み出す</strong>
+</a>
+</nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -45,4 +96,9 @@
 
 
 
-</main></body></html>
+
+
+
+</main><script src="../../../../learn.js"></script>
+</body>
+</html>

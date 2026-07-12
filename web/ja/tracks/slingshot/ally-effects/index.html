@@ -1,4 +1,19 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>味方に当てる友情効果 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/slingshot/ally-effects/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← ひっぱり反射アクション</a><span>STEP 05 / 06</span></div><section class="overview-hero"><p class="eyebrow">モンスターストライク型ゲームを作る</p><h1>味方に当てる友情効果</h1><p>味方へ触れた瞬間にレーザーや回復など、データで選んだ効果を発動します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>接触イベントと能力データ</strong></div></section><section class="overview-plan"><p class="eyebrow">PLAY / TRACE / BUILD</p><h2>盤面や物理の変化を、<br>1手ずつ追いかける。</h2><div class="overview-steps"><article><b>01</b><h3>遊んで予想する</h3><p>次に何が起きるか考えながら、完成したルールを体験します。</p></article><article><b>02</b><h3>途中の状態を見る</h3><p>判定前、処理中、処理後のデータを表示し、変化の順番を確認します。</p></article><article><b>03</b><h3>Ebitengineで再現する</h3><p>Updateでルールを進め、Drawで盤面とフィードバックを描きます。</p></article></div></section><nav class="lesson-pager"><a href="../friction-stop/">← STEP 04<strong>減速して止まる</strong></a><a href="../ebi-strike/">STEP 06 →<strong>Ebi Strike</strong></a></nav>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>味方に当てる友情効果 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/slingshot/ally-effects/">EN</a></nav></header><main class="overview-main">
+<div class="lesson-breadcrumb"><a href="../">← ひっぱり反射アクション</a><span>STEP 05 / 06</span></div>
+<section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>味方に当てる友情効果</h1><p>味方へ触れた瞬間をイベントに変え、能力データからレーザー・回復・衝撃波を選んで発動します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>接触イベントと能力データ</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3種類の味方を使い分け、サンゴの敵を倒そう。</h2></div><p>行きたい方向を長押し・タップ。PCでは矢印またはWASD。レーザーは近い敵、回復はHP、衝撃波は近くの敵全員へ働きます。50秒以内に全滅でクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="味方に当てる友情効果" src="../../../../play/ally-effects/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="physics" id="learn">
+<div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT EVENT</p><h2>「触れている」から「触れた瞬間」を取り出す。</h2><p class="lesson-lead">円の重なりを毎フレーム調べるだけだと、くっついている間に60回も能力が出ます。今の接触と前の接触を比べ、<strong>今は触れていて、前は離れていた</strong>ときだけイベントを作ります。そのイベントが味方の能力データを読みます。</p></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>今の接触を調べる</h3><p>中心どうしの距離が二つの半径の合計以下なら接触です。画面の円と同じ簡単な円判定を使います。</p><code>touching := distance &lt;= playerR + allyR</code></article><article><span class="concept-number">2</span><h3>開始した瞬間だけイベント</h3><p><code>touching</code>がtrueで、前回の<code>wasTouching</code>がfalseなら新しい接触です。最後に今の値を次回用へ保存します。</p><code>if touching &amp;&amp; !wasTouching { activate() }</code></article><article><span class="concept-number">3</span><h3>能力データで処理を選ぶ</h3><p>味方は名前、種類、強さを持ちます。共通の<code>activate</code>が種類を見て、レーザー・回復・衝撃波へ分けます。</p><code>Ability{Name: "HEAL", Kind: Heal, Power: 2}</code></article></div>
+<div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / EVENT QUEUE</p><h3>接触イベントを一つずつ処理しよう</h3><p>接触が始まったらイベントを待ち列へ追加し、ゲームルールが順番に実行します。効果が同時に起きても順序を保てます。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fire>接触イベント追加</button><button type="button" class="lab-button" data-lab-step>1件を発動</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>空にする</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>待っている効果</span><strong data-lab-count>0</strong></div><div><span>発動する順番</span><strong data-lab-list>—</strong></div></div></div></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>接触の入口は共通、結果はデータで分岐</h3><p>味方ごとに当たり判定を作り直しません。同じ入口から能力番号を渡すので、新能力を足しても移動や接触コードは変わりません。</p></div><pre><code>now := circlesTouch(player, ally)
+if now &amp;&amp; !ally.wasTouching &amp;&amp; ally.cooldown == 0 {
+    activate(abilities[ally.ability])
+    ally.cooldown = 75
+}
+ally.wasTouching = now</code></pre></div>
+<div class="why-grid"><article><p class="eyebrow">WHY AN EDGE?</p><h3>一回の接触を一回にする</h3><p>接触開始だけを使えば、円が重なったままでも効果は連打されません。</p></article><article><p class="eyebrow">WHY DATA?</p><h3>味方を増やしやすい</h3><p>位置や動きと能力内容を分けると、同じ接触ルールへ新しい効果を差し込めます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>効果を組み合わせる</h3><p>「レーザーの威力を上げる」味方を追加し、次に起きるイベントのデータを書き換えてみよう。</p></article></div>
+</section><nav class="lesson-pager"><a href="../friction-stop/">← STEP 04<strong>減速して止まる</strong></a><a href="../ebi-strike/">STEP 06 →<strong>Ebi Strike</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -24,25 +39,4 @@
     </section>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main></body></html>
+</main><script src="../../../../learn.js"></script></body></html>

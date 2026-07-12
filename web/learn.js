@@ -1414,6 +1414,116 @@ document.querySelectorAll(".motion-lab[data-lab='spellbook']").forEach((lab) => 
   render();
 });
 
+// Advanced magic showcase previews (STEPS 09–13).
+document.querySelectorAll(".motion-lab[data-lab^='magic-']").forEach((lab) => {
+  const kind = (lab.dataset.lab || "").replace("magic-", "");
+  const board = bind(lab, "[data-lab-board]");
+  const countOut = bind(lab, "[data-lab-count]");
+  const idleHTML = board ? board.innerHTML : "";
+  const asset = {
+    fire: "../../../../assets/vfx-fire.png",
+    ice: "../../../../assets/vfx-ice.png",
+    thunder: "../../../../assets/vfx-bolt.png",
+    light: "../../../../assets/vfx-light.png",
+    dark: "../../../../assets/vfx-dark.png",
+    spark: "../../../../assets/vfx-spark.png",
+    ring: "../../../../assets/vfx-ring.png",
+  };
+  let total = 0;
+
+  const sprite = (src, cls, style = {}) => {
+    const el = document.createElement("img");
+    el.src = src;
+    el.alt = "";
+    el.className = `lab-vfx-sprite ${cls}`;
+    Object.entries(style).forEach(([k, v]) => {
+      if (k.startsWith("--") || k === "left" || k === "top") el.style.setProperty(k, v);
+      else el.style[k] = v;
+    });
+    return el;
+  };
+
+  const burst = () => {
+    if (!board) return;
+    board.className = `lab-board lab-spell-stage lab-magic-stage is-${kind}`;
+    board.innerHTML = "";
+    const n = 18 + Math.floor(Math.random() * 12);
+    total += n;
+    if (countOut) setText(countOut, String(total));
+    if (kind === "fire") {
+      for (let i = 0; i < n; i++) {
+        board.appendChild(sprite(asset.fire, "lab-vfx-flame", {
+          left: `${40 + Math.random() * 20}%`,
+          "--drift": `${(Math.random() - 0.5) * 70}px`,
+          "--rise": `${130 + Math.random() * 130}px`,
+          "--size": `${40 + Math.random() * 60}px`,
+        }));
+      }
+      board.appendChild(sprite(asset.ring, "lab-vfx-ring", { left: "50%", top: "70%" }));
+    } else if (kind === "ice") {
+      for (let i = 0; i < n; i++) {
+        board.appendChild(sprite(asset.ice, "lab-vfx-ice", {
+          left: "50%",
+          top: "45%",
+          "--dx": `${(Math.random() - 0.5) * 220}px`,
+          "--dy": `${(Math.random() - 0.5) * 180}px`,
+          "--rot": `${(Math.random() - 0.5) * 120}deg`,
+          "--size": `${36 + Math.random() * 48}px`,
+        }));
+      }
+    } else if (kind === "thunder") {
+      board.classList.add("is-flash");
+      setTimeout(() => board.classList.remove("is-flash"), 180);
+      for (let i = 0; i < 6; i++) {
+        board.appendChild(sprite(asset.thunder, "lab-vfx-bolt", {
+          left: `${28 + i * 9}%`,
+          "--rot": `${(Math.random() - 0.5) * 30}deg`,
+        }));
+      }
+      for (let i = 0; i < 16; i++) {
+        board.appendChild(sprite(asset.spark, "lab-vfx-zap", {
+          left: `${45 + (Math.random() - 0.5) * 30}%`,
+          top: `${30 + Math.random() * 40}%`,
+          "--dx": `${(Math.random() - 0.5) * 140}px`,
+          "--dy": `${(Math.random() - 0.5) * 140}px`,
+        }));
+      }
+    } else if (kind === "light") {
+      board.appendChild(sprite(asset.light, "lab-vfx-flare", { left: "50%", top: "45%" }));
+      board.appendChild(sprite(asset.ring, "lab-vfx-ring", { left: "50%", top: "45%" }));
+      for (let i = 0; i < n; i++) {
+        board.appendChild(sprite(asset.spark, "lab-vfx-zap", {
+          left: "50%",
+          top: "45%",
+          "--dx": `${(Math.random() - 0.5) * 200}px`,
+          "--dy": `${(Math.random() - 0.5) * 200}px`,
+        }));
+      }
+    } else {
+      for (let i = 0; i < n; i++) {
+        board.appendChild(sprite(asset.dark, "lab-vfx-dark", {
+          left: "50%",
+          top: "48%",
+          "--ang": `${(i / n) * 360}deg`,
+          "--rad": `${40 + Math.random() * 90}px`,
+          "--size": `${32 + Math.random() * 40}px`,
+        }));
+      }
+      board.appendChild(sprite(asset.ring, "lab-vfx-ring", { left: "50%", top: "48%" }));
+    }
+  };
+
+  bind(lab, "[data-lab-burst]")?.addEventListener("click", burst);
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    total = 0;
+    if (countOut) setText(countOut, "0");
+    if (board) {
+      board.className = "lab-board lab-spell-stage lab-magic-stage";
+      board.innerHTML = idleHTML;
+    }
+  });
+});
+
 const escapeCodeHTML = (value) => value.replace(/[&<>"']/g, (character) => ({
   "&": "&amp;",
   "<": "&lt;",

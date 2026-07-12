@@ -1,5 +1,5 @@
-// Package vfxsprites holds soft effect textures for fire, water, and lightning.
-// Images are generated offline by cmd/gen-vfx and embedded here for WASM games.
+// Package vfxsprites holds generated soft-particle textures for Visual Effects Lab.
+// Regenerate with: go run ./cmd/gen-vfx
 package vfxsprites
 
 import (
@@ -7,7 +7,6 @@ import (
 	_ "embed"
 	"image"
 	_ "image/png"
-	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -24,11 +23,27 @@ var sparkPNG []byte
 //go:embed bolt.png
 var boltPNG []byte
 
+//go:embed ice.png
+var icePNG []byte
+
+//go:embed light.png
+var lightPNG []byte
+
+//go:embed dark.png
+var darkPNG []byte
+
+//go:embed ring.png
+var ringPNG []byte
+
 var (
 	Fire  *ebiten.Image
 	Water *ebiten.Image
 	Spark *ebiten.Image
 	Bolt  *ebiten.Image
+	Ice   *ebiten.Image
+	Light *ebiten.Image
+	Dark  *ebiten.Image
+	Ring  *ebiten.Image
 )
 
 func init() {
@@ -36,12 +51,16 @@ func init() {
 	Water = mustDecode(waterPNG)
 	Spark = mustDecode(sparkPNG)
 	Bolt = mustDecode(boltPNG)
+	Ice = mustDecode(icePNG)
+	Light = mustDecode(lightPNG)
+	Dark = mustDecode(darkPNG)
+	Ring = mustDecode(ringPNG)
 }
 
-func mustDecode(data []byte) *ebiten.Image {
-	img, _, err := image.Decode(bytes.NewReader(data))
+func mustDecode(png []byte) *ebiten.Image {
+	img, _, err := image.Decode(bytes.NewReader(png))
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	return ebiten.NewImageFromImage(img)
 }
