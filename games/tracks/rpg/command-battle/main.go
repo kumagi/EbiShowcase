@@ -55,6 +55,8 @@ func (g *game) Update() error {
 			g.state = playerTurn
 			g.timer = 35
 			g.guard = false
+			// Apply the chosen effect as soon as the player-turn motion starts
+			// (not when the timer later hits zero).
 			switch c {
 			case 0:
 				d := 8 + g.rng.Intn(7)
@@ -77,6 +79,7 @@ func (g *game) Update() error {
 				g.clear = true
 				g.message = "Victory!"
 			} else {
+				// Start enemy motion AND apply damage on this frame (attack start).
 				g.state = enemyTurn
 				g.timer = 40
 				d := 7 + g.rng.Intn(8)
@@ -88,6 +91,7 @@ func (g *game) Update() error {
 			}
 		}
 	case enemyTurn:
+		// Timer is follow-through only; HP already changed when the motion began.
 		g.timer--
 		if g.timer <= 0 {
 			if g.hp <= 0 {

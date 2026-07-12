@@ -75,6 +75,8 @@
         <p class="eyebrow">THE CHASE DIRECTION</p>
         <div class="formula-lines"><code>dx, dy := (player.x - enemy.x), (player.y - enemy.y)</code><span>normalize then scale</span><code>vx, vy = dx/dist * speed, dy/dist * speed</code></div>
         <p>Dividing by the distance produces a unit vector that points toward the player regardless of angle. Multiplying by <code>speed</code> then sets an exact constant velocity in that direction.</p>
+        <p>Patrol turn <code>vx, vy = -vy, vx</code> is a 90° rotate. Example: right <code>(1,0)</code> → <code>(0,1)</code> down → <code>(-1,0)</code> left → <code>(0,-1)</code> up.</p>
+        <p>If distance is 0 (perfect overlap), dividing yields NaN. The live game clamps with <code>if dist &lt; 1 { dist = 1 }</code>.</p>
       </div>
 
       <div class="code-lesson">
@@ -100,6 +102,7 @@
             e.timer = 100
         }
     } <span>else</span> { <i>// chase: move toward player</i>
+        <span>if</span> dist &lt; 1 { dist = 1 } <i>// avoid /0 → NaN</i>
         e.vx = ((g.player.x+14) - e.x) / dist * 1.35
         e.vy = ((g.player.y+14) - e.y) / dist * 1.35
     }

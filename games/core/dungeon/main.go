@@ -215,6 +215,9 @@ func (g *game) Update() error {
 				e.timer = 100
 			}
 		} else {
+			if dist < 1 {
+				dist = 1 // 重なったときの 0 割り（NaN）を防ぐ
+			}
 			e.vx = (playerCX - e.x) / dist * 1.35
 			e.vy = (playerCY - e.y) / dist * 1.35
 		}

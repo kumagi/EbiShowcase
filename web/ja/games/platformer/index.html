@@ -85,6 +85,8 @@
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>X → 衝突 → Y → 衝突<br>の順番が大切</h3>
           <p>X方向の移動と衝突解決を終えてから、Y方向を処理します。混ぜると「壁の角でコーナーカットできてしまう」バグが起きます。</p>
+          <p><code>onGround</code> は毎フレーム <code>false</code> に戻し、Y衝突で足場に乗れたときだけ <code>true</code> にします。「昨日乗っていた」記憶を残さないのがコツです。</p>
+          <p><code>math.Mod(a, 320)</code> は余り（負数にも安全な版）。カメラが進んでも 0〜320 に折り返すので、幅320の遠景を繰り返し並べられます。</p>
         </div>
         <pre><code><i>// X方向に動かして衝突を解決</i>
 g.player.x += g.vx
@@ -100,19 +102,20 @@ g.player.x += g.vx
 }
 <i>// Y方向に動かして衝突を解決</i>
 g.player.y += g.vy
-g.onGround = false
+g.onGround = false <i>// 毎フレームいったん空中へ</i>
 <span>for</span> _, p := range g.platforms {
     <span>if</span> overlap(g.player, p) {
         <span>if</span> g.vy > 0 { <i>// 落下中なら接地</i>
             g.player.y = p.y - g.player.h
-            g.onGround = true
-        } <span>else</span> <span>if</span> g.vy < 0 { <i>// 上昇中なら天井</i>
+            g.onGround = true <i>// 乗れたフレームだけ true</i>
+        } <span>else</span> <span>if</span> g.vy < 0 {
             g.player.y = p.y + p.h
         }
         g.vy = 0
     }
 }
-<i>// カメラをなめらかに追従</i>
+<i>// 遠景: Mod で 320 幅タイルをループ</i>
+<i>// x := i*320 - math.Mod(cameraX*0.25, 320)</i>
 target := g.player.x - width*.38
 g.camera += (target - g.camera) * .09</code></pre>
       </div>

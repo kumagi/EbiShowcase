@@ -38,7 +38,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>String-based stage</h3><p>The level is a <code>[]string</code> where each character encodes one tile. Looking at the source is like looking at the map itself.</p><code>var level = []string{…}</code></article>
         <article><span class="concept-number">2</span><h3>Logic tiles vs draw lerp</h3><p>Collision stays on integer tiles. While <code>moving</code>, only <code>progress</code> (0→1) advances and Draw interpolates. Commit the logical tile when progress hits 1.</p><code>if moving { progress += …; return }</code></article>
-        <article><span class="concept-number">3</span><h3>Undo is a stack</h3><p>Before any move, save the player and box positions as a snapshot. Undo pops the last snapshot and restores it.</p><code>history []snapshot</code></article>
+        <article><span class="concept-number">3</span><h3>Undo is a stack</h3><p>Before any move, save the player and box positions as a snapshot. Undo pops the last snapshot. <code>append([]point(nil), boxes...)</code> copies the slice — assigning <code>boxes: g.boxes</code> would share the backing array and corrupt history.</p><code>append([]point(nil), boxes...)</code></article>
       </div>
 
       
@@ -74,6 +74,7 @@
         <p class="eyebrow">THE PARSE RECIPE</p>
         <div class="formula-lines"><code>for y, row := range level</code><span>inner</span><code>for x, c := range row</code></div>
         <p>The outer loop provides the row (y coordinate) and the inner loop provides the column (x coordinate). A switch on character <code>c</code> fills walls, boxes, goals, and the player start.</p>
+        <p>Walls live in <code>map[point]bool</code> — one lookup <code>walls[p]</code> answers “is this tile a wall?” Sparse walls fit a map better than a huge 2D array.</p>
       </div>
 
       <div class="code-lesson">

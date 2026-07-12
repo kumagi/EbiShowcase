@@ -77,6 +77,9 @@
         <p class="eyebrow">THE TWO-LINE MOVE</p>
         <div class="formula-lines"><code>body = append([]point{head}, body...)</code><span>then</span><code>body = body[:len(body)-1]</code></div>
         <p>Line one inserts the new head at the front. Line two cuts the old tail. When food is eaten, skip line two and the snake permanently grows by one cell.</p>
+        <p>The trailing <code>...</code> in <code>append([]point{head}, g.body...)</code> unpacks the slice: pass every point inside <code>g.body</code>, not the slice as one argument.</p>
+        <p>Reverse-direction block <code>d.x+g.dir.x==0 &amp;&amp; d.y+g.dir.y==0</code> means “inputs cancel.” Right <code>(1,0)</code> plus left <code>(-1,0)</code> is <code>(0,0)</code>. Same or perpendicular dirs do not sum to zero.</p>
+        <p>Touch aim <code>abs(dx) &gt; abs(dy)</code> asks which axis has the bigger offset — mostly horizontal → left/right, mostly vertical → up/down.</p>
       </div>
 
       <div class="code-lesson">

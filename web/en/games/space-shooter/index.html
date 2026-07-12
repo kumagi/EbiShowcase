@@ -36,7 +36,7 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>One slice per kind</h3><p>Player bullets are <code>[]body</code>, enemy bullets are <code>[]body</code>, enemies are <code>[]enemy</code>, stars are <code>[]star</code>. Each kind has its own slice; all share the same pattern.</p><code>bullets []body</code></article>
+        <article><span class="concept-number">1</span><h3>Slices and embedding</h3><p>Bullets are <code>[]body</code>. Enemies use embedding: <code>type enemy struct { body; hp int }</code> so you can write <code>e.x</code> directly (composition).</p><code>type enemy struct { body; hp int }</code></article>
         <article><span class="concept-number">2</span><h3>Update all at once</h3><p>Range over the slice and move every element. No element needs special casing; the loop applies the same rule uniformly.</p><code>for i := range g.bullets</code></article>
         <article><span class="concept-number">3</span><h3>Delete backward</h3><p>Remove off-screen or dead entities by iterating from the last index toward zero. Deleting an element does not shift earlier indices, so nothing is skipped.</p><code>bullets[:i], bullets[i+1:]</code></article>
       </div>
@@ -72,6 +72,7 @@
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>Collision and deletion<br>in a single backward loop</h3>
           <p>After moving all bullets and enemies, a nested loop tests every (bullet, enemy) pair. A hit removes both. The outer loop runs backward so deletions stay safe.</p>
+          <p>Aimed shots use <code>dx/length*2.3</code>: divide by distance to keep only direction (length 1), then ×2.3 so every bullet shares the same speed (normalization).</p>
         </div>
         <pre><code><span>for</span> bi := len(g.bullets) - 1; bi >= 0; bi-- {
     hit := false

@@ -36,8 +36,8 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>円形弾幕</h3><p>全周（2π）を弾の数で割った角度ずつずらして発射します。<code>cos(a)</code> がX方向、<code>sin(a)</code> がY方向の速度成分になります。</p><code>a = i * math.Pi * 2 / count</code></article>
-        <article><span class="concept-number">2</span><h3>狙い撃ち弾</h3><p>ボスから自機へのベクトルを <code>Atan2</code> で角度に変換します。その角度を中心にして扇形に広げると、自機への追尾弾幕になります。</p><code>base = math.Atan2(py-128, px-240)</code></article>
+        <article><span class="concept-number">1</span><h3>円形弾幕</h3><p>コンピュータの角度は度数法（360度）ではなく<strong>ラジアン</strong>（1周 = 2π ≒ 6.28）が基本です。全周を弾の数で割ると1発ごとの間隔になります。<code>cos</code>/<code>sin</code> が X/Y の向きです。</p><code>a = i * math.Pi * 2 / count</code></article>
+        <article><span class="concept-number">2</span><h3>狙い撃ち弾</h3><p><code>Atan2(dy, dx)</code> は「横の差・縦の差から、どっち向き？」を返す関数です（中学の三角より一歩先）。返ってきた角度を中心に扇形へ広げます。</p><code>base = math.Atan2(py-128, px-240)</code></article>
         <article><span class="concept-number">3</span><h3>後ろから削除</h3><p>画面外に出た弾は毎フレーム削除します。後ろから（大きい添え字から）ループすることで、削除しても添え字がずれません。</p><code>for i := len-1; i &gt;= 0; i--</code></article>
       </div>
 
@@ -82,6 +82,7 @@
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>3種類の弾幕を<br>フレームタイミングで切り替え</h3>
           <p>フレーム番号を周期で割った余りを見て、どの弾パターンを発射するか決めます。周期を変えるだけで難易度が変わります。</p>
+          <p><code>float64(...)</code> は整数を小数に直す変換です。Goは int と float を混ぜて計算できないので、角度や速さの式では何度も出てきます。意味は「小数として計算したい」だけです。</p>
         </div>
         <pre><code><i>// 38フレームごとに円形弾幕（スピン付き）</i>
 <span>if</span> g.frame%38 == 0 {

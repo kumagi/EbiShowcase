@@ -29,7 +29,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / AUTO AIMING</p>
         <h2>どうして砲台は<br>勝手に狙えるの？</h2>
-        <p class="lesson-lead">全ての敵との距離を一つずつ比べて、最も近い敵だけを記録します。この「全部と比べる」ループが<strong>最近傍探索</strong>です。その敵への方向を正規化して速度にするだけで、自動照準の完成です。クールダウンで発射間隔を制限すれば、Survivors型攻撃の基本形になります。</p>
+        <p class="lesson-lead">全ての敵との距離を一つずつ比べて、最も近い敵だけを記録します。この「全部と比べる」ループが<strong>最近傍探索</strong>です。<code>bestDist := math.MaxFloat64</code>（とても大きい数）から始め、もっと近い敵を見つけたら書き換えると「今までの最小」が残ります。方向は距離で割って長さ1にしてから ×7（正規化）。<code>dist</code> が 0 に近いときは割らないようガードします。</p>
       </div>
 
       <div class="concept-row">
@@ -88,6 +88,7 @@
     e := g.enemies[best]
     g.shots = append(g.shots, body{
         g.px, g.py,
+        <span>if</span> dist &lt; 1 { dist = 1 }
         (e.x - g.px) / dist * 7,
         (e.y - g.py) / dist * 7, 5,
     })

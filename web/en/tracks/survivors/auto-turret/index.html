@@ -29,7 +29,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / AUTO AIMING</p>
         <h2>How does the turret<br>know where to aim?</h2>
-        <p class="lesson-lead">Compare the distance to every enemy one by one and remember the smallest. That linear scan is a <strong>nearest-neighbor search</strong>. Once the closest target is found, normalize the direction vector and multiply by shot speed. That is all auto-aiming is.</p>
+        <p class="lesson-lead">Compare the distance to every enemy one by one and remember the smallest. That linear scan is a <strong>nearest-neighbor search</strong>. Once the closest target is found, normalize the direction vector and multiply by shot speed. That is all auto-aiming is. Start bestDist at math.MaxFloat64 (a huge number) and shrink it when a closer foe appears. Divide by dist to normalize, then ×7. Guard dist≈0 before dividing.</p>
       </div>
 
       <div class="concept-row">
@@ -88,6 +88,7 @@
     e := g.enemies[best]
     g.shots = append(g.shots, body{
         g.px, g.py,
+        <span>if</span> dist &lt; 1 { dist = 1 }
         (e.x - g.px) / dist * 7,
         (e.y - g.py) / dist * 7, 5,
     })

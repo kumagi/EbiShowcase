@@ -38,7 +38,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>文字列でステージ</h3><p>ステージはGoの文字列スライス。<code>#</code> や <code>$</code> を読んで壁・箱のデータを作ります。見た目がそのままマップになるので設計しやすいです。</p><code>var level = []string{…}</code></article>
         <article><span class="concept-number">2</span><h3>論理座標と描画座標を分ける</h3><p>壁判定は整数タイルのまま。<code>moving</code> 中は <code>progress</code>（0→1）で描画だけを補間します。着いた瞬間に論理座標を更新します。</p><code>if moving { progress += …; return }</code></article>
-        <article><span class="concept-number">3</span><h3>Undoは履歴スタック</h3><p>動く前にプレイヤーと箱の位置をスナップショットとして保存します。Undoで最後の状態を取り出して復元します。</p><code>history []snapshot</code></article>
+        <article><span class="concept-number">3</span><h3>Undoは履歴スタック</h3><p>動く前に保存。<code>append([]point(nil), g.boxes...)</code> は箱リストのコピーです。単に <code>boxes: g.boxes</code> と書くと同じ配列を共有し、あとで動かすと履歴まで書き換わります。</p><code>append([]point(nil), boxes...)</code></article>
       </div>
 
       
@@ -74,6 +74,7 @@
         <p class="eyebrow">THE PARSE RECIPE</p>
         <div class="formula-lines"><code>for y, row := range level</code><span>内側</span><code>for x, c := range row</code></div>
         <p>外側のループが行（y座標）、内側のループが列（x座標）を与えます。文字 <code>c</code> で壁・箱・ゴールを振り分けるだけで、ステージデータが完成します。</p>
+        <p>壁は <code>map[point]bool</code>。「このマスは壁？」を <code>walls[p]</code> の1回で調べられます。壁だけまばらなら、巨大な二次元配列より map の方が素直です。</p>
       </div>
 
       <div class="code-lesson">

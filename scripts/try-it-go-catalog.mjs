@@ -567,6 +567,31 @@ export const catalog = {
       "data-lab-reset": { clear: true },
     },
   },
+
+  circles: {
+    lines: [
+      { id: "dist", code: "d := math.Hypot(bx-ax, by-ay)" },
+      { id: "hit", code: "if d < ar+br { /* overlap */ }" },
+      { id: "push", code: "nx, ny := dx/d, dy/d; pushApart(nx, ny)" },
+    ],
+    buttons: {
+      "data-lab-closer": { ids: ["dist", "hit", "push"] },
+      "data-lab-farther": { ids: ["dist"] },
+      "data-lab-reset": { clear: true },
+    },
+  },
+  "sling-drag": {
+    lines: [
+      { id: "drag", code: "dx, dy := pointerX-ballX, pointerY-ballY" },
+      { id: "len", code: "length := math.Hypot(dx, dy)" },
+      { id: "clamp", code: "if length > 160 { dx *= 160/length; dy *= 160/length }" },
+    ],
+    buttons: {
+      "data-lab-cardinal": { ids: ["drag", "len"] },
+      "data-lab-diag": { ids: ["drag", "len", "clamp"] },
+      "data-lab-reset": { clear: true },
+    },
+  },
   hitbox: {
     lines: [
       { id: "atk", code: "atk := Rect{x, y, w, h} // active only" },

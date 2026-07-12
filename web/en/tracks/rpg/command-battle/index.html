@@ -56,7 +56,7 @@
         <article>
           <span class="concept-number">1</span>
           <h3>Define states with iota</h3>
-          <p>Use Go's <code>iota</code> to create sequential constants: <code>command=0, playerTurn=1, enemyTurn=2, result=3</code>. One integer variable tracks the entire battle phase.</p>
+          <p><code>iota</code> auto-numbers constants in a block: start at 0, then +1 each line. Write <code>command = iota</code>, then <code>playerTurn</code>, <code>enemyTurn</code>, <code>result</code> — Go fills 0,1,2,3. You name the phases; the numbers come free.</p>
           <code>state = command</code>
         </article>
         <article>
@@ -117,39 +117,45 @@
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
-          <h3>switch drives every phase transition</h3>
-          <p>Each call to <code>Update()</code> evaluates the state switch. Selecting Attack calculates damage and transitions to <code>playerTurn</code> with a timer. When the timer drains, the code checks whether the enemy is dead or moves to <code>enemyTurn</code> for the counter-attack.</p>
+          <h3>Damage lands when the motion starts</h3>
+          <p>Update() runs every frame. Apply the player's effect the moment a command is chosen; the <code>playerTurn</code> timer is follow-through only. Enemy damage also lands on the frame you enter <code>enemyTurn</code> (attack pose starts). Waiting until the timer hits zero to change HP desyncs numbers from the animation.</p>
         </div>
-        <pre><code><span>switch</span> g.state {
+        <pre><code><span>const</span> (
+    command = iota // 0
+    playerTurn     // 1 (auto +1)
+    enemyTurn      // 2
+    result         // 3
+)
+
+<span>switch</span> g.state {
 <span>case</span> command:
-    <span>if</span> c == 0 {  <span>// attack</span>
+    <span>if</span> c == 0 {  <span>// Attack chosen = player motion starts</span>
         d := 8 + g.rng.Intn(7)
-        g.enemyHP -= d
+        g.enemyHP -= d          <i>// damage here</i>
         g.state = playerTurn
-        g.timer = 35
+        g.timer = 35            <i>// then animate</i>
     }
 <span>case</span> playerTurn:
     g.timer--
     <span>if</span> g.timer &lt;= 0 {
-        <span>if</span> g.enemyHP &lt;= 0 { g.clear = true }
-        <span>else</span> { g.state = enemyTurn; g.timer = 40 }
+        <span>if</span> g.enemyHP &lt;= 0 { g.clear = true } <span>else</span> {
+            d := 7 + g.rng.Intn(8)
+            g.hp -= d           <i>// enemyTurn starts = hit frame</i>
+            g.state = enemyTurn
+            g.timer = 40
+        }
     }
 <span>case</span> enemyTurn:
-    g.timer--
-    <span>if</span> g.timer &lt;= 0 {
-        d := 7 + g.rng.Intn(8)
-        <span>if</span> g.guard { d = (d + 1) / 2 }
-        g.hp -= d
-        g.state = command
-    }
+    g.timer--                   <i>// HP already changed; wait out the pose</i>
+    <span>if</span> g.timer &lt;= 0 { g.state = command }
 }</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
           <p class="eyebrow">WITHOUT STATE MACHINE</p>
-          <h3>No state means timing bugs</h3>
-          <p>Without a phase variable you would need nested if chains to block input during animations. Mistakes let the enemy act twice or accept player input mid-animation.</p>
+          <h3>What goes wrong without states?</h3>
+          <p>Nested ifs alone let the enemy move during command select, or accept input mid-animation. Timing bugs pile up fast.</p>
         </article>
         <article>
           <p class="eyebrow">WITH STATE MACHINE</p>

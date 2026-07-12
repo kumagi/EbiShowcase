@@ -75,6 +75,8 @@
         <p class="eyebrow">THE CHASE DIRECTION</p>
         <div class="formula-lines"><code>dx, dy := (player.x - enemy.x), (player.y - enemy.y)</code><span>正規化して</span><code>vx, vy = dx/dist * speed, dy/dist * speed</code></article></div>
         <p>差ベクトル（dx, dy）の長さで割ることで方向だけを取り出し（正規化）、それにスピードを掛けます。どんな方向でも一定の速さで向かわせることができます。</p>
+        <p>巡回の <code>vx, vy = -vy, vx</code> は90度回転です。例: 右 <code>(1,0)</code> → <code>(0,1)</code> 下 → <code>(-1,0)</code> 左 → <code>(0,-1)</code> 上、と時計回りに曲がります。</p>
+        <p>距離が 0（ぴったり重なった）だと割り算で NaN になります。本番では <code>if dist &lt; 1 { dist = 1 }</code> のように下限を入れます。</p>
       </div>
 
       <div class="code-lesson">
@@ -100,6 +102,7 @@
             e.timer = 100
         }
     } <span>else</span> { <i>// 追跡: プレイヤーへ向かう</i>
+        <span>if</span> dist &lt; 1 { dist = 1 } <i>// 0割り防止</i>
         e.vx = ((g.player.x+14) - e.x) / dist * 1.35
         e.vy = ((g.player.y+14) - e.y) / dist * 1.35
     }

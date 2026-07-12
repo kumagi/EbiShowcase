@@ -36,8 +36,8 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>Circular burst</h3><p>Divide 2π by the bullet count to get the angular step. Apply <code>cos</code> for the X velocity component and <code>sin</code> for Y.</p><code>a = i * math.Pi * 2 / count</code></article>
-        <article><span class="concept-number">2</span><h3>Aimed spread</h3><p>Use <code>Atan2</code> to convert the vector from the boss to the player into an angle, then fan bullets around that base angle.</p><code>base = math.Atan2(py-128, px-240)</code></article>
+        <article><span class="concept-number">1</span><h3>Circular burst</h3><p>Computers use <strong>radians</strong> (full circle = 2π ≈ 6.28), not 360°. Divide that by bullet count for spacing. <code>cos</code>/<code>sin</code> give X/Y direction.</p><code>a = i * math.Pi * 2 / count</code></article>
+        <article><span class="concept-number">2</span><h3>Aimed spread</h3><p><code>Atan2(dy,dx)</code> answers “which way is that delta?” — treat it as a heading helper if trig is new, then fan bullets around that base angle.</p><code>base = math.Atan2(py-128, px-240)</code></article>
         <article><span class="concept-number">3</span><h3>Backward removal</h3><p>Every frame, remove bullets that have left the screen. Iterating from the last index prevents index shifting when elements are deleted.</p><code>for i := len-1; i &gt;= 0; i--</code></article>
       </div>
 
@@ -81,7 +81,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>Three patterns, timed<br>by frame modulo</h3>
-          <p>Check the frame counter modulo a period to decide when to fire each pattern. Change the period to shift difficulty without touching the pattern logic.</p>
+          <p>Check the frame counter modulo a period to decide when to fire each pattern. Change the period to shift difficulty without touching the pattern logic. <code>float64(...)</code> only converts ints so Go can do real-number math.</p>
         </div>
         <pre><code><i>// circular burst every 38 frames (with spin)</i>
 <span>if</span> g.frame%38 == 0 {

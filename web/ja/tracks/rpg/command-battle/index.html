@@ -56,7 +56,7 @@
         <article>
           <span class="concept-number">1</span>
           <h3>状態を定数で定義する</h3>
-          <p><code>iota</code> で連番の定数を作ります。<code>command=0, playerTurn=1, enemyTurn=2, result=3</code> の4つです。変数1つで「今どの段階か」を管理できます。</p>
+          <p><code>iota</code> は定数ブロックで「0から1ずつ増える番号」を自動で振る機能です。<code>command = iota</code> の次の行は自動で 1、その次は 2…となります。自分で 0,1,2,3 と書かなくても、状態の名前だけ並べれば連番になります。</p>
           <code>state = command</code>
         </article>
         <article>
@@ -117,31 +117,37 @@
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
-          <h3>switch で状態を切り替える</h3>
-          <p>Update() は毎フレーム呼ばれます。<code>command</code> 状態でキーを押すとダメージ計算をして <code>playerTurn</code> へ移行し、タイマーをセットします。タイマーが尽きると敵ターンへ移り、敵がダメージを与えて次のコマンド入力に戻ります。</p>
+          <h3>ダメージは演出の「始まり」で入れる</h3>
+          <p>Update() は毎フレーム呼ばれます。コマンドを選んだ瞬間に味方の効果を入れ、<code>playerTurn</code> のタイマーは演出用です。敵のダメージも <code>enemyTurn</code> に入った瞬間（攻撃モーション開始）に入れ、残りタイマーは余韻だけにします。タイマーが0になってから初めて HP を減らすと、モーションと数字のタイミングがずれて不自然になります。</p>
         </div>
-        <pre><code><span>switch</span> g.state {
+        <pre><code><span>const</span> (
+    command = iota // 0
+    playerTurn     // 1（自動で+1）
+    enemyTurn      // 2
+    result         // 3
+)
+
+<span>switch</span> g.state {
 <span>case</span> command:
-    <span>if</span> c == 0 {  <span>// 攻撃</span>
+    <span>if</span> c == 0 {  <span>// 攻撃を選んだ＝味方ターン開始</span>
         d := 8 + g.rng.Intn(7)
-        g.enemyHP -= d
+        g.enemyHP -= d          <i>// ダメージはここで</i>
         g.state = playerTurn
-        g.timer = 35
+        g.timer = 35            <i>// あとは演出</i>
     }
 <span>case</span> playerTurn:
     g.timer--
     <span>if</span> g.timer &lt;= 0 {
-        <span>if</span> g.enemyHP &lt;= 0 { g.clear = true }
-        <span>else</span> { g.state = enemyTurn; g.timer = 40 }
+        <span>if</span> g.enemyHP &lt;= 0 { g.clear = true } <span>else</span> {
+            d := 7 + g.rng.Intn(8)
+            g.hp -= d           <i>// 敵ターン開始＝ヒットの瞬間</i>
+            g.state = enemyTurn
+            g.timer = 40
+        }
     }
 <span>case</span> enemyTurn:
-    g.timer--
-    <span>if</span> g.timer &lt;= 0 {
-        d := 7 + g.rng.Intn(8)
-        <span>if</span> g.guard { d = (d + 1) / 2 }
-        g.hp -= d
-        g.state = command
-    }
+    g.timer--                   <i>// ダメージ済み。余韻だけ待つ</i>
+    <span>if</span> g.timer &lt;= 0 { g.state = command }
 }</code></pre>
       </div>
 

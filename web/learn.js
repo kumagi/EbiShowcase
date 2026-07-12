@@ -325,7 +325,7 @@ document.querySelectorAll(".motion-lab[data-lab='cost']").forEach((lab) => {
   render();
 });
 
-document.querySelectorAll(".motion-lab[data-lab='hitbox']").forEach((lab) => {
+document.querySelectorAll(".motion-lab[data-lab='hitbox'], .motion-lab[data-lab='circles']").forEach((lab) => {
   const atk = lab.querySelector("[data-lab-attack]");
   const hurt = lab.querySelector("[data-lab-hurt]");
   const result = lab.querySelector("[data-lab-result]");
@@ -630,7 +630,7 @@ document.querySelectorAll(".motion-lab[data-lab='power']").forEach((lab) => {
   render();
 });
 
-document.querySelectorAll(".motion-lab[data-lab='move8']").forEach((lab) => {
+document.querySelectorAll(".motion-lab[data-lab='move8'], .motion-lab[data-lab='sling-drag']").forEach((lab) => {
   const rawOut = bind(lab, "[data-lab-raw]");
   const normOut = bind(lab, "[data-lab-norm]");
   if (!rawOut || !normOut) return;
@@ -3137,7 +3137,7 @@ document.querySelectorAll(".motion-lab[data-lab='power']").forEach((lab) => {
   });
 });
 
-document.querySelectorAll(".motion-lab[data-lab='move8']").forEach((lab) => {
+document.querySelectorAll(".motion-lab[data-lab='move8'], .motion-lab[data-lab='sling-drag']").forEach((lab) => {
   watchLabPaint(lab, (board) => {
     const raw = lab.querySelector("[data-lab-raw]")?.textContent || "—";
     const norm = lab.querySelector("[data-lab-norm]")?.textContent || "—";

@@ -36,7 +36,7 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>種類ごとにスライス</h3><p>プレイヤーの弾は <code>[]body</code>、敵弾は <code>[]body</code>、敵は <code>[]enemy</code>、星は <code>[]star</code>。種類が違っても、まとめ方は同じです。</p><code>bullets []body</code></article>
+        <article><span class="concept-number">1</span><h3>種類ごとにスライス／埋め込み</h3><p>弾は <code>[]body</code>。敵は <code>type enemy struct { body; hp int }</code> のように <code>body</code> を埋め込み、<code>e.x</code> へ直接触れます（Composition）。</p><code>type enemy struct { body; hp int }</code></article>
         <article><span class="concept-number">2</span><h3>毎フレーム一括更新</h3><p>スライスを <code>range</code> でループし、全員を動かします。特定の1発だけ別扱いにする必要はありません。</p><code>for i := range g.bullets</code></article>
         <article><span class="concept-number">3</span><h3>後ろから削除</h3><p>画面外に出た弾や倒した敵は削除します。後ろから削除すると、添え字がずれないので安全です。</p><code>bullets[:i], bullets[i+1:]</code></article>
       </div>
@@ -72,6 +72,7 @@
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>弾の当たり判定と<br>削除を同時にやる</h3>
           <p>自機の弾と敵を総当たりで調べます。当たったら敵を削除し、弾も削除します。後ろからループしているので添え字がずれません。</p>
+          <p>自機狙い弾の <code>dx/length*2.3</code> は「向きだけ残して長さを 2.3 にする」作業です。距離 <code>length</code> で割ると長さ1の矢印になり、×2.3 で速さが揃います（正規化）。</p>
         </div>
         <pre><code><span>for</span> bi := len(g.bullets) - 1; bi >= 0; bi-- {
     hit := false

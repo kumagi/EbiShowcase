@@ -77,6 +77,9 @@
         <p class="eyebrow">THE TWO-LINE MOVE</p>
         <div class="formula-lines"><code>body = append([]point{head}, body...)</code><span>そして</span><code>body = body[:len(body)-1]</code></div>
         <p>1行目で新しい頭を先頭に追加します。2行目で古い尻尾を取り除きます。エサを食べたときは2行目をスキップするだけで体が1マス伸びます。</p>
+        <p><code>append([]point{head}, g.body...)</code> の末尾の <code>...</code> は「スライスの中身をバラして渡す」印です。<code>g.body</code> をまとめて1個渡すのではなく、中の点を全部並べて <code>append</code> に渡します。</p>
+        <p>逆向き防止の <code>d.x+g.dir.x==0 &amp;&amp; d.y+g.dir.y==0</code> は、右 <code>(1,0)</code> と左 <code>(-1,0)</code> を足すと <code>(0,0)</code> になる、という判定です。同じ向きや直角では足しても 0 になりません。</p>
+        <p>タッチ方向の <code>abs(dx) &gt; abs(dy)</code> は、「左右のずれと上下のずれ、どちらが大きいか」。横に長い入力なら左右、縦に長い入力なら上下へ振り分けます。</p>
       </div>
 
       <div class="code-lesson">
