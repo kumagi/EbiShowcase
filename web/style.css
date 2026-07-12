@@ -56,6 +56,9 @@ html{overflow-x:hidden;-webkit-text-size-adjust:100%}body{min-width:0;overflow-x
 .full-code-copy:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
 .full-code pre{margin:0;max-height:min(70vh,640px);overflow:auto;-webkit-overflow-scrolling:touch}
 .full-code code{display:block;padding:28px 24px;font:500 12px/1.75 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre;color:#d7e6ea}
+.code-keyword{color:#f92672}.code-type{color:#66d9ef}.code-string{color:#e6db74}.code-number{color:#ae81ff}.code-constant{color:#ae81ff}.code-comment{color:#75715e;font-style:italic}.code-function{color:#a6e22e}
+.code-lesson pre code,.implementation-note pre code,.asset-tree pre code,.example-pair pre code,.state-compare pre code,.loading-guide pre code{display:block;white-space:pre;color:#f8f8f2;font:500 13px/1.8 ui-monospace,SFMono-Regular,Menlo,monospace}
+.code-lesson pre code .code-type,.implementation-note pre code .code-type,.asset-tree pre code .code-type,.example-pair pre code .code-type,.state-compare pre code .code-type,.loading-guide pre code .code-type{color:#66d9ef}
 @media(max-width:600px){.lab-board{min-height:430px;border-right:0;border-bottom:1px solid #294054}.full-code code{padding:20px 14px;font-size:11px}.full-code-head{padding:14px 14px}}
 
 

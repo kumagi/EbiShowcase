@@ -1089,6 +1089,40 @@ document.querySelectorAll(".motion-lab[data-lab='loop']").forEach((lab) => {
   render();
 });
 
+const escapeCodeHTML = (value) => value.replace(/[&<>"']/g, (character) => ({
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;",
+}[character]));
+
+const highlightCode = (code) => {
+  const source = code.textContent || "";
+  const tokenPattern = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/|"(?:\\.|[^"\\])*"|`[\s\S]*?`|'(?:\\.|[^'\\])*'|\b\d+(?:\.\d+)?\b|\b(?:package|import|func|type|struct|interface|const|var|if|else|for|range|switch|case|default|return|go|defer|select|break|continue|fallthrough)\b|\b(?:true|false|nil)\b|\b(?:bool|string|byte|int|int8|int16|int32|int64|uint|uint8|uint16|uint32|uint64|float32|float64|complex64|complex128|error)\b|\b[A-Z][A-Za-z0-9_]*\b)/g;
+  let html = "";
+  let cursor = 0;
+
+  for (const match of source.matchAll(tokenPattern)) {
+    const token = match[0];
+    const start = match.index ?? 0;
+    html += escapeCodeHTML(source.slice(cursor, start));
+    let kind = "code-number";
+    if (token.startsWith("//") || token.startsWith("/*")) kind = "code-comment";
+    else if (/^["'`]/.test(token)) kind = "code-string";
+    else if (/^(package|import|func|type|struct|interface|const|var|if|else|for|range|switch|case|default|return|go|defer|select|break|continue|fallthrough)$/.test(token)) kind = "code-keyword";
+    else if (/^(true|false|nil)$/.test(token)) kind = "code-constant";
+    else if (/^(bool|string|byte|int|int8|int16|int32|int64|uint|uint8|uint16|uint32|uint64|float32|float64|complex64|complex128|error)$/.test(token)) kind = "code-type";
+    else if (/^[A-Z]/.test(token)) kind = "code-type";
+    else if (/^\s*\(/.test(source.slice(start + token.length))) kind = "code-function";
+    html += `<span class="${kind}">${escapeCodeHTML(token)}</span>`;
+    cursor = start + token.length;
+  }
+  code.innerHTML = html + escapeCodeHTML(source.slice(cursor));
+};
+
+document.querySelectorAll("pre code").forEach(highlightCode);
+
 document.querySelectorAll(".full-code").forEach((block) => {
   const button = block.querySelector("[data-copy]");
   const code = block.querySelector("[data-embed-slot], pre code");
