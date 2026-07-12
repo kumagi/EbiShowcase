@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+node "$ROOT/scripts/embed-lesson-sources.mjs"
 rm -rf "$ROOT/dist"
 mkdir -p "$ROOT/dist"
 cp -R "$ROOT/web/." "$ROOT/dist/"

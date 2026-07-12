@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/hero"
 	"image/color"
 	"strconv"
 	"syscall/js"
@@ -201,7 +202,7 @@ func (g *game) Draw(s *ebiten.Image) {
 		vector.DrawFilledCircle(s, 8*tile+24, float32(oy+2*tile+24), 11, color.RGBA{72, 205, 255, 255}, false)
 	}
 	vector.DrawFilledRect(s, 8*tile+7, float32(oy+tile+7), 34, 34, color.RGBA{55, 45, 75, 255}, false)
-	vector.DrawFilledCircle(s, float32(g.x*tile+24), float32(oy+g.y*tile+24), 15, color.RGBA{240, 74, 90, 255}, false)
+	hero.DrawCentered(s, float64(g.x*tile+24), float64(oy+g.y*tile+24), 34)
 	if g.companion {
 		vector.DrawFilledCircle(s, float32(g.x*tile+10), float32(oy+g.y*tile+38), 10, color.RGBA{255, 211, 62, 255}, false)
 	}

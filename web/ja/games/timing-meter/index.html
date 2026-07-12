@@ -82,21 +82,168 @@
             g.stopped = false <i>// 次のラウンド</i>
         } <span>else</span> {
             g.stopped = true
-            g.score += scoreFor(g.marker)
+            g.score += scoreFor(g.markerX)
         }
     }
     <span>if</span> g.stopped {
         <span>return</span> nil
     }
-    g.marker += g.speed
-    <span>if</span> g.marker &lt; 45 || g.marker &gt; width-45 {
+    g.markerX += g.speed
+    <span>if</span> g.markerX &lt; 45 || g.markerX &gt; width-45 {
         g.speed = -g.speed
     }
     <span>return</span> nil
 }</code></pre>
       </div>
 
-      <div class="why-grid">
+      
+            <div class="code-focus">
+        <p class="eyebrow">TODAY — まずここを見る</p>
+        <ol>
+          <li>止めた瞬間の採点</li>
+          <li>markerX の往復</li>
+          <li>ゾーンの幅</li>
+        </ol>
+      </div>
+<p class="full-code-intro">下のコードがこのゲームの<strong>全部</strong>です（図形だけで動いています）。コピーして手元で開けます。その前に、上の「まずここを見る」3つだけ追ってください。</p>
+      <div class="full-code" data-embed-source="games/core/timing-meter/main.go">
+        <div class="full-code-head">
+          <span>main.go · ぜんぶのコード</span>
+          <button type="button" class="full-code-copy" data-copy data-copied-label="コピーした！">コピー</button>
+        </div>
+        <pre><code data-embed-slot>package main
+
+import (
+	"fmt"
+	"image/color"
+	"math"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+)
+
+const (
+	screenWidth  = 480
+	screenHeight = 720
+	centerX      = screenWidth / 2
+	barLeft      = 45
+	barRight     = screenWidth - 45
+)
+
+type game struct {
+	markerX float64 // 動く線の位置
+	speed   float64 // 1フレームで動く量（マイナスなら左へ）
+	score   int
+	round   int
+	stopped bool // 止めた直後か
+}
+
+// スペース・クリック・タッチのどれかが「いま押された」か
+func justPressed() bool {
+	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+		return true
+	}
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+		return true
+	}
+	if len(inpututil.AppendJustPressedTouchIDs(nil)) &gt; 0 {
+		return true
+	}
+	return false
+}
+
+// 中心からの距離で得点を決める
+func pointsForDistance(distance float64) (points int, label string) {
+	switch {
+	case distance &lt;= 8:
+		return 100, "PERFECT +100"
+	case distance &lt;= 28:
+		return 50, "GREAT +50"
+	case distance &lt;= 55:
+		return 10, "GOOD +10"
+	default:
+		return 0, "MISS"
+	}
+}
+
+// --- ここから Update ---
+func (g *game) Update() error {
+	if justPressed() {
+		if g.stopped {
+			// 次のラウンドを始める
+			g.stopped = false
+			g.round++
+			g.speed = 3.2 + float64(g.round)*0.18
+			// 奇数ラウンドは左向きからスタート
+			if g.round%2 == 1 {
+				g.speed = -g.speed
+			}
+		} else {
+			// 動いている線を止めて採点する
+			g.stopped = true
+			distance := math.Abs(g.markerX - centerX)
+			points, _ := pointsForDistance(distance)
+			g.score += points
+		}
+	}
+
+	if g.stopped {
+		return nil
+	}
+
+	// 線を動かす
+	g.markerX += g.speed
+
+	// 端に当たったら向きを変える
+	if g.markerX &lt; barLeft || g.markerX &gt; barRight {
+		g.speed = -g.speed
+		g.markerX = math.Max(barLeft, math.Min(barRight, g.markerX))
+	}
+	return nil
+}
+
+// --- ここから Draw ---
+func (g *game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{7, 20, 38, 255})
+
+	// メーターの帯（外側 → 内側ほど高得点）
+	vector.DrawFilledRect(screen, 35, 310, screenWidth-70, 80, color.RGBA{16, 44, 69, 255}, false)
+	vector.DrawFilledRect(screen, centerX-55, 310, 110, 80, color.RGBA{255, 105, 79, 255}, false)
+	vector.DrawFilledRect(screen, centerX-28, 310, 56, 80, color.RGBA{255, 205, 69, 255}, false)
+	vector.DrawFilledRect(screen, centerX-8, 310, 16, 80, color.RGBA{45, 226, 194, 255}, false)
+
+	// 動く白い線
+	vector.DrawFilledRect(screen, float32(g.markerX-4), 285, 8, 130, color.White, false)
+
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %04d   ROUND %02d", g.score, g.round+1), 145, 35)
+
+	if g.stopped {
+		distance := math.Abs(g.markerX - centerX)
+		_, label := pointsForDistance(distance)
+		ebitenutil.DebugPrintAt(screen, label+"\n\nTAP FOR NEXT ROUND", 165, 470)
+	} else {
+		ebitenutil.DebugPrintAt(screen, "TAP / SPACE TO STOP", 165, 470)
+	}
+}
+
+func (g *game) Layout(_, _ int) (int, int) {
+	return screenWidth, screenHeight
+}
+
+func main() {
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Stop the Meter — Ebitengine")
+	g := &amp;game{markerX: barLeft, speed: 3.2}
+	if err := ebiten.RunGame(g); err != nil {
+		panic(err)
+	}
+}
+</code></pre>
+      </div>
+
+    <div class="why-grid">
         <article><p class="eyebrow">WITHOUT STATE</p><h3>いつも同じ反応</h3><p>ボタンを押すたびに同じ処理だけだと、「止める」と「再開する」を分けられません。</p></article>
         <article><p class="eyebrow">WITH STATE</p><h3>今のモードで意味が変わる</h3><p><code>stopped</code> ひとつで、入力の意味と更新の有無を切り替えられます。</p></article>
         <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>速さと帯の幅を変えよう</h3><p><code>speed</code> を大きくするとむずかしく、中央帯を広くするとやさしくなります。ラウンドごとに速くするのも定番です。</p></article>

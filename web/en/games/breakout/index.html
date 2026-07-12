@@ -19,6 +19,9 @@
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Many objects</strong></div>
     </section>
 
+    <p class="curriculum-bridge">The skeleton is still the <a href="../tap-target/#basics">LEVEL 01</a> <strong>Update → Draw</strong> loop. This lesson only adds its new piece (bounce, bricks, or a growing body). Drawing and hits stay simple shapes.</p>
+
+
     <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Clear every brick.</h2></div><p>Bounce the ball with the paddle and erase the colored wall. You have three lives.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Breakout" src="../../../play/breakout/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -75,16 +78,229 @@
     <span>if</span> !b.alive {
         <span>continue</span>
     }
-    <span>if</span> hitBrick(g.bx, g.by, b) {
+    <span>if</span> hitBrick(g.ballX, g.ballY, b) {
         b.alive = false
         g.score += 10
-        g.vy = -g.vy
+        g.ballVY = -g.ballVY
         <span>break</span>
     }
 }</code></pre>
       </div>
 
-      <div class="why-grid">
+      
+            <div class="code-focus">
+        <p class="eyebrow">TODAY — look here first</p>
+        <ol>
+          <li>Brick array</li>
+          <li>Destroy on hit</li>
+          <li>Ball bounce</li>
+        </ol>
+      </div>
+<p class="full-code-intro">The code below is the <strong>entire</strong> game (drawn with simple shapes). Copy it to your editor — but first follow the three “look here first” points above.</p>
+      <p class="full-code-note">Note: inline comments in this full listing are in Japanese for young learners. The English teaching snippets above are your guide.</p>
+      <div class="full-code" data-embed-source="games/core/breakout/main.go">
+        <div class="full-code-head">
+          <span>main.go · full source</span>
+          <button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy</button>
+        </div>
+        <pre><code data-embed-slot>package main
+
+import (
+	"fmt"
+	"image/color"
+	"math"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+)
+
+const (
+	screenWidth  = 480
+	screenHeight = 720
+	brickW       = 50.0
+	brickH       = 24.0
+	ballR        = 10.0
+)
+
+type brick struct {
+	x, y  float64
+	alive bool
+	row   int
+}
+
+type game struct {
+	paddleX float64
+	ballX   float64
+	ballY   float64
+	ballVX  float64
+	ballVY  float64
+	bricks  []brick
+	score   int
+	lives   int
+}
+
+func newGame() *game {
+	g := &amp;game{
+		paddleX: screenWidth / 2,
+		lives:   3,
+	}
+	for row := 0; row &lt; 6; row++ {
+		for col := 0; col &lt; 8; col++ {
+			g.bricks = append(g.bricks, brick{
+				x:     22 + float64(col)*56,
+				y:     90 + float64(row)*32,
+				alive: true,
+				row:   row,
+			})
+		}
+	}
+	g.serve()
+	return g
+}
+
+func (g *game) serve() {
+	g.ballX = screenWidth / 2
+	g.ballY = 590
+	g.ballVX = 3.4
+	g.ballVY = -4.5
+}
+
+func (g *game) movePaddle() {
+	if ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || ebiten.IsKeyPressed(ebiten.KeyA) {
+		g.paddleX -= 6
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) || ebiten.IsKeyPressed(ebiten.KeyD) {
+		g.paddleX += 6
+	}
+	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+		x, _ := ebiten.CursorPosition()
+		g.paddleX = float64(x)
+	}
+	if ids := ebiten.AppendTouchIDs(nil); len(ids) &gt; 0 {
+		x, _ := ebiten.TouchPosition(ids[0])
+		g.paddleX = float64(x)
+	}
+	g.paddleX = math.Max(55, math.Min(screenWidth-55, g.paddleX))
+}
+
+func (g *game) bounceWorld() {
+	g.ballX += g.ballVX
+	g.ballY += g.ballVY
+
+	// 左右の壁
+	if g.ballX &lt; 12 || g.ballX &gt; screenWidth-12 {
+		g.ballVX = -g.ballVX
+		g.ballX = math.Max(12, math.Min(screenWidth-12, g.ballX))
+	}
+	// 天井
+	if g.ballY &lt; 52 {
+		g.ballVY = math.Abs(g.ballVY)
+	}
+	// パドル
+	hitPaddle := g.ballVY &gt; 0 &amp;&amp;
+		g.ballY &gt; 630 &amp;&amp; g.ballY &lt; 650 &amp;&amp;
+		math.Abs(g.ballX-g.paddleX) &lt; 64
+	if hitPaddle {
+		g.ballY = 630
+		g.ballVY = -math.Abs(g.ballVY)
+		g.ballVX += (g.ballX - g.paddleX) * 0.06
+	}
+}
+
+func (g *game) hitBricks() {
+	for i := range g.bricks {
+		b := &amp;g.bricks[i]
+		if !b.alive {
+			continue
+		}
+		hit := g.ballX+ballR &gt; b.x &amp;&amp;
+			g.ballX-ballR &lt; b.x+brickW &amp;&amp;
+			g.ballY+ballR &gt; b.y &amp;&amp;
+			g.ballY-ballR &lt; b.y+brickH
+		if hit {
+			b.alive = false
+			g.score += 10
+			g.ballVY = -g.ballVY
+			break
+		}
+	}
+}
+
+func (g *game) aliveBrickCount() int {
+	n := 0
+	for _, b := range g.bricks {
+		if b.alive {
+			n++
+		}
+	}
+	return n
+}
+
+// --- ここから Update ---
+func (g *game) Update() error {
+	g.movePaddle()
+	g.bounceWorld()
+	g.hitBricks()
+
+	// ボールが下に落ちた
+	if g.ballY &gt; screenHeight+15 {
+		g.lives--
+		if g.lives &lt;= 0 {
+			*g = *newGame()
+		} else {
+			g.serve()
+		}
+	}
+
+	// ブロックを全部壊したらクリア → 最初から
+	if g.aliveBrickCount() == 0 {
+		*g = *newGame()
+	}
+	return nil
+}
+
+// --- ここから Draw ---
+func (g *game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{7, 20, 38, 255})
+
+	colors := []color.RGBA{
+		{255, 105, 79, 255},
+		{255, 145, 72, 255},
+		{255, 210, 72, 255},
+		{45, 226, 194, 255},
+		{71, 161, 220, 255},
+		{151, 113, 230, 255},
+	}
+	for _, b := range g.bricks {
+		if !b.alive {
+			continue
+		}
+		vector.DrawFilledRect(screen, float32(b.x), float32(b.y), brickW, brickH, colors[b.row], false)
+	}
+
+	vector.DrawFilledRect(screen, float32(g.paddleX-58), 640, 116, 14, color.RGBA{45, 226, 194, 255}, false)
+	vector.DrawFilledCircle(screen, float32(g.ballX), float32(g.ballY), ballR, color.White, false)
+
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %04d   LIVES %d", g.score, g.lives), 160, 25)
+	ebitenutil.DebugPrintAt(screen, "ARROWS / DRAG", 184, 690)
+}
+
+func (g *game) Layout(_, _ int) (int, int) {
+	return screenWidth, screenHeight
+}
+
+func main() {
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Breakout — Ebitengine")
+	if err := ebiten.RunGame(newGame()); err != nil {
+		panic(err)
+	}
+}
+</code></pre>
+      </div>
+
+    <div class="why-grid">
         <article><p class="eyebrow">WITHOUT A SLICE</p><h3>brick1, brick2, brick3…</h3><p>Named variables run out fast. Changing the count means rewriting code.</p></article>
         <article><p class="eyebrow">WITH A SLICE</p><h3>Count is data; the rule is one</h3><p>Ten bricks or a hundred bricks still share the same update and draw loops.</p></article>
         <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Change rows, columns, and lives</h3><p>More rows densify the wall. Ball speed and paddle width change the feel immediately.</p></article>

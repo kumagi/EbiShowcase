@@ -3,6 +3,7 @@
  * Structural quality gate for playable lesson articles.
  * Checks JA+EN pages for the Flappy-class skeleton:
  * DEEP DIVE, concept-row, motion-lab, code-lesson, why-grid, learn.js, play iframe.
+ * Intro lessons (order ≤ 12) also require embedded full Go source + copy button.
  *
  * Usage:
  *   node scripts/check-lessons.mjs
@@ -28,7 +29,18 @@ const required = [
   { name: "learn.js", re: /learn\.js/ },
 ];
 
-function checkPage(html, slug) {
+const introRequired = [
+  { name: "code-focus", re: /class="code-focus"/ },
+  { name: "full-code", re: /class="full-code"/ },
+];
+
+function expectedSource(entry) {
+  if (entry.slug === "flappy") return "game/main.go";
+  if (entry.id.startsWith("core/")) return `games/core/${entry.slug}/main.go`;
+  return null;
+}
+
+function checkPage(html, slug, entry) {
   const missing = [];
   for (const rule of required) {
     if (!rule.re.test(html)) missing.push(rule.name);
@@ -38,6 +50,25 @@ function checkPage(html, slug) {
     html.includes("game.html") || // core flappy
     html.includes(`play/${slug}"`);
   if (!playOk) missing.push(`iframe play/${slug}`);
+
+  if (entry.order <= 12) {
+    for (const rule of introRequired) {
+      if (!rule.re.test(html)) missing.push(rule.name);
+    }
+    const src = expectedSource(entry);
+    if (!html.includes('class="full-code"') || !html.includes("data-embed-source=")) {
+      missing.push("full-code");
+    } else if (src && !html.includes(`data-embed-source="${src}"`)) {
+      missing.push(`embed-source ${src}`);
+    }
+    if (!html.includes("data-copy")) missing.push("copy-button");
+    if (!html.includes("data-embed-slot")) missing.push("embed-slot");
+    // Slot should contain package main after embed
+    const slotMatch = html.match(/data-embed-slot[^>]*>([\s\S]*?)<\/code>/);
+    if (!slotMatch || !slotMatch[1].includes("package main")) {
+      missing.push("embedded-source");
+    }
+  }
   return missing;
 }
 
@@ -55,7 +86,7 @@ for (const entry of curriculum) {
       continue;
     }
     const html = readFileSync(file, "utf8");
-    const missing = checkPage(html, entry.slug);
+    const missing = checkPage(html, entry.slug, entry);
     if (missing.length) {
       failures.push({ order: entry.order, id: entry.id, lang, missing });
     }

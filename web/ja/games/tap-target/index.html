@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="光る丸をタッチして、入力座標と円の当たり判定を学ぶEbitengineレッスン。">
+  <meta name="description" content="EbitengineのUpdate・Draw・Layoutと、入力座標の当たり判定を学ぶ最初のレッスン。">
   <title>LEVEL 01 — 光る丸をタッチ | Ebi Showcase</title>
   <link rel="stylesheet" href="../../../style.css">
 </head>
 <body class="overview-page">
-  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../en/games/tap-target/" lang="en" data-language="en">EN</a></nav></header>
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a href="#basics">HOW IT WORKS</a><a href="#learn">COORDINATES</a><a class="lang" href="../../../en/games/tap-target/" lang="en" data-language="en">EN</a></nav></header>
   <main class="overview-main">
     <div class="lesson-breadcrumb"><a href="../../">← 全レベル</a><span>LEVEL 01</span></div>
 
     <section class="overview-hero">
       <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
       <h1>光る丸をタッチ</h1>
-      <p>画面に出た丸をすばやくタッチする、いちばん小さなゲームです。ここから「押した場所」と「画面の位置」を同じものさしで考えます。</p>
-      <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>入力と座標</strong></div>
+      <p>画面に出た丸をすばやくタッチする、いちばん小さなゲームです。ここから「ゲームはどう動くか」と「押した場所はどう数えるか」をいっしょに学びます。</p>
+      <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>ゲームループと入力</strong></div>
     </section>
 
     <section class="play lesson-play" id="play">
@@ -24,16 +24,65 @@
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="光る丸をタッチ" src="../../../play/tap-target/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 
+    <section class="learn" id="basics">
+      <p class="eyebrow">WHAT'S INSIDE / BEFORE ANYTHING ELSE</p>
+      <h2>ゲームの心臓部は、<br>たった3つのメソッド。</h2>
+      <p class="lesson-lead">Ebitengineのゲームは、パラパラ漫画と同じです。毎フレーム「数字を変える」→「画面に描く」をくり返します。このリズムがわかると、あとから出てくる重力も敵も、同じ枠の中に書けます。</p>
+      <div class="steps" style="grid-template-columns:1fr 1fr">
+        <article><b>01</b><h3>UPDATE</h3><p>入力を読み、スコアや位置などの<strong>数字</strong>を進めます。ここには絵を描きません。</p><code>func (g *Game) Update() error</code></article>
+        <article><b>02</b><h3>DRAW</h3><p>いまの数字どおりに、丸や文字を<strong>画面へ描きます</strong>。計算はしません。</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
+      </div>
+
+      <div class="motion-lab" data-lab="loop" data-update="UPDATE" data-draw="DRAW" data-update-note="数字を変える（スコア・位置・タイマー）" data-draw-note="いまの数字どおりに画面を描く" aria-labelledby="loop-lab-title">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / GAME LOOP</p>
+          <h3 id="loop-lab-title">Update → Draw を1コマずつ</h3>
+          <p>ボタンを押すたび、フェーズが切り替わります。本物のゲームも、この2つをものすごい速さでくり返しています。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>次のフェーズ</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+          </div>
+          <p class="lab-hint">1フレーム = Update 1回 + Draw 1回。計算と描画を分けると、あとから直しやすくなります。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-loop-board" data-lab-board data-phase="update" role="img" aria-label="UpdateとDrawの切り替え">
+            <strong data-lab-phase>UPDATE</strong>
+            <span data-lab-note>数字を変える（スコア・位置・タイマー）</span>
+          </div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>フェーズ</span><strong data-lab-phase>UPDATE</strong><small>いまやっていること</small></div>
+            <div><span>フレーム</span><strong data-lab-frame>0</strong><small>何コマ目か</small></div>
+            <div><span>ルール</span><strong>U → D</strong><small>つねにこの順</small></div>
+          </div>
+        </div>
+      </div>
+
+      <details class="basics-extra">
+        <summary>おまけ：Layout とビルドの話（あとでで大丈夫）</summary>
+        <div class="steps" style="grid-template-columns:1fr">
+          <article><b>03</b><h3>LAYOUT</h3><p>ゲーム内のマス目の大きさ（論理解像度）を決めます。実機の拡大縮小はエンジンに任せます。</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article>
+        </div>
+        <div class="recipe">
+          <div><p class="eyebrow">BUILD RECIPE</p><h3>Goのコードが、Webのゲームになるまで。</h3></div>
+          <ol>
+            <li><span>01</span><div><strong>WRITE</strong><small>games の main.go</small></div></li>
+            <li><span>02</span><div><strong>BUILD</strong><small>GOOS=js GOARCH=wasm</small></div></li>
+            <li><span>03</span><div><strong>SHIP</strong><small>GitHub Pages など</small></div></li>
+          </ol>
+        </div>
+      </details>
+    </section>
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / INPUT &amp; COORDINATES</p>
         <h2>どうして、<br>押した場所がわかるの？</h2>
-        <p class="lesson-lead">画面はマス目のないグラフ用紙だと考えます。左上が <strong>(0, 0)</strong>。右へ行くほど X が、下へ行くほど Y が大きくなります。タッチした点と丸の中心の距離が、半径より短ければ「当たった！」です。</p>
+        <p class="lesson-lead">ループの仕組みがわかったら、次は中身です。画面はマス目のないグラフ用紙。左上が <strong>(0, 0)</strong>。右へ行くほど X が、下へ行くほど Y が大きくなります。タッチした点と丸の中心の距離が、半径より短ければ「当たった！」です。</p>
       </div>
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>座標</h3><p>画面のどこかを、2つの数で表します。丸の中心も、タッチした場所も、同じ X と Y で書けます。</p><code>circleX, circleY</code></article>
-        <article><span class="concept-number">2</span><h3>距離</h3><p>2点のあいだの長さです。直角三角形のたてとよこから求めます。平方根が面倒なら、二乗のまま比べても同じです。</p><code>hypot(dx, dy)</code></article>
+        <article><span class="concept-number">2</span><h3>距離</h3><p>2点のあいだの長さです。直角三角形のたてとよこから求めます。平方根を使わない近道として、二乗のまま比べても同じです。</p><code>hypot(dx, dy)</code></article>
         <article><span class="concept-number">3</span><h3>当たり判定</h3><p>距離が半径以下ならヒット。得点して、次の丸を別の場所へ移します。</p><code>dist &lt;= radius</code></article>
       </div>
 
@@ -73,8 +122,8 @@
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
-          <h3>Ebitengineでは<br><code>Update</code>に書く</h3>
-          <p>押された瞬間だけ座標を読み、距離を調べます。<code>Draw</code>は丸とスコアを描くだけ。計算と描画を分けると、あとから直しやすくなります。</p>
+          <h3>判定は<br><code>Update</code>に書く</h3>
+          <p>押された瞬間だけ座標を読み、距離を調べます。<code>Draw</code>は丸とスコアを描くだけ。さっき学んだ「計算と描画の分け方」そのものです。</p>
         </div>
         <pre><code><span>func</span> (g *game) Update() error {
     px, py, pressed := pressedPosition()
@@ -83,7 +132,7 @@
     }
 
     <i>// 押した点と中心の距離</i>
-    dist := math.Hypot(float64(px)-g.x, float64(py)-g.y)
+    dist := math.Hypot(float64(px)-g.circleX, float64(py)-g.circleY)
     <span>if</span> dist &lt;= g.radius {
         g.score++
         g.moveTarget()
@@ -92,9 +141,174 @@
 }</code></pre>
       </div>
 
-      <div class="why-grid">
-        <article><p class="eyebrow">WITHOUT COORDINATES</p><h3>「なんとなく」では作れない</h3><p>「だいたいこのへん」ではプログラムは動きません。位置は必ず数字で表します。</p></article>
-        <article><p class="eyebrow">WITH DISTANCE CHECK</p><h3>丸もタッチも同じものさし</h3><p>見た目が丸でも、判定は中心と半径の計算です。これでどの画面サイズでも同じルールになります。</p></article>
+      
+            <div class="code-focus">
+        <p class="eyebrow">TODAY — まずここを見る</p>
+        <ol>
+          <li>Update（押した座標）</li>
+          <li>距離の判定</li>
+          <li>Draw（丸とスコア）</li>
+        </ol>
+      </div>
+<p class="full-code-intro">下のコードがこのゲームの<strong>全部</strong>です（図形だけで動いています）。コピーして手元で開けます。その前に、上の「まずここを見る」3つだけ追ってください。</p>
+      <div class="full-code" data-embed-source="games/core/tap-target/main.go">
+        <div class="full-code-head">
+          <span>main.go · ぜんぶのコード</span>
+          <button type="button" class="full-code-copy" data-copy data-copied-label="コピーした！">コピー</button>
+        </div>
+        <pre><code data-embed-slot>package main
+
+import (
+	"fmt"
+	"image/color"
+	"math"
+	"math/rand"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+)
+
+// --- 画面の大きさ（ゲーム内のマス目） ---
+const (
+	screenWidth  = 480
+	screenHeight = 720
+	startSeconds = 30
+)
+
+// game はこのゲームの全部の数字を入れた箱です。
+type game struct {
+	circleX    float64 // 丸の中心 X
+	circleY    float64 // 丸の中心 Y
+	radius     float64 // 丸の半径
+	score      int     // 得点
+	framesLeft int     // 残りフレーム（60フレーム ≒ 1秒）
+	started    bool    // スタートしたか
+	rng        *rand.Rand
+}
+
+func newGame() *game {
+	g := &amp;game{
+		radius:     38,
+		framesLeft: startSeconds * 60,
+		rng:        rand.New(rand.NewSource(11)),
+	}
+	g.moveTarget()
+	return g
+}
+
+// 丸を別の場所へ移す
+func (g *game) moveTarget() {
+	g.circleX = 60 + g.rng.Float64()*(screenWidth-120)
+	g.circleY = 130 + g.rng.Float64()*(screenHeight-240)
+}
+
+// マウスまたはタッチで「いま押した位置」を返す
+func pressedPosition() (x, y int, pressed bool) {
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+		x, y = ebiten.CursorPosition()
+		return x, y, true
+	}
+	ids := inpututil.AppendJustPressedTouchIDs(nil)
+	if len(ids) &gt; 0 {
+		x, y = ebiten.TouchPosition(ids[0])
+		return x, y, true
+	}
+	return 0, 0, false
+}
+
+// --- ここから Update（数字を進める） ---
+func (g *game) Update() error {
+	px, py, pressed := pressedPosition()
+
+	// まだ始まっていない → 押したらスタート
+	if !g.started {
+		if pressed {
+			g.started = true
+		}
+		return nil
+	}
+
+	// 時間切れ → 押したら最初から
+	if g.framesLeft &lt;= 0 {
+		if pressed {
+			g.score = 0
+			g.framesLeft = startSeconds * 60
+			g.started = false
+			g.moveTarget()
+		}
+		return nil
+	}
+
+	// タイマーを1フレーム減らす
+	g.framesLeft--
+
+	// 押した瞬間だけ、丸との距離を調べる
+	if pressed {
+		dx := float64(px) - g.circleX
+		dy := float64(py) - g.circleY
+		distance := math.Hypot(dx, dy)
+		if distance &lt;= g.radius {
+			g.score++
+			// 当たるほど丸を少し小さくする
+			g.radius = math.Max(22, 38-float64(g.score)/2)
+			g.moveTarget()
+		}
+	}
+	return nil
+}
+
+// --- ここから Draw（画面に描く） ---
+func (g *game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{7, 20, 38, 255})
+
+	// 背景のうすい円
+	for i := 0; i &lt; 12; i++ {
+		vector.StrokeCircle(
+			screen,
+			float32(screenWidth/2),
+			float32(screenHeight/2),
+			float32(55+i*38),
+			1,
+			color.RGBA{45, 226, 194, 25},
+			false,
+		)
+	}
+
+	// 光る丸（外側のぼかし → 本体 → ハイライト）
+	vector.DrawFilledCircle(screen, float32(g.circleX), float32(g.circleY), float32(g.radius+8), color.RGBA{45, 226, 194, 45}, false)
+	vector.DrawFilledCircle(screen, float32(g.circleX), float32(g.circleY), float32(g.radius), color.RGBA{45, 226, 194, 255}, false)
+	vector.DrawFilledCircle(screen, float32(g.circleX-10), float32(g.circleY-10), float32(g.radius/4), color.RGBA{230, 255, 249, 220}, false)
+
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %02d", g.score), 24, 24)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("TIME  %02d", max(0, g.framesLeft/60)), 380, 24)
+
+	if !g.started {
+		ebitenutil.DebugPrintAt(screen, "TAP THE TARGET\n\nCLICK / TOUCH TO START", 145, 320)
+	} else if g.framesLeft &lt;= 0 {
+		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("TIME UP!  SCORE %d\n\nTAP TO RETRY", g.score), 160, 320)
+	}
+}
+
+// --- Layout（画面の大きさ） ---
+func (g *game) Layout(_, _ int) (int, int) {
+	return screenWidth, screenHeight
+}
+
+func main() {
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Tap the Target — Ebitengine")
+	if err := ebiten.RunGame(newGame()); err != nil {
+		panic(err)
+	}
+}
+</code></pre>
+      </div>
+
+    <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT THE LOOP</p><h3>どこに書けばいいか迷う</h3><p>Update / Draw の役割が決まっていると、「入力はここ」「絵はここ」と迷わず足せます。</p></article>
+        <article><p class="eyebrow">WITH COORDINATES</p><h3>丸もタッチも同じものさし</h3><p>見た目が丸でも、判定は中心と半径の計算です。どの画面サイズでも同じルールになります。</p></article>
         <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>数字を変えて実験しよう</h3><p><code>radius</code> を小さくするとむずかしく、<code>framesLeft</code> を伸ばすとゆっくり遊べます。ゲーム作りは「ちょうどいい」を探す作業です。</p></article>
       </div>
     </section>

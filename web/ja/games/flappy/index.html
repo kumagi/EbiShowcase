@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="GoとEbitengineで作ったミニゲームを、ブラウザですぐ遊んで学べるショーケース。">
-  <title>Ebi Showcase — Goでゲームを作ろう</title>
+  <title>LEVEL 04 — Ebi Flight | Ebi Showcase</title>
   <link rel="canonical" href="./">
   <link rel="alternate" hreflang="ja" href="../../../ja/games/flappy/">
   <link rel="alternate" hreflang="en" href="../../../en/games/flappy/">
@@ -14,35 +14,38 @@
 <body>
   <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="#play">PLAY</a><a href="#learn">HOW IT WORKS</a><a href="#acceleration">ACCELERATION</a><a href="https://ebitengine.org/" rel="noreferrer">EBITENGINE ↗</a><a class="lang" href="../../../en/games/flappy/" lang="en" data-language="en">EN</a></nav></header>
   <main id="top"><div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>LEVEL 04</span></div>
+    <div class="overview-concept" style="margin:18px max(24px,7vw)"><small>このゲームで学ぶこと</small><strong>速度と加速度</strong></div>
     <section class="hero">
-      <div class="hero-copy"><p class="eyebrow">A TINY GAME ENGINE. A BIG FIRST STEP.</p><h1>Goで、<br><em>ゲームが動く。</em></h1><p class="lead">コードを書いて、ビルドして、ブラウザで遊ぶ。Ebitengineなら、その全部が驚くほどまっすぐです。</p><a class="cta" href="#play">今すぐプレイ <b>↓</b></a></div>
+      <div class="hero-copy"><p class="eyebrow">LEVEL 04 / ACCELERATION IN MOTION</p><h1>Goで、<br><em>主人公が落ちる。</em></h1><p class="lead">Update の中で速度を少しずつ変えると、ジャンプが自然な弧になります。見た目はオリジナル主人公の Ebi Boy、当たり判定は円です。ゲームループは LEVEL 01 で学んだはず。ここでは加速度に集中します。</p><a class="cta" href="#play">今すぐプレイ <b>↓</b></a></div>
       <div class="code-card" aria-hidden="true"><div class="dots">● ● ●</div><pre><span>func</span> (g *Game) Update() error {
   <i>// every frame, keep it simple.</i>
   g.bird.velocity += gravity
   g.bird.y += g.bird.velocity
   <span>return</span> nil
 }</pre><div class="run">GO → WASM → BROWSER</div></div>
+      <p class="cast-note">見た目はオリジナル主人公の <strong>Ebi Boy</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
     </section>
 
     <section class="play" id="play">
-      <div class="section-head"><div><p class="eyebrow">GAME 01 / EBI FLIGHT</p><h2>まずは、飛んでみよう。</h2></div><p>クリック、タップ、またはスペースキーで上昇。パイプを抜けるたびに1ポイント。</p></div>
+      <div class="section-head"><div><p class="eyebrow">LEVEL 04 / EBI FLIGHT</p><h2>まずは、飛んでみよう。</h2></div><p>クリック、タップ、またはスペースキーで上昇。パイプを抜けるたびに1ポイント。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / WEBASSEMBLY</span><button id="fullscreen" type="button">FULL SCREEN ↗</button></div><div id="game-wrap"><iframe id="game" title="Ebi Flight game" src="../../../game.html" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 
     <section class="learn" id="learn">
-      <p class="eyebrow">WHAT'S INSIDE</p><h2>ゲームの心臓部は、<br>たった3つのメソッド。</h2>
-      <div class="steps"><article><b>01</b><h3>UPDATE</h3><p>入力、重力、当たり判定。1フレームごとに世界の状態を一歩進めます。</p><code>func (g *Game) Update() error</code></article><article><b>02</b><h3>DRAW</h3><p>現在の状態を画面に描画。画像なしでも図形APIだけでゲームは作れます。</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article><article><b>03</b><h3>LAYOUT</h3><p>ゲーム内の論理解像度を決定。異なる画面サイズへの拡大縮小はエンジンに任せます。</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article></div>
-      <div class="recipe"><div><p class="eyebrow">BUILD RECIPE</p><h3>Goのコードが、Webのゲームになるまで。</h3></div><ol><li><span>01</span><div><strong>WRITE</strong><small>game/main.go</small></div></li><li><span>02</span><div><strong>BUILD</strong><small>GOOS=js GOARCH=wasm</small></div></li><li><span>03</span><div><strong>SHIP</strong><small>GitHub Pages</small></div></li></ol></div>
+      <p class="eyebrow">QUICK REVIEW / FROM LEVEL 01</p>
+      <h2>Update と Draw は、<br>もう知っているはず。</h2>
+      <p style="max-width:720px;font-size:18px;line-height:1.85;color:#40515b;margin:0 0 36px">ゲームが毎フレーム動く仕組みは、<a href="../tap-target/#basics">LEVEL 01</a> で学びました。ここでは短く復習してから、本題の<strong>加速度</strong>へ進みます。</p>
+      <div class="steps"><article><b>01</b><h3>UPDATE</h3><p>入力・重力・当たり判定。数字を進める場所（復習）。</p><code>func (g *Game) Update() error</code></article><article><b>02</b><h3>DRAW</h3><p>いまの数字どおりに描く場所（復習）。</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article><article><b>03</b><h3>LAYOUT</h3><p>論理解像度を決める場所（復習）。</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article></div>
     </section>
 
     <section class="physics" id="acceleration" data-up="上向き" data-down="下向き" data-still="止まっている">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / ACCELERATION</p>
-        <h2>どうして鳥は、<br>だんだん落ちるの？</h2>
+        <h2>どうして主人公は、<br>だんだん落ちるの？</h2>
         <p class="lesson-lead">答えは<strong>加速度（かそくど）</strong>です。むずかしそうな名前ですが、「速さを少しずつ変える量」と考えれば大丈夫。坂道を転がるボールが、だんだん速くなるのと同じです。</p>
       </div>
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>位置</h3><p>鳥が「いま、どこにいるか」。画面の上が0で、下へ行くほど数字が大きくなります。</p><code>birdY = 320</code></article>
+        <article><span class="concept-number">1</span><h3>位置</h3><p>主人公が「いま、どこにいるか」。画面の上が0で、下へ行くほど数字が大きくなります。</p><code>birdY = 320</code></article>
         <article><span class="concept-number">2</span><h3>速度</h3><p>1回の更新で、どちらへどれだけ動くか。マイナスなら上へ、プラスなら下へ進みます。</p><code>velocity = -7.4</code></article>
         <article><span class="concept-number">3</span><h3>加速度</h3><p>速度を毎回どれだけ変えるか。重力として <strong>+0.42</strong> を足し続けると、上昇が止まり、やがて落下します。</p><code>gravity = +0.42</code></article>
       </div>
@@ -50,25 +53,25 @@
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p>
           <h3 id="motion-lab-title">1コマずつ動かしてみよう</h3>
-          <p>ゲームはパラパラ漫画のように、少しずつ計算して描き直します。ボタンを押すたび、重力が速度へ足され、その速度だけ鳥の位置が変わります。</p>
+          <p>ゲームはパラパラ漫画のように、少しずつ計算して描き直します。ボタンを押すたび、重力が速度へ足され、その速度だけ主人公の位置が変わります。見た目は Ebi Boy、当たりは円です。</p>
           <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap>はばたく</button><button type="button" class="lab-button" data-lab-step>1フレーム進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button></div>
           <p class="lab-hint">「はばたく」は、上向きの速度 <code>-7.4</code> をセットしてから1フレーム進めます。</p>
         </div>
         <div class="lab-visual">
-          <div class="lab-sky" role="img" aria-label="鳥の上下運動を示す図"><span class="axis-label axis-top">0 / 上</span><span class="axis-label axis-bottom">720 / 下</span><div class="lab-bird" data-lab-bird aria-hidden="true"><span></span></div></div>
+          <div class="lab-sky" role="img" aria-label="主人公の上下運動を示す図"><span class="axis-label axis-top">0 / 上</span><span class="axis-label axis-bottom">720 / 下</span><div class="lab-bird" data-lab-bird aria-hidden="true"><span></span></div></div>
           <div class="lab-values" aria-live="polite"><div><span>加速度</span><strong>+0.42</strong><small>毎フレーム</small></div><div><span>速度</span><strong data-lab-velocity>0.00</strong><small data-lab-direction>止まっている</small></div><div><span>位置 Y</span><strong data-lab-position>320.00</strong><small>画面の上から</small></div></div>
         </div>
       </div>
       <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>速度 = 速度 + 重力</code><span>つぎに</span><code>位置 = 位置 + 速度</code></div><p>順番が大切です。まず重力で速度を変え、次にその速度で位置を変えます。毎フレームくり返すだけで、自然なジャンプの曲線が生まれます。</p></div>
       <div class="code-lesson">
-        <div><p class="eyebrow">IN THE REAL GAME</p><h3>Ebitengineでは<br><code>Update</code>に書く</h3><p><code>Update</code>はゲームの状態を進める場所です。入力を調べ、速度を変え、位置を動かします。<code>Draw</code>は計算後の位置に鳥を描きます。</p></div>
+        <div><p class="eyebrow">IN THE REAL GAME</p><h3>Ebitengineでは<br><code>Update</code>に書く</h3><p><code>Update</code>はゲームの状態を進める場所です。入力を調べ、速度を変え、位置を動かします。<code>Draw</code>は計算後の位置に主人公を描きます。</p></div>
         <pre><code><span>const</span> gravity = 0.42
-<span>const</span> flapV   = -7.4
+<span>const</span> flapSpeed = -7.4
 
 <span>func</span> (g *game) Update() error {
-    <i>// 押した瞬間、上向きの速度にする</i>
+    <i>// 押した瞬間、上向きの速さにする</i>
     <span>if</span> justPressed() {
-        g.velocity = flapV
+        g.velocity = flapSpeed
     }
 
     <i>// 1. 重力で速度を変える</i>
@@ -79,10 +82,267 @@
     <span>return</span> nil
 }</code></pre>
       </div>
-      <div class="why-grid">
-        <article><p class="eyebrow">WITHOUT ACCELERATION</p><h3>ずっと同じ速さ</h3><p>鳥が直線で上がり、直線で落ちるため、機械のような不自然な動きになります。</p></article>
+      
+            <div class="code-focus">
+        <p class="eyebrow">TODAY — まずここを見る</p>
+        <ol>
+          <li>velocity += gravity</li>
+          <li>位置 = 位置 + 速度</li>
+          <li>はばたきで速度セット</li>
+        </ol>
+      </div>
+<p class="full-code-intro">下のコードがこのゲームの<strong>本体</strong>です（主人公の絵は共有パッケージ <code>internal/hero</code> から読みます）。コピーして手元で開けます。その前に、上の「まずここを見る」3つだけ追ってください。</p>
+      <div class="full-code" data-embed-source="game/main.go">
+        <div class="full-code-head">
+          <span>main.go · ぜんぶのコード</span>
+          <button type="button" class="full-code-copy" data-copy data-copied-label="コピーした！">コピー</button>
+        </div>
+        <pre><code data-embed-slot>package main
+
+import (
+	"fmt"
+	"image/color"
+	"math"
+	"math/rand"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/hero"
+)
+
+// --- 授業で触る数字 ---
+const (
+	screenWidth  = 480
+	screenHeight = 720
+	groundY      = 650
+	gravity      = 0.42 // 毎フレーム、速さに足す量（加速度）
+	flapSpeed    = -7.4 // はばたいたときの上向きの速さ
+	birdX        = 128.0
+	birdRadius   = 15.0
+	pipeWidth    = 76.0
+	gapHeight    = 178.0
+)
+
+// パイプ 1本（すきまの中心 Y を持つ）
+type pipe struct {
+	x      float64
+	gapY   float64
+	scored bool // もう得点したか
+}
+
+type game struct {
+	birdY    float64
+	velocity float64 // 速さ（マイナス＝上、プラス＝下）
+	pipes    []pipe
+	score    int
+	best     int
+	frame    int
+	started  bool
+	gameOver bool
+	rng      *rand.Rand
+}
+
+func newGame() *game {
+	g := &amp;game{rng: rand.New(rand.NewSource(7))}
+	g.reset()
+	return g
+}
+
+func (g *game) reset() {
+	g.birdY = 320
+	g.velocity = 0
+	g.pipes = []pipe{
+		{x: 560, gapY: 300},
+		{x: 830, gapY: 390},
+		{x: 1100, gapY: 265},
+	}
+	g.score = 0
+	g.frame = 0
+	g.started = false
+	g.gameOver = false
+}
+
+func justPressed() bool {
+	if inpututil.IsKeyJustPressed(ebiten.KeySpace) || inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
+		return true
+	}
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+		return true
+	}
+	if len(inpututil.AppendJustPressedTouchIDs(nil)) &gt; 0 {
+		return true
+	}
+	return false
+}
+
+func (g *game) hitPipe() bool {
+	for _, p := range g.pipes {
+		inX := birdX+birdRadius &gt; p.x &amp;&amp; birdX-birdRadius &lt; p.x+pipeWidth
+		if !inX {
+			continue
+		}
+		gapTop := p.gapY - gapHeight/2
+		gapBottom := p.gapY + gapHeight/2
+		hitTop := g.birdY-birdRadius &lt; gapTop
+		hitBottom := g.birdY+birdRadius &gt; gapBottom
+		if hitTop || hitBottom {
+			return true
+		}
+	}
+	return false
+}
+
+// --- ここから Update（数字を進める） ---
+func (g *game) Update() error {
+	g.frame++
+	pressed := justPressed()
+
+	if g.gameOver {
+		if pressed {
+			g.reset()
+		}
+		return nil
+	}
+
+	// スタート前は少し上下にゆらす
+	if !g.started {
+		g.birdY = 320 + math.Sin(float64(g.frame)*0.06)*7
+		if pressed {
+			g.started = true
+			g.velocity = flapSpeed
+		}
+		return nil
+	}
+
+	// 押した瞬間、上向きの速さにする
+	if pressed {
+		g.velocity = flapSpeed
+	}
+
+	// 1. 速さに重力を足す（加速度）
+	g.velocity += gravity
+	// 2. 速さで位置を動かす
+	g.birdY += g.velocity
+
+	// パイプを左へ流す
+	for i := range g.pipes {
+		g.pipes[i].x -= 2.8
+		if !g.pipes[i].scored &amp;&amp; g.pipes[i].x+pipeWidth &lt; birdX {
+			g.pipes[i].scored = true
+			g.score++
+		}
+	}
+
+	// 画面外のパイプを消して、右に新しいパイプを足す
+	if g.pipes[0].x+pipeWidth &lt; -10 {
+		lastX := g.pipes[len(g.pipes)-1].x
+		newPipe := pipe{
+			x:    lastX + 270,
+			gapY: 225 + g.rng.Float64()*230,
+		}
+		g.pipes = append(g.pipes[1:], newPipe)
+	}
+
+	// 地面・天井・パイプに当たったらゲームオーバー
+	hitGround := g.birdY+17 &gt;= groundY
+	hitCeiling := g.birdY-17 &lt;= 0
+	if hitGround || hitCeiling || g.hitPipe() {
+		g.gameOver = true
+		if g.score &gt; g.best {
+			g.best = g.score
+		}
+	}
+	return nil
+}
+
+// --- ここから Draw ---
+func (g *game) Draw(screen *ebiten.Image) {
+	g.drawBackground(screen)
+	for _, p := range g.pipes {
+		g.drawPipe(screen, p)
+	}
+	g.drawGround(screen)
+	g.drawBird(screen)
+
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE  %02d", g.score), 198, 28)
+	if !g.started {
+		g.drawPanel(screen, "TAP TO FLY", "SPACE / CLICK / TOUCH")
+	}
+	if g.gameOver {
+		g.drawPanel(screen, "GAME OVER", fmt.Sprintf("SCORE %d   BEST %d\n\nTAP TO RETRY", g.score, g.best))
+	}
+}
+
+func (g *game) drawBackground(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{9, 21, 43, 255})
+	for i := 0; i &lt; 26; i++ {
+		x := float32((i*83-g.frame/5)%540 - 30)
+		y := float32(35 + (i*47)%390)
+		vector.DrawFilledCircle(screen, x, y, float32(1+i%2), color.RGBA{100, 230, 225, 150}, false)
+	}
+	for i := 0; i &lt; 10; i++ {
+		x := float32(i*62 - (g.frame/3)%62)
+		h := float32(55 + (i*29)%105)
+		vector.DrawFilledRect(screen, x, groundY-h, 48, h, color.RGBA{14, 39, 67, 255}, false)
+	}
+}
+
+func (g *game) drawGround(screen *ebiten.Image) {
+	vector.DrawFilledRect(screen, 0, groundY, screenWidth, screenHeight-groundY, color.RGBA{27, 203, 159, 255}, false)
+	for x := -40 + (g.frame*2)%40; x &lt; screenWidth; x += 40 {
+		vector.DrawFilledRect(screen, float32(x), groundY+13, 22, 5, color.RGBA{9, 98, 91, 255}, false)
+	}
+}
+
+func (g *game) drawPipe(screen *ebiten.Image, p pipe) {
+	green := color.RGBA{22, 196, 145, 255}
+	light := color.RGBA{70, 236, 170, 255}
+	dark := color.RGBA{6, 103, 91, 255}
+	topH := float32(p.gapY - gapHeight/2)
+	bottomY := float32(p.gapY + gapHeight/2)
+
+	vector.DrawFilledRect(screen, float32(p.x), 0, pipeWidth, topH, green, false)
+	vector.DrawFilledRect(screen, float32(p.x-7), topH-28, pipeWidth+14, 28, green, false)
+	vector.DrawFilledRect(screen, float32(p.x), bottomY, pipeWidth, groundY-bottomY, green, false)
+	vector.DrawFilledRect(screen, float32(p.x-7), bottomY, pipeWidth+14, 28, green, false)
+	vector.DrawFilledRect(screen, float32(p.x+9), 0, 8, topH-28, light, false)
+	vector.DrawFilledRect(screen, float32(p.x+pipeWidth-10), 0, 10, topH, dark, false)
+	vector.DrawFilledRect(screen, float32(p.x+9), bottomY+28, 8, groundY-bottomY-28, light, false)
+	vector.DrawFilledRect(screen, float32(p.x+pipeWidth-10), bottomY, 10, groundY-bottomY, dark, false)
+}
+
+func (g *game) drawBird(screen *ebiten.Image) {
+	// オリジナル主人公「Ebi Boy」を鳥の代わりに描く
+	hero.DrawCentered(screen, birdX, g.birdY, 44)
+}
+
+func (g *game) drawPanel(screen *ebiten.Image, title, detail string) {
+	vector.DrawFilledRect(screen, 68, 250, 344, 166, color.RGBA{5, 16, 34, 225}, false)
+	vector.StrokeRect(screen, 68, 250, 344, 166, 3, color.RGBA{45, 226, 194, 255}, false)
+	ebitenutil.DebugPrintAt(screen, title, 192-len(title)*2, 286)
+	ebitenutil.DebugPrintAt(screen, detail, 137, 338)
+}
+
+func (g *game) Layout(_, _ int) (int, int) {
+	return screenWidth, screenHeight
+}
+
+func main() {
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Ebi Flight — Ebitengine WASM")
+	if err := ebiten.RunGame(newGame()); err != nil {
+		panic(err)
+	}
+}
+</code></pre>
+      </div>
+
+    <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT ACCELERATION</p><h3>ずっと同じ速さ</h3><p>主人公が直線で上がり、直線で落ちるため、機械のような不自然な動きになります。</p></article>
         <article><p class="eyebrow">WITH ACCELERATION</p><h3>なめらかな弧を描く</h3><p>上向きの速度が弱まり、頂点で0に近づき、その後は下向きに速くなります。</p></article>
-        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>数字を変えて実験しよう</h3><p><code>gravity</code>を大きくすると重い鳥に、<code>flapV</code>をより小さなマイナスにすると力強い羽ばたきになります。ゲーム作りは、この「ちょうどいい」を探す作業です。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>数字を変えて実験しよう</h3><p><code>gravity</code>を大きくすると重いキャラに、<code>flapSpeed</code>をより小さなマイナスにすると力強い羽ばたきになります。ゲーム作りは、この「ちょうどいい」を探す作業です。</p></article>
       </div>
     </section>
   </main>

@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/hero"
 	"image/color"
 )
 
@@ -109,7 +110,7 @@ func (g *game) Draw(s *ebiten.Image) {
 	}
 	vector.DrawFilledRect(s, 8*tile+8, float32(oy+1*tile+8), 32, 32, gate, false)
 	px, py := float32(g.p.x*tile+24), float32(oy+g.p.y*tile+24)
-	vector.DrawFilledCircle(s, px, py, 15, color.RGBA{240, 74, 90, 255}, false)
+	hero.DrawCentered(s, float64(px), float64(py), 34)
 	vector.DrawFilledCircle(s, px+float32(g.facing.x*8), py+float32(g.facing.y*8), 3, color.White, false)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("VILLAGE STARS %d/3", g.collected), 170, 25)
 	ebitenutil.DebugPrintAt(s, "COLLECT 3 STARS, THEN REACH THE GREEN SHRINE", 85, 50)

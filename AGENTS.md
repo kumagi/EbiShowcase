@@ -13,7 +13,7 @@ The long-term completion gate is `105/105` playable curriculum entries. A lesson
 
 - Game logic, input, simulation, collision, and rendering belong in Go + Ebitengine. HTML, CSS, and JavaScript are only for the static showcase and shared WASM loader.
 - Everything in the repository is Apache License 2.0 compatible. Do not add assets, fonts, code, or copied game names/artwork with incompatible or unclear licensing.
-- Use original simple shapes and Ebi-themed presentation. Famous games are references for mechanics, not permission to copy their art, text, characters, music, maps, or branding.
+- Prefer original simple shapes; the shared Ebi Boy sprite is allowed as the curriculum protagonist. Ebi-themed presentation otherwise. Famous games are references for mechanics, not permission to copy their art, text, characters, music, maps, or branding.
 - Every game must work with keyboard/mouse on PC and touch input on phones and tablets.
 - GitHub Pages project URLs must work. Use relative links; do not assume the site is hosted at `/`.
 - Japanese and English are independent, shareable URLs. Keep both versions in sync.
@@ -45,9 +45,18 @@ The build creates a separate game at `dist/play/<slug>/` for every implementatio
 - Keyboard and touch controls are both implemented. Pointer controls should use Ebitengine input APIs, not page-side JavaScript.
 - `web/ja/<route>/index.html` and `web/en/<route>/index.html` embed `../../../../play/<slug>/` (or the correct relative depth).
 - Both articles explain the mechanic step by step, including a small representative Go snippet. Japanese should avoid unexplained jargon and use concrete examples a child can picture.
+- Core lessons (curriculum order 1–12) also embed the full `main.go` with a short “look here first” map and copy button (`data-embed-source`). Track lessons use the code-lesson snippet only; point learners to the repo for the full file.
+- Shared hero art may live in `internal/hero`. Lesson copy must say the on-screen character is Ebi Boy when that sprite is drawn, and must not claim the HTML listing is a fully self-contained single file if shared packages are imported.
 - The relevant hub/card says PLAYABLE or otherwise clearly identifies the finished lesson when the surrounding design supports statuses.
 - Go formatting, JS/WASM compilation, and the Ralph verification pass.
 - A real browser loads one Canvas without console errors. Check a desktop viewport and a phone-size viewport; the lesson page must not overflow horizontally.
+
+## Article consistency (current curriculum policy)
+
+- Teach Ebitengine from the game loop first: LEVEL 01 owns Update / Draw / (optional) Layout. Later lessons review or extend that frame; they do not reintroduce the engine as if from zero.
+- When a lesson draws the shared hero sprite (`internal/hero`), articles in both languages must call out **Ebi Boy** and say that hit tests remain simple shapes.
+- Full-source blurbs must not claim `internal/hero` if that package is unused. Shape-only games say the listing is the entire game; hero games say main logic plus shared art.
+- Track hubs and STEP 01 pages should link back to LEVEL 01 so genre paths feel like continuations, not a second beginner track.
 
 ## Implementation conventions
 

@@ -28,7 +28,35 @@ html{overflow-x:hidden;-webkit-text-size-adjust:100%}body{min-width:0;overflow-x
 .lab-burst{position:relative;width:100%;height:100%;min-height:280px}
 .lab-burst span{position:absolute;width:12px;height:12px;margin:-6px;border-radius:50%;background:var(--cyan)}
 .lab-mono-board{display:grid;place-items:center;padding:28px;color:#c5d5db;font:700 18px monospace;letter-spacing:.04em;text-align:center;line-height:1.7}
-@media(max-width:600px){.lab-board{min-height:430px;border-right:0;border-bottom:1px solid #294054}}
+.lab-loop-board{display:grid;place-items:center;min-height:280px;padding:28px;text-align:center}
+.lab-loop-board[data-phase="update"]{background:linear-gradient(180deg,#0f3a4a,#0a1c32)}
+.lab-loop-board[data-phase="draw"]{background:linear-gradient(180deg,#3a2a12,#0a1c32)}
+.lab-loop-board strong{display:block;font:900 42px monospace;color:var(--cyan);margin-bottom:12px}
+.lab-loop-board[data-phase="draw"] strong{color:#ffd248}
+.overview-page .learn{padding:90px max(24px,9vw);background:var(--paper);border-top:1px solid var(--line)}
+.overview-page .learn>h2{font-size:clamp(40px,5vw,72px);line-height:.98;letter-spacing:-.05em;margin:18px 0 28px}
+.overview-page .learn>.lesson-lead{max-width:720px;font-size:18px;line-height:1.85;color:#40515b;margin-bottom:48px}
+.full-code{margin-top:24px;border:1px solid #294054;background:var(--ink);color:#e8f2f4;overflow:hidden}
+.code-focus{margin:56px 0 0;padding:28px 32px;background:var(--ink);color:white;border:1px solid #294054}
+.code-focus .eyebrow{color:var(--cyan)}
+.code-focus ol{margin:18px 0 0;padding-left:22px;line-height:1.9;color:#d5e4e8}
+.code-focus li{margin:6px 0}
+.full-code-note{margin:18px 0 0;max-width:760px;font-size:14px;line-height:1.7;color:#5d6b70}
+.basics-extra{margin-top:36px;border:1px solid var(--line);background:#eef1ea}
+.basics-extra summary{cursor:pointer;padding:18px 22px;font:800 12px monospace;letter-spacing:.06em;color:#177f76;list-style:none}
+.basics-extra summary::-webkit-details-marker{display:none}
+.basics-extra[open] summary{border-bottom:1px solid var(--line)}
+.basics-extra .recipe{margin-top:0;border:0}
+.basics-extra .steps{margin-top:0;border:0;border-top:1px solid var(--line)}
+.full-code-intro{margin:56px 0 0;max-width:760px;font-size:17px;line-height:1.85;color:#40515b}
+.full-code-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 20px;border-bottom:1px solid #294054;background:#0d2037}
+.full-code-head span{font:800 11px monospace;letter-spacing:.08em;color:var(--cyan)}
+.full-code-copy{min-height:40px;padding:10px 14px;border:1px solid #537080;background:transparent;color:white;font:800 11px monospace;cursor:pointer}
+.full-code-copy:hover,.full-code-copy[data-copied="1"]{background:var(--cyan);border-color:var(--cyan);color:var(--ink)}
+.full-code-copy:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+.full-code pre{margin:0;max-height:min(70vh,640px);overflow:auto;-webkit-overflow-scrolling:touch}
+.full-code code{display:block;padding:28px 24px;font:500 12px/1.75 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre;color:#d7e6ea}
+@media(max-width:600px){.lab-board{min-height:430px;border-right:0;border-bottom:1px solid #294054}.full-code code{padding:20px 14px;font-size:11px}.full-code-head{padding:14px 14px}}
 
 
 /* Curriculum catalog */
@@ -46,3 +74,6 @@ html{overflow-x:hidden;-webkit-text-size-adjust:100%}body{min-width:0;overflow-x
 
 /* Playable lesson embeds */
 .lesson-play{padding-top:80px}.lesson-game-frame{width:100%;height:100%;border:0;display:block;touch-action:none}.implementation-note{padding:90px max(24px,9vw);display:grid;grid-template-columns:.9fr 1.1fr;gap:60px;align-items:center;background:var(--paper)}.implementation-note h2{font-size:clamp(36px,5vw,62px);line-height:1.05;letter-spacing:-.045em}.implementation-note p{line-height:1.85;color:#40515b}.implementation-note pre{margin:0;padding:36px;background:var(--ink);color:var(--cyan);overflow:auto;line-height:1.8}@media(max-width:800px){.implementation-note{grid-template-columns:1fr;padding:65px 22px;gap:28px}.implementation-note pre{padding:25px 18px;font-size:11px}}
+
+.cast-note,.curriculum-bridge{max-width:760px;margin:18px 0 0;padding:14px 18px;border-left:4px solid var(--cyan);background:#e7ece4;color:#40515b;font-size:15px;line-height:1.75}
+.track-hero .curriculum-bridge{margin:20px 0 0;max-width:680px}

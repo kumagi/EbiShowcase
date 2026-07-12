@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/hero"
 	"image/color"
 	"math"
 	"math/rand"
@@ -131,7 +132,7 @@ func (g *game) Draw(s *ebiten.Image) {
 	vector.DrawFilledCircle(s, float32(g.px), float32(g.py), 68, color.RGBA{255, 211, 62, 28}, false)
 	vector.StrokeCircle(s, float32(g.px), float32(g.py), 68, 2, color.RGBA{255, 211, 62, 170}, false)
 	if g.inv%10 < 5 {
-		vector.DrawFilledCircle(s, float32(g.px), float32(g.py), 16, color.RGBA{45, 225, 194, 255}, false)
+		hero.DrawCentered(s, g.px, g.py, 34)
 	}
 	sec := g.frame / 60
 	wave := min(3, sec/15+1)

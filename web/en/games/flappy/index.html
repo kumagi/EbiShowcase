@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="A playable showcase for learning game development with Go and Ebitengine in your browser.">
-  <title>Ebi Showcase — Make games with Go</title>
+  <title>LEVEL 04 — Ebi Flight | Ebi Showcase</title>
   <link rel="canonical" href="./">
   <link rel="alternate" hreflang="ja" href="../../../ja/games/flappy/">
   <link rel="alternate" hreflang="en" href="../../../en/games/flappy/">
@@ -14,46 +14,49 @@
 <body>
   <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="#play">PLAY</a><a href="#learn">HOW IT WORKS</a><a href="#acceleration">ACCELERATION</a><a href="https://ebitengine.org/" rel="noreferrer">EBITENGINE ↗</a><a class="lang" href="../../../ja/games/flappy/" lang="ja" data-language="ja">日本語</a></nav></header>
   <main id="top"><div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>LEVEL 04</span></div>
+    <div class="overview-concept" style="margin:18px max(24px,7vw)"><small>NEW CONCEPT</small><strong>Velocity and acceleration</strong></div>
     <section class="hero">
-      <div class="hero-copy"><p class="eyebrow">A TINY GAME ENGINE. A BIG FIRST STEP.</p><h1>Make games.<br><em>Make them move.</em></h1><p class="lead">Write the code, build it, and play in the browser. Ebitengine keeps every step refreshingly straightforward.</p><a class="cta" href="#play">PLAY NOW <b>↓</b></a></div>
+      <div class="hero-copy"><p class="eyebrow">LEVEL 04 / ACCELERATION IN MOTION</p><h1>Make the hero<br><em>fall for real.</em></h1><p class="lead">Change velocity a little each Update and jumps become a natural arc. The sprite is original hero Ebi Boy; the hit test is still a circle. You already met the game loop in LEVEL 01—here we focus on acceleration.</p><a class="cta" href="#play">PLAY NOW <b>↓</b></a></div>
       <div class="code-card" aria-hidden="true"><div class="dots">● ● ●</div><pre><span>func</span> (g *Game) Update() error {
   <i>// every frame, keep it simple.</i>
   g.bird.velocity += gravity
   g.bird.y += g.bird.velocity
   <span>return</span> nil
 }</pre><div class="run">GO → WASM → BROWSER</div></div>
+      <p class="cast-note">On screen you see original hero <strong>Ebi Boy</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
     </section>
 
     <section class="play" id="play">
-      <div class="section-head"><div><p class="eyebrow">GAME 01 / EBI FLIGHT</p><h2>Your first flight starts here.</h2></div><p>Click, tap, or press Space to flap. Every pipe you clear earns one point.</p></div>
+      <div class="section-head"><div><p class="eyebrow">LEVEL 04 / EBI FLIGHT</p><h2>Your first flight starts here.</h2></div><p>Click, tap, or press Space to flap. Every pipe you clear earns one point.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / WEBASSEMBLY</span><button id="fullscreen" type="button">FULL SCREEN ↗</button></div><div id="game-wrap"><iframe id="game" title="Ebi Flight game" src="../../../game.html" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 
     <section class="learn" id="learn">
-      <p class="eyebrow">WHAT'S INSIDE</p><h2>The heart of a game<br>is just three methods.</h2>
-      <div class="steps"><article><b>01</b><h3>UPDATE</h3><p>Handle input, gravity, and collisions. Move the world forward once per frame.</p><code>func (g *Game) Update() error</code></article><article><b>02</b><h3>DRAW</h3><p>Draw the current state. You can build a complete game using only the shape API.</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article><article><b>03</b><h3>LAYOUT</h3><p>Choose the logical resolution. Let the engine scale it to different screen sizes.</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article></div>
-      <div class="recipe"><div><p class="eyebrow">BUILD RECIPE</p><h3>From Go code to a game on the web.</h3></div><ol><li><span>01</span><div><strong>WRITE</strong><small>game/main.go</small></div></li><li><span>02</span><div><strong>BUILD</strong><small>GOOS=js GOARCH=wasm</small></div></li><li><span>03</span><div><strong>SHIP</strong><small>GitHub Pages</small></div></li></ol></div>
+      <p class="eyebrow">QUICK REVIEW / FROM LEVEL 01</p>
+      <h2>You already know<br>Update and Draw.</h2>
+      <p style="max-width:720px;font-size:18px;line-height:1.85;color:#40515b;margin:0 0 36px">How a game runs every frame was covered in <a href="../tap-target/#basics">LEVEL 01</a>. Here is a short refresh, then we dive into <strong>acceleration</strong>.</p>
+      <div class="steps"><article><b>01</b><h3>UPDATE</h3><p>Input, gravity, collisions—advance the numbers (review).</p><code>func (g *Game) Update() error</code></article><article><b>02</b><h3>DRAW</h3><p>Paint from the current numbers (review).</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article><article><b>03</b><h3>LAYOUT</h3><p>Pick the logical resolution (review).</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article></div>
     </section>
 
     <section class="physics" id="acceleration" data-up="moving up" data-down="moving down" data-still="not moving">
-      <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ACCELERATION</p><h2>Why does the bird<br>fall faster and faster?</h2><p class="lesson-lead">The answer is <strong>acceleration</strong>. It simply means “the amount that changes speed,” like a ball rolling faster down a hill.</p></div>
+      <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ACCELERATION</p><h2>Why does the hero<br>fall faster and faster?</h2><p class="lesson-lead">The answer is <strong>acceleration</strong>. It simply means “the amount that changes speed,” like a ball rolling faster down a hill.</p></div>
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>Position</h3><p>Where the bird is now. The top is 0, and the number gets bigger as you move down.</p><code>birdY = 320</code></article>
-        <article><span class="concept-number">2</span><h3>Velocity</h3><p>How far and which way the bird moves each update. Negative goes up; positive goes down.</p><code>velocity = -7.4</code></article>
-        <article><span class="concept-number">3</span><h3>Acceleration</h3><p>How much velocity changes each time. Keep adding <strong>+0.42</strong> as gravity and the bird slows, then falls.</p><code>gravity = +0.42</code></article>
+        <article><span class="concept-number">1</span><h3>Position</h3><p>Where the hero is now. The top is 0, and the number gets bigger as you move down.</p><code>birdY = 320</code></article>
+        <article><span class="concept-number">2</span><h3>Velocity</h3><p>How far and which way the hero moves each update. Negative goes up; positive goes down.</p><code>velocity = -7.4</code></article>
+        <article><span class="concept-number">3</span><h3>Acceleration</h3><p>How much velocity changes each time. Keep adding <strong>+0.42</strong> as gravity and the hero slows, then falls.</p><code>gravity = +0.42</code></article>
       </div>
       <div class="motion-lab" aria-labelledby="motion-lab-title">
-        <div class="lab-copy"><p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p><h3 id="motion-lab-title">Move one frame at a time</h3><p>A game works like a flipbook. Each step adds gravity to velocity, then moves the bird by that velocity.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap>Flap</button><button type="button" class="lab-button" data-lab-step>Next frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div><p class="lab-hint">“Flap” sets the upward velocity to <code>-7.4</code>, then advances one frame.</p></div>
-        <div class="lab-visual"><div class="lab-sky" role="img" aria-label="Diagram of vertical bird movement"><span class="axis-label axis-top">0 / TOP</span><span class="axis-label axis-bottom">720 / BOTTOM</span><div class="lab-bird" data-lab-bird aria-hidden="true"><span></span></div></div><div class="lab-values" aria-live="polite"><div><span>Acceleration</span><strong>+0.42</strong><small>each frame</small></div><div><span>Velocity</span><strong data-lab-velocity>0.00</strong><small data-lab-direction>not moving</small></div><div><span>Position Y</span><strong data-lab-position>320.00</strong><small>from the top</small></div></div></div>
+        <div class="lab-copy"><p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p><h3 id="motion-lab-title">Move one frame at a time</h3><p>A game works like a flipbook. Each step adds gravity to velocity, then moves the hero by that velocity. Looks like Ebi Boy; hit test is a circle.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap>Flap</button><button type="button" class="lab-button" data-lab-step>Next frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div><p class="lab-hint">“Flap” sets the upward velocity to <code>-7.4</code>, then advances one frame.</p></div>
+        <div class="lab-visual"><div class="lab-sky" role="img" aria-label="Diagram of vertical hero movement"><span class="axis-label axis-top">0 / TOP</span><span class="axis-label axis-bottom">720 / BOTTOM</span><div class="lab-bird" data-lab-bird aria-hidden="true"><span></span></div></div><div class="lab-values" aria-live="polite"><div><span>Acceleration</span><strong>+0.42</strong><small>each frame</small></div><div><span>Velocity</span><strong data-lab-velocity>0.00</strong><small data-lab-direction>not moving</small></div><div><span>Position Y</span><strong data-lab-position>320.00</strong><small>from the top</small></div></div></div>
       </div>
       <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>velocity = velocity + gravity</code><span>then</span><code>position = position + velocity</code></div><p>Order matters. First gravity changes velocity, then velocity changes position. Repeat every frame to make a natural jumping curve.</p></div>
-      <div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Put it inside<br><code>Update</code></h3><p><code>Update</code> reads input, changes velocity, and moves the bird. <code>Draw</code> paints it at the newly calculated position.</p></div><pre><code><span>const</span> gravity = 0.42
-<span>const</span> flapV   = -7.4
+      <div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Put it inside<br><code>Update</code></h3><p><code>Update</code> reads input, changes velocity, and moves the hero. <code>Draw</code> paints the hero at the newly calculated position.</p></div><pre><code><span>const</span> gravity = 0.42
+<span>const</span> flapSpeed = -7.4
 
 <span>func</span> (g *game) Update() error {
     <i>// A press gives upward speed.</i>
     <span>if</span> justPressed() {
-        g.velocity = flapV
+        g.velocity = flapSpeed
     }
 
     <i>// 1. Gravity changes velocity.</i>
@@ -63,7 +66,265 @@
     g.birdY += g.velocity
     <span>return</span> nil
 }</code></pre></div>
-      <div class="why-grid"><article><p class="eyebrow">WITHOUT ACCELERATION</p><h3>One constant speed</h3><p>The bird travels up and down in straight lines, so movement feels mechanical.</p></article><article><p class="eyebrow">WITH ACCELERATION</p><h3>A smooth arc</h3><p>Upward velocity weakens, nears zero at the top, then grows downward.</p></article><article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Experiment with numbers</h3><p>Larger <code>gravity</code> makes a heavier bird. A more negative <code>flapV</code> makes a stronger flap. Game design is finding values that feel right.</p></article></div>
+      
+            <div class="code-focus">
+        <p class="eyebrow">TODAY — look here first</p>
+        <ol>
+          <li>velocity += gravity</li>
+          <li>position += velocity</li>
+          <li>Flap sets velocity</li>
+        </ol>
+      </div>
+<p class="full-code-intro">The code below is the game's <strong>main logic</strong> (the hero art loads from shared package <code>internal/hero</code>). Copy it to your editor — but first follow the three “look here first” points above.</p>
+      <p class="full-code-note">Note: inline comments in this full listing are in Japanese for young learners. The English teaching snippets above are your guide.</p>
+      <div class="full-code" data-embed-source="game/main.go">
+        <div class="full-code-head">
+          <span>main.go · full source</span>
+          <button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy</button>
+        </div>
+        <pre><code data-embed-slot>package main
+
+import (
+	"fmt"
+	"image/color"
+	"math"
+	"math/rand"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/hero"
+)
+
+// --- 授業で触る数字 ---
+const (
+	screenWidth  = 480
+	screenHeight = 720
+	groundY      = 650
+	gravity      = 0.42 // 毎フレーム、速さに足す量（加速度）
+	flapSpeed    = -7.4 // はばたいたときの上向きの速さ
+	birdX        = 128.0
+	birdRadius   = 15.0
+	pipeWidth    = 76.0
+	gapHeight    = 178.0
+)
+
+// パイプ 1本（すきまの中心 Y を持つ）
+type pipe struct {
+	x      float64
+	gapY   float64
+	scored bool // もう得点したか
+}
+
+type game struct {
+	birdY    float64
+	velocity float64 // 速さ（マイナス＝上、プラス＝下）
+	pipes    []pipe
+	score    int
+	best     int
+	frame    int
+	started  bool
+	gameOver bool
+	rng      *rand.Rand
+}
+
+func newGame() *game {
+	g := &amp;game{rng: rand.New(rand.NewSource(7))}
+	g.reset()
+	return g
+}
+
+func (g *game) reset() {
+	g.birdY = 320
+	g.velocity = 0
+	g.pipes = []pipe{
+		{x: 560, gapY: 300},
+		{x: 830, gapY: 390},
+		{x: 1100, gapY: 265},
+	}
+	g.score = 0
+	g.frame = 0
+	g.started = false
+	g.gameOver = false
+}
+
+func justPressed() bool {
+	if inpututil.IsKeyJustPressed(ebiten.KeySpace) || inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
+		return true
+	}
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+		return true
+	}
+	if len(inpututil.AppendJustPressedTouchIDs(nil)) &gt; 0 {
+		return true
+	}
+	return false
+}
+
+func (g *game) hitPipe() bool {
+	for _, p := range g.pipes {
+		inX := birdX+birdRadius &gt; p.x &amp;&amp; birdX-birdRadius &lt; p.x+pipeWidth
+		if !inX {
+			continue
+		}
+		gapTop := p.gapY - gapHeight/2
+		gapBottom := p.gapY + gapHeight/2
+		hitTop := g.birdY-birdRadius &lt; gapTop
+		hitBottom := g.birdY+birdRadius &gt; gapBottom
+		if hitTop || hitBottom {
+			return true
+		}
+	}
+	return false
+}
+
+// --- ここから Update（数字を進める） ---
+func (g *game) Update() error {
+	g.frame++
+	pressed := justPressed()
+
+	if g.gameOver {
+		if pressed {
+			g.reset()
+		}
+		return nil
+	}
+
+	// スタート前は少し上下にゆらす
+	if !g.started {
+		g.birdY = 320 + math.Sin(float64(g.frame)*0.06)*7
+		if pressed {
+			g.started = true
+			g.velocity = flapSpeed
+		}
+		return nil
+	}
+
+	// 押した瞬間、上向きの速さにする
+	if pressed {
+		g.velocity = flapSpeed
+	}
+
+	// 1. 速さに重力を足す（加速度）
+	g.velocity += gravity
+	// 2. 速さで位置を動かす
+	g.birdY += g.velocity
+
+	// パイプを左へ流す
+	for i := range g.pipes {
+		g.pipes[i].x -= 2.8
+		if !g.pipes[i].scored &amp;&amp; g.pipes[i].x+pipeWidth &lt; birdX {
+			g.pipes[i].scored = true
+			g.score++
+		}
+	}
+
+	// 画面外のパイプを消して、右に新しいパイプを足す
+	if g.pipes[0].x+pipeWidth &lt; -10 {
+		lastX := g.pipes[len(g.pipes)-1].x
+		newPipe := pipe{
+			x:    lastX + 270,
+			gapY: 225 + g.rng.Float64()*230,
+		}
+		g.pipes = append(g.pipes[1:], newPipe)
+	}
+
+	// 地面・天井・パイプに当たったらゲームオーバー
+	hitGround := g.birdY+17 &gt;= groundY
+	hitCeiling := g.birdY-17 &lt;= 0
+	if hitGround || hitCeiling || g.hitPipe() {
+		g.gameOver = true
+		if g.score &gt; g.best {
+			g.best = g.score
+		}
+	}
+	return nil
+}
+
+// --- ここから Draw ---
+func (g *game) Draw(screen *ebiten.Image) {
+	g.drawBackground(screen)
+	for _, p := range g.pipes {
+		g.drawPipe(screen, p)
+	}
+	g.drawGround(screen)
+	g.drawBird(screen)
+
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE  %02d", g.score), 198, 28)
+	if !g.started {
+		g.drawPanel(screen, "TAP TO FLY", "SPACE / CLICK / TOUCH")
+	}
+	if g.gameOver {
+		g.drawPanel(screen, "GAME OVER", fmt.Sprintf("SCORE %d   BEST %d\n\nTAP TO RETRY", g.score, g.best))
+	}
+}
+
+func (g *game) drawBackground(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{9, 21, 43, 255})
+	for i := 0; i &lt; 26; i++ {
+		x := float32((i*83-g.frame/5)%540 - 30)
+		y := float32(35 + (i*47)%390)
+		vector.DrawFilledCircle(screen, x, y, float32(1+i%2), color.RGBA{100, 230, 225, 150}, false)
+	}
+	for i := 0; i &lt; 10; i++ {
+		x := float32(i*62 - (g.frame/3)%62)
+		h := float32(55 + (i*29)%105)
+		vector.DrawFilledRect(screen, x, groundY-h, 48, h, color.RGBA{14, 39, 67, 255}, false)
+	}
+}
+
+func (g *game) drawGround(screen *ebiten.Image) {
+	vector.DrawFilledRect(screen, 0, groundY, screenWidth, screenHeight-groundY, color.RGBA{27, 203, 159, 255}, false)
+	for x := -40 + (g.frame*2)%40; x &lt; screenWidth; x += 40 {
+		vector.DrawFilledRect(screen, float32(x), groundY+13, 22, 5, color.RGBA{9, 98, 91, 255}, false)
+	}
+}
+
+func (g *game) drawPipe(screen *ebiten.Image, p pipe) {
+	green := color.RGBA{22, 196, 145, 255}
+	light := color.RGBA{70, 236, 170, 255}
+	dark := color.RGBA{6, 103, 91, 255}
+	topH := float32(p.gapY - gapHeight/2)
+	bottomY := float32(p.gapY + gapHeight/2)
+
+	vector.DrawFilledRect(screen, float32(p.x), 0, pipeWidth, topH, green, false)
+	vector.DrawFilledRect(screen, float32(p.x-7), topH-28, pipeWidth+14, 28, green, false)
+	vector.DrawFilledRect(screen, float32(p.x), bottomY, pipeWidth, groundY-bottomY, green, false)
+	vector.DrawFilledRect(screen, float32(p.x-7), bottomY, pipeWidth+14, 28, green, false)
+	vector.DrawFilledRect(screen, float32(p.x+9), 0, 8, topH-28, light, false)
+	vector.DrawFilledRect(screen, float32(p.x+pipeWidth-10), 0, 10, topH, dark, false)
+	vector.DrawFilledRect(screen, float32(p.x+9), bottomY+28, 8, groundY-bottomY-28, light, false)
+	vector.DrawFilledRect(screen, float32(p.x+pipeWidth-10), bottomY, 10, groundY-bottomY, dark, false)
+}
+
+func (g *game) drawBird(screen *ebiten.Image) {
+	// オリジナル主人公「Ebi Boy」を鳥の代わりに描く
+	hero.DrawCentered(screen, birdX, g.birdY, 44)
+}
+
+func (g *game) drawPanel(screen *ebiten.Image, title, detail string) {
+	vector.DrawFilledRect(screen, 68, 250, 344, 166, color.RGBA{5, 16, 34, 225}, false)
+	vector.StrokeRect(screen, 68, 250, 344, 166, 3, color.RGBA{45, 226, 194, 255}, false)
+	ebitenutil.DebugPrintAt(screen, title, 192-len(title)*2, 286)
+	ebitenutil.DebugPrintAt(screen, detail, 137, 338)
+}
+
+func (g *game) Layout(_, _ int) (int, int) {
+	return screenWidth, screenHeight
+}
+
+func main() {
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Ebi Flight — Ebitengine WASM")
+	if err := ebiten.RunGame(newGame()); err != nil {
+		panic(err)
+	}
+}
+</code></pre>
+      </div>
+
+    <div class="why-grid"><article><p class="eyebrow">WITHOUT ACCELERATION</p><h3>One constant speed</h3><p>The hero travels up and down in straight lines, so movement feels mechanical.</p></article><article><p class="eyebrow">WITH ACCELERATION</p><h3>A smooth arc</h3><p>Upward velocity weakens, nears zero at the top, then grows downward.</p></article><article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Experiment with numbers</h3><p>Larger <code>gravity</code> makes a heavier hero. A more negative <code>flapSpeed</code> makes a stronger flap. Game design is finding values that feel right.</p></article></div>
     </section>
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine. No game framework JavaScript.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>

@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/hero"
 	"image/color"
 	"math"
 	"math/rand"
@@ -112,7 +113,7 @@ func (g *game) Draw(s *ebiten.Image) {
 		vector.DrawFilledCircle(s, float32(m.x), float32(m.y), 14, color.RGBA{226, 72, 105, 255}, false)
 	}
 	if g.inv%10 < 5 {
-		vector.DrawFilledCircle(s, float32(g.px), float32(g.py), 16, color.RGBA{45, 225, 194, 255}, false)
+		hero.DrawCentered(s, g.px, g.py, 34)
 		vector.DrawFilledCircle(s, float32(g.px+6), float32(g.py-4), 3, color.RGBA{5, 27, 38, 255}, false)
 	}
 	left := max(0, 30-g.frame/60)

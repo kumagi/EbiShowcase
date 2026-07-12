@@ -3,20 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Tap glowing targets and learn input coordinates plus circle hit tests in Ebitengine.">
+  <meta name="description" content="Learn Ebitengine Update, Draw, and Layout, plus input coordinates and circle hit tests.">
   <title>LEVEL 01 — Tap the Target | Ebi Showcase</title>
   <link rel="stylesheet" href="../../../style.css">
 </head>
 <body class="overview-page">
-  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../ja/games/tap-target/" lang="ja" data-language="ja">日本語</a></nav></header>
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a href="#basics">HOW IT WORKS</a><a href="#learn">COORDINATES</a><a class="lang" href="../../../ja/games/tap-target/" lang="ja" data-language="ja">日本語</a></nav></header>
   <main class="overview-main">
     <div class="lesson-breadcrumb"><a href="../../">← ALL LEVELS</a><span>LEVEL 01</span></div>
 
     <section class="overview-hero">
       <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
       <h1>Tap the Target</h1>
-      <p>A tiny game where you tap glowing circles as they appear. This is where you start treating taps and on-screen positions as the same kind of numbers.</p>
-      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Input and coordinates</strong></div>
+      <p>A tiny game where you tap glowing circles as they appear. This is where you learn how a game runs—and how taps become numbers on screen.</p>
+      <div class="overview-concept"><small>NEW CONCEPT</small><strong>Game loop and input</strong></div>
     </section>
 
     <section class="play lesson-play" id="play">
@@ -24,11 +24,60 @@
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Tap the Target" src="../../../play/tap-target/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 
+    <section class="learn" id="basics">
+      <p class="eyebrow">WHAT'S INSIDE / BEFORE ANYTHING ELSE</p>
+      <h2>The heart of a game<br>is just three methods.</h2>
+      <p class="lesson-lead">An Ebitengine game is a flipbook. Every frame you <strong>change the numbers</strong>, then <strong>paint the screen</strong>. Once that rhythm clicks, gravity, enemies, and everything later fits in the same frame.</p>
+      <div class="steps" style="grid-template-columns:1fr 1fr">
+        <article><b>01</b><h3>UPDATE</h3><p>Read input and advance the <strong>numbers</strong>—score, positions, timers. Do not draw here.</p><code>func (g *Game) Update() error</code></article>
+        <article><b>02</b><h3>DRAW</h3><p>Paint circles and text from the current numbers. Do not run game math here.</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
+      </div>
+
+      <div class="motion-lab" data-lab="loop" data-update="UPDATE" data-draw="DRAW" data-update-note="Change numbers (score, positions, timers)" data-draw-note="Paint the current numbers on screen" aria-labelledby="loop-lab-title">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / GAME LOOP</p>
+          <h3 id="loop-lab-title">Step through Update → Draw</h3>
+          <p>Each click flips the phase. A real game repeats these two steps many times per second.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>Next phase</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+          <p class="lab-hint">One frame = one Update + one Draw. Separating math from drawing makes later changes easier.</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-loop-board" data-lab-board data-phase="update" role="img" aria-label="Update and Draw phases">
+            <strong data-lab-phase>UPDATE</strong>
+            <span data-lab-note>Change numbers (score, positions, timers)</span>
+          </div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>phase</span><strong data-lab-phase>UPDATE</strong><small>what is running</small></div>
+            <div><span>frame</span><strong data-lab-frame>0</strong><small>which flipbook page</small></div>
+            <div><span>order</span><strong>U → D</strong><small>always this sequence</small></div>
+          </div>
+        </div>
+      </div>
+
+      <details class="basics-extra">
+        <summary>Optional: Layout and the build path (fine to learn later)</summary>
+        <div class="steps" style="grid-template-columns:1fr">
+          <article><b>03</b><h3>LAYOUT</h3><p>Choose the logical resolution. Let the engine scale it to phones and desktops.</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article>
+        </div>
+        <div class="recipe">
+          <div><p class="eyebrow">BUILD RECIPE</p><h3>From Go code to a game on the web.</h3></div>
+          <ol>
+            <li><span>01</span><div><strong>WRITE</strong><small>your game main.go</small></div></li>
+            <li><span>02</span><div><strong>BUILD</strong><small>GOOS=js GOARCH=wasm</small></div></li>
+            <li><span>03</span><div><strong>SHIP</strong><small>GitHub Pages, etc.</small></div></li>
+          </ol>
+        </div>
+      </details>
+    </section>
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / INPUT &amp; COORDINATES</p>
         <h2>How does the game<br>know where you tapped?</h2>
-        <p class="lesson-lead">Think of the screen as graph paper without lines. The top-left is <strong>(0, 0)</strong>. X grows to the right, Y grows downward. If the distance from your tap to the circle center is shorter than the radius, it counts as a hit.</p>
+        <p class="lesson-lead">Once the loop makes sense, fill it with meaning. Think of the screen as graph paper without lines. The top-left is <strong>(0, 0)</strong>. X grows to the right, Y grows downward. If the distance from your tap to the circle center is shorter than the radius, it counts as a hit.</p>
       </div>
 
       <div class="concept-row">
@@ -73,8 +122,8 @@
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
-          <h3>Put it inside<br><code>Update</code></h3>
-          <p>Only read the position on the press frame, then check distance. <code>Draw</code> just paints the circle and score. Separating math from drawing makes later changes easier.</p>
+          <h3>Put the check inside<br><code>Update</code></h3>
+          <p>Only read the position on the press frame, then check distance. <code>Draw</code> just paints the circle and score—the same split you learned above.</p>
         </div>
         <pre><code><span>func</span> (g *game) Update() error {
     px, py, pressed := pressedPosition()
@@ -83,7 +132,7 @@
     }
 
     <i>// Distance from tap to center</i>
-    dist := math.Hypot(float64(px)-g.x, float64(py)-g.y)
+    dist := math.Hypot(float64(px)-g.circleX, float64(py)-g.circleY)
     <span>if</span> dist &lt;= g.radius {
         g.score++
         g.moveTarget()
@@ -92,9 +141,175 @@
 }</code></pre>
       </div>
 
-      <div class="why-grid">
-        <article><p class="eyebrow">WITHOUT COORDINATES</p><h3>“Somewhere around here” fails</h3><p>Programs cannot use vague places. Every position must become numbers.</p></article>
-        <article><p class="eyebrow">WITH DISTANCE CHECK</p><h3>One ruler for circle and tap</h3><p>Even when it looks round, the check is center plus radius. The rule stays the same on any screen size.</p></article>
+      
+            <div class="code-focus">
+        <p class="eyebrow">TODAY — look here first</p>
+        <ol>
+          <li>Update (tap position)</li>
+          <li>Distance hit test</li>
+          <li>Draw (circle and score)</li>
+        </ol>
+      </div>
+<p class="full-code-intro">The code below is the <strong>entire</strong> game (drawn with simple shapes). Copy it to your editor — but first follow the three “look here first” points above.</p>
+      <p class="full-code-note">Note: inline comments in this full listing are in Japanese for young learners. The English teaching snippets above are your guide.</p>
+      <div class="full-code" data-embed-source="games/core/tap-target/main.go">
+        <div class="full-code-head">
+          <span>main.go · full source</span>
+          <button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy</button>
+        </div>
+        <pre><code data-embed-slot>package main
+
+import (
+	"fmt"
+	"image/color"
+	"math"
+	"math/rand"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+)
+
+// --- 画面の大きさ（ゲーム内のマス目） ---
+const (
+	screenWidth  = 480
+	screenHeight = 720
+	startSeconds = 30
+)
+
+// game はこのゲームの全部の数字を入れた箱です。
+type game struct {
+	circleX    float64 // 丸の中心 X
+	circleY    float64 // 丸の中心 Y
+	radius     float64 // 丸の半径
+	score      int     // 得点
+	framesLeft int     // 残りフレーム（60フレーム ≒ 1秒）
+	started    bool    // スタートしたか
+	rng        *rand.Rand
+}
+
+func newGame() *game {
+	g := &amp;game{
+		radius:     38,
+		framesLeft: startSeconds * 60,
+		rng:        rand.New(rand.NewSource(11)),
+	}
+	g.moveTarget()
+	return g
+}
+
+// 丸を別の場所へ移す
+func (g *game) moveTarget() {
+	g.circleX = 60 + g.rng.Float64()*(screenWidth-120)
+	g.circleY = 130 + g.rng.Float64()*(screenHeight-240)
+}
+
+// マウスまたはタッチで「いま押した位置」を返す
+func pressedPosition() (x, y int, pressed bool) {
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+		x, y = ebiten.CursorPosition()
+		return x, y, true
+	}
+	ids := inpututil.AppendJustPressedTouchIDs(nil)
+	if len(ids) &gt; 0 {
+		x, y = ebiten.TouchPosition(ids[0])
+		return x, y, true
+	}
+	return 0, 0, false
+}
+
+// --- ここから Update（数字を進める） ---
+func (g *game) Update() error {
+	px, py, pressed := pressedPosition()
+
+	// まだ始まっていない → 押したらスタート
+	if !g.started {
+		if pressed {
+			g.started = true
+		}
+		return nil
+	}
+
+	// 時間切れ → 押したら最初から
+	if g.framesLeft &lt;= 0 {
+		if pressed {
+			g.score = 0
+			g.framesLeft = startSeconds * 60
+			g.started = false
+			g.moveTarget()
+		}
+		return nil
+	}
+
+	// タイマーを1フレーム減らす
+	g.framesLeft--
+
+	// 押した瞬間だけ、丸との距離を調べる
+	if pressed {
+		dx := float64(px) - g.circleX
+		dy := float64(py) - g.circleY
+		distance := math.Hypot(dx, dy)
+		if distance &lt;= g.radius {
+			g.score++
+			// 当たるほど丸を少し小さくする
+			g.radius = math.Max(22, 38-float64(g.score)/2)
+			g.moveTarget()
+		}
+	}
+	return nil
+}
+
+// --- ここから Draw（画面に描く） ---
+func (g *game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{7, 20, 38, 255})
+
+	// 背景のうすい円
+	for i := 0; i &lt; 12; i++ {
+		vector.StrokeCircle(
+			screen,
+			float32(screenWidth/2),
+			float32(screenHeight/2),
+			float32(55+i*38),
+			1,
+			color.RGBA{45, 226, 194, 25},
+			false,
+		)
+	}
+
+	// 光る丸（外側のぼかし → 本体 → ハイライト）
+	vector.DrawFilledCircle(screen, float32(g.circleX), float32(g.circleY), float32(g.radius+8), color.RGBA{45, 226, 194, 45}, false)
+	vector.DrawFilledCircle(screen, float32(g.circleX), float32(g.circleY), float32(g.radius), color.RGBA{45, 226, 194, 255}, false)
+	vector.DrawFilledCircle(screen, float32(g.circleX-10), float32(g.circleY-10), float32(g.radius/4), color.RGBA{230, 255, 249, 220}, false)
+
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %02d", g.score), 24, 24)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("TIME  %02d", max(0, g.framesLeft/60)), 380, 24)
+
+	if !g.started {
+		ebitenutil.DebugPrintAt(screen, "TAP THE TARGET\n\nCLICK / TOUCH TO START", 145, 320)
+	} else if g.framesLeft &lt;= 0 {
+		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("TIME UP!  SCORE %d\n\nTAP TO RETRY", g.score), 160, 320)
+	}
+}
+
+// --- Layout（画面の大きさ） ---
+func (g *game) Layout(_, _ int) (int, int) {
+	return screenWidth, screenHeight
+}
+
+func main() {
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Tap the Target — Ebitengine")
+	if err := ebiten.RunGame(newGame()); err != nil {
+		panic(err)
+	}
+}
+</code></pre>
+      </div>
+
+    <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT THE LOOP</p><h3>Nowhere obvious to put code</h3><p>With Update / Draw roles fixed, you know where input goes and where painting goes.</p></article>
+        <article><p class="eyebrow">WITH COORDINATES</p><h3>One ruler for circle and tap</h3><p>Even when it looks round, the check is center plus radius. The rule stays the same on any screen size.</p></article>
         <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Experiment with numbers</h3><p>Smaller <code>radius</code> makes it harder. Larger <code>framesLeft</code> makes a calmer round. Game design is hunting for values that feel right.</p></article>
       </div>
     </section>

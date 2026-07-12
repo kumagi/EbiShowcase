@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/hero"
 	"image/color"
 	"math"
 	"math/rand"
@@ -146,7 +147,7 @@ func (g *game) Draw(s *ebiten.Image) {
 	}
 	vector.DrawFilledCircle(s, float32(g.px), float32(g.py), float32(g.radius), color.RGBA{255, 211, 62, 28}, false)
 	if g.inv%10 < 5 {
-		vector.DrawFilledCircle(s, float32(g.px), float32(g.py), 15, color.RGBA{45, 225, 194, 255}, false)
+		hero.DrawCentered(s, g.px, g.py, 34)
 	}
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("LEVEL %d/5   XP %02d/%02d   LIFE %d", g.level, g.xp, g.need, g.life), 90, 24)
 	ebitenutil.DebugPrintAt(s, "COLLECT BLUE EXPERIENCE GEMS", 125, 685)

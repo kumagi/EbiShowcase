@@ -1,1 +1,150 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Circle Collision Lab | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/merge-physics/circle-collision/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Merge Physics Puzzle</a><span>STEP 02 / 06</span></div><section class="overview-hero"><p class="eyebrow">Build a Suika Game-style physics puzzle</p><h1>Circle Collision Lab</h1><p>Detect overlap from center distance and calculate the direction of separation.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Center distance and contact normals</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>Make a hard system<br>small enough to play.</h2><div class="overview-steps"><article><b>01</b><h3>Observe</h3><p>Display collisions, values, and states so the system is visible.</p></article><article><b>02</b><h3>Build the minimum</h3><p>Implement only this step's concept with Ebitengine Update and Draw.</p></article><article><b>03</b><h3>Integrate</h3><p>Add it to the previous step and move closer to the complete game.</p></article></div></section><nav class="lesson-pager"><a href="../falling-circles/">← STEP 01<strong>Falling Circles</strong></a><a href="../stacking-bounce/">STEP 03 →<strong>Stacking and Bounce</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Physics lesson on circle–circle collision using center distance and contact normals.">
+  <title>Circle Collision | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">PATH</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/merge-physics/circle-collision/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Merge Physics</a><span>STEP 02 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>Circle Collision</h1>
+      <p>Use center distance to detect overlap and push two circles apart along the right direction. STEP 01’s floor bounce, now between two circles.</p>
+      <div class="overview-concept"><small>CONCEPT THIS STEP</small><strong>Center distance and contact normals</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">This track still runs on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> <strong>Update → Draw</strong> loop—each step adds one new piece. Here the drawing and the hit test are both circles.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Observe ten collisions.</h2></div>
+        <p>Tap to launch the green circle. Each bump with the red circle adds to the count.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Circle Collision" src="../../../../play/circle-collision/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / CIRCLE COLLISION</p>
+        <h2>When have two circles<br>really touched?</h2>
+        <p class="lesson-lead">They overlap when center distance is shorter than the <strong>sum of both radii</strong>. The center-to-center arrow (the normal) is the push direction. The formula differs from rectangle hits (LEVEL 03), but Update’s job—“if overlapping, push out”—is the same.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Center delta</h3>
+          <p>Subtract one center from the other.</p>
+          <code>dx, dy</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Distance</h3>
+          <p>Measure distance from both deltas.</p>
+          <code>Hypot(dx, dy)</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Normal</h3>
+          <p>Divide delta by distance for a unit direction.</p>
+          <code>nx = dx / distance</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="hitbox" aria-labelledby="lab-title-circle">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / DISTANCE</p>
+          <h3 id="lab-title-circle">Move the hit boxes together</h3>
+          <p>Collision is the moment distance falls below total size. Circles or rectangles—first measure overlap, then respond.</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-closer>Closer</button>
+            <button type="button" class="lab-button" data-lab-farther>Farther</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+          </div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board">
+            <div data-lab-attack></div>
+            <div data-lab-hurt></div>
+          </div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>Distance</span><strong data-lab-sep>—</strong></div>
+            <div><span>Result</span><strong data-lab-result>—</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE ONE-LINE RULE</p>
+        <div class="formula-lines">
+          <code>distance &lt; a.r + b.r</code>
+          <span>then</span>
+          <code>push out half-and-half along the normal</code>
+        </div>
+        <p>Moving only one circle makes the other feel like a wall. Splitting the push keeps the bounce fair.</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>Share the push-out</h3>
+          <p>Inside Update, measure distance; if overlapping, separate along the normal and add a bounce from relative velocity.</p>
+        </div>
+        <pre><code>dx, dy := b.x-a.x, b.y-a.y
+distance := math.Hypot(dx, dy)
+<span>if</span> distance &lt; a.r+b.r {
+    nx, ny := dx/distance, dy/distance
+    overlap := a.r + b.r - distance
+    a.x -= nx * overlap / 2
+    b.x += nx * overlap / 2
+    <span>//</span> same for y, then bounce velocities
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY DISTANCE?</p>
+          <h3>Circles have no favorite side</h3>
+          <p>The same test works from every angle.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY NORMAL?</p>
+          <h3>Take the shortest way out</h3>
+          <p>Diagonal contacts separate along the center line.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>Tune bounce</h3>
+          <p>Change the 0.9 impulse scale and compare soft vs snappy worlds.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../falling-circles/">← STEP 01<strong>Falling Circles</strong></a>
+      <a href="../stacking-bounce/">STEP 03 →<strong>Stacking and Bounce</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

@@ -1,1 +1,150 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>円どうしの衝突 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/merge-physics/circle-collision/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 合体物理パズル</a><span>STEP 02 / 06</span></div><section class="overview-hero"><p class="eyebrow">スイカゲーム型の物理パズルを作る</p><h1>円どうしの衝突</h1><p>2つの円の中心距離から重なりを調べ、押し戻す方向を求めます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>中心距離と接触法線</strong></div></section><section class="overview-plan"><p class="eyebrow">GAME + LESSON + CHALLENGE</p><h2>難しい仕組みを、<br>遊べる大きさに分ける。</h2><div class="overview-steps"><article><b>01</b><h3>観察する</h3><p>判定、数値、状態を画面に表示し、何が起きているか見えるようにします。</p></article><article><b>02</b><h3>最小実装を作る</h3><p>今回の概念だけをEbitengineのUpdateとDrawで動かします。</p></article><article><b>03</b><h3>前の仕組みと統合する</h3><p>前のステップのコードへ加え、完成ゲームに一歩近づけます。</p></article></div></section><nav class="lesson-pager"><a href="../falling-circles/">← STEP 01<strong>落下する円</strong></a><a href="../stacking-bounce/">STEP 03 →<strong>積み上げと反発</strong></a></nav></main></body></html>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="円どうしの中心距離と接触法線で衝突を解く物理レッスン。">
+  <title>円どうしの衝突 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コース</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/merge-physics/circle-collision/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 合体物理パズル</a><span>STEP 02 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>円どうしの衝突</h1>
+      <p>中心どうしの距離から重なりを調べ、2つの円を正しい方向へ押し戻します。STEP 01 の「床との反発」を、円どうしに広げた一歩です。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>中心距離と接触法線</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。ここでは円の絵も、当たり判定も、どちらも丸です。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>10回ぶつけて観察しよう。</h2></div>
+        <p>タップした方向へ緑の円を飛ばします。赤い円とぶつかるたびにカウントが増えます。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="円どうしの衝突" src="../../../../play/circle-collision/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / CIRCLE COLLISION</p>
+        <h2>丸と丸は、いつ<br>ぶつかったことになる？</h2>
+        <p class="lesson-lead">中心の距離が <strong>半径2つの合計</strong> より短ければ重なっています。中心同士を結ぶ矢印（法線）が、押し戻す向きです。矩形の当たり判定（LEVEL 03）とは式が違いますが、「重なったら戻す」という Update の仕事は同じです。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>中心差</h3>
+          <p>相手の中心から自分の中心を引きます。</p>
+          <code>dx, dy</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>距離</h3>
+          <p>横差と縦差から中心距離を求めます。</p>
+          <code>Hypot(dx, dy)</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>法線</h3>
+          <p>差を距離で割り、長さ1の向きにします。</p>
+          <code>nx = dx / distance</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="hitbox" aria-labelledby="lab-title-circle">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / DISTANCE</p>
+          <h3 id="lab-title-circle">2つの判定を近づけよう</h3>
+          <p>距離が「大きさの合計」より小さくなった瞬間が衝突です。円でも矩形でも、まず距離（または重なり）を見る、という順番は同じです。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-closer>近づける</button>
+            <button type="button" class="lab-button" data-lab-farther>離す</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button>
+          </div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board">
+            <div data-lab-attack></div>
+            <div data-lab-hurt></div>
+          </div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>距離</span><strong data-lab-sep>—</strong></div>
+            <div><span>結果</span><strong data-lab-result>—</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        <p class="eyebrow">THE ONE-LINE RULE</p>
+        <div class="formula-lines">
+          <code>distance &lt; a.r + b.r</code>
+          <span>なら</span>
+          <code>法線方向へ半分ずつ戻す</code>
+        </div>
+        <p>片方だけ動かすと相手が「壁」みたいになります。半分ずつ戻すと、どちらも同じように跳ねます。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>重なりを半分ずつ戻す</h3>
+          <p>Update の中で距離を測り、重なっていたら法線方向へ押し戻し、相対速度から跳ね返しを足します。</p>
+        </div>
+        <pre><code>dx, dy := b.x-a.x, b.y-a.y
+distance := math.Hypot(dx, dy)
+<span>if</span> distance &lt; a.r+b.r {
+    nx, ny := dx/distance, dy/distance
+    overlap := a.r + b.r - distance
+    a.x -= nx * overlap / 2
+    b.x += nx * overlap / 2
+    <span>//</span> 同様に y と速度の跳ね返し
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY DISTANCE?</p>
+          <h3>円は向きを選ばない</h3>
+          <p>どこから触れても同じ式で判定できます。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY NORMAL?</p>
+          <h3>最短方向へ戻せる</h3>
+          <p>斜め衝突も、中心を結ぶ向きが一番短い抜け道です。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>反発を変えよう</h3>
+          <p>跳ね返しの 0.9 を変えて、ふわふわ／コツコツを比べよう。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../falling-circles/">← STEP 01<strong>落下する円</strong></a>
+      <a href="../stacking-bounce/">STEP 03 →<strong>積み上げと反発</strong></a>
+    </nav>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

@@ -9,6 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/hero"
 )
 
 const width, height = 480, 720
@@ -145,7 +146,7 @@ func (g *game) Draw(s *ebiten.Image) {
 		vector.DrawFilledCircle(s, float32(e.x+19), float32(e.y+10), 2, color.White, false)
 	}
 	vector.DrawFilledRect(s, 62, 135, 55, 35, color.RGBA{255, 211, 62, 255}, false)
-	vector.DrawFilledRect(s, float32(g.player.x), float32(g.player.y), float32(g.player.w), float32(g.player.h), color.RGBA{241, 72, 88, 255}, false)
+	hero.DrawBottomCentered(s, g.player.x+g.player.w/2, g.player.y+g.player.h, g.player.h*1.55)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("LIFE %d   ENEMIES %d", g.life, g.alive()), 18, 22)
 	ebitenutil.DebugPrintAt(s, "JUMP ON ENEMIES FROM ABOVE", 145, 48)
 	ebitenutil.DebugPrintAt(s, "MOVE: A/D OR LOWER TOUCH    JUMP: SPACE OR UPPER TOUCH", 50, 685)

@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/hero"
 	"image/color"
 	"math"
 	"math/rand"
@@ -105,7 +106,7 @@ func (g *game) Draw(s *ebiten.Image) {
 	vector.DrawFilledCircle(s, float32(g.px), float32(g.py), 62, color.RGBA{255, 211, 61, 35}, false)
 	vector.StrokeCircle(s, float32(g.px), float32(g.py), 62, 2, color.RGBA{255, 211, 61, 180}, false)
 	if g.inv%10 < 5 {
-		vector.DrawFilledCircle(s, float32(g.px), float32(g.py), 15, color.RGBA{45, 225, 194, 255}, false)
+		hero.DrawCentered(s, g.px, g.py, 34)
 	}
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("POOL 100/100   DEFEATED %03d/100   LIFE %d", g.kills, g.life), 52, 24)
 	ebitenutil.DebugPrintAt(s, "THE GOLD AURA ATTACKS EVERY 18 FRAMES", 90, 50)

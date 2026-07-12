@@ -19,6 +19,9 @@
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>反射とベクトル</strong></div>
     </section>
 
+    <p class="curriculum-bridge">ゲームの骨格は <a href="../tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> です。ここでは反射・ブロック・体の伸びなど、新しい部品だけを足します。見た目も当たりも図形のままです。</p>
+
+
     <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>パドルでボールを打ち返そう。</h2></div><p>矢印キー、WASD、ドラッグで自機を動かします。CPUと得点を競います。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Pong" src="../../../play/pong/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -84,7 +87,180 @@ g.ballY += g.vy
 }</code></pre>
       </div>
 
-      <div class="why-grid">
+      
+            <div class="code-focus">
+        <p class="eyebrow">TODAY — まずここを見る</p>
+        <ol>
+          <li>ボールの反射</li>
+          <li>パドル当たり</li>
+          <li>CPUの追従</li>
+        </ol>
+      </div>
+<p class="full-code-intro">下のコードがこのゲームの<strong>全部</strong>です（図形だけで動いています）。コピーして手元で開けます。その前に、上の「まずここを見る」3つだけ追ってください。</p>
+      <div class="full-code" data-embed-source="games/core/pong/main.go">
+        <div class="full-code-head">
+          <span>main.go · ぜんぶのコード</span>
+          <button type="button" class="full-code-copy" data-copy data-copied-label="コピーした！">コピー</button>
+        </div>
+        <pre><code data-embed-slot>package main
+
+import (
+	"fmt"
+	"image/color"
+	"math"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+)
+
+const (
+	screenWidth  = 480
+	screenHeight = 720
+	paddleHalfW  = 60
+	ballRadius   = 12
+)
+
+type game struct {
+	playerX     float64
+	cpuX        float64
+	ballX       float64
+	ballY       float64
+	ballVX      float64 // ボールの横の速さ
+	ballVY      float64 // ボールの縦の速さ
+	playerScore int
+	cpuScore    int
+}
+
+func newGame() *game {
+	g := &amp;game{
+		playerX: screenWidth / 2,
+		cpuX:    screenWidth / 2,
+	}
+	g.serve(1) // 下向きにサーブ
+	return g
+}
+
+// direction: +1 は下へ、-1 は上へ
+func (g *game) serve(direction float64) {
+	g.ballX = screenWidth / 2
+	g.ballY = screenHeight / 2
+	g.ballVX = 3.2
+	g.ballVY = 4.2 * direction
+}
+
+func (g *game) movePlayer() {
+	if ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || ebiten.IsKeyPressed(ebiten.KeyA) {
+		g.playerX -= 6
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) || ebiten.IsKeyPressed(ebiten.KeyD) {
+		g.playerX += 6
+	}
+	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+		x, _ := ebiten.CursorPosition()
+		g.playerX = float64(x)
+	}
+	if ids := ebiten.AppendTouchIDs(nil); len(ids) &gt; 0 {
+		x, _ := ebiten.TouchPosition(ids[0])
+		g.playerX = float64(x)
+	}
+	g.playerX = math.Max(55, math.Min(screenWidth-55, g.playerX))
+}
+
+// CPU はボールの X にゆっくりついていく
+func (g *game) moveCPU() {
+	if g.cpuX &lt; g.ballX-8 {
+		g.cpuX += 3.5
+	} else if g.cpuX &gt; g.ballX+8 {
+		g.cpuX -= 3.5
+	}
+}
+
+func (g *game) bounceBall() {
+	g.ballX += g.ballVX
+	g.ballY += g.ballVY
+
+	// 左右の壁
+	if g.ballX &lt; 14 || g.ballX &gt; screenWidth-14 {
+		g.ballVX = -g.ballVX
+		g.ballX = math.Max(14, math.Min(screenWidth-14, g.ballX))
+	}
+
+	// 自分のパドル（下）
+	hitPlayer := g.ballVY &gt; 0 &amp;&amp;
+		g.ballY &gt;= 646 &amp;&amp; g.ballY &lt;= 662 &amp;&amp;
+		math.Abs(g.ballX-g.playerX) &lt; 66
+	if hitPlayer {
+		g.ballY = 646
+		g.ballVY = -math.Abs(g.ballVY) * 1.025
+		g.ballVX += (g.ballX - g.playerX) * 0.055
+	}
+
+	// CPU のパドル（上）
+	hitCPU := g.ballVY &lt; 0 &amp;&amp;
+		g.ballY &lt;= 74 &amp;&amp; g.ballY &gt;= 58 &amp;&amp;
+		math.Abs(g.ballX-g.cpuX) &lt; 66
+	if hitCPU {
+		g.ballY = 74
+		g.ballVY = math.Abs(g.ballVY) * 1.015
+		g.ballVX += (g.ballX - g.cpuX) * 0.04
+	}
+
+	g.ballVX = math.Max(-8, math.Min(8, g.ballVX))
+}
+
+// --- ここから Update ---
+func (g *game) Update() error {
+	g.movePlayer()
+	g.moveCPU()
+	g.bounceBall()
+
+	// 上に抜けたらプレイヤーの得点
+	if g.ballY &lt; -20 {
+		g.playerScore++
+		g.serve(1)
+	}
+	// 下に抜けたら CPU の得点
+	if g.ballY &gt; screenHeight+20 {
+		g.cpuScore++
+		g.serve(-1)
+	}
+	return nil
+}
+
+// --- ここから Draw ---
+func (g *game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{7, 20, 38, 255})
+
+	// 中央の点線
+	for y := 10; y &lt; screenHeight; y += 30 {
+		vector.DrawFilledRect(screen, screenWidth/2-2, float32(y), 4, 16, color.RGBA{45, 226, 194, 80}, false)
+	}
+
+	vector.DrawFilledRect(screen, float32(g.cpuX-paddleHalfW), 50, 120, 14, color.RGBA{255, 105, 79, 255}, false)
+	vector.DrawFilledRect(screen, float32(g.playerX-paddleHalfW), 656, 120, 14, color.RGBA{45, 226, 194, 255}, false)
+	vector.DrawFilledCircle(screen, float32(g.ballX), float32(g.ballY), ballRadius, color.White, false)
+
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("CPU %02d", g.cpuScore), 24, 22)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("YOU %02d", g.playerScore), 400, 688)
+	ebitenutil.DebugPrintAt(screen, "ARROWS / DRAG", 184, 350)
+}
+
+func (g *game) Layout(_, _ int) (int, int) {
+	return screenWidth, screenHeight
+}
+
+func main() {
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Pong — Ebitengine")
+	if err := ebiten.RunGame(newGame()); err != nil {
+		panic(err)
+	}
+}
+</code></pre>
+      </div>
+
+    <div class="why-grid">
         <article><p class="eyebrow">WITHOUT VECTORS</p><h3>「斜め」を1つの数では表せない</h3><p>左右と上下を分けないと、壁ではねたあとの方向をきれいに書けません。</p></article>
         <article><p class="eyebrow">WITH REFLECTION</p><h3>符号反転が物理の近道</h3><p>本物の物理エンジンがなくても、符号をひっくり返すだけで「はねた！」感じが出ます。</p></article>
         <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>初速と角度の効きを変えよう</h3><p>サーブの <code>vx, vy</code> や、ヒット時の <code>0.055</code> を変えると、ゆったり試合にも、激しい試合にもできます。</p></article>

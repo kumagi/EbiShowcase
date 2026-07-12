@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/hero"
 	"image/color"
 	"math/rand"
 )
@@ -162,7 +163,7 @@ func (g *game) Draw(s *ebiten.Image) {
 		gate = color.RGBA{45, 225, 194, 255}
 	}
 	vector.DrawFilledRect(s, 8*tile+6, float32(oy+tile+6), 36, 36, gate, false)
-	vector.DrawFilledCircle(s, float32(g.x*tile+24), float32(oy+g.y*tile+24), 15, color.RGBA{240, 74, 90, 255}, false)
+	hero.DrawCentered(s, float64(g.x*tile+24), float64(oy+g.y*tile+24), 34)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("WORLD MAP  HP %02d/50  VICTORIES %d/3", g.hp, g.wins), 95, 25)
 	ebitenutil.DebugPrintAt(s, g.message, 70, 50)
 	ebitenutil.DebugPrintAt(s, "GREEN / DESERT / SNOW HAVE DIFFERENT ENEMIES", 80, 690)

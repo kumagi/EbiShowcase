@@ -1050,3 +1050,71 @@ document.querySelectorAll(".motion-lab[data-lab='gravity']").forEach((lab) => {
   bind(lab, "[data-lab-reset]")?.addEventListener("click", () => { y = 40; v = 0; render(); });
   render();
 });
+
+document.querySelectorAll(".motion-lab[data-lab='loop']").forEach((lab) => {
+  const phaseOuts = lab.querySelectorAll("[data-lab-phase]");
+  const frameOut = bind(lab, "[data-lab-frame]");
+  const noteOuts = lab.querySelectorAll("[data-lab-note]");
+  const board = bind(lab, "[data-lab-board]");
+  if (!phaseOuts.length || !frameOut) return;
+  const updateLabel = lab.dataset.update || "UPDATE";
+  const drawLabel = lab.dataset.draw || "DRAW";
+  const updateNote = lab.dataset.updateNote || "Change numbers (score, positions).";
+  const drawNote = lab.dataset.drawNote || "Paint the current numbers on screen.";
+  let frame = 0;
+  let phase = "update";
+  const render = () => {
+    const isUpdate = phase === "update";
+    const label = isUpdate ? updateLabel : drawLabel;
+    const note = isUpdate ? updateNote : drawNote;
+    phaseOuts.forEach((el) => setText(el, label));
+    noteOuts.forEach((el) => setText(el, note));
+    setText(frameOut, String(frame));
+    if (board) board.dataset.phase = phase;
+  };
+  bind(lab, "[data-lab-step]")?.addEventListener("click", () => {
+    if (phase === "update") {
+      phase = "draw";
+    } else {
+      phase = "update";
+      frame += 1;
+    }
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    frame = 0;
+    phase = "update";
+    render();
+  });
+  render();
+});
+
+document.querySelectorAll(".full-code").forEach((block) => {
+  const button = block.querySelector("[data-copy]");
+  const code = block.querySelector("[data-embed-slot], pre code");
+  if (!button || !code) return;
+  const idle = button.textContent.trim() || "Copy";
+  const done = button.dataset.copiedLabel || "Copied!";
+  button.addEventListener("click", async () => {
+    const text = code.textContent || "";
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.left = "-9999px";
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand("copy");
+      area.remove();
+    }
+    button.dataset.copied = "1";
+    button.textContent = done;
+    window.setTimeout(() => {
+      button.dataset.copied = "0";
+      button.textContent = idle;
+    }, 1600);
+  });
+});

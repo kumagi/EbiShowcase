@@ -15,20 +15,21 @@
     <section class="overview-hero">
       <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
       <h1>落ちものキャッチ</h1>
-      <p>上から落ちる星をカゴで受け止めます。動かすもの、落とすもの、重なったかの判定。ゲームの「物体」がいっきに増える一歩です。</p>
+      <p>上から落ちる星を、主人公 Ebi Boy が持つカゴで受け止めます。見た目はキャラとカゴ、当たり判定は見えない四角形です。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>移動と当たり判定</strong></div>
+      <p class="cast-note">見た目はオリジナル主人公の <strong>Ebi Boy</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
     </section>
 
     <section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>カゴを動かして、星を集めよう。</h2></div><p>矢印キー、WASD、ドラッグに対応。3回落とすとゲームオーバーです。</p></div>
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>主人公を動かして、星を集めよう。</h2></div><p>矢印キー、WASD、ドラッグに対応。3回落とすとゲームオーバーです。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="落ちものキャッチ" src="../../../play/catch-stars/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / MOVEMENT &amp; AABB</p>
-        <h2>どうしてカゴに<br>入ったとわかるの？</h2>
-        <p class="lesson-lead">星もカゴも、見えない四角形（バウンディングボックス）だと考えます。2つの四角形が重なっていればキャッチ成功。このやり方を AABB（軸に平行な箱どうしの判定）と呼びます。</p>
+        <p class="eyebrow">DEEP DIVE / MOVEMENT &amp; BOX HITS</p>
+        <h2>どうして星を<br>取れたとわかるの？</h2>
+        <p class="lesson-lead">星もカゴも、見えない四角形だと考えます。2つの四角形が重なっていればキャッチ成功。むずかしい略語より、「箱どうしが重なったか」と覚えるだけで十分です。</p>
       </div>
 
       <div class="concept-row">
@@ -55,7 +56,7 @@
           </div>
           <div class="lab-values" aria-live="polite">
             <div><span>星の Y</span><strong data-lab-y>80</strong><small>毎フレーム下落</small></div>
-            <div><span>重なり</span><strong data-lab-overlap data-state="miss">まだ</strong><small>AABB</small></div>
+            <div><span>重なり</span><strong data-lab-overlap data-state="miss">まだ</strong><small>箱の重なり</small></div>
             <div><span>ルール</span><strong>4辺</strong><small>左右上下すべて</small></div>
           </div>
         </div>
@@ -88,12 +89,207 @@
 g.stars = next</code></pre>
       </div>
 
-      <div class="why-grid">
+      
+            <div class="code-focus">
+        <p class="eyebrow">TODAY — まずここを見る</p>
+        <ol>
+          <li>カゴの移動</li>
+          <li>四角形の重なり</li>
+          <li>星リストの更新</li>
+        </ol>
+      </div>
+<p class="full-code-intro">下のコードがこのゲームの<strong>本体</strong>です（主人公の絵は共有パッケージ <code>internal/hero</code> から読みます）。コピーして手元で開けます。その前に、上の「まずここを見る」3つだけ追ってください。</p>
+      <div class="full-code" data-embed-source="games/core/catch-stars/main.go">
+        <div class="full-code-head">
+          <span>main.go · ぜんぶのコード</span>
+          <button type="button" class="full-code-copy" data-copy data-copied-label="コピーした！">コピー</button>
+        </div>
+        <pre><code data-embed-slot>package main
+
+import (
+	"fmt"
+	"image/color"
+	"math/rand"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/hero"
+)
+
+const (
+	screenWidth  = 480
+	screenHeight = 720
+	basketY      = 640
+	basketHalfW  = 58
+)
+
+// 落ちてくる星 1つ
+type star struct {
+	x, y  float64
+	speed float64
+}
+
+type game struct {
+	basketX  float64
+	stars    []star
+	frame    int
+	score    int
+	lives    int
+	gameOver bool
+	rng      *rand.Rand
+}
+
+func newGame() *game {
+	return &amp;game{
+		basketX: screenWidth / 2,
+		lives:   3,
+		rng:     rand.New(rand.NewSource(19)),
+	}
+}
+
+func restartPressed() bool {
+	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+		return true
+	}
+	if len(ebiten.AppendTouchIDs(nil)) &gt; 0 {
+		return true
+	}
+	return false
+}
+
+// キーボード・マウス・タッチでカゴを動かす
+func (g *game) moveBasket() {
+	if ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || ebiten.IsKeyPressed(ebiten.KeyA) {
+		g.basketX -= 5
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) || ebiten.IsKeyPressed(ebiten.KeyD) {
+		g.basketX += 5
+	}
+	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
+		x, _ := ebiten.CursorPosition()
+		g.basketX = float64(x)
+	}
+	if ids := ebiten.AppendTouchIDs(nil); len(ids) &gt; 0 {
+		x, _ := ebiten.TouchPosition(ids[0])
+		g.basketX = float64(x)
+	}
+
+	// 画面の端から出ないようにする
+	if g.basketX &lt; 55 {
+		g.basketX = 55
+	}
+	if g.basketX &gt; screenWidth-55 {
+		g.basketX = screenWidth - 55
+	}
+}
+
+// 星がカゴに入ったか（AABB：四角どうしの重なり）
+func (g *game) caught(s star) bool {
+	inY := s.y &gt; 625 &amp;&amp; s.y &lt; 675
+	inX := s.x &gt; g.basketX-basketHalfW &amp;&amp; s.x &lt; g.basketX+basketHalfW
+	return inY &amp;&amp; inX
+}
+
+// --- ここから Update ---
+func (g *game) Update() error {
+	if g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}
+
+	g.moveBasket()
+
+	g.frame++
+	// 45フレームごとに星を1つ出す
+	if g.frame%45 == 0 {
+		g.stars = append(g.stars, star{
+			x:     25 + g.rng.Float64()*(screenWidth-50),
+			y:     -20,
+			speed: 2.6 + g.rng.Float64()*2,
+		})
+	}
+
+	// 残す星だけを next に集める
+	next := g.stars[:0]
+	for _, s := range g.stars {
+		s.y += s.speed
+
+		if g.caught(s) {
+			g.score++
+			continue // 取れたので消す
+		}
+		if s.y &gt; screenHeight {
+			g.lives--
+			if g.lives &lt;= 0 {
+				g.gameOver = true
+			}
+			continue // 落としたので消す
+		}
+		next = append(next, s)
+	}
+	g.stars = next
+	return nil
+}
+
+// --- ここから Draw ---
+func (g *game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{7, 20, 38, 255})
+
+	// うすい星空
+	for i := 0; i &lt; 24; i++ {
+		vector.DrawFilledCircle(
+			screen,
+			float32((i*97)%screenWidth),
+			float32((i*53+g.frame/4)%screenHeight),
+			1.5,
+			color.RGBA{45, 226, 194, 120},
+			false,
+		)
+	}
+
+	for _, s := range g.stars {
+		vector.DrawFilledCircle(screen, float32(s.x), float32(s.y), 15, color.RGBA{255, 210, 72, 255}, false)
+		vector.DrawFilledCircle(screen, float32(s.x-5), float32(s.y-5), 4, color.White, false)
+	}
+
+	vector.DrawFilledRect(screen, float32(g.basketX-basketHalfW), basketY, 116, 38, color.RGBA{45, 226, 194, 255}, false)
+	vector.DrawFilledRect(screen, float32(g.basketX-48), 630, 96, 12, color.RGBA{255, 105, 79, 255}, false)
+	// カゴを持つ主人公
+	hero.DrawBottomCentered(screen, g.basketX, basketY+8, 56)
+
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %02d   LIVES %d", g.score, g.lives), 170, 25)
+	if g.gameOver {
+		ebitenutil.DebugPrintAt(screen, "GAME OVER\n\nCLICK / TOUCH TO RETRY", 155, 320)
+	} else {
+		ebitenutil.DebugPrintAt(screen, "MOVE: ARROWS / DRAG", 170, 690)
+	}
+}
+
+func (g *game) Layout(_, _ int) (int, int) {
+	return screenWidth, screenHeight
+}
+
+func main() {
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Catch the Stars — Ebitengine")
+	if err := ebiten.RunGame(newGame()); err != nil {
+		panic(err)
+	}
+}
+</code></pre>
+      </div>
+
+    <div class="why-grid">
         <article><p class="eyebrow">WITHOUT LISTS</p><h3>星が1個だけ</h3><p>変数を星の数だけ用意すると、すぐに限界が来ます。リストなら何個でも同じルールで動けます。</p></article>
-        <article><p class="eyebrow">WITH AABB</p><h3>見た目より先に箱</h3><p>絵がきれいでなくても、四角形の重なりさえ正しければ「キャッチした感じ」は出せます。</p></article>
+        <article><p class="eyebrow">WITH BOX HITS</p><h3>見た目より先に箱</h3><p>絵がきれいでなくても、四角形の重なりさえ正しければ「キャッチした感じ」は出せます。</p></article>
         <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>速さと出現間隔を変えよう</h3><p>星の <code>speed</code> や出現間隔 <code>frame%45</code> を変えると難易度が変わります。カゴの幅を広げるのもやさしい調整です。</p></article>
       </div>
     </section>
+
+    <p class="lesson-lead" style="margin:48px 0 0">次のレベルでは、速さが<strong>毎フレーム少しずつ変わる</strong>（加速度）話になります。落ちる速さは一定のまま、ジャンプの弧を作ります。</p>
 
     <nav class="lesson-pager"><a href="../timing-meter/">← LEVEL 02<strong>ストップ・ザ・メーター</strong></a><a href="../flappy/">LEVEL 04 →<strong>Ebi Flight</strong></a></nav>
   </main>

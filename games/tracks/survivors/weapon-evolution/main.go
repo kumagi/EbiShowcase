@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/hero"
 	"image/color"
 	"math"
 	"math/rand"
@@ -126,7 +127,7 @@ func (g *game) Draw(s *ebiten.Image) {
 		vector.DrawFilledRect(s, float32(g.item.x-12), float32(g.item.y-12), 24, 24, color.RGBA{92, 170, 255, 255}, false)
 	}
 	if g.inv%10 < 5 {
-		vector.DrawFilledCircle(s, float32(g.px), float32(g.py), 16, color.RGBA{45, 225, 194, 255}, false)
+		hero.DrawCentered(s, g.px, g.py, 34)
 	}
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("%s   KILLS %02d/50   LIFE %d", g.weapon.name, g.kills, g.life), 70, 24)
 	status := "DEFEAT 10 ENEMIES TO FIND THE BLUE CORE"

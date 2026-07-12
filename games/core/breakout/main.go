@@ -10,73 +10,136 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
-const width, height = 480, 720
+const (
+	screenWidth  = 480
+	screenHeight = 720
+	brickW       = 50.0
+	brickH       = 24.0
+	ballR        = 10.0
+)
 
 type brick struct {
 	x, y  float64
 	alive bool
-	hue   int
+	row   int
 }
+
 type game struct {
-	paddle, bx, by, vx, vy float64
-	bricks                 []brick
-	score, lives           int
+	paddleX float64
+	ballX   float64
+	ballY   float64
+	ballVX  float64
+	ballVY  float64
+	bricks  []brick
+	score   int
+	lives   int
 }
 
 func newGame() *game {
-	g := &game{paddle: width / 2, lives: 3}
+	g := &game{
+		paddleX: screenWidth / 2,
+		lives:   3,
+	}
 	for row := 0; row < 6; row++ {
 		for col := 0; col < 8; col++ {
-			g.bricks = append(g.bricks, brick{x: 22 + float64(col)*56, y: 90 + float64(row)*32, alive: true, hue: row})
+			g.bricks = append(g.bricks, brick{
+				x:     22 + float64(col)*56,
+				y:     90 + float64(row)*32,
+				alive: true,
+				row:   row,
+			})
 		}
 	}
 	g.serve()
 	return g
 }
-func (g *game) serve() { g.bx, g.by, g.vx, g.vy = width/2, 590, 3.4, -4.5 }
-func (g *game) Update() error {
+
+func (g *game) serve() {
+	g.ballX = screenWidth / 2
+	g.ballY = 590
+	g.ballVX = 3.4
+	g.ballVY = -4.5
+}
+
+func (g *game) movePaddle() {
 	if ebiten.IsKeyPressed(ebiten.KeyArrowLeft) || ebiten.IsKeyPressed(ebiten.KeyA) {
-		g.paddle -= 6
+		g.paddleX -= 6
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyArrowRight) || ebiten.IsKeyPressed(ebiten.KeyD) {
-		g.paddle += 6
+		g.paddleX += 6
 	}
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		x, _ := ebiten.CursorPosition()
-		g.paddle = float64(x)
+		g.paddleX = float64(x)
 	}
 	if ids := ebiten.AppendTouchIDs(nil); len(ids) > 0 {
 		x, _ := ebiten.TouchPosition(ids[0])
-		g.paddle = float64(x)
+		g.paddleX = float64(x)
 	}
-	g.paddle = math.Max(55, math.Min(width-55, g.paddle))
-	g.bx += g.vx
-	g.by += g.vy
-	if g.bx < 12 || g.bx > width-12 {
-		g.vx = -g.vx
-		g.bx = math.Max(12, math.Min(width-12, g.bx))
+	g.paddleX = math.Max(55, math.Min(screenWidth-55, g.paddleX))
+}
+
+func (g *game) bounceWorld() {
+	g.ballX += g.ballVX
+	g.ballY += g.ballVY
+
+	// 左右の壁
+	if g.ballX < 12 || g.ballX > screenWidth-12 {
+		g.ballVX = -g.ballVX
+		g.ballX = math.Max(12, math.Min(screenWidth-12, g.ballX))
 	}
-	if g.by < 52 {
-		g.vy = math.Abs(g.vy)
+	// 天井
+	if g.ballY < 52 {
+		g.ballVY = math.Abs(g.ballVY)
 	}
-	if g.vy > 0 && g.by > 630 && g.by < 650 && math.Abs(g.bx-g.paddle) < 64 {
-		g.by = 630
-		g.vy = -math.Abs(g.vy)
-		g.vx += (g.bx - g.paddle) * .06
+	// パドル
+	hitPaddle := g.ballVY > 0 &&
+		g.ballY > 630 && g.ballY < 650 &&
+		math.Abs(g.ballX-g.paddleX) < 64
+	if hitPaddle {
+		g.ballY = 630
+		g.ballVY = -math.Abs(g.ballVY)
+		g.ballVX += (g.ballX - g.paddleX) * 0.06
 	}
+}
+
+func (g *game) hitBricks() {
 	for i := range g.bricks {
 		b := &g.bricks[i]
 		if !b.alive {
 			continue
 		}
-		if g.bx+10 > b.x && g.bx-10 < b.x+50 && g.by+10 > b.y && g.by-10 < b.y+24 {
+		hit := g.ballX+ballR > b.x &&
+			g.ballX-ballR < b.x+brickW &&
+			g.ballY+ballR > b.y &&
+			g.ballY-ballR < b.y+brickH
+		if hit {
 			b.alive = false
 			g.score += 10
-			g.vy = -g.vy
+			g.ballVY = -g.ballVY
 			break
 		}
 	}
-	if g.by > height+15 {
+}
+
+func (g *game) aliveBrickCount() int {
+	n := 0
+	for _, b := range g.bricks {
+		if b.alive {
+			n++
+		}
+	}
+	return n
+}
+
+// --- ここから Update ---
+func (g *game) Update() error {
+	g.movePaddle()
+	g.bounceWorld()
+	g.hitBricks()
+
+	// ボールが下に落ちた
+	if g.ballY > screenHeight+15 {
 		g.lives--
 		if g.lives <= 0 {
 			*g = *newGame()
@@ -84,33 +147,46 @@ func (g *game) Update() error {
 			g.serve()
 		}
 	}
-	alive := 0
-	for _, b := range g.bricks {
-		if b.alive {
-			alive++
-		}
-	}
-	if alive == 0 {
+
+	// ブロックを全部壊したらクリア → 最初から
+	if g.aliveBrickCount() == 0 {
 		*g = *newGame()
 	}
 	return nil
 }
-func (g *game) Draw(s *ebiten.Image) {
-	s.Fill(color.RGBA{7, 20, 38, 255})
-	cols := []color.RGBA{{255, 105, 79, 255}, {255, 145, 72, 255}, {255, 210, 72, 255}, {45, 226, 194, 255}, {71, 161, 220, 255}, {151, 113, 230, 255}}
-	for _, b := range g.bricks {
-		if b.alive {
-			vector.DrawFilledRect(s, float32(b.x), float32(b.y), 50, 24, cols[b.hue], false)
-		}
+
+// --- ここから Draw ---
+func (g *game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{7, 20, 38, 255})
+
+	colors := []color.RGBA{
+		{255, 105, 79, 255},
+		{255, 145, 72, 255},
+		{255, 210, 72, 255},
+		{45, 226, 194, 255},
+		{71, 161, 220, 255},
+		{151, 113, 230, 255},
 	}
-	vector.DrawFilledRect(s, float32(g.paddle-58), 640, 116, 14, color.RGBA{45, 226, 194, 255}, false)
-	vector.DrawFilledCircle(s, float32(g.bx), float32(g.by), 10, color.White, false)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("SCORE %04d   LIVES %d", g.score, g.lives), 160, 25)
-	ebitenutil.DebugPrintAt(s, "ARROWS / DRAG", 184, 690)
+	for _, b := range g.bricks {
+		if !b.alive {
+			continue
+		}
+		vector.DrawFilledRect(screen, float32(b.x), float32(b.y), brickW, brickH, colors[b.row], false)
+	}
+
+	vector.DrawFilledRect(screen, float32(g.paddleX-58), 640, 116, 14, color.RGBA{45, 226, 194, 255}, false)
+	vector.DrawFilledCircle(screen, float32(g.ballX), float32(g.ballY), ballR, color.White, false)
+
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %04d   LIVES %d", g.score, g.lives), 160, 25)
+	ebitenutil.DebugPrintAt(screen, "ARROWS / DRAG", 184, 690)
 }
-func (g *game) Layout(_, _ int) (int, int) { return width, height }
+
+func (g *game) Layout(_, _ int) (int, int) {
+	return screenWidth, screenHeight
+}
+
 func main() {
-	ebiten.SetWindowSize(width, height)
+	ebiten.SetWindowSize(screenWidth, screenHeight)
 	ebiten.SetWindowTitle("Breakout — Ebitengine")
 	if err := ebiten.RunGame(newGame()); err != nil {
 		panic(err)

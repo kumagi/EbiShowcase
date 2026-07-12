@@ -8,6 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/hero"
 )
 
 const width, height = 480, 720
@@ -126,8 +127,7 @@ func (g *game) Draw(s *ebiten.Image) {
 		vector.DrawFilledRect(s, float32(p.x+6), float32(p.y+5), float32(p.w-12), 4, color.RGBA{186, 255, 229, 210}, false)
 	}
 	vector.DrawFilledRect(s, 72, 165, 55, 35, color.RGBA{255, 210, 61, 255}, false)
-	vector.DrawFilledRect(s, float32(g.player.x), float32(g.player.y), float32(g.player.w), float32(g.player.h), color.RGBA{240, 74, 91, 255}, false)
-	vector.DrawFilledCircle(s, float32(g.player.x+20), float32(g.player.y+10), 3, color.White, false)
+	hero.DrawBottomCentered(s, g.player.x+g.player.w/2, g.player.y+g.player.h, g.player.h*1.55)
 	ebitenutil.DebugPrintAt(s, "RIDE THE MOVING PLATFORMS TO THE FLAG", 95, 28)
 	ebitenutil.DebugPrintAt(s, "BOTTOM TOUCH: MOVE    TOP TOUCH: JUMP", 105, 685)
 	if g.clear {
