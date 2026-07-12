@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="Step-by-step: install Go and Ebitengine on a fresh Windows or macOS machine, then run a do-nothing empty window.">
   <title>Getting Started — Open an Empty Window | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/setup/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
@@ -23,7 +24,6 @@
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--setup.png">
     <meta name="twitter:image:alt" content="From a blank computer to an empty window.">
     <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/setup/">
   <link rel="stylesheet" href="../../../style.css">
 </head>
 <body>
@@ -67,6 +67,7 @@
       <article class="setup-os"><h3>macOS</h3><ol class="setup-ol"><li>Press Command + Space</li><li>Type Terminal</li><li>Open the Terminal app</li></ol></article>
     </div>
     <p class="setup-tip">If you see a blinking cursor, you’re ready. You’ll paste commands there.</p>
+    <p class="setup-note">Name tip: on Windows people often say <strong>PowerShell</strong>; on Mac, <strong>Terminal</strong>. Same job—a window where you type commands. Windows 11’s “Terminal” app can host PowerShell. This guide says PowerShell for Windows and Terminal for Mac.</p>
   </section>
 
   <section class="setup-step" id="install-go">
@@ -74,7 +75,7 @@
     <h2>Install Go</h2>
     <p class="setup-lead">Ebitengine is a Go game engine, so install Go first. Official requirement: Go 1.22+. This repository targets 1.24.</p>
     <div class="setup-os-grid">
-      <article class="setup-os"><h3>Windows</h3><ol class="setup-ol"><li>Open <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a></li><li>Download the Microsoft Windows <strong>.msi</strong> (usually the latest stable at the top)</li><li>Run the installer and click through Next</li><li>When it finishes, <strong>close PowerShell and open it again</strong> so PATH refreshes</li></ol></article>
+      <article class="setup-os"><h3>Windows</h3><ol class="setup-ol"><li>Open <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a></li><li>Download the Microsoft Windows <strong>.msi</strong> (usually the latest stable at the top)</li><li>Run the installer and click through Next</li><li>When it finishes, <strong>close the PowerShell window and open it again</strong> so PATH refreshes</li></ol></article>
       <article class="setup-os"><h3>macOS</h3><ol class="setup-ol"><li>Open <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a></li><li>Pick the right <strong>.pkg</strong>: <strong>ARM64</strong> for Apple Silicon (M1/M2/M3…), <strong>x86-64</strong> for Intel</li><li>Run the package and follow the prompts</li><li>When it finishes, <strong>quit Terminal and open it again</strong></li></ol></article>
     </div>
     <p class="setup-note">School or work PCs may need an admin password. Ask a parent or teacher if you can’t install.</p>
@@ -83,7 +84,7 @@
   <section class="setup-step" id="compiler">
     <p class="setup-n">STEP 02</p>
     <h2>Mac only: install a C compiler</h2>
-    <p class="setup-lead">Ebitengine also uses C under the hood. Windows needs no extra C compiler. On Mac, install Apple’s Command Line Tools.</p>
+    <p class="setup-lead">Ebitengine also uses a little C under the hood. <strong>Windows school PCs can skip this.</strong> On Mac only, install Apple’s Command Line Tools (free). If your classroom PC is Windows, jump to step 3.</p>
     <p class="setup-skip">On Windows, skip this step and go to “3. Verify”.</p>
     <pre class="setup-code"><code>xcode-select --install</code></pre>
     <ol class="setup-ol"><li>Paste the command above into Terminal and press Enter</li><li>In the dialog, choose Install (it can take several minutes)</li><li>If tools are already present, a message like “already installed” is fine</li></ol>
@@ -173,36 +174,34 @@ func main() {
 
   <section class="setup-step setup-trouble" id="troubleshoot">
     <h2>Troubleshooting</h2>
+    <p class="setup-lead">This is where people get stuck most. Match your symptom below. Still stuck? Copy the full red error into the feedback box at the bottom.</p>
     <div class="setup-trouble-list">
-      <article><h3>go: command not found / not recognized</h3><p>Reopen the terminal after install. On Windows, confirm Go appears under Start. Still stuck? Reboot once.</p></article><article><h3>xcrun: error: invalid active developer path… (Mac)</h3><p>Run xcode-select --install again.</p></article><article><h3>Network errors on go mod tidy / go run</h3><p>Check internet and school/work proxies. Home networks often work when campus ones don’t.</p></article><article><h3>Window flashes and disappears / panic</h3><p>Read the full red error in the terminal. Search it, or paste it into the feedback box below.</p></article><article><h3>Using WSL (Linux on Windows)</h3><p>Official docs may require GOOS=windows for go run. Prefer plain PowerShell for this first guide.</p></article>
+      <article><h3>PowerShell vs Terminal—which one?</h3><p>On Windows, PowerShell is fine. On Mac, use Terminal. Same job: a window for typing commands. Windows 11’s Terminal app is OK if it opens PowerShell inside.</p></article><article><h3>go: command not found / not recognized</h3><p>① After installing Go, fully close and reopen the command window. ② On Windows, check Start for “Go”. ③ Still stuck? Reboot, then try <code>go version</code> again.</p></article><article><h3>xcrun: error: invalid active developer path… (Mac)</h3><p>Run step 02’s <code>xcode-select --install</code> again. If it stalled, reboot and retry.</p></article><article><h3>Network errors on go mod tidy / go run</h3><p>Check internet and school/work proxies. Home networks often work when campus ones don’t.</p></article><article><h3>Window flashes and disappears / panic</h3><p>Read the full red error in the command window. Search it, or paste it into the feedback box below.</p></article><article><h3>Using WSL (Linux on Windows)</h3><p>Official docs may require GOOS=windows for go run. Prefer plain PowerShell for this first guide.</p></article>
     </div>
-    <p class="setup-footer-note">Official Install / Hello, World! docs have more detail. This page reorders them for a blank-machine first run. <a href="https://ebitengine.org/en/documents/install.html" rel="noreferrer">Official Install ↗</a></p>
+    <p class="setup-footer-note">Official Install / Hello, World! docs have more detail. This page reorders them for a blank-machine first run. When stuck, jump back to Troubleshooting first. <a href="https://ebitengine.org/en/documents/install.html" rel="noreferrer">Official Install ↗</a></p>
   </section>
 
-
-    <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">Quick feedback</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/en/guides/setup/">
-          <label class="feedback-field">
-            <span class="sr-only">Feedback</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…" aria-label="Feedback">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
+  <section class="feedback-section" aria-labelledby="feedback-title">
+    <div class="feedback-card">
+      <div class="feedback-heading">
+        <p class="eyebrow">FEEDBACK</p>
+        <h2 id="feedback-title">Quick feedback</h2>
       </div>
-    </section>
-
-
+      <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+        <input type="hidden" name="entry.765794446" value="/en/guides/setup/">
+        <label class="feedback-field">
+          <span class="sr-only">Feedback</span>
+          <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+        </label>
+        <div class="feedback-actions">
+          <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+          <p class="feedback-status" aria-live="polite"></p>
+        </div>
+        <input type="hidden" name="fvv" value="1">
+        <input type="hidden" name="pageHistory" value="0">
+      </form>
+    </div>
+  </section>
 </main>
 <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
 <script src="../../../learn.js"></script>

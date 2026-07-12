@@ -25,19 +25,19 @@ const hub = {
   letter: "VFX",
   ja: {
     title: "ビジュアルエフェクト工房",
-    eyebrow: "見た目の魔法をEbitengineで作る",
-    lead: "基本編で描画の文法を手で確かめ、応用編で LEVEL 01〜12 のミニゲームそれぞれに派手な演出を足します。応用編のゴールは、エフェクトをゲーム本編の配列と分けて管理することに自分で気づくこと。",
+    eyebrow: "花火・光・歩き——見た目の道具箱",
+    lead: "ここは「ゲームのルール」ではなく「見た目のかっこよさ」を練習する工房です。スタンプ・回転・色・光・歩きなど、絵を動かす道具を1つずつ触ります。後半では、すでに遊んだ LEVEL のミニゲームにキラキラを足します。全部やらなくても大丈夫——気になる見出しからでOKです。",
     pathTitle: "基本編と応用編。",
-    pathLead: "まず LIVE GO で道具を覚え、次に12本のコアゲームへ演出を足しながら「play と fx を分ける」構造にたどり着きます。",
+    pathLead: "基本編：画面上のスライダーで「置く・回す・染める・光らせる」を体感。応用編：ルール（得点や当たり）と演出（花火）を別の箱に入れる練習。まずはスタンプからで十分です。",
     breadcrumb: "← 全コース",
     course: "コース",
   },
   en: {
     title: "Visual Effects Lab",
-    eyebrow: "Make on-screen magic with Ebitengine",
-    lead: "Basics teach the drawing grammar; Advanced remakes each LEVEL 01–12 mini game with flashy FX. The goal is noticing for yourself that effects belong in a separate system from gameplay entities.",
+    eyebrow: "Sparks, light, walk cycles—a look toolbox",
+    lead: "This lab practices “how it looks,” not game rules. Touch one drawing tool at a time—stamp, rotate, tint, glow, walk. Later chapters add sparkle to the core LEVEL mini games you already played. You don’t need every step—pick a title that looks fun.",
     pathTitle: "Basics, then Advanced.",
-    pathLead: "Learn the tools with LIVE GO, then dress up all twelve core games while discovering the play-vs-fx split.",
+    pathLead: "Basics: feel place/spin/tint/glow with on-page sliders. Advanced: practice keeping score/hits in one box and fireworks in another. Starting at Stamp is enough.",
     breadcrumb: "← ALL PATHS",
     course: "PATHS",
   },
@@ -1296,14 +1296,14 @@ function hubPage(lang) {
   const basicSteps = basic.map(stepLink).join("\n");
   const advSteps = advanced.map(stepLink).join("\n");
   const bridge = lang === "ja"
-    ? `<p class="curriculum-bridge">共通基礎(LEVEL 01〜12)の続きです。<a href="../../games/tap-target/#basics">Update / Draw</a> のループの上に、見た目を作る道具を1つずつ足します。主人公はオリジナルの海老・天次郎です。</p>`
-    : `<p class="curriculum-bridge">This continues the core lessons (LEVEL 01–12). On top of the <a href="../../games/tap-target/#basics">Update / Draw</a> loop, add one presentation tool at a time. The hero is original Ebi Tenjiroh (海老・天次郎).</p>`;
+    ? `<p class="curriculum-bridge">共通基礎(LEVEL 01〜12)の続きです。<a href="../../games/tap-target/#basics">Update / Draw</a> のループの上に、見た目を作る道具を1つずつ足します。主人公はオリジナルの海老・天次郎（えび・てんじろう）です。</p>`
+    : `<p class="curriculum-bridge">This continues the core lessons (LEVEL 01–12). On top of the <a href="../../games/tap-target/#basics">Update / Draw</a> loop, add one presentation tool at a time. The hero is original Ebi Tenjiroh (海老・天次郎 / ebi-tenjiroh).</p>`;
   const basicHead = lang === "ja"
-    ? `<div class="path-intro"><p class="eyebrow">BASIC / 基本編</p><h2>描画の文法を<br>手で確かめる。</h2><p>Translate から魔法ショーケースまで。LIVE GO とスライダーで道具を覚える ${basic.length} ステップ。</p></div>`
-    : `<div class="path-intro"><p class="eyebrow">BASIC</p><h2>Feel the drawing<br>grammar by hand.</h2><p>${basic.length} steps from Translate to magic showcases—LIVE GO + sliders.</p></div>`;
+    ? `<div class="path-intro"><p class="eyebrow">BASIC / 基本編</p><h2>描画の文法を<br>手で確かめる。</h2><p>スタンプから魔法ショーケースまで。ページ上のスライダーで「置く・回す・染める」を体感する ${basic.length} ステップ（全部やらなくてOK）。</p></div>`
+    : `<div class="path-intro"><p class="eyebrow">BASIC</p><h2>Feel the drawing<br>grammar by hand.</h2><p>${basic.length} steps from Stamp to magic showcases—try the on-page sliders (you don’t need every step).</p></div>`;
   const advHead = lang === "ja"
-    ? `<div class="path-intro" id="advanced"><p class="eyebrow">ADVANCED / 応用編</p><h2>12のコアゲームに<br>派手な演出を足す。</h2><p>LEVEL 01〜12 をベースに、play（ルール）と fx（演出）を分けて管理する構造に自分で気づくための ${advanced.length} 章。</p></div>`
-    : `<div class="path-intro" id="advanced"><p class="eyebrow">ADVANCED</p><h2>Dress up all twelve<br>core games.</h2><p>${advanced.length} chapters on LEVEL 01–12 remakes—discover the play vs fx split for yourself.</p></div>`;
+    ? `<div class="path-intro" id="advanced"><p class="eyebrow">ADVANCED / 応用編</p><h2>12のコアゲームに<br>派手な演出を足す。</h2><p>LEVEL 01〜12 をベースに、<strong>得点や当たり（ルール）</strong>と<strong>花火や光（見た目）</strong>を別の箱に入れる練習をする ${advanced.length} 章。</p></div>`
+    : `<div class="path-intro" id="advanced"><p class="eyebrow">ADVANCED</p><h2>Dress up all twelve<br>core games.</h2><p>${advanced.length} chapters on LEVEL 01–12 remakes—practice keeping score/hits in one box and fireworks in another.</p></div>`;
 
   return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>${h.title} | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">${lang === "ja" ? "目次" : "CURRICULUM"}</a><a class="lang" href="../../../${other}/tracks/${track}/">${otherLabel}</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">${h.breadcrumb}</a><span>${basic.length}+${advanced.length} STEPS</span></div><section class="track-hero track-visual-effects"><span class="track-letter">${hub.letter}</span><div><p class="eyebrow">${h.eyebrow}</p><h1>${h.title}</h1><p>${h.lead}</p></div>${bridge}</section><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>${h.pathTitle}</h2><p>${h.pathLead}</p></div>${basicHead}${basicSteps}${advHead}${advSteps}</section></main></body></html>
 `;

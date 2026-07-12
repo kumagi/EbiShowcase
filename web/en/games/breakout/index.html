@@ -54,7 +54,7 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>One record</h3><p>Each brick is a struct with x, y, and alive. Drawing happens later in Draw.</p><code>type brick struct</code></article>
+        <article><span class="concept-number">1</span><h3>One record</h3><p>Each brick is a struct — think of it as <strong>"a toolbox for one brick"</strong> that bundles together everything about that brick: its position (x, y) and whether it is broken (alive). Drawing happens later in Draw.</p><code>type brick struct</code></article>
         <article><span class="concept-number">2</span><h3>A grid of them</h3><p>Nested loops fill rows and columns, appending into a slice. Forty-eight bricks do not mean forty-eight variables.</p><code>bricks []brick</code></article>
         <article><span class="concept-number">3</span><h3>Breaking</h3><p>Only overlapping bricks set <code>alive = false</code>. Update and draw look only at living ones.</p><code>alive = false</code></article>
       </div>
@@ -98,6 +98,7 @@
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>Test collisions inside the loop</h3>
           <p>After moving the ball, walk every brick. On a hit, destroy it, reverse vy, and stop for that frame. This lesson always flips ballVY on any brick hit — a common intro simplification; side-aware bounce is a later challenge.</p>
+          <p><strong>What happens when every brick is gone?</strong> When no bricks are left alive (<code>aliveBrickCount() == 0</code>), the real game does not show a separate "you win" screen — instead it calls <code>*g = *newGame()</code> to reset everything back to the start and immediately begin a fresh wall of bricks. The <code>win()</code> call in the lab above is a short stand-in for that "treat it as cleared" moment; in the actual game it simply flows straight into the next round.</p>
         </div>
         <pre><code><span>for</span> i := range g.bricks {
     b := &amp;g.bricks[i]

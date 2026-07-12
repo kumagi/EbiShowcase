@@ -3,7 +3,7 @@
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="ひっぱり反射アクション | Ebi Showcase">
-    <meta property="og:description" content="引っぱる照準から、円の反射、減速、敵への接触攻撃、味方との友情効果へ進みます。">
+    <meta property="og:description" content="モンスターストライクのような、キャラクターを引っぱって発射する対戦アクションを作ります。引っぱる照準から、円の反射、減速、敵への接触攻撃、味方に当てて発動する「友情効果」へ進みます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/slingshot/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--slingshot.png">
     <meta property="og:image:width" content="1200">
@@ -13,17 +13,17 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="ひっぱり反射アクション | Ebi Showcase">
-    <meta name="twitter:description" content="引っぱる照準から、円の反射、減速、敵への接触攻撃、味方との友情効果へ進みます。">
+    <meta name="twitter:description" content="モンスターストライクのような、キャラクターを引っぱって発射する対戦アクションを作ります。引っぱる照準から、円の反射、減速、敵への接触攻撃、味方に当てて発動する「友情効果」へ進みます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--slingshot.png">
     <meta name="twitter:image:alt" content="ひっぱり反射アクション">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/slingshot/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/slingshot/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>6 STEPS</span></div><section class="track-hero track-slingshot"><span class="track-letter">J</span><div><p class="eyebrow">モンスターストライク型ゲームを作る</p><h1>ひっぱり反射アクション</h1><p>引っぱる照準から、円の反射、減速、敵への接触攻撃、味方との友情効果へ進みます。</p></div></section><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公が登場するステップではオリジナルの 海老・天次郎 を使います。</p>
-<section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>小さなルールを<br>つないで完成へ。</h2><p>各ステップを単独で遊べる大きさにし、アルゴリズムを目で確認してから次の仕組みへ進みます。</p></div><a class="path-step" href="drag-launch/"><span>01</span><div><h3>ひっぱって発射</h3><p>指で引いた方向と距離から矢印を描き、反対方向へ速度を与えます。</p><strong>ドラッグベクトルと発射速度</strong></div><b>→</b></a>
-<a class="path-step" href="wall-bounce/"><span>02</span><div><h3>壁で跳ね返るボール</h3><p>壁の向きに対して速度を反射し、少しだけ勢いを失わせます。</p><strong>法線反射と反発係数</strong></div><b>→</b></a>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/slingshot/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>6 STEPS</span></div><section class="track-hero track-slingshot"><span class="track-letter">J</span><div><p class="eyebrow">モンスターストライク型ゲームを作る</p><h1>ひっぱり反射アクション</h1><p>モンスターストライクのような、キャラクターを引っぱって発射する対戦アクションを作ります。引っぱる照準から、円の反射、減速、敵への接触攻撃、味方に当てて発動する「友情効果」へ進みます。</p></div></section><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公が登場するステップではオリジナルの 海老・天次郎（えび・てんじろう） を使います。</p>
+<section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>小さなルールを<br>つないで完成へ。</h2><p>各ステップを単独で遊べる大きさにし、アルゴリズムを目で確認してから次の仕組みへ進みます。</p></div><a class="path-step" href="drag-launch/"><span>01</span><div><h3>ひっぱって発射</h3><p>指で引いた方向と距離（ドラッグベクトル）から矢印を描き、引いた方向の反対へ速度を与えて発射します。</p><strong>指で引いた方向と距離（ドラッグベクトル）から発射速度を決める</strong></div><b>→</b></a>
+<a class="path-step" href="wall-bounce/"><span>02</span><div><h3>壁で跳ね返るボール</h3><p>壁の向きに対して鏡のように速度を反射させ（法線反射）、跳ねるたびに少しだけ勢いを失わせます（反発係数でどれくらい弾むか決める）。</p><strong>壁で跳ね返る仕組み（法線反射）と、弾みやすさ（反発係数）</strong></div><b>→</b></a>
 <a class="path-step" href="circle-battle/"><span>03</span><div><h3>円形キャラクターの衝突</h3><p>敵へ触れた速さと回数を判定し、同じ敵への連続ヒットを制御します。</p><strong>円衝突と接触ダメージ</strong></div><b>→</b></a>
 <a class="path-step" href="friction-stop/"><span>04</span><div><h3>減速して止まる</h3><p>速度を少しずつ減らし、十分遅くなったら正確に停止して次の手番へ進みます。</p><strong>摩擦・停止しきい値・ターン終了</strong></div><b>→</b></a>
-<a class="path-step" href="ally-effects/"><span>05</span><div><h3>味方に当てる友情効果</h3><p>味方へ触れた瞬間にレーザーや回復など、データで選んだ効果を発動します。</p><strong>接触イベントと能力データ</strong></div><b>→</b></a>
+<a class="path-step" href="ally-effects/"><span>05</span><div><h3>味方に当てる友情効果</h3><p>味方へ触れた瞬間にレーザーや回復など、データで選んだ「友情効果」を発動します。</p><strong>味方への接触で発動する友情効果</strong></div><b>→</b></a>
 <a class="path-step" href="ebi-strike/"><span>06</span><div><h3>Ebi Strike</h3><p>複数キャラクターの手番、必殺技、敵AI、障害物を統合して完成させます。</p><strong>手番・必殺技・ステージギミック</strong></div><b>→</b></a></section>
 
 

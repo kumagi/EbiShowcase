@@ -64,7 +64,7 @@
       </div>
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>位置</h3><p>主人公が「いま、どこにいるか」。画面の上が0で、下へ行くほど数字が大きくなります。</p><code>birdY = 320</code></article>
-        <article><span class="concept-number">2</span><h3>速度</h3><p>1回の更新で、どちらへどれだけ動くか。マイナスなら上へ、プラスなら下へ進みます。</p><code>velocity = -7.4</code></article>
+        <article><span class="concept-number">2</span><h3>速度</h3><p>1回の更新で、どちらへどれだけ動くか。マイナスなら上へ、プラスなら下へ進みます。<code>velocity = -7.4</code> は「はばたいた瞬間、上へ7.4ピクセル分の勢いを与える」という初速です。数字が大きいほど、1回のはばたきが強くなります。</p><code>velocity = -7.4</code></article>
         <article><span class="concept-number">3</span><h3>加速度</h3><p>速度を毎回どれだけ変えるか。重力として <strong>+0.42</strong>（ピクセル／フレーム²）を足し続けます。60FPSなら1フレーム≈16ms。画面の上が小さいYなので、ジャンプ初速は<strong>負の数</strong>（例: -7.4）です。</p><code>gravity = +0.42</code></article>
       </div>
       <div class="motion-lab" data-lab="flappy" aria-labelledby="motion-lab-title">
@@ -88,7 +88,7 @@
 </div>
 </div>
       <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>速度 = 速度 + 重力</code><span>つぎに</span><code>位置 = 位置 + 速度</code></div><p>順番が大切です。まず重力で速度を変え、次にその速度で位置を変えます。毎フレームくり返すだけで、自然なジャンプの曲線が生まれます。Yは下方向がプラスなので、上へ飛ぶには速度をマイナスにします。</p>
-      <p>スタート前のふわふわは <code>math.Sin(...)</code> を使っています。中学ではまだ習わない三角関数ですが、「波の高さの表」だと思ってください。フレームが進むと高さがゆらゆら変わり、待機中の上下動になります。必須ではありません。定数の上下でも遊びは成立します。</p>
+      <p>スタート前に主人公がふわふわ揺れているのは <code>math.Sin(...)</code>（サイン、なめらかな波の形を作る関数）を使っているからです。中学ではまだ習わない関数ですが、「時間とともになめらかに上下する値の表」だと思えば十分です。これは<strong>「待っている感」を出すための飾り（発展・任意）</strong>で、加速度や当たり判定の仕組みとは関係ありません。省いて動かない位置のままにしても、ゲームは同じように遊べます。</p>
       <p>パイプとの当たりは距離（円）ではなく、<strong>Xが重なり、かつYが穴の外</strong>ならヒット、という四角形どうしの判定です。見た目が丸くても、まずは箱判定で十分なことが多いです。</p></div>
       <div class="code-lesson">
         <div><p class="eyebrow">IN THE REAL GAME</p><h3>Ebitengineでは<br><code>Update</code>に書く</h3><p><code>Update</code>はゲームの状態を進める場所です。入力を調べ、速度を変え、位置を動かします。<code>Draw</code>は計算後の位置に主人公を描きます。</p></div>

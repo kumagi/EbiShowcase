@@ -93,8 +93,10 @@
       <div class="formula">
         <p class="eyebrow">THE TWO-MODE RULE</p>
         <div class="formula-lines"><code>moving: marker += speed</code><span>stopped</span><code>distance = |marker - center|</code></div>
-        <p>The same button means different things in different states: stop while moving, start the next round while stopped. That is the doorway to state machines.</p>
-      <p><code>math.Abs</code> turns a signed gap into “how far from center”. <code>%</code> means remainder (not percent): <code>round%2==1</code> is an odd round. <code>float64(g.round)</code> converts int→float because Go will not multiply mixed types.</p>
+        <p>The same button means different things in different states: stop while moving, start the next round while stopped. In plain words, the game "remembers the current scene (waiting / moving / result) and switches behavior based on it." Programmers call this pattern a "state machine," but the name matters less than the idea itself — remember the current scene, then switch.</p>
+      <p><code>%</code> is not a percent sign here — it means the <strong>remainder of a division</strong>. <code>round % 2</code> reads as "the remainder when round is divided by 2," which is 1 for odd rounds and 0 for even rounds.</p>
+      <p><code>math.Abs</code> turns a signed gap into "how far from center," regardless of which side you're on.</p>
+      <p>The speed formula <code>3.2 + float64(g.round)*0.18</code> converts the whole-number <code>round</code> into a decimal with <code>float64(...)</code>. Think of whole numbers (like counting items) and decimals (like a distance that can be "half a step") as two different kinds of boxes. Go will not mix them directly in one calculation, so <code>float64(...)</code> moves the whole number into the decimal-shaped box first.</p>
       </div>
 
       <div class="code-lesson">

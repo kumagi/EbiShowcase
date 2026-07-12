@@ -109,7 +109,7 @@
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>Coordinates</h3><p>Any place on screen is two numbers. The circle center and the tap use the same X and Y.</p><code>circleX, circleY</code></article>
-        <article><span class="concept-number">2</span><h3>Distance</h3><p>Two points make a right triangle. The game calls math.Hypot(dx, dy) for the length. Comparing squares instead is an optional shortcut with the same hit/miss result.</p><code>hypot(dx, dy)</code></article>
+        <article><span class="concept-number">2</span><h3>Distance</h3><p><code>math.Hypot(dx, dy)</code> is a plain helper that turns a horizontal and a vertical difference into the straight-line distance between two points—the same calculation as the Pythagorean theorem you may know from math class. The game just calls it directly. Comparing squares instead is an optional shortcut with the same hit/miss result.</p><code>hypot(dx, dy)</code></article>
         <article><span class="concept-number">3</span><h3>Hit test</h3><p>If distance is less than or equal to the radius, score a hit and move the target.</p><code>dist &lt;= radius</code></article>
       </div>
 
@@ -151,7 +151,7 @@
       <div class="formula">
         <p class="eyebrow">THE ONE-LINE RULE</p>
         <div class="formula-lines"><code>dx = touchX - circleX</code><span>then</span><code>dy = touchY - circleY</code></div>
-        <p>A hit happens when <code>dx*dx + dy*dy</code> is smaller than <code>radius*radius</code>. Comparing squares gives the same answer without computing a square root every frame.</p>
+        <p>A hit happens when <code>dx*dx + dy*dy</code> is smaller than <code>radius*radius</code>. Comparing squares gives the same answer—it just skips the square-root step that <code>Hypot</code> does internally. Start with Hypot and remember "distance ≤ radius"; the squared version is just an optional shortcut.</p>
       </div>
 
       <div class="code-lesson">
@@ -179,13 +179,14 @@
       
             <div class="code-focus">
         <p class="eyebrow">TODAY — look here first</p>
+        <p class="lab-hint" style="margin-bottom:8px">Think of these three as a map for reading the full listing below. Follow this order first and you won't get lost — you do not need to understand every line right away.</p>
         <ol>
           <li>Update (tap position)</li>
           <li>Distance hit test</li>
           <li>Draw (circle and score)</li>
         </ol>
       </div>
-<p class="full-code-intro">The code below is the <strong>entire</strong> game (drawn with simple shapes). Copy it to your editor — but first follow the three “look here first” points above.</p>
+<p class="full-code-intro">The code below is the <strong>entire</strong> game (drawn with simple shapes). Copy it to your editor if you like. You do not need to understand every line right now — finding the three "look here first" spots above is enough for today, and you can come back to the rest whenever you're curious.</p>
       <p class="full-code-note">Note: inline comments in this full listing are in Japanese for young learners. The English teaching snippets above are your guide.</p>
       <div class="full-code" data-embed-source="games/core/tap-target/main.go">
         <div class="full-code-head">

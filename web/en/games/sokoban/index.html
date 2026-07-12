@@ -55,8 +55,8 @@
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>String-based stage</h3><p>The level is a <code>[]string</code> where each character encodes one tile. Looking at the source is like looking at the map itself.</p><code>var level = []string{…}</code></article>
-        <article><span class="concept-number">2</span><h3>Logic tiles vs draw lerp</h3><p>Collision stays on integer tiles. While <code>moving</code>, only <code>progress</code> (0→1) advances and Draw interpolates. Commit the logical tile when progress hits 1.</p><code>if moving { progress += …; return }</code></article>
-        <article><span class="concept-number">3</span><h3>Undo is a stack</h3><p>Before any move, save the player and box positions as a snapshot. Undo pops the last snapshot. <code>append([]point(nil), boxes...)</code> copies the slice — assigning <code>boxes: g.boxes</code> would share the backing array and corrupt history.</p><code>append([]point(nil), boxes...)</code></article>
+        <article><span class="concept-number">2</span><h3>Logic tiles vs draw lerp</h3><p>Think of "which grid cell" and "which pixel on screen" as two different numbers. Grid cell <code>(2,3)</code> maps to pixel position <code>(2*48, 3*48) = (96,144)</code>. Collision always checks the grid cell; while <code>moving</code>, only <code>progress</code> (0→1) slides the pixel position on screen. Commit the logical tile when progress hits 1.</p><code>if moving { progress += …; return }</code></article>
+        <article><span class="concept-number">3</span><h3>Undo is a stack</h3><p>Picture writing one note per move and stacking it on top of the pile. Undo takes the top note off the pile and restores that state. Before any move, the code actually saves the player and box positions as a snapshot with <code>append([]point(nil), boxes...)</code>, which copies the slice — assigning <code>boxes: g.boxes</code> would share the backing array and corrupt the whole stack of notes later.</p><code>append([]point(nil), boxes...)</code></article>
       </div>
 
       

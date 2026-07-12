@@ -9,22 +9,22 @@
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--game-data.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="ゲームを作るとは、 世界を構成すること。">
+    <meta property="og:image:alt" content="ゲームを作るとは、 世界を組み立てること。">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="ゲームを構成する — データ駆動設計 | Ebi Showcase">
     <meta name="twitter:description" content="Ebitengineでシナリオ、マップ、イベントなどのアセットデータを読み込み、ゲームを構成する方法。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--game-data.png">
-    <meta name="twitter:image:alt" content="ゲームを作るとは、 世界を構成すること。">
+    <meta name="twitter:image:alt" content="ゲームを作るとは、 世界を組み立てること。">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/game-data/">
 <link rel="stylesheet" href="../../../style.css"></head>
 <body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="#layers">LAYERS</a><a href="#example">EXAMPLE</a><a class="lang" href="../../../en/guides/game-data/">EN</a></nav></header>
 <main><div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>SPECIAL GUIDE</span></div>
-<section class="data-hero"><p class="eyebrow">GAME ARCHITECTURE / DATA-DRIVEN DESIGN</p><h1>ゲームを作るとは、<br><em>世界を構成すること。</em></h1><p>小さなゲームなら、敵の位置も会話もコードへ直接書けます。しかし世界が広がると、「どう動くか」と「何があるか」を分ける必要があります。</p></section>
+<section class="data-hero"><p class="eyebrow">ゲームの中身を分ける考え方</p><h1>ゲームを作るとは、<br><em>世界を組み立てること。</em></h1><p>小さなゲームなら、敵の位置も会話もプログラムに直接書けます。世界が大きくなると、「どう動くか（仕組み）」と「何があるか（中身）」を分けた方が作りやすくなります。まずは下の図で、1本のゲームがどんな部品でできているかを見てみましょう。</p></section>
 
-<section class="composition" id="layers"><div class="guide-heading"><p class="eyebrow">THE SIX LAYERS</p><h2>1本のゲームは、<br>6つの層でできている。</h2></div>
+<section class="composition" id="layers"><div class="guide-heading"><p class="eyebrow">THE SIX LAYERS</p><h2>1本のゲームは、<br>6つの層でできている。</h2><p class="lesson-lead" style="max-width:40rem;margin:0.75rem auto 0">イメージ：レシピ（仕組み）と食材リスト（中身）を分けると、同じ炒め方で野菜も肉も作れます。ゲームも同じです。</p></div>
 <div class="composition-flow" role="img" aria-label="アセットデータをローダーが読み、ゲーム世界を組み立て、UpdateとDrawが再生し、進行状態をセーブする流れ">
 <div class="flow-sources"><span>MAP</span><span>SCENARIO</span><span>EVENT</span><span>IMAGE</span><span>AUDIO</span></div><b>↓ 読み込む</b><div class="flow-loader">ASSET LOADER<small>JSON・画像・音を型のあるデータへ</small></div><b>↓ 組み立てる</b><div class="flow-world">GAME WORLD<small>マップ・登場人物・イベントを配置</small></div><b>↓ 毎フレーム再生</b><div class="flow-runtime"><span>UPDATE</span><span>DRAW</span><span>SAVE</span></div></div>
 <div class="layer-grid">
@@ -68,7 +68,7 @@
   ]
 }</code></pre></div></div></section>
 
-<section class="loading-guide"><div><p class="eyebrow">GO + EBITENGINE</p><h2><code>go:embed</code>で<br>WASMへ一緒に入れる。</h2><p>アセットを埋め込むと、デスクトップ版とWeb版で同じ読み込みコードを使えます。起動時に一度JSONを読み、Goの構造体へ変換します。</p></div><pre><code><span>import</span> (
+<section class="loading-guide"><div><p class="eyebrow">GO + EBITENGINE（発展）</p><h2>ファイルをプログラムに<br>一緒に入れる方法。</h2><p>上までの話がわかったら、発展として。Go には <code>go:embed</code> という仕組みがあり、JSON や画像をプログラムの中に同梱できます。ブラウザ版（WASM）でも同じ読み込みコードが使えます。いまは「そういう道具がある」くらいで十分です。コアの LEVEL を終えてから戻ってくると読みやすいです。</p></div><pre><code><span>import</span> (
     "embed"
     "encoding/json"
 )

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="Add Rotate and Scale to the same GeoM and the image spins and stretches. Order matters: move the center to the origin first, then rotate to ">
   <title>Rotate, Scale & the Pivot | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-transform/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
@@ -23,7 +24,6 @@
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-transform.png">
     <meta name="twitter:image:alt" content="Rotate, Scale &amp; the Pivot">
     <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-transform/">
   <link rel="stylesheet" href="../../../../style.css">
 </head>
 <body class="overview-page">
@@ -91,21 +91,13 @@
           <p class="eyebrow">TRY IT / GeoM</p>
           <h3 id="lab-title-vfx-transform">Switch the pivot and spin</h3>
           <p>Rotate and scale with buttons, then switch the pivot between center and corner. The corner pivot flings the image around in a wide swing.</p>
-          <div class="lab-controls"><button type="button" class="lab-button" data-lab-rotl>Rotate −</button><button type="button" class="lab-button lab-button-primary" data-lab-rotr>Rotate +</button><button type="button" class="lab-button" data-lab-sdown>Scale −</button><button type="button" class="lab-button" data-lab-sup>Scale +</button><button type="button" class="lab-button" data-lab-pivot>Pivot</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button" data-lab-rotl>Rotate −</button><button type="button" class="lab-button lab-button-primary" data-lab-rotr>Rotate +</button><button type="button" class="lab-button" data-lab-sdown>Scale −</button><button type="button" class="lab-button" data-lab-sup>Scale +</button><button type="button" class="lab-button" data-lab-pivot>Pivot</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board" data-lab-board></div>
           <div class="lab-values" aria-live="polite"><div><span>angle (rad)</span><strong data-lab-angle>—</strong></div><div><span>scale</span><strong data-lab-scale>—</strong></div><div><span>pivot</span><strong data-lab-pivot>—</strong></div></div>
         </div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="pivot">op.GeoM.Translate(-w/2, -h/2) // image center → origin</span>
-<span data-go-line="rot">op.GeoM.Rotate(angle)</span>
-<span data-go-line="scale">op.GeoM.Scale(sx, sy)</span>
-<span data-go-line="place">op.GeoM.Translate(x, y)</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
-</div>
-</div>
+      </div>
 
       <div class="code-lesson">
         <div>
@@ -144,31 +136,7 @@ screen.DrawImage(sprite, op)</code></pre>
       <a href="../vfx-stamp/">← STEP 01<strong>Stamp & Move</strong></a>
       <a href="../vfx-tint/">STEP 03 →<strong>Tint & Drain Color</strong></a>
     </nav>
-
-
-    <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">Quick feedback</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-transform/">
-          <label class="feedback-field">
-            <span class="sr-only">Feedback</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…" aria-label="Feedback">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-
-</main>
+  </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
   <script>

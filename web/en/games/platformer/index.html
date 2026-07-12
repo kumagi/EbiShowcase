@@ -58,7 +58,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>X collision</h3><p>After moving horizontally, if the player overlaps a platform, push them back to the edge in the direction they came from. Y stays untouched.</p><code>player.x = p.x - player.w</code></article>
         <article><span class="concept-number">2</span><h3>Y collision</h3><p>After moving vertically, check again. Landing from above sets <code>onGround = true</code> and zeros vertical velocity. Hitting a ceiling from below also zeros velocity.</p><code>onGround = true</code></article>
-        <article><span class="concept-number">3</span><h3>Smooth camera</h3><p>Every frame compute where the camera should be and move 9% of the remaining distance toward it. The larger the gap, the faster the camera catches up.</p><code>camera += (target - camera) * .09</code></article>
+        <article><span class="concept-number">3</span><h3>Smooth camera</h3><p>Every frame, the camera edges a little closer to its target — specifically, <strong>about 9% of the remaining distance</strong>. Jumping straight to 100% would snap the camera onto every tiny wiggle the player makes, which looks jerky and dizzying. Closing the gap gradually instead keeps the motion smooth and easy on the eyes. This gradual catch-up is called "lerp" (linear interpolation), or easing.</p><code>camera += (target - camera) * .09</code></article>
       </div>
 
       
@@ -95,7 +95,7 @@
       <div class="formula">
         <p class="eyebrow">THE CAMERA LERP</p>
         <div class="formula-lines"><code>target = player.x - width * 0.38</code><span>then every frame</span><code>camera += (target - camera) * 0.09</code></div>
-        <p>The target keeps the player at 38% of the screen width. Each frame the camera moves 9% closer. Big gaps close quickly; small gaps close gently, giving a natural feel. This follow rate is easing: each frame closes a fraction of the gap.</p>
+        <p>The target keeps the player at 38% of the screen width. Each frame the camera moves 9% closer. Big gaps close quickly; small gaps close gently, giving a natural feel. This follow rate is easing: each frame closes a fraction of the gap. Using 100% instead of 9% would snap the camera to the target every frame, reacting jarringly to every small player movement.</p>
       </div>
 
       <div class="code-lesson">

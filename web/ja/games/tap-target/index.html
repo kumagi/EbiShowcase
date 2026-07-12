@@ -110,7 +110,7 @@
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>座標</h3><p>画面のどこかを、2つの数で表します。丸の中心も、タッチした場所も、同じ X と Y で書けます。</p><code>circleX, circleY</code></article>
-        <article><span class="concept-number">2</span><h3>距離</h3><p>2点のあいだの長さです。ゲーム本体は読みやすい <code>math.Hypot(dx, dy)</code>（たて・よこの差から距離を出す関数）を使います。同じ判定を二乗のまま書く近道もあり、結果は同じです。</p><code>math.Hypot(dx, dy)</code></article>
+        <article><span class="concept-number">2</span><h3>距離</h3><p>2点のあいだの長さです。<code>math.Hypot(dx, dy)</code> は、たて・よこの差から2点の距離を出す便利関数（中学の三平方の定理と同じ計算）。ゲーム本体はこれをそのまま使います。同じ判定を二乗のまま書く方法もあり、結果は同じです。</p><code>math.Hypot(dx, dy)</code></article>
         <article><span class="concept-number">3</span><h3>当たり判定</h3><p>距離が半径以下ならヒット。得点して、次の丸を別の場所へ移します。</p><code>dist &lt;= radius</code></article>
       </div>
 
@@ -152,7 +152,7 @@
       <div class="formula">
         <p class="eyebrow">THE ONE-LINE RULE</p>
         <div class="formula-lines"><code>dx = touchX - circleX</code><span>そして</span><code>dy = touchY - circleY</code></div>
-        <p>本体のコードは <code>dist := math.Hypot(dx, dy)</code> のあと <code>dist &lt;= radius</code> です。同じことを <code>dx*dx+dy*dy &lt;= radius*radius</code> と二乗のまま比べても結果は同じ（平方根を省略する近道）。まずは Hypot で「距離 ≤ 半径」と覚えましょう。</p>
+        <p>本体のコードは <code>dist := math.Hypot(dx, dy)</code> のあと <code>dist &lt;= radius</code> です。同じことを <code>dx*dx+dy*dy &lt;= radius*radius</code> と二乗のまま比べても結果は同じ（Hypot が内部で使う平方根の計算を省ける、というだけの話です）。まずは Hypot で「距離 ≤ 半径」と覚えましょう。</p>
       </div>
 
       <div class="code-lesson">
@@ -180,13 +180,14 @@
       
             <div class="code-focus">
         <p class="eyebrow">TODAY — まずここを見る</p>
+        <p class="lab-hint" style="margin-bottom:8px">この3つは、下の全部のコードを読むときの「地図」です。まずこの順番で探せば迷いません。全部を一度に理解しなくても大丈夫、あとで少しずつ読み直せば十分です。</p>
         <ol>
           <li>Update（押した座標）</li>
           <li>距離の判定</li>
           <li>Draw（丸とスコア）</li>
         </ol>
       </div>
-<p class="full-code-intro">下のコードがこのゲームの<strong>全部</strong>です（図形だけで動いています）。コピーして手元で開けます。その前に、上の「まずここを見る」3つだけ追ってください。</p>
+<p class="full-code-intro">下のコードがこのゲームの<strong>全部</strong>です（図形だけで動いています）。コピーして手元で開けます。今すぐ全行を理解する必要はありません。上の「まずここを見る」3つの場所だけ見つけられれば十分で、残りは気になったときに読めば大丈夫です。</p>
       <div class="full-code" data-embed-source="games/core/tap-target/main.go">
         <div class="full-code-head">
           <span>main.go · ぜんぶのコード</span>

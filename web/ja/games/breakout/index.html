@@ -54,7 +54,7 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>データ1個</h3><p>ブロック1個は struct。x, y と alive を持ちます。絵はあとから Draw で描けば十分です。</p><code>type brick struct</code></article>
+        <article><span class="concept-number">1</span><h3>データ1個</h3><p>ブロック1個は struct（構造体）。<strong>「ブロック1個分の道具箱」</strong>だと思ってください。位置（x, y）や壊れたか（alive）といった、そのブロックに関する情報をひとまとめに入れておく箱です。絵はあとから Draw で描けば十分です。</p><code>type brick struct</code></article>
         <article><span class="concept-number">2</span><h3>並べる</h3><p>二重ループで行と列を作り、スライスへ append します。48個でもコードは増えません。</p><code>bricks []brick</code></article>
         <article><span class="concept-number">3</span><h3>壊す</h3><p>ボールと重なったブロックだけ <code>alive = false</code>。描画も更新も、生きているものだけ見ます。</p><code>alive = false</code></article>
       </div>
@@ -99,6 +99,7 @@
           <h3>ループの中で衝突を見る</h3>
           <p>ボールを動かしたあと、全ブロックを順に調べます。当たったら壊して反射し、そのフレームはそこで打ち切ります。</p>
           <p>このレッスンでは反射を簡単にするため、当たったらいつも <code>ballVY = -ballVY</code>（上下反転）だけにしています。横から当たったときも同じなので物理的には雑ですが、ブロック崩しの入門ではよく使う割り切りです。面のどちらに当たったかで vx / vy を選び分けるのは、あとのチャレンジ向きです。</p>
+          <p><strong>全部のブロックを壊すと？</strong> 生きているブロックが0個（<code>aliveBrickCount() == 0</code>）になったとき、本体のコードは「クリア画面」を出す代わりに <code>*g = *newGame()</code> でゲーム全体を初期状態に戻し、新しい面をすぐに始めます。上のラボにある <code>win()</code> はこの「クリアとして扱う」部分を短く表した例で、実際のゲームでは画面はそのまま次の面へ切り替わります。</p>
         </div>
         <pre><code><span>for</span> i := range g.bricks {
     b := &amp;g.bricks[i]

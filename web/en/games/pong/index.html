@@ -34,7 +34,7 @@
     <section class="overview-hero">
       <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
       <h1>Pong</h1>
-      <p>The ball moves with two speeds: how far right and how far down. Hit a wall or paddle, flip only that direction’s sign. That is reflection in its simplest form.</p>
+      <p>Your opponent is not another person — it is a <strong>simple CPU (computer-controlled paddle)</strong>. The ball moves with two speeds: how far right and how far down. Hit a wall or paddle, flip only that direction’s sign. That is reflection in its simplest form.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Reflection and vectors</strong></div>
     </section>
 
@@ -91,7 +91,7 @@
       <div class="formula">
         <p class="eyebrow">THE BOUNCE RULE</p>
         <div class="formula-lines"><code>wall: vx = -vx</code><span>paddle</span><code>vy = -vy (optionally a bit faster)</code></div>
-        <p>Before flipping, push the ball just outside the surface. That prevents getting stuck and bouncing forever inside the same edge.</p>
+        <p>Flipping the sign alone still leaves the ball a little inside the surface. On the very next frame it would still count as "touching," causing a bounce loop that flips back and forth. So the code moves the ball just outside the surface before flipping the sign (for example, <code>g.ballY = 646</code> pushes it above the paddle, and <code>math.Max/Min</code> keeps it inside the walls). That way the ball bounces exactly once instead of sticking inside the surface.</p>
       </div>
 
       <div class="code-lesson">

@@ -93,9 +93,10 @@
       <div class="formula">
         <p class="eyebrow">THE TWO-MODE RULE</p>
         <div class="formula-lines"><code>動くとき: marker += speed</code><span>止まるとき</span><code>distance = |marker - center|</code></div>
-        <p>同じボタンでも、状態によって意味が変わります。動いていれば「止める」、止まっていれば「次のラウンドへ」。これが状態機械の入口です。</p>
-        <p><code>|marker - center|</code> の縦線は絶対値（<code>math.Abs</code>）。マイナスをプラスに直すので、「中央より左でも右でも、どれだけ離れたか」だけが残ります。<code>%</code> はパーセントではなく<strong>割り算の余り</strong>。<code>round%2 == 1</code> は「2で割って1余る＝奇数ラウンド」の意味です。</p>
-        <p>速さの式 <code>3.2 + float64(g.round)*0.18</code> では、整数の <code>round</code> を <code>float64(...)</code> で小数に変換しています。Goは <code>int</code> と <code>float64</code> をそのまま掛けられないので、どちらかの型にそろえます。</p>
+        <p>同じボタンでも、状態によって意味が変わります。動いていれば「止める」、止まっていれば「次のラウンドへ」。これは「いまの場面（待ち／動く／結果）を覚えておいて、それに応じてふるまいを切り替える」という考え方です。こういう仕組みをプログラムの世界では「状態機械（ステートマシン）」と呼びますが、名前を覚えるより「今の場面を覚えて切り替える」という中身のほうが大切です。</p>
+        <p>コードに出てくる <code>%</code> はパーセントではなく<strong>割り算の余り</strong>を表す記号です。<code>round % 2</code> は「round を2で割った余り」という意味で、奇数ラウンドなら1、偶数ラウンドなら0になります。</p>
+        <p><code>|marker - center|</code> の縦線は絶対値（<code>math.Abs</code>）。マイナスをプラスに直すので、「中央より左でも右でも、どれだけ離れたか」だけが残ります。</p>
+        <p>速さの式 <code>3.2 + float64(g.round)*0.18</code> では、整数の <code>round</code> を <code>float64(...)</code> で小数に変換しています。たとえば「個数」のようにぴったり数える整数と、「距離」のように半端も出てくる小数は、違う種類の箱のようなものです。Goはこの2種類をそのまま混ぜて計算させてくれないので、<code>float64(...)</code> で整数を小数の箱に入れ替えてから掛けます。</p>
       </div>
 
       <div class="code-lesson">

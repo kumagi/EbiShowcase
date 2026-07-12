@@ -151,6 +151,7 @@ function page(lang) {
             "「ターミナル」アプリを開く",
           ],
           tip: "白い画面に文字が点滅していれば OK。これからここにコマンドをコピーして貼り付けます。",
+          note: "用語メモ：Windows では「PowerShell」、Mac では「ターミナル」と呼ぶことが多いです。どちらも<strong>同じ役割</strong>——キーボードでパソコンに命令を出す黒い（または白い）窓です。「ターミナル＝Mac専用」ではありません。Windows 11 の「ターミナル」アプリでも PowerShell が使えます。このガイドでは Windows 欄を PowerShell、Mac 欄をターミナルと書きます。",
         },
         step1: {
           id: "install-go",
@@ -162,7 +163,7 @@ function page(lang) {
             'ブラウザで <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a> を開く',
             "「Microsoft Windows」の <strong>.msi</strong> を選ぶ（だいたい一番上の安定版）",
             "ダウンロードしたファイルを開き、画面の指示どおり「次へ」で進む",
-            "終わったら PowerShell を<strong>いったん閉じて、もう一度開き直す</strong>（パスを読み直すため）",
+            "終わったら PowerShell（さっき開いた命令の窓）を<strong>いったん閉じて、もう一度開き直す</strong>（パスを読み直すため）",
           ],
           macTitle: "macOS",
           macBody: [
@@ -177,7 +178,7 @@ function page(lang) {
           id: "compiler",
           n: "02",
           h: "Mac だけ：C コンパイラを入れる",
-          p: "Ebitengine は中で C の部品も使います。Windows では追加の C コンパイラは不要です。Mac では Apple のコマンドラインツールが必要です。",
+          p: "Ebitengine は中で C の部品も使います。<strong>Windows の学校 PC はこのステップを飛ばして大丈夫</strong>です。Mac だけ、無料の「コマンドラインツール」を入れます。教室の PC が Windows なら、すぐ「3. 動作確認」へ進んでください。",
           winSkip: "Windows の人はこのステップを飛ばして「3. 動作確認」へ進んでください。",
           macCmd: "xcode-select --install",
           macBody: [
@@ -240,14 +241,19 @@ function page(lang) {
         trouble: {
           id: "troubleshoot",
           h: "うまくいかないとき",
+          lead: "ここが一番よく止まります。下の表から自分の症状に近いものを選んでください。それでもだめなら、赤いエラー全文をコピーしてページ末尾のフィードバックへ送ってください。",
           items: [
             [
+              "PowerShell とターミナル、どっち？",
+              "Windows なら「PowerShell」で大丈夫。Mac なら「ターミナル」。どちらも命令を打ち込む窓です。Windows の「ターミナル」アプリを開いても、中身が PowerShell なら問題ありません。",
+            ],
+            [
               "go: command not found / 認識されない",
-              "インストール後にターミナルを開き直す。Windows はスタートメニューから Go が入っているかも確認。それでもだめなら再起動。",
+              "① Go を入れたあと、命令の窓を<strong>完全に閉じて開き直したか</strong>確認。② Windows ならスタートメニューに「Go」があるか確認。③ それでもだめなら PC を再起動してもう一度 <code>go version</code>。",
             ],
             [
               "xcrun: error: invalid active developer path…（Mac）",
-              "xcode-select --install をもう一度実行する。",
+              "ステップ 02 の <code>xcode-select --install</code> をもう一度実行する。途中で止まったら再起動してから再実行。",
             ],
             [
               "go mod tidy や go run でネットエラー",
@@ -255,15 +261,15 @@ function page(lang) {
             ],
             [
               "窓が一瞬で消える / パニック",
-              "ターミナルに赤いエラー全文が出ています。その文を検索するか、このページ末尾のフィードバックへ貼ってください。",
+              "命令の窓に赤いエラー全文が出ています。その文を検索するか、このページ末尾のフィードバックへ貼ってください。",
             ],
             [
               "WSL（Windows の Linux）を使っている",
-              "公式どおり、実行時に GOOS=windows が必要になることがあります。まずは通常の PowerShell での手順を推奨します。",
+              "公式どおり、実行時に GOOS=windows が必要になることがあります。はじめてなら通常の PowerShell での手順を推奨します。",
             ],
           ],
         },
-        footerNote: "手順の詳細は公式ドキュメント（Install / Hello, World!）にもあります。このページは「まっさらな PC 向け」に順序を並べ替えた導入です。",
+        footerNote: "手順の詳細は公式ドキュメント（Install / Hello, World!）にもあります。このページは「まっさらな PC 向け」に順序を並べ替えた導入です。つまずいたらまず「うまくいかないとき」へ戻ってください。",
         official: "公式 Install",
         officialHref: "https://ebitengine.org/en/documents/install.html",
       }
@@ -310,6 +316,7 @@ function page(lang) {
             "Open the Terminal app",
           ],
           tip: "If you see a blinking cursor, you’re ready. You’ll paste commands there.",
+          note: "Name tip: on Windows people often say <strong>PowerShell</strong>; on Mac, <strong>Terminal</strong>. Same job—a window where you type commands. Windows 11’s “Terminal” app can host PowerShell. This guide says PowerShell for Windows and Terminal for Mac.",
         },
         step1: {
           id: "install-go",
@@ -321,7 +328,7 @@ function page(lang) {
             'Open <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a>',
             "Download the Microsoft Windows <strong>.msi</strong> (usually the latest stable at the top)",
             "Run the installer and click through Next",
-            "When it finishes, <strong>close PowerShell and open it again</strong> so PATH refreshes",
+            "When it finishes, <strong>close the PowerShell window and open it again</strong> so PATH refreshes",
           ],
           macTitle: "macOS",
           macBody: [
@@ -336,7 +343,7 @@ function page(lang) {
           id: "compiler",
           n: "02",
           h: "Mac only: install a C compiler",
-          p: "Ebitengine also uses C under the hood. Windows needs no extra C compiler. On Mac, install Apple’s Command Line Tools.",
+          p: "Ebitengine also uses a little C under the hood. <strong>Windows school PCs can skip this.</strong> On Mac only, install Apple’s Command Line Tools (free). If your classroom PC is Windows, jump to step 3.",
           winSkip: "On Windows, skip this step and go to “3. Verify”.",
           macCmd: "xcode-select --install",
           macBody: [
@@ -399,14 +406,19 @@ function page(lang) {
         trouble: {
           id: "troubleshoot",
           h: "Troubleshooting",
+          lead: "This is where people get stuck most. Match your symptom below. Still stuck? Copy the full red error into the feedback box at the bottom.",
           items: [
             [
+              "PowerShell vs Terminal—which one?",
+              "On Windows, PowerShell is fine. On Mac, use Terminal. Same job: a window for typing commands. Windows 11’s Terminal app is OK if it opens PowerShell inside.",
+            ],
+            [
               "go: command not found / not recognized",
-              "Reopen the terminal after install. On Windows, confirm Go appears under Start. Still stuck? Reboot once.",
+              "① After installing Go, fully close and reopen the command window. ② On Windows, check Start for “Go”. ③ Still stuck? Reboot, then try <code>go version</code> again.",
             ],
             [
               "xcrun: error: invalid active developer path… (Mac)",
-              "Run xcode-select --install again.",
+              "Run step 02’s <code>xcode-select --install</code> again. If it stalled, reboot and retry.",
             ],
             [
               "Network errors on go mod tidy / go run",
@@ -414,7 +426,7 @@ function page(lang) {
             ],
             [
               "Window flashes and disappears / panic",
-              "Read the full red error in the terminal. Search it, or paste it into the feedback box below.",
+              "Read the full red error in the command window. Search it, or paste it into the feedback box below.",
             ],
             [
               "Using WSL (Linux on Windows)",
@@ -422,7 +434,7 @@ function page(lang) {
             ],
           ],
         },
-        footerNote: "Official Install / Hello, World! docs have more detail. This page reorders them for a blank-machine first run.",
+        footerNote: "Official Install / Hello, World! docs have more detail. This page reorders them for a blank-machine first run. When stuck, jump back to Troubleshooting first.",
         official: "Official Install",
         officialHref: "https://ebitengine.org/en/documents/install.html",
       };
@@ -498,6 +510,7 @@ function page(lang) {
       ${osCard(t.step0.macTitle, ol(t.step0.macSteps))}
     </div>
     <p class="setup-tip">${t.step0.tip}</p>
+    ${t.step0.note ? `<p class="setup-note">${t.step0.note}</p>` : ""}
   </section>
 
   <section class="setup-step" id="${t.step1.id}">
@@ -571,11 +584,12 @@ function page(lang) {
 
   <section class="setup-step setup-trouble" id="${t.trouble.id}">
     <h2>${t.trouble.h}</h2>
+    ${t.trouble.lead ? `<p class="setup-lead">${t.trouble.lead}</p>` : ""}
     <div class="setup-trouble-list">
       ${t.trouble.items
         .map(
           ([h, p]) =>
-            `<article><h3>${esc(h)}</h3><p>${esc(p)}</p></article>`,
+            `<article><h3>${esc(h)}</h3><p>${p}</p></article>`,
         )
         .join("")}
     </div>

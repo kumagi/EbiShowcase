@@ -105,6 +105,7 @@
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>Move the body<br>inside Update</h3>
           <p>The snake does not move every frame — it waits several frames, and that wait shrinks as the score climbs, making the game faster over time.</p>
+          <p><strong>Reading order:</strong> ① prepend the new head to the list → ② if food was eaten, leave the tail alone (that's the growth) → ③ otherwise trim one tail cell. Read the code in that order and it clicks.</p>
         </div>
         <pre><code><span>func</span> (g *game) Update() error {
     g.frame++

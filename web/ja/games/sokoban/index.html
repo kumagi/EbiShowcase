@@ -55,8 +55,8 @@
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>文字列でステージ</h3><p>ステージはGoの文字列スライス。<code>#</code> や <code>$</code> を読んで壁・箱のデータを作ります。見た目がそのままマップになるので設計しやすいです。</p><code>var level = []string{…}</code></article>
-        <article><span class="concept-number">2</span><h3>論理座標と描画座標を分ける</h3><p>壁判定は整数タイルのまま。<code>moving</code> 中は <code>progress</code>（0→1）で描画だけを補間します。着いた瞬間に論理座標を更新します。</p><code>if moving { progress += …; return }</code></article>
-        <article><span class="concept-number">3</span><h3>Undoは履歴スタック</h3><p>動く前に保存。<code>append([]point(nil), g.boxes...)</code> は箱リストのコピーです。単に <code>boxes: g.boxes</code> と書くと同じ配列を共有し、あとで動かすと履歴まで書き換わります。</p><code>append([]point(nil), boxes...)</code></article>
+        <article><span class="concept-number">2</span><h3>論理座標と描画座標を分ける</h3><p>「マス座標（何列目・何行目）」と「画面のピクセル位置」は別の数字だと考えます。たとえばマス <code>(2,3)</code> は、画面上では <code>(2*48, 3*48) = (96,144)</code> のピクセル位置です。壁判定はいつもマス座標のほうで行い、<code>moving</code> 中は <code>progress</code>（0→1）で画面のピクセル位置だけをなめらかにずらします。着いた瞬間にマス座標を更新します。</p><code>if moving { progress += …; return }</code></article>
+        <article><span class="concept-number">3</span><h3>Undoは履歴スタック</h3><p>紙のメモを1手ごとに1枚書いて、上に積み上げていくイメージです。Undoは一番上のメモを取って、そこに書かれた状態に戻します。実際には動く前に <code>append([]point(nil), g.boxes...)</code> で箱リストのコピーを保存します。単に <code>boxes: g.boxes</code> と書くと同じ配列を共有し、あとで動かすと積んだはずのメモまで書き換わってしまいます。</p><code>append([]point(nil), boxes...)</code></article>
       </div>
 
       

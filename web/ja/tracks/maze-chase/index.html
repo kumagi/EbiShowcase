@@ -3,7 +3,7 @@
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="迷路追跡ゲーム | Ebi Showcase">
-    <meta property="og:description" content="タイル上の移動から、先行入力、交差点、敵のモード、経路選択、パワー状態へ進みます。">
+    <meta property="og:description" content="パックマンのような、迷路の中でドットを食べながら敵から逃げるゲームを作ります。タイル上の移動から、次に曲がる方向を早めに覚えておく仕組み（先行入力）、交差点、敵のモード、経路選択、パワー状態へ進みます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/maze-chase/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--maze-chase.png">
     <meta property="og:image:width" content="1200">
@@ -13,17 +13,17 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="迷路追跡ゲーム | Ebi Showcase">
-    <meta name="twitter:description" content="タイル上の移動から、先行入力、交差点、敵のモード、経路選択、パワー状態へ進みます。">
+    <meta name="twitter:description" content="パックマンのような、迷路の中でドットを食べながら敵から逃げるゲームを作ります。タイル上の移動から、次に曲がる方向を早めに覚えておく仕組み（先行入力）、交差点、敵のモード、経路選択、パワー状態へ進みます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--maze-chase.png">
     <meta name="twitter:image:alt" content="迷路追跡ゲーム">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/maze-chase/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/maze-chase/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>6 STEPS</span></div><section class="track-hero track-maze-chase"><span class="track-letter">N</span><div><p class="eyebrow">パックマン型の追いかけっこを作る</p><h1>迷路追跡ゲーム</h1><p>タイル上の移動から、先行入力、交差点、敵のモード、経路選択、パワー状態へ進みます。</p></div></section><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公が登場するステップではオリジナルの 海老・天次郎 を使います。</p>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/maze-chase/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>6 STEPS</span></div><section class="track-hero track-maze-chase"><span class="track-letter">N</span><div><p class="eyebrow">パックマン型の追いかけっこを作る</p><h1>迷路追跡ゲーム</h1><p>パックマンのような、迷路の中でドットを食べながら敵から逃げるゲームを作ります。タイル上の移動から、次に曲がる方向を早めに覚えておく仕組み（先行入力）、交差点、敵のモード、経路選択、パワー状態へ進みます。</p></div></section><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公が登場するステップではオリジナルの 海老・天次郎（えび・てんじろう） を使います。</p>
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>ひとつの仕組みから、<br>遊べる世界へ。</h2><p>データの変化とアルゴリズムを小さなゲームで確かめ、前のステップを再利用しながら完成形へ進みます。</p></div><a class="path-step" href="tile-runner/"><span>01</span><div><h3>迷路を走る</h3><p>通路の中心線を滑らかに進み、壁のある方向へは曲がれないようにします。</p><strong>タイル中心と進行方向</strong></div><b>→</b></a>
-<a class="path-step" href="buffered-turn/"><span>02</span><div><h3>曲がり角の先行入力</h3><p>少し早く押した方向を覚え、次の交差点で自動的に曲がります。</p><strong>入力予約と交差点判定</strong></div><b>→</b></a>
+<a class="path-step" href="buffered-turn/"><span>02</span><div><h3>曲がり角の先行入力</h3><p>少し早く押した方向を覚えておき（先行入力）、次の交差点で自動的に曲がります。</p><strong>次の方向を早めに覚える仕組み（先行入力）と交差点判定</strong></div><b>→</b></a>
 <a class="path-step" href="pellet-map/"><span>03</span><div><h3>ドットを食べる迷路</h3><p>マップ上のドットを個別に管理し、残りが0ならステージクリアにします。</p><strong>収集状態とクリア判定</strong></div><b>→</b></a>
 <a class="path-step" href="patrol-chase/"><span>04</span><div><h3>巡回と追跡</h3><p>敵を巡回、追跡、逃走の状態に分け、それぞれ異なる目標を選びます。</p><strong>敵モードと目標タイル</strong></div><b>→</b></a>
-<a class="path-step" href="junction-ai/"><span>05</span><div><h3>交差点AI</h3><p>交差点で複数の候補を比べ、目標へ近づく方向を選びます。</p><strong>距離評価と逆走禁止</strong></div><b>→</b></a>
+<a class="path-step" href="junction-ai/"><span>05</span><div><h3>交差点AI</h3><p>敵が交差点に来たら、進める方向をすべて比べて「目標にいちばん近づく道」を選びます。たとえば右か下かで迷ったら、目標までの残り距離が短い方を選ぶ、という考え方です（距離評価）。</p><strong>目標に近づく道を選ぶ考え方（距離評価）と逆走禁止</strong></div><b>→</b></a>
 <a class="path-step" href="ebi-maze/"><span>06</span><div><h3>Ebi Maze</h3><p>敵を食べられる時間、巣への帰還、速度変化、複数面を統合します。</p><strong>パワー状態・復活・難易度</strong></div><b>→</b></a></section>
 
 

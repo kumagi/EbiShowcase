@@ -42,7 +42,7 @@
     </section>
 
     <section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>全ウェーブを生き残れ。</h2></div><p>矢印キーまたはドラッグで自機を動かし、スペース／タッチで弾を発射します。ウェーブをすべて倒すと次のウェーブが来ます。ライフが0になるとゲームオーバーです。</p></div>
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>全ウェーブを生き残れ。</h2></div><p>矢印キーまたはドラッグで自機を動かし、スペース／タッチで弾を発射します。敵は「ウェーブ」というグループ単位で時間差で降ってきます。今のウェーブをすべて倒すと次のウェーブが来ます。ライフが0になるとゲームオーバーです。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Space Shooter" src="../../../play/space-shooter/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 
@@ -56,7 +56,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>種類ごとにスライス／埋め込み</h3><p>弾は <code>[]body</code>。敵は <code>type enemy struct { body; hp int }</code> のように <code>body</code> を埋め込み、<code>e.x</code> へ直接触れます（Composition）。</p><code>type enemy struct { body; hp int }</code></article>
         <article><span class="concept-number">2</span><h3>毎フレーム一括更新</h3><p>スライスを <code>range</code> でループし、全員を動かします。特定の1発だけ別扱いにする必要はありません。</p><code>for i := range g.bullets</code></article>
-        <article><span class="concept-number">3</span><h3>後ろから削除</h3><p>画面外に出た弾や倒した敵は削除します。後ろから削除すると、添え字がずれないので安全です。</p><code>bullets[:i], bullets[i+1:]</code></article>
+        <article><span class="concept-number">3</span><h3>後ろから削除</h3><p>画面外に出た弾や倒した敵はリストから削除します。<strong>リストの後ろ（大きい番号）から順に消すと、まだ調べていない前の番号がずれにくい</strong>のがポイントです。</p><code>bullets[:i], bullets[i+1:]</code></article>
       </div>
 
       
@@ -89,7 +89,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>弾の当たり判定と<br>削除を同時にやる</h3>
-          <p>自機の弾と敵を総当たりで調べます。当たったら敵を削除し、弾も削除します。後ろからループしているので添え字がずれません。</p>
+          <p>自機の弾と敵を総当たりで調べます——<strong>弾ごとに、敵を1体ずつぜんぶ調べる</strong>という意味です（弾5発・敵3体なら、最大5×3=15回くらべます）。当たったら敵を削除し、弾も削除します。後ろからループしているので添え字がずれません。</p>
           <p>自機狙い弾の <code>dx/length*2.3</code> は「向きだけ残して長さを 2.3 にする」作業です。距離 <code>length</code> で割ると長さ1の矢印になり、×2.3 で速さが揃います（正規化）。</p>
         </div>
         <pre><code><span>for</span> bi := len(g.bullets) - 1; bi >= 0; bi-- {

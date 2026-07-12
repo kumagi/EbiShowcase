@@ -34,7 +34,7 @@
     <section class="overview-hero">
       <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
       <h1>落ちものキャッチ</h1>
-      <p>上から落ちる星を、主人公 海老・天次郎 が持つカゴで受け止めます。見た目はキャラとカゴ、当たり判定は見えない四角形です。</p>
+      <p>上から落ちる星を、主人公 海老・天次郎 が持つカゴで受け止めます。見た目はキャラとカゴ、当たり判定は見えない四角形です。<strong>星を3回落とすとゲームオーバー</strong>なので、取りこぼしに気をつけましょう。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>移動と当たり判定</strong></div>
       <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
     </section>
@@ -98,7 +98,11 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>リストを1個ずつ更新</h3>
-          <p>落ちた星、キャッチした星、画面外へ消えた星を分けます。本体では先に <code>next := g.stars[:0]</code> と書いています。これは「中身を捨てた新しいリスト」ではなく、<strong>同じ配列メモリを長さ0から再利用</strong>する書き方です。普通の <code>var next []star</code> でも動きますが、毎フレームの確保を減らせます。</p>
+          <p>やっていることはシンプルです。星を1つずつ見て、キャッチした星と画面外に落ちた星をリストから外し、<strong>残す星だけを新しいリストに移す</strong>だけです。</p>
+          <details class="basics-extra">
+            <summary>発展：<code>g.stars[:0]</code> の意味（読まなくても大丈夫）</summary>
+            <p>コードでは <code>next := g.stars[:0]</code> と書いていますが、これは「中身を捨てた新しいリスト」ではなく、<strong>同じ配列メモリを長さ0から再利用</strong>する書き方です。普通の <code>var next []star</code> でも同じ結果になりますが、毎フレームのメモリ確保を減らせます。</p>
+          </details>
           <p>Y判定の <code>625〜675</code> はカゴ中心（だいたい Y=640）の上下に厚みを持たせた範囲です。カゴの見た目の高さに合わせた「つかみやすい帯」だと思ってください。</p>
           <p>リトライの <code>*g = *newGame()</code> は、「ゲーム箱 <code>g</code> の中身を、新品の箱の中身で丸ごと入れ替え」です。ポインタ <code>g</code> 自体は同じまま、スコアや星リストなど全部が初期値に戻ります。</p>
         </div>

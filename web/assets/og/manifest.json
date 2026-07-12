@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-07-12T18:51:46.010Z",
+  "generatedAt": "2026-07-12T19:14:19.751Z",
   "pages": [
     {
       "file": "web/en/games/breakout/index.html",
@@ -153,8 +153,8 @@
       "lang": "en",
       "kind": "guide",
       "title": "Composing a Game — Data-driven Design | Ebi Showcase",
-      "h1": "Building a game means composing a world.",
-      "eyebrow": "GAME ARCHITECTURE / DATA-DRIVEN DESIGN",
+      "h1": "Building a game means assembling a world.",
+      "eyebrow": "How a game’s insides are split",
       "description": "How to compose an Ebitengine game by loading scenario, map, event, and presentation assets.",
       "image": "assets/og/en--guides--game-data.png"
     },
@@ -176,10 +176,10 @@
       "key": "en",
       "lang": "en",
       "kind": "home",
-      "title": "Ebi Showcase — Learn Ebitengine by playing",
+      "title": "Ebi Showcase — Learn to make games by playing",
       "h1": "Play more. Build more.",
-      "eyebrow": "12 GAMES / START WITH THE LOOP",
-      "description": "A step-by-step showcase for learning Ebitengine through playable mini games.",
+      "eyebrow": "12 playable mini games in your browser",
+      "description": "A practice site for making games yourself: play mini games in the browser and learn Go with Ebitengine, explained for beginners.",
       "image": "assets/og/en.png"
     },
     {
@@ -251,7 +251,7 @@
       "title": "Bomb Maze Action | Ebi Showcase",
       "h1": "Bomb Maze Action",
       "eyebrow": "Build a Bomberman-style blast game",
-      "description": "Start with timed bombs, then add cross-shaped blasts, breakable walls, chain reactions, items, and enemy AI.",
+      "description": "Build a Bomberman-style game where you drop bombs in a maze to blast walls and enemies. Start with timed bombs, then add a cross-shaped blast that grows up, down, left, and right u",
       "image": "assets/og/en--tracks--bomb-maze.png"
     },
     {
@@ -311,7 +311,7 @@
       "title": "Idle Clicker | Ebi Showcase",
       "h1": "Idle Clicker",
       "eyebrow": "Build a Cookie Clicker-style game",
-      "description": "Grow one click into automatic production, price curves, saving, and offline progress.",
+      "description": "Build an idle clicker like the phone games where a button tap makes numbers go up on their own. Grow one click into automatic production, prices that rise on a set schedule (a pric",
       "image": "assets/og/en--tracks--clicker.png"
     },
     {
@@ -395,7 +395,7 @@
       "title": "Deck-building Card Game | Ebi Showcase",
       "h1": "Deck-building Card Game",
       "eyebrow": "Build a Slay the Spire-style game",
-      "description": "Start by playing one card, then add deck circulation, enemy intents, statuses, rewards, and a branching map.",
+      "description": "Build a Slay the Spire-style game where you choose cards to build your deck as you climb. Start by playing one card, then add deck circulation (draw → play → discard → reshuffle), ",
       "image": "assets/og/en--tracks--deckbuilder.png"
     },
     {
@@ -479,7 +479,7 @@
       "title": "Falling-block Puzzle | Ebi Showcase",
       "h1": "Falling-block Puzzle",
       "eyebrow": "Build a Tetris-style game",
-      "description": "Grow one falling block into rotation, locking, line clears, hold, and modern scoring.",
+      "description": "Build a Tetris-style puzzle where you stack falling pieces to clear full rows. Grow one falling block into rotation, locking, line clears, hold, and modern scoring.",
       "image": "assets/og/en--tracks--falling-blocks.png"
     },
     {
@@ -587,7 +587,7 @@
       "title": "Falling-pair Chain Puzzle | Ebi Showcase",
       "h1": "Falling-pair Chain Puzzle",
       "eyebrow": "Build a Puyo Puyo-style chain puzzle",
-      "description": "Start with a falling pair, then add color groups, clearing, gravity, rescanning, and chain scoring.",
+      "description": "Build a Puyo Puyo-style chain puzzle where connecting four or more same-color blobs clears them. Start with a falling pair, then add color groups, clearing, gravity, rescanning, an",
       "image": "assets/og/en--tracks--falling-pairs.png"
     },
     {
@@ -695,7 +695,7 @@
       "title": "2D Fighting Game | Ebi Showcase",
       "h1": "2D Fighting Game",
       "eyebrow": "Build a fighter from collision boxes",
-      "description": "Start with pushboxes, hurtboxes, and hitboxes, then add move frames, hitstop, and combos.",
+      "description": "Build a one-on-one arcade-style fighting game where you and an opponent trade moves. Start with pushboxes (boxes that keep characters from overlapping), hurtboxes (boxes that can g",
       "image": "assets/og/en--tracks--fighting.png"
     },
     {
@@ -767,7 +767,7 @@
       "title": "Match-three Puzzle | Ebi Showcase",
       "h1": "Match-three Puzzle",
       "eyebrow": "Build a Candy Crush-style game",
-      "description": "Start with swapping cells, then add match detection, falling, refills, cascades, and special pieces.",
+      "description": "Build a Candy Crush-style puzzle where you swap two neighboring pieces to line up three. Start with swapping cells, then add match detection, falling, refills, cascades, and specia",
       "image": "assets/og/en--tracks--match3.png"
     },
     {
@@ -815,7 +815,7 @@
       "title": "Maze Chase | Ebi Showcase",
       "h1": "Maze Chase",
       "eyebrow": "Build a Pac-Man-style chase",
-      "description": "Start with tile movement, then add buffered turns, intersections, enemy modes, path choice, and power states.",
+      "description": "Build a Pac-Man-style game where you eat pellets in a maze while running from enemies. Start with tile movement, then add remembering your next turn early (buffered input), interse",
       "image": "assets/og/en--tracks--maze-chase.png"
     },
     {
@@ -911,7 +911,7 @@
       "title": "Merge Physics Puzzle | Ebi Showcase",
       "h1": "Merge Physics Puzzle",
       "eyebrow": "Build a Suika Game-style physics puzzle",
-      "description": "Start with falling circles, then add gravity, collision, penetration correction, bounce, and merging.",
+      "description": "Build a Suika Game-style puzzle where matching fruit merge into a bigger one when they touch. Start with falling circles, then add gravity, collision, pushing overlapping circles a",
       "image": "assets/og/en--tracks--merge-physics.png"
     },
     {
@@ -995,7 +995,7 @@
       "title": "Creature Collection RPG | Ebi Showcase",
       "h1": "Creature Collection RPG",
       "eyebrow": "Build a collect-and-train battle game",
-      "description": "Grow one creature definition into moves, affinities, parties, capture, growth, and a bestiary.",
+      "description": "Build a Pokémon-style game where you catch, raise, and battle creatures. Grow one creature definition into moves, type affinities, parties, capture, growth, and a bestiary.",
       "image": "assets/og/en--tracks--monster-collection.png"
     },
     {
@@ -1055,7 +1055,7 @@
       "title": "Side-scrolling Action | Ebi Showcase",
       "h1": "Side-scrolling Action",
       "eyebrow": "Build a Mario-style game",
-      "description": "Start with jumping, then add moving platforms, enemies, a camera, and power-ups.",
+      "description": "Build a side-scrolling action game like Super Mario. Start with jumping, then add moving platforms, enemies, a camera, and power-ups.",
       "image": "assets/og/en--tracks--platformer.png"
     },
     {
@@ -1163,7 +1163,7 @@
       "title": "Command RPG | Ebi Showcase",
       "h1": "Command RPG",
       "eyebrow": "Build a Dragon Quest-style game",
-      "description": "Combine town exploration, dialogue, turn-based combat, growth, equipment, and a world map.",
+      "description": "Build a Dragon Quest-style RPG where you pick a command each turn. Start with town exploration and dialogue, then add turn-based combat (taking turns to pick Attack, Defend, or Ite",
       "image": "assets/og/en--tracks--rpg.png"
     },
     {
@@ -1259,7 +1259,7 @@
       "title": "2D Block Sandbox | Ebi Showcase",
       "h1": "2D Block Sandbox",
       "eyebrow": "Build a world you can mine and create",
-      "description": "Start by placing one block, then add chunks, crafting, creatures, and persistent worlds.",
+      "description": "Build a Minecraft-style game where you place and break blocks to shape a world. Start by placing one block, then add chunks (the world cut into squares), crafting, creatures, and p",
       "image": "assets/og/en--tracks--sandbox.png"
     },
     {
@@ -1379,7 +1379,7 @@
       "title": "Slingshot Reflection Action | Ebi Showcase",
       "h1": "Slingshot Reflection Action",
       "eyebrow": "Build a Monster Strike-style game",
-      "description": "Start with drag aiming, then add circle reflection, damping, contact attacks, and ally-triggered effects.",
+      "description": "Build a Monster Strike-style battle where you pull back and release characters like a slingshot. Start with drag aiming, then add circle reflection, damping, contact attacks, and f",
       "image": "assets/og/en--tracks--slingshot.png"
     },
     {
@@ -1439,7 +1439,7 @@
       "title": "Horde Survival | Ebi Showcase",
       "h1": "Horde Survival",
       "eyebrow": "Build a Vampire Survivors-style game",
-      "description": "Begin with auto-attacks, then scale to hundreds of enemies, experience, upgrades, and weapon evolution.",
+      "description": "Build a Vampire Survivors-style game where you auto-attack swarms of enemies to survive. Begin with auto-attacks, then scale up to hundreds of enemies, experience, upgrades, and we",
       "image": "assets/og/en--tracks--survivors.png"
     },
     {
@@ -1486,8 +1486,8 @@
       "kind": "vfx",
       "title": "Visual Effects Lab | Ebi Showcase",
       "h1": "Visual Effects Lab",
-      "eyebrow": "Make on-screen magic with Ebitengine",
-      "description": "Basics teach the drawing grammar; Advanced remakes each LEVEL 01–12 mini game with flashy FX. The goal is noticing for yourself that effects belong in a separate system from gamepl",
+      "eyebrow": "Sparks, light, walk cycles—a look toolbox",
+      "description": "This lab practices “how it looks,” not game rules. Touch one drawing tool at a time—stamp, rotate, tint, glow, walk. Later chapters add sparkle to the core LEVEL mini games you alr",
       "image": "assets/og/en--tracks--visual-effects.png"
     },
     {
@@ -1953,8 +1953,8 @@
       "lang": "ja",
       "kind": "guide",
       "title": "ゲームを構成する — データ駆動設計 | Ebi Showcase",
-      "h1": "ゲームを作るとは、 世界を構成すること。",
-      "eyebrow": "GAME ARCHITECTURE / DATA-DRIVEN DESIGN",
+      "h1": "ゲームを作るとは、 世界を組み立てること。",
+      "eyebrow": "ゲームの中身を分ける考え方",
       "description": "Ebitengineでシナリオ、マップ、イベントなどのアセットデータを読み込み、ゲームを構成する方法。",
       "image": "assets/og/ja--guides--game-data.png"
     },
@@ -1976,10 +1976,10 @@
       "key": "ja",
       "lang": "ja",
       "kind": "home",
-      "title": "Ebi Showcase — 遊んで学ぶEbitengine",
+      "title": "Ebi Showcase — 遊んで学ぶ・自分で作るゲーム教室",
       "h1": "遊ぶたび、 作れることが増える。",
-      "eyebrow": "12 GAMES / START WITH THE LOOP",
-      "description": "遊べるミニゲームを通して、Ebitengineのゲーム開発を一歩ずつ学ぶショーケース。",
+      "eyebrow": "ブラウザで遊べる・12の小さなゲーム",
+      "description": "ブラウザでミニゲームを遊びながら、自分でゲームを作る練習をするサイト。Go と Ebitengine を中学生でも追える言葉で教えます。",
       "image": "assets/og/ja.png"
     },
     {
@@ -2051,7 +2051,7 @@
       "title": "爆弾迷路アクション | Ebi Showcase",
       "h1": "爆弾迷路アクション",
       "eyebrow": "ボンバーマン型の爆風ゲームを作る",
-      "description": "時限爆弾から、十字の爆風、壊れる壁、連鎖爆発、アイテム、敵AIへ進みます。",
+      "description": "ボンバーマンのような、迷路に爆弾を置いて壁や敵を吹き飛ばすゲームを作ります。時限爆弾から、上下左右に壁で止まるまで伸びていく十字の爆風、壊れる壁、連鎖爆発、アイテム、敵AIへ進みます。",
       "image": "assets/og/ja--tracks--bomb-maze.png"
     },
     {
@@ -2111,7 +2111,7 @@
       "title": "放置クリッカー | Ebi Showcase",
       "h1": "放置クリッカー",
       "eyebrow": "Cookie Clicker型ゲームを作る",
-      "description": "1クリックの加算から、自動生産、価格曲線、保存、オフライン進行まで育てます。",
+      "description": "スマホの放置ゲーム（クッキークリッカーのような、ボタンを押すたびに数が増えるゲーム）を作ります。1クリックの加算から、自動生産、決まった法則で値上がりする価格（価格曲線）、保存、閉じている間も進む「オフライン進行」まで育てます。",
       "image": "assets/og/ja--tracks--clicker.png"
     },
     {
@@ -2195,7 +2195,7 @@
       "title": "デッキ構築カードゲーム | Ebi Showcase",
       "h1": "デッキ構築カードゲーム",
       "eyebrow": "Slay the Spire型ゲームを作る",
-      "description": "カードを1枚使うところから、手札循環、敵の予告、状態効果、報酬、分岐マップへ広げます。",
+      "description": "スレイ・ザ・スパイアのような、カードを選んでデッキを作りながら進むゲームを作ります。カードを1枚使うところから、手札が山札→手札→捨て札を巡る仕組み（手札循環）、敵の予告、毒や強化が数ターン続く効果（状態効果）、報酬、分岐マップへ広げます。",
       "image": "assets/og/ja--tracks--deckbuilder.png"
     },
     {
@@ -2279,7 +2279,7 @@
       "title": "落ちものブロックパズル | Ebi Showcase",
       "h1": "落ちものブロックパズル",
       "eyebrow": "テトリス型ゲームを作る",
-      "description": "マス目を落ちる1個のブロックから、回転、固定、ライン消去、ホールドまで広げます。",
+      "description": "テトリスのような、マス目を落ちてくるブロックを積んで並べるパズルを作ります。マス目を落ちる1個のブロックから、回転、固定、ライン消去、ホールドまで広げます。",
       "image": "assets/og/ja--tracks--falling-blocks.png"
     },
     {
@@ -2387,7 +2387,7 @@
       "title": "落下ペア連鎖パズル | Ebi Showcase",
       "h1": "落下ペア連鎖パズル",
       "eyebrow": "ぷよぷよ型の連鎖を作る",
-      "description": "2個組の落下から、同色の連結探索、消去、重力、再探索、連鎖得点へ進みます。",
+      "description": "ぷよぷよのような、同じ色を4つ以上つなげて消す連鎖パズルを作ります。2個組の落下から、同色の連結探索、消去、重力、再探索、連鎖得点へ進みます。",
       "image": "assets/og/ja--tracks--falling-pairs.png"
     },
     {
@@ -2495,7 +2495,7 @@
       "title": "2D格闘ゲーム | Ebi Showcase",
       "h1": "2D格闘ゲーム",
       "eyebrow": "判定矩形から対戦格闘を作る",
-      "description": "押し合い判定、喰らい判定、攻撃判定から始め、技のフレーム、ヒットストップ、コンボへ進みます。",
+      "description": "ゲームセンターにあるような、1対1で技を出し合う対戦格闘ゲームを作ります。キャラクター同士がぶつからないための箱（押し合い判定）、攻撃が当たる場所を示す箱（喰らい判定・攻撃判定）から始め、技のフレーム、当たった瞬間だけ時間を止める「ヒットストップ」、コンボへ進みます。",
       "image": "assets/og/ja--tracks--fighting.png"
     },
     {
@@ -2567,7 +2567,7 @@
       "title": "3マッチパズル | Ebi Showcase",
       "h1": "3マッチパズル",
       "eyebrow": "キャンディクラッシュ型ゲームを作る",
-      "description": "盤面の交換から、3個並びの探索、落下、補充、連鎖、特殊ピースへ進みます。",
+      "description": "キャンディクラッシュのような、隣り合う2個を入れ替えて3つ並べるパズルを作ります。盤面の交換から、3個並びの探索、落下、補充、連鎖、特殊ピースへ進みます。",
       "image": "assets/og/ja--tracks--match3.png"
     },
     {
@@ -2615,7 +2615,7 @@
       "title": "迷路追跡ゲーム | Ebi Showcase",
       "h1": "迷路追跡ゲーム",
       "eyebrow": "パックマン型の追いかけっこを作る",
-      "description": "タイル上の移動から、先行入力、交差点、敵のモード、経路選択、パワー状態へ進みます。",
+      "description": "パックマンのような、迷路の中でドットを食べながら敵から逃げるゲームを作ります。タイル上の移動から、次に曲がる方向を早めに覚えておく仕組み（先行入力）、交差点、敵のモード、経路選択、パワー状態へ進みます。",
       "image": "assets/og/ja--tracks--maze-chase.png"
     },
     {
@@ -2711,7 +2711,7 @@
       "title": "合体物理パズル | Ebi Showcase",
       "h1": "合体物理パズル",
       "eyebrow": "スイカゲーム型の物理パズルを作る",
-      "description": "落下する円から始め、重力、衝突、めり込み修正、反発、同種合体を順に実装します。",
+      "description": "スイカゲームのように、同じ種類の実がぶつかると合体して大きくなるパズルを作ります。落下する円から始め、重力、衝突、円を押し合って重ならないようにする仕組み（めり込み修正）、反発、同種合体を順に実装します。",
       "image": "assets/og/ja--tracks--merge-physics.png"
     },
     {
@@ -2795,7 +2795,7 @@
       "title": "モンスター収集RPG | Ebi Showcase",
       "h1": "モンスター収集RPG",
       "eyebrow": "集めて育てるバトルを作る",
-      "description": "1体のモンスターデータから、技、相性、パーティ、捕獲、成長、図鑑へ発展します。",
+      "description": "ポケモンのような、モンスターを捕まえて育てて戦わせるゲームを作ります。1体のモンスターデータから、技、タイプの相性、パーティ、捕獲、成長、図鑑へ発展します。",
       "image": "assets/og/ja--tracks--monster-collection.png"
     },
     {
@@ -2855,7 +2855,7 @@
       "title": "横スクロールアクション | Ebi Showcase",
       "h1": "横スクロールアクション",
       "eyebrow": "マリオ型ゲームを作る",
-      "description": "ジャンプから始め、動く足場、敵、カメラ、パワーアップを順に組み立てます。",
+      "description": "スーパーマリオのような横スクロールアクションを作ります。ジャンプから始めて、動く足場、敵、カメラ、パワーアップの順に少しずつ組み立てます。",
       "image": "assets/og/ja--tracks--platformer.png"
     },
     {
@@ -2963,7 +2963,7 @@
       "title": "コマンドRPG | Ebi Showcase",
       "h1": "コマンドRPG",
       "eyebrow": "ドラゴンクエスト型ゲームを作る",
-      "description": "町の探索、会話、ターン制戦闘、成長、装備、世界地図を順に統合します。",
+      "description": "ドラゴンクエストのような、コマンドを選んで進めるRPGを作ります。町の探索、会話から始め、順番に「たたかう」などのコマンドを選ぶ戦闘（ターン制戦闘）、成長、装備、世界地図を順に統合します。",
       "image": "assets/og/ja--tracks--rpg.png"
     },
     {
@@ -3059,7 +3059,7 @@
       "title": "2Dブロックサンドボックス | Ebi Showcase",
       "h1": "2Dブロックサンドボックス",
       "eyebrow": "掘って作れる世界を作る",
-      "description": "1個のブロックを置くところから、チャンク、クラフト、生き物、ワールド保存へ広げます。",
+      "description": "マインクラフトのような、ブロックを置いたり壊したりして世界を作るゲームを作ります。1個のブロックを置くところから、世界を区切る「チャンク」、クラフト、生き物、ワールド保存へ広げます。",
       "image": "assets/og/ja--tracks--sandbox.png"
     },
     {
@@ -3179,7 +3179,7 @@
       "title": "ひっぱり反射アクション | Ebi Showcase",
       "h1": "ひっぱり反射アクション",
       "eyebrow": "モンスターストライク型ゲームを作る",
-      "description": "引っぱる照準から、円の反射、減速、敵への接触攻撃、味方との友情効果へ進みます。",
+      "description": "モンスターストライクのような、キャラクターを引っぱって発射する対戦アクションを作ります。引っぱる照準から、円の反射、減速、敵への接触攻撃、味方に当てて発動する「友情効果」へ進みます。",
       "image": "assets/og/ja--tracks--slingshot.png"
     },
     {
@@ -3239,7 +3239,7 @@
       "title": "大量敵サバイバル | Ebi Showcase",
       "h1": "大量敵サバイバル",
       "eyebrow": "Vampire Survivors型ゲームを作る",
-      "description": "自動攻撃から始め、数百の敵、経験値、強化選択、武器進化へ発展します。",
+      "description": "Vampire Survivorsのような、大量の敵から逃げながら生き延びるゲームを作ります。自動攻撃から始め、数百体の敵、経験値、強化選択、武器の進化へ発展します。",
       "image": "assets/og/ja--tracks--survivors.png"
     },
     {
@@ -3286,8 +3286,8 @@
       "kind": "vfx",
       "title": "ビジュアルエフェクト工房 | Ebi Showcase",
       "h1": "ビジュアルエフェクト工房",
-      "eyebrow": "見た目の魔法をEbitengineで作る",
-      "description": "基本編で描画の文法を手で確かめ、応用編で LEVEL 01〜12 のミニゲームそれぞれに派手な演出を足します。応用編のゴールは、エフェクトをゲーム本編の配列と分けて管理することに自分で気づくこと。",
+      "eyebrow": "花火・光・歩き——見た目の道具箱",
+      "description": "ここは「ゲームのルール」ではなく「見た目のかっこよさ」を練習する工房です。スタンプ・回転・色・光・歩きなど、絵を動かす道具を1つずつ触ります。後半では、すでに遊んだ LEVEL のミニゲームにキラキラを足します。全部やらなくても大丈夫——気になる見出しからでOKです。",
       "image": "assets/og/ja--tracks--visual-effects.png"
     },
     {
@@ -3527,7 +3527,7 @@
       "title": "粒をばらまく（パーティクル） | Ebi Showcase",
       "h1": "粒をばらまく（パーティクル）",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "火花・煙・キラキラは、小さな粒のあつまり。粒の配列を持ち、毎フレーム「位置を進めて、寿命（フレーム数）を減らして、薄くする」だけで、いろんな演出になります。",
+      "description": "火花・煙・キラキラは、小さな粒のあつまり。粒の配列を持ち、毎フレーム「位置を進めて、寿命を減らして、薄くする」だけで、いろんな演出になります。",
       "image": "assets/og/ja--tracks--visual-effects--vfx-particles.png"
     },
     {

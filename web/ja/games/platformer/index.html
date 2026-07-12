@@ -58,7 +58,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>X軸の衝突</h3><p>X方向に動いた後、プラットフォームと重なっていたら押した方向に応じてX座標を戻します。Y座標はそのままなので、床の角で引っかかりません。</p><code>player.x = p.x - player.w</code></article>
         <article><span class="concept-number">2</span><h3>Y軸の衝突</h3><p>Y方向に動いた後に同じように確認。上から乗ったら <code>onGround = true</code> にしてジャンプを許可し、速度を0にして貫通を防ぎます。</p><code>onGround = true</code></article>
-        <article><span class="concept-number">3</span><h3>カメラの追従</h3><p>目標X座標を計算し、現在位置から目標へ毎フレーム9%だけ近づきます。この「線形補間（イージング）」により、急激なカメラジャンプがなくなります。係数 0.09 は「残り距離の9%だけ追う」意味です。</p><code>camera += (target - camera) * .09</code></article>
+        <article><span class="concept-number">3</span><h3>カメラの追従</h3><p>カメラは目標の位置に、少しずつ近づいていきます——毎フレーム、<strong>残りの距離の約9%だけ</strong>動く、という意味です。もし一気に100%動いてピタッと追いつくと、プレイヤーの小さな動きにもカメラが急にガクッと反応して見づらくなります。少しずつ近づくことで、画面がなめらかになり、見ていて目が回りにくくなります。この動き方を「線形補間（イージング）」と呼びます。</p><code>camera += (target - camera) * .09</code></article>
       </div>
 
       
@@ -95,7 +95,7 @@
       <div class="formula">
         <p class="eyebrow">THE CAMERA LERP</p>
         <div class="formula-lines"><code>target = player.x - width * 0.38</code><span>そして毎フレーム</span><code>camera += (target - camera) * 0.09</code></div>
-        <p>プレイヤーが画面の38%の位置にくるような目標を毎フレーム計算し、カメラは目標との差の9%だけ動きます。差が大きいほど速く、近づくほどゆっくりになります。</p>
+        <p>プレイヤーが画面の38%の位置にくるような目標を毎フレーム計算し、カメラは目標との差の9%だけ動きます。差が大きいほど速く、近づくほどゆっくりになります。9%ではなく100%にしてしまうと、カメラが毎フレーム目標にぴったり張り付き、プレイヤーの細かい動きにまでガクガク反応してしまいます。</p>
       </div>
 
       <div class="code-lesson">

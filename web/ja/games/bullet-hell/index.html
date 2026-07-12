@@ -55,7 +55,7 @@
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>円形弾幕</h3><p>コンピュータの角度は度数法（360度）ではなく<strong>ラジアン</strong>（1周 = 2π ≒ 6.28）が基本です。全周を弾の数で割ると1発ごとの間隔になります。<code>cos</code>/<code>sin</code> が X/Y の向きです。</p><code>a = i * math.Pi * 2 / count</code></article>
-        <article><span class="concept-number">2</span><h3>狙い撃ち弾</h3><p><code>Atan2(dy, dx)</code> は「横の差・縦の差から、どっち向き？」を返す関数です（中学の三角より一歩先）。返ってきた角度を中心に扇形へ広げます。</p><code>base = math.Atan2(py-128, px-240)</code></article>
+        <article><span class="concept-number">2</span><h3>狙い撃ち弾</h3><p><code>Atan2(dy, dx)</code> は<strong>「自分から見て、相手がどの向きにあるか（角度）」を求める関数</strong>です。横の差・縦の差の2つの数字から、その1つの角度を計算します（中学の三角より一歩先）。返ってきた角度を中心に扇形へ広げます。</p><code>base = math.Atan2(py-128, px-240)</code></article>
         <article><span class="concept-number">3</span><h3>後ろから削除</h3><p>画面外に出た弾は毎フレーム削除します。後ろから（大きい添え字から）ループすることで、削除しても添え字がずれません。</p><code>for i := len-1; i &gt;= 0; i--</code></article>
       </div>
 

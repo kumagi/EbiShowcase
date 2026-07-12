@@ -42,7 +42,7 @@
     </section>
 
     <section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Survive every wave.</h2></div><p>Arrow keys or drag to move, Space or touch to shoot. Clear all enemies to trigger the next wave. Lose all three lives and the mission fails.</p></div>
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Survive every wave.</h2></div><p>Arrow keys or drag to move, Space or touch to shoot. Enemies arrive in "waves" — groups that drop in one after another over time. Clear all enemies in the current wave to trigger the next one. Lose all three lives and the mission fails.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Space Shooter" src="../../../play/space-shooter/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 
@@ -56,7 +56,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>Slices and embedding</h3><p>Bullets are <code>[]body</code>. Enemies use embedding: <code>type enemy struct { body; hp int }</code> so you can write <code>e.x</code> directly (composition).</p><code>type enemy struct { body; hp int }</code></article>
         <article><span class="concept-number">2</span><h3>Update all at once</h3><p>Range over the slice and move every element. No element needs special casing; the loop applies the same rule uniformly.</p><code>for i := range g.bullets</code></article>
-        <article><span class="concept-number">3</span><h3>Delete backward</h3><p>Remove off-screen or dead entities by iterating from the last index toward zero. Deleting an element does not shift earlier indices, so nothing is skipped.</p><code>bullets[:i], bullets[i+1:]</code></article>
+        <article><span class="concept-number">3</span><h3>Delete backward</h3><p>Remove off-screen or dead entities from the list. In plain words: <strong>deleting from the back (the highest index first) keeps the numbers ahead of you from shifting</strong>, so nothing gets skipped.</p><code>bullets[:i], bullets[i+1:]</code></article>
       </div>
 
       
@@ -89,7 +89,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>Collision and deletion<br>in a single backward loop</h3>
-          <p>After moving all bullets and enemies, a nested loop tests every (bullet, enemy) pair. A hit removes both. The outer loop runs backward so deletions stay safe.</p>
+          <p>After moving all bullets and enemies, a nested loop tests every (bullet, enemy) pair — <strong>for each bullet, check every enemy one by one</strong> (5 bullets × 3 enemies is at most 5×3=15 checks). A hit removes both. The outer loop runs backward so deletions stay safe.</p>
           <p>Aimed shots use <code>dx/length*2.3</code>: divide by distance to keep only direction (length 1), then ×2.3 so every bullet shares the same speed (normalization).</p>
         </div>
         <pre><code><span>for</span> bi := len(g.bullets) - 1; bi >= 0; bi-- {

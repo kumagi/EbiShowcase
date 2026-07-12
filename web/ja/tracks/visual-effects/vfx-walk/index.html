@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="1枚に並んだ絵(スプライトシート)から、SubImage で1コマだけ切り出して描きます。タイマーで切り出す位置を進めれば、キャラクターが歩いて見えます。">
   <title>パラパラ歩き（コマ送り） | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-walk/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
@@ -23,7 +24,6 @@
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-walk.png">
     <meta name="twitter:image:alt" content="パラパラ歩き（コマ送り）">
     <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-walk/">
   <link rel="stylesheet" href="../../../../style.css">
 </head>
 <body class="overview-page">
@@ -91,20 +91,13 @@
           <p class="eyebrow">TRY IT / SUBIMAGE</p>
           <h3 id="lab-title-vfx-walk">コマを送って再生しよう</h3>
           <p>コマ送りと再生/停止を切り替えます。光っている枠が、今 SubImage で切り出しているコマです。</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="frame draw" data-go-caption="1枚引く">コマ送り</button><button type="button" class="lab-button" data-lab-play>再生 / 停止</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>リセット</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>コマ送り</button><button type="button" class="lab-button" data-lab-play>再生 / 停止</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board" data-lab-board style="display:grid;place-items:center"><div class="lab-frames"><span data-lab-cell>0</span><span data-lab-cell>1</span><span data-lab-cell>2</span><span data-lab-cell>3</span></div></div>
           <div class="lab-values" aria-live="polite"><div><span>コマ</span><strong data-lab-frame>—</strong></div></div>
         </div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="frame">frame := frames[i % len(frames)]</span>
-<span data-go-line="sub">// SubImage cuts one cell from the atlas</span>
-<span data-go-line="draw">screen.DrawImage(frame, &amp;op)</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
-</div>
-</div>
+      </div>
 
       <div class="code-lesson">
         <div>
@@ -158,31 +151,7 @@ screen.DrawImage(frame, op)</code></pre>
       <a href="../vfx-additive/">← STEP 05<strong>加算合成で光らせる</strong></a>
       <a href="../vfx-particles/">STEP 07 →<strong>粒をばらまく（パーティクル）</strong></a>
     </nav>
-
-
-    <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">ひとことフィードバック</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-walk/">
-          <label class="feedback-field">
-            <span class="sr-only">フィードバック</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…" aria-label="フィードバック">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-
-</main>
+  </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
   <script>

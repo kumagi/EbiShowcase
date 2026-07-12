@@ -34,7 +34,7 @@
     <section class="overview-hero">
       <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
       <h1>Pong</h1>
-      <p>ボールは「右へどれだけ・下へどれだけ」の2つの速さで動きます。壁やパドルに当たったら、その向きの符号だけひっくり返す。反射の基本です。</p>
+      <p>対戦相手は人間ではなく、シンプルな<strong>CPU（コンピューターが動かすパドル）</strong>です。ボールは「右へどれだけ・下へどれだけ」の2つの速さで動きます。壁やパドルに当たったら、その向きの符号だけひっくり返す。反射の基本です。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>反射とベクトル</strong></div>
     </section>
 
@@ -91,7 +91,7 @@
       <div class="formula">
         <p class="eyebrow">THE BOUNCE RULE</p>
         <div class="formula-lines"><code>壁: vx = -vx</code><span>パドル</span><code>vy = -vy （少し速くしてもOK）</code></div>
-        <p>符号を反転する前に、ボールを面の外側へ押し戻すと、同じ面に何度も食い込む「めり込みループ」を防げます。</p>
+        <p>符号を反転するだけでは、ボールが少し面の内側にめり込んだ状態が残ってしまいます。すると次のフレームでも「まだ当たっている」と判定され、跳ね返りが何度も起きる「めり込みループ」の原因になります。そこでコードでは符号を反転する前に、ボールの位置を面のすぐ外側へ移し直します（例: <code>g.ballY = 646</code> でパドルの上に押し出す、<code>math.Max/Min</code> で壁の内側に収める）。これで、めり込んだまま貼りつくことなく、きちんと1回だけ跳ね返ります。</p>
       </div>
 
       <div class="code-lesson">

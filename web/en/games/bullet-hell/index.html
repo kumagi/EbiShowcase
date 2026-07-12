@@ -55,7 +55,7 @@
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>Circular burst</h3><p>Computers use <strong>radians</strong> (full circle = 2π ≈ 6.28), not 360°. Divide that by bullet count for spacing. <code>cos</code>/<code>sin</code> give X/Y direction.</p><code>a = i * math.Pi * 2 / count</code></article>
-        <article><span class="concept-number">2</span><h3>Aimed spread</h3><p><code>Atan2(dy,dx)</code> answers “which way is that delta?” — treat it as a heading helper if trig is new, then fan bullets around that base angle.</p><code>base = math.Atan2(py-128, px-240)</code></article>
+        <article><span class="concept-number">2</span><h3>Aimed spread</h3><p><code>Atan2(dy,dx)</code> is a function that answers <strong>"which direction is that other point, as seen from me?"</strong> — it turns a horizontal difference and a vertical difference into that one angle (a heading helper, one step past middle-school trig). Fan bullets around that base angle.</p><code>base = math.Atan2(py-128, px-240)</code></article>
         <article><span class="concept-number">3</span><h3>Backward removal</h3><p>Every frame, remove bullets that have left the screen. Iterating from the last index prevents index shifting when elements are deleted.</p><code>for i := len-1; i &gt;= 0; i--</code></article>
       </div>
 

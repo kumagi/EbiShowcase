@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。">
   <title>はじめての環境づくり — 空の窓を開くまで | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/setup/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
@@ -23,7 +24,6 @@
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--setup.png">
     <meta name="twitter:image:alt" content="まっさらなパソコンから、 空の窓を開くまで。">
     <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/setup/">
   <link rel="stylesheet" href="../../../style.css">
 </head>
 <body>
@@ -67,6 +67,7 @@
       <article class="setup-os"><h3>macOS</h3><ol class="setup-ol"><li>Command + Space キーを同時に押す</li><li>「ターミナル」と入力する</li><li>「ターミナル」アプリを開く</li></ol></article>
     </div>
     <p class="setup-tip">白い画面に文字が点滅していれば OK。これからここにコマンドをコピーして貼り付けます。</p>
+    <p class="setup-note">用語メモ：Windows では「PowerShell」、Mac では「ターミナル」と呼ぶことが多いです。どちらも<strong>同じ役割</strong>——キーボードでパソコンに命令を出す黒い（または白い）窓です。「ターミナル＝Mac専用」ではありません。Windows 11 の「ターミナル」アプリでも PowerShell が使えます。このガイドでは Windows 欄を PowerShell、Mac 欄をターミナルと書きます。</p>
   </section>
 
   <section class="setup-step" id="install-go">
@@ -74,7 +75,7 @@
     <h2>Go をインストールする</h2>
     <p class="setup-lead">Ebitengine は Go で書かれたゲームエンジンです。先に Go 本体が必要です。いまの公式要件は Go 1.22 以降（このリポジトリは 1.24 向け）。</p>
     <div class="setup-os-grid">
-      <article class="setup-os"><h3>Windows</h3><ol class="setup-ol"><li>ブラウザで <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a> を開く</li><li>「Microsoft Windows」の <strong>.msi</strong> を選ぶ（だいたい一番上の安定版）</li><li>ダウンロードしたファイルを開き、画面の指示どおり「次へ」で進む</li><li>終わったら PowerShell を<strong>いったん閉じて、もう一度開き直す</strong>（パスを読み直すため）</li></ol></article>
+      <article class="setup-os"><h3>Windows</h3><ol class="setup-ol"><li>ブラウザで <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a> を開く</li><li>「Microsoft Windows」の <strong>.msi</strong> を選ぶ（だいたい一番上の安定版）</li><li>ダウンロードしたファイルを開き、画面の指示どおり「次へ」で進む</li><li>終わったら PowerShell（さっき開いた命令の窓）を<strong>いったん閉じて、もう一度開き直す</strong>（パスを読み直すため）</li></ol></article>
       <article class="setup-os"><h3>macOS</h3><ol class="setup-ol"><li>ブラウザで <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a> を開く</li><li>自分の Mac に合うパッケージを選ぶ。<strong>Apple Silicon（M1/M2/M3…）</strong>なら ARM64、<strong>Intel</strong> なら x86-64 の <strong>.pkg</strong></li><li>ダウンロードした .pkg を開き、画面の指示どおりインストールする</li><li>終わったらターミナルを<strong>いったん閉じて、もう一度開き直す</strong></li></ol></article>
     </div>
     <p class="setup-note">学校や会社の PC では管理者パスワードが必要なことがあります。入れられないときは保護者や先生に相談してください。</p>
@@ -83,7 +84,7 @@
   <section class="setup-step" id="compiler">
     <p class="setup-n">STEP 02</p>
     <h2>Mac だけ：C コンパイラを入れる</h2>
-    <p class="setup-lead">Ebitengine は中で C の部品も使います。Windows では追加の C コンパイラは不要です。Mac では Apple のコマンドラインツールが必要です。</p>
+    <p class="setup-lead">Ebitengine は中で C の部品も使います。<strong>Windows の学校 PC はこのステップを飛ばして大丈夫</strong>です。Mac だけ、無料の「コマンドラインツール」を入れます。教室の PC が Windows なら、すぐ「3. 動作確認」へ進んでください。</p>
     <p class="setup-skip">Windows の人はこのステップを飛ばして「3. 動作確認」へ進んでください。</p>
     <pre class="setup-code"><code>xcode-select --install</code></pre>
     <ol class="setup-ol"><li>ターミナルに上のコマンドを貼り付けて Enter</li><li>ダイアログが出たら「インストール」を選ぶ（数分〜十数分かかることがあります）</li><li>すでに入っている場合は「command line tools are already installed」のようなメッセージで大丈夫です</li></ol>
@@ -173,36 +174,34 @@ func main() {
 
   <section class="setup-step setup-trouble" id="troubleshoot">
     <h2>うまくいかないとき</h2>
+    <p class="setup-lead">ここが一番よく止まります。下の表から自分の症状に近いものを選んでください。それでもだめなら、赤いエラー全文をコピーしてページ末尾のフィードバックへ送ってください。</p>
     <div class="setup-trouble-list">
-      <article><h3>go: command not found / 認識されない</h3><p>インストール後にターミナルを開き直す。Windows はスタートメニューから Go が入っているかも確認。それでもだめなら再起動。</p></article><article><h3>xcrun: error: invalid active developer path…（Mac）</h3><p>xcode-select --install をもう一度実行する。</p></article><article><h3>go mod tidy や go run でネットエラー</h3><p>インターネット接続と、会社・学校のプロキシ設定を確認。自宅の回線で試すと通ることがあります。</p></article><article><h3>窓が一瞬で消える / パニック</h3><p>ターミナルに赤いエラー全文が出ています。その文を検索するか、このページ末尾のフィードバックへ貼ってください。</p></article><article><h3>WSL（Windows の Linux）を使っている</h3><p>公式どおり、実行時に GOOS=windows が必要になることがあります。まずは通常の PowerShell での手順を推奨します。</p></article>
+      <article><h3>PowerShell とターミナル、どっち？</h3><p>Windows なら「PowerShell」で大丈夫。Mac なら「ターミナル」。どちらも命令を打ち込む窓です。Windows の「ターミナル」アプリを開いても、中身が PowerShell なら問題ありません。</p></article><article><h3>go: command not found / 認識されない</h3><p>① Go を入れたあと、命令の窓を<strong>完全に閉じて開き直したか</strong>確認。② Windows ならスタートメニューに「Go」があるか確認。③ それでもだめなら PC を再起動してもう一度 <code>go version</code>。</p></article><article><h3>xcrun: error: invalid active developer path…（Mac）</h3><p>ステップ 02 の <code>xcode-select --install</code> をもう一度実行する。途中で止まったら再起動してから再実行。</p></article><article><h3>go mod tidy や go run でネットエラー</h3><p>インターネット接続と、会社・学校のプロキシ設定を確認。自宅の回線で試すと通ることがあります。</p></article><article><h3>窓が一瞬で消える / パニック</h3><p>命令の窓に赤いエラー全文が出ています。その文を検索するか、このページ末尾のフィードバックへ貼ってください。</p></article><article><h3>WSL（Windows の Linux）を使っている</h3><p>公式どおり、実行時に GOOS=windows が必要になることがあります。はじめてなら通常の PowerShell での手順を推奨します。</p></article>
     </div>
-    <p class="setup-footer-note">手順の詳細は公式ドキュメント（Install / Hello, World!）にもあります。このページは「まっさらな PC 向け」に順序を並べ替えた導入です。 <a href="https://ebitengine.org/en/documents/install.html" rel="noreferrer">公式 Install ↗</a></p>
+    <p class="setup-footer-note">手順の詳細は公式ドキュメント（Install / Hello, World!）にもあります。このページは「まっさらな PC 向け」に順序を並べ替えた導入です。つまずいたらまず「うまくいかないとき」へ戻ってください。 <a href="https://ebitengine.org/en/documents/install.html" rel="noreferrer">公式 Install ↗</a></p>
   </section>
 
-
-    <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">ひとことフィードバック</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/ja/guides/setup/">
-          <label class="feedback-field">
-            <span class="sr-only">フィードバック</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…" aria-label="フィードバック">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
+  <section class="feedback-section" aria-labelledby="feedback-title">
+    <div class="feedback-card">
+      <div class="feedback-heading">
+        <p class="eyebrow">FEEDBACK</p>
+        <h2 id="feedback-title">ひとことフィードバック</h2>
       </div>
-    </section>
-
-
+      <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+        <input type="hidden" name="entry.765794446" value="/ja/guides/setup/">
+        <label class="feedback-field">
+          <span class="sr-only">フィードバック</span>
+          <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+        </label>
+        <div class="feedback-actions">
+          <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+          <p class="feedback-status" aria-live="polite"></p>
+        </div>
+        <input type="hidden" name="fvv" value="1">
+        <input type="hidden" name="pageHistory" value="0">
+      </form>
+    </div>
+  </section>
 </main>
 <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
 <script src="../../../learn.js"></script>

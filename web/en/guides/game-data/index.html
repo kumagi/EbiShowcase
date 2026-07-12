@@ -9,22 +9,22 @@
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--game-data.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Building a game means composing a world.">
+    <meta property="og:image:alt" content="Building a game means assembling a world.">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Composing a Game — Data-driven Design | Ebi Showcase">
     <meta name="twitter:description" content="How to compose an Ebitengine game by loading scenario, map, event, and presentation assets.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--game-data.png">
-    <meta name="twitter:image:alt" content="Building a game means composing a world.">
+    <meta name="twitter:image:alt" content="Building a game means assembling a world.">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/game-data/">
 <link rel="stylesheet" href="../../../style.css"></head>
 <body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="#layers">LAYERS</a><a href="#example">EXAMPLE</a><a class="lang" href="../../../ja/guides/game-data/">日本語</a></nav></header>
 <main><div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>SPECIAL GUIDE</span></div>
-<section class="data-hero"><p class="eyebrow">GAME ARCHITECTURE / DATA-DRIVEN DESIGN</p><h1>Building a game means<br><em>composing a world.</em></h1><p>A tiny game can keep enemy positions and dialogue in code. As the world grows, separate “how it works” from “what it contains.”</p></section>
+<section class="data-hero"><p class="eyebrow">How a game’s insides are split</p><h1>Building a game means<br><em>assembling a world.</em></h1><p>A tiny game can keep enemy positions and dialogue in code. As the world grows, it’s easier if you separate “how it works” (systems) from “what exists” (content). Start with the diagram below—see what one game is made of.</p></section>
 
-<section class="composition" id="layers"><div class="guide-heading"><p class="eyebrow">THE SIX LAYERS</p><h2>A game is built<br>from six layers.</h2></div>
+<section class="composition" id="layers"><div class="guide-heading"><p class="eyebrow">THE SIX LAYERS</p><h2>A game is built<br>from six layers.</h2><p class="lesson-lead" style="max-width:40rem;margin:0.75rem auto 0">Picture a recipe (systems) vs. a grocery list (content): same stir-fry method, different ingredients. Games work the same way.</p></div>
 <div class="composition-flow" role="img" aria-label="Asset data is loaded into a game world, played through Update and Draw, and stored as save state">
 <div class="flow-sources"><span>MAP</span><span>SCENARIO</span><span>EVENT</span><span>IMAGE</span><span>AUDIO</span></div><b>↓ LOAD</b><div class="flow-loader">ASSET LOADER<small>JSON, images, and audio into typed data</small></div><b>↓ COMPOSE</b><div class="flow-world">GAME WORLD<small>Place maps, characters, and events</small></div><b>↓ PLAY EACH FRAME</b><div class="flow-runtime"><span>UPDATE</span><span>DRAW</span><span>SAVE</span></div></div>
 <div class="layer-grid">
@@ -68,7 +68,7 @@
   ]
 }</code></pre></div></div></section>
 
-<section class="loading-guide"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Bundle assets into WASM<br>with <code>go:embed</code>.</h2><p>Embedded assets use the same loading code on desktop and Web. Read JSON once at startup and decode it into Go structs.</p></div><pre><code><span>import</span> (
+<section class="loading-guide"><div><p class="eyebrow">GO + EBITENGINE (advanced)</p><h2>How to pack files<br>into the program.</h2><p>Once the ideas above click, here’s an advanced tool: Go’s <code>go:embed</code> can bundle JSON and images inside the program. The same load path works in the browser (WASM). For now, “that tool exists” is enough—come back after the core LEVELS and this section will read easier.</p></div><pre><code><span>import</span> (
     "embed"
     "encoding/json"
 )

@@ -3,7 +3,7 @@
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Bomb Maze Action | Ebi Showcase">
-    <meta property="og:description" content="Start with timed bombs, then add cross-shaped blasts, breakable walls, chain reactions, items, and enemy AI.">
+    <meta property="og:description" content="Build a Bomberman-style game where you drop bombs in a maze to blast walls and enemies. Start with timed bombs, then add a cross-shaped blast that grows up, down, left, and right u">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/bomb-maze/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--bomb-maze.png">
     <meta property="og:image:width" content="1200">
@@ -13,17 +13,17 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Bomb Maze Action | Ebi Showcase">
-    <meta name="twitter:description" content="Start with timed bombs, then add cross-shaped blasts, breakable walls, chain reactions, items, and enemy AI.">
+    <meta name="twitter:description" content="Build a Bomberman-style game where you drop bombs in a maze to blast walls and enemies. Start with timed bombs, then add a cross-shaped blast that grows up, down, left, and right u">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--bomb-maze.png">
     <meta name="twitter:image:alt" content="Bomb Maze Action">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/bomb-maze/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/bomb-maze/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>6 STEPS</span></div><section class="track-hero track-bomb-maze"><span class="track-letter">O</span><div><p class="eyebrow">Build a Bomberman-style blast game</p><h1>Bomb Maze Action</h1><p>Start with timed bombs, then add cross-shaped blasts, breakable walls, chain reactions, items, and enemy AI.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is original Ebi Tenjiroh.</p></section>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/bomb-maze/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>6 STEPS</span></div><section class="track-hero track-bomb-maze"><span class="track-letter">O</span><div><p class="eyebrow">Build a Bomberman-style blast game</p><h1>Bomb Maze Action</h1><p>Build a Bomberman-style game where you drop bombs in a maze to blast walls and enemies. Start with timed bombs, then add a cross-shaped blast that grows up, down, left, and right until it hits a wall, breakable walls, chain reactions, items, and enemy AI.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p></section>
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a playable world.</h2><p>Test data changes and algorithms in small games, reusing each step on the way to the final project.</p></div><a class="path-step" href="timed-bomb/"><span>01</span><div><h3>Place a Timed Bomb</h3><p>Place a bomb on the current cell and switch it to exploding after a timer.</p><strong>Placement rules and timers</strong></div><b>→</b></a>
-<a class="path-step" href="cross-blast/"><span>02</span><div><h3>Cross-shaped Blast</h3><p>Traverse cells in four directions and stop blasts at hard walls or range.</p><strong>Four-direction ray traversal</strong></div><b>→</b></a>
+<a class="path-step" href="cross-blast/"><span>02</span><div><h3>Cross-shaped Blast</h3><p>Grow the blast cell by cell up, down, left, and right from the bomb, stopping at a hard wall or once it reaches its range.</p><strong>Growing a blast in four directions (ray traversal)</strong></div><b>→</b></a>
 <a class="path-step" href="breakable-walls/"><span>03</span><div><h3>Breakable Walls and Items</h3><p>Turn blasted walls into floor and sometimes reveal power-ups.</p><strong>Tile changes and random drops</strong></div><b>→</b></a>
-<a class="path-step" href="chain-explosion/"><span>04</span><div><h3>Bomb Chain Reactions</h3><p>Detonate bombs hit by blasts immediately without processing one twice.</p><strong>Event propagation and deduplication</strong></div><b>→</b></a>
-<a class="path-step" href="escape-ai/"><span>05</span><div><h3>Blast-escape AI</h3><p>Predict future blast cells and find a path to safety.</p><strong>Danger maps and safe paths</strong></div><b>→</b></a>
+<a class="path-step" href="chain-explosion/"><span>04</span><div><h3>Bomb Chain Reactions</h3><p>Detonate bombs hit by blasts immediately, letting the explosion spread from bomb to bomb (event propagation), while marking each bomb so it's never processed twice (deduplication).</p><strong>Explosions spreading bomb to bomb (event propagation) and deduplication</strong></div><b>→</b></a>
+<a class="path-step" href="escape-ai/"><span>05</span><div><h3>Blast-escape AI</h3><p>Predict which cells are about to become blasts, mark them on a map of danger, and find a path to safety around them.</p><strong>Maps of danger (danger maps) and safe paths</strong></div><b>→</b></a>
 <a class="path-step" href="ebi-bomber/"><span>06</span><div><h3>Ebi Bomber</h3><p>Combine bomb count, blast range, movement, enemies, and exits into a complete stage.</p><strong>Power-ups, enemies, and progression</strong></div><b>→</b></a></section>
 
 

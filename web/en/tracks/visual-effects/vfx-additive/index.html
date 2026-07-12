@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="Normal blending hides the back with the front. Additive (BlendLighter) adds color, so overlapping light gets brighter and the middle glows w">
   <title>Additive Blending Glow | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-additive/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
@@ -23,7 +24,6 @@
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-additive.png">
     <meta name="twitter:image:alt" content="Additive Blending Glow">
     <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-additive/">
   <link rel="stylesheet" href="../../../../style.css">
 </head>
 <body class="overview-page">
@@ -91,19 +91,13 @@
           <p class="eyebrow">TRY IT / BLEND</p>
           <h3 id="lab-title-vfx-additive">Toggle the blend mode</h3>
           <p>Overlap two lights and switch between normal and additive. With additive, only the overlap flares bright.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-toggle>Toggle blend</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-toggle>Toggle blend</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board" data-lab-board data-blend="add"></div>
           <div class="lab-values" aria-live="polite"><div><span>blend</span><strong data-lab-mode>—</strong></div></div>
         </div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="blend">op.Blend = ebiten.BlendLighter</span>
-<span data-go-line="draw">screen.DrawImage(glow, &amp;op)</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
-</div>
-</div>
+      </div>
 
       <div class="code-lesson">
         <div>
@@ -140,31 +134,7 @@ screen.DrawImage(glow, op)</code></pre>
       <a href="../vfx-alpha/">← STEP 04<strong>Alpha, Order & Afterimage</strong></a>
       <a href="../vfx-walk/">STEP 06 →<strong>Sprite Walk (Frame by Frame)</strong></a>
     </nav>
-
-
-    <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">Quick feedback</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-additive/">
-          <label class="feedback-field">
-            <span class="sr-only">Feedback</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…" aria-label="Feedback">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-
-</main>
+  </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
   <script>
