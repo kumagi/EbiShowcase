@@ -35,9 +35,9 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>指数関数的コスト</h3><p><code>math.Pow(1.18, n)</code> で n 番目のラボのコストを計算します。n=0 で10、n=5 で約23、n=20 で約270 と、最初はゆっくり後半は急激に増えます。</p><code>10 * math.Pow(1.18, float64(g.labs))</code></article>
+        <article><span class="concept-number">1</span><h3>指数関数的コスト</h3><p><code>math.Pow(a, n)</code> は「a を n 回かける」計算です（2の3乗＝8）。<code>float64(g.labs)</code> は整数を実数に変えるだけで、Pow が実数専用だから書きます。n=0 で10、n=5 で約23、n=20 で約270 と後半ほど急に増えます。</p><code>10 * math.Pow(1.18, float64(g.labs))</code></article>
         <article><span class="concept-number">2</span><h3>二乗の生産量</h3><p>生産速度は <code>labs × labs × 8</code> です。台数が増えるほど1台あたりの貢献が大きくなる「スケーリング」が楽しさの核心です。1台で8/秒、3台で72/秒、10台で800/秒。</p><code>float64(g.labs*g.labs) * 8</code></article>
-        <article><span class="concept-number">3</span><h3>K・M・B表記</h3><p>1000以上の数字を K、100万以上を M で省略します。<code>short()</code> 関数が変換を担当。「1234567」が「1.23M」と表示され、画面に収まります。</p><code>fmt.Sprintf("%.2fM", v/1e6)</code></article>
+        <article><span class="concept-number">3</span><h3>K・M・B表記</h3><p><code>1e6</code> は 1×10の6乗＝100万、<code>1e9</code> は10億の短い書き方です。<code>fmt.Sprintf("%.2fM", v)</code> の <code>%.2f</code> は「小数点以下2桁の実数」。M は百万の印です。</p><code>fmt.Sprintf("%.2fM", v/1e6)</code></article>
       </div>
 
       <div class="motion-lab" data-lab="cost" data-base="10" data-growth="1.18" aria-labelledby="cost-lab-title">
@@ -79,7 +79,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>コスト計算 → 生産 → 数値表示</h3>
-          <p>cost() と rate() はメソッドとして定義し、実際の値を毎フレーム計算します。short() で大きな数字を読みやすくして Draw で表示します。</p>
+          <p>cost() と rate() は毎フレーム計算します。<code>math.Pow</code> は累乗、<code>float64(...)</code> は型合わせ、<code>1e9</code> は10億、<code>%.2f</code> は小数2桁表示の指定です。short() がこれらをまとめて短い文字にします。</p>
         </div>
         <pre><code><span>func</span> (g *game) cost() float64 {
     return 10 * math.Pow(1.18, float64(g.labs))

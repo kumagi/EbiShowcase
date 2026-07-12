@@ -93,7 +93,7 @@
 <p class="eyebrow">TRY IT · GO</p>
 <pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="v">vy += g</span>
 <span data-go-line="y">y += vy</span>
-<span data-go-line="floor">if y &gt; floor { y, vy = floor, 0 }</span></pre>
+<span data-go-line="floor">if y &gt; floor { y = floor; vy = -vy * 0.45 }</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>

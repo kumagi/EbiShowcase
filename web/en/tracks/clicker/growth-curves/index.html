@@ -35,9 +35,9 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>Exponential cost</h3><p><code>math.Pow(1.18, n)</code> raises 1.18 to the power n. At n=0 the cost is 10; at n=5 roughly 23; at n=20 roughly 270. The curve starts gentle and becomes steep, keeping every purchase meaningful.</p><code>10 * math.Pow(1.18, float64(g.labs))</code></article>
+        <article><span class="concept-number">1</span><h3>Exponential cost</h3><p><code>math.Pow(a, n)</code> means multiply a by itself n times (2³ = 8). <code>float64(g.labs)</code> only converts an int so Pow can accept it. Cost is gentle early, steep later.</p><code>10 * math.Pow(1.18, float64(g.labs))</code></article>
         <article><span class="concept-number">2</span><h3>Quadratic production rate</h3><p>Production is <code>labs × labs × 8</code> energy per second. Doubling your lab count quadruples output. That super-linear scaling is what makes mid-game purchases feel powerful and keeps players motivated to buy more.</p><code>float64(g.labs*g.labs) * 8</code></article>
-        <article><span class="concept-number">3</span><h3>K / M / B number format</h3><p>Raw floats like 1234567.89 overflow any display. The <code>short()</code> helper rounds and appends a suffix — K for thousands, M for millions, B for billions — so every number fits in a compact label.</p><code>fmt.Sprintf("%.2fM", v/1e6)</code></article>
+        <article><span class="concept-number">3</span><h3>K / M / B number format</h3><p><code>1e6</code> is scientific notation for 1,000,000; <code>1e9</code> is a billion. In <code>fmt.Sprintf("%.2fM", v)</code>, <code>%.2f</code> means “two digits after the decimal,” and M marks millions.</p><code>fmt.Sprintf("%.2fM", v/1e6)</code></article>
       </div>
 
       <div class="motion-lab" data-lab="cost" data-base="10" data-growth="1.18" aria-labelledby="cost-lab-title">

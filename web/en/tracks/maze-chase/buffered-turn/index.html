@@ -62,15 +62,15 @@
     queued = dir
 }
 if reachedTileCenter {
-    if passable(tile.add(queued)) {
+    if passable(add(tile, queued)) {
         current = queued
-    } else if !passable(tile.add(current)) {
+    } else if !passable(add(tile, current)) {
         return // stop at the center
     }
-    target = tile.add(current)
+    target = add(tile, current)
 }</code></pre></div>
 
-      <div class="why-grid"><article><h3>Why does this feel better?</h3><p>The player need not hit one exact frame; the game waits briefly for their intention to become legal.</p></article><article><h3>When does the queue expire?</h3><p>This game keeps it until success. Other games use a short timer to tune the feel.</p></article><article><h3>Challenge</h3><p>Expire the queue after ten frames and compare it with the persistent version.</p></article></div>
+      <div class="why-grid"><article><p class="eyebrow">WHY BUFFER?</p><h3>Why does this feel better?</h3><p>The player need not hit one exact frame; the game waits briefly for their intention to become legal. <code>add(tile, queued)</code> adds a direction (e.g. right = +1 on x) to the tile to get the next cell.</p></article><article><p class="eyebrow">WHEN TO CLEAR?</p><h3>When does the queue expire?</h3><p>This game keeps it until success. Other games use a short timer to tune the feel.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Challenge</h3><p>Expire the queue after ten frames and compare it with the persistent version.</p></article></div>
     </section>
 
     <nav class="lesson-pager"><a href="../tile-runner/">← STEP 01<strong>Run the Maze</strong></a><a href="../pellet-map/">STEP 03 →<strong>Pellet Maze</strong></a></nav>

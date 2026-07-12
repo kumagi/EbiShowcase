@@ -51,8 +51,8 @@
         <article>
           <span class="concept-number">1</span>
           <h3>Hitstop</h3>
-          <p>On hit, early-return from Update for a few frames. A background tint makes the freeze visible.</p>
-          <code>if hitstop > 0 { hitstop--; return nil }</code>
+          <p>Freeze motion for a few frames on hit — but read input first into <code>bufAttack</code> so presses during the freeze still start the next attack.</p>
+          <code>if start { bufAttack = true }</code>
         </article>
         <article>
           <span class="concept-number">2</span>
@@ -112,13 +112,21 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>Set all three<br>on the hit frame</h3>
-          <p>On the active attack frame, check range. On a hit, set stop, stun, and velocity together.</p>
+          <p>On the active attack frame, set hitstop, stun, and knockback. Still sample input during hitstop into bufAttack, then return — only simulation freezes.</p>
         </div>
-        <pre><code><span>if</span> g.attack == 12 &amp;&amp; g.p2-g.p1 &lt; 115 {
+        <pre><code><span>if</span> start { g.bufAttack = true }
+<span>if</span> g.hitstop &gt; 0 {
+    g.hitstop--
+    <span>return</span> nil <i>// freeze motion; input already saved</i>
+}
+<span>if</span> g.bufAttack &amp;&amp; g.attack == 0 {
+    g.attack = 20
+    g.bufAttack = false
+}
+<span>if</span> g.attack == 12 &amp;&amp; g.p2-g.p1 &lt; 115 {
     g.hitstop = 8
     g.stun = 25
     g.v2 = 7
-    g.hits++
 }</code></pre>
       </div>
 
@@ -136,7 +144,7 @@
         <article class="challenge">
           <p class="eyebrow">YOUR FIRST TUNING</p>
           <h3>Tweak the three numbers</h3>
-          <p>hitstop, stun, and v2 alone turn a light poke into a heavy blow.</p>
+          <p>Tweak hitstop, stun, and v2. Also compare with/without buffering presses during hitstop — dropping them feels sticky.</p>
         </article>
       </div>
     </section>

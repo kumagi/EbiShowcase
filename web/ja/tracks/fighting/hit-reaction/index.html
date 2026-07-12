@@ -51,8 +51,8 @@
         <article>
           <span class="concept-number">1</span>
           <h3>ヒットストップ</h3>
-          <p>当たった瞬間、数フレームだけ Update を早期 return します。背景色を変えると「止まった」が目にもわかります。</p>
-          <code>if hitstop > 0 { hitstop--; return nil }</code>
+          <p>当たった瞬間だけ位置やタイマーを止めます。入力は先に読んで <code>bufAttack</code> に覚え、ストップ解除後に攻撃へ使います。</p>
+          <code>if start { bufAttack = true }</code>
         </article>
         <article>
           <span class="concept-number">2</span>
@@ -112,13 +112,21 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>当たったフレームで<br>3つを一気にセット</h3>
-          <p>攻撃のアクティブフレームで距離を見て、ヒットならストップ・スタン・速度を入れます。</p>
+          <p>攻撃のアクティブフレームで距離を見て、ヒットならストップ・スタン・速度を入れます。ヒットストップ中も入力は読み、<code>bufAttack</code> に残してから <code>return</code> します。</p>
         </div>
-        <pre><code><span>if</span> g.attack == 12 &amp;&amp; g.p2-g.p1 &lt; 115 {
+        <pre><code><span>if</span> start { g.bufAttack = true }
+<span>if</span> g.hitstop &gt; 0 {
+    g.hitstop--
+    <span>return</span> nil <i>// 動きだけ止める。入力は上で保存済み</i>
+}
+<span>if</span> g.bufAttack &amp;&amp; g.attack == 0 {
+    g.attack = 20
+    g.bufAttack = false
+}
+<span>if</span> g.attack == 12 &amp;&amp; g.p2-g.p1 &lt; 115 {
     g.hitstop = 8
     g.stun = 25
     g.v2 = 7
-    g.hits++
 }</code></pre>
       </div>
 
@@ -136,7 +144,7 @@
         <article class="challenge">
           <p class="eyebrow">YOUR FIRST TUNING</p>
           <h3>3つの数字をいじろう</h3>
-          <p>hitstop・stun・v2 を変えるだけで、軽いパンチにも重い一撃にもなります。</p>
+          <p>hitstop・stun・v2 を変えてみよう。ストップ中の入力を捨てると操作がもたつくので、バッファの有無も比べてみよう。</p>
         </article>
       </div>
     </section>

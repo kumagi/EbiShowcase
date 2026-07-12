@@ -1143,7 +1143,16 @@ document.querySelectorAll(".motion-lab[data-lab='gravity']").forEach((lab) => {
     setText(vOut, v.toFixed(2));
     if (actor) actor.style.top = `${Math.min(85, (y / 480) * 100)}%`;
   };
-  bind(lab, "[data-lab-step]")?.addEventListener("click", () => { v += g; y += v; if (y > 400) { y = 400; v = 0; } render(); });
+  bind(lab, "[data-lab-step]")?.addEventListener("click", () => {
+    v += g;
+    y += v;
+    if (y > 400) {
+      y = 400;
+      v = -v * 0.45;
+      if (Math.abs(v) < 0.8) v = 0;
+    }
+    render();
+  });
   bind(lab, "[data-lab-reset]")?.addEventListener("click", () => { y = 40; v = 0; render(); });
   render();
 });
@@ -1877,7 +1886,38 @@ document.querySelectorAll(".motion-lab[data-lab='card-play']").forEach((lab) => 
   render();
 });
 
-document.querySelectorAll(".motion-lab[data-lab='energy-turn']").forEach((lab) => {
+document.querySelectorAll(".motion-lab[data-lab='friction']").forEach((lab) => {
+  const xOut = bind(lab, "[data-lab-x]");
+  const speedOut = bind(lab, "[data-lab-speed]");
+  const stateOut = bind(lab, "[data-lab-state]");
+  if (!xOut || !speedOut) return;
+  const friction = Number(lab.dataset.friction || 0.92);
+  const stopAt = Number(lab.dataset.stop || 0.35);
+  let x = 40, vx = 8;
+  const moving = lab.dataset.moving || "moving";
+  const stopped = lab.dataset.stopped || "stopped";
+  const render = () => {
+    const speed = Math.abs(vx);
+    setText(xOut, x.toFixed(0));
+    setText(speedOut, speed.toFixed(2));
+    if (stateOut) setText(stateOut, speed < stopAt ? stopped : moving);
+  };
+  bind(lab, "[data-lab-step]")?.addEventListener("click", () => {
+    x += vx;
+    vx *= friction;
+    if (Math.abs(vx) < stopAt) vx = 0;
+    if (x > 220) x = 40;
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    x = 40;
+    vx = 8;
+    render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='energy-turn'], .motion-lab[data-lab='deck-cycle']").forEach((lab) => {
   const energyOut = bind(lab, "[data-lab-energy]");
   const turnOut = bind(lab, "[data-lab-turn]");
   const spentOut = bind(lab, "[data-lab-spent]");

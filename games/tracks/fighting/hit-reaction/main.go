@@ -15,6 +15,7 @@ const width, height = 480, 720
 type game struct {
 	p1, p2, v2                  float64
 	attack, hitstop, stun, hits int
+	bufAttack                   bool
 	clear                       bool
 }
 
@@ -26,17 +27,7 @@ func (g *game) Update() error {
 		}
 		return nil
 	}
-	if g.hitstop > 0 {
-		g.hitstop--
-		return nil
-	}
-	if g.stun > 0 {
-		g.stun--
-		g.p2 += g.v2
-		g.v2 *= .86
-	} else {
-		g.p2 += (290 - g.p2) * .04
-	}
+	// Read input even during hitstop so a press is not lost.
 	left := ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyLeft)
 	right := ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyRight)
 	start := inpututil.IsKeyJustPressed(ebiten.KeySpace) || inpututil.IsKeyJustPressed(ebiten.KeyX) ||
@@ -68,6 +59,20 @@ func (g *game) Update() error {
 			start = true
 		}
 	}
+	if start {
+		g.bufAttack = true
+	}
+	if g.hitstop > 0 {
+		g.hitstop--
+		return nil // freeze motion; attack intent already buffered
+	}
+	if g.stun > 0 {
+		g.stun--
+		g.p2 += g.v2
+		g.v2 *= .86
+	} else {
+		g.p2 += (290 - g.p2) * .04
+	}
 	if left {
 		g.p1 -= 3
 	}
@@ -75,8 +80,9 @@ func (g *game) Update() error {
 		g.p1 += 3
 	}
 	g.p1 = math.Max(30, math.Min(g.p2-40, g.p1))
-	if start && g.attack == 0 {
+	if g.bufAttack && g.attack == 0 {
 		g.attack = 20
+		g.bufAttack = false
 	}
 	if g.attack > 0 {
 		g.attack--
