@@ -2,32 +2,28 @@
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-copy">
-        <p class="eyebrow">TELL EBI BOY</p>
-        <h2 id="feedback-title">Help us grow this page</h2>
-        <p>Tell us what was fun, confusing, or worth adding. A short note is perfect.</p>
-        <div class="feedback-promise"><span>✦</span>Your note helps us improve the lessons.</div>
-      </div>
       <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
         <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/falling-blocks/rotation-kicks/">
           <label class="feedback-field">
-            <span>Page</span>
-            <input name="entry.765794446" value="/en/tracks/falling-blocks/rotation-kicks/" readonly required>
-          </label>
-          <label class="feedback-field">
-            <span>Feedback</span>
-            <textarea name="entry.893595607" rows="5" maxlength="500" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write a short note"></textarea>
-            <small>Up to 500 characters</small>
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
             <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
-            <p class="feedback-status" aria-live="polite">Sent securely to Google Forms.</p>
+            <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
           <input type="hidden" name="pageHistory" value="0">
         </form>
       </div>
     </section>
+
+
 
 
 

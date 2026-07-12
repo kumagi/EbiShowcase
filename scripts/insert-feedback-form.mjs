@@ -34,26 +34,20 @@ function block(lang, pagePath) {
   const pageLabel = escapeHTML(`/${pagePath.replace(/\\/g, "/")}`);
   return `
     <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-copy">
-        <p class="eyebrow">TELL EBI BOY</p>
-        <h2 id="feedback-title">${japanese ? "このページを一緒に育てよう" : "Help us grow this page"}</h2>
-        <p>${japanese ? "わかりにくかったところ、楽しかったところ、追加してほしいことを教えてください。短いひとことでも大歓迎です。" : "Tell us what was fun, confusing, or worth adding. A short note is perfect."}</p>
-        <div class="feedback-promise"><span>✦</span>${japanese ? "送信内容は教材の改善だけに使います。" : "Your note helps us improve the lessons."}</div>
-      </div>
       <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">${japanese ? "ひとことフィードバック" : "Quick feedback"}</h2>
+        </div>
         <form class="feedback-form" action="${responseURL}" method="POST">
+          <input type="hidden" name="entry.${pageEntry}" value="${pageLabel}">
           <label class="feedback-field">
-            <span>${japanese ? "対象ページ" : "Page"}</span>
-            <input name="entry.${pageEntry}" value="${pageLabel}" readonly required>
-          </label>
-          <label class="feedback-field">
-            <span>${japanese ? "フィードバック" : "Feedback"}</span>
-            <textarea name="entry.${feedbackEntry}" rows="5" maxlength="500" required data-sending="${japanese ? "送信中…" : "Sending…"}" data-sent="${japanese ? "送信しました。ありがとうございます！" : "Sent — thank you!"}" data-failed="${japanese ? "送信できませんでした。時間をおいて再試行してください。" : "Could not send. Please try again later."}" placeholder="${japanese ? "短いひとことを入力してください" : "Write a short note"}"></textarea>
-            <small>${japanese ? "500文字以内" : "Up to 500 characters"}</small>
+            <span class="sr-only">${japanese ? "フィードバック" : "Feedback"}</span>
+            <input class="feedback-message" name="entry.${feedbackEntry}" maxlength="200" required data-sending="${japanese ? "送信中…" : "Sending…"}" data-sent="${japanese ? "送信しました。ありがとうございます！" : "Sent — thank you!"}" data-failed="${japanese ? "送信できませんでした。時間をおいて再試行してください。" : "Could not send. Please try again later."}" placeholder="${japanese ? "ひとこと入力…" : "Write one short note…"}">
           </label>
           <div class="feedback-actions">
             <button type="submit" class="feedback-submit">${japanese ? "送信する" : "Send feedback"}<span>→</span></button>
-            <p class="feedback-status" aria-live="polite">${japanese ? "Googleフォームへ安全に送信されます。" : "Sent securely to Google Forms."}</p>
+            <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
           <input type="hidden" name="pageHistory" value="0">

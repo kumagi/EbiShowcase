@@ -1126,12 +1126,12 @@ document.querySelectorAll("pre code").forEach(highlightCode);
 document.querySelectorAll(".feedback-form").forEach((form) => {
   const button = form.querySelector(".feedback-submit");
   const status = form.querySelector(".feedback-status");
-  const textarea = form.querySelector("textarea");
-  if (!button || !status || !textarea) return;
+  const message = form.querySelector(".feedback-message");
+  if (!button || !status || !message) return;
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     button.disabled = true;
-    status.textContent = textarea.dataset.sending || "送信中…";
+    status.textContent = message.dataset.sending || "送信中…";
     status.classList.remove("is-sent");
     try {
       await fetch(form.action, {
@@ -1140,11 +1140,11 @@ document.querySelectorAll(".feedback-form").forEach((form) => {
         mode: "no-cors",
         credentials: "omit",
       });
-      textarea.value = "";
-      status.textContent = textarea.dataset.sent || "送信しました。ありがとうございます！";
+      message.value = "";
+      status.textContent = message.dataset.sent || "送信しました。ありがとうございます！";
       status.classList.add("is-sent");
     } catch {
-      status.textContent = textarea.dataset.failed || "送信できませんでした。時間をおいて再試行してください。";
+      status.textContent = message.dataset.failed || "送信できませんでした。時間をおいて再試行してください。";
     } finally {
       button.disabled = false;
     }

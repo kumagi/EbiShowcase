@@ -392,32 +392,28 @@ func main() {
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-copy">
-        <p class="eyebrow">TELL EBI BOY</p>
-        <h2 id="feedback-title">このページを一緒に育てよう</h2>
-        <p>わかりにくかったところ、楽しかったところ、追加してほしいことを教えてください。短いひとことでも大歓迎です。</p>
-        <div class="feedback-promise"><span>✦</span>送信内容は教材の改善だけに使います。</div>
-      </div>
       <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
         <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/games/bullet-hell/">
           <label class="feedback-field">
-            <span>対象ページ</span>
-            <input name="entry.765794446" value="/ja/games/bullet-hell/" readonly required>
-          </label>
-          <label class="feedback-field">
-            <span>フィードバック</span>
-            <textarea name="entry.893595607" rows="5" maxlength="500" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="短いひとことを入力してください"></textarea>
-            <small>500文字以内</small>
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
             <button type="submit" class="feedback-submit">送信する<span>→</span></button>
-            <p class="feedback-status" aria-live="polite">Googleフォームへ安全に送信されます。</p>
+            <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
           <input type="hidden" name="pageHistory" value="0">
         </form>
       </div>
     </section>
+
+
 
 
 
