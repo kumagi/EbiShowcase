@@ -35,6 +35,13 @@ type game struct {
 	history []snapshot
 	moves   int
 	cleared bool
+
+	// Mid-tile slide: while moving, Update advances progress and ignores new input.
+	moving               bool
+	progress             float64
+	fromPlayer, toPlayer point
+	boxIndex             int // -1 = player only
+	fromBox, toBox       point
 }
 
 // # = 壁, @ = プレイヤー, $ = 箱, . = ゴール
@@ -51,7 +58,7 @@ var level = []string{
 }
 
 func newGame() *game {
-	g := &game{walls: map[point]bool{}}
+	g := &game{walls: map[point]bool{}, boxIndex: -1}
 	for y, row := range level {
 		for x, c := range row {
 			p := point{x, y}
@@ -139,8 +146,21 @@ func (g *game) undo() {
 	}
 }
 
-// 1マス動く（箱があれば押す）
+func (g *game) checkCleared() {
+	g.cleared = true
+	for _, goal := range g.goals {
+		if g.boxAt(goal) < 0 {
+			g.cleared = false
+			return
+		}
+	}
+}
+
+// Start a one-tile slide. Logical tile coords update only when progress reaches 1.
 func (g *game) move(d point) {
+	if g.moving {
+		return
+	}
 	next := point{g.player.x + d.x, g.player.y + d.y}
 	if g.walls[next] {
 		return
@@ -153,23 +173,25 @@ func (g *game) move(d point) {
 			return // 箱の先が壁か別の箱なら押せない
 		}
 		g.save()
-		g.boxes[boxIndex] = beyond
-		g.player = next
+		g.fromPlayer, g.toPlayer = g.player, next
+		g.boxIndex = boxIndex
+		g.fromBox, g.toBox = g.boxes[boxIndex], beyond
+		g.moving = true
+		g.progress = 0
 		g.moves++
-	} else {
-		g.save()
-		g.player = next
-		g.moves++
+		return
 	}
 
-	// すべてのゴールに箱があるか？
-	g.cleared = true
-	for _, goal := range g.goals {
-		if g.boxAt(goal) < 0 {
-			g.cleared = false
-			break
-		}
-	}
+	g.save()
+	g.fromPlayer, g.toPlayer = g.player, next
+	g.boxIndex = -1
+	g.moving = true
+	g.progress = 0
+	g.moves++
+}
+
+func lerp(a, b, t float64) float64 {
+	return a + (b-a)*t
 }
 
 func (g *game) readMove() point {
@@ -214,13 +236,28 @@ func (g *game) Update() error {
 		*g = *newGame()
 		return nil
 	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyZ) || inpututil.IsKeyJustPressed(ebiten.KeyBackspace) {
+	if !g.moving && (inpututil.IsKeyJustPressed(ebiten.KeyZ) || inpututil.IsKeyJustPressed(ebiten.KeyBackspace)) {
 		g.undo()
 		return nil
 	}
 	if g.cleared {
 		if restartPressed() {
 			*g = *newGame()
+		}
+		return nil
+	}
+
+	// While sliding between tiles, advance the tween and ignore move input.
+	if g.moving {
+		g.progress += 0.14
+		if g.progress >= 1 {
+			g.player = g.toPlayer
+			if g.boxIndex >= 0 {
+				g.boxes[g.boxIndex] = g.toBox
+			}
+			g.moving = false
+			g.progress = 0
+			g.checkCleared()
 		}
 		return nil
 	}
@@ -260,19 +297,30 @@ func (g *game) Draw(screen *ebiten.Image) {
 		}
 	}
 
-	for _, b := range g.boxes {
-		px := float32(b.x * tileSize)
-		py := float32(offsetY + b.y*tileSize)
+	for i, b := range g.boxes {
+		bx, by := float64(b.x), float64(b.y)
+		if g.moving && i == g.boxIndex {
+			bx = lerp(float64(g.fromBox.x), float64(g.toBox.x), g.progress)
+			by = lerp(float64(g.fromBox.y), float64(g.toBox.y), g.progress)
+		}
+		px := float32(bx * tileSize)
+		py := float32(float64(offsetY) + by*tileSize)
 		c := color.RGBA{224, 130, 64, 255}
-		if g.isGoal(b) {
+		goalTile := point{int(bx + 0.5), int(by + 0.5)}
+		if g.isGoal(goalTile) {
 			c = color.RGBA{50, 210, 151, 255}
 		}
 		vector.DrawFilledRect(screen, px+7, py+7, tileSize-14, tileSize-14, c, false)
 		vector.StrokeRect(screen, px+12, py+12, tileSize-24, tileSize-24, 3, color.RGBA{255, 234, 190, 210}, false)
 	}
 
-	px := float32(g.player.x*tileSize + tileSize/2)
-	py := float32(offsetY + g.player.y*tileSize + tileSize/2)
+	pxTile, pyTile := float64(g.player.x), float64(g.player.y)
+	if g.moving {
+		pxTile = lerp(float64(g.fromPlayer.x), float64(g.toPlayer.x), g.progress)
+		pyTile = lerp(float64(g.fromPlayer.y), float64(g.toPlayer.y), g.progress)
+	}
+	px := float32(pxTile*tileSize + tileSize/2)
+	py := float32(float64(offsetY) + pyTile*tileSize + tileSize/2)
 	hero.DrawCentered(screen, float64(px), float64(py), float64(tileSize)-4)
 
 	ebitenutil.DebugPrintAt(screen, "SOKOBAN — PUT EVERY BOX ON A GOLD GOAL", 86, 28)

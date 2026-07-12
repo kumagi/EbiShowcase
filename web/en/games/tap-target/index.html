@@ -74,7 +74,7 @@
           <div><p class="eyebrow">BUILD RECIPE</p><h3>From Go code to a game on the web.</h3></div>
           <ol>
             <li><span>01</span><div><strong>WRITE</strong><small>your game main.go</small></div></li>
-            <li><span>02</span><div><strong>BUILD</strong><small>GOOS=js GOARCH=wasm</small></div></li>
+            <li><span>02</span><div><strong>BUILD</strong><small>GOOS=js GOARCH=wasm — switches that translate Go into WebAssembly (a fast program format browsers run)</small></div></li>
             <li><span>03</span><div><strong>SHIP</strong><small>GitHub Pages, etc.</small></div></li>
           </ol>
         </div>
@@ -90,7 +90,7 @@
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>Coordinates</h3><p>Any place on screen is two numbers. The circle center and the tap use the same X and Y.</p><code>circleX, circleY</code></article>
-        <article><span class="concept-number">2</span><h3>Distance</h3><p>The length between two points, from the triangle’s width and height. Comparing squared values avoids a square root.</p><code>hypot(dx, dy)</code></article>
+        <article><span class="concept-number">2</span><h3>Distance</h3><p>Two points make a right triangle. The game calls math.Hypot(dx, dy) for the length. Comparing squares instead is an optional shortcut with the same hit/miss result.</p><code>hypot(dx, dy)</code></article>
         <article><span class="concept-number">3</span><h3>Hit test</h3><p>If distance is less than or equal to the radius, score a hit and move the target.</p><code>dist &lt;= radius</code></article>
       </div>
 
@@ -324,7 +324,7 @@ func main() {
       </div>
 
     <div class="why-grid">
-        <article><p class="eyebrow">WITHOUT THE LOOP</p><h3>Nowhere obvious to put code</h3><p>With Update / Draw roles fixed, you know where input goes and where painting goes.</p></article>
+        <article><p class="eyebrow">WITHOUT THE LOOP</p><h3>Nowhere obvious to put code</h3><p>With Update / Draw roles fixed, you know where input goes and where painting goes. The <code>error</code> return is an Ebitengine rule: return a problem to stop, or <code>nil</code> for “all fine”. Draw does not return error.</p></article>
         <article><p class="eyebrow">WITH COORDINATES</p><h3>One ruler for circle and tap</h3><p>Even when it looks round, the check is center plus radius. The rule stays the same on any screen size.</p></article>
         <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Experiment with numbers</h3><p>Smaller <code>radius</code> makes it harder. Larger <code>framesLeft</code> makes a calmer round. Game design is hunting for values that feel right.</p></article>
       </div>
@@ -354,6 +354,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

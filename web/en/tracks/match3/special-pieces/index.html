@@ -13,17 +13,17 @@
   <section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Special Piece Workshop</h1><p>Find lines of four, lines of five, and L shapes, then transform each into a special piece with a different reach.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Pattern detection and area effects</strong></div></section>
   <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Forge and activate all three special pieces.</h2></div><p>Tap a shape above or press 1, 2, or 3. Use the bottom button or Space to forge, activate, and continue. Earn OK on all three to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Special Piece Workshop" src="../../../../play/special-pieces/" allow="autoplay; fullscreen"></iframe></div></div></section>
   <section class="physics" id="learn">
-    <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / PATTERN TO EFFECT</p><h2>Turn a color's count and shape into a move blueprint.</h2><p class="lesson-lead">A shape harder than an ordinary match of three can earn a reward. First inspect the board and name the pattern. Then build <strong>a set of affected cells</strong>. Keeping those jobs separate makes it easy to add more special pieces later.</p></div>
-    <div class="concept-row">
-      <article><span class="concept-number">1</span><h3>Count horizontally and vertically</h3><p>From one cell, count matching colors in both directions. Five can make a color wave, while four can make a row rocket.</p><code>if horizontal &gt;= 5 { kind = ColorWave }</code></article>
-      <article><span class="concept-number">2</span><h3>Check intersections first</h3><p>If both directions reach three, the pieces form a bent L or T. Test this before a line of four or you may mistake the bend for a plain line.</p><code>if horizontal &gt;= 3 &amp;&amp; vertical &gt;= 3</code></article>
-      <article><span class="concept-number">3</span><h3>Collect an effect set</h3><p>Add a whole row, one color, or a 3-by-3 area to a map. A cell reached twice still appears only once.</p><code>affected[point{x, y}] = true</code></article>
-    </div>
-    <div class="motion-lab" data-lab="match-scan" data-found="marked effect cells" data-none="none" data-cleared="batch cleared" aria-labelledby="lab-title-special-pieces">
+    <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DETECT → KIND → EFFECT</p><h2>Specials are two functions: shape detect, then blast set.</h2><p class="lesson-lead">Special pieces are not magic. <strong>1) Read a shape</strong> (4-run, 5-run, L/T), <strong>2) Return the cells that kind clears</strong>. Effects differ only in how the set is built; the final clear path matches a normal match.</p></div>
+<div class="concept-row">
+<article><span class="concept-number">1</span><h3>Detect longest shapes first</h3><p>Count same-color runs. 5 across → color wave, 4 → row rocket. L/T means both axes ≥3 — check <strong>before</strong> plain lines.</p><code>if h&gt;=3 &amp;&amp; v&gt;=3 { kind = AreaBomb }</code></article>
+<article><span class="concept-number">2</span><h3>Store kind on a cell</h3><p>Write the special at the shape center. Icons are just a switch on kind while drawing.</p><code>board[y][x] = special(kind)</code></article>
+<article><span class="concept-number">3</span><h3>Effects return a Set</h3><p>Rocket = same row, color wave = every matching color, area bomb = 3×3. Clear that set in one pass.</p><code>for p := range effect(kind, at)</code></article>
+</div>
+<div class="motion-lab" data-lab="match-scan" data-found="marked effect cells" data-none="none" data-cleared="batch cleared" aria-labelledby="lab-title-special-pieces">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / MARK SPECIALS</p>
 <h3 id="lab-title-special-pieces">Build the clear-set first</h3>
-<p>Specials still start as a set of cells to clear. Scan marks the set; then one clear pass handles bombs and lines alike.</p>
+<p>Pick a recipe (4 / 5 / L), gather the affected set, then clear. Bombs and lines share the same clear(Set) pipe.</p>
 <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan data-go-focus="scan">Collect affected cells</button><button type="button" class="lab-button" data-lab-clear data-go-focus="clear">Clear the set</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Different FX, one clear pipeline keeps edge cases tame.</p>
 </div>
@@ -38,21 +38,20 @@
 <span data-go-line="fall">compactColumns()</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</div><div class="formula"><p class="eyebrow">SET THEN CLEAR</p><div class="formula-lines"><code>add cells to a Set</code><span>then</span><code>clear the whole Set</code></div><p>New specials only change how the Set is filled.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Separate detection from effects</h3><p><code>detectSpecial</code> says what was made. <code>activate</code> reads that kind and decides where it reaches. Avoid hiding both jobs in one long conditional.</p></div><pre><code>kind, center, ok := detectSpecial(board)
-if ok {
-    special.kind = kind
-    special.pos = center
-}
+</div><div class="formula"><p class="eyebrow">DETECT THEN BLAST</p><div class="formula-lines"><code>kind := detectShape(run)</code><span>then</span><code>clear(effectCells(kind))</code></div><p>Keep shape detection and range math out of one giant if — that is how you grow the special roster.</p></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Split detectSpecial and effectCells</h3><p>The demo picks a recipe, forges, then activates. Separating “create” from “clear” lets cascades reuse the same effectCells when another special is caught in the blast.</p></div><pre><code>kind, at, ok := detectSpecial(board)
+if !ok { return }
+specials[at] = kind
 
-for p := range effectCells(special) {
-    board[p.y][p.x] = Empty
+// on activate
+for p := range effectCells(kind, at, board) {
+    board[p.y][p.x] = empty
 }</code></pre></div>
-    <div class="why-grid">
-      <article><p class="eyebrow">WHY ORDER?</p><h3>Test special shapes first</h3><p>An L contains a short straight line. Checking the shape with more conditions first awards the correct reward.</p></article>
-      <article><p class="eyebrow">WHY A SET?</p><h3>Make overlaps safe</h3><p>If a rocket and bomb both reach one cell, a map prevents clearing or scoring that cell twice.</p></article>
-      <article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Chain special pieces</h3><p>When an effect reaches another special piece, add its effect to a waiting queue.</p></article>
-    </div>
-  </section>
+<div class="why-grid">
+<article><p class="eyebrow">WHY ORDER?</p><h3>L before straight</h3><p>An L arm is also a 3-run; detecting lines first drops the bent shape.</p></article>
+<article><p class="eyebrow">WHY A SET?</p><h3>Overlap once</h3><p>Row clear and bomb may share a cell; a map clears and scores it once.</p></article>
+<article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Combine specials</h3><p>If the blast set hits another special, enqueue that kind's effectCells too.</p></article>
+</div></section>
   <nav class="lesson-pager"><a href="../cascade/">← STEP 04<strong>Cascade Reactions</strong></a><a href="../ebi-match/">STEP 06 →<strong>Ebi Match</strong></a></nav>
 
 
@@ -77,6 +76,8 @@ for p := range effectCells(special) {
         </form>
       </div>
     </section>
+
+
 
 
 

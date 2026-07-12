@@ -43,7 +43,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / COMPOSE</p>
         <h2>What is a spell<br>made of?</h2>
-        <p class="lesson-lead">Fire = flame sprites rising with additive blending. Water = droplet sprites falling under gravity with alpha. Lightning = bolt sprites for a few frames + a flash + sparks. Same tools; change the texture, direction, color, blend, and lifetime for wildly different spells. (The on-screen character is original Ebi Tenjiroh; hit tests stay simple shapes.)</p>
+        <p class="lesson-lead">Fire = flame sprites rising with additive blending. Water = droplet sprites falling under gravity with alpha. Lightning = bolt sprites for a few frames + a flash + sparks. Same tools; change the texture, direction, color, blend, and lifetime for wildly different spells. (The on-screen character is original Ebi Tenjiroh; hit tests stay simple shapes.) <strong>ColorScale</strong> multiplies sprite color. <strong>BlendLighter</strong> adds light so fire glows into the background.</p>
       </div>
 
       <div class="concept-row">
@@ -93,14 +93,22 @@
           <h3>Three spells, one grammar</h3>
           <p>Switch blend, color, and gravity to tell fire, water, and lightning apart.</p>
         </div>
-        <pre><code>// 炎: 加算 + 上向き + オレンジ
+        <pre><code>// DrawImageOptions(op) = how to draw
+// ColorScale multiplies sprite tint; BlendLighter adds light (brighter mix)
 op.Blend = ebiten.BlendLighter
 op.ColorScale.ScaleWithColor(fire)
-// 水: 半透明 + 重力
+
+// water: alpha + gravity down
 op.ColorScale.ScaleAlpha(0.7)
 p.vy += 0.22
-// 雷: 明るい線を数フレームだけ
-vector.StrokeLine(screen, ax, ay, bx, by, 5, white, false)</code></pre>
+
+// thunder: short-lived bolt sprites walking down with random x jitter
+y, x := top, center
+for y &lt; ground {
+    bolts = append(bolts, Bolt{X: x, Y: y, Life: 16})
+    y += 30
+    x += rand(-25, 25) // zigzag
+}</code></pre>
       </div>
 
       <div class="why-grid">
@@ -126,7 +134,31 @@ vector.StrokeLine(screen, ax, ay, bx, by, 5, white, false)</code></pre>
       <a href="../vfx-particles/">← STEP 07<strong>Scatter Particles</strong></a>
       <a href="../vfx-magic-fire/">STEP 09 →<strong>Make Cool Fire Magic</strong></a>
     </nav>
-  </main>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-spells/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+</main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
   <script>

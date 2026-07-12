@@ -3,7 +3,7 @@
 <p class="eyebrow">TRY IT / RESOLVE</p>
 <h3 id="lab-title-play-a-card">Play cards to change numbers</h3>
 <p>Attack, block, and heal look different but share one path: pay cost, branch on Kind. Not enough energy? The card won’t play. End turn: foe hits, energy refills.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-card data-go-focus="cost pay fx"="damage">Strike 2⚡</button><button type="button" class="lab-button" data-lab-card data-go-focus="cost pay fx"="block">Guard 1⚡</button><button type="button" class="lab-button" data-lab-card data-go-focus="cost pay fx"="heal">Heal 2⚡</button><button type="button" class="lab-button" data-lab-end>End turn</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-card="damage" data-go-focus="cost pay fx">Strike 2⚡</button><button type="button" class="lab-button" data-lab-card="block" data-go-focus="cost pay fx">Guard 1⚡</button><button type="button" class="lab-button" data-lab-card="heal" data-go-focus="cost pay fx">Heal 2⚡</button><button type="button" class="lab-button" data-lab-end>End turn</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">The WASM game resolves with the same switch on card.Kind.</p>
 </div>
 <div class="lab-visual">
@@ -41,6 +41,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -43,7 +43,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / COMPOSE</p>
         <h2>魔法は<br>何でできている？</h2>
-        <p class="lesson-lead">炎＝炎のスプライトを加算合成で上へ。水＝水滴スプライトを半透明＋重力で落とす。雷＝稲妻スプライトを数フレームだけ＋閃光＋粒。同じ道具でも、画像・向き・色・合成・寿命を変えるだけで、まったく違う魔法になります。（画面のキャラクターはオリジナルの海老・天次郎。当たり判定はいつも通り簡単な形です。）</p>
+        <p class="lesson-lead">炎＝炎のスプライトを加算合成で上へ。水＝水滴スプライトを半透明＋重力で落とす。雷＝稲妻スプライトを数フレームだけ＋閃光＋粒。同じ道具でも、画像・向き・色・合成・寿命を変えるだけで、まったく違う魔法になります。<strong>ColorScale</strong>はスプライトの色に掛け算するつまみ。<strong>BlendLighter（加算合成）</strong>は「色を足すと明るくなる」光の混色で、炎が背景に溶ける感じを出します。（画面のキャラクターはオリジナルの海老・天次郎。当たり判定はいつも通り簡単な形です。）</p>
       </div>
 
       <div class="concept-row">
@@ -93,14 +93,23 @@
           <h3>同じ文法で3つの魔法</h3>
           <p>合成・色・重力を切り替えるだけで、炎・水・雷を作り分けます。</p>
         </div>
-        <pre><code>// 炎: 加算 + 上向き + オレンジ
+        <pre><code>// DrawImageOptions(op) = 「どう描くか」の設定袋
+// ColorScale = 画像の色に掛け算（炎ならオレンジを掛ける）
+// BlendLighter = 加算合成。色を足すと明るくなる（光の混色）
 op.Blend = ebiten.BlendLighter
 op.ColorScale.ScaleWithColor(fire)
-// 水: 半透明 + 重力
+
+// 水: 半透明 + 下向き重力
 op.ColorScale.ScaleAlpha(0.7)
 p.vy += 0.22
-// 雷: 明るい線を数フレームだけ
-vector.StrokeLine(screen, ax, ay, bx, by, 5, white, false)</code></pre>
+
+// 雷: 上から下へ、左右にランダムにずらした稲妻スプライトを短寿命で並べる
+y, x := top, center
+for y &lt; ground {
+    bolts = append(bolts, Bolt{X: x, Y: y, Life: 16})
+    y += 30
+    x += rand(-25, 25) // ここでジグザグになる
+}</code></pre>
       </div>
 
       <div class="why-grid">
@@ -126,7 +135,31 @@ vector.StrokeLine(screen, ax, ay, bx, by, 5, white, false)</code></pre>
       <a href="../vfx-particles/">← STEP 07<strong>粒をばらまく（パーティクル）</strong></a>
       <a href="../vfx-magic-fire/">STEP 09 →<strong>かっこいい炎魔法を作ろう</strong></a>
     </nav>
-  </main>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-spells/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+</main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
   <script>

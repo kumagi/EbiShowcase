@@ -16,7 +16,7 @@
   <main id="top"><div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>LEVEL 04</span></div>
     <div class="overview-concept" style="margin:18px max(24px,7vw)"><small>このゲームで学ぶこと</small><strong>速度と加速度</strong></div>
     <section class="hero">
-      <div class="hero-copy"><p class="eyebrow">LEVEL 04 / ACCELERATION IN MOTION</p><h1>Goで、<br><em>主人公が落ちる。</em></h1><p class="lead">Update の中で速度を少しずつ変えると、ジャンプが自然な弧になります。見た目はオリジナル主人公の 海老・天次郎、当たり判定は円です。ゲームループは LEVEL 01 で学んだはず。ここでは加速度に集中します。</p><a class="cta" href="#play">今すぐプレイ <b>↓</b></a></div>
+      <div class="hero-copy"><p class="eyebrow">LEVEL 04 / ACCELERATION IN MOTION</p><h1>Goで、<br><em>主人公が落ちる。</em></h1><p class="lead">Update の中で速度を少しずつ変えると、ジャンプが自然な弧になります。見た目はオリジナル主人公の 海老・天次郎。当たり判定は「円に見える箱」＝上下左右の範囲チェック（AABB）です。ゲームループは LEVEL 01 で学んだはず。ここでは加速度に集中します。</p><a class="cta" href="#play">今すぐプレイ <b>↓</b></a></div>
       <div class="code-card" aria-hidden="true"><div class="dots">● ● ●</div><pre><span>func</span> (g *Game) Update() error {
   <i>// every frame, keep it simple.</i>
   g.bird.velocity += gravity
@@ -53,7 +53,7 @@
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p>
           <h3 id="motion-lab-title">1コマずつ動かしてみよう</h3>
-          <p>ゲームはパラパラ漫画のように、少しずつ計算して描き直します。ボタンを押すたび、重力が速度へ足され、その速度だけ主人公の位置が変わります。見た目は 海老・天次郎、当たりは円です。</p>
+          <p>ゲームはパラパラ漫画のように、少しずつ計算して描き直します。ボタンを押すたび、重力が速度へ足され、その速度だけ主人公の位置が変わります。見た目は 海老・天次郎。当たりは円ではなく、主人公と足場の四角い範囲が重なるかのチェックです。</p>
           <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap data-go-focus="flap grav pos" data-go-caption="上昇の初速を入れる → 加速度を足す → 速度を位置へ足す">はばたく</button><button type="button" class="lab-button" data-lab-step data-go-focus="grav pos" data-go-caption="加速度を足す → 速度を位置へ足す">1フレーム進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button></div>
           <p class="lab-hint">「はばたく」は、上向きの速度 <code>-7.4</code> をセットしてから1フレーム進めます。</p>
         </div>
@@ -69,7 +69,9 @@
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>
-      <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>速度 = 速度 + 重力</code><span>つぎに</span><code>位置 = 位置 + 速度</code></div><p>順番が大切です。まず重力で速度を変え、次にその速度で位置を変えます。毎フレームくり返すだけで、自然なジャンプの曲線が生まれます。</p></div>
+      <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>速度 = 速度 + 重力</code><span>つぎに</span><code>位置 = 位置 + 速度</code></div><p>順番が大切です。まず重力で速度を変え、次にその速度で位置を変えます。毎フレームくり返すだけで、自然なジャンプの曲線が生まれます。</p>
+      <p>スタート前のふわふわは <code>math.Sin(...)</code> を使っています。中学ではまだ習わない三角関数ですが、「波の高さの表」だと思ってください。フレームが進むと高さがゆらゆら変わり、待機中の上下動になります。必須ではありません。定数の上下でも遊びは成立します。</p>
+      <p>パイプとの当たりは距離（円）ではなく、<strong>Xが重なり、かつYが穴の外</strong>ならヒット、という四角形どうしの判定です。見た目が丸くても、まずは箱判定で十分なことが多いです。</p></div>
       <div class="code-lesson">
         <div><p class="eyebrow">IN THE REAL GAME</p><h3>Ebitengineでは<br><code>Update</code>に書く</h3><p><code>Update</code>はゲームの状態を進める場所です。入力を調べ、速度を変え、位置を動かします。<code>Draw</code>は計算後の位置に主人公を描きます。</p></div>
         <pre><code><span>const</span> gravity = 0.42
@@ -378,6 +380,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

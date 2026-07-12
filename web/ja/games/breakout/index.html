@@ -71,7 +71,7 @@
       <div class="formula">
         <p class="eyebrow">THE GRID RECIPE</p>
         <div class="formula-lines"><code>for row := 0; row &lt; 6; row++</code><span>内側</span><code>for col := 0; col &lt; 8; col++</code></div>
-        <p>位置は <code>x = 原点 + col * 幅</code>、<code>y = 原点 + row * 高さ</code>。表計算のセルと同じ考え方です。</p>
+        <p>位置は <code>x = 22 + col * 56</code>、<code>y = 90 + row * 32</code>。ここで <code>22</code>/<code>90</code> は左上の原点、<code>56</code> はブロック幅＋隙間、<code>32</code> は高さ＋隙間です。表計算のセルと同じ考え方です。</p>
       </div>
 
       <div class="code-lesson">
@@ -79,6 +79,7 @@
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>ループの中で衝突を見る</h3>
           <p>ボールを動かしたあと、全ブロックを順に調べます。当たったら壊して反射し、そのフレームはそこで打ち切ります。</p>
+          <p>このレッスンでは反射を簡単にするため、当たったらいつも <code>ballVY = -ballVY</code>（上下反転）だけにしています。横から当たったときも同じなので物理的には雑ですが、ブロック崩しの入門ではよく使う割り切りです。面のどちらに当たったかで vx / vy を選び分けるのは、あとのチャレンジ向きです。</p>
         </div>
         <pre><code><span>for</span> i := range g.bricks {
     b := &amp;g.bricks[i]
@@ -337,6 +338,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

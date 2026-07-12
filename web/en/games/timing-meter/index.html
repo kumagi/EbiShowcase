@@ -75,6 +75,7 @@
         <p class="eyebrow">THE TWO-MODE RULE</p>
         <div class="formula-lines"><code>moving: marker += speed</code><span>stopped</span><code>distance = |marker - center|</code></div>
         <p>The same button means different things in different states: stop while moving, start the next round while stopped. That is the doorway to state machines.</p>
+      <p><code>math.Abs</code> turns a signed gap into “how far from center”. <code>%</code> means remainder (not percent): <code>round%2==1</code> is an odd round. <code>float64(g.round)</code> converts int→float because Go will not multiply mixed types.</p>
       </div>
 
       <div class="code-lesson">
@@ -282,6 +283,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -74,9 +74,10 @@
           <div><p class="eyebrow">BUILD RECIPE</p><h3>Goのコードが、Webのゲームになるまで。</h3></div>
           <ol>
             <li><span>01</span><div><strong>WRITE</strong><small>games の main.go</small></div></li>
-            <li><span>02</span><div><strong>BUILD</strong><small>GOOS=js GOARCH=wasm</small></div></li>
+            <li><span>02</span><div><strong>BUILD</strong><small>GOOS=js GOARCH=wasm — Goをブラウザ用のWebAssemblyへ翻訳するスイッチ（JS=ブラウザ、WASM=その中の速いプログラム形式）</small></div></li>
             <li><span>03</span><div><strong>SHIP</strong><small>GitHub Pages など</small></div></li>
           </ol>
+          <p class="lesson-lead" style="margin-top:16px;max-width:42rem">このサイトではビルド済みゲームが埋め込まれているので、今は遊んで読むだけで大丈夫。自分のPCで動かすときだけ上のコマンドが必要です。</p>
         </div>
       </details>
     </section>
@@ -90,7 +91,7 @@
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>座標</h3><p>画面のどこかを、2つの数で表します。丸の中心も、タッチした場所も、同じ X と Y で書けます。</p><code>circleX, circleY</code></article>
-        <article><span class="concept-number">2</span><h3>距離</h3><p>2点のあいだの長さです。直角三角形のたてとよこから求めます。平方根を使わない近道として、二乗のまま比べても同じです。</p><code>hypot(dx, dy)</code></article>
+        <article><span class="concept-number">2</span><h3>距離</h3><p>2点のあいだの長さです。ゲーム本体は読みやすい <code>math.Hypot(dx, dy)</code>（たて・よこの差から距離を出す関数）を使います。同じ判定を二乗のまま書く近道もあり、結果は同じです。</p><code>math.Hypot(dx, dy)</code></article>
         <article><span class="concept-number">3</span><h3>当たり判定</h3><p>距離が半径以下ならヒット。得点して、次の丸を別の場所へ移します。</p><code>dist &lt;= radius</code></article>
       </div>
 
@@ -132,14 +133,14 @@
       <div class="formula">
         <p class="eyebrow">THE ONE-LINE RULE</p>
         <div class="formula-lines"><code>dx = touchX - circleX</code><span>そして</span><code>dy = touchY - circleY</code></div>
-        <p>あとは <code>dx*dx + dy*dy</code> が <code>radius*radius</code> より小さければヒット。平方根を毎回計算しなくても、二乗どうしなら同じ結果になります。</p>
+        <p>本体のコードは <code>dist := math.Hypot(dx, dy)</code> のあと <code>dist &lt;= radius</code> です。同じことを <code>dx*dx+dy*dy &lt;= radius*radius</code> と二乗のまま比べても結果は同じ（平方根を省略する近道）。まずは Hypot で「距離 ≤ 半径」と覚えましょう。</p>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>判定は<br><code>Update</code>に書く</h3>
-          <p>押された瞬間だけ座標を読み、距離を調べます。<code>Draw</code>は丸とスコアを描くだけ。さっき学んだ「計算と描画の分け方」そのものです。</p>
+          <p>押された瞬間だけ座標を読み、距離を調べます。<code>Update() error</code> の <code>error</code> は Ebitengine の決まりで、「止める理由があればエラーを返す」。普通は問題ないので <code>return nil</code>（何も問題なし）です。<code>Draw</code> は絵だけなので error を返しません。</p>
         </div>
         <pre><code><span>func</span> (g *game) Update() error {
     px, py, pressed := pressedPosition()
@@ -353,6 +354,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

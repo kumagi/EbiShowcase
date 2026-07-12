@@ -78,7 +78,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>Test collisions inside the loop</h3>
-          <p>After moving the ball, walk every brick. On a hit, destroy it, reverse vy, and stop for that frame.</p>
+          <p>After moving the ball, walk every brick. On a hit, destroy it, reverse vy, and stop for that frame. This lesson always flips ballVY on any brick hit — a common intro simplification; side-aware bounce is a later challenge.</p>
         </div>
         <pre><code><span>for</span> i := range g.bricks {
     b := &amp;g.bricks[i]
@@ -338,6 +338,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

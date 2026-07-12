@@ -1,7 +1,42 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>十字に伸びる爆風 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/bomb-maze/cross-blast/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 爆弾迷路アクション</a><span>STEP 02 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">1マスずつ調べて十字を作る</p><h1>十字に伸びる爆風</h1><p>爆弾の中心から上下左右へ進み、次のマスが爆風に入るかを順番に決めます。射程まで進むか、固い壁に出会った方向はそこで止まります。</p><div class="lesson-meta"><span>★★★☆☆</span><strong>PLAYABLE</strong></div></div></section>
-<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>爆風をねらってビーコンを6個消そう</h2><p>矢印／WASDで移動、SpaceまたはXで爆弾を置きます。クリックとタッチは画面下のボタンを使います。細い枠が爆風予定セルです。置いたら爆風の外へ逃げましょう。</p></div><div class="game-frame"><iframe src="../../../../play/cross-blast/" title="十字に伸びる爆風ゲーム"></iframe></div></section>
-<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>4本の「マスを調べる光線」を伸ばす</h2><p>大きな十字の画像を当てるのではありません。上下左右それぞれに、中心から1マス、2マス、3マスと調べます。こうすると壁の手前だけを爆風セルにできます。</p><div class="concept-row"><article><b>01</b><h3>中心を追加</h3><p>爆弾があるマスは必ず爆風になるので、最初に結果へ入れます。</p></article><article><b>02</b><h3>4方向を1マスずつ進む</h3><p>方向ベクトルに1、2、3を掛け、中心へ足して次のセルを作ります。</p></article><article><b>03</b><h3>壁か射程で止める</h3><p>固い壁ならその方向のループを<code>break</code>します。ほかの3方向はそのまま続きます。</p></article></div></section>
-<section class="motion-lab" data-lab="cross-blast" data-powered="火力アップ" aria-labelledby="lab-title-cross-blast">
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>十字に伸びる爆風 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/bomb-maze/cross-blast/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 爆弾迷路アクション</a><span>STEP 02 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>十字に伸びる爆風</h1>
+      <p>爆弾の中心から上下左右へ進み、次のマスが爆風に入るかを順番に決めます。射程まで進むか、固い壁に出会った方向はそこで止まります。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>1マスずつ調べて十字を作る</strong></div>
+      <p class="cast-note">動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
+    </section>
+    <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>爆風をねらってビーコンを6個消そう</h2></div><p>矢印／WASDで移動、SpaceまたはXで爆弾を置きます。クリックとタッチは画面下のボタンを使います。細い枠が爆風予定セルです。置いたら爆風の外へ逃げましょう。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="十字に伸びる爆風ゲーム" src="../../../../play/cross-blast/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE</p>
+        <h2>4本の「マスを調べる光線」を伸ばす</h2>
+        <p class="lesson-lead">大きな十字の画像を当てるのではありません。上下左右それぞれに、中心から1マス、2マス、3マスと調べます。こうすると壁の手前だけを爆風セルにできます。</p>
+      </div>
+
+      <div class="concept-row">
+<article><span class="concept-number">1</span><h3>中心を追加</h3><p>爆弾があるマスは必ず爆風になるので、最初に結果へ入れます。</p></article><article><span class="concept-number">2</span><h3>4方向を1マスずつ進む</h3><p>方向ベクトルに1、2、3を掛け、中心へ足して次のセルを作ります。</p></article><article><span class="concept-number">3</span><h3>壁か射程で止める</h3><p>固い壁ならその方向のループを<code>break</code>します。ほかの3方向はそのまま続きます。</p></article>
+</div>
+
+      <div class="motion-lab" data-lab="cross-blast" data-powered="火力アップ" aria-labelledby="lab-title-cross-blast">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / CROSS ARMS</p>
 <h3 id="lab-title-cross-blast">火力ぶんだけ十字に伸ばす</h3>
@@ -19,7 +54,11 @@
 <span data-go-line="stop">if wall { break } ; light(cell)</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</section><div class="formula"><p class="eyebrow">FOUR LOOPS</p><div class="formula-lines"><code>for each dir in NESW</code><span>つぎに</span><code>walk until wall or power</code></div><p>円形ではなく、グリッドの十字が爆弾の定石です。</p></div><p>円形ではなく、グリッドの十字が爆弾の定石です。</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>方向と距離の二重ループにする</h2><p><code>break</code>が止めるのは内側の距離ループだけです。そのため右が壁で止まっても、次の上・下・左は調べられます。</p></div><pre><code>cells := []point{center}
+</div>
+
+      <div class="formula"><p class="eyebrow">FOUR LOOPS</p><div class="formula-lines"><code>for each dir in NESW</code><span>つぎに</span><code>walk until wall or power</code></div><p>円形ではなく、グリッドの十字が爆弾の定石です。</p></div>
+
+      <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>方向と距離の二重ループにする</h3><p><code>break</code>が止めるのは内側の距離ループだけです。そのため右が壁で止まっても、次の上・下・左は調べられます。</p></div><pre><code>cells := []point{center}
 for _, direction := range rays {
     for step := 1; step &lt;= blastRange; step++ {
         next := point{
@@ -31,8 +70,12 @@ for _, direction := range rays {
         }
         cells = append(cells, next)
     }
-}</code></pre></section>
-<section class="why-grid"><article><h3>なぜセルの配列にする？</h3><p>描画、プレイヤーの自爆判定、ビーコンの命中判定が、すべて同じ<code>blast</code>配列を使えるからです。</p></article><article><h3>壁の向こうへ届かない理由</h3><p>壁を見つけた瞬間に追加前で止めます。「壁も爆風に含めるか」は順番を変えるだけで設計できます。</p></article><article><h3>チャレンジ</h3><p>射程を2や4に変え、予定セルの数と逃げる難しさがどう変わるか比べてみよう。</p></article></section><nav class="lesson-pager"><a href="../timed-bomb/">← STEP 01<strong>時限爆弾を置く</strong></a><a href="../breakable-walls/">STEP 03 →<strong>壊れる壁とアイテム</strong></a></nav>
+}</code></pre></div>
+
+      <div class="why-grid"><article><h3>なぜセルの配列にする？</h3><p>描画、プレイヤーの自爆判定、ビーコンの命中判定が、すべて同じ<code>blast</code>配列を使えるからです。</p></article><article><h3>壁の向こうへ届かない理由</h3><p>壁を見つけた瞬間に追加前で止めます。「壁も爆風に含めるか」は順番を変えるだけで設計できます。</p></article><article><h3>チャレンジ</h3><p>射程を2や4に変え、予定セルの数と逃げる難しさがどう変わるか比べてみよう。</p></article></div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../timed-bomb/">← STEP 01<strong>時限爆弾を置く</strong></a><a href="../breakable-walls/">STEP 03 →<strong>壊れる壁とアイテム</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -58,7 +101,8 @@ for _, direction := range rays {
     </section>
 
 
-
-
-
-</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+</body>
+</html>

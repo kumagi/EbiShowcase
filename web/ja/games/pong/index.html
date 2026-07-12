@@ -37,7 +37,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>速度ベクトル</h3><p>1フレームでどれだけ動くかを、X と Y に分けて持ちます。斜めに見える動きも、実は2つの足し算です。</p><code>ballX += vx</code></article>
         <article><span class="concept-number">2</span><h3>面ごとの反射</h3><p>当たった面に垂直な成分だけ反転します。たて壁なら vx、よこパドルなら vy です。</p><code>vx = -vx</code></article>
-        <article><span class="concept-number">3</span><h3>ヒット位置</h3><p>パドルの端で返すと、中心からのずれを vx に足して角度を変えます。狙い打ちの味です。</p><code>vx += offset * 0.055</code></article>
+        <article><span class="concept-number">3</span><h3>ヒット位置</h3><p>パドル中心からのずれ × <code>0.055</code> を vx に足します。端で返すほど横に飛び、中央ならほぼ真上。0.055 は「味付け用の小さめの係数」で、大きくすると曲がりの効きが強くなります。</p><code>vx += offset * 0.055</code></article>
       </div>
 
       
@@ -80,6 +80,7 @@
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>動かす → 当てる → 向きを変える</h3>
           <p>毎フレームまず位置を進め、次に壁とパドルを調べます。下のパドルに当たったら上向きにし、当たった位置で左右の成分も少し足します。</p>
+          <p>CPUは <code>ballX</code> へ向かって毎フレーム最大 <code>3.5</code> だけ動きます。ボールより <code>8</code> ピクセル以上離れているときだけ追うので、ぴったり重ならずに「少し遅れ気味の追従」になります。3.5 はプレイヤーより遅めに感じるよう選んだ上限速度です。</p>
         </div>
         <pre><code>g.ballX += g.vx
 g.ballY += g.vy
@@ -298,6 +299,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

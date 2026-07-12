@@ -75,6 +75,8 @@
         <p class="eyebrow">THE TWO-MODE RULE</p>
         <div class="formula-lines"><code>動くとき: marker += speed</code><span>止まるとき</span><code>distance = |marker - center|</code></div>
         <p>同じボタンでも、状態によって意味が変わります。動いていれば「止める」、止まっていれば「次のラウンドへ」。これが状態機械の入口です。</p>
+        <p><code>|marker - center|</code> の縦線は絶対値（<code>math.Abs</code>）。マイナスをプラスに直すので、「中央より左でも右でも、どれだけ離れたか」だけが残ります。<code>%</code> はパーセントではなく<strong>割り算の余り</strong>。<code>round%2 == 1</code> は「2で割って1余る＝奇数ラウンド」の意味です。</p>
+        <p>速さの式 <code>3.2 + float64(g.round)*0.18</code> では、整数の <code>round</code> を <code>float64(...)</code> で小数に変換しています。Goは <code>int</code> と <code>float64</code> をそのまま掛けられないので、どちらかの型にそろえます。</p>
       </div>
 
       <div class="code-lesson">
@@ -82,6 +84,7 @@
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>状態で処理を分ける</h3>
           <p>入力を受けたあとに「いま止まっているか？」を見ます。動いているときだけ位置を進め、端で向きを反転します。</p>
+          <p>得点の <code>switch { case distance &lt;= 8: ... }</code> は、変数を書かない switch です。「上から順に条件を見て、最初に当てはまった case を使う」書き方で、<code>if / else if</code> の列と同じ意味です。よく見る <code>switch x { case 1: }</code> とは仲間ですが、比較対象を毎回 case 側に書きます。</p>
         </div>
         <pre><code><span>func</span> (g *game) Update() error {
     <span>if</span> pressed() {
@@ -281,6 +284,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

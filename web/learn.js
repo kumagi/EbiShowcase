@@ -2600,28 +2600,66 @@ document.querySelectorAll(".motion-lab[data-lab='capture-roll']").forEach((lab) 
   const board = lab.querySelector("[data-lab-board]");
   const rateOut = bind(lab, "[data-lab-rate]");
   const note = bind(lab, "[data-lab-note]");
-  let rate = Number(lab.dataset.rate || 35);
+  const base = 15;
+  let hp = 100;
+  let sleep = false;
+  let orb = false;
+  const chance = () => {
+    const hpBonus = Math.floor(((100 - hp) * 55) / 100);
+    const status = sleep ? 20 : 0;
+    const item = orb ? 15 : 0;
+    return Math.min(95, base + hpBonus + status + item);
+  };
   const render = () => {
+    const rate = chance();
     if (rateOut) setText(rateOut, `${rate}%`);
     if (board) {
-      board.innerHTML = `<div class="lab-capture-bar"><i style="width:${rate}%"></i></div>
-        <p class="lab-capture-label">${rate}% catch</p>`;
+      const ja = document.documentElement.lang === "ja";
+      board.innerHTML = `<div class="lab-capture-stage">
+        <div class="lab-capture-monster" style="opacity:${0.35 + (hp / 100) * 0.65}"></div>
+        <div class="lab-capture-formula">
+          <span>15</span><span>+ HP↓ ${Math.floor(((100 - hp) * 55) / 100)}</span>
+          <span>+ ${sleep ? "SLEEP 20" : "awake 0"}</span>
+          <span>+ ${orb ? "ORB 15" : "ball 0"}</span>
+          <strong>= ${rate}%</strong>
+        </div>
+        <div class="lab-capture-bar"><i style="width:${rate}%"></i><b class="lab-capture-needle" data-lab-needle></b></div>
+        <p class="lab-capture-label">${ja ? `あと HP ${hp} · 捕獲率 ${rate}%` : `HP ${hp} left · ${rate}% catch`}</p>
+      </div>`;
     }
   };
-  bind(lab, "[data-lab-bait]")?.addEventListener("click", () => {
-    rate = Math.min(95, rate + 15);
-    setText(note, lab.dataset.baited || "+bait");
+  const bumpHP = () => {
+    hp = Math.max(5, hp - 20);
+    setText(note, (lab.dataset.weakened || "HP down → rate up").replace("{hp}", String(hp)));
+    render();
+  };
+  bind(lab, "[data-lab-bait]")?.addEventListener("click", bumpHP);
+  bind(lab, "[data-lab-weaken]")?.addEventListener("click", bumpHP);
+  bind(lab, "[data-lab-sleep]")?.addEventListener("click", () => {
+    sleep = !sleep;
+    setText(note, sleep ? (lab.dataset.slept || "SLEEP +20%") : (lab.dataset.woke || "awake"));
+    render();
+  });
+  bind(lab, "[data-lab-orb]")?.addEventListener("click", () => {
+    orb = !orb;
+    setText(note, orb ? (lab.dataset.orbed || "ORB +15%") : (lab.dataset.basic || "basic ball"));
     render();
   });
   bind(lab, "[data-lab-roll]")?.addEventListener("click", () => {
+    const rate = chance();
     const roll = Math.floor(Math.random() * 100);
     const ok = roll < rate;
+    const needle = lab.querySelector("[data-lab-needle]");
+    if (needle) needle.style.left = `${roll}%`;
     setText(note, ok
-      ? (lab.dataset.caught || "caught! ({r})").replace("{r}", String(roll))
-      : (lab.dataset.missed || "broke free ({r})").replace("{r}", String(roll)));
+      ? (lab.dataset.caught || "caught! roll {r} < {p}%").replace("{r}", String(roll)).replace("{p}", String(rate))
+      : (lab.dataset.missed || "broke free — roll {r} ≥ {p}%").replace("{r}", String(roll)).replace("{p}", String(rate)));
+    render();
+    const n2 = lab.querySelector("[data-lab-needle]");
+    if (n2) n2.style.left = `${roll}%`;
   });
   bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
-    rate = Number(lab.dataset.rate || 35); setText(note, "—"); render();
+    hp = 100; sleep = false; orb = false; setText(note, "—"); render();
   });
   render();
 });
@@ -2737,26 +2775,41 @@ document.querySelectorAll(".motion-lab[data-lab='input-buffer']").forEach((lab) 
   const curOut = bind(lab, "[data-lab-current]");
   const qOut = bind(lab, "[data-lab-queued]");
   const note = bind(lab, "[data-lab-note]");
-  let current = "E", queued = "E", atCenter = true;
+  let current = "E", queued = "E", atCenter = true, slide = 0, anim = null;
+  const delta = { N: [0, -1], S: [0, 1], W: [-1, 0], E: [1, 0] };
+  let px = 2, py = 2;
   const render = () => {
     if (curOut) setText(curOut, current);
     if (qOut) setText(qOut, queued);
-    if (board) {
-      board.innerHTML = `<div class="lab-buffer-stage">
-        <div class="lab-buffer-arrows"><span class="cur">CUR ${current}</span><span class="q">Q ${queued}</span></div>
-        <p class="lab-buffer-pos">${atCenter ? "AT CENTER" : "BETWEEN TILES"}</p>
-      </div>`;
+    if (!board) return;
+    const [dx, dy] = delta[current] || [1, 0];
+    const drawX = atCenter ? px : px + dx * slide;
+    const drawY = atCenter ? py : py + dy * slide;
+    let cells = "";
+    for (let y = 0; y < 5; y++) {
+      for (let x = 0; x < 5; x++) {
+        const wall = (x === 0 || y === 0 || x === 4 || y === 4) && !(x === 2 || y === 2);
+        cells += `<span class="${wall ? "wall" : "path"}"></span>`;
+      }
     }
+    board.innerHTML = `<div class="lab-buffer-maze">${cells}
+      <i class="lab-buffer-runner" style="left:${10 + drawX * 18}%;top:${10 + drawY * 18}%"></i>
+      <div class="lab-buffer-arrows"><span class="cur">CUR ${current}</span><span class="q">Q ${queued}</span></div>
+      <p class="lab-buffer-pos">${atCenter ? "AT CENTER — ready" : `SLIDING ${(slide * 100) | 0}%`}</p>
+    </div>`;
   };
+  const stopAnim = () => { if (anim) { cancelAnimationFrame(anim); anim = null; } };
   lab.querySelectorAll("[data-lab-dir]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      queued = btn.dataset.labDir;
+      queued = btn.dataset.labDir || queued;
       setText(note, lab.dataset.queued || "queued");
       render();
     });
   });
   bind(lab, "[data-lab-center]")?.addEventListener("click", () => {
+    stopAnim();
     atCenter = true;
+    slide = 0;
     if (queued !== current) {
       current = queued;
       setText(note, lab.dataset.turned || "turned at center");
@@ -2764,12 +2817,30 @@ document.querySelectorAll(".motion-lab[data-lab='input-buffer']").forEach((lab) 
     render();
   });
   bind(lab, "[data-lab-move]")?.addEventListener("click", () => {
+    stopAnim();
     atCenter = false;
+    slide = 0;
     setText(note, lab.dataset.moving || "moving");
-    render();
+    const tick = () => {
+      slide = Math.min(1, slide + 0.08);
+      render();
+      if (slide < 1) anim = requestAnimationFrame(tick);
+      else {
+        const [dx, dy] = delta[current] || [0, 0];
+        px = Math.max(1, Math.min(3, px + dx));
+        py = Math.max(1, Math.min(3, py + dy));
+        atCenter = true;
+        slide = 0;
+        setText(note, lab.dataset.arrived || "arrived — apply queue next");
+        render();
+      }
+    };
+    anim = requestAnimationFrame(tick);
   });
   bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
-    current = "E"; queued = "E"; atCenter = true; setText(note, "—"); render();
+    stopAnim();
+    current = "E"; queued = "E"; atCenter = true; slide = 0; px = 2; py = 2;
+    setText(note, "—"); render();
   });
   render();
 });

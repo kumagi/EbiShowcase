@@ -1,12 +1,47 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Buffered Corner Turns | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/maze-chase/buffered-turn/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 02 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">QUEUE THE NEXT CORNER</p><h1>Buffered Corner Turns</h1><p>When the game remembers a direction pressed slightly early, the runner can take it cleanly at the next tile center.</p><div class="lesson-meta"><span>★★☆☆☆</span><strong>PLAYABLE</strong></div></div></section>
-<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Cross ten glowing gates</h2><p>Queue the next direction early with arrows/WASD, click, or touch. Compare the CURRENT and QUEUED readouts.</p></div><div class="game-frame"><iframe src="../../../../play/buffered-turn/" title="Play Buffered Corner Turns"></iframe></div></section>
-<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Separate “moving now” from “want to move next”</h2><p>Turning immediately on input can push the runner into a wall or off a tile center. Keep <code>current</code> and <code>queued</code> as separate state.</p><div class="concept-row"><article><b>01</b><h3>Store the press</h3><p>A key or touch changes only <code>queued</code>.</p></article><article><b>02</b><h3>Try it at a center</h3><p>If the queued neighboring tile is open, copy it into <code>current</code>.</p></article><article><b>03</b><h3>Continue if blocked</h3><p>Keep the request waiting and continue straight while the current direction remains open.</p></article></div></section>
-<section class="motion-lab" data-lab="input-buffer" data-queued="queued" data-turned="turned at center" data-same="kept going" data-moving="moving" aria-labelledby="lab-title-buffered-turn">
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Buffered Corner Turns | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/maze-chase/buffered-turn/">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 02 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>Buffered Corner Turns</h1>
+      <p>When the game remembers a direction pressed slightly early, the runner can take it cleanly at the next tile center.</p>
+      <div class="overview-concept"><small>In this step</small><strong>QUEUE THE NEXT CORNER</strong></div>
+      <p class="cast-note">The frame math sits in the same <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
+    </section>
+    <p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Cross ten glowing gates</h2></div><p>Queue the next direction early with arrows/WASD, click, or touch. Compare the CURRENT and QUEUED readouts.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Play Buffered Corner Turns" src="../../../../play/buffered-turn/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE</p>
+        <h2>Separate “moving now” from “want to move next”</h2>
+        <p class="lesson-lead">Turning immediately on input can push the runner into a wall or off a tile center. Keep <code>current</code> and <code>queued</code> as separate state.</p>
+      </div>
+
+      <div class="concept-row">
+<article><span class="concept-number">1</span><h3>Store the press</h3><p>A key or touch changes only <code>queued</code>.</p></article><article><span class="concept-number">2</span><h3>Try it at a center</h3><p>If the queued neighboring tile is open, copy it into <code>current</code>.</p></article><article><span class="concept-number">3</span><h3>Continue if blocked</h3><p>Keep the request waiting and continue straight while the current direction remains open.</p></article>
+</div>
+
+      <div class="motion-lab" data-lab="input-buffer" data-queued="queued" data-turned="turned at center" data-same="kept going" data-moving="moving" aria-labelledby="lab-title-buffered-turn">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / CURRENT vs QUEUED</p>
 <h3 id="lab-title-buffered-turn">Queue a facing, commit at center</h3>
 <p>Direction buttons only write queued. Move between tiles, then Arrive at center to copy queued into current if the next tile is open.</p>
-<div class="lab-controls"><button type="button" class="lab-button" data-lab-dir data-go-focus="queue" data-go-caption="Queue facing"="N">↑</button><button type="button" class="lab-button" data-lab-dir data-go-focus="queue" data-go-caption="Queue facing"="W">←</button><button type="button" class="lab-button lab-button-primary" data-lab-dir data-go-focus="queue" data-go-caption="Queue facing"="E">→</button><button type="button" class="lab-button" data-lab-dir data-go-focus="queue" data-go-caption="Queue facing"="S">↓</button><button type="button" class="lab-button" data-lab-move data-go-focus="queue" data-go-caption="Queue facing">Move between</button><button type="button" class="lab-button" data-lab-center data-go-focus="center" data-go-caption="Commit at tile center">Arrive center</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button" data-lab-dir="N" data-go-focus="queue" data-go-caption="Queue facing">↑</button><button type="button" class="lab-button" data-lab-dir="W" data-go-focus="queue" data-go-caption="Queue facing">←</button><button type="button" class="lab-button lab-button-primary" data-lab-dir="E" data-go-focus="queue" data-go-caption="Queue facing">→</button><button type="button" class="lab-button" data-lab-dir="S" data-go-focus="queue" data-go-caption="Queue facing">↓</button><button type="button" class="lab-button" data-lab-move data-go-focus="queue" data-go-caption="Queue facing">Move between</button><button type="button" class="lab-button" data-lab-center data-go-focus="center" data-go-caption="Commit at tile center">Arrive center</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Writing current immediately makes mid-tile wall clips common.</p>
 </div>
 <div class="lab-visual">
@@ -19,7 +54,11 @@
 <span data-go-line="center">if atCenter &amp;&amp; open(queued) { current = queued }</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</section><div class="formula"><p class="eyebrow">THE BUFFER RULE</p><div class="formula-lines"><code>input → queued</code><span>then</span><code>at center: current = queued if passable</code></div><p>Split the press moment from the facing commit.</p></div><p>Split the press moment from the facing commit.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Choose direction only at tile centers</h2><p><code>Update</code> may remember input every frame, but it changes direction only when a tile is reached.</p></div><pre><code>if dir, ok := directionInput(); ok {
+</div>
+
+      <div class="formula"><p class="eyebrow">THE BUFFER RULE</p><div class="formula-lines"><code>input → queued</code><span>then</span><code>at center: current = queued if passable</code></div><p>Split the press moment from the facing commit.</p></div>
+
+      <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>Choose direction only at tile centers</h3><p><code>Update</code> may remember input every frame, but it changes direction only when a tile is reached.</p></div><pre><code>if dir, ok := directionInput(); ok {
     queued = dir
 }
 if reachedTileCenter {
@@ -29,8 +68,12 @@ if reachedTileCenter {
         return // stop at the center
     }
     target = tile.add(current)
-}</code></pre></section>
-<section class="why-grid"><article><h3>Why does this feel better?</h3><p>The player need not hit one exact frame; the game waits briefly for their intention to become legal.</p></article><article><h3>When does the queue expire?</h3><p>This game keeps it until success. Other games use a short timer to tune the feel.</p></article><article><h3>Challenge</h3><p>Expire the queue after ten frames and compare it with the persistent version.</p></article></section><nav class="lesson-pager"><a href="../tile-runner/">← STEP 01<strong>Run the Maze</strong></a><a href="../pellet-map/">STEP 03 →<strong>Pellet Maze</strong></a></nav>
+}</code></pre></div>
+
+      <div class="why-grid"><article><h3>Why does this feel better?</h3><p>The player need not hit one exact frame; the game waits briefly for their intention to become legal.</p></article><article><h3>When does the queue expire?</h3><p>This game keeps it until success. Other games use a short timer to tune the feel.</p></article><article><h3>Challenge</h3><p>Expire the queue after ten frames and compare it with the persistent version.</p></article></div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../tile-runner/">← STEP 01<strong>Run the Maze</strong></a><a href="../pellet-map/">STEP 03 →<strong>Pellet Maze</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -56,9 +99,8 @@ if reachedTileCenter {
     </section>
 
 
-
-
-
-
-
-</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+</body>
+</html>

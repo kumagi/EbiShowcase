@@ -1,12 +1,42 @@
 <!doctype html>
 <html lang="ja">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>壊れる壁とアイテム | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head>
-<body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/bomb-maze/breakable-walls/">EN</a></nav></header>
-<main><div class="lesson-breadcrumb"><a href="../">← 爆弾迷路アクション</a><span>STEP 03 / 06</span></div>
-<section class="lesson-hero"><div><p class="eyebrow">BOMB MAZE · STEP 03</p><h1>壊れる壁とアイテム</h1><p>爆風が木の壁に当たると、そのマスのデータを「壁」から「床」へ書き換えます。ときどき現れるアイテムを拾い、10枚の壁を壊そう。</p><div class="lesson-meta"><span>むずかしさ ★★★☆☆</span><span>PLAYABLE</span></div></div></section>
-<section class="game-stage" id="play"><div class="game-copy"><p class="eyebrow">PLAY FIRST</p><h2>壁の中身を確かめよう</h2><p>矢印キー / WASDで移動、Space / Xで爆弾。スマホやタブレットでは画面下のボタンをタップします。爆風に触れるか75秒たつと失敗です。</p></div><div class="game-frame-wrap"><iframe class="game-frame" src="../../../../play/breakable-walls/" title="壊れる壁とアイテムを遊ぶ"></iframe></div></section>
-<section class="deep-dive"><p class="eyebrow">DEEP DIVE</p><h2>マスは絵ではなく「状態」</h2><p>壁が壊れるとは、壁の画像を消すことではありません。二次元配列の値を <code>softWall</code> から <code>floor</code> へ変えることです。次のフレームから移動判定も描画も、新しい床の値を読みます。</p><div class="concept-row"><article><b>01</b><h3>爆風が壁に届く</h3><p>十字にマスを調べ、固い壁なら止まり、木の壁ならそのマスまで爆風を置きます。</p></article><article><b>02</b><h3>壁を床へ変える</h3><p><code>board[y][x] = floor</code> と書けば、通れなかった場所が通れる場所になります。</p></article><article><b>03</b><h3>中身を決める</h3><p>座標から決めた値で、火力・爆弾数・速さのアイテム、または空を選びます。</p></article></div></section>
-<section class="motion-lab" data-lab="pipeline" data-steps="softWall,blast,floor+item" data-loop="次の壁マスへ" aria-labelledby="lab-title-breakable-walls">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>壊れる壁とアイテム | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/bomb-maze/breakable-walls/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 爆弾迷路アクション</a><span>STEP 03 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">むずかしさ ★★★☆☆ / PLAYABLE</p>
+      <h1>壊れる壁とアイテム</h1>
+      <p>爆風が木の壁に当たると、そのマスのデータを「壁」から「床」へ書き換えます。ときどき現れるアイテムを拾い、10枚の壁を壊そう。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>タイル変化と確率ドロップ</strong></div>
+      <p class="cast-note">動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
+    </section>
+    <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>壁の中身を確かめよう</h2></div><p>矢印キー / WASDで移動、Space / Xで爆弾。スマホやタブレットでは画面下のボタンをタップします。爆風に触れるか75秒たつと失敗です。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="壊れる壁とアイテムを遊ぶ" src="../../../../play/breakable-walls/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE</p>
+        <h2>マスは絵ではなく「状態」</h2>
+        <p class="lesson-lead">壁が壊れるとは、壁の画像を消すことではありません。二次元配列の値を <code>softWall</code> から <code>floor</code> へ変えることです。次のフレームから移動判定も描画も、新しい床の値を読みます。</p>
+      </div>
+
+      <div class="concept-row">
+<article><span class="concept-number">1</span><h3>爆風が壁に届く</h3><p>十字にマスを調べ、固い壁なら止まり、木の壁ならそのマスまで爆風を置きます。</p></article><article><span class="concept-number">2</span><h3>壁を床へ変える</h3><p><code>board[y][x] = floor</code> と書けば、通れなかった場所が通れる場所になります。</p></article><article><span class="concept-number">3</span><h3>中身を決める</h3><p>座標から決めた値で、火力・爆弾数・速さのアイテム、または空を選びます。</p></article>
+</div>
+
+      <div class="motion-lab" data-lab="pipeline" data-steps="softWall,blast,floor+item" data-loop="次の壁マスへ" aria-labelledby="lab-title-breakable-walls">
   <div class="lab-copy">
     <p class="eyebrow">TRY IT / CELL STATE</p>
     <h3 id="lab-title-breakable-walls">1マスの変化を順番に進めよう</h3>
@@ -31,18 +61,23 @@
 <span data-go-line="loop">// then next frame</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</section>
-<div class="formula"><p class="eyebrow">THE STATE WRITE</p><div class="formula-lines"><code>softWall + blast</code><span>つぎに</span><code>board[y][x] = floor; maybe item</code></div><p>判定も描画も同じ配列を読むので、見た目と通行がずれません。</p></div>
-<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>データを変えてから出現させる</h2><p>同じ座標は何度遊んでも同じ結果になるので、コードを追う練習がしやすくなります。ゲーム本体では座標ハッシュを使い、グローバルな乱数に頼らずドロップを決めています。</p></div><pre><code>if board[p.y][p.x] == softWall {
+</div>
+
+      <div class="formula"><p class="eyebrow">THE STATE WRITE</p><div class="formula-lines"><code>softWall + blast</code><span>つぎに</span><code>board[y][x] = floor; maybe item</code></div><p>判定も描画も同じ配列を読むので、見た目と通行がずれません。</p></div>
+
+      <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>データを変えてから出現させる</h3><p>同じ座標は何度遊んでも同じ結果になるので、コードを追う練習がしやすくなります。ゲーム本体では座標ハッシュを使い、グローバルな乱数に頼らずドロップを決めています。</p></div><pre><code>if board[p.y][p.x] == softWall {
     board[p.y][p.x] = floor
     destroyed++
     if drop := deterministicDrop(p); drop != noItem {
         items[p] = drop
     }
     break // 壁の向こうへ爆風を通さない
-}</code></pre></section>
-<section class="why-grid"><article><p class="eyebrow">WHY IT WORKS</p><h2>判定と見た目がずれない</h2><p><code>Update</code> の移動判定と <code>Draw</code> が同じ配列を読むため、消えたように見えるのに通れない、という食い違いを防げます。</p></article><article><p class="eyebrow">CHALLENGE</p><h2>落ちる割合を変えよう</h2><p><code>deterministicDrop</code> の余りを変え、アイテムが少ない難しい版を作ってみよう。どの種類が何マス出るか先に予想してから試そう。</p></article></section>
-<nav class="lesson-pager"><a href="../cross-blast/">← STEP 02<strong>十字に伸びる爆風</strong></a><a href="../chain-explosion/">STEP 04 →<strong>爆弾の連鎖爆発</strong></a></nav>
+}</code></pre></div>
+
+      <div class="why-grid"><article><p class="eyebrow">WHY IT WORKS</p><h2>判定と見た目がずれない</h2><p><code>Update</code> の移動判定と <code>Draw</code> が同じ配列を読むため、消えたように見えるのに通れない、という食い違いを防げます。</p></article><article><p class="eyebrow">CHALLENGE</p><h2>落ちる割合を変えよう</h2><p><code>deterministicDrop</code> の余りを変え、アイテムが少ない難しい版を作ってみよう。どの種類が何マス出るか先に予想してから試そう。</p></article></div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../cross-blast/">← STEP 02<strong>十字に伸びる爆風</strong></a><a href="../chain-explosion/">STEP 04 →<strong>爆弾の連鎖爆発</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -68,7 +103,8 @@
     </section>
 
 
-
-
-
-</main><footer><p>EBI SHOWCASE · Go + WebAssembly + Ebitengine</p></footer><script src="../../../../learn.js"></script></body></html>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+</body>
+</html>

@@ -1,8 +1,42 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>連鎖スコア研究所 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/falling-pairs/chain-score/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 落下ペア連鎖パズル</a><span>STEP 05 / 06</span></div>
-<section class="lesson-hero"><div><p class="eyebrow">再探索で「つづき」を見つける</p><h1>連鎖スコア研究所</h1><p>消したあとに落とし、盤面が止まったらもう一度探します。続けて消えた回数が、そのまま得点の倍率になります。</p><div class="lesson-meta"><span>★★★☆☆</span><strong>PLAYABLE</strong></div></div></section>
-<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>2連鎖を3回つくろう</h2><p>1〜3キー、クリック、タップで置き方を選びます。白く囲まれた仲間が消え、落下後にもう一度探索される様子を見てください。</p></div><div class="game-frame"><iframe src="../../../../play/chain-score/" title="連鎖スコア研究所を遊ぶ"></iframe></div></section>
-<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>「消えた」で終わらず、止まるまでくり返す</h2><p>前のステップでは CLEAR と GRAVITY を分けました。今回は、その後ろに SEARCH を戻して輪を作ります。見つからなくなったときだけ1回の手が終了します。</p><div class="concept-row"><article><b>01</b><h3>SEARCH</h3><p>盤面全体を調べ、4個以上の同色グループを集めます。</p></article><article><b>02</b><h3>CLEAR → GRAVITY</h3><p>対象を同時に空にし、各列を下へ詰めます。</p></article><article><b>03</b><h3>もう一度SEARCH</h3><p>新しいグループがあれば連鎖数を増やし、なければ手を終えます。</p></article></div></section>
-<section class="motion-lab" data-lab="turn"><div><p class="eyebrow">CHAIN LOOP LAB</p><h2>処理の輪を1段ずつ進める</h2><p>SEARCH → CLEAR → GRAVITY → SEARCH の順序を動かし、再探索が連鎖を生む場所を確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">SEARCHから始めよう</p><button type="button" class="lab-action">次の段階へ</button></div>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>連鎖スコア研究所 | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/falling-pairs/chain-score/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 落下ペア連鎖パズル</a><span>STEP 05 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>連鎖スコア研究所</h1>
+      <p>消したあとに落とし、盤面が止まったらもう一度探します。続けて消えた回数が、そのまま得点の倍率になります。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>連鎖倍率とスコア</strong></div>
+      <p class="cast-note">動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
+    </section>
+    <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>2連鎖を3回つくろう</h2></div><p>1〜3キー、クリック、タップで置き方を選びます。白く囲まれた仲間が消え、落下後にもう一度探索される様子を見てください。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="連鎖スコア研究所を遊ぶ" src="../../../../play/chain-score/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE</p>
+        <h2>「消えた」で終わらず、止まるまでくり返す</h2>
+        <p class="lesson-lead">前のステップでは CLEAR と GRAVITY を分けました。今回は、その後ろに SEARCH を戻して輪を作ります。見つからなくなったときだけ1回の手が終了します。</p>
+      </div>
+
+      <div class="concept-row">
+<article><span class="concept-number">1</span><h3>SEARCH</h3><p>盤面全体を調べ、4個以上の同色グループを集めます。</p></article><article><span class="concept-number">2</span><h3>CLEAR → GRAVITY</h3><p>対象を同時に空にし、各列を下へ詰めます。</p></article><article><span class="concept-number">3</span><h3>もう一度SEARCH</h3><p>新しいグループがあれば連鎖数を増やし、なければ手を終えます。</p></article>
+</div>
+
+      <div class="motion-lab" data-lab="turn"><div><p class="eyebrow">CHAIN LOOP LAB</p><h2>処理の輪を1段ずつ進める</h2><p>SEARCH → CLEAR → GRAVITY → SEARCH の順序を動かし、再探索が連鎖を生む場所を確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">SEARCHから始めよう</p><button type="button" class="lab-action">次の段階へ</button></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
 <pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="state">switch phase {</span>
@@ -10,8 +44,11 @@
 <span data-go-line="act">case player: playCard(); case enemy: enemyAct()</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</section>
-<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>状態を輪につなぐ</h2><p><code>Update</code>は待ち時間ごとに1段だけ進めます。落下後に<code>searching</code>へ戻す一行が連鎖の中心です。</p></div><pre><code>switch phase {
+</div>
+
+      
+
+      <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>状態を輪につなぐ</h3><p><code>Update</code>は待ち時間ごとに1段だけ進めます。落下後に<code>searching</code>へ戻す一行が連鎖の中心です。</p></div><pre><code>switch phase {
 case searching:
     marked = findGroups(board)
     if len(marked) == 0 { finishChain() }
@@ -24,9 +61,12 @@ case clearing:
 case falling:
     compact(&amp;board)
     phase = searching // もう一度探す
-}</code></pre></section>
-<section class="why-grid"><article><h3>なぜ状態を分けるの？</h3><p>消去と落下を同時に書くより、途中を画面で見せやすく、バグが起きた段階も見つけやすいからです。</p></article><article><h3>得点はいつ足す？</h3><p>グループを見つけた瞬間です。<code>消した数 × 10 × 連鎖数</code>なら、後の連鎖ほど価値が上がります。</p></article><article><h3>チャレンジ</h3><p>倍率を二乗にしたり、同時に2グループ消したボーナスを加えたりして、遊び心地の違いを比べてみよう。</p></article></section>
-<nav class="lesson-pager"><a href="../clear-gravity/">← STEP 04<strong>消去とちぎれ落ち</strong></a><a href="../ebi-chain/">STEP 06 →<strong>Ebi Chain</strong></a></nav>
+}</code></pre></div>
+
+      <div class="why-grid"><article><h3>なぜ状態を分けるの？</h3><p>消去と落下を同時に書くより、途中を画面で見せやすく、バグが起きた段階も見つけやすいからです。</p></article><article><h3>得点はいつ足す？</h3><p>グループを見つけた瞬間です。<code>消した数 × 10 × 連鎖数</code>なら、後の連鎖ほど価値が上がります。</p></article><article><h3>チャレンジ</h3><p>倍率を二乗にしたり、同時に2グループ消したボーナスを加えたりして、遊び心地の違いを比べてみよう。</p></article></div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../clear-gravity/">← STEP 04<strong>消去とちぎれ落ち</strong></a><a href="../ebi-chain/">STEP 06 →<strong>Ebi Chain</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -52,10 +92,8 @@ case falling:
     </section>
 
 
-
-
-
-
-
-
-</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+</body>
+</html>

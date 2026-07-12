@@ -772,3 +772,24 @@ footer p{color:#67719c}
 .lab-go-caption{margin:10px 0 0;font:700 13px var(--font-mono);color:#9eb0d8;min-height:1.2em}
 @media(prefers-reduced-motion:reduce){.lab-go [data-go-line].is-active{transition:none}}
 @media(max-width:600px){.lab-go{font-size:11px;padding:14px 12px}.lab-go-block{padding:18px 16px 22px}}
+
+.lab-buffer-maze{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;min-height:220px;padding:18px;background:#0d1530}
+.lab-buffer-maze span{aspect-ratio:1;border-radius:8px;background:#1c2748}
+.lab-buffer-maze span.path{background:#24345c}
+.lab-buffer-maze span.wall{background:#0a1022}
+.lab-buffer-runner{position:absolute;width:14%;aspect-ratio:1;border-radius:50%;background:var(--cyan);box-shadow:0 0 16px rgba(94,234,212,.55);transform:translate(-50%,-50%);transition:left .05s linear,top .05s linear}
+.lab-buffer-maze .lab-buffer-arrows{position:absolute;left:12px;bottom:12px;display:flex;gap:8px}
+.lab-buffer-maze .lab-buffer-pos{position:absolute;right:12px;bottom:12px;margin:0}
+.lab-capture-stage{padding:18px 16px 12px;background:#0d1530;min-height:220px}
+.lab-capture-monster{width:64px;height:64px;margin:8px auto 14px;border-radius:50% 50% 42% 42%;background:radial-gradient(circle at 35% 30%,#9ef, #4ecdc4 45%,#1a6b63);box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.lab-capture-formula{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:0 0 14px;font:700 12px var(--font-mono);color:#9eb0d8}
+.lab-capture-formula strong{color:var(--sun)}
+.lab-capture-bar{position:relative}
+.lab-capture-needle{position:absolute;top:-4px;width:3px;height:26px;background:#fff;border-radius:2px;transform:translateX(-50%);box-shadow:0 0 8px #fff;left:0;transition:left .15s ease}
+
+.matchup-grid{margin:28px 0 8px;overflow-x:auto}
+.matchup-grid table{border-collapse:collapse;font:700 13px var(--font-mono);min-width:320px}
+.matchup-grid th,.matchup-grid td{border:1px solid #2a3a5c;padding:10px 12px;text-align:center}
+.matchup-grid caption{caption-side:top;text-align:left;margin-bottom:8px;color:var(--ink-soft);font:800 12px var(--font-mono)}
+.matchup-grid .hot{background:rgba(255,120,80,.25);color:#ffb089}
+.matchup-grid .cold{background:rgba(80,160,255,.18);color:#9ec9ff}

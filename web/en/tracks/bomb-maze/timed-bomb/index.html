@@ -1,4 +1,42 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Place a Timed Bomb | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/bomb-maze/timed-bomb/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Bomb Maze Action</a><span>STEP 01 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">AN OBJECT CHANGES WITH TIME</p><h1>Place a Timed Bomb</h1><p>A bomb is game data with a position and time remaining. Decrease it every frame and switch to the blast state at zero.</p><div class="lesson-meta"><span>★★☆☆☆</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Blast five marked cells</h2><p>Move with arrows/WASD and place with Space. Click or touch the on-screen controls. Leave the bomb cell before its timer ends.</p></div><div class="game-frame"><iframe src="../../../../play/timed-bomb/" title="Play Place a Timed Bomb"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Make the bomb a waiting → blasting state machine</h2><p>It is more than a drawn circle: keep position, timer, and state together.</p><div class="concept-row"><article><b>01</b><h3>Check placement</h3><p>Add a bomb at the player cell only when that cell has none.</p></article><article><b>02</b><h3>Count down</h3><p><code>Update</code> advances every bomb timer.</p></article><article><b>03</b><h3>Switch at zero</h3><p>Enable hit tests only during the short blast state, then remove it.</p></article></div></section><section class="motion-lab" data-lab="bomb-timer" data-fuse="8" data-placed="placed" data-tick="tick" data-boom="BOOM" data-gone="removed" data-none="place first" aria-labelledby="lab-title-timed-bomb">
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Place a Timed Bomb | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/bomb-maze/timed-bomb/">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Bomb Maze Action</a><span>STEP 01 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>Place a Timed Bomb</h1>
+      <p>A bomb is game data with a position and time remaining. Decrease it every frame and switch to the blast state at zero.</p>
+      <div class="overview-concept"><small>In this step</small><strong>AN OBJECT CHANGES WITH TIME</strong></div>
+      <p class="cast-note">The frame math sits in the same <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
+    </section>
+    <p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Blast five marked cells</h2></div><p>Move with arrows/WASD and place with Space. Click or touch the on-screen controls. Leave the bomb cell before its timer ends.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Play Place a Timed Bomb" src="../../../../play/timed-bomb/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE</p>
+        <h2>Make the bomb a waiting → blasting state machine</h2>
+        <p class="lesson-lead">It is more than a drawn circle: keep position, timer, and state together.</p>
+      </div>
+
+      <div class="concept-row">
+<article><span class="concept-number">1</span><h3>Check placement</h3><p>Add a bomb at the player cell only when that cell has none.</p></article><article><span class="concept-number">2</span><h3>Count down</h3><p><code>Update</code> advances every bomb timer.</p></article><article><span class="concept-number">3</span><h3>Switch at zero</h3><p>Enable hit tests only during the short blast state, then remove it.</p></article>
+</div>
+
+      <div class="motion-lab" data-lab="bomb-timer" data-fuse="8" data-placed="placed" data-tick="tick" data-boom="BOOM" data-gone="removed" data-none="place first" aria-labelledby="lab-title-timed-bomb">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / FUSE</p>
 <h3 id="lab-title-timed-bomb">Place → tick → blast → remove</h3>
@@ -17,13 +55,22 @@
 <span data-go-line="gone">remove(b)</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</section><div class="formula"><p class="eyebrow">THE FUSE STATE MACHINE</p><div class="formula-lines"><code>timer-- each frame</code><span>then</span><code>timer<=0 → blasting → remove</code></div><p>Not a drawn circle—position, timer, and state in one struct.</p></div><p>Not a drawn circle—position, timer, and state in one struct.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Update timer and state</h2><p>Switch state only on the frame the remaining time reaches zero.</p></div><pre><code>for i := range bombs {
+</div>
+
+      <div class="formula"><p class="eyebrow">THE FUSE STATE MACHINE</p><div class="formula-lines"><code>timer-- each frame</code><span>then</span><code>timer<=0 → blasting → remove</code></div><p>Not a drawn circle—position, timer, and state in one struct.</p></div>
+
+      <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>One timer, two meanings</h3><p>While armed it counts down to boom. At 0, set blasting and <strong>reuse the same field</strong> as blast lifetime. One variable, two jobs — watch the flag.</p></div><pre><code>for i := range bombs {
     bombs[i].timer--
     if !bombs[i].blasting &amp;&amp; bombs[i].timer &lt;= 0 {
         bombs[i].blasting = true
         bombs[i].timer = blastLife
     }
-}</code></pre></section><section class="why-grid"><article><h3>Why use a slice?</h3><p>Several bombs can keep independent positions and timers.</p></article><article><h3>Why restrict placement?</h3><p>No duplicates means clearer drawing and collision rules.</p></article><article><h3>Challenge</h3><p>Allow two active bombs and observe their different ignition times.</p></article></section><nav class="lesson-pager"><span></span><a href="../cross-blast/">STEP 02 →<strong>Cross-shaped Blast</strong></a></nav>
+}</code></pre></div>
+
+      <div class="why-grid"><article><p class="eyebrow">WITHOUT A SLICE</p><h3>One bomb is not enough</h3><p>A slice lets many bombs keep their own place and timer.</p></article><article><p class="eyebrow">WITH A FUSE</p><h3>Why limit placement?</h3><p>Prevent stacking on one tile so draw and hit tests stay clear.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Allow two at once</h3><p>Raise the place limit to 2 and watch different fuse times.</p></article></div>
+    </section>
+
+    <nav class="lesson-pager"><span></span><a href="../cross-blast/">STEP 02 →<strong>Cross-shaped Blast</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -49,8 +96,8 @@
     </section>
 
 
-
-
-
-
-</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+</body>
+</html>

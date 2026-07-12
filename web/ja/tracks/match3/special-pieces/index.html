@@ -21,17 +21,17 @@
     <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="特殊ピース工房" src="../../../../play/special-pieces/" allow="autoplay; fullscreen"></iframe></div></div>
   </section>
   <section class="physics" id="learn">
-    <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / PATTERN TO EFFECT</p><h2>同じ色の「数」と「曲がり方」を、技の設計図にする。</h2><p class="lesson-lead">ふつうの3個並びより難しい形ができたら、ごほうびを作れます。まず盤面を調べて形の種類を決め、次に<strong>消す場所の集合</strong>を作る。この2段階に分けると、特殊ピースを増やしても整理できます。</p></div>
-    <div class="concept-row">
-      <article><span class="concept-number">1</span><h3>縦と横の長さを数える</h3><p>あるマスから同じ色が左右にいくつ、上下にいくつ続くかを数えます。5個なら色消し、4個なら一列消しの材料です。</p><code>if horizontal &gt;= 5 { kind = ColorWave }</code></article>
-      <article><span class="concept-number">2</span><h3>交差を先に調べる</h3><p>横も縦も3個以上ならL字やT字の曲がった形です。4個並びより先に判定しないと、曲がりをただの直線とまちがえます。</p><code>if horizontal &gt;= 3 &amp;&amp; vertical &gt;= 3</code></article>
-      <article><span class="concept-number">3</span><h3>効果範囲を集合にする</h3><p>一列、同じ色全部、中心の3×3など、消すマスをmapへ追加します。同じマスが重なっても一度だけ数えられます。</p><code>affected[point{x, y}] = true</code></article>
-    </div>
-    <div class="motion-lab" data-lab="match-scan" data-found="効果範囲をマーク" data-none="対象なし" data-cleared="まとめて消去" aria-labelledby="lab-title-special-pieces">
+    <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DETECT → KIND → EFFECT</p><h2>特殊ピースは「形の判定」と「消す範囲」の2関数。</h2><p class="lesson-lead">マッチ3の特殊ピースは魔法ではありません。<strong>①盤面から形を読み取る</strong>（4連・5連・L/T）、<strong>②種類ごとに消すマスの集合を返す</strong>、の2段です。効果の違いは「集合の作り方」だけで、最後の消去処理はふつうのマッチと同じにできます。</p></div>
+<div class="concept-row">
+<article><span class="concept-number">1</span><h3>長い形から判定する</h3><p>同じ色の連続を数えます。横5→色消し、横4→列ロケット。L/Tは「横も縦も3以上」を<strong>直線より先に</strong>調べます。</p><code>if h&gt;=3 &amp;&amp; v&gt;=3 { kind = AreaBomb }</code></article>
+<article><span class="concept-number">2</span><h3>種類をマスに置く</h3><p>判定の中心マスへ special を書き込みます。見た目のアイコンは kind のスイッチで描くだけです。</p><code>board[y][x] = special(kind)</code></article>
+<article><span class="concept-number">3</span><h3>効果は Set を返す</h3><p>ロケットなら同じ行、色波なら同色すべて、範囲爆弾なら 3×3。返した Set をまとめて empty にします。</p><code>for p := range effect(kind, at)</code></article>
+</div>
+<div class="motion-lab" data-lab="match-scan" data-found="効果範囲をマーク" data-none="対象なし" data-cleared="まとめて消去" aria-labelledby="lab-title-special-pieces">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / MARK SPECIALS</p>
 <h3 id="lab-title-special-pieces">消すマスの集合を先に作る</h3>
-<p>特殊ピースも、まず「どのマスを消すか」の集合を作ります。スキャンで集合を見てから消去。爆弾もラインも、最後は同じクリア処理に渡せます。</p>
+<p>まず「4連／5連／L字」のどれかを選び、効果範囲の集合を集めます。爆弾もラインも、最後は同じ clear(Set) に渡せます。</p>
 <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan data-go-focus="scan">効果範囲を集める</button><button type="button" class="lab-button" data-lab-clear data-go-focus="clear">まとめて消す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
 <p class="lab-hint">効果ごとに描画を分けても、消去パイプは1本にまとめると安全です。</p>
 </div>
@@ -46,21 +46,20 @@
 <span data-go-line="fall">compactColumns()</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</div><div class="formula"><p class="eyebrow">SET THEN CLEAR</p><div class="formula-lines"><code>消すマスを Set に入れる</code><span>つぎに</span><code>Set をまとめて空にする</code></div><p>特殊効果は「Set をどう埋めるか」だけ変えれば足せます。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>判定と効果を別の関数にする</h3><p><code>detectSpecial</code>は「何ができたか」を返し、<code>activate</code>は種類を見て「どこへ届くか」を決めます。一つの長いif文にしないのが大切です。</p></div><pre><code>kind, center, ok := detectSpecial(board)
-if ok {
-    special.kind = kind
-    special.pos = center
-}
+</div><div class="formula"><p class="eyebrow">DETECT THEN BLAST</p><div class="formula-lines"><code>kind := detectShape(run)</code><span>つぎに</span><code>clear(effectCells(kind))</code></div><p>形の判定と範囲計算を1つの巨大ifにしないのが、特殊ピースを増やすコツです。</p></div>
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>detectSpecial と effectCells を分ける</h3><p>デモはレシピ（4 / 5 / L）を選んでから FORGE→発動します。本番でも「作る瞬間」と「消す瞬間」を分けて書くと、連鎖で特殊が巻き込まれたときに同じ effectCells を再利用できます。</p></div><pre><code>kind, at, ok := detectSpecial(board)
+if !ok { return }
+specials[at] = kind
 
-for p := range effectCells(special) {
-    board[p.y][p.x] = Empty
+// 発動時
+for p := range effectCells(kind, at, board) {
+    board[p.y][p.x] = empty
 }</code></pre></div>
-    <div class="why-grid">
-      <article><p class="eyebrow">WHY ORDER?</p><h3>特別な形から判定</h3><p>L字の一部には3個の直線もあります。いちばん条件が多い形から調べると、正しいごほうびを選べます。</p></article>
-      <article><p class="eyebrow">WHY A SET?</p><h3>重なりを安全にする</h3><p>行消しと爆弾が同じマスへ届いても、mapなら二重に得点を足したり二度消したりしません。</p></article>
-      <article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>特殊どうしを連鎖</h3><p>効果範囲に別の特殊ピースがあったら、新しい効果を待ち行列へ追加してみよう。</p></article>
-    </div>
-  </section>
+<div class="why-grid">
+<article><p class="eyebrow">WHY ORDER?</p><h3>Lを直線より先に</h3><p>Lの腕は3連でもあるので、先に直線判定すると曲がった形を取りこぼします。</p></article>
+<article><p class="eyebrow">WHY A SET?</p><h3>重なりを一度だけ</h3><p>行消しと爆弾が同じマスを指しても、mapなら二重消去や二重得点になりません。</p></article>
+<article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>特殊どうしの合成</h3><p>効果範囲に別の特殊があれば、その kind の effectCells もキューへ足してみよう。</p></article>
+</div></section>
   <nav class="lesson-pager"><a href="../cascade/">← STEP 04<strong>連鎖リアクション</strong></a><a href="../ebi-match/">STEP 06 →<strong>Ebi Match</strong></a></nav>
 
 
@@ -85,6 +84,8 @@ for p := range effectCells(special) {
         </form>
       </div>
     </section>
+
+
 
 
 

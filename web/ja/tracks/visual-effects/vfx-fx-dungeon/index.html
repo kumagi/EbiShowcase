@@ -69,10 +69,11 @@
 
       <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-dungeon">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / SPLIT</p>
-          <h3 id="lab-title-vfx-fx-dungeon">HP が真実</h3>
-          <p>点滅だけで倒した判定にしない。</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx data-go-focus="fx draw" data-go-caption="Draw で絵を描く"-ping>命中！（play+fx）</button><button type="button" class="lab-button" data-lab-fx data-go-focus="fx draw" data-go-caption="Draw で絵を描く"-tick>fx だけ 1F進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>リセット</button></div>
+          <p class="eyebrow">TRY IT / PLAY vs FX</p>
+          <h3 id="lab-title-vfx-fx-dungeon">命中＝数字＋花火、どちらも別リスト</h3>
+          <p>「命中！」で左の play（score）と右の fx（spark）が同時に増えます。「fx だけ 1F」では spark の寿命だけ減り、score は変わりません。見た目が消えても HP／点数は残る、という分け方です。</p>
+          <p class="lab-hint" data-lab-fx-hint></p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx data-go-focus="fx draw" data-lab-fx-ping data-go-caption="Draw で絵を描く">命中！（play+fx）</button><button type="button" class="lab-button" data-lab-fx data-go-focus="fx draw" data-lab-fx-tick data-go-caption="Draw で絵を描く">fx だけ 1F進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>リセット</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-fx-split" data-lab-board>
@@ -126,9 +127,33 @@
 
     <nav class="lesson-pager">
       <a href="../vfx-fx-platform/">← STEP A10<strong>ジャンプと着地に塵を足す</strong></a>
-      <a href="../vfx-fx-bullethell/">STEP A12 →<strong>ボンブで弾を消し、爆発は演出へ</strong></a>
+      <a href="../vfx-fx-bullethell/">STEP A12 →<strong>ボムで弾を消し、爆発は演出へ</strong></a>
     </nav>
-  </main>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-fx-dungeon/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+</main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
   <script>

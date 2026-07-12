@@ -78,9 +78,9 @@
             <button type="button" class="lab-button" data-lab-enemy data-go-focus="pick" data-enemy="strike">Foe:strike</button>
             <button type="button" class="lab-button" data-lab-enemy data-go-focus="pick" data-enemy="guard">Foe:guard</button>
             <button type="button" class="lab-button" data-lab-enemy data-go-focus="pick" data-enemy="throw">Foe:throw</button>
-            <button type="button" class="lab-button lab-button-primary" data-lab-pick data-go-focus="pick rule res"="strike">Strike</button>
-            <button type="button" class="lab-button" data-lab-pick data-go-focus="pick rule res"="guard">Guard</button>
-            <button type="button" class="lab-button" data-lab-pick data-go-focus="pick rule res"="throw">Throw</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-pick="strike" data-go-focus="pick rule res">Strike</button>
+            <button type="button" class="lab-button" data-lab-pick="guard" data-go-focus="pick rule res">Guard</button>
+            <button type="button" class="lab-button" data-lab-pick="throw" data-go-focus="pick rule res">Throw</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
@@ -190,6 +190,8 @@ func wins(a, b int) bool {
         </form>
       </div>
     </section>
+
+
 
 
 

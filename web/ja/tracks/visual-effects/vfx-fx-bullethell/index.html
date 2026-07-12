@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="応用編のゴール。ボンブは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。">
-  <title>ボンブで弾を消し、爆発は演出へ | Ebi Showcase</title>
+  <meta name="description" content="応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。">
+  <title>ボムで弾を消し、爆発は演出へ | Ebi Showcase</title>
   <link rel="stylesheet" href="../../../../style.css">
 </head>
 <body class="overview-page">
@@ -21,8 +21,8 @@
 
     <section class="overview-hero">
       <p class="eyebrow">★★★★★ / PLAYABLE</p>
-      <h1>ボンブで弾を消し、爆発は演出へ</h1>
-      <p>応用編のゴール。ボンブは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。</p>
+      <h1>ボムで弾を消し、爆発は演出へ</h1>
+      <p>応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>弾幕クリアとFXの総仕上げ</strong></div>
     </section>
 
@@ -30,12 +30,12 @@
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>避けてボンブせよ</h2></div>
-        <p>弾幕を避け、ボンブで一掃。削除は play、爆発は fx。LIVE GO で bullets と fx.parts を見比べよう。</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>避けてボムせよ</h2></div>
+        <p>弾幕を避け、ボムで一掃。削除は play、爆発は fx。LIVE GO で bullets と fx.parts を見比べよう。</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A12</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="ボンブで弾を消し、爆発は演出へ" src="../../../../play/vfx-fx-bullethell/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="ボムで弾を消し、爆発は演出へ" src="../../../../play/vfx-fx-bullethell/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 
@@ -55,7 +55,7 @@
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>ボンブ</h3>
+          <h3>ボム</h3>
           <p>弾を削除するルール。</p>
           <code>filter bullets</code>
         </article>
@@ -72,7 +72,7 @@
           <p class="eyebrow">TRY IT / SPLIT</p>
           <h3 id="lab-title-vfx-fx-bullethell">危険／安全</h3>
           <p>左＝弾（危険）、右＝粒（安全）。</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx data-go-focus="fx draw" data-go-caption="Draw で絵を描く"-ping>命中！（play+fx）</button><button type="button" class="lab-button" data-lab-fx data-go-focus="fx draw" data-go-caption="Draw で絵を描く"-tick>fx だけ 1F進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>リセット</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx data-go-focus="fx draw" data-lab-fx-ping data-go-caption="Draw で絵を描く">命中！（play+fx）</button><button type="button" class="lab-button" data-lab-fx data-go-focus="fx draw" data-lab-fx-tick data-go-caption="Draw で絵を描く">fx だけ 1F進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>リセット</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-fx-split" data-lab-board>
@@ -128,7 +128,31 @@ g.fx.Burst(x, y, 80, 6, white, true)   // fx only</code></pre>
       <a href="../vfx-fx-dungeon/">← STEP A11<strong>攻撃ヒットに閃光を足す</strong></a>
       <a href="../../platformer/">応用トラックへ →<strong>作りたいゲームを選ぶ</strong></a>
     </nav>
-  </main>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-fx-bullethell/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+</main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
   <script>

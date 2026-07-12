@@ -1,7 +1,42 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Junction AI | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/maze-chase/junction-ai/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 05 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">Give each enemy a personality</p><h1>Junction AI</h1><p>At each junction, an enemy finds legal directions, removes the way back, and picks the step closest to its target. Change only the target data and its chasing style changes.</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section>
-<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Dodge two predictions and collect eight chips</h2><p>Move with arrows/WASD, clicks, or touch. The red HUNTER targets your current tile; the cyan AMBUSHER targets three tiles ahead. Colored rings show targets and yellow lines show chosen directions.</p></div><div class="game-frame"><iframe src="../../../../play/junction-ai/" title="Play Junction AI"></iframe></div></section>
-<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Split chasing into candidates, evaluation, and personality</h2><p>Do not move an enemy straight toward the player. First collect choices that obey the maze. Measure the Manhattan distance from each next tile to the target, then choose the smallest score.</p><div class="concept-row"><article><b>01</b><h3>List legal directions</h3><p>Inspect the four neighboring tiles and keep only directions that are not walls.</p></article><article><b>02</b><h3>Remove reverse</h3><p>When several choices exist, remove the way it came from. Keep reversal at a dead end so it never gets stuck.</p></article><article><b>03</b><h3>Score a personality target</h3><p>HUNTER targets now; AMBUSHER targets three tiles ahead. Both choose the candidate with minimum distance.</p></article></div></section>
-<section class="motion-lab" data-lab="junction-pick" data-chase="picked right" data-scatter="picked up" aria-labelledby="lab-title-junction-ai">
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Junction AI | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/maze-chase/junction-ai/">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 05 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Junction AI</h1>
+      <p>At each junction, an enemy finds legal directions, removes the way back, and picks the step closest to its target. Change only the target data and its chasing style changes.</p>
+      <div class="overview-concept"><small>In this step</small><strong>Chase AI at junctions</strong></div>
+      <p class="cast-note">The frame math sits in the same <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
+    </section>
+    <p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Dodge two predictions and collect eight chips</h2></div><p>Move with arrows/WASD, clicks, or touch. The red HUNTER targets your current tile; the cyan AMBUSHER targets three tiles ahead. Colored rings show targets and yellow lines show chosen directions.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Play Junction AI" src="../../../../play/junction-ai/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE</p>
+        <h2>Split chasing into candidates, evaluation, and personality</h2>
+        <p class="lesson-lead">Do not move an enemy straight toward the player. First collect choices that obey the maze. Measure the Manhattan distance from each next tile to the target, then choose the smallest score.</p>
+      </div>
+
+      <div class="concept-row">
+<article><span class="concept-number">1</span><h3>List legal directions</h3><p>Inspect the four neighboring tiles and keep only directions that are not walls.</p></article><article><span class="concept-number">2</span><h3>Remove reverse</h3><p>When several choices exist, remove the way it came from. Keep reversal at a dead end so it never gets stuck.</p></article><article><span class="concept-number">3</span><h3>Score a personality target</h3><p>HUNTER targets now; AMBUSHER targets three tiles ahead. Both choose the candidate with minimum distance.</p></article>
+</div>
+
+      <div class="motion-lab" data-lab="junction-pick" data-chase="picked right" data-scatter="picked up" aria-labelledby="lab-title-junction-ai">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / JUNCTION</p>
 <h3 id="lab-title-junction-ai">Pick exactly one edge</h3>
@@ -19,7 +54,11 @@
 <span data-go-line="pick">dir = argmin(dist(nextTile, target))</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</section><div class="formula"><p class="eyebrow">SCORE EDGES</p><div class="formula-lines"><code>candidates = open neighbors</code><span>then</span><code>pick min distance to target</code></div><p>Distance scoring reads clearer than pure randomness.</p></div><p>Distance scoring reads clearer than pure randomness.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Pass personality targets into one chooser</h2><p>An <code>ahead</code> value of 0 means the current tile; 3 means three tiles along the player's direction. One algorithm supports different enemies through data.</p></div><pre><code>target := player
+</div>
+
+      <div class="formula"><p class="eyebrow">SCORE EDGES</p><div class="formula-lines"><code>candidates = open neighbors</code><span>then</span><code>pick min distance to target</code></div><p>Distance scoring reads clearer than pure randomness.</p></div>
+
+      <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>Pass personality targets into one chooser</h3><p>An <code>ahead</code> value of 0 means the current tile; 3 means three tiles along the player's direction. One algorithm supports different enemies through data.</p></div><pre><code>target := player
 if enemy.personality.ahead &gt; 0 {
     target = player.add(playerDirection.mul(3))
 }
@@ -34,8 +73,12 @@ for _, dir := range legal[1:] {
        distance(enemy.position.add(best), target) {
         best = dir
     }
-}</code></pre></section>
-<section class="why-grid"><article><h3>Why forbid reversal?</h3><p>Picking only the nearest move can make an enemy bounce between two tiles. Moving onward at junctions makes pursuit look intentional.</p></article><article><h3>How is it strategy?</h3><p>Turn away to build distance from HUNTER. Let AMBUSHER predict a straight run, then enter another corridor early. Reading personality becomes play.</p></article><article><h3>Challenge</h3><p>Add a SCATTER personality that chases from far away but retreats toward its own corner when the player gets close.</p></article></section><nav class="lesson-pager"><a href="../patrol-chase/">← STEP 04<strong>Patrol and Chase</strong></a><a href="../ebi-maze/">STEP 06 →<strong>Ebi Maze</strong></a></nav>
+}</code></pre></div>
+
+      <div class="why-grid"><article><h3>Why forbid reversal?</h3><p>Picking only the nearest move can make an enemy bounce between two tiles. Moving onward at junctions makes pursuit look intentional.</p></article><article><h3>How is it strategy?</h3><p>Turn away to build distance from HUNTER. Let AMBUSHER predict a straight run, then enter another corridor early. Reading personality becomes play.</p></article><article><h3>Challenge</h3><p>Add a SCATTER personality that chases from far away but retreats toward its own corner when the player gets close.</p></article></div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../patrol-chase/">← STEP 04<strong>Patrol and Chase</strong></a><a href="../ebi-maze/">STEP 06 →<strong>Ebi Maze</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -61,8 +104,8 @@ for _, dir := range legal[1:] {
     </section>
 
 
-
-
-
-
-</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+</body>
+</html>

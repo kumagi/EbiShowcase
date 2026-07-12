@@ -37,7 +37,7 @@
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>文字列でステージ</h3><p>ステージはGoの文字列スライス。<code>#</code> や <code>$</code> を読んで壁・箱のデータを作ります。見た目がそのままマップになるので設計しやすいです。</p><code>var level = []string{…}</code></article>
-        <article><span class="concept-number">2</span><h3>mapで壁を管理</h3><p>壁の集合は <code>map[point]bool</code>。「このタイルは壁か？」を <code>g.walls[p]</code> の1行で確認できます。スライスを検索するより高速です。</p><code>walls map[point]bool</code></article>
+        <article><span class="concept-number">2</span><h3>論理座標と描画座標を分ける</h3><p>壁判定は整数タイルのまま。<code>moving</code> 中は <code>progress</code>（0→1）で描画だけを補間します。着いた瞬間に論理座標を更新します。</p><code>if moving { progress += …; return }</code></article>
         <article><span class="concept-number">3</span><h3>Undoは履歴スタック</h3><p>動く前にプレイヤーと箱の位置をスナップショットとして保存します。Undoで最後の状態を取り出して復元します。</p><code>history []snapshot</code></article>
       </div>
 
@@ -79,28 +79,25 @@
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
-          <h3>moveでタイル座標を<br>1マス動かす</h3>
-          <p>移動先が壁なら無視、箱があれば箱の向こうをチェックしてから押す。動く前に履歴へ保存するので、Undoが常に機能します。</p>
+          <h3>移動中は入力を無視し、<br>progressだけで絵を動かす</h3>
+          <p>キーを受けたらすぐにタイル座標を書き換えず、<code>from</code>/<code>to</code> と <code>moving=true</code> をセットします。次のフレームから <code>Update</code> は入力を読まず <code>progress</code> だけ増やし、<code>Draw</code> がその途中位置を描きます。1に達したら論理座標を <code>to</code> にそろえて初めて次の入力を受け付けます。</p>
         </div>
-        <pre><code><span>func</span> (g *game) move(d point) {
-    next := point{g.player.x + d.x, g.player.y + d.y}
-    <span>if</span> g.walls[next] {
-        <span>return</span> <i>// 壁は通れない</i>
+        <pre><code><span>if</span> g.moving {
+    g.progress += 0.14
+    <span>if</span> g.progress &gt;= 1 {
+        g.player = g.toPlayer <i>// ここで初めてタイル確定</i>
+        g.moving = false
     }
-    boxIndex := g.boxAt(next)
-    <span>if</span> boxIndex >= 0 {
-        beyond := point{next.x + d.x, next.y + d.y}
-        <span>if</span> g.walls[beyond] || g.boxAt(beyond) >= 0 {
-            <span>return</span> <i>// 箱を押せない</i>
-        }
-        g.save() <i>// 動く前に履歴へ保存</i>
-        g.boxes[boxIndex] = beyond
-    } <span>else</span> {
-        g.save()
-    }
-    g.player = next
-    g.moves++
-}</code></pre>
+    <span>return</span> <i>// 移動中は入力を無視</i>
+}
+
+<span>if</span> d, ok := readMove(); ok {
+    g.fromPlayer, g.toPlayer = g.player, next
+    g.moving, g.progress = true, 0
+}
+
+<i>// Draw: 論理タイルではなく補間した座標へ描く</i>
+x = lerp(from.x, to.x, progress)</code></pre>
       </div>
 
       
@@ -108,8 +105,8 @@
         <p class="eyebrow">TODAY — まずここを見る</p>
         <ol>
           <li>文字のステージ</li>
-          <li>箱を押す</li>
-          <li>Undoの記録</li>
+          <li>moving 中は入力無視</li>
+          <li>Draw は progress で補間</li>
         </ol>
       </div>
 <p class="full-code-intro">下のコードがこのゲームの<strong>本体</strong>です（主人公の絵は共有パッケージ <code>internal/hero</code> から読みます）。コピーして手元で開けます。その前に、上の「まずここを見る」3つだけ追ってください。</p>
@@ -155,6 +152,13 @@ type game struct {
 	history []snapshot
 	moves   int
 	cleared bool
+
+	// Mid-tile slide: while moving, Update advances progress and ignores new input.
+	moving               bool
+	progress             float64
+	fromPlayer, toPlayer point
+	boxIndex             int // -1 = player only
+	fromBox, toBox       point
 }
 
 // # = 壁, @ = プレイヤー, $ = 箱, . = ゴール
@@ -171,7 +175,7 @@ var level = []string{
 }
 
 func newGame() *game {
-	g := &amp;game{walls: map[point]bool{}}
+	g := &amp;game{walls: map[point]bool{}, boxIndex: -1}
 	for y, row := range level {
 		for x, c := range row {
 			p := point{x, y}
@@ -259,8 +263,21 @@ func (g *game) undo() {
 	}
 }
 
-// 1マス動く（箱があれば押す）
+func (g *game) checkCleared() {
+	g.cleared = true
+	for _, goal := range g.goals {
+		if g.boxAt(goal) &lt; 0 {
+			g.cleared = false
+			return
+		}
+	}
+}
+
+// Start a one-tile slide. Logical tile coords update only when progress reaches 1.
 func (g *game) move(d point) {
+	if g.moving {
+		return
+	}
 	next := point{g.player.x + d.x, g.player.y + d.y}
 	if g.walls[next] {
 		return
@@ -273,23 +290,25 @@ func (g *game) move(d point) {
 			return // 箱の先が壁か別の箱なら押せない
 		}
 		g.save()
-		g.boxes[boxIndex] = beyond
-		g.player = next
+		g.fromPlayer, g.toPlayer = g.player, next
+		g.boxIndex = boxIndex
+		g.fromBox, g.toBox = g.boxes[boxIndex], beyond
+		g.moving = true
+		g.progress = 0
 		g.moves++
-	} else {
-		g.save()
-		g.player = next
-		g.moves++
+		return
 	}
 
-	// すべてのゴールに箱があるか？
-	g.cleared = true
-	for _, goal := range g.goals {
-		if g.boxAt(goal) &lt; 0 {
-			g.cleared = false
-			break
-		}
-	}
+	g.save()
+	g.fromPlayer, g.toPlayer = g.player, next
+	g.boxIndex = -1
+	g.moving = true
+	g.progress = 0
+	g.moves++
+}
+
+func lerp(a, b, t float64) float64 {
+	return a + (b-a)*t
 }
 
 func (g *game) readMove() point {
@@ -334,13 +353,28 @@ func (g *game) Update() error {
 		*g = *newGame()
 		return nil
 	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyZ) || inpututil.IsKeyJustPressed(ebiten.KeyBackspace) {
+	if !g.moving &amp;&amp; (inpututil.IsKeyJustPressed(ebiten.KeyZ) || inpututil.IsKeyJustPressed(ebiten.KeyBackspace)) {
 		g.undo()
 		return nil
 	}
 	if g.cleared {
 		if restartPressed() {
 			*g = *newGame()
+		}
+		return nil
+	}
+
+	// While sliding between tiles, advance the tween and ignore move input.
+	if g.moving {
+		g.progress += 0.14
+		if g.progress &gt;= 1 {
+			g.player = g.toPlayer
+			if g.boxIndex &gt;= 0 {
+				g.boxes[g.boxIndex] = g.toBox
+			}
+			g.moving = false
+			g.progress = 0
+			g.checkCleared()
 		}
 		return nil
 	}
@@ -380,19 +414,30 @@ func (g *game) Draw(screen *ebiten.Image) {
 		}
 	}
 
-	for _, b := range g.boxes {
-		px := float32(b.x * tileSize)
-		py := float32(offsetY + b.y*tileSize)
+	for i, b := range g.boxes {
+		bx, by := float64(b.x), float64(b.y)
+		if g.moving &amp;&amp; i == g.boxIndex {
+			bx = lerp(float64(g.fromBox.x), float64(g.toBox.x), g.progress)
+			by = lerp(float64(g.fromBox.y), float64(g.toBox.y), g.progress)
+		}
+		px := float32(bx * tileSize)
+		py := float32(float64(offsetY) + by*tileSize)
 		c := color.RGBA{224, 130, 64, 255}
-		if g.isGoal(b) {
+		goalTile := point{int(bx + 0.5), int(by + 0.5)}
+		if g.isGoal(goalTile) {
 			c = color.RGBA{50, 210, 151, 255}
 		}
 		vector.DrawFilledRect(screen, px+7, py+7, tileSize-14, tileSize-14, c, false)
 		vector.StrokeRect(screen, px+12, py+12, tileSize-24, tileSize-24, 3, color.RGBA{255, 234, 190, 210}, false)
 	}
 
-	px := float32(g.player.x*tileSize + tileSize/2)
-	py := float32(offsetY + g.player.y*tileSize + tileSize/2)
+	pxTile, pyTile := float64(g.player.x), float64(g.player.y)
+	if g.moving {
+		pxTile = lerp(float64(g.fromPlayer.x), float64(g.toPlayer.x), g.progress)
+		pyTile = lerp(float64(g.fromPlayer.y), float64(g.toPlayer.y), g.progress)
+	}
+	px := float32(pxTile*tileSize + tileSize/2)
+	py := float32(float64(offsetY) + pyTile*tileSize + tileSize/2)
 	hero.DrawCentered(screen, float64(px), float64(py), float64(tileSize)-4)
 
 	ebitenutil.DebugPrintAt(screen, "SOKOBAN — PUT EVERY BOX ON A GOLD GOAL", 86, 28)
@@ -451,6 +496,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -56,7 +56,7 @@
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>
-      <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>velocity = velocity + gravity</code><span>then</span><code>position = position + velocity</code></div><p>Order matters. First gravity changes velocity, then velocity changes position. Repeat every frame to make a natural jumping curve.</p></div>
+      <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>velocity = velocity + gravity</code><span>then</span><code>position = position + velocity</code></div><p>Order matters. First gravity changes velocity, then velocity changes position. Repeat every frame to make a natural jumping curve. Idle bob uses math.Sin as a wave table (optional). Pipe hits are AABB range checks, not circle distance.</p></div>
       <div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Put it inside<br><code>Update</code></h3><p><code>Update</code> reads input, changes velocity, and moves the hero. <code>Draw</code> paints the hero at the newly calculated position.</p></div><pre><code><span>const</span> gravity = 0.42
 <span>const</span> flapSpeed = -7.4
 
@@ -359,6 +359,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

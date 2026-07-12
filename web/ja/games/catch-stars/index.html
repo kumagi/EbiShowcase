@@ -79,9 +79,12 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>リストを1個ずつ更新</h3>
-          <p>落ちた星、キャッチした星、画面外へ消えた星を分けます。残すものだけ次のリストへ入れ直すと、管理がすっきりします。</p>
+          <p>落ちた星、キャッチした星、画面外へ消えた星を分けます。本体では先に <code>next := g.stars[:0]</code> と書いています。これは「中身を捨てた新しいリスト」ではなく、<strong>同じ配列メモリを長さ0から再利用</strong>する書き方です。普通の <code>var next []star</code> でも動きますが、毎フレームの確保を減らせます。</p>
+          <p>Y判定の <code>625〜675</code> はカゴ中心（だいたい Y=640）の上下に厚みを持たせた範囲です。カゴの見た目の高さに合わせた「つかみやすい帯」だと思ってください。</p>
+          <p>リトライの <code>*g = *newGame()</code> は、「ゲーム箱 <code>g</code> の中身を、新品の箱の中身で丸ごと入れ替え」です。ポインタ <code>g</code> 自体は同じまま、スコアや星リストなど全部が初期値に戻ります。</p>
         </div>
-        <pre><code><span>for</span> _, s := range g.stars {
+        <pre><code>next := g.stars[:0] <i>// 長さ0で再利用（var next []star でも可）</i>
+<span>for</span> _, s := range g.stars {
     s.y += s.speed
     <span>if</span> overlaps(s, g.basket) {
         g.score++
@@ -322,6 +325,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

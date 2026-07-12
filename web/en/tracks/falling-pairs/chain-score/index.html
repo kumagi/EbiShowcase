@@ -1,8 +1,42 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Chain Scoring Lab | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/falling-pairs/chain-score/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Falling-pair Chain Puzzle</a><span>STEP 05 / 06</span></div>
-<section class="lesson-hero"><div><p class="eyebrow">RESCAN TO FIND WHAT COMES NEXT</p><h1>Chain Scoring Lab</h1><p>Clear, let pieces fall, then search again after the board settles. Each consecutive clear becomes the score multiplier.</p><div class="lesson-meta"><span>★★★☆☆</span><strong>PLAYABLE</strong></div></div></section>
-<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Build three 2-chains</h2><p>Choose a plan with keys 1–3, a click, or a tap. Watch the outlined group clear and the whole board get searched again after gravity.</p></div><div class="game-frame"><iframe src="../../../../play/chain-score/" title="Play Chain Scoring Lab"></iframe></div></section>
-<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Do not stop at “cleared”; repeat until stable</h2><p>The previous step separated CLEAR from GRAVITY. This step connects SEARCH back after them. One move ends only when the new search finds nothing.</p><div class="concept-row"><article><b>01</b><h3>SEARCH</h3><p>Scan the board and collect every same-color group of four or more.</p></article><article><b>02</b><h3>CLEAR → GRAVITY</h3><p>Empty all marked cells together, then compact each column downward.</p></article><article><b>03</b><h3>SEARCH AGAIN</h3><p>If another group exists, raise the chain count. Otherwise finish the move.</p></article></div></section>
-<section class="motion-lab" data-lab="turn"><div><p class="eyebrow">CHAIN LOOP LAB</p><h2>Step through the processing loop</h2><p>Move through SEARCH → CLEAR → GRAVITY → SEARCH and find the exact point where a chain is born.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">Begin at SEARCH</p><button type="button" class="lab-action">Next phase</button></div>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Chain Scoring Lab | Ebi Showcase</title>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/falling-pairs/chain-score/">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Falling-pair Chain Puzzle</a><span>STEP 05 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Chain Scoring Lab</h1>
+      <p>Clear, let pieces fall, then search again after the board settles. Each consecutive clear becomes the score multiplier.</p>
+      <div class="overview-concept"><small>In this step</small><strong>Chain multiplier & score</strong></div>
+      <p class="cast-note">The frame math sits in the same <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
+    </section>
+    <p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Build three 2-chains</h2></div><p>Choose a plan with keys 1–3, a click, or a tap. Watch the outlined group clear and the whole board get searched again after gravity.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Play Chain Scoring Lab" src="../../../../play/chain-score/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE</p>
+        <h2>Do not stop at “cleared”; repeat until stable</h2>
+        <p class="lesson-lead">The previous step separated CLEAR from GRAVITY. This step connects SEARCH back after them. One move ends only when the new search finds nothing.</p>
+      </div>
+
+      <div class="concept-row">
+<article><span class="concept-number">1</span><h3>SEARCH</h3><p>Scan the board and collect every same-color group of four or more.</p></article><article><span class="concept-number">2</span><h3>CLEAR → GRAVITY</h3><p>Empty all marked cells together, then compact each column downward.</p></article><article><span class="concept-number">3</span><h3>SEARCH AGAIN</h3><p>If another group exists, raise the chain count. Otherwise finish the move.</p></article>
+</div>
+
+      <div class="motion-lab" data-lab="turn"><div><p class="eyebrow">CHAIN LOOP LAB</p><h2>Step through the processing loop</h2><p>Move through SEARCH → CLEAR → GRAVITY → SEARCH and find the exact point where a chain is born.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">Begin at SEARCH</p><button type="button" class="lab-action">Next phase</button></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
 <pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="state">switch phase {</span>
@@ -10,8 +44,11 @@
 <span data-go-line="act">case player: playCard(); case enemy: enemyAct()</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</section>
-<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Connect states into a loop</h2><p><code>Update</code> advances one phase at a time. Returning to <code>searching</code> after gravity is the heart of chaining.</p></div><pre><code>switch phase {
+</div>
+
+      
+
+      <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>Connect states into a loop</h3><p><code>Update</code> advances one phase at a time. Returning to <code>searching</code> after gravity is the heart of chaining.</p></div><pre><code>switch phase {
 case searching:
     marked = findGroups(board)
     if len(marked) == 0 { finishChain() }
@@ -24,9 +61,12 @@ case clearing:
 case falling:
     compact(&amp;board)
     phase = searching // scan again
-}</code></pre></section>
-<section class="why-grid"><article><h3>Why separate phases?</h3><p>Clear stages make intermediate results visible and tell you exactly where a bug entered the loop.</p></article><article><h3>When should score be added?</h3><p>Add it when a group is found. <code>cells × 10 × chain</code> makes later clears more valuable.</p></article><article><h3>Challenge</h3><p>Try a squared multiplier or a bonus for two groups clearing together, then compare how planning changes.</p></article></section>
-<nav class="lesson-pager"><a href="../clear-gravity/">← STEP 04<strong>Clear and Drop</strong></a><a href="../ebi-chain/">STEP 06 →<strong>Ebi Chain</strong></a></nav>
+}</code></pre></div>
+
+      <div class="why-grid"><article><h3>Why separate phases?</h3><p>Clear stages make intermediate results visible and tell you exactly where a bug entered the loop.</p></article><article><h3>When should score be added?</h3><p>Add it when a group is found. <code>cells × 10 × chain</code> makes later clears more valuable.</p></article><article><h3>Challenge</h3><p>Try a squared multiplier or a bonus for two groups clearing together, then compare how planning changes.</p></article></div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../clear-gravity/">← STEP 04<strong>Clear and Drop</strong></a><a href="../ebi-chain/">STEP 06 →<strong>Ebi Chain</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -52,10 +92,8 @@ case falling:
     </section>
 
 
-
-
-
-
-
-
-</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>
+  </main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+</body>
+</html>

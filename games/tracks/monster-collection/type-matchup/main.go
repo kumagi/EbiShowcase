@@ -12,10 +12,10 @@ import (
 
 const width, height = 480, 720
 
-type affinity int
+type element int
 
 const (
-	tide affinity = iota
+	tide element = iota
 	flame
 	leaf
 )
@@ -30,8 +30,8 @@ var matchup = [3][3]float64{
 	{2, 0.5, 1}, // Leaf beats Tide.
 }
 
-var defensePlan = []affinity{leaf, tide, flame, leaf, tide, flame, leaf, tide}
-var counterPlan = []affinity{flame, tide, leaf, tide, flame, leaf, flame, tide}
+var defensePlan = []element{leaf, tide, flame, leaf, tide, flame, leaf, tide}
+var counterPlan = []element{flame, tide, leaf, tide, flame, leaf, flame, tide}
 
 type game struct {
 	playerHP, enemyHP int
@@ -45,7 +45,7 @@ func newGame() *game {
 	return &game{playerHP: 65, enemyHP: 110, message: "Read defense and the predicted counter, then choose a type."}
 }
 
-func (g *game) attack(chosen affinity) {
+func (g *game) attack(chosen element) {
 	if g.clear || g.over {
 		return
 	}
@@ -93,7 +93,7 @@ func (g *game) Update() error {
 		g.attack(leaf)
 	}
 	if x, y, ok := pressPosition(); ok && y >= 565 {
-		g.attack(affinity(min(2, x/160)))
+		g.attack(element(min(2, x/160)))
 	}
 	return nil
 }
@@ -141,7 +141,7 @@ func (g *game) Draw(screen *ebiten.Image) {
 	}
 }
 
-func drawButton(screen *ebiten.Image, x int, label string, kind affinity) {
+func drawButton(screen *ebiten.Image, x int, label string, kind element) {
 	vector.DrawFilledRect(screen, float32(x), 565, 140, 66, colors[kind], false)
 	ebitenutil.DebugPrintAt(screen, label, x+24, 592)
 }

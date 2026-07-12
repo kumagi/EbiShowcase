@@ -37,7 +37,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>Velocity vector</h3><p>Store how far to move each frame as separate X and Y. Diagonal motion is just both additions together.</p><code>ballX += vx</code></article>
         <article><span class="concept-number">2</span><h3>Bounce per face</h3><p>Invert only the component perpendicular to the face you hit. Vertical walls flip vx; horizontal paddles flip vy.</p><code>vx = -vx</code></article>
-        <article><span class="concept-number">3</span><h3>Hit offset</h3><p>Hitting near a paddle edge adds the offset into vx so the return angle changes. That is aimed play.</p><code>vx += offset * 0.055</code></article>
+        <article><span class="concept-number">3</span><h3>Hit offset</h3><p>Hit offset from paddle center × 0.055 is added to vx — a small curve “taste” factor. CPU chases ballX by at most 3.5px/frame when farther than 8px.</p><code>vx += offset * 0.055</code></article>
       </div>
 
       
@@ -299,6 +299,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 
