@@ -1,16 +1,19 @@
 #!/usr/bin/env node
 /**
- * Add the shared Google Form to every Japanese and English content page.
+ * Add the shared Google Form connection to every Japanese and English content page.
  *
- * The source pages keep the form markup so local previews work too.
+ * The page uses a native, styled form that posts to Google's public formResponse
+ * endpoint. The Google Form remains the owner of validation and spreadsheet storage.
  * Running this script again is safe because the marker is idempotent.
  */
 import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 
 const root = new URL("..", import.meta.url).pathname;
-const formURL =
-  "https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/viewform?embedded=true";
+const responseURL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse";
+const pageEntry = "765794446";
+const feedbackEntry = "893595607";
 
 function walk(dir, files = []) {
   for (const name of readdirSync(dir)) {
@@ -22,22 +25,39 @@ function walk(dir, files = []) {
   return files;
 }
 
-function block(lang) {
+function escapeHTML(value) {
+  return value.replace(/[&<>\"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[character]));
+}
+
+function block(lang, pagePath) {
   const japanese = lang === "ja";
+  const pageLabel = escapeHTML(`/${pagePath.replace(/\\/g, "/")}`);
   return `
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-copy">
-        <p class="eyebrow">${japanese ? "TELL EBI BOY" : "TELL EBI BOY"}</p>
-        <h2 id="feedback-title">${japanese ? "ひとことフィードバック" : "A quick note for us"}</h2>
+        <p class="eyebrow">TELL EBI BOY</p>
+        <h2 id="feedback-title">${japanese ? "このページを一緒に育てよう" : "Help us grow this page"}</h2>
         <p>${japanese ? "わかりにくかったところ、楽しかったところ、追加してほしいことを教えてください。短いひとことでも大歓迎です。" : "Tell us what was fun, confusing, or worth adding. A short note is perfect."}</p>
+        <div class="feedback-promise"><span>✦</span>${japanese ? "送信内容は教材の改善だけに使います。" : "Your note helps us improve the lessons."}</div>
       </div>
-      <div class="feedback-frame">
-        <iframe
-          title="${japanese ? "Ebi Showcase フィードバックフォーム" : "Ebi Showcase feedback form"}"
-          src="${formURL}"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-        >${japanese ? "フィードバックフォームを読み込めませんでした。フォームを別のタブで開いてください。" : "The feedback form could not be loaded. Please open it in a new tab."}</iframe>
+      <div class="feedback-card">
+        <form class="feedback-form" action="${responseURL}" method="POST">
+          <label class="feedback-field">
+            <span>${japanese ? "対象ページ" : "Page"}</span>
+            <input name="entry.${pageEntry}" value="${pageLabel}" readonly required>
+          </label>
+          <label class="feedback-field">
+            <span>${japanese ? "フィードバック" : "Feedback"}</span>
+            <textarea name="entry.${feedbackEntry}" rows="5" maxlength="500" required data-sending="${japanese ? "送信中…" : "Sending…"}" data-sent="${japanese ? "送信しました。ありがとうございます！" : "Sent — thank you!"}" data-failed="${japanese ? "送信できませんでした。時間をおいて再試行してください。" : "Could not send. Please try again later."}" placeholder="${japanese ? "短いひとことを入力してください" : "Write a short note"}"></textarea>
+            <small>${japanese ? "500文字以内" : "Up to 500 characters"}</small>
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">${japanese ? "送信する" : "Send feedback"}<span>→</span></button>
+            <p class="feedback-status" aria-live="polite">${japanese ? "Googleフォームへ安全に送信されます。" : "Sent securely to Google Forms."}</p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
       </div>
     </section>
 `;
@@ -51,17 +71,28 @@ const pages = [
 
 for (const file of pages) {
   const lang = file.includes(`${join("web", "ja")}/`) ? "ja" : "en";
+  const pagePath = relative(join(root, "web", lang), file).replace(/\/index\.html$/, "/");
   const html = readFileSync(file, "utf8");
-  if (html.includes("class=\"feedback-section\"")) continue;
+  const marker = '<section class="feedback-section"';
+  const existing = html.indexOf(marker);
+  if (existing >= 0) {
+    const close = html.indexOf("</section>", existing);
+    if (close < 0) throw new Error(`Malformed feedback section: ${file}`);
+    const prefix = html.slice(0, existing).replace(/[ \t\n]+$/, "\n\n");
+    const next = prefix + block(lang, `${lang}/${pagePath}`) + html.slice(close + "</section>".length);
+    writeFileSync(file, next);
+    updated++;
+    continue;
+  }
   const mainClose = html.lastIndexOf("</main>");
   if (mainClose < 0) {
     console.error(`No </main> found in ${file}`);
     process.exitCode = 1;
     continue;
   }
-  const next = html.slice(0, mainClose) + block(lang) + html.slice(mainClose);
-  writeFileSync(file, next);
+  const prefix = html.slice(0, mainClose).replace(/[ \t\n]+$/, "\n\n");
+  writeFileSync(file, prefix + block(lang, `${lang}/${pagePath}`) + html.slice(mainClose));
   updated++;
 }
 
-console.log(`Inserted feedback forms into ${updated} page(s).`);
+console.log(`Updated feedback forms in ${updated} page(s).`);

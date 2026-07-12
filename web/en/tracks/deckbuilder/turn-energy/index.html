@@ -1,17 +1,37 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Energy Turns | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/deckbuilder/turn-energy/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Deckbuilding Card Game</a><span>STEP 02 / 07</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Energy Turns</h1><p>Advance turn start, card play, turn end, and enemy action with a state machine.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Turn phases and action resources</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Combine three energy to win.</h2></div><p>Play cards with 1–3 and end with E or the bottom button.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Energy Turns" src="../../../../play/turn-energy/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / TURN PHASE</p><h2>Why does the enemy wait while you choose cards?</h2><p class="lesson-lead">Remember one current phase and run <strong>only that phase's Update</strong>. Ending the player turn passes control to the enemy.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Turn start</h3><p>Restore energy to three and prepare block.</p><code>energy = 3</code></article><article><span class="concept-number">2</span><h3>Card play</h3><p>Subtract cost and play several while energy remains.</p><code>energy -= card.Cost</code></article><article><span class="concept-number">3</span><h3>Enemy action</h3><p>The end button changes phase to Enemy.</p><code>phase = EnemyPhase</code></article></div><div class="motion-lab" data-lab="entities"><div class="lab-copy"><p class="eyebrow">TRY IT / ACTION LIST</p><h3>Queue one turn's actions</h3><p>Add cards, then advance them in order. The game allows actions until End Turn.</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-fire>Add action</button><button class="lab-button" data-lab-step>Advance</button><button class="lab-button lab-button-quiet" data-lab-reset>Reset turn</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Actions</span><strong data-lab-count>0</strong></div><div><span>Order</span><strong data-lab-list>—</strong></div></div></div></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Branch Update by phase</h3><p>Ignore card input during Enemy phase, then restore energy when it finishes.</p></div><pre><code>switch phase { case PlayerPhase: playCardsOrEnd(); case EnemyPhase: enemyAct(); energy = 3; phase = PlayerPhase }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ENERGY?</p><h3>Choose combinations</h3><p>Compare several small cards with one large move.</p></article><article><p class="eyebrow">WHY PHASE?</p><h3>Keep order clear</h3><p>Input and enemy action cannot happen together.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Carry energy</h3><p>Design a rule that saves one unused energy.</p></article></div></section><nav class="lesson-pager"><a href="../play-a-card/">← STEP 01<strong>Play a Card</strong></a><a href="../deck-cycle/">STEP 03 →<strong>Draw, Hand, Discard</strong></a></nav>
+
+
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-copy">
         <p class="eyebrow">TELL EBI BOY</p>
-        <h2 id="feedback-title">A quick note for us</h2>
+        <h2 id="feedback-title">Help us grow this page</h2>
         <p>Tell us what was fun, confusing, or worth adding. A short note is perfect.</p>
+        <div class="feedback-promise"><span>✦</span>Your note helps us improve the lessons.</div>
       </div>
-      <div class="feedback-frame">
-        <iframe
-          title="Ebi Showcase feedback form"
-          src="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/viewform?embedded=true"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-        >The feedback form could not be loaded. Please open it in a new tab.</iframe>
+      <div class="feedback-card">
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <label class="feedback-field">
+            <span>Page</span>
+            <input name="entry.765794446" value="/en/tracks/deckbuilder/turn-energy/" readonly required>
+          </label>
+          <label class="feedback-field">
+            <span>Feedback</span>
+            <textarea name="entry.893595607" rows="5" maxlength="500" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write a short note"></textarea>
+            <small>Up to 500 characters</small>
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite">Sent securely to Google Forms.</p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
       </div>
     </section>
+
+
+
+
+
+
 </main><script src="../../../../learn.js"></script></body></html>

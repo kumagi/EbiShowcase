@@ -85,7 +85,7 @@ Open lesson pages through HTTP, not `file://`, because browsers will not load WA
 
 ## Feedback workflow
 
-- Every Japanese and English content page embeds the shared Google Form at the end of the page. Keep the form embed and its feedback styles when adding or restructuring pages.
+- Every Japanese and English content page has a shared, site-styled feedback form at the end of the page. It posts to the Google Form `formResponse` endpoint; do not replace it with a visible iframe when adding or restructuring pages.
 - Feedback responses are stored in the linked Google Sheet `1r6jYssPE7AdluEqJ1nqyzzRWrOH8Ncp-zUyK4xnn0lw`.
 - The local triage tool uses OAuth. The OAuth client JSON belongs under `.secrets/` and must never be committed or pasted into chat. The first run opens a browser for Google consent and stores a refresh token in `.secrets/feedback-token.json`.
 - Use these commands from the repository root:

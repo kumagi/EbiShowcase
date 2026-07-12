@@ -1,17 +1,37 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Stable Physics World | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/merge-physics/stable-simulation/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Merge Physics Puzzle</a><span>STEP 04 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Stable Physics World</h1><p>Solve collisions repeatedly, sleep still circles, and compare only nearby objects.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Iterative solving, sleep, and spatial grids</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Settle a stack of thirty.</h2></div><p>Tap to drop circles. A blue ring means sleeping.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Stable Physics World" src="../../../../play/stable-simulation/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / STABILITY</p><h2>Why does a circle stack stop trembling?</h2><p class="lesson-lead">Solve contacts <strong>seven times</strong> per frame, sleep quiet circles, and divide the screen into cells so only neighbors are compared.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Iterations</h3><p>Seven correction passes reduce error.</p><code>for pass := 0; pass &lt; 7; pass++</code></article><article><span class="concept-number">2</span><h3>Sleep</h3><p>Stop updates after ninety quiet frames.</p><code>if quiet &gt; 90 { sleep = true }</code></article><article><span class="concept-number">3</span><h3>Spatial grid</h3><p>Group circle indices into 80px cells.</p><code>buckets[cell] = append(...)</code></article></div><div class="motion-lab" data-lab="bounce" data-wall="wall" data-paddle="floor"><div class="lab-copy"><p class="eyebrow">TRY IT / SETTLE</p><h3>Follow bouncing velocity</h3><p>Velocity reverses at surfaces and can eventually become quiet.</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-step>Step one frame</button><button class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div></div><div class="lab-visual"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-ball style="position:absolute;border-radius:50%"></div></div><div class="lab-values"><div><span>vx</span><strong data-lab-vx>6.0</strong></div><div><span>vy</span><strong data-lab-vy>4.0</strong></div><div><span>Contact</span><strong data-lab-note>—</strong></div></div></div></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Solve neighbors seven times</h3><p>Avoid checking all thirty against all thirty; inspect the same and eight adjacent cells.</p></div><pre><code>for pass := 0; pass &lt; 7; pass++ { buckets := buildGrid(balls); solveNeighborCells(buckets) } / if speed &lt; .12 { quiet++ }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ITERATE?</p><h3>Fix chained overlap</h3><p>Moving one circle affects its neighbor, so several passes help.</p></article><article><p class="eyebrow">WHY SLEEP?</p><h3>Stop tiny trembling</h3><p>Skip still objects and let the pile rest.</p></article><article class="challenge"><p class="eyebrow">WHY GRID?</p><h3>Ignore distant circles</h3><p>Change cell size and watch comparison count.</p></article></div></section><nav class="lesson-pager"><a href="../stacking-bounce/">← STEP 03<strong>Stacking and Bounce</strong></a><a href="../merge-rule/">STEP 05 →<strong>Merge Rule</strong></a></nav>
+
+
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-copy">
         <p class="eyebrow">TELL EBI BOY</p>
-        <h2 id="feedback-title">A quick note for us</h2>
+        <h2 id="feedback-title">Help us grow this page</h2>
         <p>Tell us what was fun, confusing, or worth adding. A short note is perfect.</p>
+        <div class="feedback-promise"><span>✦</span>Your note helps us improve the lessons.</div>
       </div>
-      <div class="feedback-frame">
-        <iframe
-          title="Ebi Showcase feedback form"
-          src="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/viewform?embedded=true"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-        >The feedback form could not be loaded. Please open it in a new tab.</iframe>
+      <div class="feedback-card">
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <label class="feedback-field">
+            <span>Page</span>
+            <input name="entry.765794446" value="/en/tracks/merge-physics/stable-simulation/" readonly required>
+          </label>
+          <label class="feedback-field">
+            <span>Feedback</span>
+            <textarea name="entry.893595607" rows="5" maxlength="500" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write a short note"></textarea>
+            <small>Up to 500 characters</small>
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite">Sent securely to Google Forms.</p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
       </div>
     </section>
+
+
+
+
+
+
 </main><script src="../../../../learn.js"></script></body></html>

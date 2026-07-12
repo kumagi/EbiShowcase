@@ -1123,6 +1123,34 @@ const highlightCode = (code) => {
 
 document.querySelectorAll("pre code").forEach(highlightCode);
 
+document.querySelectorAll(".feedback-form").forEach((form) => {
+  const button = form.querySelector(".feedback-submit");
+  const status = form.querySelector(".feedback-status");
+  const textarea = form.querySelector("textarea");
+  if (!button || !status || !textarea) return;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    button.disabled = true;
+    status.textContent = textarea.dataset.sending || "送信中…";
+    status.classList.remove("is-sent");
+    try {
+      await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        mode: "no-cors",
+        credentials: "omit",
+      });
+      textarea.value = "";
+      status.textContent = textarea.dataset.sent || "送信しました。ありがとうございます！";
+      status.classList.add("is-sent");
+    } catch {
+      status.textContent = textarea.dataset.failed || "送信できませんでした。時間をおいて再試行してください。";
+    } finally {
+      button.disabled = false;
+    }
+  });
+});
+
 document.querySelectorAll(".full-code").forEach((block) => {
   const button = block.querySelector("[data-copy]");
   const code = block.querySelector("[data-embed-slot], pre code");
