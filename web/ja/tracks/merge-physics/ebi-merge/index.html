@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / NEXT QUEUE</p>
 <h3 id="lab-title-ebi-merge">次に落ちる段をキューで見せる</h3>
 <p>予告は「次の物体」の待ち行列です。先頭を落とし、後ろへ新しい段を足します。得点やゲームオーバー判定とは別の箱です。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-drop>先頭を落とす</button><button type="button" class="lab-button" data-lab-enqueue>予告を足す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-drop data-go-focus="q drop">先頭を落とす</button><button type="button" class="lab-button" data-lab-enqueue data-go-focus="enq">予告を足す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
 <p class="lab-hint">次の1個だけ見せるか、2〜3個見せるかも同じキューです。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>次</span><strong data-lab-next>—</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="q">next := queue[0]</span>
+<span data-go-line="drop">queue = queue[1:]; spawn(next)</span>
+<span data-go-line="enq">queue = append(queue, randomTier())</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">PREVIEW ≠ BOARD</p><div class="formula-lines"><code>queue.front → spawn</code><span>つぎに</span><code>queue は盤面と別</code></div><p>予告を盤面配列へ混ぜないこと。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>同じUpdateへ全部を順序よく置く</h3><p>入力、物理、合体、危険判定の順なら、結果が毎回同じになります。</p></div><pre><code>readDropInput() / simulatePhysics() / replaceMergedPairs() / updateScoreAndDanger() / decideClearOrGameOver()</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY PREVIEW?</p><h3>運だけにしない</h3><p>次を知れば置き場所を計画できます。</p></article><article><p class="eyebrow">WHY DELAY DANGER?</p><h3>跳ねた瞬間を許す</h3><p>一瞬ラインを越えただけでは終了しません。</p></article><article class="challenge"><p class="eyebrow">TUNE IT</p><h3>得点曲線</h3><p>2乗を3乗へ変えると大合体の価値がさらに上がります。</p></article></div></section><nav class="lesson-pager"><a href="../merge-rule/">← STEP 05<strong>同じ実の合体</strong></a><a href="../">PATH COMPLETE →<strong>合体物理パズル</strong></a></nav>
 

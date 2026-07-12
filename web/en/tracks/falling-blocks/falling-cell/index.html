@@ -80,12 +80,19 @@
 <p class="eyebrow">TRY IT / DROP CLOCK</p>
 <h3 id="lab-title-falling-cell">Drop one cell only when the clock fills</h3>
 <p>Each Step ticks the timer. When it’s full, the cell moves one row. If blocked below, it LOCKs and respawns up top. Dropping every frame would hit the floor instantly—so we throttle with a clock.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>Advance 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset clock</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="tick drop" data-go-caption="Tick the fuse">Advance 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset clock</button></div>
 <p class="lab-hint">The real game uses 38 frames; this lab uses 8 so you can feel it sooner.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>timer</span><strong data-lab-timer>0</strong></div><div><span>row y</span><strong data-lab-y>0</strong></div><div><span>event</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="tick">timer++</span>
+<span data-go-line="drop">if timer &gt;= 38 { y++; timer = 0 }</span>
+<span data-go-line="lock">if !canFall { lockPiece() }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE TIMER RULE</p><div class="formula-lines"><code>timer++</code><span>then</span><code>when full: y++ (or lock)</code></div><p>Want faster drops? Change dropFrames only—leave the position math alone.</p></div><div class="code-lesson">
 <div>

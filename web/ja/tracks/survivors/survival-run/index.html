@@ -45,8 +45,8 @@
           <h3 id="lab-title-survival-run">秒数が間隔と速度を変える</h3>
           <p>経過秒で出現間隔を短くし、敵速度を上げます。難しさは時間の関数です。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>+5秒</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="sec iv spd">+5秒</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -58,7 +58,14 @@
             <div><span>speed</span><strong data-lab-speed>0.85</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="sec">sec := frame / 60</span>
+<span data-go-line="iv">interval := max(10, 34-sec/2)</span>
+<span data-go-line="spd">speed := 1.15 + float64(sec)*0.028</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE DIFFICULTY CURVE</p>

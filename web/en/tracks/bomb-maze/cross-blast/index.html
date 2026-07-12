@@ -6,14 +6,20 @@
 <p class="eyebrow">TRY IT / CROSS ARMS</p>
 <h3 id="lab-title-cross-blast">Extend a cross up to power</h3>
 <p>From the center, walk N/E/S/W until a wall or the power runs out. Power+ lengthens each arm. Hard walls stop the flame.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-power>Power +1</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Power 1</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-power data-go-focus="arms stop" data-go-caption="Input freezes motion">Power +1</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Power 1</button></div>
 <p class="lab-hint">Each direction is its own for-loop.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>power</span><strong data-lab-reach>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
 </div>
-</section><div class="formula"><p class="eyebrow">FOUR LOOPS</p><div class="formula-lines"><code>for each dir in NESW</code><span>then</span><code>walk until wall or power</code></div><p>Grid crosses beat circles for tile bombs.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Use nested direction and distance loops</h2><p><code>break</code> stops only the inner distance loop. A wall to the right therefore does not prevent the next up, down, or left ray from being checked.</p></div><pre><code>cells := []point{center}
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="arms">for dir in ±x,±y { for i:=1; i&lt;=power; i++ }</span>
+<span data-go-line="stop">if wall { break } ; light(cell)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</section><div class="formula"><p class="eyebrow">FOUR LOOPS</p><div class="formula-lines"><code>for each dir in NESW</code><span>then</span><code>walk until wall or power</code></div><p>Grid crosses beat circles for tile bombs.</p></div><p>Grid crosses beat circles for tile bombs.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Use nested direction and distance loops</h2><p><code>break</code> stops only the inner distance loop. A wall to the right therefore does not prevent the next up, down, or left ray from being checked.</p></div><pre><code>cells := []point{center}
 for _, direction := range rays {
     for step := 1; step &lt;= blastRange; step++ {
         next := point{

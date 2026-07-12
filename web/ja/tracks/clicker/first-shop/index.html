@@ -47,9 +47,9 @@
           <h3 id="lab-title-first-shop">足りるときだけ買う</h3>
           <p>足りるときだけ購入し、値段を上げます。足りなければ何もしません。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button" data-lab-earn>稼ぐ +5</button>
-            <button type="button" class="lab-button lab-button-primary" data-lab-buy>買う</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button" data-lab-earn data-go-focus="earn">稼ぐ +5</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-buy data-go-focus="buy">買う</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -61,7 +61,13 @@
             <div><span>所有</span><strong data-lab-owned>0</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="earn">gold += 5</span>
+<span data-go-line="buy">if gold &gt;= cost { gold -= cost; owned++; cost += 5 }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE SHOP RULE</p>

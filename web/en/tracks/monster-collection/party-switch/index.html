@@ -10,12 +10,18 @@
 <p class="eyebrow">TRY IT / ACTIVE INDEX</p>
 <h3 id="lab-title-party-switch">Rotate the front-line index</h3>
 <p>The party is an array; the front-liner is an index. Swap advances that index. Forced swaps write the same field.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-swap>Switch</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>First</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-swap data-go-focus="idx">Switch</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>First</button></div>
 <p class="lab-hint">Disable swap when only one member remains.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>active</span><strong data-lab-active>—</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="idx">active = slot // do not delete party</span>
+<span data-go-line="turn">if fainted { forceSwap() }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">INDEX ONLY</p><div class="formula-lines"><code>active = (active+1) % len</code><span>then</span><code>draw party[active]</code></div><p>You can swap without reshuffling the array.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>One switch function handles two transitions</h3><p>A forced switch clears state without another enemy action. A planned switch spends a turn. One entrance also keeps the “cannot select HP zero” check in one place.</p></div><pre><code>func switchTo(next int) {
     if party[next].hp == 0 { return }

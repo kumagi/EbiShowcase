@@ -32,12 +32,19 @@
 <p class="eyebrow">TRY IT / MARK SPECIALS</p>
 <h3 id="lab-title-special-pieces">消すマスの集合を先に作る</h3>
 <p>特殊ピースも、まず「どのマスを消すか」の集合を作ります。スキャンで集合を見てから消去。爆弾もラインも、最後は同じクリア処理に渡せます。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan>効果範囲を集める</button><button type="button" class="lab-button" data-lab-clear>まとめて消す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan data-go-focus="scan">効果範囲を集める</button><button type="button" class="lab-button" data-lab-clear data-go-focus="clear">まとめて消す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
 <p class="lab-hint">効果ごとに描画を分けても、消去パイプは1本にまとめると安全です。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>対象マス</span><strong data-lab-count>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="scan">for each cell { if run &gt;= 3 { mark } }</span>
+<span data-go-line="clear">removeMarked()</span>
+<span data-go-line="fall">compactColumns()</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">SET THEN CLEAR</p><div class="formula-lines"><code>消すマスを Set に入れる</code><span>つぎに</span><code>Set をまとめて空にする</code></div><p>特殊効果は「Set をどう埋めるか」だけ変えれば足せます。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>判定と効果を別の関数にする</h3><p><code>detectSpecial</code>は「何ができたか」を返し、<code>activate</code>は種類を見て「どこへ届くか」を決めます。一つの長いif文にしないのが大切です。</p></div><pre><code>kind, center, ok := detectSpecial(board)
 if ok {

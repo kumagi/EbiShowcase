@@ -3,12 +3,18 @@
 <p class="eyebrow">TRY IT / STAGE DATA</p>
 <h3 id="lab-title-ebi-match">手数と目標スコアを同時に見よう</h3>
 <p>ステージデータは「残り手数」と「目標」のセットです。マッチするたび手数を減らし得点を足す。0手で未達なら失敗です。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-match>マッチする</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>ステージを戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-match data-go-focus="move clear" data-go-caption="位置を進める">マッチする</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>ステージを戻す</button></div>
 <p class="lab-hint">盤面レイアウトも同じステージJSONに置けます。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>残り手数</span><strong data-lab-moves>10</strong></div><div><span>スコア</span><strong data-lab-score>0/30</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="move">moves--; score += cleared</span>
+<span data-go-line="clear">if score &gt;= goal { stageClear = true }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">MOVES + GOAL</p><div class="formula-lines"><code>moves-- ; score += n</code><span>つぎに</span><code>win if score >= goal</code></div><p>ルールとステージ数値を分離します。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>データを読み、同じルールを動かす</h3><p>newGameへ別のstageを渡すだけで、手数も目標も盤面も変わります。Updateの交換ルールはそのままです。</p></div><pre><code>type stage struct {
     moves       int

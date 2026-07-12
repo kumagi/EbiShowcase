@@ -73,9 +73,9 @@
           <h3 id="jump-lab-title">Jump only while grounded</h3>
           <p>“Jump” works only when grounded. Pressing again in the air does nothing. “Next frame” applies gravity; landing sets grounded again.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-jump>Jump</button>
-            <button type="button" class="lab-button" data-lab-step>Next frame</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-jump data-go-focus="jump">Jump</button>
+            <button type="button" class="lab-button" data-lab-step data-go-focus="grav land" data-go-caption="Add acceleration">Next frame</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">The real game advances every frame automatically. This lab is slow motion.</p>
         </div>
@@ -90,7 +90,14 @@
             <div><span>grounded</span><strong data-lab-grounded data-state="hit">grounded</strong><small>jump allowed</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="grav">vy += gravity</span>
+<span data-go-line="jump">if grounded &amp;&amp; pressed { vy = jumpV }</span>
+<span data-go-line="land">if y &gt;= floor { y, vy, grounded = floor, 0, true }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE ONE-LINE RULE</p>

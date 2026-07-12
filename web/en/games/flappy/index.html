@@ -45,10 +45,17 @@
         <article><span class="concept-number">2</span><h3>Velocity</h3><p>How far and which way the hero moves each update. Negative goes up; positive goes down.</p><code>velocity = -7.4</code></article>
         <article><span class="concept-number">3</span><h3>Acceleration</h3><p>How much velocity changes each time. Keep adding <strong>+0.42</strong> as gravity and the hero slows, then falls.</p><code>gravity = +0.42</code></article>
       </div>
-      <div class="motion-lab" aria-labelledby="motion-lab-title">
-        <div class="lab-copy"><p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p><h3 id="motion-lab-title">Move one frame at a time</h3><p>A game works like a flipbook. Each step adds gravity to velocity, then moves the hero by that velocity. Looks like Ebi Tenjiroh; hit test is a circle.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap>Flap</button><button type="button" class="lab-button" data-lab-step>Next frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div><p class="lab-hint">“Flap” sets the upward velocity to <code>-7.4</code>, then advances one frame.</p></div>
+      <div class="motion-lab" data-lab="flappy" aria-labelledby="motion-lab-title">
+        <div class="lab-copy"><p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p><h3 id="motion-lab-title">Move one frame at a time</h3><p>A game works like a flipbook. Each step adds gravity to velocity, then moves the hero by that velocity. Looks like Ebi Tenjiroh; hit test is a circle.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap data-go-focus="flap grav pos" data-go-caption="Apply upward impulse → Add acceleration → Add velocity to position">Flap</button><button type="button" class="lab-button" data-lab-step data-go-focus="grav pos" data-go-caption="Add acceleration → Add velocity to position">Next frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div><p class="lab-hint">“Flap” sets the upward velocity to <code>-7.4</code>, then advances one frame.</p></div>
         <div class="lab-visual"><div class="lab-sky" role="img" aria-label="Diagram of vertical hero movement"><span class="axis-label axis-top">0 / TOP</span><span class="axis-label axis-bottom">720 / BOTTOM</span><div class="lab-bird" data-lab-bird aria-hidden="true"><span></span></div></div><div class="lab-values" aria-live="polite"><div><span>Acceleration</span><strong>+0.42</strong><small>each frame</small></div><div><span>Velocity</span><strong data-lab-velocity>0.00</strong><small data-lab-direction>not moving</small></div><div><span>Position Y</span><strong data-lab-position>320.00</strong><small>from the top</small></div></div></div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="grav">vy += 0.42 // gravity each frame</span>
+<span data-go-line="pos">y += vy</span>
+<span data-go-line="flap">if pressed { vy = -7.4 // jump impulse }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
       <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>velocity = velocity + gravity</code><span>then</span><code>position = position + velocity</code></div><p>Order matters. First gravity changes velocity, then velocity changes position. Repeat every frame to make a natural jumping curve.</p></div>
       <div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Put it inside<br><code>Update</code></h3><p><code>Update</code> reads input, changes velocity, and moves the hero. <code>Draw</code> paints the hero at the newly calculated position.</p></div><pre><code><span>const</span> gravity = 0.42
 <span>const</span> flapSpeed = -7.4

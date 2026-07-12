@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / STATUS TURNS</p>
 <h3 id="lab-title-intent-status">Tick status durations down</h3>
 <p>A status is a name plus remaining turns. Apply adds one; tick decrements; zero removes it. Enemy intents use the same leftover-time idea.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-add>Apply poison</button><button type="button" class="lab-button" data-lab-tick>Pass turn</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-add data-go-focus="add">Apply poison</button><button type="button" class="lab-button" data-lab-tick data-go-focus="tick drop" data-go-caption="Tick the fuse">Pass turn</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Tick every status once at turn start.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>effects</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="add">status = append(status, Effect{name, left: 3})</span>
+<span data-go-line="tick">for i := range status { status[i].left-- }</span>
+<span data-go-line="drop">status = filterAlive(status)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">DURATION FIELD</p><div class="formula-lines"><code>apply: left = N</code><span>then</span><code>tick: left-- ; drop if 0</code></div><p>Split effect logic from lifetime.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Execute the intent that was displayed</h3><p>Read the current intent, reduce attack to three quarters during Weak, then advance to the next intent.</p></div><pre><code>in := intents[intentIndex]
 damage := in.damage

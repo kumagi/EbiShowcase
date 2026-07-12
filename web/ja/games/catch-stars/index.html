@@ -44,8 +44,8 @@
           <h3 id="aabb-lab-title">星を落として、重なりを見よう</h3>
           <p>「1フレーム進める」で星が落ちます。カゴの四角形と重なった瞬間、判定が YES になります。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>1フレーム進める</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="fall" data-go-caption="毎フレーム落ちる">1フレーム進める</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">丸く見えても、当たり判定は四角形で十分なことがよくあります。まずは箱で考え、必要ならあとから精密にします。</p>
         </div>
@@ -60,7 +60,14 @@
             <div><span>ルール</span><strong>4辺</strong><small>左右上下すべて</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="fall">star.y += star.speed</span>
+<span data-go-line="move">basket.x = clamp(pointerX)</span>
+<span data-go-line="hit">if overlaps(starBox, basketBox) { score++ }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE OVERLAP RULE</p>

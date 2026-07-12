@@ -3,12 +3,18 @@
 <p class="eyebrow">TRY IT / DRAW CYCLE</p>
 <h3 id="lab-title-deck-cycle">手札コストを回して山を循環させる</h3>
 <p>カードを使う（コスト消費）→ ターン終了でリソース回復。山札・捨て札の循環も、同じ「ターンの区切り」でまとめて処理すると迷子になりません。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spend>1枚使う</button><button type="button" class="lab-button" data-lab-end>ターン終了（山を循環）</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spend>1枚使う</button><button type="button" class="lab-button" data-lab-end data-go-focus="end">ターン終了（山を循環）</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
 <p class="lab-hint">山が空なら捨て札をシャッフルして山に戻す、もターン区切りで行います。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>手札枠</span><strong data-lab-energy>0</strong></div><div><span>ターン</span><strong data-lab-turn>0</strong></div><div><span>使った枚数</span><strong data-lab-spent>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="refill">energy = maxEnergy // start of turn</span>
+<span data-go-line="end">drawHand(); enemyTurn()</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE CYCLE EDGE</p><div class="formula-lines"><code>play: hand → discard</code><span>つぎに</span><code>turn end: draw / reshuffle</code></div><p>循環の処理をターンの境目に集めると、戦闘中のバグが減ります。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>引く前に山札を確かめる</h3><p>手札が5枚になるまで1枚ずつ引きます。山札が空なら捨て札を移し、捨て札を空にしてから混ぜます。</p></div><pre><code>for len(hand) &lt; 5 {
     if len(draw) == 0 {

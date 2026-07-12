@@ -3,14 +3,21 @@
 <p class="eyebrow">TRY IT / FUSE</p>
 <h3 id="lab-title-timed-bomb">Place → tick → blast → remove</h3>
 <p>Place arms a bomb; Step drains the fuse. At 0 it BLASTs; another step removes it. Classic state machine.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-place>Place bomb</button><button type="button" class="lab-button" data-lab-tick>Advance step</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Clear</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-place data-go-focus="place" data-go-caption="Place a bomb">Place bomb</button><button type="button" class="lab-button" data-lab-tick data-go-focus="tick" data-go-caption="Tick the fuse">Advance step</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Clear</button></div>
 <p class="lab-hint">Real fuse is ~90 frames; this lab uses 8 so you can feel it.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>left</span><strong data-lab-timer>0</strong></div><div><span>state</span><strong data-lab-state>none</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
 </div>
-</section><div class="formula"><p class="eyebrow">THE FUSE STATE MACHINE</p><div class="formula-lines"><code>timer-- each frame</code><span>then</span><code>timer<=0 → blasting → remove</code></div><p>Not a drawn circle—position, timer, and state in one struct.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Update timer and state</h2><p>Switch state only on the frame the remaining time reaches zero.</p></div><pre><code>for i := range bombs {
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="place">bombs = append(bombs, Bomb{x, y, timer: fuse})</span>
+<span data-go-line="tick">b.timer--; if b.timer &lt;= 0 { b.state = blast }</span>
+<span data-go-line="gone">remove(b)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</section><div class="formula"><p class="eyebrow">THE FUSE STATE MACHINE</p><div class="formula-lines"><code>timer-- each frame</code><span>then</span><code>timer<=0 → blasting → remove</code></div><p>Not a drawn circle—position, timer, and state in one struct.</p></div><p>Not a drawn circle—position, timer, and state in one struct.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Update timer and state</h2><p>Switch state only on the frame the remaining time reaches zero.</p></div><pre><code>for i := range bombs {
     bombs[i].timer--
     if !bombs[i].blasting &amp;&amp; bombs[i].timer &lt;= 0 {
         bombs[i].blasting = true

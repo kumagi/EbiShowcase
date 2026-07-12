@@ -35,7 +35,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>Fixed array</h3><p>Declaring <code>[100]mob</code> reserves exactly 100 slots in memory from the start. Unlike a slice, no new memory is allocated when updating or replacing elements.</p><code>mobs [100]mob</code></article>
         <article><span class="concept-number">2</span><h3>Instant respawn</h3><p>On defeat, do not delete the enemy. Overwrite its slot with fresh coordinates via <code>spawn(i)</code>. The count stays at 100 at all times.</p><code>g.spawn(i)</code></article>
-        <article><span class="concept-number">3</span><h3>Aura attack</h3><p>Kill once and seat 0 becomes N1. Array length stays 8 — you reuse the same seats. The grid on the right updates too.</p><code>if d &lt; 62 &amp;&amp; frame%18 == 0</code></article>
+        <article><span class="concept-number">3</span><h3>Aura attack</h3><p>Kill once and seat 0 becomes N1. Array length stays 8.</p><code>if d &lt; 62 &amp;&amp; frame%18 == 0</code></article>
       </div>
 
       
@@ -45,10 +45,10 @@
           <h3 id="lab-title-swarm">Overwrite the same slot instead of deleting</h3>
           <p>Do not shrink the array — overwrite the defeated index with a new foe.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-kill>Kill & overwrite</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-kill data-go-focus="kill" data-go-caption="Overwrite the seat">Kill & overwrite</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
-          <p class="lab-hint">Watch the slot text and the grid change together. Every click must change something.</p>
+          <p class="lab-hint">Watch the slot text and the grid change together.</p>
         </div>
         <div class="lab-visual">
           <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
@@ -58,7 +58,13 @@
             <div><span>規則</span><strong>overwrite</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="slot">mobs [100]mob // fixed seats</span>
+<span data-go-line="kill">mobs[i] = spawn() // overwrite, do not delete</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE POOL RULE</p>

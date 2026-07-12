@@ -45,8 +45,8 @@
           <h3 id="lab-title-auto-turret">一番近い敵へ、クールダウンで撃つ</h3>
           <p>毎フレームいちばん近い敵を選び、クールダウン間隔でのみ弾を出します。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>次の発射まで進める</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="scan cd shot">次の発射まで進める</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物は毎フレーム距離を測り、28フレームごとに弾を足します。ラボは体感しやすい8フレームです。</p>
         </div>
@@ -58,7 +58,14 @@
             <div><span>発射数</span><strong data-lab-shots>0</strong><small></small></div>
           <div><span>結果</span><strong data-lab-note>—</strong><small></small></div></div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="scan">best, dist := nearestEnemy(enemies, px, py)</span>
+<span data-go-line="cd">if frame%cooldown == 0 { fire(best) }</span>
+<span data-go-line="shot">shots = append(shots, toward(best))</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE TARGETING RULE</p>

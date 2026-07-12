@@ -10,12 +10,18 @@
 <p class="eyebrow">TRY IT / PELLET LAYER</p>
 <h3 id="lab-title-pellet-map">Clear remaining pellets one by one</h3>
 <p>Pellets are a bool layer beside the maze. Stepping on one sets false; zero left clears the stage. Walls stay untouched.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-eat>Eat one</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Restore</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-eat data-go-focus="eat win">Eat one</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Restore</button></div>
 <p class="lab-hint">Initial layout is data; remaining counts are runtime state.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>left</span><strong data-lab-left>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="eat">if tile == pellet { pellets--; score++ }</span>
+<span data-go-line="win">if pellets == 0 { clear = true }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">LAYER STATE</p><div class="formula-lines"><code>if pellet[y][x] { eat; left-- }</code><span>then</span><code>clear if left == 0</code></div><p>Don’t erase pellets by rewriting maze glyphs.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Put successful collection in one function</h3><p>Starting player and enemy tiles use the same function. A false cell does nothing, preventing remaining from decreasing twice.</p></div><pre><code>func (g *Game) removePellet(p Point) {
     if g.pellets[p.y][p.x] {

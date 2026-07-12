@@ -5,7 +5,15 @@
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RESOLUTION STATE MACHINE</p><h2>操作を止め、盤面が落ち着くまで同じ循環を回す。</h2><p class="lesson-lead">ペアを固定したら、プレイヤー入力から盤面解決へ主役を渡します。<code>find → clear all → gravity → find again</code>を、見つからなくなるまで続けます。止まった時だけ得点とおじゃまを確定し、次のペアを出す。この<strong>フェーズの境界</strong>が、前5段の処理を安全につなぎます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>現在と次のペアを分ける</h3><p>spawnは予告データを現在へ移し、その後に次の予告を補充します。Drawは操作中のペアとNEXT欄を別々の値から描きます。</p><code>pivotKind = nextPivotKind; refillNext()</code></article><article><span class="concept-number">2</span><h3>消去と重力を交互にする</h3><p>4連結を全部markedへ入れて同時消去し、列を圧縮してから再探索します。新しい組があればchainを増やしてCLEARへ戻ります。</p><code>CLEAR → GRAVITY → RESCAN → CLEAR ...</code></article><article><span class="concept-number">3</span><h3>停止時に対戦結果を送る</h3><p>1連鎖ごとにおじゃま2個、盤面が空ならさらに2個です。不発なら逆に灰色おじゃまが自分の盤面へ1個落ちます。</p><code>sent := chain*2 + allClearBonus</code></article></div>
-<div class="motion-lab" data-lab="turn" data-states="ペア操作,同色探索,同時消去,列重力,再探索,おじゃま送信"><div class="lab-copy"><p class="eyebrow">TRY IT / RESOLUTION PHASES</p><h3>1手が止まるまで順に進めよう</h3><p>盤面を書き換える段階では新しい操作を受けません。再探索で0組になった時だけ、送信量を決めて次の手へ戻ります。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>次のフェーズ</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>ペア操作へ戻す</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board></div><div class="lab-values"><div><span>現在</span><strong data-lab-state>ペア操作</strong></div><div><span>入力</span><strong>フェーズで切替</strong></div><div><span>出口</span><strong>グループ0</strong></div></div></div></div>
+<div class="motion-lab" data-lab="turn" data-states="ペア操作,同色探索,同時消去,列重力,再探索,おじゃま送信"><div class="lab-copy"><p class="eyebrow">TRY IT / RESOLUTION PHASES</p><h3>1手が止まるまで順に進めよう</h3><p>盤面を書き換える段階では新しい操作を受けません。再探索で0組になった時だけ、送信量を決めて次の手へ戻ります。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="next act">次のフェーズ</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>ペア操作へ戻す</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board></div><div class="lab-values"><div><span>現在</span><strong data-lab-state>ペア操作</strong></div><div><span>入力</span><strong>フェーズで切替</strong></div><div><span>出口</span><strong>グループ0</strong></div></div></div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="state">switch phase {</span>
+<span data-go-line="next">phase = nextPhase(phase)</span>
+<span data-go-line="act">case player: playCard(); case enemy: enemyAct()</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 <div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>重力後の再探索が連鎖の分かれ道</h3><p>markedが空でなければ連鎖数を増やし、同じCLEARフェーズへ戻ります。空ならこの手を終了し、連鎖数を送信量へ変換します。</p></div><pre><code>compactColumns()
 marked = findGroups(board)
 if len(marked) &gt; 0 {

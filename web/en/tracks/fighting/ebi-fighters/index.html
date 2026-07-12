@@ -74,9 +74,9 @@
           <h3 id="lab-title-rounds">Count round wins</h3>
           <p>Reduce HP to take rounds. First to two wins the match.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-p1hit>P1 wins round</button>
-            <button type="button" class="lab-button" data-lab-p2hit>P2 wins round</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-p1hit data-go-focus="point match">P1 wins round</button>
+            <button type="button" class="lab-button" data-lab-p2hit data-go-focus="point match">P2 wins round</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">The real game also checks HP and time-up.</p>
         </div>
@@ -88,7 +88,13 @@
             <div><span>round</span><strong data-lab-round>1</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="point">if roundWin { p1++ }</span>
+<span data-go-line="match">if p1 &gt;= 2 { matchOver = true }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE MATCH RULE</p>

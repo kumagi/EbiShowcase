@@ -80,12 +80,19 @@
 <p class="eyebrow">TRY IT / WORLD RESTORE</p>
 <h3 id="lab-title-ebi-craft">Collect savable state in order</h3>
 <p>Restoring a world is a pipe of what to save: seed → chunks → inventory → player. Load in the same order.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>Next field</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Start</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">Next field</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Start</button></div>
 <p class="lab-hint">Save seed + diffs, not raw images.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>field</span><strong data-lab-stepn>0</strong></div><div><span>now</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<span data-go-line="step">input → sim → resolve → draw</span>
+<span data-go-line="loop">// then next frame</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">SAVE BOUNDARY</p><div class="formula-lines"><code>write fields in order</code><span>then</span><code>read fields in same order</code></div><p>Avoid half-old save layouts.</p></div><div class="code-lesson">
 <div>

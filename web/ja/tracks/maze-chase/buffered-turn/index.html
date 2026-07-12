@@ -6,14 +6,20 @@
 <p class="eyebrow">TRY IT / CURRENT vs QUEUED</p>
 <h3 id="lab-title-buffered-turn">押した向きを予約して、中心で反映</h3>
 <p>方向ボタンは queued だけを変えます。「移動中」にしてから「中心到着」で、予約が current に入ります。壁判定はこの瞬間だけです。</p>
-<div class="lab-controls"><button type="button" class="lab-button" data-lab-dir="N">↑</button><button type="button" class="lab-button" data-lab-dir="W">←</button><button type="button" class="lab-button lab-button-primary" data-lab-dir="E">→</button><button type="button" class="lab-button" data-lab-dir="S">↓</button><button type="button" class="lab-button" data-lab-move>マス間を進む</button><button type="button" class="lab-button" data-lab-center>中心に到着</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button" data-lab-dir data-go-focus="queue" data-go-caption="向きを予約する"="N">↑</button><button type="button" class="lab-button" data-lab-dir data-go-focus="queue" data-go-caption="向きを予約する"="W">←</button><button type="button" class="lab-button lab-button-primary" data-lab-dir data-go-focus="queue" data-go-caption="向きを予約する"="E">→</button><button type="button" class="lab-button" data-lab-dir data-go-focus="queue" data-go-caption="向きを予約する"="S">↓</button><button type="button" class="lab-button" data-lab-move data-go-focus="queue" data-go-caption="向きを予約する">マス間を進む</button><button type="button" class="lab-button" data-lab-center data-go-focus="center" data-go-caption="マス中心で確定する">中心に到着</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
 <p class="lab-hint">すぐに current を書き換えると、マスの途中で壁にめり込みやすくなります。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>current</span><strong data-lab-current>E</strong></div><div><span>queued</span><strong data-lab-queued>E</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
 </div>
-</section><div class="formula"><p class="eyebrow">THE BUFFER RULE</p><div class="formula-lines"><code>input → queued</code><span>つぎに</span><code>at center: current = queued if passable</code></div><p>入力の瞬間と向きの確定を分けます。</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>中心に着いた瞬間だけ向きを決める</h2><p><code>Update</code>は毎フレーム入力を保存できますが、方向変更はタイル到着時だけにします。</p></div><pre><code>if dir, ok := directionInput(); ok {
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="queue">queued = inputDir // do not write current yet</span>
+<span data-go-line="center">if atCenter &amp;&amp; open(queued) { current = queued }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</section><div class="formula"><p class="eyebrow">THE BUFFER RULE</p><div class="formula-lines"><code>input → queued</code><span>つぎに</span><code>at center: current = queued if passable</code></div><p>入力の瞬間と向きの確定を分けます。</p></div><p>入力の瞬間と向きの確定を分けます。</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>中心に着いた瞬間だけ向きを決める</h2><p><code>Update</code>は毎フレーム入力を保存できますが、方向変更はタイル到着時だけにします。</p></div><pre><code>if dir, ok := directionInput(); ok {
     queued = dir
 }
 if reachedTileCenter {

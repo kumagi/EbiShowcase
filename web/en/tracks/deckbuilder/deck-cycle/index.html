@@ -3,12 +3,18 @@
 <p class="eyebrow">TRY IT / DRAW CYCLE</p>
 <h3 id="lab-title-deck-cycle">Spend the hand, refill on the turn edge</h3>
 <p>Play cards (spend) → end turn refills. Deck/discard cycling belongs on that same turn boundary so state stays easy to find.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spend>Play 1</button><button type="button" class="lab-button" data-lab-end>End turn (cycle)</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spend>Play 1</button><button type="button" class="lab-button" data-lab-end data-go-focus="end">End turn (cycle)</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Empty draw pile? Shuffle discard into draw—also on the turn edge.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>hand slots</span><strong data-lab-energy>0</strong></div><div><span>turn</span><strong data-lab-turn>0</strong></div><div><span>played</span><strong data-lab-spent>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="refill">energy = maxEnergy // start of turn</span>
+<span data-go-line="end">drawHand(); enemyTurn()</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE CYCLE EDGE</p><div class="formula-lines"><code>play: hand → discard</code><span>then</span><code>turn end: draw / reshuffle</code></div><p>Keep cycling on the turn edge and mid-combat bugs drop.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Check draw before taking a card</h3><p>Draw one at a time until hand has five. If draw is empty, move discard, clear it, and then shuffle.</p></div><pre><code>for len(hand) &lt; 5 {
     if len(draw) == 0 {

@@ -73,10 +73,10 @@
           <h3 id="lab-title-ebi-quest">Save and load a quest id</h3>
           <p>Progress is an integer quest id. Save and load to resume later.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-advance>Advance quest</button>
-            <button type="button" class="lab-button" data-lab-save>Save</button>
-            <button type="button" class="lab-button" data-lab-load>Load</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-advance data-go-focus="adv">Advance quest</button>
+            <button type="button" class="lab-button" data-lab-save data-go-focus="save">Save</button>
+            <button type="button" class="lab-button" data-lab-load data-go-focus="load">Load</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -88,7 +88,14 @@
             <div><span>localStorage</span><strong></strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="adv">quest++</span>
+<span data-go-line="save">save.quest = quest</span>
+<span data-go-line="load">quest = save.quest</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE SAVE RULE</p>

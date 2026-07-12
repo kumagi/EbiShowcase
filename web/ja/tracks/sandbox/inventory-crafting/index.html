@@ -38,12 +38,18 @@
 <p class="eyebrow">TRY IT / RECIPE</p>
 <h3 id="lab-title-inventory-crafting">材料を集めてレシピで作ろう</h3>
 <p>インベントリは個数の辞書、クラフトはレシピ照合です。足りれば材料を減らし成果を足す。スタックも同じ個数管理です。</p>
-<div class="lab-controls"><button type="button" class="lab-button" data-lab-wood>+木</button><button type="button" class="lab-button" data-lab-string>+糸</button><button type="button" class="lab-button lab-button-primary" data-lab-craft>クラフト</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>空にする</button></div>
+<div class="lab-controls"><button type="button" class="lab-button" data-lab-wood>+木</button><button type="button" class="lab-button" data-lab-string>+糸</button><button type="button" class="lab-button lab-button-primary" data-lab-craft data-go-focus="need out">クラフト</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>空にする</button></div>
 <p class="lab-hint">レシピをデータ表にすると、新しい道具が行追加だけで増えます。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>所持</span><strong data-lab-inv>—</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="need">if has(ingredients) { craft(recipe) }</span>
+<span data-go-line="out">inventory = append(inventory, result)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">PAY THEN GAIN</p><div class="formula-lines"><code>if inv has costs</code><span>つぎに</span><code>inv -= costs; inv += result</code></div><p>失敗時に材料だけ減らないよう、先に検査します。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>不足ならreturnして在庫を守る</h3><p>必要数を全部確認してから引くので、失敗したクラフトで一部の材料だけ失いません。</p></div><pre><code>r := recipes[selected]
 if wood &lt; r.wood || stone &lt; r.stone ||

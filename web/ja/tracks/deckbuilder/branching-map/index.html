@@ -3,12 +3,18 @@
 <p class="eyebrow">TRY IT / GRAPH PATH</p>
 <h3 id="lab-title-branching-map">ノードを選んで道を進めよう</h3>
 <p>マップはグラフです。今いるノードから出る辺だけが次の候補。選ぶたびに path へ履歴を残します。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-quiet" data-lab-reset>スタートへ</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>スタートへ</button></div>
 <p class="lab-hint">戻れるマップにするなら、訪れたノード集合も別で持ちます。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>経路</span><strong data-lab-path>—</strong></div><div><span>今地</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="edge">next := edges[node]</span>
+<span data-go-line="go">node = choice; path = append(path, node)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">NODES + EDGES</p><div class="formula-lines"><code>choices = edges[current]</code><span>つぎに</span><code>path = append(path, next)</code></div><p>全部の部屋を直線配列にしないこと。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>現在地から出る線だけを調べる</h3><p>タップした丸がnextのどれかなら移動し、その地点のイベントを1回実行します。</p></div><pre><code>options := nodes[current].next
 for _, id := range options {

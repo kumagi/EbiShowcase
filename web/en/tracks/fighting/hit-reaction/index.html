@@ -75,9 +75,9 @@
           <h3 id="lab-title-hit-reaction">Hitstop then stun decay</h3>
           <p>On hit, freeze the world, then decay knockback during stun.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-hit>Hit</button>
-            <button type="button" class="lab-button" data-lab-step>Next frame</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-hit data-go-focus="stop stun" data-go-caption="Input freezes motion">Hit</button>
+            <button type="button" class="lab-button" data-lab-step data-go-focus="slide">Next frame</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -89,7 +89,14 @@
             <div><span>v2</span><strong data-lab-v>0.00</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="stop">hitstop = 8</span>
+<span data-go-line="stun">stun = 25; vx = knockback</span>
+<span data-go-line="slide">x += vx; vx *= 0.86</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE REACTION CHAIN</p>

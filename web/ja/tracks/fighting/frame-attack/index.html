@@ -75,8 +75,8 @@
           <h3 id="lab-title-frame-attack">発生・持続・硬直をコマ送り</h3>
           <p>技は発生・持続・硬直の3相。持続のあいだだけ攻撃判定が出ます。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>1F進める</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="tick active rec" data-go-caption="タイマーを減らす">1F進める</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -88,7 +88,15 @@
             <div><span>1-8 / 9-12 / 13+</span><strong></strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="start">if pressed { frame = 1 }</span>
+<span data-go-line="active">if frame &gt;= 9 &amp;&amp; frame &lt;= 12 { hitboxOn = true }</span>
+<span data-go-line="rec">if frame &gt; 12 { /* recovery */ }</span>
+<span data-go-line="tick">frame++</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">FRAME RANGES</p>

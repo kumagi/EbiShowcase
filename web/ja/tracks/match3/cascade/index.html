@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / CASCADE</p>
 <h3 id="lab-title-cascade">消す→落とす→もう一度探す</h3>
 <p>スキャンで光らせ、消して落下、もう一度スキャン。落ちたあとに新しいそろいができるのが連鎖です。1回で終わらせないのがポイントです。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan>スキャン</button><button type="button" class="lab-button" data-lab-clear>消して落下</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan data-go-focus="scan">スキャン</button><button type="button" class="lab-button" data-lab-clear data-go-focus="clear">消して落下</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
 <p class="lab-hint">本番も while で「そろいがなくなるまで」くり返します。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>光ったマス</span><strong data-lab-count>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="scan">for each cell { if run &gt;= 3 { mark } }</span>
+<span data-go-line="clear">removeMarked()</span>
+<span data-go-line="fall">compactColumns()</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE CASCADE LOOP</p><div class="formula-lines"><code>scan → clear → gravity</code><span>つぎに</span><code>そろいがある間くり返す</code></div><p>得点は連鎖の深さで倍増させると気持ちよくなります。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>見つからなくなるまで戻る</h3><p>Updateのphaseとして分ければ、アニメーションをはさみながら同じ循環を進められます。</p></div><pre><code>clearMatches()
 fallAndRefill()

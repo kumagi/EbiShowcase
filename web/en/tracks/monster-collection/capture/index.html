@@ -3,12 +3,18 @@
 <p class="eyebrow">TRY IT / CATCH RATE</p>
 <h3 id="lab-title-capture">Boost the rate, then roll</h3>
 <p>Capture is a percentage. Bait raises it; Roll picks 0–99 and succeeds if below the rate. Failure is the other side of the same RNG.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-bait>Bait +15%</button><button type="button" class="lab-button" data-lab-roll>Roll</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset rate</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-bait>Bait +15%</button><button type="button" class="lab-button" data-lab-roll data-go-focus="rate roll">Roll</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset rate</button></div>
 <p class="lab-hint">Check party capacity before rolling.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>rate</span><strong data-lab-rate>35%</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="rate">p := catchRate(hp, ball)</span>
+<span data-go-line="roll">if rng.Float64() &lt; p { caught = true }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">RATE THEN RNG</p><div class="formula-lines"><code>rate = base + modifiers</code><span>then</span><code>success if rand < rate</code></div><p>Keep the shown rate identical to the check.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Keep chance calculation separate from saving</h3><p>captureChance only returns a number. tryCapture draws the roll and updates storage only on success.</p></div><pre><code>func captureChance() int {
     hpBonus := (maxHP-wildHP) * 55 / maxHP

@@ -47,8 +47,8 @@
           <h3 id="lab-title-offline-bakery">Away seconds × rate = offline gain</h3>
           <p>Reward on return is elapsed away time × production rate.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-add>Away +30s</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-add data-go-focus="away gain">Away +30s</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -60,7 +60,13 @@
             <div><span>rate</span><strong>8/s</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="away">away := now.Sub(savedAt).Seconds()</span>
+<span data-go-line="gain">gold += away * rate</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE OFFLINE RULE</p>

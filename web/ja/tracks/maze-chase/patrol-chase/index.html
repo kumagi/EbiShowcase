@@ -3,14 +3,20 @@
 <p class="eyebrow">TRY IT / AI MODE</p>
 <h3 id="lab-title-patrol-chase">追跡と散開で交点の選び方を変える</h3>
 <p>交点では「目標」に近い辺を選びます。chase はプレイヤー方向、scatter は隅。モードが経路の意味を切り替えます。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-chase>追跡モード</button><button type="button" class="lab-button" data-lab-scatter>散開モード</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-chase data-go-focus="mode pick">追跡モード</button><button type="button" class="lab-button" data-lab-scatter data-go-focus="mode pick">散開モード</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
 <p class="lab-hint">同じ交点ロジックに、目標座標だけ差し込みます。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>選択</span><strong data-lab-choice>chase:right</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
 </div>
-</section><div class="formula"><p class="eyebrow">MODE → TARGET</p><div class="formula-lines"><code>chase: target = player</code><span>つぎに</span><code>scatter: target = corner</code></div><p>交点AIは目標を変えるだけで振る舞いが変わります。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>状態遷移と移動を分ける</h3><p>先にupdateModeで状態と目標を決め、その後moveEnemyがその目標へ1マス進みます。色表示も同じmodeを読みます。</p></div><pre><code>visible := hasLineOfSight(enemy, player) &amp;&amp;
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="mode">target := player // or corner if scatter</span>
+<span data-go-line="pick">dir = argmin(dist(nextTile, target))</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</section><div class="formula"><p class="eyebrow">MODE → TARGET</p><div class="formula-lines"><code>chase: target = player</code><span>つぎに</span><code>scatter: target = corner</code></div><p>交点AIは目標を変えるだけで振る舞いが変わります。</p></div><p>交点AIは目標を変えるだけで振る舞いが変わります。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>状態遷移と移動を分ける</h3><p>先にupdateModeで状態と目標を決め、その後moveEnemyがその目標へ1マス進みます。色表示も同じmodeを読みます。</p></div><pre><code>visible := hasLineOfSight(enemy, player) &amp;&amp;
            manhattan(enemy, player) &lt;= 7
 if visible {
     mode = chase

@@ -72,13 +72,20 @@
           <p class="eyebrow">TRY IT / SPELLBOOK</p>
           <h3 id="lab-title-vfx-spells">See each recipe by name</h3>
           <p>Press fire, water, and lightning to animate flame, droplet, and bolt sprites on the board. See all three to complete the book.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spell="fire">Fire</button><button type="button" class="lab-button" data-lab-spell="water">Water</button><button type="button" class="lab-button" data-lab-spell="thunder">Thunder</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spell="fire">Fire</button><button type="button" class="lab-button" data-lab-spell="water">Water</button><button type="button" class="lab-button" data-lab-spell="thunder">Thunder</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-spell-stage" data-lab-board><p class="lab-spell-hint">Cast a spell with the buttons</p></div>
           <div class="lab-values" aria-live="polite"><div><span>learned</span><strong data-lab-done>—</strong></div></div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="pick">spell := spells[selected]</span>
+<span data-go-line="cast">fx = append(fx, spell.Spawn(x, y)...)</span>
+<span data-go-line="tick">updateFX(fx)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="code-lesson">
         <div>
@@ -119,32 +126,7 @@ vector.StrokeLine(screen, ax, ay, bx, by, 5, white, false)</code></pre>
       <a href="../vfx-particles/">← STEP 07<strong>Scatter Particles</strong></a>
       <a href="../vfx-magic-fire/">STEP 09 →<strong>Make Cool Fire Magic</strong></a>
     </nav>
-
-
-    <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">Quick feedback</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-spells/">
-          <label class="feedback-field">
-            <span class="sr-only">Feedback</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-
-
-</main>
+  </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
   <script>

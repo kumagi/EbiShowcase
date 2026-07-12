@@ -78,8 +78,8 @@
           <h3 id="lab-title-dialogue-flags">フラグでセリフが変わる</h3>
           <p>同じNPCでもフラグでセリフが変わります。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-toggle>フラグ切替</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-toggle data-go-focus="set say">フラグ切替</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -91,7 +91,13 @@
             <div><span>if</span><strong>flag</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="set">flags[&quot;found&quot;] = true</span>
+<span data-go-line="say">if flags[&quot;found&quot;] { text = after } else { text = before }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE DIALOGUE RULE</p>

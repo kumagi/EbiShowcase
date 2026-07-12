@@ -12,8 +12,8 @@
     <h3 id="lab-title-breakable-walls">Step one cell’s state change</h3>
     <p>Wood wall → blast → floor + item. That’s the order of writing array values. Become floor first so the player can walk onto the drop.</p>
     <div class="lab-controls">
-      <button type="button" class="lab-button lab-button-primary" data-lab-next>Next state</button>
-      <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Back to wall</button>
+      <button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">Next state</button>
+      <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Back to wall</button>
     </div>
     <p class="lab-hint">You’re not erasing art—you’re changing <code>board[y][x]</code>.</p>
   </div>
@@ -24,6 +24,13 @@
       <div><span>now</span><strong data-lab-note>—</strong></div>
     </div>
   </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<span data-go-line="step">input → sim → resolve → draw</span>
+<span data-go-line="loop">// then next frame</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
 </section>
 <div class="formula"><p class="eyebrow">THE STATE WRITE</p><div class="formula-lines"><code>softWall + blast</code><span>then</span><code>board[y][x] = floor; maybe item</code></div><p>Movement and draw both read the same array, so look and walkability stay aligned.</p></div>
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Change the data, then reveal the item</h2><p>The same coordinate produces the same result on every retry, which makes the code easier to trace. The real game uses a coordinate hash instead of global randomness.</p></div><pre><code>if board[p.y][p.x] == softWall {

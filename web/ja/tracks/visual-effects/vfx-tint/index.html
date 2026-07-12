@@ -72,13 +72,20 @@
           <p class="eyebrow">TRY IT / TINT</p>
           <h3 id="lab-title-vfx-tint">モードを切り替えよう</h3>
           <p>NORMAL・TINT・FLASH・SHADOW を切り替えると、同じ四角の色だけが変わります。表示されるコードが、そのときの ColorScale です。</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-mode-set="normal">NORMAL</button><button type="button" class="lab-button" data-lab-mode-set="tint">TINT</button><button type="button" class="lab-button" data-lab-mode-set="flash">FLASH</button><button type="button" class="lab-button" data-lab-mode-set="shadow">SHADOW</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-mode-set="normal">NORMAL</button><button type="button" class="lab-button" data-lab-mode-set="tint">TINT</button><button type="button" class="lab-button" data-lab-mode-set="flash">FLASH</button><button type="button" class="lab-button" data-lab-mode-set="shadow">SHADOW</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>リセット</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board" data-lab-board></div>
           <div class="lab-values" aria-live="polite"><div><span>モード</span><strong data-lab-mode>—</strong></div><div><span>ColorScale</span><strong data-lab-code>—</strong></div></div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="cs">var op ebiten.DrawImageOptions</span>
+<span data-go-line="tint">op.ColorScale.Scale(r, g, b, 1)</span>
+<span data-go-line="draw">screen.DrawImage(img, &amp;op)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="code-lesson">
         <div>
@@ -117,32 +124,7 @@ screen.DrawImage(sprite, op)</code></pre>
       <a href="../vfx-transform/">← STEP 02<strong>回転と拡大縮小、そして中心</strong></a>
       <a href="../vfx-alpha/">STEP 04 →<strong>透明と重ね順・残像</strong></a>
     </nav>
-
-
-    <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">ひとことフィードバック</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-tint/">
-          <label class="feedback-field">
-            <span class="sr-only">フィードバック</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-
-
-</main>
+  </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
   <script>

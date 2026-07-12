@@ -12,12 +12,18 @@
 <p class="eyebrow">TRY IT / SHAPE DATA</p>
 <h3 id="lab-title-tetromino-shapes">Rotate four relative cells</h3>
 <p>A piece is a list of cells relative to an origin. Swap shapes, then rotate with (x,y)→(-y,x). Names/colors are data; rotation is shared math.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>Next shape</button><button type="button" class="lab-button" data-lab-rot>Rotate 90°</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="shape">Next shape</button><button type="button" class="lab-button" data-lab-rot data-go-focus="rot">Rotate 90°</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">O looking unchanged after rotate is correct.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>shape</span><strong data-lab-name>—</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="shape">cells := shapes[kind] // relative offsets</span>
+<span data-go-line="rot">cells = rotate(cells)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">RELATIVE CELLS</p><div class="formula-lines"><code>cells = shape[rot]</code><span>then</span><code>world = origin + cell</code></div><p>Absolute-only shapes make rotation miserable.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Draw and collision read the same array</h3><p>One source of shape data keeps the visible blocks and collision blocks in agreement. A new shape needs only four new coordinates.</p></div><pre><code>type Shape struct {
     blocks [4]Point

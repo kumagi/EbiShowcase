@@ -73,8 +73,8 @@
           <h3 id="lab-title-gravity">Add the same gravity every frame</h3>
           <p>“Next frame” adds gravity to vy and updates position. Bounce on the floor shrinks speed until rest.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>Next frame</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="v y floor">Next frame</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A fixed timestep assumes Update runs about 1/60s.</p>
         </div>
@@ -89,7 +89,14 @@
             <div><span>g</span><strong>+0.55</strong><small>each frame</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="v">vy += g</span>
+<span data-go-line="y">y += vy</span>
+<span data-go-line="floor">if y &gt; floor { y, vy = floor, 0 }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE TWO-LINE RULE</p>

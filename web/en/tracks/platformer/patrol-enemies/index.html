@@ -73,9 +73,9 @@
           <h3 id="lab-title-patrol-enemies">Stomp only while falling</h3>
           <p>Only positive vy (falling) counts as a stomp; rising takes damage.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-fall>Falling</button>
-            <button type="button" class="lab-button" data-lab-rise>Rising</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-fall data-go-focus="check stomp">Falling</button>
+            <button type="button" class="lab-button" data-lab-rise data-go-focus="check hurt">Rising</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -87,7 +87,14 @@
             <div><span>規則</span><strong>vy > 0</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="check">if vy &gt; 0 &amp;&amp; fromAbove(player, enemy)</span>
+<span data-go-line="stomp">{ enemy.dead = true; vy = bounce }</span>
+<span data-go-line="hurt">else { player.hurt() }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE ONE-LINE RULE</p>

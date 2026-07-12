@@ -56,12 +56,19 @@
 <p class="eyebrow">TRY IT / PAIR KICKS</p>
 <h3 id="lab-title-pair-rotation">Kick a rotating pair</h3>
 <p>A two-cell pair can clip a wall after rotate. Walk kick offsets and keep the first fit.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-kick>Try kick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-kick data-go-focus="try ok">Try kick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">You can store a kick table per facing.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>tries</span><strong data-lab-try>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="try">for _, k := range kicks { if canPlace(x+k.dx, y+k.dy) }</span>
+<span data-go-line="ok">{ x, y = x+k.dx, y+k.dy; return }</span>
+<span data-go-line="fail">/* all kicks failed → keep old rot */</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">SAME KICK IDEA</p><div class="formula-lines"><code>rotate pair</code><span>then</span><code>try offsets until fit</code></div><p>Same kick idea, just two cells.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Accept the first valid candidate</h3></div><pre><code>next := (dir+1)%4
 for _, k := range kicks {

@@ -10,12 +10,18 @@
 <p class="eyebrow">TRY IT / LIGHT BFS</p>
 <h3 id="lab-title-tools-light">Flood brightness from a torch</h3>
 <p>Place a torch to set a bright center. Flood copies to neighbors with decay. Tool durability stays a separate system.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-torch>Place torch</button><button type="button" class="lab-button" data-lab-flood>Flood once</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Lights out</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-torch>Place torch</button><button type="button" class="lab-button" data-lab-flood>Flood once</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Lights out</button></div>
 <p class="lab-hint">Block walls by simply never writing light into them.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>lit cells</span><strong data-lab-lit>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="seed">light[y][x] = 15 // torch</span>
+<span data-go-line="spread">n = max(n, c-1) // 4-neighborhood</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">DECAY FLOOD</p><div class="formula-lines"><code>center = power</code><span>then</span><code>neighbor = max(old, power-1)</code></div><p>Additive or max—pick one rule and stick to it.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Build maximum light from day and every torch</h3><p>Brightness is an integer from 0 to 9. DAY/NIGHT and the value are printed too, so information is not carried only by color.</p></div><pre><code>func (g *Game) lightAt(x, y int) int {
     light := g.daylight()

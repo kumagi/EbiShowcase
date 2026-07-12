@@ -47,9 +47,9 @@
           <h3 id="lab-title-first-shop">Buy only when you can afford it</h3>
           <p>Buy only when affordable, then raise the price. Otherwise do nothing.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button" data-lab-earn>Earn +5</button>
-            <button type="button" class="lab-button lab-button-primary" data-lab-buy>Buy</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button" data-lab-earn data-go-focus="earn">Earn +5</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-buy data-go-focus="buy">Buy</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -61,7 +61,13 @@
             <div><span>owned</span><strong data-lab-owned>0</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="earn">gold += 5</span>
+<span data-go-line="buy">if gold &gt;= cost { gold -= cost; owned++; cost += 5 }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE SHOP RULE</p>

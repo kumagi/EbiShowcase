@@ -48,9 +48,9 @@
           <h3 id="lab-title-dungeon">Switch patrol/chase by distance</h3>
           <p>Distance under 120 means chase; otherwise patrol.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-closer>Closer</button>
-            <button type="button" class="lab-button" data-lab-farther>Farther</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-closer data-go-focus="dist chase">Closer</button>
+            <button type="button" class="lab-button" data-lab-farther data-go-focus="dist chase">Farther</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -62,7 +62,14 @@
             <div><span>閾値</span><strong>120</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="dist">d := math.Hypot(ex-px, ey-py)</span>
+<span data-go-line="chase">if d &lt; limit { mode = chase } else { mode = patrol }</span>
+<span data-go-line="step">moveToward(target)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE CHASE DIRECTION</p>

@@ -80,8 +80,8 @@
           <h3 id="lab-title-stats-status">攻撃−防御（強化込み）</h3>
           <p>基本は攻撃−防御。一時強化は攻撃側に足してから計算します。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-buff>強化+5</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-buff data-go-focus="raw min">強化+5</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -93,7 +93,13 @@
             <div><span>ダメージ</span><strong data-lab-dmg>7</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="raw">dmg := atk + buff - def</span>
+<span data-go-line="min">if dmg &lt; 1 { dmg = 1 }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE DAMAGE FORMULA</p>

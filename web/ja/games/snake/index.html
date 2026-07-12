@@ -50,9 +50,9 @@
           <h3 id="lab-title-snake">頭を足して、しっぽを消そう</h3>
           <p>「進む」は新しい頭を先頭に足して末尾を削ります。「食べる」は末尾を残すので体が伸びます。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>進む</button>
-            <button type="button" class="lab-button" data-lab-eat>食べる</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="head grow trim">進む</button>
+            <button type="button" class="lab-button" data-lab-eat data-go-focus="head grow">食べる</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">体はマス座標のリストです。</p>
         </div>
@@ -64,7 +64,14 @@
             <div><span>ルール</span><strong>[]point</strong><small>append + trim</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="head">head := body[0]; next := Point{head.X+dx, head.Y+dy}</span>
+<span data-go-line="grow">body = append([]Point{next}, body...)</span>
+<span data-go-line="trim">if !ate { body = body[:len(body)-1] }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE TWO-LINE MOVE</p>

@@ -75,8 +75,8 @@
           <h3 id="lab-title-powerup-adventure">Power flag changes collision result</h3>
           <p>When powered is true, enemy contact becomes a stomp instead of damage.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-toggle>Toggle power</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-toggle data-go-focus="flag branch">Toggle power</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -88,7 +88,13 @@
             <div><span>flag</span><strong>bool</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="flag">powered := g.powered</span>
+<span data-go-line="branch">if powered { stomp } else { takeDamage }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE STATE RULE</p>

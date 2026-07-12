@@ -80,8 +80,8 @@
           <h3 id="lab-title-command-battle">Step the battle state machine</h3>
           <p>Battles advance one state at a time. Only the current state accepts input.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>Next state</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="next act">Next state</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -93,7 +93,14 @@
             <div><span>1つずつ</span><strong></strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="state">switch phase {</span>
+<span data-go-line="next">phase = nextPhase(phase)</span>
+<span data-go-line="act">case player: playCard(); case enemy: enemyAct()</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE STATE FLOW</p>

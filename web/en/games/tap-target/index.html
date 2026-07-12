@@ -40,8 +40,8 @@
           <h3 id="loop-lab-title">Step through Update → Draw</h3>
           <p>Each click flips the phase. A real game repeats these two steps many times per second.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>Next phase</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="update draw" data-go-caption="Update changes numbers → Draw paints the frame">Next phase</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">One frame = one Update + one Draw. Separating math from drawing makes later changes easier.</p>
         </div>
@@ -56,7 +56,14 @@
             <div><span>order</span><strong>U → D</strong><small>always this sequence</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="update">func (g *game) Update() error { /* numbers */ }</span>
+<span data-go-line="draw">func (g *game) Draw(screen *ebiten.Image) { /* paint */ }</span>
+<span data-go-line="run">ebiten.RunGame(g) // Update → Draw → repeat</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <details class="basics-extra">
         <summary>Optional: Layout and the build path (fine to learn later)</summary>
@@ -93,9 +100,9 @@
           <h3 id="hit-lab-title">Tap the board and watch the distance</h3>
           <p>Tap the board on the right. You will see the difference from the circle center. A distance of 70 or less is a hit.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-sample-hit>Sample hit</button>
-            <button type="button" class="lab-button" data-lab-sample-miss>Sample miss</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-sample-hit data-go-focus="dxdy hypot hit" data-go-caption="Pointer minus center → Measure distance → Inside radius → hit">Sample hit</button>
+            <button type="button" class="lab-button" data-lab-sample-miss data-go-focus="dxdy hypot miss" data-go-caption="Pointer minus center → Measure distance → Too far → miss">Sample miss</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">In the real game, mouse and touch are both turned into one “pressed position” before the check.</p>
         </div>
@@ -112,7 +119,15 @@
             <div><span>distance</span><strong data-lab-dist>—</strong><small class="lab-result" data-lab-result data-state="wait">TAP HERE</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="dxdy">dx := touchX - circleX; dy := touchY - circleY</span>
+<span data-go-line="hypot">dist := math.Hypot(dx, dy)</span>
+<span data-go-line="hit">if dist &lt;= radius { score++; moveTarget() }</span>
+<span data-go-line="miss">// dist &gt; radius → no score</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE ONE-LINE RULE</p>

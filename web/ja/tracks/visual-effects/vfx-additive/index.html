@@ -72,13 +72,19 @@
           <p class="eyebrow">TRY IT / BLEND</p>
           <h3 id="lab-title-vfx-additive">合成モードを切り替えよう</h3>
           <p>2つの光を重ね、通常合成と加算合成を切り替えます。加算にすると、重なった所だけ明るく輝きます。</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-toggle>合成を切替</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-toggle>合成を切替</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>リセット</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board" data-lab-board data-blend="add"></div>
           <div class="lab-values" aria-live="polite"><div><span>合成</span><strong data-lab-mode>—</strong></div></div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="blend">op.Blend = ebiten.BlendLighter</span>
+<span data-go-line="draw">screen.DrawImage(glow, &amp;op)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="code-lesson">
         <div>
@@ -115,32 +121,7 @@ screen.DrawImage(glow, op)</code></pre>
       <a href="../vfx-alpha/">← STEP 04<strong>透明と重ね順・残像</strong></a>
       <a href="../vfx-walk/">STEP 06 →<strong>パラパラ歩き（コマ送り）</strong></a>
     </nav>
-
-
-    <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">ひとことフィードバック</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-additive/">
-          <label class="feedback-field">
-            <span class="sr-only">フィードバック</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-
-
-</main>
+  </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
   <script>

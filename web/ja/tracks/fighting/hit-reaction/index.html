@@ -75,9 +75,9 @@
           <h3 id="lab-title-hit-reaction">ヒットストップとのけぞり</h3>
           <p>ヒットで世界を止め、のけぞり中は速度を減衰させます。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-hit>ヒット</button>
-            <button type="button" class="lab-button" data-lab-step>1F進める</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-hit data-go-focus="stop stun" data-go-caption="入力で止める">ヒット</button>
+            <button type="button" class="lab-button" data-lab-step data-go-focus="slide">1F進める</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -89,7 +89,14 @@
             <div><span>v2</span><strong data-lab-v>0.00</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="stop">hitstop = 8</span>
+<span data-go-line="stun">stun = 25; vx = knockback</span>
+<span data-go-line="slide">x += vx; vx *= 0.86</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE REACTION CHAIN</p>

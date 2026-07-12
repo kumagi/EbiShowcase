@@ -75,7 +75,7 @@
           <div class="lab-controls">
             <button type="button" class="lab-button lab-button-primary" data-lab-closer>近づける</button>
             <button type="button" class="lab-button" data-lab-farther>離す</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button>
           </div>
         </div>
         <div class="lab-visual">
@@ -88,7 +88,14 @@
             <div><span>結果</span><strong data-lab-result>—</strong></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="atk">atk := Rect{x, y, w, h} // active only</span>
+<span data-go-line="hurt">hurt := Rect{ox, oy, ow, oh}</span>
+<span data-go-line="hit">if overlaps(atk, hurt) { applyHit() }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE ONE-LINE RULE</p>

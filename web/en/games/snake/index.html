@@ -50,9 +50,9 @@
           <h3 id="lab-title-snake">Add a head, drop a tail</h3>
           <p>“Move” prepends a head and trims the tail. “Eat” keeps the tail so the body grows.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>Move</button>
-            <button type="button" class="lab-button" data-lab-eat>Eat</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="head grow trim">Move</button>
+            <button type="button" class="lab-button" data-lab-eat data-go-focus="head grow">Eat</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">The body is a list of grid points.</p>
         </div>
@@ -64,7 +64,14 @@
             <div><span>rule</span><strong>[]point</strong><small>append + trim</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="head">head := body[0]; next := Point{head.X+dx, head.Y+dy}</span>
+<span data-go-line="grow">body = append([]Point{next}, body...)</span>
+<span data-go-line="trim">if !ate { body = body[:len(body)-1] }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE TWO-LINE MOVE</p>

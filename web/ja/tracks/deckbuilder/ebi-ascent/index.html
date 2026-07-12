@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / RUN LOOP</p>
 <h3 id="lab-title-ebi-ascent">マップ→戦闘→報酬の場面をつなぐ</h3>
 <p>大きなゲームは場面のパイプです。「次へ」で今の工程を進め、最後まで行ったら次の周回。状態は場面ごとに分けて持ちます。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>次の場面へ</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>最初へ</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">次の場面へ</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>最初へ</button></div>
 <p class="lab-hint">セーブは場面の境目で取ると安全です。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>進捗</span><strong data-lab-stepn>0</strong></div><div><span>今</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<span data-go-line="step">input → sim → resolve → draw</span>
+<span data-go-line="loop">// then next frame</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">SCENE PIPE</p><div class="formula-lines"><code>currentScene.Update()</code><span>つぎに</span><code>on exit → next scene</code></div><p>全部を1つの巨大 Update に書かない。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Updateを現在の場面へ渡す</h3><p>一つのUpdateを巨大にせず、場面ごとの小さな処理へ分けます。</p></div><pre><code>switch phase {
 case phaseBattle:

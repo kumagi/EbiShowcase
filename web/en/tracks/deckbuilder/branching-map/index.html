@@ -3,12 +3,18 @@
 <p class="eyebrow">TRY IT / GRAPH PATH</p>
 <h3 id="lab-title-branching-map">Walk a branching node graph</h3>
 <p>The map is a graph. Only edges from the current node are legal next picks. Each choice appends to the path history.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Back to start</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Back to start</button></div>
 <p class="lab-hint">Want revisits? Track a visited set separately.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>path</span><strong data-lab-path>—</strong></div><div><span>here</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="edge">next := edges[node]</span>
+<span data-go-line="go">node = choice; path = append(path, node)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">NODES + EDGES</p><div class="formula-lines"><code>choices = edges[current]</code><span>then</span><code>path = append(path, next)</code></div><p>Don’t flatten every room into one line.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Test only lines leaving the current node</h3><p>If a tapped circle belongs to next, move there and resolve its event once.</p></div><pre><code>options := nodes[current].next
 for _, id := range options {

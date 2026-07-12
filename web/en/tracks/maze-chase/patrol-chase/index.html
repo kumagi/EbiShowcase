@@ -3,14 +3,20 @@
 <p class="eyebrow">TRY IT / AI MODE</p>
 <h3 id="lab-title-patrol-chase">Chase vs scatter at a junction</h3>
 <p>At a junction, pick the edge closer to a target. Chase aims at the player; scatter aims at a corner. Mode swaps the target.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-chase>Chase</button><button type="button" class="lab-button" data-lab-scatter>Scatter</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-chase data-go-focus="mode pick">Chase</button><button type="button" class="lab-button" data-lab-scatter data-go-focus="mode pick">Scatter</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Same junction picker—only the target changes.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>choice</span><strong data-lab-choice>chase:right</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
 </div>
-</section><div class="formula"><p class="eyebrow">MODE → TARGET</p><div class="formula-lines"><code>chase: target = player</code><span>then</span><code>scatter: target = corner</code></div><p>Junction AI changes behavior by swapping targets only.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Separate transition from movement</h3><p>updateMode first selects state and target. moveEnemy then takes one tile toward that target. The label reads the same mode value.</p></div><pre><code>visible := hasLineOfSight(enemy, player) &amp;&amp;
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="mode">target := player // or corner if scatter</span>
+<span data-go-line="pick">dir = argmin(dist(nextTile, target))</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</section><div class="formula"><p class="eyebrow">MODE → TARGET</p><div class="formula-lines"><code>chase: target = player</code><span>then</span><code>scatter: target = corner</code></div><p>Junction AI changes behavior by swapping targets only.</p></div><p>Junction AI changes behavior by swapping targets only.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Separate transition from movement</h3><p>updateMode first selects state and target. moveEnemy then takes one tile toward that target. The label reads the same mode value.</p></div><pre><code>visible := hasLineOfSight(enemy, player) &amp;&amp;
            manhattan(enemy, player) &lt;= 7
 if visible {
     mode = chase

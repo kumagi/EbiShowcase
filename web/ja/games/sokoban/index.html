@@ -48,8 +48,8 @@
           <h3 id="lab-title-sokoban">箱を1マス押してみよう</h3>
           <p>P がプレイヤー、B が箱です。右へ進むとき、先が箱ならその先が空いているときだけ押せます。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-right>右へ</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-right data-go-focus="try box">右へ</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -61,7 +61,14 @@
             <div><span>P/B</span><strong>player/box</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="try">next := ahead(player, dir)</span>
+<span data-go-line="box">if next == Box &amp;&amp; ahead(box, dir) == Empty { push }</span>
+<span data-go-line="block">if next == Wall { /* stay */ }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE PARSE RECIPE</p>

@@ -47,12 +47,19 @@
 <p class="eyebrow">TRY IT / BULLET LIST</p>
 <h3 id="lab-title-space-shooter">Spawn, move, cull bullets</h3>
 <p>Fire appends to a slice; Step moves every bullet and drops off-screen ones. Separate lists per kind keep updates simple.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fire>Fire</button><button type="button" class="lab-button" data-lab-step>Advance 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fire data-go-focus="fire" data-go-caption="Append a shot">Fire</button><button type="button" class="lab-button" data-lab-step data-go-focus="fly cull" data-go-caption="Move shots → Drop off-screen shots">Advance 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Real games loop append → move → filter the same way.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>bullets</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="fire">shots = append(shots, Shot{x: px, y: py})</span>
+<span data-go-line="fly">for i := range shots { shots[i].y -= 8 }</span>
+<span data-go-line="cull">shots = filterOnScreen(shots)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula">
         <p class="eyebrow">THE DELETE PATTERN</p>

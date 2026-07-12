@@ -10,12 +10,18 @@
 <p class="eyebrow">TRY IT / DEF vs INST</p>
 <h3 id="lab-title-species-data">Spawn instances from a species def</h3>
 <p>Species data stays constant (maxHP…). Instances reference it but keep their own HP. Spawn adds instances; hit damages only them.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spawn>Spawn</button><button type="button" class="lab-button" data-lab-hit>Hit first</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Clear</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spawn data-go-focus="inst">Spawn</button><button type="button" class="lab-button" data-lab-hit>Hit first</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Clear</button></div>
 <p class="lab-hint">Dex = definitions; party = instances.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>instances</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="table">speciesTable[id] = Species{hp, atk}</span>
+<span data-go-line="inst">c := Creature{speciesID: id, hp: table.hp}</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">DEF ≠ STATE</p><div class="formula-lines"><code>Species.MaxHP</code><span>then</span><code>Instance.HP</code></div><p>Mutating the def corrupts every instance.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Read only the healing cap from species</h3><p>Only the selected creature's <code>hp</code> changes. Its cap comes from the shared table through <code>speciesID</code>.</p></div><pre><code>c := &amp;creatures[selected]
 definition := speciesTable[c.speciesID]

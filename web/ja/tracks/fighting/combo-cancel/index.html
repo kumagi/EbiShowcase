@@ -75,9 +75,9 @@
           <h3 id="lab-title-combo-cancel">早め入力をバッファしてキャンセル</h3>
           <p>早めの入力を数フレーム覚え、キャンセル窓で次の技へつなぎます。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-press>早めに入力</button>
-            <button type="button" class="lab-button" data-lab-step>1F進める</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-press data-go-focus="press">早めに入力</button>
+            <button type="button" class="lab-button" data-lab-step data-go-focus="tick cancel" data-go-caption="タイマーを減らす">1F進める</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -89,7 +89,14 @@
             <div><span>メモ</span><strong data-lab-note>—</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="press">buffer, life = &quot;light&quot;, 8</span>
+<span data-go-line="tick">if life &gt; 0 { life-- } else { buffer = &quot;none&quot; }</span>
+<span data-go-line="cancel">if cancelWindow &amp;&amp; buffer != &quot;none&quot; { start(buffer) }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">COMBO TIMING</p>

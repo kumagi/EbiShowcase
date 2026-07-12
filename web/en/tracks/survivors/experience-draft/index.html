@@ -45,11 +45,11 @@
           <h3 id="lab-title-experience-draft">Enter draft mode on level-up</h3>
           <p>Level-up enters draft mode. Picking a card returns to combat.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-level>Level up</button>
-            <button type="button" class="lab-button" data-lab-card data-card="A">A</button>
-            <button type="button" class="lab-button" data-lab-card data-card="B">B</button>
-            <button type="button" class="lab-button" data-lab-card data-card="C">C</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-level data-go-focus="pause">Level up</button>
+            <button type="button" class="lab-button" data-lab-card data-go-focus="pick" data-card="A">A</button>
+            <button type="button" class="lab-button" data-lab-card data-go-focus="pick" data-card="B">B</button>
+            <button type="button" class="lab-button" data-lab-card data-go-focus="pick" data-card="C">C</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -61,7 +61,13 @@
             <div><span>flag</span><strong>drafting</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="pause">if xp &gt;= need { drafting = true }</span>
+<span data-go-line="pick">applyCard(choice); drafting = false</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE LEVEL-UP RULE</p>

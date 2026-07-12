@@ -45,8 +45,8 @@
           <h3 id="lab-title-auto-turret">Aim at the nearest foe, fire on cooldown</h3>
           <p>Each frame pick the nearest foe; fire only when the cooldown hits zero.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>Advance to next shot</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="scan cd shot">Advance to next shot</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">The real game measures distance every frame and appends a bullet every 28 frames. This lab uses 8 frames so you feel it.</p>
         </div>
@@ -58,7 +58,14 @@
             <div><span>shots</span><strong data-lab-shots>0</strong><small></small></div>
           <div><span>result</span><strong data-lab-note>—</strong><small></small></div></div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="scan">best, dist := nearestEnemy(enemies, px, py)</span>
+<span data-go-line="cd">if frame%cooldown == 0 { fire(best) }</span>
+<span data-go-line="shot">shots = append(shots, toward(best))</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE TARGETING RULE</p>

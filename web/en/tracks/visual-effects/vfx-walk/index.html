@@ -72,13 +72,20 @@
           <p class="eyebrow">TRY IT / SUBIMAGE</p>
           <h3 id="lab-title-vfx-walk">Step and play frames</h3>
           <p>Step frames or play/pause. The glowing cell is the frame SubImage is cutting right now.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>Step</button><button type="button" class="lab-button" data-lab-play>Play / Pause</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="frame draw" data-go-caption="Draw paints the frame">Step</button><button type="button" class="lab-button" data-lab-play>Play / Pause</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board" data-lab-board style="display:grid;place-items:center"><div class="lab-frames"><span data-lab-cell>0</span><span data-lab-cell>1</span><span data-lab-cell>2</span><span data-lab-cell>3</span></div></div>
           <div class="lab-values" aria-live="polite"><div><span>frame</span><strong data-lab-frame>—</strong></div></div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="frame">frame := frames[i % len(frames)]</span>
+<span data-go-line="sub">// SubImage cuts one cell from the atlas</span>
+<span data-go-line="draw">screen.DrawImage(frame, &amp;op)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="code-lesson">
         <div>
@@ -132,32 +139,7 @@ screen.DrawImage(frame, op)</code></pre>
       <a href="../vfx-additive/">← STEP 05<strong>Additive Blending Glow</strong></a>
       <a href="../vfx-particles/">STEP 07 →<strong>Scatter Particles</strong></a>
     </nav>
-
-
-    <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">Quick feedback</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-walk/">
-          <label class="feedback-field">
-            <span class="sr-only">Feedback</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-
-
-</main>
+  </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
   <script>

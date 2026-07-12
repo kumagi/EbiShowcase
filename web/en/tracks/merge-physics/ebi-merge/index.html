@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / NEXT QUEUE</p>
 <h3 id="lab-title-ebi-merge">Queue the next drop tiers</h3>
 <p>The preview is a queue of upcoming pieces. Drop the front, enqueue behind. Scoring and game-over stay in other boxes.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-drop>Drop front</button><button type="button" class="lab-button" data-lab-enqueue>Enqueue</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-drop data-go-focus="q drop">Drop front</button><button type="button" class="lab-button" data-lab-enqueue data-go-focus="enq">Enqueue</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Showing one or three previews is the same queue.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>next</span><strong data-lab-next>—</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="q">next := queue[0]</span>
+<span data-go-line="drop">queue = queue[1:]; spawn(next)</span>
+<span data-go-line="enq">queue = append(queue, randomTier())</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">PREVIEW ≠ BOARD</p><div class="formula-lines"><code>queue.front → spawn</code><span>then</span><code>keep queue off the board</code></div><p>Never mix preview into the board slice.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Put every system in one clear order</h3><p>Input, physics, merge, then danger makes results deterministic.</p></div><pre><code>readDropInput() / simulatePhysics() / replaceMergedPairs() / updateScoreAndDanger() / decideClearOrGameOver()</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY PREVIEW?</p><h3>Reduce pure luck</h3><p>Knowing next allows placement plans.</p></article><article><p class="eyebrow">WHY DELAY DANGER?</p><h3>Allow brief bounces</h3><p>Crossing the line for one frame is safe.</p></article><article class="challenge"><p class="eyebrow">TUNE IT</p><h3>Score curve</h3><p>Change square to cube to reward large merges more.</p></article></div></section><nav class="lesson-pager"><a href="../merge-rule/">← STEP 05<strong>Merge Rule</strong></a><a href="../">PATH COMPLETE →<strong>Merge Physics Puzzle</strong></a></nav>
 

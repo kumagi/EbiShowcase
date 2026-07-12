@@ -43,9 +43,9 @@
           <h3 id="meter-lab-title">1コマずつ動かして、止めてみよう</h3>
           <p>「1フレーム進める」で線が動きます。端で向きが変わります。「止める」を押すと中央との距離で得点します。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>1フレーム進める</button>
-            <button type="button" class="lab-button" data-lab-stop>止める / 再開</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="位置を進める">1フレーム進める</button>
+            <button type="button" class="lab-button" data-lab-stop data-go-focus="stop score" data-go-caption="入力で止める → 中央判定で得点">止める / 再開</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームでは、ボタンを押さなくても毎フレーム自動で進みます。ここは仕組みを見るためのスローモーションです。</p>
         </div>
@@ -62,7 +62,14 @@
             <div><span>SCORE</span><strong data-lab-score>0</strong><small>中央に近いほど高い</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="move">x += speed; if x &gt; max || x &lt; min { speed = -speed }</span>
+<span data-go-line="stop">if justPressed { stopped = true }</span>
+<span data-go-line="score">if abs(x-center) &lt; zone { score++ }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE TWO-MODE RULE</p>

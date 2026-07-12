@@ -3,14 +3,21 @@
 <p class="eyebrow">TRY IT / FRAME ORDER</p>
 <h3 id="lab-title-ebi-bomber">爆弾ゲームの1フレームを並べる</h3>
 <p>総合はパイプです。入力→移動→爆弾タイマー→爆風→壁/連鎖→敵AI→描画。順番を固定すると「爆風中に歩けるか」が説明できます。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>次の工程</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>先頭へ</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">次の工程</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>先頭へ</button></div>
 <p class="lab-hint">描画は最後。AIは爆風更新のあとに置くことが多いです。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>工程</span><strong data-lab-stepn>0</strong></div><div><span>今</span><strong data-lab-note>—</strong></div></div>
 </div>
-</section><div class="formula"><p class="eyebrow">FIXED SYSTEMS ORDER</p><div class="formula-lines"><code>update bombs before AI</code><span>つぎに</span><code>draw last</code></div><p>順序を変えると、同じ入力でも生死が変わることがあります。</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>統合順序をUpdateに書く</h2><p>各関数は小さく保ち、<code>Update</code>がゲーム全体の設計図になります。</p></div><pre><code>readPlayerInput()
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<span data-go-line="step">input → sim → resolve → draw</span>
+<span data-go-line="loop">// then next frame</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</section><div class="formula"><p class="eyebrow">FIXED SYSTEMS ORDER</p><div class="formula-lines"><code>update bombs before AI</code><span>つぎに</span><code>draw last</code></div><p>順序を変えると、同じ入力でも生死が変わることがあります。</p></div><p>順序を変えると、同じ入力でも生死が変わることがあります。</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>統合順序をUpdateに書く</h2><p>各関数は小さく保ち、<code>Update</code>がゲーム全体の設計図になります。</p></div><pre><code>readPlayerInput()
 updateBombTimers()
 updateFlames()      // 壁・敵・自分へ作用
 collectItems()      // 能力値を更新

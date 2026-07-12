@@ -80,11 +80,11 @@
           <h3 id="lab-title-village-walk">Walls block tile steps</h3>
           <p>If the next tile is a wall, stay put but still update facing.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button" data-lab-up>↑</button>
-            <button type="button" class="lab-button" data-lab-left>←</button>
-            <button type="button" class="lab-button lab-button-primary" data-lab-right>→</button>
-            <button type="button" class="lab-button" data-lab-down>↓</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button" data-lab-up data-go-focus="try go">↑</button>
+            <button type="button" class="lab-button" data-lab-left data-go-focus="try go">←</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-right data-go-focus="try go">→</button>
+            <button type="button" class="lab-button" data-lab-down data-go-focus="try go">↓</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -96,7 +96,14 @@
             <div><span>note</span><strong data-lab-note>—</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="try">nx, ny := x+dx, y+dy</span>
+<span data-go-line="wall">if walls[ny][nx] { return /* blocked */ }</span>
+<span data-go-line="go">x, y = nx, ny</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE MOVEMENT RULE</p>

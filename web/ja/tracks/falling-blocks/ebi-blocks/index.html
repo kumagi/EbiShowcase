@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / FRAME JOBS</p>
 <h3 id="lab-title-ebi-blocks">1入力が通る仕事を順番に並べる</h3>
 <p>落下ブロック全体はパイプです。入力→移動→固定→ライン消し→次ピース。同じフレームで順番を守るとバグが減ります。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>次の工程</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>フレーム先頭へ</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">次の工程</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>フレーム先頭へ</button></div>
 <p class="lab-hint">ゴースト表示は描画専用で、このパイプの外に置けます。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>工程</span><strong data-lab-stepn>0</strong></div><div><span>今</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<span data-go-line="step">input → sim → resolve → draw</span>
+<span data-go-line="loop">// then next frame</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">ORDERED PIPE</p><div class="formula-lines"><code>do jobs in fixed order</code><span>つぎに</span><code>never skip ahead</code></div><p>消す前に固定、固定前に移動。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>固定を境目に一連の処理を完了する</h3><p>activeの4マスを盤面へ移した後は、行・得点・次の形までまとめて処理し、それから入力へ戻ります。</p></div><pre><code>func (g *game) lock() {
     writeActiveToBoard()

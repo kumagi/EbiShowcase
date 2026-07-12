@@ -75,13 +75,13 @@
           <h3 id="lab-title-guard-throw">打撃・ガード・投げの読み合い</h3>
           <p>先に敵の手を選び、自分の手で勝ち負けを見ます。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button" data-lab-enemy data-enemy="strike">敵:打撃</button>
-            <button type="button" class="lab-button" data-lab-enemy data-enemy="guard">敵:ガード</button>
-            <button type="button" class="lab-button" data-lab-enemy data-enemy="throw">敵:投げ</button>
-            <button type="button" class="lab-button lab-button-primary" data-lab-pick="strike">打撃</button>
-            <button type="button" class="lab-button" data-lab-pick="guard">ガード</button>
-            <button type="button" class="lab-button" data-lab-pick="throw">投げ</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button" data-lab-enemy data-go-focus="pick" data-enemy="strike">敵:打撃</button>
+            <button type="button" class="lab-button" data-lab-enemy data-go-focus="pick" data-enemy="guard">敵:ガード</button>
+            <button type="button" class="lab-button" data-lab-enemy data-go-focus="pick" data-enemy="throw">敵:投げ</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-pick data-go-focus="pick rule res"="strike">打撃</button>
+            <button type="button" class="lab-button" data-lab-pick data-go-focus="pick rule res"="guard">ガード</button>
+            <button type="button" class="lab-button" data-lab-pick data-go-focus="pick rule res"="throw">投げ</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -93,7 +93,14 @@
             <div><span>wins()</span><strong></strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="pick">you, enemy := choice, foeChoice</span>
+<span data-go-line="rule">strike &gt; throw &gt; guard &gt; strike</span>
+<span data-go-line="res">result := resolve(you, enemy)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE RPS RULE</p>

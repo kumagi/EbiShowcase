@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / SCAN</p>
 <h3 id="lab-title-find-matches">Highlight runs of 3+</h3>
 <p>Scan walks rows and columns for equal runs of length ≥ 3. Lit cells are clear candidates. Clear+fall drops gems into holes and refills.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan>Scan</button><button type="button" class="lab-button" data-lab-clear>Clear + fall</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan data-go-focus="scan">Scan</button><button type="button" class="lab-button" data-lab-clear data-go-focus="clear">Clear + fall</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">After every swap, run scan → clear → gravity in that order.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>lit cells</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="scan">for each cell { if run &gt;= 3 { mark } }</span>
+<span data-go-line="clear">removeMarked()</span>
+<span data-go-line="fall">compactColumns()</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE SCAN RULE</p><div class="formula-lines"><code>run length ≥ 3</code><span>then</span><code>mark those cells</code></div><p>Don’t start with fancy shapes—count runs first and bugs shrink.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Scan rows, then columns</h3><p>Keep directions separate: first all rows, then all columns, using two simple loops.</p></div><pre><code>for y := 0; y &lt; rows; y++ {
     scanRow(y, marked)

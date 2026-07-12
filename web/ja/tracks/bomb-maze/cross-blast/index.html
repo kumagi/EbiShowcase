@@ -6,14 +6,20 @@
 <p class="eyebrow">TRY IT / CROSS ARMS</p>
 <h3 id="lab-title-cross-blast">火力ぶんだけ十字に伸ばす</h3>
 <p>中心から上下左右へ、壁に当たるまでマスを進めます。「火力+」で届く距離が伸びます。固い壁で止まるのがポイントです。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-power>火力 +1</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>火力1へ</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-power data-go-focus="arms stop" data-go-caption="入力で止める">火力 +1</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>火力1へ</button></div>
 <p class="lab-hint">各方向は独立した for ループです。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>火力</span><strong data-lab-reach>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
 </div>
-</section><div class="formula"><p class="eyebrow">FOUR LOOPS</p><div class="formula-lines"><code>for each dir in NESW</code><span>つぎに</span><code>walk until wall or power</code></div><p>円形ではなく、グリッドの十字が爆弾の定石です。</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>方向と距離の二重ループにする</h2><p><code>break</code>が止めるのは内側の距離ループだけです。そのため右が壁で止まっても、次の上・下・左は調べられます。</p></div><pre><code>cells := []point{center}
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="arms">for dir in ±x,±y { for i:=1; i&lt;=power; i++ }</span>
+<span data-go-line="stop">if wall { break } ; light(cell)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</section><div class="formula"><p class="eyebrow">FOUR LOOPS</p><div class="formula-lines"><code>for each dir in NESW</code><span>つぎに</span><code>walk until wall or power</code></div><p>円形ではなく、グリッドの十字が爆弾の定石です。</p></div><p>円形ではなく、グリッドの十字が爆弾の定石です。</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>方向と距離の二重ループにする</h2><p><code>break</code>が止めるのは内側の距離ループだけです。そのため右が壁で止まっても、次の上・下・左は調べられます。</p></div><pre><code>cells := []point{center}
 for _, direction := range rays {
     for step := 1; step &lt;= blastRange; step++ {
         next := point{

@@ -45,8 +45,8 @@
           <h3 id="lab-title-survival-run">Seconds reshape interval and speed</h3>
           <p>Elapsed seconds shorten spawns and raise speed. Difficulty is a function of time.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>+5 sec</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="sec iv spd">+5 sec</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -58,7 +58,14 @@
             <div><span>speed</span><strong data-lab-speed>0.85</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="sec">sec := frame / 60</span>
+<span data-go-line="iv">interval := max(10, 34-sec/2)</span>
+<span data-go-line="spd">speed := 1.15 + float64(sec)*0.028</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE DIFFICULTY CURVE</p>

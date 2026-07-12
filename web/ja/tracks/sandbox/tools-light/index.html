@@ -10,12 +10,18 @@
 <p class="eyebrow">TRY IT / LIGHT BFS</p>
 <h3 id="lab-title-tools-light">光源から明るさを広げよう</h3>
 <p>トーチを置くと中心が明るい値になります。「拡散」で上下左右へ1ずつ減衰してコピー。道具の耐久とは別計算です。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-torch>トーチ設置</button><button type="button" class="lab-button" data-lab-flood>1回拡散</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>消灯</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-torch>トーチ設置</button><button type="button" class="lab-button" data-lab-flood>1回拡散</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>消灯</button></div>
 <p class="lab-hint">壁で止めたいときは、壁マスへ値を書き込まないだけでできます。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>明るいマス</span><strong data-lab-lit>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="seed">light[y][x] = 15 // torch</span>
+<span data-go-line="spread">n = max(n, c-1) // 4-neighborhood</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">DECAY FLOOD</p><div class="formula-lines"><code>center = power</code><span>つぎに</span><code>neighbor = max(old, power-1)</code></div><p>光は加算でも上書きでもよいが、ルールを1つに。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>昼夜とすべての松明から最大光量を作る</h3><p>明るさは0〜9の整数です。色だけでなく画面上にもDAY/NIGHTと数値を出し、採掘できない理由が分かるようにしています。</p></div><pre><code>func (g *Game) lightAt(x, y int) int {
     light := g.daylight()

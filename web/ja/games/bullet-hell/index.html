@@ -48,9 +48,9 @@
           <h3 id="lab-title-bullet-hell">弾の数で円形弾幕を変える</h3>
           <p>全周を弾の数で割った角度に cos / sin をかけて円形弾幕を作ります。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button" data-lab-less>減らす</button>
-            <button type="button" class="lab-button lab-button-primary" data-lab-more>増やす</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button" data-lab-less data-go-focus="count spawn">減らす</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-more data-go-focus="count spawn">増やす</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -62,7 +62,14 @@
             <div><span>cos/sin</span><strong>velocity</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="spawn">for i := 0; i &lt; n; i++ { angle := tau * i / n }</span>
+<span data-go-line="vel">vx, vy := cos(a)*speed, sin(a)*speed</span>
+<span data-go-line="count">n = clamp(n, 4, 24)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE CIRCLE SHOT</p>

@@ -38,12 +38,18 @@
 <p class="eyebrow">TRY IT / FULL ROW</p>
 <h3 id="lab-title-lock-lines">Clear only full rows</h3>
 <p>Gold rows are completely filled. Clear Rows removes them and drops everything above. Scoring in falling-block games starts from this “is the row full?” test.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-clear>Clear rows</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-clear data-go-focus="full pack">Clear rows</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Several full rows clear together in one pass.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>cleared</span><strong data-lab-cleared>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="full">if rowAllFilled { cleared++ }</span>
+<span data-go-line="pack">write surviving rows from bottom</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE FULL-ROW RULE</p><div class="formula-lines"><code>if every cell is filled → clear</code><span>then</span><code>pack remaining rows down</code></div><p>Feed the cleared count into a score table for singles through Tetrises.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Read upward and write upward</h3><p>Copy only non-full rows to write, then fill every unused row at the top with an empty row.</p></div><pre><code>write := rows - 1
 for read := rows - 1; read &gt;= 0; read-- {

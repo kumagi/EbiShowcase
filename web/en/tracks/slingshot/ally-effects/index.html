@@ -10,12 +10,18 @@
 <p class="eyebrow">TRY IT / CONTACT QUEUE</p>
 <h3 id="lab-title-ally-effects">Resolve contact events one-by-one</h3>
 <p>On contact, enqueue an event instead of firing instantly. Pop resolves the front. Simultaneous hits keep a stable order.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-push>Queue contact</button><button type="button" class="lab-button" data-lab-pop>Resolve one</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Clear</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-push data-go-focus="push">Queue contact</button><button type="button" class="lab-button" data-lab-pop data-go-focus="pop">Resolve one</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Clear</button></div>
 <p class="lab-hint">Drain the queue inside Update until empty.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>waiting</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="push">q = append(q, Event{kind, at})</span>
+<span data-go-line="pop">e, q := q[0], q[1:]; resolve(e)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">QUEUE THEN RESOLVE</p><div class="formula-lines"><code>on contact: push event</code><span>then</span><code>later: pop & apply</code></div><p>Split the physics moment from effect resolve.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>One contact entrance, data-defined results</h3><p>Each ally does not need a new collision test. Pass an ability number through the same entrance, so new effects do not change movement or contact code.</p></div><pre><code>now := circlesTouch(player, ally)
 if now &amp;&amp; !ally.wasTouching &amp;&amp; ally.cooldown == 0 {

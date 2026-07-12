@@ -1,3 +1,27 @@
+/* --- TRY IT × Go highlight API (see FIX_TRY_IT_RALPH.md) --- */
+
+function focusGo(lab, ids, caption) {
+  if (!lab) return;
+  const list = Array.isArray(ids) ? ids : String(ids || "").split(/\s+/).filter(Boolean);
+  lab.querySelectorAll(".lab-go [data-go-line]").forEach((el) => {
+    el.classList.toggle("is-active", list.includes(el.dataset.goLine));
+  });
+  const cap = lab.querySelector("[data-lab-go-caption]");
+  if (cap) {
+    let text = caption;
+    if (text && typeof text === "object") {
+      const lang = document.documentElement.lang === "en" ? "en" : "ja";
+      text = text[lang] || text.ja || text.en || "—";
+    }
+    if (text == null || text === "") text = list.length ? list.join(" · ") : "—";
+    cap.textContent = text;
+  }
+}
+
+function clearGo(lab) {
+  focusGo(lab, [], "—");
+}
+
 function initFlappyLab(lab) {
   const section = lab.closest(".physics");
   const bird = lab.querySelector("[data-lab-bird]");
@@ -26,12 +50,17 @@ function initFlappyLab(lab) {
   lab.querySelector("[data-lab-flap]")?.addEventListener("click", () => {
     velocity = -7.4;
     step();
+    focusGo(lab, ["flap", "grav", "pos"]);
   });
-  lab.querySelector("[data-lab-step]")?.addEventListener("click", step);
+  lab.querySelector("[data-lab-step]")?.addEventListener("click", () => {
+    step();
+    focusGo(lab, ["grav", "pos"]);
+  });
   lab.querySelector("[data-lab-reset]")?.addEventListener("click", () => {
     velocity = 0;
     position = 320;
     render();
+    clearGo(lab);
   });
   render();
 }
@@ -70,6 +99,7 @@ document.querySelectorAll(".motion-lab[data-lab='hit-test']").forEach((lab) => {
     result.textContent = hit ? hitLabel : missLabel;
     result.dataset.state = hit ? "hit" : "miss";
     board.dataset.state = hit ? "hit" : "miss";
+    focusGo(lab, hit ? ["dxdy", "hypot", "hit"] : ["dxdy", "hypot", "miss"]);
   };
 
   const placeFromEvent = (event) => {
@@ -97,6 +127,7 @@ document.querySelectorAll(".motion-lab[data-lab='hit-test']").forEach((lab) => {
     result.textContent = lab.dataset.wait || "TAP";
     result.dataset.state = "wait";
     board.dataset.state = "wait";
+    clearGo(lab);
   });
 });
 
@@ -3225,5 +3256,21 @@ document.querySelectorAll(".motion-lab[data-lab='push']").forEach((lab) => {
     const cells = (lab.querySelector("[data-lab-map]")?.textContent || ". P . B .").trim().split(/\s+/);
     board.innerHTML = `<div class="lab-push-row">${cells.map((c) =>
       `<span class="${c === "P" ? "you" : c === "B" ? "box" : c === "#" ? "wall" : ""}">${c === "." ? "" : c}</span>`).join("")}</div>`;
+  });
+});
+
+/* Auto-wire TRY IT · GO highlights from data-go-focus / data-go-clear */
+document.querySelectorAll(".motion-lab").forEach((lab) => {
+  if (!lab.querySelector(".lab-go")) return;
+  lab.addEventListener("click", (event) => {
+    const btn = event.target.closest("button");
+    if (!btn || !lab.contains(btn)) return;
+    if (btn.hasAttribute("data-go-clear")) {
+      clearGo(lab);
+      return;
+    }
+    if (!btn.hasAttribute("data-go-focus")) return;
+    const ids = btn.getAttribute("data-go-focus").trim().split(/\s+/).filter(Boolean);
+    focusGo(lab, ids, btn.getAttribute("data-go-caption") || undefined);
   });
 });

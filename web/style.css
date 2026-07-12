@@ -761,3 +761,14 @@ footer p{color:#67719c}
 .feedback-status.is-sent{color:#168e7f}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:600px){.feedback-section{padding:56px 22px}.feedback-card{padding:22px}.feedback-heading{display:block}.feedback-heading .eyebrow{margin-bottom:10px}.feedback-actions{align-items:flex-start;flex-direction:column}.feedback-submit{width:100%;justify-content:space-between}.feedback-status{font-size:11px}}
+
+/* TRY IT · GO snippet */
+.motion-lab{grid-template-rows:auto auto}
+.lab-go-block{grid-column:1/-1;padding:22px 24px 26px;border-top:1px solid var(--space-line);background:rgba(8,12,28,.55)}
+.lab-go-block .eyebrow{margin:0 0 10px;color:var(--cyan)}
+.lab-go{margin:0;padding:16px 18px;border-radius:12px;background:#0b1228;border:1px solid #2a3a62;overflow:auto;font:600 12px/1.7 var(--font-mono);color:#9eb0d8;white-space:pre}
+.lab-go [data-go-line]{display:block;padding:2px 8px;margin:0 -8px;border-left:3px solid transparent;border-radius:6px;color:#c9d3f4}
+.lab-go [data-go-line].is-active{border-left-color:var(--sun);background:rgba(255,209,102,.14);color:#fff6d6}
+.lab-go-caption{margin:10px 0 0;font:700 13px var(--font-mono);color:#9eb0d8;min-height:1.2em}
+@media(prefers-reduced-motion:reduce){.lab-go [data-go-line].is-active{transition:none}}
+@media(max-width:600px){.lab-go{font-size:11px;padding:14px 12px}.lab-go-block{padding:18px 16px 22px}}

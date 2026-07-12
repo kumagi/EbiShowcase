@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / RUN LOOP</p>
 <h3 id="lab-title-ebi-ascent">Pipe map → battle → reward</h3>
 <p>A run is a pipeline of scenes. Next advances the stage; wrapping starts the next loop. Keep state per scene.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>Next scene</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Restart</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">Next scene</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Restart</button></div>
 <p class="lab-hint">Save on scene boundaries.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>progress</span><strong data-lab-stepn>0</strong></div><div><span>now</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<span data-go-line="step">input → sim → resolve → draw</span>
+<span data-go-line="loop">// then next frame</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">SCENE PIPE</p><div class="formula-lines"><code>currentScene.Update()</code><span>then</span><code>on exit → next scene</code></div><p>Don’t cram every mode into one Update.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Delegate Update to the current scene</h3><p>Keep one Update readable by splitting it into small scene-specific operations.</p></div><pre><code>switch phase {
 case phaseBattle:

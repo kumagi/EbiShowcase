@@ -75,8 +75,8 @@
           <h3 id="lab-title-powerup-adventure">パワー状態で衝突結果が変わる</h3>
           <p>powered フラグが立つと、敵接触がダメージから踏みつけへ変わります。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-toggle>パワー切替</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-toggle data-go-focus="flag branch">パワー切替</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -88,7 +88,13 @@
             <div><span>flag</span><strong>bool</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="flag">powered := g.powered</span>
+<span data-go-line="branch">if powered { stomp } else { takeDamage }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE ONE-LINE RULE</p>

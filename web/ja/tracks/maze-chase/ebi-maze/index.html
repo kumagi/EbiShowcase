@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / FRAME ORDER</p>
 <h3 id="lab-title-ebi-maze">1フレームの仕事を順番に処理</h3>
 <p>迷路総合はパイプです。入力→移動→敵AI→ドット→描画準備。順序を守ると、食べた直後の敵接触なども説明しやすくなります。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>次の仕事</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>フレーム先頭</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">次の仕事</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>フレーム先頭</button></div>
 <p class="lab-hint">描画は最後。ここより前で画面を触らない。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>工程</span><strong data-lab-stepn>0</strong></div><div><span>今</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<span data-go-line="step">input → sim → resolve → draw</span>
+<span data-go-line="loop">// then next frame</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">FIXED ORDER</p><div class="formula-lines"><code>run systems in list order</code><span>つぎに</span><code>draw is last</code></div><p>AIが先かドットが先かで勝敗が変わることがあります。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>各システムの責任を小さく保つ</h3><p>一つの巨大な関数にせず、順番を読むUpdateから走者、敵、接触の関数を呼びます。各関数は自分の状態だけを更新します。</p></div><pre><code>func (g *game) Update() error {
     g.player.wanted = readInput()

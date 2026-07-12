@@ -10,12 +10,18 @@
 <p class="eyebrow">TRY IT / BFS GROUP</p>
 <h3 id="lab-title-color-groups">Tap a cell to paint its color group</h3>
 <p>BFS gathers 4-way neighbors of the same color. Remember visited. Clear rules use this set’s size (e.g. ≥ 4).</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Clear paint</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Clear paint</button></div>
 <p class="lab-hint">The tapped cell’s color is the search key.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>group size</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="seed">q = []Pos{start}; seen[start]=true</span>
+<span data-go-line="step">for len(q)&gt;0 { pop; push same-color neighbors }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">BFS SET</p><div class="formula-lines"><code>queue + visited</code><span>then</span><code>same color → expand</code></div><p>DFS works too; BFS is safer on deep boards.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Spread until the queue becomes empty</h3><p>Visited is shared across the board scan, so another entrance never counts an old group twice. Pair placement returns as group length.</p></div><pre><code>for len(queue) &gt; 0 {
     current := queue[0]

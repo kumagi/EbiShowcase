@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / FRAME JOBS</p>
 <h3 id="lab-title-ebi-blocks">Order the jobs one input travels</h3>
 <p>A full stacker is a pipe: input → fall → lock → clear → spawn. Keep that order inside one frame.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>Next job</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Frame start</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">Next job</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Frame start</button></div>
 <p class="lab-hint">Ghost piece can stay draw-only, outside the pipe.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>step</span><strong data-lab-stepn>0</strong></div><div><span>now</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<span data-go-line="step">input → sim → resolve → draw</span>
+<span data-go-line="loop">// then next frame</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">ORDERED PIPE</p><div class="formula-lines"><code>do jobs in fixed order</code><span>then</span><code>never skip ahead</code></div><p>Lock before clear; move before lock.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Finish the pipeline at the lock boundary</h3><p>After active becomes board cells, finish lines, score, and next-piece work before returning control.</p></div><pre><code>func (g *game) lock() {
     writeActiveToBoard()

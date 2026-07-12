@@ -49,19 +49,26 @@
         <article><span class="concept-number">2</span><h3>速度</h3><p>1回の更新で、どちらへどれだけ動くか。マイナスなら上へ、プラスなら下へ進みます。</p><code>velocity = -7.4</code></article>
         <article><span class="concept-number">3</span><h3>加速度</h3><p>速度を毎回どれだけ変えるか。重力として <strong>+0.42</strong> を足し続けると、上昇が止まり、やがて落下します。</p><code>gravity = +0.42</code></article>
       </div>
-      <div class="motion-lab" aria-labelledby="motion-lab-title">
+      <div class="motion-lab" data-lab="flappy" aria-labelledby="motion-lab-title">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p>
           <h3 id="motion-lab-title">1コマずつ動かしてみよう</h3>
           <p>ゲームはパラパラ漫画のように、少しずつ計算して描き直します。ボタンを押すたび、重力が速度へ足され、その速度だけ主人公の位置が変わります。見た目は 海老・天次郎、当たりは円です。</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap>はばたく</button><button type="button" class="lab-button" data-lab-step>1フレーム進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap data-go-focus="flap grav pos" data-go-caption="上昇の初速を入れる → 加速度を足す → 速度を位置へ足す">はばたく</button><button type="button" class="lab-button" data-lab-step data-go-focus="grav pos" data-go-caption="加速度を足す → 速度を位置へ足す">1フレーム進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button></div>
           <p class="lab-hint">「はばたく」は、上向きの速度 <code>-7.4</code> をセットしてから1フレーム進めます。</p>
         </div>
         <div class="lab-visual">
           <div class="lab-sky" role="img" aria-label="主人公の上下運動を示す図"><span class="axis-label axis-top">0 / 上</span><span class="axis-label axis-bottom">720 / 下</span><div class="lab-bird" data-lab-bird aria-hidden="true"><span></span></div></div>
           <div class="lab-values" aria-live="polite"><div><span>加速度</span><strong>+0.42</strong><small>毎フレーム</small></div><div><span>速度</span><strong data-lab-velocity>0.00</strong><small data-lab-direction>止まっている</small></div><div><span>位置 Y</span><strong data-lab-position>320.00</strong><small>画面の上から</small></div></div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="grav">vy += 0.42 // gravity each frame</span>
+<span data-go-line="pos">y += vy</span>
+<span data-go-line="flap">if pressed { vy = -7.4 // jump impulse }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
       <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>速度 = 速度 + 重力</code><span>つぎに</span><code>位置 = 位置 + 速度</code></div><p>順番が大切です。まず重力で速度を変え、次にその速度で位置を変えます。毎フレームくり返すだけで、自然なジャンプの曲線が生まれます。</p></div>
       <div class="code-lesson">
         <div><p class="eyebrow">IN THE REAL GAME</p><h3>Ebitengineでは<br><code>Update</code>に書く</h3><p><code>Update</code>はゲームの状態を進める場所です。入力を調べ、速度を変え、位置を動かします。<code>Draw</code>は計算後の位置に主人公を描きます。</p></div>

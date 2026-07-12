@@ -24,12 +24,19 @@
 <p class="eyebrow">TRY IT / MARK SPECIALS</p>
 <h3 id="lab-title-special-pieces">Build the clear-set first</h3>
 <p>Specials still start as a set of cells to clear. Scan marks the set; then one clear pass handles bombs and lines alike.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan>Collect affected cells</button><button type="button" class="lab-button" data-lab-clear>Clear the set</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan data-go-focus="scan">Collect affected cells</button><button type="button" class="lab-button" data-lab-clear data-go-focus="clear">Clear the set</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Different FX, one clear pipeline keeps edge cases tame.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>targets</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="scan">for each cell { if run &gt;= 3 { mark } }</span>
+<span data-go-line="clear">removeMarked()</span>
+<span data-go-line="fall">compactColumns()</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">SET THEN CLEAR</p><div class="formula-lines"><code>add cells to a Set</code><span>then</span><code>clear the whole Set</code></div><p>New specials only change how the Set is filled.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Separate detection from effects</h3><p><code>detectSpecial</code> says what was made. <code>activate</code> reads that kind and decides where it reaches. Avoid hiding both jobs in one long conditional.</p></div><pre><code>kind, center, ok := detectSpecial(board)
 if ok {

@@ -73,9 +73,9 @@
           <h3 id="jump-lab-title">接地のときだけ跳ばせてみよう</h3>
           <p>「ジャンプ」は grounded のときだけ効きます。空中でもう一度押しても飛びません。「1フレーム進める」で重力がかかり、床に着くとまた接地します。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-jump>ジャンプ</button>
-            <button type="button" class="lab-button" data-lab-step>1フレーム進める</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-jump data-go-focus="jump">ジャンプ</button>
+            <button type="button" class="lab-button" data-lab-step data-go-focus="grav land" data-go-caption="加速度を足す">1フレーム進める</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームでは毎フレーム自動で進みます。ここはスローモーションです。</p>
         </div>
@@ -90,7 +90,14 @@
             <div><span>grounded</span><strong data-lab-grounded data-state="hit">接地中</strong><small>ジャンプ許可</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="grav">vy += gravity</span>
+<span data-go-line="jump">if grounded &amp;&amp; pressed { vy = jumpV }</span>
+<span data-go-line="land">if y &gt;= floor { y, vy, grounded = floor, 0, true }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE ONE-LINE RULE</p>

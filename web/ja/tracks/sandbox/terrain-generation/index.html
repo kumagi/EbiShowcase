@@ -10,12 +10,18 @@
 <p class="eyebrow">TRY IT / HEIGHT FIELD</p>
 <h3 id="lab-title-terrain-generation">列ごとの高さをノイズで決めよう</h3>
 <p>地形は「列→高さ」です。ノイズでサンプリングし、必要なら削って地層を作ります。seed を固定すれば同じ大地が再現できます。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-noise>ノイズサンプリング</button><button type="button" class="lab-button" data-lab-carve>1段削る</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-noise data-go-focus="noise">ノイズサンプリング</button><button type="button" class="lab-button" data-lab-carve data-go-focus="carve">1段削る</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
 <p class="lab-hint">高さの下を石、上を土、みたいな層分けはあとから載せます。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>高さ</span><strong data-lab-h>—</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="noise">h = sampleNoise(x, z)</span>
+<span data-go-line="carve">h = max(1, h-1)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">HEIGHT THEN LAYERS</p><div class="formula-lines"><code>h = noise(x, seed)</code><span>つぎに</span><code>fill cells below h</code></div><p>いきなり2Dノイズ全部より、高さからが簡単です。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>高さを先に決め、上から層を重ねる</h3><p>一列ずつ表面を求めれば、どのyが空でどこから地面かが決まります。その同じ表面値を地層判定とプレイヤーの足元にも使います。</p></div><pre><code>surfaceY := 3 + int(valueNoise1D(seed, float64(x)/8)*6)
 for y := surfaceY; y &lt; worldH; y++ {

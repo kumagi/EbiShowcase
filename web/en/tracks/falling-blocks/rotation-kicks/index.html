@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / WALL KICKS</p>
 <h3 id="lab-title-rotation-kicks">Try kick offsets in order</h3>
 <p>If a rotate hits a wall, walk a kick table: (0,0), (1,0), (-1,0)… First legal offset wins. None work → cancel the rotate.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-kick>Try next kick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-kick data-go-focus="try ok">Try next kick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">SRS is the same “try offsets top-down” shape.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>tries</span><strong data-lab-try>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="try">for _, k := range kicks { if canPlace(x+k.dx, y+k.dy) }</span>
+<span data-go-line="ok">{ x, y = x+k.dx, y+k.dy; return }</span>
+<span data-go-line="fail">/* all kicks failed → keep old rot */</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">TRY TABLE</p><div class="formula-lines"><code>for offset in kicks</code><span>then</span><code>if fits { apply; break }</code></div><p>Kick tables are data; the tester is shared.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Test rotation and offset together</h3><p>Build the four rotated cells at each candidate position. Commit only the first pair for which collides returns false.</p></div><pre><code>nextRotation := (rotation + 1) % 4
 for _, kick := range kickTests {

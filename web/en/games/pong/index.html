@@ -47,8 +47,8 @@
           <h3 id="lab-title-bounce">Bounce off walls and paddles</h3>
           <p>“Next frame” moves the ball. Side walls flip vx; the paddle flips vy.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>Next frame</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="Advance position">Next frame</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">Keep the speed magnitude; only the sign changes.</p>
         </div>
@@ -60,7 +60,14 @@
             <div><span>event</span><strong data-lab-note>—</strong><small>last bounce</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="move">x += vx; y += vy</span>
+<span data-go-line="wall">if x &lt; 0 || x &gt; w { vx = -vx }</span>
+<span data-go-line="paddle">if hitPaddle { vy = -vy }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE BOUNCE RULE</p>

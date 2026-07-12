@@ -80,8 +80,8 @@
           <h3 id="lab-title-command-battle">戦闘状態を1つずつ進める</h3>
           <p>戦闘は状態を1つずつ進めます。いまの状態だけが入力を受けます。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>次の状態</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="next act">次の状態</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -93,7 +93,14 @@
             <div><span>1つずつ</span><strong></strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="state">switch phase {</span>
+<span data-go-line="next">phase = nextPhase(phase)</span>
+<span data-go-line="act">case player: playCard(); case enemy: enemyAct()</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE STATE FLOW</p>

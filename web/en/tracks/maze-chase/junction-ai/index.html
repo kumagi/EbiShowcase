@@ -6,14 +6,20 @@
 <p class="eyebrow">TRY IT / JUNCTION</p>
 <h3 id="lab-title-junction-ai">Pick exactly one edge</h3>
 <p>At a junction, list open neighbors and keep the one closest to the target. Anti-U-turn rules plug in here too.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-chase>Target right</button><button type="button" class="lab-button" data-lab-scatter>Target up</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-chase data-go-focus="mode pick">Target right</button><button type="button" class="lab-button" data-lab-scatter data-go-focus="mode pick">Target up</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Enumerate → score → take the best.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>pick</span><strong data-lab-choice>chase:right</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
 </div>
-</section><div class="formula"><p class="eyebrow">SCORE EDGES</p><div class="formula-lines"><code>candidates = open neighbors</code><span>then</span><code>pick min distance to target</code></div><p>Distance scoring reads clearer than pure randomness.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Pass personality targets into one chooser</h2><p>An <code>ahead</code> value of 0 means the current tile; 3 means three tiles along the player's direction. One algorithm supports different enemies through data.</p></div><pre><code>target := player
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="mode">target := player // or corner if scatter</span>
+<span data-go-line="pick">dir = argmin(dist(nextTile, target))</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</section><div class="formula"><p class="eyebrow">SCORE EDGES</p><div class="formula-lines"><code>candidates = open neighbors</code><span>then</span><code>pick min distance to target</code></div><p>Distance scoring reads clearer than pure randomness.</p></div><p>Distance scoring reads clearer than pure randomness.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Pass personality targets into one chooser</h2><p>An <code>ahead</code> value of 0 means the current tile; 3 means three tiles along the player's direction. One algorithm supports different enemies through data.</p></div><pre><code>target := player
 if enemy.personality.ahead &gt; 0 {
     target = player.add(playerDirection.mul(3))
 }

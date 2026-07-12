@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / FRAME ORDER</p>
 <h3 id="lab-title-ebi-maze">Run one frame’s jobs in order</h3>
 <p>The full maze game is a pipe: input → move → enemy AI → pellets → draw prep. Fixed order makes edge cases explainable.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>Next job</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Frame start</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">Next job</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Frame start</button></div>
 <p class="lab-hint">Draw last—never touch pixels earlier.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>step</span><strong data-lab-stepn>0</strong></div><div><span>now</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<span data-go-line="step">input → sim → resolve → draw</span>
+<span data-go-line="loop">// then next frame</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">FIXED ORDER</p><div class="formula-lines"><code>run systems in list order</code><span>then</span><code>draw is last</code></div><p>AI-before-pellets can change who wins a tie.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Keep each system's responsibility small</h3><p>Instead of one giant function, readable Update calls runner, guard, and contact functions in order. Each updates its own state.</p></div><pre><code>func (g *game) Update() error {
     g.player.wanted = readInput()

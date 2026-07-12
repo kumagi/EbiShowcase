@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / GRAVITY</p>
 <h3 id="lab-title-clear-and-fall">消したあとに落とそう</h3>
 <p>まずスキャンで候補を光らせ、次に「消して落下」。穴の上にあった色が下へ詰まります。マッチ3は「消す」と「落とす」を別ステップにすると安定します。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan>スキャン</button><button type="button" class="lab-button" data-lab-clear>消して落下</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan data-go-focus="scan">スキャン</button><button type="button" class="lab-button" data-lab-clear data-go-focus="clear">消して落下</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
 <p class="lab-hint">落下後にもう一度スキャンすると連鎖になります。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>光ったマス</span><strong data-lab-count>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="scan">for each cell { if run &gt;= 3 { mark } }</span>
+<span data-go-line="clear">removeMarked()</span>
+<span data-go-line="fall">compactColumns()</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">CLEAR THEN FALL</p><div class="formula-lines"><code>揃ったマスを空にする</code><span>つぎに</span><code>列ごとに下へ詰める</code></div><p>同時にやろうとすると穴の扱いで混乱します。順番を守ると連鎖も書けます。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>1列を下から圧縮する</h3><p>readとwriteを分けると、穴が何個続いても同じループで処理できます。</p></div><pre><code>write := rows - 1
 for read := rows-1; read &gt;= 0; read-- {

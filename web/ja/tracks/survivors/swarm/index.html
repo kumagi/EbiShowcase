@@ -34,7 +34,7 @@
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>固定配列</h3><p><code>[100]mob</code> と宣言すると、ちょうど100個の場所が最初からメモリに確保されます。スライスと違い、要素の追加でサイズが変わりません。</p><code>mobs [100]mob</code></article>
-        <article><span class="concept-number">2</span><h3>即時リスポーン</h3><p>「1体倒す」で席0が N1 に書き換わります。配列の長さは増えず、同じ8席を使い回します。右側のマスも一緒に変わります。</p><code>g.spawn(i)</code></article>
+        <article><span class="concept-number">2</span><h3>即時リスポーン</h3><p>「1体倒す」で席0が N1 に書き換わります。配列の長さは増えず、同じ8席を使い回します。</p><code>g.spawn(i)</code></article>
         <article><span class="concept-number">3</span><h3>オーラ攻撃</h3><p>自機の周囲62ピクセルが攻撃範囲です。18フレームごとに範囲内の敵をキルカウントし、すぐ同じ席に再スポーンします。</p><code>if d &lt; 62 &amp;&amp; frame%18 == 0</code></article>
       </div>
 
@@ -45,10 +45,10 @@
           <h3 id="lab-title-swarm">倒した席にすぐ次の敵を上書き</h3>
           <p>固定配列の席を消さず、倒したインデックスへ次の敵を上書きします。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-kill>1体倒して上書き</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-kill data-go-focus="kill" data-go-caption="席を上書きリスポーン">1体倒して上書き</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
-          <p class="lab-hint">スロット表示と右側のマスが同時に変わります。クリックで必ず変化が見えます。</p>
+          <p class="lab-hint">スロット表示と右側のマスが同時に変わります。</p>
         </div>
         <div class="lab-visual">
           <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
@@ -58,7 +58,13 @@
             <div><span>規則</span><strong>overwrite</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="slot">mobs [100]mob // fixed seats</span>
+<span data-go-line="kill">mobs[i] = spawn() // overwrite, do not delete</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE POOL RULE</p>

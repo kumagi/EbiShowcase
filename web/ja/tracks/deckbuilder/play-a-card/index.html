@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / RESOLVE</p>
 <h3 id="lab-title-play-a-card">カードを使って数字を変えよう</h3>
 <p>攻撃・防御・回復は見た目が違っても、同じ「コストを払って Kind で分岐」です。エナジーが足りないと使えません。ターン終了で敵が殴り、エナジーが戻ります。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-card="damage">攻撃 2⚡</button><button type="button" class="lab-button" data-lab-card="block">防御 1⚡</button><button type="button" class="lab-button" data-lab-card="heal">回復 2⚡</button><button type="button" class="lab-button" data-lab-end>ターン終了</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-card data-go-focus="cost pay fx"="damage">攻撃 2⚡</button><button type="button" class="lab-button" data-lab-card data-go-focus="cost pay fx"="block">防御 1⚡</button><button type="button" class="lab-button" data-lab-card data-go-focus="cost pay fx"="heal">回復 2⚡</button><button type="button" class="lab-button" data-lab-end>ターン終了</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
 <p class="lab-hint">ゲーム本体も switch card.Kind で同じ解決をしています。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>エナジー</span><strong data-lab-energy>0</strong></div><div><span>自分HP</span><strong data-lab-hp>0</strong></div><div><span>敵HP</span><strong data-lab-enemy>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="cost">if energy &lt; card.cost { return }</span>
+<span data-go-line="pay">energy -= card.cost</span>
+<span data-go-line="fx">apply(card)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE PAY → BRANCH RULE</p><div class="formula-lines"><code>energy -= cost</code><span>つぎに</span><code>switch kind { damage / block / heal }</code></div><p>カードを増やすときはデータ1行。解決の仕組みは変えません。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>データを読んで命令へ変える</h3><p>カードごとに別関数を作らず、KindとValueを読みます。</p></div><pre><code>if energy &gt;= card.Cost { energy -= card.Cost; switch card.Kind { case "damage": enemyHP -= card.Value; case "block": block += card.Value; case "heal": hp += card.Value } }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY DATA?</p><h3>カードを増やしやすい</h3><p>新しい行を足すだけで別の数値を作れます。</p></article><article><p class="eyebrow">WHY COST?</p><h3>選ぶ理由が生まれる</h3><p>強いカードをいつ使うか考えます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>新しいKind</h3><p>2回攻撃するカードを考えてみよう。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../turn-energy/">STEP 02 →<strong>エナジー制ターン</strong></a></nav>
 

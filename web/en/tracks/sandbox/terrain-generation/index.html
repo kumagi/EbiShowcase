@@ -10,12 +10,18 @@
 <p class="eyebrow">TRY IT / HEIGHT FIELD</p>
 <h3 id="lab-title-terrain-generation">Sample a height per column</h3>
 <p>Terrain starts as column→height. Sample with noise, carve if needed. A fixed seed rebuilds the same land.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-noise>Sample noise</button><button type="button" class="lab-button" data-lab-carve>Carve 1</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-noise data-go-focus="noise">Sample noise</button><button type="button" class="lab-button" data-lab-carve data-go-focus="carve">Carve 1</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Layer stone/dirt on top of the height field afterward.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>heights</span><strong data-lab-h>—</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="noise">h = sampleNoise(x, z)</span>
+<span data-go-line="carve">h = max(1, h-1)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">HEIGHT THEN LAYERS</p><div class="formula-lines"><code>h = noise(x, seed)</code><span>then</span><code>fill cells below h</code></div><p>Heights first beat full 2D noise for starters.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Find height first, then stack layers</h3><p>Computing one surface value per column tells us where air ends. The same surface powers material choice and the explorer's footing.</p></div><pre><code>surfaceY := 3 + int(valueNoise1D(seed, float64(x)/8)*6)
 for y := surfaceY; y &lt; worldH; y++ {

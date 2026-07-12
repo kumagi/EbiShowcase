@@ -10,12 +10,18 @@
 <p class="eyebrow">TRY IT / CONTACT QUEUE</p>
 <h3 id="lab-title-ally-effects">接触イベントを1件ずつ処理</h3>
 <p>接触したらすぐ能力を発動せず、イベントをキューへ入れます。「処理」で先頭から1件解決。同時に複数触れても順番が保てます。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-push>接触を追加</button><button type="button" class="lab-button" data-lab-pop>1件処理</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>空にする</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-push data-go-focus="push">接触を追加</button><button type="button" class="lab-button" data-lab-pop data-go-focus="pop">1件処理</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>空にする</button></div>
 <p class="lab-hint">キューが空になるまで Update で消化します。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>待ち</span><strong data-lab-count>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="push">q = append(q, Event{kind, at})</span>
+<span data-go-line="pop">e, q := q[0], q[1:]; resolve(e)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">QUEUE THEN RESOLVE</p><div class="formula-lines"><code>on contact: push event</code><span>つぎに</span><code>later: pop & apply</code></div><p>物理の瞬間と効果解決を分離します。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>接触の入口は共通、結果はデータで分岐</h3><p>味方ごとに当たり判定を作り直しません。同じ入口から能力番号を渡すので、新能力を足しても移動や接触コードは変わりません。</p></div><pre><code>now := circlesTouch(player, ally)
 if now &amp;&amp; !ally.wasTouching &amp;&amp; ally.cooldown == 0 {

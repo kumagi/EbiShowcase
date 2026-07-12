@@ -57,12 +57,18 @@
 <p class="eyebrow">TRY IT / XP CURVE</p>
 <h3 id="lab-title-growth-evolution">Bank XP until you level</h3>
 <p>XP needed grows with level. On overflow, level++ and keep the remainder. Evolution is “level >= threshold” beside the same code.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-gain>+4 XP</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Back to Lv1</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-gain>+4 XP</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Back to Lv1</button></div>
 <p class="lab-hint">Retune difficulty by editing need() only.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>level</span><strong data-lab-level>1</strong></div><div><span>XP</span><strong data-lab-xp>0/10</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="xp">xp += gained</span>
+<span data-go-line="lv">for xp &gt;= need { level++; xp -= need }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">CURVE FUNCTION</p><div class="formula-lines"><code>need = level * 10</code><span>then</span><code>while xp >= need { level++ }</code></div><p>Tables or functions both work for need().</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Separate species and individual</h3><p>Changing the species reference does not rebuild individual state.</p></div><pre><code>for exp &gt;= (level+1)*(level+1)*10 { level++ }
 if level &gt;= 4 {

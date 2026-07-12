@@ -73,8 +73,8 @@
           <h3 id="lab-title-gravity">毎フレーム同じ重力を足そう</h3>
           <p>「進める」で vy に重力を足し、位置を更新します。床で跳ねて小さくなり、やがて静止します。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>1フレーム進める</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="v y floor">1フレーム進める</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">Update が 1/60 秒ごとに呼ばれる前提の固定時間ステップです。</p>
         </div>
@@ -89,7 +89,14 @@
             <div><span>g</span><strong>+0.55</strong><small>毎フレーム</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="v">vy += g</span>
+<span data-go-line="y">y += vy</span>
+<span data-go-line="floor">if y &gt; floor { y, vy = floor, 0 }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE TWO-LINE RULE</p>

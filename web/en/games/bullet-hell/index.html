@@ -48,9 +48,9 @@
           <h3 id="lab-title-bullet-hell">Change the circular burst count</h3>
           <p>Divide the circle by bullet count; cos/sin build the ring.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button" data-lab-less>Fewer</button>
-            <button type="button" class="lab-button lab-button-primary" data-lab-more>More</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button" data-lab-less data-go-focus="count spawn">Fewer</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-more data-go-focus="count spawn">More</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -62,7 +62,14 @@
             <div><span>cos/sin</span><strong>velocity</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="spawn">for i := 0; i &lt; n; i++ { angle := tau * i / n }</span>
+<span data-go-line="vel">vx, vy := cos(a)*speed, sin(a)*speed</span>
+<span data-go-line="count">n = clamp(n, 4, 24)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE CIRCLE SHOT</p>

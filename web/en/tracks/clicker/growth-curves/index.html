@@ -46,8 +46,8 @@
           <h3 id="cost-lab-title">Watch the price jump</h3>
           <p>Each “Buy one” raises ownership and multiplies the next cost by 1.18. Production scales with the square of ownership.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-buy>Buy one</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-buy data-go-focus="curve buy">Buy one</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">K / M formatting keeps huge numbers readable.</p>
         </div>
@@ -61,7 +61,13 @@
             <div><span>rate</span><strong data-lab-rate>0.0/s</strong><small>n² × 8</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="curve">cost = base * pow(growth, owned)</span>
+<span data-go-line="buy">if gold &gt;= cost { purchase() }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE GROWTH FORMULA</p>

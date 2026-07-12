@@ -3,14 +3,21 @@
 <p class="eyebrow">TRY IT / FRAME ORDER</p>
 <h3 id="lab-title-ebi-bomber">Order one bomber frame</h3>
 <p>The full game is a pipe: input → move → fuse → blast → walls/chain → AI → draw. A fixed order makes blast-vs-walk rules explainable.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>Next job</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Frame start</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">Next job</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Frame start</button></div>
 <p class="lab-hint">Draw last. AI usually runs after blast updates.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>step</span><strong data-lab-stepn>0</strong></div><div><span>now</span><strong data-lab-note>—</strong></div></div>
 </div>
-</section><div class="formula"><p class="eyebrow">FIXED SYSTEMS ORDER</p><div class="formula-lines"><code>update bombs before AI</code><span>then</span><code>draw last</code></div><p>Reordering systems can change who survives the same input.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Write integration order in Update</h2><p>Small functions keep each learned system visible while <code>Update</code> becomes the game blueprint.</p></div><pre><code>readPlayerInput()
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<span data-go-line="step">input → sim → resolve → draw</span>
+<span data-go-line="loop">// then next frame</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</section><div class="formula"><p class="eyebrow">FIXED SYSTEMS ORDER</p><div class="formula-lines"><code>update bombs before AI</code><span>then</span><code>draw last</code></div><p>Reordering systems can change who survives the same input.</p></div><p>Reordering systems can change who survives the same input.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Write integration order in Update</h2><p>Small functions keep each learned system visible while <code>Update</code> becomes the game blueprint.</p></div><pre><code>readPlayerInput()
 updateBombTimers()
 updateFlames()      // affects walls, enemy, player
 collectItems()      // changes abilities

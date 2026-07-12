@@ -57,12 +57,18 @@
 <p class="eyebrow">TRY IT / XP CURVE</p>
 <h3 id="lab-title-growth-evolution">経験値をためてレベルを上げよう</h3>
 <p>必要 XP はレベルで増えます。足りたら level++ して余りを持ち越し。進化は「レベルが閾値以上」の判定を同じ場所に足します。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-gain>+4 XP</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Lv1へ</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-gain>+4 XP</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Lv1へ</button></div>
 <p class="lab-hint">曲線を変えたいときは need() だけ触ります。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>レベル</span><strong data-lab-level>1</strong></div><div><span>XP</span><strong data-lab-xp>0/10</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="xp">xp += gained</span>
+<span data-go-line="lv">for xp &gt;= need { level++; xp -= need }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">CURVE FUNCTION</p><div class="formula-lines"><code>need = level * 10</code><span>つぎに</span><code>while xp >= need { level++ }</code></div><p>必要量を表にしても、関数でもよいです。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>種族と個体を分ける</h3><p>参照する種族を替えても個体状態は作り直しません。</p></div><pre><code>for exp &gt;= (level+1)*(level+1)*10 { level++ }
 if level &gt;= 4 {

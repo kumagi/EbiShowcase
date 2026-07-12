@@ -10,12 +10,19 @@
 <p class="eyebrow">TRY IT / ADVENTURE FLOW</p>
 <h3 id="lab-title-ebi-monsters">Resolve adventure events in order</h3>
 <p>Dex, capture, growth, and battle still form a pipe. Finish the current event, advance, and save on those edges.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>Next event</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Intro</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">Next event</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Intro</button></div>
 <p class="lab-hint">Mid-battle saves need finer boundaries.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>progress</span><strong data-lab-stepn>0</strong></div><div><span>now</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<span data-go-line="step">input → sim → resolve → draw</span>
+<span data-go-line="loop">// then next frame</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">EVENT PIPE</p><div class="formula-lines"><code>finish current</code><span>then</span><code>go next / save</code></div><p>Don’t run every system at once.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Build a save structure from runtime data</h3><p>Runtime monsters also have HP, but this lesson's save chooses species, EXP, bestiary, and region progress. A dedicated structure keeps the JSON contract stable.</p></div><pre><code>payload := saveData{Dex: g.dex, Visits: g.visits}
 for _, m := range g.party {

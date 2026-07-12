@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / LEGAL TILE</p>
 <h3 id="lab-title-tile-runner">Walls reject the step</h3>
 <p>Arrows move row/col by integers. Red cells are walls—illegal moves leave you in place. The real game only lerps between two centers.</p>
-<div class="lab-controls"><button type="button" class="lab-button" data-lab-up>↑</button><button type="button" class="lab-button" data-lab-left>←</button><button type="button" class="lab-button" data-lab-right>→</button><button type="button" class="lab-button" data-lab-down>↓</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button" data-lab-up data-go-focus="try go">↑</button><button type="button" class="lab-button" data-lab-left data-go-focus="try go">←</button><button type="button" class="lab-button" data-lab-right data-go-focus="try go">→</button><button type="button" class="lab-button" data-lab-down data-go-focus="try go">↓</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Accept a new heading only after arriving at a center to stay in the corridor.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>tile x,y</span><strong data-lab-pos>0</strong></div><div><span>facing</span><strong data-lab-face>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="try">nx, ny := x+dx, y+dy</span>
+<span data-go-line="wall">if walls[ny][nx] { return /* blocked */ }</span>
+<span data-go-line="go">x, y = nx, ny</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Start new movement only at a center</h3><p>While moving, advance only progress. Once moving becomes false at a center, convert input into a candidate tile.</p></div><pre><code>if moving {
     progress += 0.105

@@ -10,12 +10,18 @@
 <p class="eyebrow">TRY IT / PELLET LAYER</p>
 <h3 id="lab-title-pellet-map">残ドットを1個ずつ消そう</h3>
 <p>ドットは迷路と別レイヤーの bool 配列です。通ったら false にし、残り0でクリア。壁データは変えません。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-eat>1個取る</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>配置を戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-eat data-go-focus="eat win">1個取る</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>配置を戻す</button></div>
 <p class="lab-hint">初期配置だけマップデータ、実行中の残りは状態です。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>残り</span><strong data-lab-left>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="eat">if tile == pellet { pellets--; score++ }</span>
+<span data-go-line="win">if pellets == 0 { clear = true }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">LAYER STATE</p><div class="formula-lines"><code>if pellet[y][x] { eat; left-- }</code><span>つぎに</span><code>clear if left == 0</code></div><p>迷路文字を直接書き換えて消さない。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>成功した取得を一つの関数にまとめる</h3><p>初期位置や敵位置のドットを消す時も同じ関数を使います。すでにfalseなら何もしないため、残数が二重に減りません。</p></div><pre><code>func (g *Game) removePellet(p Point) {
     if g.pellets[p.y][p.x] {

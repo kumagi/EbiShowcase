@@ -38,12 +38,18 @@
 <p class="eyebrow">TRY IT / RECIPE</p>
 <h3 id="lab-title-inventory-crafting">Gather materials, craft from a recipe</h3>
 <p>Inventory is counts; crafting is recipe matching. If costs are met, subtract inputs and add the output. Stacks are the same counters.</p>
-<div class="lab-controls"><button type="button" class="lab-button" data-lab-wood>+wood</button><button type="button" class="lab-button" data-lab-string>+string</button><button type="button" class="lab-button lab-button-primary" data-lab-craft>Craft</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Clear</button></div>
+<div class="lab-controls"><button type="button" class="lab-button" data-lab-wood>+wood</button><button type="button" class="lab-button" data-lab-string>+string</button><button type="button" class="lab-button lab-button-primary" data-lab-craft data-go-focus="need out">Craft</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Clear</button></div>
 <p class="lab-hint">Recipes as data rows mean new tools are new lines.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>inventory</span><strong data-lab-inv>—</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="need">if has(ingredients) { craft(recipe) }</span>
+<span data-go-line="out">inventory = append(inventory, result)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">PAY THEN GAIN</p><div class="formula-lines"><code>if inv has costs</code><span>then</span><code>inv -= costs; inv += result</code></div><p>Check first so a failed craft never eats items.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Return on shortage to protect inventory</h3><p>Every required count is checked before subtraction, so a failed craft cannot lose only some ingredients.</p></div><pre><code>r := recipes[selected]
 if wood &lt; r.wood || stone &lt; r.stone ||

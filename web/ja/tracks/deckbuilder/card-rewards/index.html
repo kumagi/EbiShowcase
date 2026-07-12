@@ -3,12 +3,18 @@
 <p class="eyebrow">TRY IT / REWARD PICK</p>
 <h3 id="lab-title-card-rewards">3枚から1枚をデッキへ足そう</h3>
 <p>報酬は候補配列です。選んだ1枚だけを自分のデッキへ append。レア度は候補の作り方、編集は配列の操作です。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-quiet" data-lab-reset>デッキを戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>デッキを戻す</button></div>
 <p class="lab-hint">スキップ（足さない）も同じ画面の選択肢にできます。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>デッキ枚数</span><strong data-lab-deck>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="offer">choices := randomThree(cardPool)</span>
+<span data-go-line="take">deck = append(deck, chosen)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">PICK ONE</p><div class="formula-lines"><code>show candidates[]</code><span>つぎに</span><code>deck = append(deck, choice)</code></div><p>候補と所持デッキは別配列です。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>選択番号を境界チェックする</h3><p>入力が候補の範囲内にあるときだけ追加し、報酬画面を閉じて次のステージへ進めます。</p></div><pre><code>if choice &gt;= 0 &amp;&amp; choice &lt; len(rewards) {
     chosen := rewards[choice]

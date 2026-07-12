@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / GRAVITY</p>
 <h3 id="lab-title-clear-and-fall">Clear, then collapse</h3>
 <p>Scan lights candidates; Clear+fall packs colors downward. Keeping clear and gravity as separate steps keeps match-3 stable.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan>Scan</button><button type="button" class="lab-button" data-lab-clear>Clear + fall</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan data-go-focus="scan">Scan</button><button type="button" class="lab-button" data-lab-clear data-go-focus="clear">Clear + fall</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Scan again after a fall to unlock cascades.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>lit cells</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="scan">for each cell { if run &gt;= 3 { mark } }</span>
+<span data-go-line="clear">removeMarked()</span>
+<span data-go-line="fall">compactColumns()</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">CLEAR THEN FALL</p><div class="formula-lines"><code>empty matched cells</code><span>then</span><code>pack each column down</code></div><p>Doing both at once confuses holes. Keep the order and cascades become easy.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Compact one column from below</h3><p>Separate read and write so one loop handles any number of consecutive holes.</p></div><pre><code>write := rows - 1
 for read := rows-1; read &gt;= 0; read-- {

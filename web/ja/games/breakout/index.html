@@ -47,7 +47,7 @@
           <h3 id="lab-title-bricks">ブロックをタップして壊そう</h3>
           <p>12個のブロックは同じ配列の要素です。タップで alive を false にし、スコアを足します。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">残りの数と得点が右に出ます。</p>
         </div>
@@ -59,7 +59,14 @@
             <div><span>ルール</span><strong>for i := range</strong><small>配列をループ</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="grid">bricks[row][col] = alive</span>
+<span data-go-line="hit">if hitBrick { bricks[r][c] = false; score++ }</span>
+<span data-go-line="clear">if allClear() { win() }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE GRID RECIPE</p>

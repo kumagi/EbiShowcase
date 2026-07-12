@@ -46,8 +46,8 @@
           <h3 id="lab-title-tap-counter">Add one on each press</h3>
           <p>Increment only on the press edge — holding does nothing.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-tap>Tap</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-tap data-go-focus="tap">Tap</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -59,7 +59,13 @@
             <div><span>+1</span><strong></strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="tap">if justPressed { count++ }</span>
+<span data-go-line="draw">drawNumber(count)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE INPUT RULE</p>

@@ -12,12 +12,18 @@
 <p class="eyebrow">TRY IT / SHAPE DATA</p>
 <h3 id="lab-title-tetromino-shapes">相対座標の4マスを回転させよう</h3>
 <p>形は「中心からの相対マス」のリストです。形を切り替え、回転で (x,y)→(-y,x) を試します。色や名前はデータ、回転は共通の式です。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>次の形</button><button type="button" class="lab-button" data-lab-rot>90°回転</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="shape">次の形</button><button type="button" class="lab-button" data-lab-rot data-go-focus="rot">90°回転</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
 <p class="lab-hint">O ミノは回転しても見た目が同じになるのが正解です。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>形</span><strong data-lab-name>—</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="shape">cells := shapes[kind] // relative offsets</span>
+<span data-go-line="rot">cells = rotate(cells)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">RELATIVE CELLS</p><div class="formula-lines"><code>cells = shape[rot]</code><span>つぎに</span><code>world = origin + cell</code></div><p>絶対座標だけで形を持つと回転が地獄です。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Drawも衝突判定も同じ配列を読む</h3><p>形データを一か所に置くと、描いた形と当たり判定の形が食い違いません。新しい形も4個の座標を追加するだけです。</p></div><pre><code>type Shape struct {
     blocks [4]Point

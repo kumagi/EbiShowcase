@@ -78,11 +78,11 @@
           <h3 id="lab-title-world-encounters">フィールドと戦闘を切り替える</h3>
           <p>シーンを戦闘へ切り替え、地域テーブルから敵を抽選します。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-walk>エンカウント</button>
-            <button type="button" class="lab-button" data-lab-region data-region="grass">草原</button>
-            <button type="button" class="lab-button" data-lab-region data-region="desert">砂漠</button>
-            <button type="button" class="lab-button" data-lab-back>フィールドへ</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-walk data-go-focus="table swap">エンカウント</button>
+            <button type="button" class="lab-button" data-lab-region data-go-focus="table" data-region="grass">草原</button>
+            <button type="button" class="lab-button" data-lab-region data-go-focus="table" data-region="desert">砂漠</button>
+            <button type="button" class="lab-button" data-lab-back data-go-focus="back">フィールドへ</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -94,7 +94,14 @@
             <div><span>table</span><strong>region</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="table">enemy := tables[region]</span>
+<span data-go-line="swap">scene = battle</span>
+<span data-go-line="back">scene = field</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE ENCOUNTER RULE</p>

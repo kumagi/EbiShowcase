@@ -6,14 +6,20 @@
 <p class="eyebrow">TRY IT / CHAIN</p>
 <h3 id="lab-title-chain-explosion">Let blasts ignite neighbor bombs</h3>
 <p>Ignite turns the first bomb into BLAST and spreads to neighbors. Clear removes flames. Queue or recursion both work.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-ignite>Ignite</button><button type="button" class="lab-button" data-lab-clear>Clear flames</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset layout</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-ignite data-go-focus="ignite chain">Ignite</button><button type="button" class="lab-button" data-lab-clear data-go-focus="ignite">Clear flames</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset layout</button></div>
 <p class="lab-hint">Resolve the whole chain in one frame, or stretch it across frames.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>flames</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
 </div>
-</section><div class="formula"><p class="eyebrow">BLAST TOUCHES BOMB</p><div class="formula-lines"><code>if flame hits bomb</code><span>then</span><code>arm that bomb too</code></div><p>A blasting flag prevents double-trigger bugs.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Propagate until the queue is empty</h2><p>The game queues bomb indexes. A fresh <code>processed</code> map records which bombs have already triggered during this one reaction.</p></div><pre><code>queue := append([]int(nil), starts...)
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="ignite">blast(i)</span>
+<span data-go-line="chain">if neighbor is bomb { blast(neighbor) }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</section><div class="formula"><p class="eyebrow">BLAST TOUCHES BOMB</p><div class="formula-lines"><code>if flame hits bomb</code><span>then</span><code>arm that bomb too</code></div><p>A blasting flag prevents double-trigger bugs.</p></div><p>A blasting flag prevents double-trigger bugs.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Propagate until the queue is empty</h2><p>The game queues bomb indexes. A fresh <code>processed</code> map records which bombs have already triggered during this one reaction.</p></div><pre><code>queue := append([]int(nil), starts...)
 processed := map[int]bool{}
 for len(queue) &gt; 0 {
     index := queue[0]

@@ -44,8 +44,8 @@
           <h3 id="aabb-lab-title">Drop the star and watch overlap</h3>
           <p>“Next frame” lowers the star. The moment its box overlaps the basket, the verdict becomes YES.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>Next frame</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="fall" data-go-caption="Fall each frame">Next frame</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">Even round art often uses a rectangle for hits first. Start with boxes, refine later if needed.</p>
         </div>
@@ -60,7 +60,14 @@
             <div><span>rule</span><strong>4 sides</strong><small>left right top bottom</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="fall">star.y += star.speed</span>
+<span data-go-line="move">basket.x = clamp(pointerX)</span>
+<span data-go-line="hit">if overlaps(starBox, basketBox) { score++ }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE OVERLAP RULE</p>

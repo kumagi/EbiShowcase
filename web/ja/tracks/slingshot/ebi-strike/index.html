@@ -3,12 +3,18 @@
 <p class="eyebrow">TRY IT / SHOT EVENTS</p>
 <h3 id="lab-title-ebi-strike">1ショットで起きた出来事を順に処理</h3>
 <p>壁反射・敵接触・ターン終了はイベントです。発生順にキューし、手番のルールで1件ずつ処理すると、同時ヒットでも破綻しません。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-push>イベント追加</button><button type="button" class="lab-button" data-lab-pop>手番で1件</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>空にする</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-push data-go-focus="push">イベント追加</button><button type="button" class="lab-button" data-lab-pop data-go-focus="pop">手番で1件</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>空にする</button></div>
 <p class="lab-hint">描画用の火花はイベント結果から出します。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>待ち</span><strong data-lab-count>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="push">q = append(q, Event{kind, at})</span>
+<span data-go-line="pop">e, q := q[0], q[1:]; resolve(e)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">TURN OWNS THE QUEUE</p><div class="formula-lines"><code>physics pushes events</code><span>つぎに</span><code>turn pops events</code></div><p>物理と手番ロジックの境界です。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>移動中と狙い中を混ぜない</h3><p>movingがtrueの間だけ物理と接触を進めます。停止した一瞬に手番を変え、その後で次のドラッグ入力を受け付けます。</p></div><pre><code>active.pos = active.pos.add(active.velocity)
 bounceWalls(&amp;active)

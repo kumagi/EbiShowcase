@@ -75,13 +75,13 @@
           <h3 id="lab-title-guard-throw">Strike / guard / throw triangle</h3>
           <p>Set the foe’s pick, then choose yours to see who wins.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button" data-lab-enemy data-enemy="strike">Foe:strike</button>
-            <button type="button" class="lab-button" data-lab-enemy data-enemy="guard">Foe:guard</button>
-            <button type="button" class="lab-button" data-lab-enemy data-enemy="throw">Foe:throw</button>
-            <button type="button" class="lab-button lab-button-primary" data-lab-pick="strike">Strike</button>
-            <button type="button" class="lab-button" data-lab-pick="guard">Guard</button>
-            <button type="button" class="lab-button" data-lab-pick="throw">Throw</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button" data-lab-enemy data-go-focus="pick" data-enemy="strike">Foe:strike</button>
+            <button type="button" class="lab-button" data-lab-enemy data-go-focus="pick" data-enemy="guard">Foe:guard</button>
+            <button type="button" class="lab-button" data-lab-enemy data-go-focus="pick" data-enemy="throw">Foe:throw</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-pick data-go-focus="pick rule res"="strike">Strike</button>
+            <button type="button" class="lab-button" data-lab-pick data-go-focus="pick rule res"="guard">Guard</button>
+            <button type="button" class="lab-button" data-lab-pick data-go-focus="pick rule res"="throw">Throw</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -93,7 +93,14 @@
             <div><span>wins()</span><strong></strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="pick">you, enemy := choice, foeChoice</span>
+<span data-go-line="rule">strike &gt; throw &gt; guard &gt; strike</span>
+<span data-go-line="res">result := resolve(you, enemy)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE TRIANGLE RULE</p>

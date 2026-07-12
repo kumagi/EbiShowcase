@@ -80,8 +80,8 @@
           <h3 id="lab-title-inventory-shop">Spend gold to equip an item</h3>
           <p>Spend gold and write the item into an equip slot.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-buy>Buy sword 50G</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-buy data-go-focus="pay equip">Buy sword 50G</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -93,7 +93,13 @@
             <div><span>note</span><strong data-lab-note>—</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="pay">if gold &gt;= price { gold -= price }</span>
+<span data-go-line="equip">slot = item</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE PURCHASE RULE</p>

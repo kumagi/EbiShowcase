@@ -72,13 +72,20 @@
           <p class="eyebrow">TRY IT / TRANSLATE</p>
           <h3 id="lab-title-vfx-stamp">Place it where you tap</h3>
           <p>Tap the board and the image jumps to that spot. The (x, y) you see is exactly what you pass to GeoM.Translate.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board" data-lab-board></div>
           <div class="lab-values" aria-live="polite"><div><span>X</span><strong data-lab-x>—</strong></div><div><span>Y</span><strong data-lab-y>—</strong></div></div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="geom">var op ebiten.DrawImageOptions</span>
+<span data-go-line="move">op.GeoM.Translate(x, y)</span>
+<span data-go-line="draw">screen.DrawImage(img, &amp;op)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="code-lesson">
         <div>
@@ -114,32 +121,7 @@ screen.DrawImage(tenjiroh, op)</code></pre>
       <a href="../../../games/bullet-hell/">← LEVEL 12<strong>Bullet Hell Boss</strong></a>
       <a href="../vfx-transform/">STEP 02 →<strong>Rotate, Scale & the Pivot</strong></a>
     </nav>
-
-
-    <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">Quick feedback</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-stamp/">
-          <label class="feedback-field">
-            <span class="sr-only">Feedback</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-
-
-</main>
+  </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
   <script>

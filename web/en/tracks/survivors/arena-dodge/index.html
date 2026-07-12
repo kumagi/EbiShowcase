@@ -47,9 +47,9 @@
           <h3 id="lab-title-arena-dodge">Normalize diagonal movement</h3>
           <p>Raw diagonal input is √2 faster. Divide by length so every direction shares one speed.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button" data-lab-cardinal>Cardinal</button>
-            <button type="button" class="lab-button lab-button-primary" data-lab-diag>Diagonal</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button" data-lab-cardinal data-go-focus="raw apply">Cardinal</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-diag data-go-focus="raw norm apply">Diagonal</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -61,7 +61,14 @@
             <div><span>公式</span><strong>v / |v|</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="raw">dx, dy := inputX, inputY</span>
+<span data-go-line="norm">if dx!=0 &amp;&amp; dy!=0 { dx, dy = dx*0.707, dy*0.707 }</span>
+<span data-go-line="apply">x += dx * speed; y += dy * speed</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE NORMALIZE RULE</p>

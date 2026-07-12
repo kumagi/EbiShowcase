@@ -10,12 +10,19 @@
 <p class="eyebrow">TRY IT / 7-BAG</p>
 <h3 id="lab-title-bag-hold-ghost">Draw without replacement</h3>
 <p>Fill a bag with seven pieces and draw until empty—no dups mid-bag. HOLD swaps with the current piece. Classic fair randomizer.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-draw>Draw</button><button type="button" class="lab-button" data-lab-hold>Swap HOLD</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Refill bag</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-draw data-go-focus="bag draw" data-go-caption="Draw paints the frame">Draw</button><button type="button" class="lab-button" data-lab-hold data-go-focus="hold">Swap HOLD</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Refill bag</button></div>
 <p class="lab-hint">Refill all seven when the bag empties.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>left in bag</span><strong data-lab-left>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="bag">if len(bag)==0 { bag = shuffle7() }</span>
+<span data-go-line="draw">piece := popRandom(&amp;bag)</span>
+<span data-go-line="hold">held, current = current, held</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">BAG RANDOM</p><div class="formula-lines"><code>if bag empty { refill 7 }</code><span>then</span><code>draw = remove random</code></div><p>A bag fights droughts better than raw RNG.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>The ghost never changes the board</h3><p>It calls the same <code>canPlace</code> as the real piece, but changes only a local variable. Drawing a prediction does not advance game state.</p></div><pre><code>func (g *Game) ghostY() int {
     y := g.y

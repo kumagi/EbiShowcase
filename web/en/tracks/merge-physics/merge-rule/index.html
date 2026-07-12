@@ -3,12 +3,18 @@
 <p class="eyebrow">TRY IT / SAME TIER</p>
 <h3 id="lab-title-merge-rule">Merge only matching tiers</h3>
 <p>Raise left/right until tiers match, then Merge. Different tiers do nothing—same one-line rule as the game.</p>
-<div class="lab-controls"><button type="button" class="lab-button" data-lab-bump-left>Raise left</button><button type="button" class="lab-button" data-lab-bump-right>Raise right</button><button type="button" class="lab-button lab-button-primary" data-lab-merge>Merge!</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button" data-lab-bump-left>Raise left</button><button type="button" class="lab-button" data-lab-bump-right>Raise right</button><button type="button" class="lab-button lab-button-primary" data-lab-merge data-go-focus="touch merge">Merge!</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Real code merges only on contact + equal tier.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>tiers</span><strong data-lab-tier>1 + 1</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="touch">if sameTier(a, b) &amp;&amp; overlapping(a, b)</span>
+<span data-go-line="merge">{ spawn(tier+1); remove(a, b) }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE ONE-LINE RULE</p><div class="formula-lines"><code>if tiers match</code><span>then</span><code>spawn next tier</code></div><p>Contact alone is not enough—equal tiers unlock the merge. One rule keeps balancing simple.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Mark during iteration</h3><p>dead prevents the same fruit merging twice in one frame.</p></div><pre><code>if a.tier == b.tier { a.dead, b.dead = true, true; spawned = append(spawned, nextFruit(a, b)) } / fruits = append(removeDead(fruits), spawned...)</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY MARK?</p><h3>Avoid index shifts</h3><p>Do not delete slice entries inside the pair loop.</p></article><article><p class="eyebrow">WHY MIDPOINT?</p><h3>Natural spawn position</h3><p>The next fruit appears between its parents.</p></article><article class="challenge"><p class="eyebrow">EVENT RULE</p><h3>Add score too</h3><p>Change points according to the new tier.</p></article></div></section><nav class="lesson-pager"><a href="../stable-simulation/">← STEP 04<strong>Stable Simulation</strong></a><a href="../ebi-merge/">STEP 06 →<strong>Ebi Merge</strong></a></nav>
 

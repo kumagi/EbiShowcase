@@ -3,12 +3,18 @@
 <p class="eyebrow">TRY IT / STAGE DATA</p>
 <h3 id="lab-title-ebi-match">Track moves and a score goal</h3>
 <p>Stage data pairs remaining moves with a goal. Each match spends a move and adds score. Zero moves without the goal is failure.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-match>Make a match</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset stage</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-match data-go-focus="move clear" data-go-caption="Advance position">Make a match</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset stage</button></div>
 <p class="lab-hint">Board layouts can live in the same stage JSON.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>moves</span><strong data-lab-moves>10</strong></div><div><span>score</span><strong data-lab-score>0/30</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="move">moves--; score += cleared</span>
+<span data-go-line="clear">if score &gt;= goal { stageClear = true }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">MOVES + GOAL</p><div class="formula-lines"><code>moves-- ; score += n</code><span>then</span><code>win if score >= goal</code></div><p>Keep rules separate from stage numbers.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Load data into shared rules</h3><p>Pass a different stage to newGame and the moves, target, and board all change. Update keeps the same swap rules.</p></div><pre><code>type stage struct {
     moves       int

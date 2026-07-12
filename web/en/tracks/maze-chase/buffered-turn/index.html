@@ -6,14 +6,20 @@
 <p class="eyebrow">TRY IT / CURRENT vs QUEUED</p>
 <h3 id="lab-title-buffered-turn">Queue a facing, commit at center</h3>
 <p>Direction buttons only write queued. Move between tiles, then Arrive at center to copy queued into current if the next tile is open.</p>
-<div class="lab-controls"><button type="button" class="lab-button" data-lab-dir="N">↑</button><button type="button" class="lab-button" data-lab-dir="W">←</button><button type="button" class="lab-button lab-button-primary" data-lab-dir="E">→</button><button type="button" class="lab-button" data-lab-dir="S">↓</button><button type="button" class="lab-button" data-lab-move>Move between</button><button type="button" class="lab-button" data-lab-center>Arrive center</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button" data-lab-dir data-go-focus="queue" data-go-caption="Queue facing"="N">↑</button><button type="button" class="lab-button" data-lab-dir data-go-focus="queue" data-go-caption="Queue facing"="W">←</button><button type="button" class="lab-button lab-button-primary" data-lab-dir data-go-focus="queue" data-go-caption="Queue facing"="E">→</button><button type="button" class="lab-button" data-lab-dir data-go-focus="queue" data-go-caption="Queue facing"="S">↓</button><button type="button" class="lab-button" data-lab-move data-go-focus="queue" data-go-caption="Queue facing">Move between</button><button type="button" class="lab-button" data-lab-center data-go-focus="center" data-go-caption="Commit at tile center">Arrive center</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Writing current immediately makes mid-tile wall clips common.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>current</span><strong data-lab-current>E</strong></div><div><span>queued</span><strong data-lab-queued>E</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
 </div>
-</section><div class="formula"><p class="eyebrow">THE BUFFER RULE</p><div class="formula-lines"><code>input → queued</code><span>then</span><code>at center: current = queued if passable</code></div><p>Split the press moment from the facing commit.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Choose direction only at tile centers</h2><p><code>Update</code> may remember input every frame, but it changes direction only when a tile is reached.</p></div><pre><code>if dir, ok := directionInput(); ok {
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="queue">queued = inputDir // do not write current yet</span>
+<span data-go-line="center">if atCenter &amp;&amp; open(queued) { current = queued }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</section><div class="formula"><p class="eyebrow">THE BUFFER RULE</p><div class="formula-lines"><code>input → queued</code><span>then</span><code>at center: current = queued if passable</code></div><p>Split the press moment from the facing commit.</p></div><p>Split the press moment from the facing commit.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Choose direction only at tile centers</h2><p><code>Update</code> may remember input every frame, but it changes direction only when a tile is reached.</p></div><pre><code>if dir, ok := directionInput(); ok {
     queued = dir
 }
 if reachedTileCenter {

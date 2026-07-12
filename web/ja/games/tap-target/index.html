@@ -40,8 +40,8 @@
           <h3 id="loop-lab-title">Update → Draw を1コマずつ</h3>
           <p>ボタンを押すたび、フェーズが切り替わります。本物のゲームも、この2つをものすごい速さでくり返しています。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>次のフェーズ</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="update draw" data-go-caption="Update で数字を変える → Draw で絵を描く">次のフェーズ</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">1フレーム = Update 1回 + Draw 1回。計算と描画を分けると、あとから直しやすくなります。</p>
         </div>
@@ -56,7 +56,14 @@
             <div><span>ルール</span><strong>U → D</strong><small>つねにこの順</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="update">func (g *game) Update() error { /* numbers */ }</span>
+<span data-go-line="draw">func (g *game) Draw(screen *ebiten.Image) { /* paint */ }</span>
+<span data-go-line="run">ebiten.RunGame(g) // Update → Draw → repeat</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <details class="basics-extra">
         <summary>おまけ：Layout とビルドの話（あとでで大丈夫）</summary>
@@ -93,9 +100,9 @@
           <h3 id="hit-lab-title">画面を押して、距離を見てみよう</h3>
           <p>右のボードをタップすると、押した点と丸の中心の差が出ます。距離が 70 以下ならヒットです。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-sample-hit>当たる例</button>
-            <button type="button" class="lab-button" data-lab-sample-miss>はずれる例</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-sample-hit data-go-focus="dxdy hypot hit" data-go-caption="押した点と中心の差 → 距離を求める → 半径以下ならヒット">当たる例</button>
+            <button type="button" class="lab-button" data-lab-sample-miss data-go-focus="dxdy hypot miss" data-go-caption="押した点と中心の差 → 距離を求める → 遠いのではずれる">はずれる例</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームでも、マウスとタッチを同じ「押した座標」にそろえてから判定します。</p>
         </div>
@@ -112,7 +119,15 @@
             <div><span>距離</span><strong data-lab-dist>—</strong><small class="lab-result" data-lab-result data-state="wait">タッチしてね</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="dxdy">dx := touchX - circleX; dy := touchY - circleY</span>
+<span data-go-line="hypot">dist := math.Hypot(dx, dy)</span>
+<span data-go-line="hit">if dist &lt;= radius { score++; moveTarget() }</span>
+<span data-go-line="miss">// dist &gt; radius → no score</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE ONE-LINE RULE</p>

@@ -72,13 +72,20 @@
           <p class="eyebrow">TRY IT / SPELLBOOK</p>
           <h3 id="lab-title-vfx-spells">混ぜ方を名前で確認</h3>
           <p>炎・水・雷のボタンを押すと、炎スプライト／水滴／稲妻の画像が盤面で動きます。3つ全部を見たら達成です。</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spell="fire">炎</button><button type="button" class="lab-button" data-lab-spell="water">水</button><button type="button" class="lab-button" data-lab-spell="thunder">雷</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spell="fire">炎</button><button type="button" class="lab-button" data-lab-spell="water">水</button><button type="button" class="lab-button" data-lab-spell="thunder">雷</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>リセット</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-spell-stage" data-lab-board><p class="lab-spell-hint">ボタンで魔法を唱えてみて</p></div>
           <div class="lab-values" aria-live="polite"><div><span>習得</span><strong data-lab-done>—</strong></div></div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="pick">spell := spells[selected]</span>
+<span data-go-line="cast">fx = append(fx, spell.Spawn(x, y)...)</span>
+<span data-go-line="tick">updateFX(fx)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="code-lesson">
         <div>
@@ -119,32 +126,7 @@ vector.StrokeLine(screen, ax, ay, bx, by, 5, white, false)</code></pre>
       <a href="../vfx-particles/">← STEP 07<strong>粒をばらまく（パーティクル）</strong></a>
       <a href="../vfx-magic-fire/">STEP 09 →<strong>かっこいい炎魔法を作ろう</strong></a>
     </nav>
-
-
-    <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">ひとことフィードバック</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-spells/">
-          <label class="feedback-field">
-            <span class="sr-only">フィードバック</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-
-
-</main>
+  </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
   <script>

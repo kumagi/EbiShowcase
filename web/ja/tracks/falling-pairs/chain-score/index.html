@@ -2,7 +2,15 @@
 <section class="lesson-hero"><div><p class="eyebrow">再探索で「つづき」を見つける</p><h1>連鎖スコア研究所</h1><p>消したあとに落とし、盤面が止まったらもう一度探します。続けて消えた回数が、そのまま得点の倍率になります。</p><div class="lesson-meta"><span>★★★☆☆</span><strong>PLAYABLE</strong></div></div></section>
 <section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>2連鎖を3回つくろう</h2><p>1〜3キー、クリック、タップで置き方を選びます。白く囲まれた仲間が消え、落下後にもう一度探索される様子を見てください。</p></div><div class="game-frame"><iframe src="../../../../play/chain-score/" title="連鎖スコア研究所を遊ぶ"></iframe></div></section>
 <section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>「消えた」で終わらず、止まるまでくり返す</h2><p>前のステップでは CLEAR と GRAVITY を分けました。今回は、その後ろに SEARCH を戻して輪を作ります。見つからなくなったときだけ1回の手が終了します。</p><div class="concept-row"><article><b>01</b><h3>SEARCH</h3><p>盤面全体を調べ、4個以上の同色グループを集めます。</p></article><article><b>02</b><h3>CLEAR → GRAVITY</h3><p>対象を同時に空にし、各列を下へ詰めます。</p></article><article><b>03</b><h3>もう一度SEARCH</h3><p>新しいグループがあれば連鎖数を増やし、なければ手を終えます。</p></article></div></section>
-<section class="motion-lab" data-lab="turn"><div><p class="eyebrow">CHAIN LOOP LAB</p><h2>処理の輪を1段ずつ進める</h2><p>SEARCH → CLEAR → GRAVITY → SEARCH の順序を動かし、再探索が連鎖を生む場所を確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">SEARCHから始めよう</p><button type="button" class="lab-action">次の段階へ</button></div></section>
+<section class="motion-lab" data-lab="turn"><div><p class="eyebrow">CHAIN LOOP LAB</p><h2>処理の輪を1段ずつ進める</h2><p>SEARCH → CLEAR → GRAVITY → SEARCH の順序を動かし、再探索が連鎖を生む場所を確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">SEARCHから始めよう</p><button type="button" class="lab-action">次の段階へ</button></div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="state">switch phase {</span>
+<span data-go-line="next">phase = nextPhase(phase)</span>
+<span data-go-line="act">case player: playCard(); case enemy: enemyAct()</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</section>
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>状態を輪につなぐ</h2><p><code>Update</code>は待ち時間ごとに1段だけ進めます。落下後に<code>searching</code>へ戻す一行が連鎖の中心です。</p></div><pre><code>switch phase {
 case searching:
     marked = findGroups(board)

@@ -3,12 +3,19 @@
 <p class="eyebrow">TRY IT / LEGAL TILE</p>
 <h3 id="lab-title-tile-runner">壁のマスには入れない</h3>
 <p>矢印は行と列を整数で動かします。赤いマスは壁。入れなければ座標は変わりません。本番は通った2つの中心の間だけを滑らかに描きます。</p>
-<div class="lab-controls"><button type="button" class="lab-button" data-lab-up>↑</button><button type="button" class="lab-button" data-lab-left>←</button><button type="button" class="lab-button" data-lab-right>→</button><button type="button" class="lab-button" data-lab-down>↓</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button" data-lab-up data-go-focus="try go">↑</button><button type="button" class="lab-button" data-lab-left data-go-focus="try go">←</button><button type="button" class="lab-button" data-lab-right data-go-focus="try go">→</button><button type="button" class="lab-button" data-lab-down data-go-focus="try go">↓</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
 <p class="lab-hint">中心に着いてから次の入力を受け付けると、通路からずれません。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>タイル x,y</span><strong data-lab-pos>0</strong></div><div><span>向き</span><strong data-lab-face>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="try">nx, ny := x+dx, y+dy</span>
+<span data-go-line="wall">if walls[ny][nx] { return /* blocked */ }</span>
+<span data-go-line="go">x, y = nx, ny</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>中心でだけ新しい移動を始める</h3><p>moving中はprogressだけを進めます。中心へ到着してmoving=falseのときだけ入力を候補タイルへ変換します。</p></div><pre><code>if moving {
     progress += 0.105

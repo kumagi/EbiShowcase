@@ -73,8 +73,8 @@
           <h3 id="lab-title-weapon-evolution">Evolve by swapping weapon data</h3>
           <p>Keep the fire loop; evolution is assigning a new weapon struct.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-evolve>Evolve</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-evolve data-go-focus="rule evo">Evolve</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -86,7 +86,13 @@
             <div><span>cooldown</span><strong data-lab-wcd>32</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="rule">if weapon == needle &amp;&amp; copies &gt;= 3</span>
+<span data-go-line="evo">{ weapon = storm; cooldown /= 2 }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE SWAP RULE</p>

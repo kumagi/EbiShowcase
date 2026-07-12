@@ -46,8 +46,8 @@
           <h3 id="cost-lab-title">買うたびに値段が跳ねる</h3>
           <p>「1台買う」を押すたびに所有数が増え、次の価格は ×1.18 されます。生産速度は所有数の二乗で伸びます。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-buy>1台買う</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-buy data-go-focus="curve buy">1台買う</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">大きな数は K / M 表記にすると読みやすくなります。</p>
         </div>
@@ -61,7 +61,13 @@
             <div><span>生産</span><strong data-lab-rate>0.0/s</strong><small>n² × 8</small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="curve">cost = base * pow(growth, owned)</span>
+<span data-go-line="buy">if gold &gt;= cost { purchase() }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE GROWTH FORMULA</p>

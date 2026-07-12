@@ -73,10 +73,10 @@
           <h3 id="lab-title-ebi-quest">クエスト番号を保存・読込</h3>
           <p>進行は整数のクエスト番号。セーブして読めば続きから再開できます。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-advance>クエスト進める</button>
-            <button type="button" class="lab-button" data-lab-save>セーブ</button>
-            <button type="button" class="lab-button" data-lab-load>ロード</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-advance data-go-focus="adv">クエスト進める</button>
+            <button type="button" class="lab-button" data-lab-save data-go-focus="save">セーブ</button>
+            <button type="button" class="lab-button" data-lab-load data-go-focus="load">ロード</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -88,7 +88,14 @@
             <div><span>localStorage</span><strong></strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="adv">quest++</span>
+<span data-go-line="save">save.quest = quest</span>
+<span data-go-line="load">quest = save.quest</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE SAVE RULE</p>

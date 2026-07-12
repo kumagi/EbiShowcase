@@ -56,12 +56,19 @@
 <p class="eyebrow">TRY IT / PAIR KICKS</p>
 <h3 id="lab-title-pair-rotation">ペア回転のずらしを試そう</h3>
 <p>2個ペアも回転後に壁へ食い込むことがあります。キック表で少しずつずらして、最初に収まる位置を採用します。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-kick>補正を試す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-kick data-go-focus="try ok">補正を試す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
 <p class="lab-hint">4方向それぞれのキック表を持てます。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>試行</span><strong data-lab-try>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="try">for _, k := range kicks { if canPlace(x+k.dx, y+k.dy) }</span>
+<span data-go-line="ok">{ x, y = x+k.dx, y+k.dy; return }</span>
+<span data-go-line="fail">/* all kicks failed → keep old rot */</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">SAME KICK IDEA</p><div class="formula-lines"><code>rotate pair</code><span>つぎに</span><code>try offsets until fit</code></div><p>テトロミノと同じ発想を2マスに縮小しただけです。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>置ける最初の候補を採用</h3></div><pre><code>next := (dir+1)%4
 for _, k := range kicks {

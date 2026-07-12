@@ -75,9 +75,9 @@
           <h3 id="lab-title-combo-cancel">Buffer early input and cancel</h3>
           <p>Remember an early press for a few frames, then spend it in the cancel window.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-press>Buffer input</button>
-            <button type="button" class="lab-button" data-lab-step>Next frame</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-press data-go-focus="press">Buffer input</button>
+            <button type="button" class="lab-button" data-lab-step data-go-focus="tick cancel" data-go-caption="Tick the fuse">Next frame</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
@@ -89,7 +89,14 @@
             <div><span>note</span><strong data-lab-note>—</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="press">buffer, life = &quot;light&quot;, 8</span>
+<span data-go-line="tick">if life &gt; 0 { life-- } else { buffer = &quot;none&quot; }</span>
+<span data-go-line="cancel">if cancelWindow &amp;&amp; buffer != &quot;none&quot; { start(buffer) }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">COMBO TIMING</p>

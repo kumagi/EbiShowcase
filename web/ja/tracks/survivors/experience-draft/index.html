@@ -45,11 +45,11 @@
           <h3 id="lab-title-experience-draft">レベルアップで選択モードへ</h3>
           <p>レベルアップで選択モードへ。カードを選ぶと戦闘に戻ります。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-level>レベルアップ</button>
-            <button type="button" class="lab-button" data-lab-card data-card="A">A</button>
-            <button type="button" class="lab-button" data-lab-card data-card="B">B</button>
-            <button type="button" class="lab-button" data-lab-card data-card="C">C</button>
-            <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-level data-go-focus="pause">レベルアップ</button>
+            <button type="button" class="lab-button" data-lab-card data-go-focus="pick" data-card="A">A</button>
+            <button type="button" class="lab-button" data-lab-card data-go-focus="pick" data-card="B">B</button>
+            <button type="button" class="lab-button" data-lab-card data-go-focus="pick" data-card="C">C</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
         </div>
@@ -61,7 +61,13 @@
             <div><span>flag</span><strong>drafting</strong><small></small></div>
           </div>
         </div>
-      </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="pause">if xp &gt;= need { drafting = true }</span>
+<span data-go-line="pick">applyCard(choice); drafting = false</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
 
       <div class="formula">
         <p class="eyebrow">THE LEVEL-UP RULE</p>
