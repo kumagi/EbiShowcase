@@ -42,6 +42,28 @@ python3 -m http.server 8080 --directory dist
 
 クリック、タップ、スペースキー、または上矢印キーで羽ばたきます。ゲームオーバー後に同じ操作でリトライできます。
 
+## フィードバックを確認する
+
+各教材ページの末尾にはGoogle Formを埋め込んでいます。回答先のスプレッドシートは、OAuthでログインしたGoogleアカウントから読み書きします。
+
+1. Google CloudでSheets APIを有効にし、OAuthクライアント（デスクトップアプリ）を作成します。
+2. ダウンロードしたJSONを `.secrets/` に保存します（このファイルはGitへ入りません）。
+3. 次のコマンドを初回だけ実行し、ブラウザでGoogleログインとアクセス許可を行います。
+
+```sh
+node scripts/feedback-sheet.mjs list
+```
+
+4. 次のコマンドで一覧を取得・更新します。
+
+```sh
+node scripts/feedback-sheet.mjs list
+node scripts/feedback-sheet.mjs check 12   # 12行目を対応済みにする
+node scripts/feedback-sheet.mjs delete 12   # 12行目を削除する
+```
+
+`check` は「対応済み」列がなければ自動追加し、✅を記録します。行番号は一覧表示の番号を使ってください。
+
 ## License
 
 Apache License 2.0
