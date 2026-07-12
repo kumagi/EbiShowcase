@@ -11,6 +11,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/hero"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 )
 
 const width, height = 480, 720
@@ -225,14 +226,15 @@ func (g *game) updateDraft() error {
 func (g *game) Draw(s *ebiten.Image) {
 	s.Fill(color.RGBA{10, 24, 39, 255})
 	for _, gem := range g.gems {
-		vector.DrawFilledCircle(s, float32(gem.x), float32(gem.y), 7, color.RGBA{90, 220, 255, 255}, false)
+		trackatlas.DrawCentered(s, "xp-gem", gem.x, gem.y, 18)
 	}
 	for _, m := range g.mobs {
-		c := color.RGBA{226, 70, 104, 255}
+		sprite := "swarm"
+		size := m.r * 2
 		if m.boss {
-			c = color.RGBA{153, 70, 210, 255}
+			sprite = "boss-crab"
 		}
-		vector.DrawFilledCircle(s, float32(m.x), float32(m.y), float32(m.r), c, false)
+		trackatlas.DrawCentered(s, sprite, m.x, m.y, size)
 		if m.boss {
 			vector.DrawFilledRect(s, float32(m.x-45), float32(m.y-52), 90, 7, color.RGBA{50, 48, 70, 255}, false)
 			vector.DrawFilledRect(s, float32(m.x-45), float32(m.y-52), float32(90*m.hp/80), 7, color.RGBA{255, 211, 62, 255}, false)

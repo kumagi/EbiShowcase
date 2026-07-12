@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"image/color"
 	"math"
 )
@@ -165,23 +166,25 @@ func (g *game) Draw(s *ebiten.Image) {
 			continue
 		}
 		vector.DrawFilledRect(s, float32(x), float32(b.y), float32(b.w), float32(b.h), color.RGBA{55, 101, 66, 255}, false)
-		vector.DrawFilledRect(s, float32(x), float32(b.y), float32(b.w), 8, color.RGBA{108, 214, 87, 255}, false)
+		for tx := 0.0; tx < b.w; tx += 40 {
+			w := math.Min(40, b.w-tx)
+			trackatlas.Draw(s, "tile-platform", x+tx, b.y, w)
+		}
 	}
 	for _, c := range g.coins {
-		vector.DrawFilledCircle(s, float32(c.x-g.camera+7), float32(c.y+7), 9, color.RGBA{255, 215, 62, 255}, false)
+		trackatlas.DrawCentered(s, "coin", c.x-g.camera+7, c.y+7, 20)
 	}
 	if !g.powerTaken {
-		vector.DrawFilledCircle(s, float32(g.power.x-g.camera+11), float32(g.power.y+11), 12, color.RGBA{46, 225, 190, 255}, false)
+		trackatlas.DrawCentered(s, "power-star", g.power.x-g.camera+11, g.power.y+11, 26)
 	}
 	for _, e := range g.foes {
 		if e.alive {
-			vector.DrawFilledCircle(s, float32(e.x-g.camera+14), float32(e.y+14), 14, color.RGBA{150, 74, 191, 255}, false)
+			trackatlas.DrawCentered(s, "slug", e.x-g.camera+14, e.y+14, 30)
 		}
 	}
-	vector.DrawFilledRect(s, float32(g.p.x-g.camera), float32(g.p.y), float32(g.p.w), float32(g.p.h), color.RGBA{240, 72, 88, 255}, false)
-	flag := float32(1650 - g.camera)
-	vector.DrawFilledRect(s, flag, 480, 5, 160, color.White, false)
-	vector.DrawFilledRect(s, flag+5, 485, 55, 35, color.RGBA{255, 211, 61, 255}, false)
+	trackatlas.DrawCentered(s, "hero", g.p.x-g.camera+g.p.w/2, g.p.y+g.p.h/2, g.p.h)
+	flag := 1650 - g.camera
+	trackatlas.Draw(s, "flag", flag, 480, 140)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("STAGE %d/2   LIFE %d   SCORE %05d   COINS %d", g.stage, g.life, g.score, len(g.coins)), 45, 22)
 	ebitenutil.DebugPrintAt(s, "GREEN ORB MAKES EBI BIG", 150, 48)
 	ebitenutil.DebugPrintAt(s, "MOVE: A/D OR LOWER TOUCH    JUMP: SPACE OR UPPER TOUCH", 50, 685)

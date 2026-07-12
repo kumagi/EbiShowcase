@@ -14,6 +14,10 @@ python3 -m http.server 8080 --directory dist
 
 ブラウザで `http://localhost:8080` を開きます。WASMは `file://` では読み込めないため、ローカルHTTPサーバーが必要です。
 
+カリキュラムの整合確認は `bash scripts/ralph-loop.sh verify`（Go 1.24+ が必要）です。
+
+SNS向けの OGP は `node scripts/inject-ogp.mjs` と `go run ./cmd/gen-og-images` で全ページ分を生成します（`build.sh` 内でも実行）。公開URLのオリジンは環境変数 `SITE_ORIGIN`（省略時 `https://kumagi.github.io/EbiShowcase`）です。
+
 ## GitHub Pagesへ公開する
 
 1. このディレクトリをGitHubリポジトリへpushします。

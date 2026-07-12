@@ -1,4 +1,24 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>デッキ構築カードゲーム | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/deckbuilder/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>7 STEPS</span></div><section class="track-hero track-deckbuilder"><span class="track-letter">G</span><div><p class="eyebrow">Slay the Spire型ゲームを作る</p><h1>デッキ構築カードゲーム</h1><p>カードを1枚使うところから、手札循環、敵の予告、状態効果、報酬、分岐マップへ広げます。</p></div></section><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公が登場するステップではオリジナルの 海老・天次郎 を使います。</p>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>デッキ構築カードゲーム | Ebi Showcase</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="デッキ構築カードゲーム | Ebi Showcase">
+    <meta property="og:description" content="カードを1枚使うところから、手札循環、敵の予告、状態効果、報酬、分岐マップへ広げます。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/deckbuilder/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="デッキ構築カードゲーム">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="デッキ構築カードゲーム | Ebi Showcase">
+    <meta name="twitter:description" content="カードを1枚使うところから、手札循環、敵の予告、状態効果、報酬、分岐マップへ広げます。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder.png">
+    <meta name="twitter:image:alt" content="デッキ構築カードゲーム">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/deckbuilder/">
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/deckbuilder/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>7 STEPS</span></div><section class="track-hero track-deckbuilder"><span class="track-letter">G</span><div><p class="eyebrow">Slay the Spire型ゲームを作る</p><h1>デッキ構築カードゲーム</h1><p>カードを1枚使うところから、手札循環、敵の予告、状態効果、報酬、分岐マップへ広げます。</p></div></section><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公が登場するステップではオリジナルの 海老・天次郎 を使います。</p>
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>小さな仕組みから<br>完成形へ。</h2><p>難しい部分を一度に作らず、単独で動くミニゲームへ分解します。各ステップで前のコードを再利用し、最後に統合します。</p></div><a class="path-step" href="play-a-card/"><span>01</span><div><h3>1枚のカードを使う</h3><p>コスト、名前、効果をデータ化し、選んだカードの命令を実行します。</p><strong>カードデータと効果解決</strong></div><b>→</b></a>
 <a class="path-step" href="turn-energy/"><span>02</span><div><h3>エナジー制ターン</h3><p>ターン開始、カード使用、ターン終了、敵行動を状態機械で進めます。</p><strong>ターンフェーズと行動資源</strong></div><b>→</b></a>
 <a class="path-step" href="deck-cycle/"><span>03</span><div><h3>山札・手札・捨て札</h3><p>カードを山札、手札、捨て札、廃棄へ移し、山札が空なら混ぜ直します。</p><strong>シャッフルとカード移動</strong></div><b>→</b></a>
@@ -18,7 +38,7 @@
           <input type="hidden" name="entry.765794446" value="/ja/tracks/deckbuilder/">
           <label class="feedback-field">
             <span class="sr-only">フィードバック</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…" aria-label="フィードバック">
           </label>
           <div class="feedback-actions">
             <button type="submit" class="feedback-submit">送信する<span>→</span></button>

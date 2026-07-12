@@ -1,4 +1,10 @@
-/* --- TRY IT × Go highlight API (see FIX_TRY_IT_RALPH.md) --- */
+/* --- TRY IT × Go highlight API (see FIX_TRY_IT_RALPH.md) ---
+ * Supported data-lab kinds (non-exhaustive; see also scripts/try-it-go-catalog.mjs):
+ * loop, hitbox, circles, meter, flappy, bounce, bricks, bullets, camera, gravity,
+ * friction, sling-drag, move8, energy-turn, deck-cycle, input-buffer, turn, aim,
+ * translate, geom, colorscale, opacity, blend, sheet, spray, spellbook,
+ * fx-split, and various track-specific labs.
+ */
 
 function focusGo(lab, ids, caption) {
   if (!lab) return;

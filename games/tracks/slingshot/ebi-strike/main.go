@@ -9,6 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 )
 
 const (
@@ -250,19 +251,17 @@ func (g *game) Draw(screen *ebiten.Image) {
 	vector.StrokeRect(screen, 18, 88, 444, 505, 4, color.RGBA{83, 137, 158, 255}, false)
 
 	for _, p := range [...]vec{{240, 205}, {145, 375}, {350, 390}} {
-		vector.DrawFilledCircle(screen, float32(p.x), float32(p.y), 24, color.RGBA{77, 91, 113, 255}, false)
-		vector.StrokeCircle(screen, float32(p.x), float32(p.y), 24, 3, color.RGBA{151, 172, 188, 255}, false)
+		trackatlas.DrawCentered(screen, "peg", p.x, p.y, 48)
 	}
 	for _, e := range g.enemies {
 		if e.hp <= 0 {
 			continue
 		}
-		c := color.RGBA{222, 82, 88, 255}
 		if e.cooldown > 0 {
-			c = color.RGBA{243, 169, 62, 255}
+			trackatlas.DrawTinted(screen, "leaf-guard", e.pos.x, e.pos.y, enemyRadius*2, 1.3, 1.1, 0.7, 1)
+		} else {
+			trackatlas.DrawCentered(screen, "leaf-guard", e.pos.x, e.pos.y, enemyRadius*2)
 		}
-		vector.DrawFilledCircle(screen, float32(e.pos.x), float32(e.pos.y), enemyRadius, c, false)
-		vector.StrokeCircle(screen, float32(e.pos.x), float32(e.pos.y), enemyRadius, 3, color.White, false)
 		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("HP%d", e.hp), int(e.pos.x)-11, int(e.pos.y)-5)
 	}
 	if g.pulseFrames > 0 {
@@ -270,16 +269,10 @@ func (g *game) Draw(screen *ebiten.Image) {
 		vector.StrokeCircle(screen, float32(g.pulseAt.x), float32(g.pulseAt.y), r, 5, color.RGBA{250, 210, 72, 210}, false)
 	}
 	for i, a := range g.allies {
-		c := color.RGBA{77, 190, 217, 255}
-		if i == 1 {
-			c = color.RGBA{103, 203, 118, 255}
-		}
-		vector.DrawFilledCircle(screen, float32(a.pos.x), float32(a.pos.y), allyRadius, c, false)
-		var outline color.Color = color.White
+		trackatlas.DrawCentered(screen, "ally", a.pos.x, a.pos.y, allyRadius*2)
 		if i == g.active && !g.moving {
-			outline = color.RGBA{252, 205, 68, 255}
+			vector.StrokeCircle(screen, float32(a.pos.x), float32(a.pos.y), allyRadius+2, 4, color.RGBA{252, 205, 68, 255}, false)
 		}
-		vector.StrokeCircle(screen, float32(a.pos.x), float32(a.pos.y), allyRadius+2, 4, outline, false)
 		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("A%d", i+1), int(a.pos.x)-7, int(a.pos.y)-5)
 	}
 	if g.dragging {

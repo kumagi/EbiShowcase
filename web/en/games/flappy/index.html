@@ -5,7 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="A playable showcase for learning game development with Go and Ebitengine in your browser.">
   <title>LEVEL 04 — Ebi Flight | Ebi Showcase</title>
-  <link rel="canonical" href="./">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="LEVEL 04 — Ebi Flight | Ebi Showcase">
+    <meta property="og:description" content="A playable showcase for learning game development with Go and Ebitengine in your browser.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/games/flappy/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--flappy.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Make the hero fall for real.">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="LEVEL 04 — Ebi Flight | Ebi Showcase">
+    <meta name="twitter:description" content="A playable showcase for learning game development with Go and Ebitengine in your browser.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--flappy.png">
+    <meta name="twitter:image:alt" content="Make the hero fall for real.">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/games/flappy/">
   <link rel="alternate" hreflang="ja" href="../../../ja/games/flappy/">
   <link rel="alternate" hreflang="en" href="../../../en/games/flappy/">
   <link rel="alternate" hreflang="x-default" href="../../../">
@@ -43,7 +61,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>Position</h3><p>Where the hero is now. The top is 0, and the number gets bigger as you move down.</p><code>birdY = 320</code></article>
         <article><span class="concept-number">2</span><h3>Velocity</h3><p>How far and which way the hero moves each update. Negative goes up; positive goes down.</p><code>velocity = -7.4</code></article>
-        <article><span class="concept-number">3</span><h3>Acceleration</h3><p>How much velocity changes each time. Keep adding <strong>+0.42</strong> as gravity and the hero slows, then falls.</p><code>gravity = +0.42</code></article>
+        <article><span class="concept-number">3</span><h3>Acceleration</h3><p>How much velocity changes each frame. Keep adding <strong>+0.42</strong> px/frame² (~16ms at 60FPS). Screen Y grows downward, so flap impulse is <strong>negative</strong> (e.g. -7.4).</p><code>gravity = +0.42</code></article>
       </div>
       <div class="motion-lab" data-lab="flappy" aria-labelledby="motion-lab-title">
         <div class="lab-copy"><p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p><h3 id="motion-lab-title">Move one frame at a time</h3><p>A game works like a flipbook. Each step adds gravity to velocity, then moves the hero by that velocity. Looks like Ebi Tenjiroh; hit test is a circle.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap data-go-focus="flap grav pos" data-go-caption="Apply upward impulse → Add acceleration → Add velocity to position">Flap</button><button type="button" class="lab-button" data-lab-step data-go-focus="grav pos" data-go-caption="Add acceleration → Add velocity to position">Next frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div><p class="lab-hint">“Flap” sets the upward velocity to <code>-7.4</code>, then advances one frame.</p></div>
@@ -56,7 +74,7 @@
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>
-      <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>velocity = velocity + gravity</code><span>then</span><code>position = position + velocity</code></div><p>Order matters. First gravity changes velocity, then velocity changes position. Repeat every frame to make a natural jumping curve. Idle bob uses math.Sin as a wave table (optional). Pipe hits are AABB range checks, not circle distance.</p></div>
+      <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>velocity = velocity + gravity</code><span>then</span><code>position = position + velocity</code></div><p>Order matters. First gravity changes velocity, then velocity changes position. Repeat every frame to make a natural jumping curve. Idle bob uses math.Sin as a wave table (optional). Pipe hits are AABB range checks, not circle distance. Up is negative Y on screen.</p></div>
       <div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Put it inside<br><code>Update</code></h3><p><code>Update</code> reads input, changes velocity, and moves the hero. <code>Draw</code> paints the hero at the newly calculated position.</p></div><pre><code><span>const</span> gravity = 0.42
 <span>const</span> flapSpeed = -7.4
 
@@ -348,7 +366,7 @@ func main() {
           <input type="hidden" name="entry.765794446" value="/en/games/flappy/">
           <label class="feedback-field">
             <span class="sr-only">Feedback</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…" aria-label="Feedback">
           </label>
           <div class="feedback-actions">
             <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>

@@ -8,6 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 )
 
 const (
@@ -277,34 +278,32 @@ func (g *game) Draw(screen *ebiten.Image) {
 	for y := 0; y < rows; y++ {
 		for x := 0; x < cols; x++ {
 			px, py := float32(mazeX+x*tileSize), float32(mazeY+y*tileSize)
-			c := color.RGBA{23, 42, 58, 255}
+			tile := "tile-cobble"
 			if maze[y][x] == '#' {
-				c = color.RGBA{47, 74, 119, 255}
+				tile = "tile-wall"
 			}
-			vector.DrawFilledRect(screen, px+1, py+1, tileSize-2, tileSize-2, c, false)
+			trackatlas.Draw(screen, tile, float64(px+1), float64(py+1), float64(tileSize-2))
 			if g.pellets[point{x, y}] {
-				vector.DrawFilledCircle(screen, px+tileSize/2, py+tileSize/2, 5, color.RGBA{245, 199, 75, 255}, false)
+				trackatlas.DrawCentered(screen, "pearl", float64(px+tileSize/2), float64(py+tileSize/2), 16)
 			}
 		}
 	}
 	px, py := runnerPosition(g.player)
-	playerColor := color.RGBA{74, 195, 216, 255}
+	alpha := float32(1)
 	if g.invulnerable > 0 && g.invulnerable%10 < 5 {
-		playerColor.A = 80
+		alpha = 0.35
 	}
-	vector.DrawFilledCircle(screen, px, py, 12, playerColor, false)
-	vector.StrokeCircle(screen, px, py, 12, 3, color.White, false)
+	trackatlas.DrawTinted(screen, "hero", float64(px), float64(py), 30, 1, 1, 1, alpha)
 	for i, e := range g.guards {
 		ex, ey := tileCenter(e.tile)
-		c := color.RGBA{237, 169, 62, 255}
+		sprite := "ghost-patrol"
 		if e.mode == chase {
-			c = color.RGBA{226, 75, 82, 255}
+			sprite = "ghost-chase"
 		}
 		if e.mode == search {
-			c = color.RGBA{170, 91, 202, 255}
+			sprite = "ghost-search"
 		}
-		vector.DrawFilledCircle(screen, ex, ey, 13, c, false)
-		vector.StrokeCircle(screen, ex, ey, 13, 3, color.White, false)
+		trackatlas.DrawCentered(screen, sprite, float64(ex), float64(ey), 30)
 		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("G%d %s", i+1, modeNames[e.mode]), int(ex)-25, int(ey)-28)
 	}
 	labels := [...]string{"LEFT", "UP", "DOWN", "RIGHT"}

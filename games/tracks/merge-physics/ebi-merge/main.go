@@ -10,12 +10,12 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 )
 
 const width, height = 480, 720
 
 var radii = []float64{15, 20, 27, 36, 47, 60, 74}
-var colors = []color.RGBA{{65, 215, 183, 255}, {255, 191, 68, 255}, {242, 101, 83, 255}, {154, 91, 218, 255}, {76, 164, 235, 255}, {255, 222, 94, 255}, {242, 122, 177, 255}}
 
 type fruit struct {
 	x, y, vx, vy float64
@@ -156,11 +156,11 @@ func (g *game) Draw(s *ebiten.Image) {
 	vector.StrokeLine(s, 25, 175, 455, 175, 3, line, false)
 	for _, f := range g.fruits {
 		r := radii[f.tier]
-		vector.DrawFilledCircle(s, float32(f.x), float32(f.y), float32(r), colors[f.tier], false)
+		trackatlas.DrawCentered(s, trackatlas.Merge(f.tier+1), f.x, f.y, r*2)
 		ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d", f.tier+1), int(f.x)-3, int(f.y)-5)
 	}
 	vector.StrokeLine(s, float32(g.cursor), 75, float32(g.cursor), 135, 2, color.RGBA{255, 255, 255, 130}, false)
-	vector.DrawFilledCircle(s, float32(g.cursor), 92, float32(radii[g.next]), colors[g.next], false)
+	trackatlas.DrawCentered(s, trackatlas.Merge(g.next+1), g.cursor, 92, radii[g.next]*2)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("SCORE %05d   NEXT %d   AFTER %d   DANGER %03d/180", g.score, g.next+1, g.after+1, g.danger), 55, 28)
 	ebitenutil.DebugPrintAt(s, "MOVE POINTER, TAP TO DROP — CREATE TIER 7", 75, 700)
 	if g.clear {

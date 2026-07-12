@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"image/color"
 )
 
@@ -222,31 +223,35 @@ func (g *game) Draw(s *ebiten.Image) {
 			p := point{x, y}
 			px, py := float32(boardX+x*cell), float32(boardY+y*cell)
 			c := color.RGBA{25, 47, 51, 255}
-			if hard(p) {
-				c = color.RGBA{62, 82, 117, 255}
-			} else if g.soft[p] {
-				c = color.RGBA{126, 87, 58, 255}
-			}
 			vector.DrawFilledRect(s, px+1, py+1, cell-2, cell-2, c, false)
+			if hard(p) {
+				trackatlas.Draw(s, "tile-wall", float64(px+1), float64(py+1), float64(cell-2))
+			} else if g.soft[p] {
+				trackatlas.Draw(s, "tile-crate", float64(px+1), float64(py+1), float64(cell-2))
+			}
 		}
 	}
 	if g.exitOpen {
-		drawCell(s, g.exit, color.RGBA{74, 211, 126, 255}, "EXIT")
+		trackatlas.DrawTinted(s, "tile-exit", tileCX(g.exit), tileCY(g.exit), cell-2, 1, 1, 1, 1)
+		ebitenutil.DebugPrintAt(s, "EXIT", int(tileCX(g.exit))-12, int(tileCY(g.exit))-5)
 	} else {
-		drawCell(s, g.exit, color.RGBA{75, 85, 96, 255}, "LOCK")
+		trackatlas.DrawTinted(s, "tile-exit", tileCX(g.exit), tileCY(g.exit), cell-2, 0.5, 0.5, 0.5, 1)
+		ebitenutil.DebugPrintAt(s, "LOCK", int(tileCX(g.exit))-12, int(tileCY(g.exit))-5)
 	}
+	upgradeSprites := []string{"upgrade-blast", "upgrade-cap", "upgrade-spd"}
 	for _, it := range g.items {
-		drawCell(s, it.at, []color.RGBA{{242, 183, 57, 255}, {85, 184, 239, 255}, {106, 218, 141, 255}}[it.kind], "+")
+		trackatlas.DrawCentered(s, upgradeSprites[it.kind], tileCX(it.at), tileCY(it.at), 30)
 	}
 	for _, b := range g.bombs {
-		drawCell(s, b.at, color.RGBA{20, 23, 31, 255}, fmt.Sprintf("%.1f", float64(b.timer)/60))
+		trackatlas.DrawCentered(s, "bomb", tileCX(b.at), tileCY(b.at), 30)
+		ebitenutil.DebugPrintAt(s, fmt.Sprintf("%.1f", float64(b.timer)/60), int(tileCX(b.at))-12, int(tileCY(b.at))-5)
 	}
 	for _, f := range g.flames {
-		drawCell(s, f.at, color.RGBA{255, 151, 45, 230}, "")
+		trackatlas.DrawCentered(s, "flame", tileCX(f.at), tileCY(f.at), 34)
 	}
-	drawCell(s, g.player, color.RGBA{234, 90, 77, 255}, "EBI")
+	trackatlas.DrawCentered(s, "hero", tileCX(g.player), tileCY(g.player), 34)
 	if g.enemyAlive {
-		drawCell(s, g.enemy, color.RGBA{72, 186, 233, 255}, "AI")
+		trackatlas.DrawCentered(s, "scout", tileCX(g.enemy), tileCY(g.enemy), 34)
 	}
 	labels := [...]string{"LEFT", "UP", "DOWN", "RIGHT", "BOMB"}
 	for i, l := range labels {
@@ -261,11 +266,8 @@ func (g *game) Draw(s *ebiten.Image) {
 		overlay(s, "MISSION FAILED\n\nTAP / ENTER TO RETRY")
 	}
 }
-func drawCell(s *ebiten.Image, p point, c color.RGBA, label string) {
-	x, y := float32(boardX+p.x*cell+cell/2), float32(boardY+p.y*cell+cell/2)
-	vector.DrawFilledCircle(s, x, y, 15, c, false)
-	ebitenutil.DebugPrintAt(s, label, int(x)-12, int(y)-5)
-}
+func tileCX(p point) float64 { return float64(boardX + p.x*cell + cell/2) }
+func tileCY(p point) float64 { return float64(boardY + p.y*cell + cell/2) }
 func inputDir() (point, bool) {
 	if inpututil.IsKeyJustPressed(ebiten.KeyLeft) || inpututil.IsKeyJustPressed(ebiten.KeyA) {
 		return point{-1, 0}, true

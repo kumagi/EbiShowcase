@@ -10,6 +10,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 )
 
 const (
@@ -438,10 +439,8 @@ func (g *game) drawBattle(screen *ebiten.Image) {
 	front := g.party[g.active]
 	frontSpecies := speciesBook[front.speciesID]
 	vector.DrawFilledRect(screen, 20, 150, 440, 305, color.RGBA{28, 54, 70, 255}, false)
-	vector.DrawFilledCircle(screen, 125, 260, 54, frontSpecies.color, false)
-	vector.StrokeCircle(screen, 125, 260, 54, 4, color.White, false)
-	vector.DrawFilledCircle(screen, 355, 235, 62, wild.color, false)
-	vector.StrokeCircle(screen, 355, 235, 62, 4, color.White, false)
+	trackatlas.DrawCentered(screen, trackatlas.Species(front.speciesID), 125, 260, 108)
+	trackatlas.DrawCentered(screen, trackatlas.Species(g.wildSpecies), 355, 235, 124)
 	ebitenutil.DebugPrintAt(screen, "FRONT "+frontSpecies.name, 75, 327)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%s HP%d LV%d", typeNames[frontSpecies.kind], front.hp, level(front.exp)), 82, 351)
 	ebitenutil.DebugPrintAt(screen, "WILD "+wild.name, 313, 315)

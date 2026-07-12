@@ -5,6 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="絵のピクセルはそのまま、ColorScale で色を「かけ算」します。赤くティント、白フラッシュ、真っ黒なシルエット。1枚の絵から3つの表現が生まれます。">
   <title>色を変える・色を抜く | Ebi Showcase</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="色を変える・色を抜く | Ebi Showcase">
+    <meta property="og:description" content="絵のピクセルはそのまま、ColorScale で色を「かけ算」します。赤くティント、白フラッシュ、真っ黒なシルエット。1枚の絵から3つの表現が生まれます。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-tint/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-tint.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="色を変える・色を抜く">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="色を変える・色を抜く | Ebi Showcase">
+    <meta name="twitter:description" content="絵のピクセルはそのまま、ColorScale で色を「かけ算」します。赤くティント、白フラッシュ、真っ黒なシルエット。1枚の絵から3つの表現が生まれます。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-tint.png">
+    <meta name="twitter:image:alt" content="色を変える・色を抜く">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-tint/">
   <link rel="stylesheet" href="../../../../style.css">
 </head>
 <body class="overview-page">
@@ -43,7 +62,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / COLORSCALE</p>
         <h2>1枚の絵から<br>何色も作れる？</h2>
-        <p class="lesson-lead">ColorScale は各色チャンネルにかける倍率です。(1,0.4,0.4,1) なら緑と青が減って赤っぽく。(6,6,6,1) なら明るさが振り切れて白フラッシュ。(0,0,0,α) なら色が抜けて影になります。</p>
+        <p class="lesson-lead">ColorScale は各色チャンネルにかける倍率です。4つ目の引数は<strong>アルファ（0〜1）</strong>で、1が不透明・0が完全透明です。(1,0.4,0.4,1) なら緑と青が減って赤っぽく。(6,6,6,1) なら明るさが振り切れて白フラッシュ。(0,0,0,α) なら色が抜けて影になります。</p>
       </div>
 
       <div class="concept-row">
@@ -136,7 +155,7 @@ screen.DrawImage(sprite, op)</code></pre>
           <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/vfx-tint/">
           <label class="feedback-field">
             <span class="sr-only">フィードバック</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…" aria-label="フィードバック">
           </label>
           <div class="feedback-actions">
             <button type="submit" class="feedback-submit">送信する<span>→</span></button>

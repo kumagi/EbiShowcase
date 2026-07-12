@@ -3,6 +3,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 node "$ROOT/scripts/embed-lesson-sources.mjs"
 node "$ROOT/scripts/insert-feedback-form.mjs"
+node "$ROOT/scripts/inject-ogp.mjs"
+go run ./cmd/gen-og-images "$ROOT"
 rm -rf "$ROOT/dist"
 mkdir -p "$ROOT/dist"
 cp -R "$ROOT/web/." "$ROOT/dist/"

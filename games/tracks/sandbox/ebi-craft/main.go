@@ -8,6 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 )
 
 const (
@@ -270,7 +271,7 @@ func (g *game) Draw(screen *ebiten.Image) {
 			vector.DrawFilledRect(screen, px+1, py+1, cell-2, cell-2, base, false)
 			kind := g.tiles[y][x]
 			if kind != ground {
-				vector.DrawFilledRect(screen, px+6, py+6, cell-12, cell-12, tileColor(kind), false)
+				trackatlas.Draw(screen, tileSprite(kind), float64(px+3), float64(py+3), float64(cell-6))
 			}
 		}
 	}
@@ -279,10 +280,9 @@ func (g *game) Draw(screen *ebiten.Image) {
 		vector.StrokeLine(screen, x, oy, x, oy+worldH*cell, 4, color.RGBA{245, 195, 75, 180}, false)
 	}
 	if g.creatureAlive {
-		vector.DrawFilledCircle(screen, float32(ox+g.creatureX*cell+cell/2), float32(oy+g.creatureY*cell+cell/2), 13, color.RGBA{194, 76, 126, 255}, true)
+		trackatlas.DrawCentered(screen, "slug", float64(ox+g.creatureX*cell+cell/2), float64(oy+g.creatureY*cell+cell/2), 28)
 	}
-	vector.DrawFilledCircle(screen, float32(ox+g.px*cell+cell/2), float32(oy+g.py*cell+cell/2), 12, color.RGBA{94, 215, 226, 255}, true)
-	vector.StrokeCircle(screen, float32(ox+g.px*cell+cell/2), float32(oy+g.py*cell+cell/2), 12, 2, color.White, true)
+	trackatlas.DrawCentered(screen, "hero", float64(ox+g.px*cell+cell/2), float64(oy+g.py*cell+cell/2), 30)
 	for c := 0; c < 3; c++ {
 		status := "DARK"
 		if g.lanterns[c] {
@@ -312,16 +312,16 @@ func (g *game) Draw(screen *ebiten.Image) {
 	}
 }
 
-func tileColor(kind int) color.RGBA {
+func tileSprite(kind int) string {
 	switch kind {
 	case woodTile:
-		return color.RGBA{188, 119, 62, 255}
+		return "tile-wood"
 	case stoneTile:
-		return color.RGBA{135, 151, 164, 255}
+		return "tile-stone"
 	case crystalTile:
-		return color.RGBA{102, 203, 224, 255}
+		return "tile-glass"
 	default:
-		return color.RGBA{250, 207, 77, 255}
+		return "tile-lantern"
 	}
 }
 

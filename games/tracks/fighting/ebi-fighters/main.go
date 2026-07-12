@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"image/color"
 	"math"
 	"math/rand"
@@ -140,8 +141,8 @@ func (g *game) updateAttack(a, b *fighter, inv *int, player bool) {
 func (g *game) Draw(s *ebiten.Image) {
 	s.Fill(color.RGBA{22, 31, 48, 255})
 	vector.DrawFilledRect(s, 0, 590, 480, 130, color.RGBA{59, 67, 79, 255}, false)
-	draw(s, g.p, color.RGBA{45, 225, 194, 255}, true)
-	draw(s, g.ai, color.RGBA{240, 75, 91, 255}, false)
+	draw(s, g.p, "fighter-p1", true)
+	draw(s, g.ai, "fighter-p2", false)
 	vector.DrawFilledRect(s, 30, 45, 190, 18, color.RGBA{57, 60, 76, 255}, false)
 	vector.DrawFilledRect(s, 260, 45, 190, 18, color.RGBA{57, 60, 76, 255}, false)
 	vector.DrawFilledRect(s, 30, 45, float32(190*max(g.p.hp, 0)/100), 18, color.RGBA{45, 225, 194, 255}, false)
@@ -163,19 +164,18 @@ func (g *game) Draw(s *ebiten.Image) {
 		overlay(s, result+"\n\nTAP / SPACE TO REMATCH")
 	}
 }
-func draw(s *ebiten.Image, f fighter, c color.RGBA, right bool) {
-	x := float32(f.x)
-	vector.DrawFilledCircle(s, x, 500, 23, c, false)
-	vector.DrawFilledRect(s, x-18, 523, 36, 80, c, false)
+func draw(s *ebiten.Image, f fighter, sprite string, right bool) {
+	x := f.x
+	trackatlas.DrawCentered(s, sprite, x, 540, 130)
 	if f.guard {
-		vector.StrokeCircle(s, x, 540, 45, 6, color.RGBA{100, 165, 255, 255}, false)
+		vector.StrokeCircle(s, float32(x), 540, 45, 6, color.RGBA{100, 165, 255, 255}, false)
 	}
 	if f.attack > 8 && f.attack < 16 {
-		dx := float32(18)
+		dx := 18.0
 		if !right {
 			dx = -95
 		}
-		vector.DrawFilledRect(s, x+dx, 530, 77, 26, color.RGBA{255, 210, 62, 255}, false)
+		vector.DrawFilledRect(s, float32(x+dx), 530, 77, 26, color.RGBA{255, 210, 62, 255}, false)
 	}
 }
 func any() bool {

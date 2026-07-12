@@ -5,7 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="GoとEbitengineで作ったミニゲームを、ブラウザですぐ遊んで学べるショーケース。">
   <title>LEVEL 04 — Ebi Flight | Ebi Showcase</title>
-  <link rel="canonical" href="./">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="LEVEL 04 — Ebi Flight | Ebi Showcase">
+    <meta property="og:description" content="GoとEbitengineで作ったミニゲームを、ブラウザですぐ遊んで学べるショーケース。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/games/flappy/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--flappy.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Goで、 主人公が落ちる。">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="LEVEL 04 — Ebi Flight | Ebi Showcase">
+    <meta name="twitter:description" content="GoとEbitengineで作ったミニゲームを、ブラウザですぐ遊んで学べるショーケース。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--flappy.png">
+    <meta name="twitter:image:alt" content="Goで、 主人公が落ちる。">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/games/flappy/">
   <link rel="alternate" hreflang="ja" href="../../../ja/games/flappy/">
   <link rel="alternate" hreflang="en" href="../../../en/games/flappy/">
   <link rel="alternate" hreflang="x-default" href="../../../">
@@ -47,7 +65,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>位置</h3><p>主人公が「いま、どこにいるか」。画面の上が0で、下へ行くほど数字が大きくなります。</p><code>birdY = 320</code></article>
         <article><span class="concept-number">2</span><h3>速度</h3><p>1回の更新で、どちらへどれだけ動くか。マイナスなら上へ、プラスなら下へ進みます。</p><code>velocity = -7.4</code></article>
-        <article><span class="concept-number">3</span><h3>加速度</h3><p>速度を毎回どれだけ変えるか。重力として <strong>+0.42</strong> を足し続けると、上昇が止まり、やがて落下します。</p><code>gravity = +0.42</code></article>
+        <article><span class="concept-number">3</span><h3>加速度</h3><p>速度を毎回どれだけ変えるか。重力として <strong>+0.42</strong>（ピクセル／フレーム²）を足し続けます。60FPSなら1フレーム≈16ms。画面の上が小さいYなので、ジャンプ初速は<strong>負の数</strong>（例: -7.4）です。</p><code>gravity = +0.42</code></article>
       </div>
       <div class="motion-lab" data-lab="flappy" aria-labelledby="motion-lab-title">
         <div class="lab-copy">
@@ -69,7 +87,7 @@
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>
-      <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>速度 = 速度 + 重力</code><span>つぎに</span><code>位置 = 位置 + 速度</code></div><p>順番が大切です。まず重力で速度を変え、次にその速度で位置を変えます。毎フレームくり返すだけで、自然なジャンプの曲線が生まれます。</p>
+      <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>速度 = 速度 + 重力</code><span>つぎに</span><code>位置 = 位置 + 速度</code></div><p>順番が大切です。まず重力で速度を変え、次にその速度で位置を変えます。毎フレームくり返すだけで、自然なジャンプの曲線が生まれます。Yは下方向がプラスなので、上へ飛ぶには速度をマイナスにします。</p>
       <p>スタート前のふわふわは <code>math.Sin(...)</code> を使っています。中学ではまだ習わない三角関数ですが、「波の高さの表」だと思ってください。フレームが進むと高さがゆらゆら変わり、待機中の上下動になります。必須ではありません。定数の上下でも遊びは成立します。</p>
       <p>パイプとの当たりは距離（円）ではなく、<strong>Xが重なり、かつYが穴の外</strong>ならヒット、という四角形どうしの判定です。見た目が丸くても、まずは箱判定で十分なことが多いです。</p></div>
       <div class="code-lesson">
@@ -369,7 +387,7 @@ func main() {
           <input type="hidden" name="entry.765794446" value="/ja/games/flappy/">
           <label class="feedback-field">
             <span class="sr-only">フィードバック</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…" aria-label="フィードバック">
           </label>
           <div class="feedback-actions">
             <button type="submit" class="feedback-submit">送信する<span>→</span></button>

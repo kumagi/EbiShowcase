@@ -9,6 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 )
 
 const (
@@ -364,10 +365,10 @@ func (g *game) Draw(screen *ebiten.Image) {
 }
 
 func drawCell(screen *ebiten.Image, x, y int, c color.RGBA, alpha uint8) {
-	c.A = alpha
 	px, py := float32(boardX+x*cell), float32(boardY+y*cell)
-	vector.DrawFilledRect(screen, px+2, py+2, cell-4, cell-4, c, false)
-	vector.StrokeRect(screen, px+4, py+4, cell-8, cell-8, 1, color.RGBA{255, 255, 255, alpha / 2}, false)
+	a := float32(alpha) / 255
+	r, g, b := float32(c.R)/255, float32(c.G)/255, float32(c.B)/255
+	trackatlas.DrawTinted(screen, "block-cell", float64(px+cell/2), float64(py+cell/2), float64(cell-4), r, g, b, a)
 }
 
 func drawSide(screen *ebiten.Image, x, y int, title string, kind int) {

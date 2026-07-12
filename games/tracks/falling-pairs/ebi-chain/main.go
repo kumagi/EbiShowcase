@@ -8,6 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 )
 
 const (
@@ -24,7 +25,6 @@ const (
 	maxMisses      = 3
 )
 
-var colors = []color.RGBA{{232, 86, 87, 255}, {72, 158, 219, 255}, {239, 183, 59, 255}, {94, 188, 108, 255}, {133, 137, 149, 255}}
 var names = []string{"RED", "BLUE", "YELLOW", "GREEN"}
 
 type point struct{ x, y int }
@@ -366,16 +366,17 @@ func (g *game) Draw(screen *ebiten.Image) {
 
 	vector.DrawFilledRect(screen, 330, 110, 120, 88, color.RGBA{30, 52, 73, 255}, false)
 	ebitenutil.DebugPrintAt(screen, "NEXT PAIR", 354, 124)
-	vector.DrawFilledCircle(screen, 365, 166, 14, colors[g.nextPivotKind], false)
-	vector.DrawFilledCircle(screen, 410, 166, 14, colors[g.nextChildKind], false)
+	trackatlas.DrawCentered(screen, trackatlas.Gem(g.nextPivotKind), 365, 166, 26)
+	trackatlas.DrawCentered(screen, trackatlas.Gem(g.nextChildKind), 410, 166, 26)
 	ebitenutil.DebugPrintAt(screen, "RIVAL GARBAGE", 343, 225)
 	for i := 0; i < garbageGoal; i++ {
 		row, col := i/3, i%3
-		c := color.RGBA{45, 56, 70, 255}
+		cx, cy := float32(350+col*38), float32(260+row*38)
 		if i < g.opponentGarbage {
-			c = colors[garbage]
+			trackatlas.DrawCentered(screen, "gem-trash", float64(cx), float64(cy), 26)
+		} else {
+			vector.DrawFilledCircle(screen, cx, cy, 14, color.RGBA{45, 56, 70, 255}, false)
 		}
-		vector.DrawFilledCircle(screen, float32(350+col*38), float32(260+row*38), 14, c, false)
 	}
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%02d/%02d", min(g.opponentGarbage, garbageGoal), garbageGoal), 370, 421)
 	ebitenutil.DebugPrintAt(screen, "2 per chain + ALL CLEAR 2", 324, 458)
@@ -398,8 +399,11 @@ func (g *game) Draw(screen *ebiten.Image) {
 func drawPiece(screen *ebiten.Image, x, y, kind int, label string) {
 	cx := float32(boardX + x*cell + cell/2)
 	cy := float32(boardY + y*cell + cell/2)
-	vector.DrawFilledCircle(screen, cx, cy, cell/2-4, colors[kind], false)
-	vector.StrokeCircle(screen, cx, cy, cell/2-4, 2, color.White, false)
+	sprite := trackatlas.Gem(kind)
+	if kind == garbage {
+		sprite = "gem-trash"
+	}
+	trackatlas.DrawCentered(screen, sprite, float64(cx), float64(cy), float64(cell-6))
 	if kind == garbage {
 		ebitenutil.DebugPrintAt(screen, "X", int(cx)-3, int(cy)-5)
 	} else if label != "" {

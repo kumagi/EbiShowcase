@@ -5,7 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="GoとEbitengineで作った横スクロールアクションから、X軸・Y軸分離の衝突解決とスムーズなカメラ追従を学ぶレッスンです。">
   <title>LEVEL 10 — Platformer | Ebi Showcase</title>
-  <link rel="canonical" href="./">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="LEVEL 10 — Platformer | Ebi Showcase">
+    <meta property="og:description" content="GoとEbitengineで作った横スクロールアクションから、X軸・Y軸分離の衝突解決とスムーズなカメラ追従を学ぶレッスンです。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/games/platformer/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--platformer.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Platformer">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="LEVEL 10 — Platformer | Ebi Showcase">
+    <meta name="twitter:description" content="GoとEbitengineで作った横スクロールアクションから、X軸・Y軸分離の衝突解決とスムーズなカメラ追従を学ぶレッスンです。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--platformer.png">
+    <meta name="twitter:image:alt" content="Platformer">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/games/platformer/">
   <link rel="alternate" hreflang="ja" href="../../../ja/games/platformer/">
   <link rel="alternate" hreflang="en" href="../../../en/games/platformer/">
   <link rel="stylesheet" href="../../../style.css">
@@ -40,7 +58,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>X軸の衝突</h3><p>X方向に動いた後、プラットフォームと重なっていたら押した方向に応じてX座標を戻します。Y座標はそのままなので、床の角で引っかかりません。</p><code>player.x = p.x - player.w</code></article>
         <article><span class="concept-number">2</span><h3>Y軸の衝突</h3><p>Y方向に動いた後に同じように確認。上から乗ったら <code>onGround = true</code> にしてジャンプを許可し、速度を0にして貫通を防ぎます。</p><code>onGround = true</code></article>
-        <article><span class="concept-number">3</span><h3>カメラの追従</h3><p>目標X座標を計算し、現在位置から目標へ毎フレーム9%だけ近づきます。この「線形補間」により、急激なカメラジャンプがなくなります。</p><code>camera += (target - camera) * .09</code></article>
+        <article><span class="concept-number">3</span><h3>カメラの追従</h3><p>目標X座標を計算し、現在位置から目標へ毎フレーム9%だけ近づきます。この「線形補間（イージング）」により、急激なカメラジャンプがなくなります。係数 0.09 は「残り距離の9%だけ追う」意味です。</p><code>camera += (target - camera) * .09</code></article>
       </div>
 
       
@@ -417,7 +435,7 @@ func main() {
           <input type="hidden" name="entry.765794446" value="/ja/games/platformer/">
           <label class="feedback-field">
             <span class="sr-only">フィードバック</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…" aria-label="フィードバック">
           </label>
           <div class="feedback-actions">
             <button type="submit" class="feedback-submit">送信する<span>→</span></button>

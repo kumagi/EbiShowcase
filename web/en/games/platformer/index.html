@@ -5,7 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="Learn collision resolution and camera follow in Go and Ebitengine: separate X/Y axis processing and smooth lerp camera tracking.">
   <title>LEVEL 10 — Platformer | Ebi Showcase</title>
-  <link rel="canonical" href="./">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="LEVEL 10 — Platformer | Ebi Showcase">
+    <meta property="og:description" content="Learn collision resolution and camera follow in Go and Ebitengine: separate X/Y axis processing and smooth lerp camera tracking.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/games/platformer/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--platformer.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Platformer">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="LEVEL 10 — Platformer | Ebi Showcase">
+    <meta name="twitter:description" content="Learn collision resolution and camera follow in Go and Ebitengine: separate X/Y axis processing and smooth lerp camera tracking.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--platformer.png">
+    <meta name="twitter:image:alt" content="Platformer">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/games/platformer/">
   <link rel="alternate" hreflang="ja" href="../../../ja/games/platformer/">
   <link rel="alternate" hreflang="en" href="../../../en/games/platformer/">
   <link rel="stylesheet" href="../../../style.css">
@@ -77,7 +95,7 @@
       <div class="formula">
         <p class="eyebrow">THE CAMERA LERP</p>
         <div class="formula-lines"><code>target = player.x - width * 0.38</code><span>then every frame</span><code>camera += (target - camera) * 0.09</code></div>
-        <p>The target keeps the player at 38% of the screen width. Each frame the camera moves 9% closer. Big gaps close quickly; small gaps close gently, giving a natural feel.</p>
+        <p>The target keeps the player at 38% of the screen width. Each frame the camera moves 9% closer. Big gaps close quickly; small gaps close gently, giving a natural feel. This follow rate is easing: each frame closes a fraction of the gap.</p>
       </div>
 
       <div class="code-lesson">
@@ -417,7 +435,7 @@ func main() {
           <input type="hidden" name="entry.765794446" value="/en/games/platformer/">
           <label class="feedback-field">
             <span class="sr-only">Feedback</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…" aria-label="Feedback">
           </label>
           <div class="feedback-actions">
             <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>

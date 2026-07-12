@@ -7,6 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/hero"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"image/color"
 	"strconv"
 	"syscall/js"
@@ -190,21 +191,21 @@ func (g *game) Draw(s *ebiten.Image) {
 	oy := 74
 	for y := 0; y < 12; y++ {
 		for x := 0; x < 10; x++ {
-			c := color.RGBA{84, 158, 91, 255}
+			t := "tile-grass"
 			if x > 5 {
-				c = color.RGBA{113, 139, 167, 255}
+				t = "tile-cobble"
 			}
-			vector.DrawFilledRect(s, float32(x*tile), float32(oy+y*tile), tile, tile, c, false)
+			trackatlas.Draw(s, t, float64(x*tile), float64(oy+y*tile), tile)
 		}
 	}
-	vector.DrawFilledCircle(s, 2*tile+24, float32(oy+9*tile+24), 14, color.RGBA{255, 211, 62, 255}, false)
+	trackatlas.DrawCentered(s, "npc", 2*tile+24, float64(oy+9*tile+24), 32)
 	if g.quest == 1 {
 		vector.DrawFilledCircle(s, 8*tile+24, float32(oy+2*tile+24), 11, color.RGBA{72, 205, 255, 255}, false)
 	}
 	vector.DrawFilledRect(s, 8*tile+7, float32(oy+tile+7), 34, 34, color.RGBA{55, 45, 75, 255}, false)
 	hero.DrawCentered(s, float64(g.x*tile+24), float64(oy+g.y*tile+24), 34)
 	if g.companion {
-		vector.DrawFilledCircle(s, float32(g.x*tile+10), float32(oy+g.y*tile+38), 10, color.RGBA{255, 211, 62, 255}, false)
+		trackatlas.DrawCentered(s, "ally", float64(g.x*tile+10), float64(oy+g.y*tile+38), 22)
 	}
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("EBI QUEST  HP %02d/60  QUEST %d/4", g.hp, g.quest), 120, 25)
 	ebitenutil.DebugPrintAt(s, g.message, 60, 50)
@@ -215,7 +216,7 @@ func (g *game) Draw(s *ebiten.Image) {
 }
 func (g *game) drawBattle(s *ebiten.Image) {
 	s.Fill(color.RGBA{18, 24, 43, 255})
-	vector.DrawFilledCircle(s, 240, 210, 78, color.RGBA{109, 59, 151, 255}, false)
+	trackatlas.DrawCentered(s, "king-crab", 240, 210, 156)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("SHADOW CRAB HP %02d/90", max(0, g.bossHP)), 160, 105)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("PARTY HP %02d/60", g.hp), 185, 415)
 	ebitenutil.DebugPrintAt(s, g.message, 60, 480)

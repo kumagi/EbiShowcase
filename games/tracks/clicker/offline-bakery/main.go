@@ -6,6 +6,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"image/color"
 	"math"
 	"strconv"
@@ -108,7 +109,7 @@ func (g *game) Draw(s *ebiten.Image) {
 	s.Fill(color.RGBA{39, 25, 43, 255})
 	ebitenutil.DebugPrintAt(s, "EBI BAKERY — SAVED IN THIS BROWSER", 110, 40)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("SWEETS %s / 5.00K", short(g.sweets)), 160, 85)
-	vector.DrawFilledCircle(s, 240, 280, 100, color.RGBA{222, 143, 76, 255}, false)
+	trackatlas.DrawCentered(s, "bakery", 240, 280, 200)
 	ebitenutil.DebugPrintAt(s, "TAP / SPACE: BAKE", 165, 405)
 	vector.DrawFilledRect(s, 55, 475, 370, 145, color.RGBA{45, 205, 181, 255}, false)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("BUY AUTO OVEN [B]\n\nCOST %s   OWNED %d\nPRODUCTION %s / SECOND", short(g.cost), g.ovens, short(g.rate())), 130, 500)

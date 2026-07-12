@@ -9,6 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 )
 
 const (
@@ -371,8 +372,7 @@ func (g *game) Draw(screen *ebiten.Image) {
 			animating[point{f.x, f.toY}] = true
 			py := float32(boardY) + float32(float64(f.fromY)+float64(f.toY-f.fromY)*g.progress)*cell
 			px := float32(boardX + f.x*cell)
-			vector.DrawFilledRect(screen, px+3, py+3, cell-6, cell-6, pieceColors[f.kind], false)
-			vector.DrawFilledCircle(screen, px+22, py+22, 7, color.RGBA{255, 255, 255, 95}, false)
+			trackatlas.Draw(screen, trackatlas.Gem(f.kind), float64(px+3), float64(py+3), float64(cell-6))
 		}
 	}
 	for y := 0; y < rows; y++ {
@@ -386,12 +386,11 @@ func (g *game) Draw(screen *ebiten.Image) {
 			if animating[point{x, y}] {
 				continue
 			}
-			c := pieceColors[g.board[y][x]]
 			if g.flashLeft > 0 && g.flash[point{x, y}] {
-				c = color.RGBA{255, 255, 255, 255}
+				trackatlas.DrawTinted(screen, trackatlas.Gem(g.board[y][x]), float64(px+cell/2), float64(py+cell/2), float64(cell-6), 2.4, 2.4, 2.4, 1)
+			} else {
+				trackatlas.Draw(screen, trackatlas.Gem(g.board[y][x]), float64(px+3), float64(py+3), float64(cell-6))
 			}
-			vector.DrawFilledRect(screen, px+3, py+3, cell-6, cell-6, c, false)
-			vector.DrawFilledCircle(screen, px+22, py+22, 7, color.RGBA{255, 255, 255, 95}, false)
 			if g.hasSelection && g.selected == (point{x, y}) {
 				vector.StrokeRect(screen, px+2, py+2, cell-4, cell-4, 6, color.White, false)
 			}

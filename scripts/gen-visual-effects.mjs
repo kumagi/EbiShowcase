@@ -1005,7 +1005,7 @@ function labParts(kind, lang) {
           btn("data-lab-sup", lang === "ja" ? "拡大" : "Scale +") +
           btn("data-lab-pivot", lang === "ja" ? "軸を切替" : "Pivot") + R,
         board: `<div class="lab-board" data-lab-board></div>`,
-        values: val("data-lab-angle", lang === "ja" ? "角度" : "angle") + val("data-lab-scale", lang === "ja" ? "倍率" : "scale") + val("data-lab-pivot", lang === "ja" ? "軸" : "pivot"),
+        values: val("data-lab-angle", lang === "ja" ? "角度(ラジアン)" : "angle (rad)") + val("data-lab-scale", lang === "ja" ? "倍率" : "scale") + val("data-lab-pivot", lang === "ja" ? "軸" : "pivot"),
       };
     case "colorscale":
       return {

@@ -1,4 +1,24 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>3マッチパズル | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/match3/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>6 STEPS</span></div><section class="track-hero track-match3"><span class="track-letter">H</span><div><p class="eyebrow">キャンディクラッシュ型ゲームを作る</p><h1>3マッチパズル</h1><p>盤面の交換から、3個並びの探索、落下、補充、連鎖、特殊ピースへ進みます。</p></div></section><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公が登場するステップではオリジナルの 海老・天次郎 を使います。</p>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>3マッチパズル | Ebi Showcase</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="3マッチパズル | Ebi Showcase">
+    <meta property="og:description" content="盤面の交換から、3個並びの探索、落下、補充、連鎖、特殊ピースへ進みます。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/match3/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--match3.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="3マッチパズル">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="3マッチパズル | Ebi Showcase">
+    <meta name="twitter:description" content="盤面の交換から、3個並びの探索、落下、補充、連鎖、特殊ピースへ進みます。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--match3.png">
+    <meta name="twitter:image:alt" content="3マッチパズル">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/match3/">
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/match3/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>6 STEPS</span></div><section class="track-hero track-match3"><span class="track-letter">H</span><div><p class="eyebrow">キャンディクラッシュ型ゲームを作る</p><h1>3マッチパズル</h1><p>盤面の交換から、3個並びの探索、落下、補充、連鎖、特殊ピースへ進みます。</p></div></section><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公が登場するステップではオリジナルの 海老・天次郎 を使います。</p>
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>小さなルールを<br>つないで完成へ。</h2><p>各ステップを単独で遊べる大きさにし、アルゴリズムを目で確認してから次の仕組みへ進みます。</p></div><a class="path-step" href="grid-swap/"><span>01</span><div><h3>となり同士を交換</h3><p>盤面を行と列で管理し、隣り合う2個だけをドラッグで交換します。</p><strong>2次元グリッドと隣接判定</strong></div><b>→</b></a>
 <a class="path-step" href="find-matches/"><span>02</span><div><h3>3個並びを探す</h3><p>横方向と縦方向を別々に調べ、同じ種類が3個以上続く場所を集めます。</p><strong>横・縦の走査とグループ化</strong></div><b>→</b></a>
 <a class="path-step" href="clear-and-fall/"><span>03</span><div><h3>消して落とす</h3><p>そろったピースを消し、列ごとに下へ詰め、上から新しいピースを補充します。</p><strong>空きマスと重力詰め</strong></div><b>→</b></a>
@@ -17,7 +37,7 @@
           <input type="hidden" name="entry.765794446" value="/ja/tracks/match3/">
           <label class="feedback-field">
             <span class="sr-only">フィードバック</span>
-            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+            <input class="feedback-message" name="entry.893595607" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…" aria-label="フィードバック">
           </label>
           <div class="feedback-actions">
             <button type="submit" class="feedback-submit">送信する<span>→</span></button>

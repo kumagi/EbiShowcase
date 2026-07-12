@@ -8,6 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 )
 
 const width, height = 480, 720
@@ -161,9 +162,19 @@ func (g *game) Draw(s *ebiten.Image) {
 		overlay(s, "THE RUN ENDED!\n\nTAP / SPACE TO RETRY")
 	}
 }
+func cardSprite(c card) string {
+	switch {
+	case c.damage > 0 && c.block > 0:
+		return "card-skill"
+	case c.damage > 0:
+		return "card-attack"
+	default:
+		return "card-block"
+	}
+}
 func (g *game) drawBattle(s *ebiten.Image) {
 	e := encounters[g.floor]
-	vector.DrawFilledCircle(s, 240, 150, 62, color.RGBA{215, 104, 76, 255}, false)
+	trackatlas.DrawCentered(s, "king-crab", 240, 150, 124)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("%s  HP %02d/%02d  NEXT %d", e.name, max(0, g.enemyHP), e.hp, e.attack), 125, 75)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("ENERGY %d/3   BLOCK %d", g.energy, g.block), 160, 340)
 	ebitenutil.DebugPrintAt(s, g.message, 45, 390)
@@ -172,7 +183,8 @@ func (g *game) drawBattle(s *ebiten.Image) {
 		for i, c := range g.hand {
 			x := float32(i)*w + 3
 			vector.DrawFilledRect(s, x, 465, w-6, 155, c.color, false)
-			ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d %s\nDMG %d\nBLK %d", i+1, c.name, c.damage, c.block), int(x)+8, 490)
+			trackatlas.DrawCentered(s, cardSprite(c), float64(x+w/2-3), 505, 40)
+			ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d %s\nDMG %d\nBLK %d", i+1, c.name, c.damage, c.block), int(x)+8, 550)
 		}
 	}
 	vector.DrawFilledRect(s, 55, 642, 370, 55, color.RGBA{240, 177, 65, 255}, false)
@@ -183,7 +195,8 @@ func (g *game) drawReward(s *ebiten.Image) {
 	for i, c := range rewards {
 		x := float32(i*160 + 5)
 		vector.DrawFilledRect(s, x, 390, 150, 200, c.color, false)
-		ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d %s\n\nDMG %d\nBLOCK %d", i+1, c.name, c.damage, c.block), int(x)+10, 420)
+		trackatlas.DrawCentered(s, cardSprite(c), float64(x+75), 440, 48)
+		ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d %s\n\nDMG %d\nBLOCK %d", i+1, c.name, c.damage, c.block), int(x)+10, 500)
 	}
 	ebitenutil.DebugPrintAt(s, g.message, 70, 630)
 }
@@ -191,8 +204,10 @@ func (g *game) drawRoute(s *ebiten.Image) {
 	ebitenutil.DebugPrintAt(s, "CHOOSE THE NEXT ROUTE", 145, 280)
 	vector.DrawFilledRect(s, 20, 400, 210, 170, color.RGBA{66, 158, 129, 255}, false)
 	vector.DrawFilledRect(s, 250, 400, 210, 170, color.RGBA{178, 113, 58, 255}, false)
-	ebitenutil.DebugPrintAt(s, "1  REST\n\nHEAL 9 HP", 75, 445)
-	ebitenutil.DebugPrintAt(s, "2  TREASURE\n\nADD A CARD", 285, 445)
+	trackatlas.DrawCentered(s, "route-rest", 125, 445, 56)
+	trackatlas.DrawCentered(s, "route-treasure", 355, 445, 56)
+	ebitenutil.DebugPrintAt(s, "1  REST\n\nHEAL 9 HP", 75, 490)
+	ebitenutil.DebugPrintAt(s, "2  TREASURE\n\nADD A CARD", 285, 490)
 	ebitenutil.DebugPrintAt(s, g.message, 65, 620)
 }
 func press() (int, int, bool) {
