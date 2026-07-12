@@ -622,9 +622,10 @@ document.querySelectorAll(".motion-lab[data-lab='aim']").forEach((lab) => {
   const targetOut = bind(lab, "[data-lab-target]");
   const cdOut = bind(lab, "[data-lab-cd]");
   const shotOut = bind(lab, "[data-lab-shots]");
+  const note = bind(lab, "[data-lab-note]");
   if (!targetOut || !cdOut || !shotOut) return;
   const enemies = [{ id: "A", d: 120 }, { id: "B", d: 80 }, { id: "C", d: 200 }];
-  let frame = 0, shots = 0, cooldown = 28;
+  let frame = 0, shots = 0, cooldown = 8;
   const nearest = () => enemies.reduce((b, e) => (e.d < b.d ? e : b));
   const render = () => {
     setText(targetOut, nearest().id);
@@ -632,11 +633,22 @@ document.querySelectorAll(".motion-lab[data-lab='aim']").forEach((lab) => {
     setText(shotOut, String(shots));
   };
   bind(lab, "[data-lab-step]")?.addEventListener("click", () => {
-    frame++;
-    if (frame % cooldown === 0) shots++;
+    // Advance until the next shot so one click always feels like an action.
+    let fired = false;
+    for (let i = 0; i < cooldown; i++) {
+      frame++;
+      if (frame % cooldown === 0) {
+        shots++;
+        fired = true;
+        break;
+      }
+    }
+    setText(note, fired ? (lab.dataset.fire || `PEW → ${nearest().id}`) : "…");
     render();
   });
-  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => { frame = 0; shots = 0; render(); });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    frame = 0; shots = 0; setText(note, "—"); render();
+  });
   render();
 });
 
@@ -2685,4 +2697,533 @@ document.querySelectorAll(".motion-lab[data-lab='pellet-count']").forEach((lab) 
     setText(note, "—"); render();
   });
   render();
+});
+
+/* --- Late-track polish labs (maze-chase / bomb-maze) --- */
+
+document.querySelectorAll(".motion-lab[data-lab='input-buffer']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const curOut = bind(lab, "[data-lab-current]");
+  const qOut = bind(lab, "[data-lab-queued]");
+  const note = bind(lab, "[data-lab-note]");
+  let current = "E", queued = "E", atCenter = true;
+  const render = () => {
+    if (curOut) setText(curOut, current);
+    if (qOut) setText(qOut, queued);
+    if (board) {
+      board.innerHTML = `<div class="lab-buffer-stage">
+        <div class="lab-buffer-arrows"><span class="cur">CUR ${current}</span><span class="q">Q ${queued}</span></div>
+        <p class="lab-buffer-pos">${atCenter ? "AT CENTER" : "BETWEEN TILES"}</p>
+      </div>`;
+    }
+  };
+  lab.querySelectorAll("[data-lab-dir]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      queued = btn.dataset.labDir;
+      setText(note, lab.dataset.queued || "queued");
+      render();
+    });
+  });
+  bind(lab, "[data-lab-center]")?.addEventListener("click", () => {
+    atCenter = true;
+    if (queued !== current) {
+      current = queued;
+      setText(note, lab.dataset.turned || "turned at center");
+    } else setText(note, lab.dataset.same || "kept going");
+    render();
+  });
+  bind(lab, "[data-lab-move]")?.addEventListener("click", () => {
+    atCenter = false;
+    setText(note, lab.dataset.moving || "moving");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    current = "E"; queued = "E"; atCenter = true; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='bomb-timer']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const timerOut = bind(lab, "[data-lab-timer]");
+  const stateOut = bind(lab, "[data-lab-state]");
+  const note = bind(lab, "[data-lab-note]");
+  const fuse = Number(lab.dataset.fuse || 8);
+  let timer = fuse, blasting = false, alive = false;
+  const render = () => {
+    if (timerOut) setText(timerOut, alive ? String(timer) : "—");
+    if (stateOut) setText(stateOut, !alive ? "none" : blasting ? "BLAST" : "armed");
+    if (board) {
+      const pct = alive && !blasting ? (timer / fuse) * 100 : blasting ? 100 : 0;
+      board.innerHTML = `<div class="lab-bomb-stage ${blasting ? "blast" : alive ? "armed" : ""}">
+        <div class="lab-bomb-fuse"><i style="width:${pct}%"></i></div>
+        <strong>${!alive ? "NO BOMB" : blasting ? "BOOM" : "TICK"}</strong>
+      </div>`;
+    }
+  };
+  bind(lab, "[data-lab-place]")?.addEventListener("click", () => {
+    alive = true; blasting = false; timer = fuse;
+    setText(note, lab.dataset.placed || "placed");
+    render();
+  });
+  bind(lab, "[data-lab-tick]")?.addEventListener("click", () => {
+    if (!alive) { setText(note, lab.dataset.none || "place first"); return; }
+    if (blasting) {
+      alive = false; blasting = false;
+      setText(note, lab.dataset.gone || "removed");
+      render();
+      return;
+    }
+    timer -= 1;
+    if (timer <= 0) { blasting = true; timer = 0; setText(note, lab.dataset.boom || "explode!"); }
+    else setText(note, lab.dataset.tick || "tick");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    alive = false; blasting = false; timer = fuse; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='cross-blast']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const reachOut = bind(lab, "[data-lab-reach]");
+  const note = bind(lab, "[data-lab-note]");
+  const size = 7;
+  const mid = 3;
+  let power = 1;
+  const walls = new Set(["1,3", "5,1"]);
+  const render = () => {
+    if (reachOut) setText(reachOut, String(power));
+    const lit = new Set([`${mid},${mid}`]);
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      for (let i = 1; i <= power; i++) {
+        const x = mid + dx * i, y = mid + dy * i;
+        if (x < 0 || y < 0 || x >= size || y >= size) break;
+        if (walls.has(`${x},${y}`)) { lit.add(`${x},${y}`); break; }
+        lit.add(`${x},${y}`);
+      }
+    }
+    if (board) {
+      let html = '<div class="lab-blast-grid">';
+      for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+        const k = `${x},${y}`;
+        const cls = walls.has(k) ? "wall" : lit.has(k) ? (x === mid && y === mid ? "core" : "flame") : "";
+        html += `<span class="${cls}"></span>`;
+      }
+      html += "</div>";
+      board.innerHTML = html;
+    }
+  };
+  bind(lab, "[data-lab-power]")?.addEventListener("click", () => {
+    power = Math.min(3, power + 1);
+    setText(note, lab.dataset.powered || "power up");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    power = 1; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='chain-bomb']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const countOut = bind(lab, "[data-lab-count]");
+  const note = bind(lab, "[data-lab-note]");
+  // cells: 0 empty, 1 bomb, 2 blasting
+  let cells = [0, 1, 0, 1, 0, 1, 0];
+  let blasts = 0;
+  const render = () => {
+    if (countOut) setText(countOut, String(blasts));
+    if (board) {
+      board.innerHTML = `<div class="lab-chain-row">${cells.map((c) =>
+        `<span class="${c === 1 ? "bomb" : c === 2 ? "blast" : ""}"></span>`).join("")}</div>`;
+    }
+  };
+  bind(lab, "[data-lab-ignite]")?.addEventListener("click", () => {
+    // ignite first bomb
+    const i = cells.indexOf(1);
+    if (i < 0 && !cells.includes(2)) { setText(note, lab.dataset.done || "chain done"); return; }
+    if (i >= 0) cells[i] = 2;
+    // propagate: blasting lights neighbor bombs
+    let changed = true;
+    while (changed) {
+      changed = false;
+      for (let x = 0; x < cells.length; x++) {
+        if (cells[x] !== 2) continue;
+        for (const n of [x - 1, x + 1]) {
+          if (n >= 0 && n < cells.length && cells[n] === 1) { cells[n] = 2; changed = true; }
+        }
+      }
+    }
+    blasts = cells.filter((c) => c === 2).length;
+    setText(note, lab.dataset.chained || "chain reaction");
+    render();
+  });
+  bind(lab, "[data-lab-clear]")?.addEventListener("click", () => {
+    cells = cells.map((c) => (c === 2 ? 0 : c));
+    blasts = 0;
+    setText(note, lab.dataset.cleared || "blasts cleared");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    cells = [0, 1, 0, 1, 0, 1, 0]; blasts = 0; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='escape-timing']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const fuseOut = bind(lab, "[data-lab-fuse]");
+  const etaOut = bind(lab, "[data-lab-eta]");
+  const note = bind(lab, "[data-lab-note]");
+  let fuse = 90, eta = 22, margin = 8;
+  const render = () => {
+    if (fuseOut) setText(fuseOut, String(fuse));
+    if (etaOut) setText(etaOut, String(eta));
+    const ok = eta + margin < fuse;
+    if (board) {
+      board.innerHTML = `<div class="lab-escape-compare ${ok ? "ok" : "bad"}">
+        <div><span>ETA+margin</span><strong>${eta + margin}</strong></div>
+        <div><span>vs fuse</span><strong>${fuse}</strong></div>
+        <p>${ok ? "SAFE ROUTE" : "TOO SLOW — reroute"}</p>
+      </div>`;
+    }
+  };
+  bind(lab, "[data-lab-tick]")?.addEventListener("click", () => {
+    fuse = Math.max(0, fuse - 10);
+    eta = Math.max(5, eta - 2);
+    const ok = eta + margin < fuse;
+    setText(note, ok ? (lab.dataset.ok || "still safe") : (lab.dataset.bad || "reroute!"));
+    render();
+  });
+  bind(lab, "[data-lab-far]")?.addEventListener("click", () => {
+    eta += 15;
+    setText(note, lab.dataset.far || "longer path");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    fuse = 90; eta = 22; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='junction-pick']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const choiceOut = bind(lab, "[data-lab-choice]");
+  const note = bind(lab, "[data-lab-note]");
+  let target = "right", mode = "chase";
+  const render = () => {
+    if (choiceOut) setText(choiceOut, `${mode}:${target}`);
+    if (board) {
+      board.innerHTML = `<div class="lab-junction">
+        <span class="up ${target === "up" ? "on" : ""}">↑</span>
+        <div class="mid">
+          <span class="left ${target === "left" ? "on" : ""}">←</span>
+          <span class="core">AI</span>
+          <span class="right ${target === "right" ? "on" : ""}">→</span>
+        </div>
+        <span class="down ${target === "down" ? "on" : ""}">↓</span>
+        <p class="lab-junction-mode">${mode.toUpperCase()}</p>
+      </div>`;
+    }
+  };
+  bind(lab, "[data-lab-chase]")?.addEventListener("click", () => {
+    mode = "chase"; target = "right";
+    setText(note, lab.dataset.chase || "pick toward player");
+    render();
+  });
+  bind(lab, "[data-lab-scatter]")?.addEventListener("click", () => {
+    mode = "scatter"; target = "up";
+    setText(note, lab.dataset.scatter || "pick corner");
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    mode = "chase"; target = "right"; setText(note, "—"); render();
+  });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='fx-breakout']").forEach((lab) => {
+  const brickList = bind(lab, "[data-lab-brick-list]"), shardList = bind(lab, "[data-lab-shard-list]");
+  const brickOut = bind(lab, "[data-lab-bricks]"), shardOut = bind(lab, "[data-lab-shards]");
+  const hint = bind(lab, "[data-lab-breakout-hint]"), ja = document.documentElement.lang === "ja";
+  let bricks = 3, shards = [], sid = 0;
+  const render = () => {
+    if (brickList) brickList.innerHTML = Array.from({length: bricks}, (_, i) => `<li>brick#${i+1}</li>`).join("") || `<li>${ja ? "（空）" : "(empty)"}</li>`;
+    if (shardList) shardList.innerHTML = shards.length ? shards.map((s) => `<li>shard#${s.id} life=${s.life}</li>`).join("") : `<li>${ja ? "（空）" : "(empty)"}</li>`;
+    setText(brickOut, String(bricks)); setText(shardOut, String(shards.length));
+  };
+  bind(lab, "[data-lab-breakout-hit]")?.addEventListener("click", () => {
+    if (bricks > 0) { bricks--; for (let i=0;i<4;i++) shards.push({id:++sid,life:8}); }
+    setText(hint, ja ? "ボールは残り、ブロックだけ削除。破片はfxへ追加。" : "Ball stays; brick removed; shards enter FX."); render();
+  });
+  bind(lab, "[data-lab-breakout-tick]")?.addEventListener("click", () => { shards=shards.map((s)=>({...s,life:s.life-1})).filter((s)=>s.life>0);setText(hint,ja?"破片だけ進み、ブロックは変わりません。":"Only shards advance; bricks stay.");render(); });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click",()=>{bricks=3;shards=[];sid=0;render();}); render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='fx-snake']").forEach((lab) => {
+  const grid=bind(lab,"[data-lab-snake-grid]"), bodyList=bind(lab,"[data-lab-snake-body]"), fxList=bind(lab,"[data-lab-snake-fx]");
+  const lengthOut=bind(lab,"[data-lab-snake-length]"), partsOut=bind(lab,"[data-lab-snake-parts]"), hint=bind(lab,"[data-lab-snake-hint]");
+  const ja=document.documentElement.lang==="ja";let body=[2,1,0],food=3,parts=[],id=0;
+  const render=()=>{setText(grid,`[${Array.from({length:7},(_,x)=>body.includes(x)?"●":x===food?"◎":"·").join(" ")}]`);if(bodyList)bodyList.innerHTML=body.map((x,i)=>`<li>${i?"body":"head"}[${i}] x=${x}</li>`).join("");if(fxList)fxList.innerHTML=parts.length?parts.map((p)=>`<li>spark#${p.id} life=${p.life}</li>`).join(""):`<li>${ja?"（空）":"(empty)"}</li>`;setText(lengthOut,String(body.length));setText(partsOut,String(parts.length));};
+  bind(lab,"[data-lab-snake-step]")?.addEventListener("click",()=>{const head=(body[0]+1)%7,ate=head===food;body.unshift(head);if(ate){food=(food+3)%7;for(let n=0;n<4;n++)parts.push({id:++id,life:8});setText(hint,ja?"エサを消して体セルを追加。捕食位置にfxを生成。":"Food removed, body grows, FX spawns.");}else body.pop();render();});
+  bind(lab,"[data-lab-snake-tick]")?.addEventListener("click",()=>{parts=parts.map((p)=>({...p,life:p.life-1})).filter((p)=>p.life>0);setText(hint,ja?"キラキラだけ進み、体セルは変わりません。":"Only sparkles advance; body stays.");render();});
+  bind(lab,"[data-lab-reset]")?.addEventListener("click",()=>{body=[2,1,0];food=3;parts=[];id=0;render();});render();
+});
+
+/* --- Mono-board visual upgrade (paint empty data-lab-board from live values) --- */
+
+function labBoard(lab) {
+  return lab.querySelector("[data-lab-board]") || lab.querySelector(".lab-board");
+}
+
+function watchLabPaint(lab, paint) {
+  const board = labBoard(lab);
+  if (!board || board.dataset.visualized === "1") return;
+  board.dataset.visualized = "1";
+  const run = () => paint(board, lab);
+  const values = lab.querySelector(".lab-values");
+  if (values) new MutationObserver(run).observe(values, { subtree: true, childList: true, characterData: true });
+  lab.querySelector(".lab-controls")?.addEventListener("click", () => requestAnimationFrame(run));
+  run();
+}
+
+document.querySelectorAll(".motion-lab[data-lab='pool']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const slots = (lab.querySelector("[data-lab-slots]")?.textContent || "").trim().split(/\s+/).filter(Boolean);
+    board.innerHTML = `<div class="lab-pool-grid">${slots.map((s) =>
+      `<span class="${String(s).startsWith("N") ? "new" : ""}">${s}</span>`).join("")}</div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='ai']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const dist = Number(lab.querySelector("[data-lab-dist]")?.textContent || 180);
+    const state = lab.querySelector("[data-lab-state]")?.textContent || "";
+    const chasing = dist < 120;
+    const pct = Math.min(100, (dist / 260) * 100);
+    board.innerHTML = `<div class="lab-ai-stage ${chasing ? "chase" : "patrol"}"><span class="foe"></span><i style="width:${pct}%"></i><span class="you" style="left:${pct}%"></span><p>${state}</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='carry']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const plat = Number(lab.querySelector("[data-lab-plat]")?.textContent || 100);
+    const player = Number(lab.querySelector("[data-lab-player]")?.textContent || 120);
+    const px = Math.max(0, Math.min(80, ((plat - 40) / 160) * 100));
+    const py = Math.max(0, Math.min(80, ((player - 40) / 160) * 100));
+    board.innerHTML = `<div class="lab-carry-stage"><span class="plat" style="left:${px}%"></span><span class="you" style="left:${py}%"></span></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='stomp']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const result = lab.querySelector("[data-lab-result]")?.textContent || "";
+    const vy = Number(lab.querySelector("[data-lab-vy]")?.textContent || 0);
+    const ok = vy > 0;
+    board.innerHTML = `<div class="lab-stomp-stage ${ok ? "ok" : "bad"}"><span class="you ${ok ? "down" : "up"}"></span><span class="foe"></span><p>${result}</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='power']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const powered = (lab.querySelector("[data-lab-powered]")?.textContent || "").toLowerCase();
+    const on = powered === "on" || powered === "あり" || powered.includes("on");
+    const result = lab.querySelector("[data-lab-result]")?.textContent || "";
+    board.innerHTML = `<div class="lab-power-stage ${on ? "on" : ""}"><span class="you"></span><span class="item"></span><p>${result}</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='move8']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const raw = lab.querySelector("[data-lab-raw]")?.textContent || "—";
+    const norm = lab.querySelector("[data-lab-norm]")?.textContent || "—";
+    board.innerHTML = `<div class="lab-move8-stage"><span class="raw"></span><span class="norm"></span><p>raw ${raw} → unit ${norm}</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='aim']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const t = lab.querySelector("[data-lab-target]")?.textContent || "?";
+    const cd = lab.querySelector("[data-lab-cd]")?.textContent || "0";
+    const shots = lab.querySelector("[data-lab-shots]")?.textContent || "0";
+    const enemies = [{ id: "A", d: 120 }, { id: "B", d: 80 }, { id: "C", d: 200 }];
+    board.innerHTML = `<div class="lab-aim-stage"><span class="turret"></span>${enemies.map((e) =>
+      `<span class="mob ${e.id === t ? "lock" : ""}" style="--d:${e.d}">${e.id}</span>`).join("")}<p>cd ${cd} · shots ${shots}</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='draft']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const mode = lab.querySelector("[data-lab-mode]")?.textContent || "";
+    const pick = lab.querySelector("[data-lab-pick]")?.textContent || "—";
+    const drafting = /draft|下書き|選択/i.test(mode);
+    board.innerHTML = drafting
+      ? `<div class="lab-draft-stage open"><span>A</span><span>B</span><span>C</span><p>${mode}</p></div>`
+      : `<div class="lab-draft-stage"><p>${mode}${pick !== "—" ? " · " + pick : ""}</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='evolve']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const name = lab.querySelector("[data-lab-name]")?.textContent || "";
+    const count = Number(lab.querySelector("[data-lab-wcount]")?.textContent || 1);
+    const storm = /storm/i.test(name);
+    board.innerHTML = `<div class="lab-evolve-stage ${storm ? "storm" : ""}">${Array.from({ length: Math.max(1, count) }, () => "<span></span>").join("")}<p>${name}</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='curve']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const sec = Number(lab.querySelector("[data-lab-sec]")?.textContent || 0);
+    const interval = lab.querySelector("[data-lab-interval]")?.textContent || "";
+    const bars = Array.from({ length: 9 }, (_, i) => {
+      const s = i * 5;
+      const iv = Math.max(14, 42 - Math.floor(s / 2));
+      const h = Math.round(((42 - iv) / 28) * 100);
+      return `<span class="${s === sec ? "now" : ""}" style="height:${20 + h * 0.7}%"></span>`;
+    }).join("");
+    board.innerHTML = `<div class="lab-curve-stage">${bars}<p>t=${sec}s · iv=${interval}</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='click']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const n = lab.querySelector("[data-lab-count]")?.textContent || "0";
+    board.innerHTML = `<div class="lab-click-stage"><strong>${n}</strong><p>TAP</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='shop']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const gold = lab.querySelector("[data-lab-gold]")?.textContent || "0";
+    const cost = lab.querySelector("[data-lab-cost]")?.textContent || "0";
+    const owned = Number(lab.querySelector("[data-lab-owned]")?.textContent || 0);
+    board.innerHTML = `<div class="lab-shop-stage"><p class="g">★ ${gold}</p><p class="c">cost ${cost}</p><div class="owned">${Array.from({ length: owned }, () => "<span></span>").join("")}</div></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='idle']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const points = lab.querySelector("[data-lab-points]")?.textContent || "0";
+    const rate = Number.parseInt(lab.querySelector("[data-lab-rate]")?.textContent || "2", 10) || 2;
+    board.innerHTML = `<div class="lab-idle-stage"><div class="machines">${Array.from({ length: Math.min(12, rate) }, () => "<span></span>").join("")}</div><strong>${points}</strong></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='save']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const away = lab.querySelector("[data-lab-away]")?.textContent || "0s";
+    const gained = lab.querySelector("[data-lab-gained]")?.textContent || "0";
+    board.innerHTML = `<div class="lab-save-stage"><p>${away}</p><strong>+${gained}</strong></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='turn']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const states = (lab.dataset.states || "select,player,enemy,win").split(",");
+    const cur = lab.querySelector("[data-lab-state]")?.textContent || states[0];
+    const i = Math.max(0, states.indexOf(cur));
+    board.innerHTML = `<div class="lab-turn-row">${states.map((s, n) =>
+      `<span class="${n === i ? "now" : n < i ? "done" : ""}">${s}</span>`).join("<b>→</b>")}</div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='flag']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const flag = lab.querySelector("[data-lab-flag]")?.textContent || "";
+    const text = lab.querySelector("[data-lab-text]")?.textContent || "";
+    const on = /true|on|あり|はい/i.test(flag);
+    board.innerHTML = `<div class="lab-flag-stage ${on ? "on" : ""}"><code>flag=${flag}</code><p>${text}</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='damage']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const atk = lab.querySelector("[data-lab-atk]")?.textContent || "?";
+    const def = lab.querySelector("[data-lab-def]")?.textContent || "?";
+    const dmg = lab.querySelector("[data-lab-dmg]")?.textContent || "?";
+    board.innerHTML = `<div class="lab-dmg-stage"><p>${atk} − ${def}</p><strong>${dmg}</strong></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='inv']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const gold = lab.querySelector("[data-lab-gold]")?.textContent || "0";
+    const item = lab.querySelector("[data-lab-item]")?.textContent || "—";
+    board.innerHTML = `<div class="lab-inv-stage"><p>★ ${gold}</p><strong>${item}</strong></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='scene']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const scene = lab.querySelector("[data-lab-scene]")?.textContent || "";
+    const enemy = lab.querySelector("[data-lab-enemy]")?.textContent || "—";
+    board.innerHTML = `<div class="lab-scene-stage"><strong>${scene}</strong><p>${enemy}</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='quest']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const quest = lab.querySelector("[data-lab-quest]")?.textContent || "0";
+    const saved = lab.querySelector("[data-lab-saved]")?.textContent || "—";
+    board.innerHTML = `<div class="lab-quest-stage"><strong>Q${quest}</strong><p>${saved}</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='buffer']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const buffer = lab.querySelector("[data-lab-buf]")?.textContent || "none";
+    const life = Number(lab.querySelector("[data-lab-life]")?.textContent || 0);
+    board.innerHTML = `<div class="lab-buf-stage"><strong>${buffer}</strong><div class="lab-bomb-fuse"><i style="width:${(life / 8) * 100}%"></i></div><p>life ${life}</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='command']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const hist = lab.querySelector("[data-lab-hist]")?.textContent || "—";
+    const match = lab.querySelector("[data-lab-match]")?.textContent || "—";
+    const ok = match && match !== "—";
+    board.innerHTML = `<div class="lab-cmd-stage ${ok ? "ok" : ""}"><div class="hist">${hist}</div><p>${ok ? match : "↓↘→"}</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='rounds']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const p1 = Number(lab.querySelector("[data-lab-p1]")?.textContent || 0);
+    const p2 = Number(lab.querySelector("[data-lab-p2]")?.textContent || 0);
+    const round = lab.querySelector("[data-lab-round]")?.textContent || "1";
+    const dots = (n) => Array.from({ length: 2 }, (_, i) => `<span class="${i < n ? "on" : ""}"></span>`).join("");
+    board.innerHTML = `<div class="lab-rounds-stage"><div>${dots(p1)}</div><p>R${round}</p><div>${dots(p2)}</div></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='rps']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const result = lab.querySelector("[data-lab-result]")?.textContent || "—";
+    board.innerHTML = `<div class="lab-rps-stage"><p>${result}</p></div>`;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='snake']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const bodyText = lab.querySelector("[data-lab-body]")?.textContent || "";
+    const body = [...bodyText.matchAll(/\((\d+),(\d+)\)/g)].map((m) => ({ x: Number(m[1]), y: Number(m[2]) }));
+    let html = '<div class="lab-snake-grid">';
+    for (let y = 0; y < 5; y++) for (let x = 0; x < 6; x++) {
+      const i = body.findIndex((p) => p.x === x && p.y === y);
+      html += `<span class="${i === 0 ? "head" : i > 0 ? "body" : ""}"></span>`;
+    }
+    html += "</div>";
+    board.innerHTML = html;
+  });
+});
+
+document.querySelectorAll(".motion-lab[data-lab='push']").forEach((lab) => {
+  watchLabPaint(lab, (board) => {
+    const cells = (lab.querySelector("[data-lab-map]")?.textContent || ". P . B .").trim().split(/\s+/);
+    board.innerHTML = `<div class="lab-push-row">${cells.map((c) =>
+      `<span class="${c === "P" ? "you" : c === "B" ? "box" : c === "#" ? "wall" : ""}">${c === "." ? "" : c}</span>`).join("")}</div>`;
+  });
 });

@@ -67,21 +67,22 @@
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-breakout">
+      <div class="motion-lab" data-lab="fx-breakout" aria-labelledby="lab-title-vfx-fx-breakout">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / TWO BOXES</p>
           <h3 id="lab-title-vfx-fx-breakout">No hitbox on debris</h3>
           <p>Pretty shards shouldn’t be clickable/collidable.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Tick FX 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-breakout-hit>Hit a brick</button><button type="button" class="lab-button" data-lab-breakout-tick>Tick shards 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play (rules / score)</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx (sparks)</h4><ul data-lab-fx-list></ul></div>
-          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
-        </div>
-        <p class="lab-fx-hint" data-lab-fx-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>score (play)</span><strong data-lab-score>—</strong></div><div><span>sparks (fx)</span><strong data-lab-fx-n>—</strong></div></div>
+          <div class="lab-fx-col"><h4>play (collidable)</h4>
+            <p>● ball</p><ul data-lab-brick-list></ul></div>
+          <div class="lab-fx-col"><h4>fx (no collision)</h4>
+            <ul data-lab-shard-list></ul></div>
+          <div class="lab-fx-stage" data-lab-shard-stage aria-hidden="true"></div>
+        </div><p class="lab-fx-hint" data-lab-breakout-hint></p>
+          <div class="lab-values" aria-live="polite"><div><span>bricks (play)</span><strong data-lab-bricks>—</strong></div><div><span>shards (fx)</span><strong data-lab-shards>—</strong></div></div>
         </div>
       </div>
 
@@ -142,19 +143,6 @@ g.fx.FlameBurst(x, y, 12)      // fx only</code></pre>
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 </main>

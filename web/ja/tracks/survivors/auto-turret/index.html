@@ -33,30 +33,30 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>最近傍探索</h3><p>全ての敵との距離を順番に測ります。これまでの最小値より小さければ更新し続けます。最後に残ったのが最近傍です。</p><code>if d &lt; dist { best = i }</code></article>
+        <article><span class="concept-number">1</span><h3>最近傍探索</h3><p>ボタン1回で「次の発射」まで進めます。毎回いちばん近い敵（距離が小さい B）へ PEW が出ます。</p><code>if d &lt; dist { best = i }</code></article>
         <article><span class="concept-number">2</span><h3>クールダウン</h3><p>毎フレーム発射すると多すぎます。<code>frame%28==0</code> で28フレームに1回だけ照準・発射します。間隔を変えると連射速度が変わります。</p><code>if g.frame%28 == 0</code></article>
         <article><span class="concept-number">3</span><h3>弾の速度計算</h3><p>「敵の位置 − 自機の位置」を距離で割って正規化し、速さ7を掛けます。これで敵に向かうちょうど良い速度ベクトルになります。</p><code>vx = (e.x - g.px) / dist * 7</code></article>
       </div>
 
       
-      <div class="motion-lab" data-lab="aim"  aria-labelledby="lab-title-auto-turret">
+      <div class="motion-lab" data-lab="aim" data-fire="PEW → 最近傍"  aria-labelledby="lab-title-auto-turret">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / LAB</p>
-          <h3 id="lab-title-auto-turret">一番近い敵へクールダウン発射</h3>
+          <p class="eyebrow">TRY IT / AIM + COOLDOWN</p>
+          <h3 id="lab-title-auto-turret">一番近い敵へ、クールダウンで撃つ</h3>
           <p>毎フレームいちばん近い敵を選び、クールダウン間隔でのみ弾を出します。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>1フレーム</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>次の発射まで進める</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset>もとに戻す</button>
           </div>
-          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+          <p class="lab-hint">本物は毎フレーム距離を測り、28フレームごとに弾を足します。ラボは体感しやすい8フレームです。</p>
         </div>
         <div class="lab-visual">
-          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">最短距離の敵へ</div></div>
+          <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
           <div class="lab-values" aria-live="polite">
             <div><span>狙い</span><strong data-lab-target>B</strong><small></small></div>
             <div><span>cooldown</span><strong data-lab-cd>0</strong><small></small></div>
             <div><span>発射数</span><strong data-lab-shots>0</strong><small></small></div>
-          </div>
+          <div><span>結果</span><strong data-lab-note>—</strong><small></small></div></div>
         </div>
       </div>
 
@@ -118,6 +118,10 @@
         </form>
       </div>
     </section>
+
+
+
+
 
 
 

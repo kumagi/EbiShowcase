@@ -67,21 +67,22 @@
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-breakout">
+      <div class="motion-lab" data-lab="fx-breakout" aria-labelledby="lab-title-vfx-fx-breakout">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / TWO BOXES</p>
           <h3 id="lab-title-vfx-fx-breakout">当たり判定は残すな</h3>
           <p>見た目の破片をクリックできない／当たらない。</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>命中！（play+fx）</button><button type="button" class="lab-button" data-lab-fx-tick>fx だけ 1F進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-breakout-hit>ボールを当てる</button><button type="button" class="lab-button" data-lab-breakout-tick>破片だけ 1F進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play（ルール・点数）</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx（見た目の粒）</h4><ul data-lab-fx-list></ul></div>
-          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
-        </div>
-        <p class="lab-fx-hint" data-lab-fx-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>スコア(play)</span><strong data-lab-score>—</strong></div><div><span>粒(fx)</span><strong data-lab-fx-n>—</strong></div></div>
+          <div class="lab-fx-col"><h4>play（当たり判定あり）</h4>
+            <p>● ball</p><ul data-lab-brick-list></ul></div>
+          <div class="lab-fx-col"><h4>fx（当たり判定なし）</h4>
+            <ul data-lab-shard-list></ul></div>
+          <div class="lab-fx-stage" data-lab-shard-stage aria-hidden="true"></div>
+        </div><p class="lab-fx-hint" data-lab-breakout-hint></p>
+          <div class="lab-values" aria-live="polite"><div><span>ブロック(play)</span><strong data-lab-bricks>—</strong></div><div><span>破片(fx)</span><strong data-lab-shards>—</strong></div></div>
         </div>
       </div>
 
@@ -142,19 +143,6 @@ g.fx.FlameBurst(x, y, 12)      // fx only</code></pre>
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 </main>

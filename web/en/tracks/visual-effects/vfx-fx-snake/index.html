@@ -67,21 +67,21 @@
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-snake">
+      <div class="motion-lab" data-lab="fx-snake" aria-labelledby="lab-title-vfx-fx-snake">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / SPLIT</p>
           <h3 id="lab-title-vfx-fx-snake">Cells are data</h3>
           <p>Don't mix sparkles into body data.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Tick FX 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-snake-step>Move and eat</button><button type="button" class="lab-button" data-lab-snake-tick>Tick sparkles 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play (rules / score)</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx (sparks)</h4><ul data-lab-fx-list></ul></div>
-          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
-        </div>
-        <p class="lab-fx-hint" data-lab-fx-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>score (play)</span><strong data-lab-score>—</strong></div><div><span>sparks (fx)</span><strong data-lab-fx-n>—</strong></div></div>
+          <div class="lab-fx-col"><h4>play (body and food)</h4>
+            <p data-lab-snake-grid></p><ul data-lab-snake-body></ul></div>
+          <div class="lab-fx-col"><h4>fx (eat sparkles)</h4><ul data-lab-snake-fx></ul></div>
+          <div class="lab-fx-stage" data-lab-snake-stage aria-hidden="true"></div>
+        </div><p class="lab-fx-hint" data-lab-snake-hint></p>
+          <div class="lab-values" aria-live="polite"><div><span>body cells (play)</span><strong data-lab-snake-length>—</strong></div><div><span>sparkles (fx)</span><strong data-lab-snake-parts>—</strong></div></div>
         </div>
       </div>
 
@@ -142,19 +142,6 @@ g.fx.Burst(food.x, food.y, 24, 3, tint, true)</code></pre>
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 </main>

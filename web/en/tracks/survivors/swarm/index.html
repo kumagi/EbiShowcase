@@ -35,25 +35,25 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>Fixed array</h3><p>Declaring <code>[100]mob</code> reserves exactly 100 slots in memory from the start. Unlike a slice, no new memory is allocated when updating or replacing elements.</p><code>mobs [100]mob</code></article>
         <article><span class="concept-number">2</span><h3>Instant respawn</h3><p>On defeat, do not delete the enemy. Overwrite its slot with fresh coordinates via <code>spawn(i)</code>. The count stays at 100 at all times.</p><code>g.spawn(i)</code></article>
-        <article><span class="concept-number">3</span><h3>Aura attack</h3><p>The 62-pixel radius aura damages any enemy inside it every 18 frames. When killed, the slot is respawned in the same line. No separate bullet objects are needed.</p><code>if d &lt; 62 &amp;&amp; frame%18 == 0</code></article>
+        <article><span class="concept-number">3</span><h3>Aura attack</h3><p>Kill once and seat 0 becomes N1. Array length stays 8 — you reuse the same seats. The grid on the right updates too.</p><code>if d &lt; 62 &amp;&amp; frame%18 == 0</code></article>
       </div>
 
       
       <div class="motion-lab" data-lab="pool"  aria-labelledby="lab-title-swarm">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / LAB</p>
-          <h3 id="lab-title-swarm">Overwrite a slot on kill</h3>
+          <p class="eyebrow">TRY IT / OBJECT POOL</p>
+          <h3 id="lab-title-swarm">Overwrite the same slot instead of deleting</h3>
           <p>Do not shrink the array — overwrite the defeated index with a new foe.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-kill>Kill one</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-kill>Kill & overwrite</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
           </div>
-          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+          <p class="lab-hint">Watch the slot text and the grid change together. Every click must change something.</p>
         </div>
         <div class="lab-visual">
-          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">mobs[i] = spawn()</div></div>
+          <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
           <div class="lab-values" aria-live="polite">
-            <div><span>slots</span><strong data-lab-slots>E0 E1 …</strong><small></small></div>
+            <div><span>slots</span><strong data-lab-slots>E0 E1 E2 E3 E4 E5 E6 E7</strong><small></small></div>
             <div><span>kills</span><strong data-lab-kills>0</strong><small></small></div>
             <div><span>規則</span><strong>overwrite</strong><small></small></div>
           </div>
@@ -120,6 +120,10 @@
         </form>
       </div>
     </section>
+
+
+
+
 
 
 

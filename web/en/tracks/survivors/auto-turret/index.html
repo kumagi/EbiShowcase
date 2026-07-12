@@ -33,30 +33,30 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>Nearest-neighbor search</h3><p>Start with the largest possible distance and iterate every enemy. Whenever a shorter distance is found, update the best index. The final winner is the nearest enemy.</p><code>if d &lt; dist { best = i }</code></article>
+        <article><span class="concept-number">1</span><h3>Nearest-neighbor search</h3><p>One click advances to the next shot. Every shot locks the nearest enemy (B has the smallest distance).</p><code>if d &lt; dist { best = i }</code></article>
         <article><span class="concept-number">2</span><h3>Cooldown</h3><p>Firing every frame would be too rapid. Use <code>frame%28==0</code> to fire exactly once every 28 frames. Changing the divisor directly controls fire rate.</p><code>if g.frame%28 == 0</code></article>
         <article><span class="concept-number">3</span><h3>Shot velocity</h3><p>Subtract player position from enemy position, divide by the already-computed distance, then multiply by shot speed. The result is a normalized direction scaled to the right magnitude.</p><code>vx = (e.x - g.px) / dist * 7</code></article>
       </div>
 
       
-      <div class="motion-lab" data-lab="aim"  aria-labelledby="lab-title-auto-turret">
+      <div class="motion-lab" data-lab="aim" data-fire="PEW → nearest"  aria-labelledby="lab-title-auto-turret">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / LAB</p>
-          <h3 id="lab-title-auto-turret">Cooldown nearest foe on cooldown</h3>
+          <p class="eyebrow">TRY IT / AIM + COOLDOWN</p>
+          <h3 id="lab-title-auto-turret">Aim at the nearest foe, fire on cooldown</h3>
           <p>Each frame pick the nearest foe; fire only when the cooldown hits zero.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step>Next frame</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step>Advance to next shot</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button>
           </div>
-          <p class="lab-hint">A slow-motion model of the real game rule.</p>
+          <p class="lab-hint">The real game measures distance every frame and appends a bullet every 28 frames. This lab uses 8 frames so you feel it.</p>
         </div>
         <div class="lab-visual">
-          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">nearest enemy</div></div>
+          <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
           <div class="lab-values" aria-live="polite">
             <div><span>target</span><strong data-lab-target>B</strong><small></small></div>
             <div><span>cooldown</span><strong data-lab-cd>0</strong><small></small></div>
             <div><span>shots</span><strong data-lab-shots>0</strong><small></small></div>
-          </div>
+          <div><span>result</span><strong data-lab-note>—</strong><small></small></div></div>
         </div>
       </div>
 
@@ -118,6 +118,10 @@
         </form>
       </div>
     </section>
+
+
+
+
 
 
 

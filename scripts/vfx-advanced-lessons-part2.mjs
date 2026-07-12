@@ -6,7 +6,7 @@ export const advancedLessonsPart2 = [
     tier: "advanced",
     core: "snake",
     stars: "★★★★★",
-    labKind: "fx-split",
+    labKind: "fx-snake",
     concept: { ja: "体セルとキラキラ", en: "Body cells vs sparkles" },
     hubDesc: {
       ja: "LEVEL 07 Snake。体は []cell、食べた瞬間だけ fx。",

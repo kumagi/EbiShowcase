@@ -97,7 +97,12 @@
     <p class="setup-n">STEP 05</p>
     <h2>main.go を書く（何もしない窓）</h2>
     <p class="setup-lead">テキストエディタ（メモ帳、メモ帳++、VS Code、Cursor など）で、いまのフォルダに main.go という名前のファイルを作り、次をそのままコピーします。</p>
-    <pre class="setup-code"><code>package main
+    <div class="full-code setup-full-code">
+  <div class="full-code-head">
+    <span>main.go</span>
+    <button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました">全文をコピー</button>
+  </div>
+  <pre class="setup-code"><code>package main
 
 import (
 	"image/color"
@@ -131,6 +136,7 @@ func main() {
 		log.Fatal(err)
 	}
 }</code></pre>
+</div>
     <div class="setup-explain">
       <div><code>Update</code><span>毎フレームの「数字」担当。今は空。</span></div><div><code>Draw</code><span>毎フレームの「絵」担当。色を一塗り。</span></div><div><code>Layout</code><span>ゲーム内部の幅と高さ。</span></div><div><code>RunGame</code><span>このくり返しを起動するスイッチ。</span></div>
     </div>
@@ -176,19 +182,6 @@ func main() {
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main>
 <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>

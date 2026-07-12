@@ -5,8 +5,19 @@
 <section class="lesson-hero"><div><p class="eyebrow">BOMB MAZE · STEP 05</p><h1>爆風から逃げる敵</h1><p>青い偵察員は、すべての爆弾が「何フレーム後に、どのマスを焼くか」を予測します。間に合う安全マスまでの道を幅優先探索で選びます。</p><div class="lesson-meta"><span>むずかしさ ★★★★☆</span><span>PLAYABLE</span></div></div></section>
 <section class="game-stage" id="play"><div class="game-copy"><p class="eyebrow">PLAY FIRST</p><h2>AIの逃げ道を観察しよう</h2><p>矢印 / WASDで赤いプレイヤーを動かし、Space / Xで爆弾を置きます。画面下のボタンはマウスとタッチに対応。青いAIを6回の爆発から生き残らせよう。赤い数字は危険になるまでのフレーム、青い点は予定経路です。</p></div><div class="game-frame-wrap"><iframe class="game-frame" src="../../../../play/escape-ai/" title="爆風から逃げる敵AIゲーム"></iframe></div></section>
 <section class="deep-dive"><p class="eyebrow">DEEP DIVE</p><h2>安全は「場所」と「時刻」の組み合わせ</h2><p>今は安全なマスでも、到着した瞬間に爆発するなら逃げ先にはできません。そこで各爆弾の残り時間から危険表を作り、AIがそのマスへ着く時刻と比べます。</p><div class="concept-row"><article><b>01</b><h3>未来の爆風を重ねる</h3><p>各爆弾から十字のマスを列挙します。同じマスに複数の爆弾が届くときは、いちばん早い時刻を記録します。</p></article><article><b>02</b><h3>時刻つきで道を探す</h3><p>幅優先探索の1歩に移動時間をかけます。到着時刻が爆発時間と重なる候補はキューへ入れません。</p></article><article><b>03</b><h3>少し先まで安全を確かめる</h3><p>着いた瞬間だけでなく、その場に50フレームいられるマスを出口として選びます。</p></article></div></section>
-<section class="motion-lab" data-lab="entities"><div><p class="eyebrow">TIME MAP LAB</p><h2>経路を時間の列として読む</h2><p>AIは「右のマス」だけでなく「11フレーム後の右のマス」を調べます。画面の数字が小さくなるたび、青い経路も作り直されます。</p></div><div class="lab-stage"><div class="entity-board"><span>爆弾: 90</span><span>到着: 22</span><span>22 + 余裕 &lt; 90 → 通れる</span></div></div></section>
-<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>到着時刻で候補をふるい分ける</h2><p><code>danger</code> はマスをキー、爆発までのフレームを値にした表です。探索は上下左右に加えて「待つ」候補も持ちます。</p></div><pre><code>arrival := nextStep * moveEvery
+<section class="motion-lab" data-lab="escape-timing" data-ok="まだ安全" data-bad="危険→張り直し" data-far="経路が長くなった" aria-labelledby="lab-title-escape-ai">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / TIME MAP</p>
+<h3 id="lab-title-escape-ai">到着時刻と導火線を比べる</h3>
+<p>AIは「今どのマスが空いているか」だけでなく、「到着までに導火線が残るか」を見ます。ETA+余裕 < 導火線なら通れる経路です。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-tick>時間を進める</button><button type="button" class="lab-button" data-lab-far>遠回りにする</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<p class="lab-hint">時間が進むと安全だった道が危険になります。だから毎フレーム張り直します。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>導火線</span><strong data-lab-fuse>0</strong></div><div><span>到着ETA</span><strong data-lab-eta>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</section><div class="formula"><p class="eyebrow">ETA vs FUSE</p><div class="formula-lines"><code>eta = steps * framesPerStep</code><span>つぎに</span><code>safe if eta + margin < fuse</code></div><p>空間の最短路に、時間の制約を足したのが回避AIです。</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>到着時刻で候補をふるい分ける</h2><p><code>danger</code> はマスをキー、爆発までのフレームを値にした表です。探索は上下左右に加えて「待つ」候補も持ちます。</p></div><pre><code>arrival := nextStep * moveEvery
 blastAt, threatened := danger[next]
 safe := !threatened ||
     arrival+8 &lt; blastAt ||
@@ -39,4 +50,8 @@ if safe {
         </form>
       </div>
     </section>
+
+
+
+
 </main><footer><p>EBI SHOWCASE · Go + WebAssembly + Ebitengine</p></footer><script src="../../../../learn.js"></script></body></html>

@@ -85,8 +85,16 @@ function esc(s) {
     .replace(/>/g, "&gt;");
 }
 
-function codeBlock(code) {
-  return `<pre class="setup-code"><code>${esc(code)}</code></pre>`;
+function codeBlock(code, opts = {}) {
+  const body = `<pre class="setup-code"><code>${esc(code)}</code></pre>`;
+  if (!opts.copy) return body;
+  return `<div class="full-code setup-full-code">
+  <div class="full-code-head">
+    <span>${esc(opts.filename || "main.go")}</span>
+    <button type="button" class="full-code-copy" data-copy data-copied-label="${esc(opts.copied || "Copied!")}">${esc(opts.copy)}</button>
+  </div>
+  ${body}
+</div>`;
 }
 
 function page(lang) {
@@ -539,7 +547,11 @@ function page(lang) {
     <p class="setup-n">STEP ${t.step5.n}</p>
     <h2>${t.step5.h}</h2>
     <p class="setup-lead">${t.step5.p}</p>
-    ${codeBlock(code)}
+    ${codeBlock(code, {
+      copy: ja ? "全文をコピー" : "Copy all",
+      copied: ja ? "コピーしました" : "Copied!",
+      filename: "main.go",
+    })}
     <div class="setup-explain">
       ${t.step5.explain
         .map(([k, v]) => `<div><code>${esc(k)}</code><span>${esc(v)}</span></div>`)

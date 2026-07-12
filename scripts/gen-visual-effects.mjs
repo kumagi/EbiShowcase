@@ -1082,6 +1082,38 @@ function labParts(kind, lang) {
           val("data-lab-score", lang === "ja" ? "スコア(play)" : "score (play)") +
           val("data-lab-fx-n", lang === "ja" ? "粒(fx)" : "sparks (fx)"),
       };
+    case "fx-breakout":
+      return {
+        controls:
+          btn("data-lab-breakout-hit", lang === "ja" ? "ボールを当てる" : "Hit a brick", "lab-button-primary") +
+          btn("data-lab-breakout-tick", lang === "ja" ? "破片だけ 1F進める" : "Tick shards 1 frame") +
+          R,
+        board: `<div class="lab-board lab-fx-split" data-lab-board>
+          <div class="lab-fx-col"><h4>${lang === "ja" ? "play（当たり判定あり）" : "play (collidable)"}</h4>
+            <p>● ball</p><ul data-lab-brick-list></ul></div>
+          <div class="lab-fx-col"><h4>${lang === "ja" ? "fx（当たり判定なし）" : "fx (no collision)"}</h4>
+            <ul data-lab-shard-list></ul></div>
+          <div class="lab-fx-stage" data-lab-shard-stage aria-hidden="true"></div>
+        </div><p class="lab-fx-hint" data-lab-breakout-hint></p>`,
+        values:
+          val("data-lab-bricks", lang === "ja" ? "ブロック(play)" : "bricks (play)") +
+          val("data-lab-shards", lang === "ja" ? "破片(fx)" : "shards (fx)"),
+      };
+    case "fx-snake":
+      return {
+        controls:
+          btn("data-lab-snake-step", lang === "ja" ? "進んでエサを食べる" : "Move and eat", "lab-button-primary") +
+          btn("data-lab-snake-tick", lang === "ja" ? "キラキラだけ 1F進める" : "Tick sparkles 1 frame") + R,
+        board: `<div class="lab-board lab-fx-split" data-lab-board>
+          <div class="lab-fx-col"><h4>${lang === "ja" ? "play（体とエサ）" : "play (body and food)"}</h4>
+            <p data-lab-snake-grid></p><ul data-lab-snake-body></ul></div>
+          <div class="lab-fx-col"><h4>${lang === "ja" ? "fx（捕食のキラキラ）" : "fx (eat sparkles)"}</h4><ul data-lab-snake-fx></ul></div>
+          <div class="lab-fx-stage" data-lab-snake-stage aria-hidden="true"></div>
+        </div><p class="lab-fx-hint" data-lab-snake-hint></p>`,
+        values:
+          val("data-lab-snake-length", lang === "ja" ? "体セル(play)" : "body cells (play)") +
+          val("data-lab-snake-parts", lang === "ja" ? "キラキラ(fx)" : "sparkles (fx)"),
+      };
     default:
       return { controls: R, board: `<div class="lab-board" data-lab-board></div>`, values: val("data-lab-x", "X") };
   }

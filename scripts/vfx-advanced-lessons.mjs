@@ -376,7 +376,7 @@ if frame%3 == 0 {
     tier: "advanced",
     core: "breakout",
     stars: "★★★★★",
-    labKind: "fx-split",
+    labKind: "fx-breakout",
     concept: { ja: "破壊＝エンティティ削除＋FX", en: "Destroy = remove + FX" },
     hubDesc: {
       ja: "LEVEL 06 ブロック崩し。brick を消し、破片は fx へ。",

@@ -15,13 +15,13 @@
     <section class="overview-hero">
       <p class="eyebrow">★★★★☆ / PLAYABLE</p>
       <h1>Survival Run (Final)</h1>
-      <p>Three waves escalate difficulty, then a boss appears at 35 seconds. Computing spawn interval and enemy speed from elapsed time lets a single formula describe the entire difficulty curve.</p>
+      <p>Difficulty rises across three waves, a boss arrives at 35 seconds, and gems fund level-up picks. Time-based formulas set spawn rate and chase speed—standing still is not a strategy.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Waves, boss, and time-based difficulty scaling</strong></div>
       <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
     </section>
 
     <section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Survive three waves and defeat the boss.</h2></div><p>WASD, arrow keys, or drag to move. The golden aura attacks automatically. Defeat the boss within 45 seconds to clear.</p></div>
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Survive three waves and defeat the boss.</h2></div><p>Move with WASD, arrows, or drag. Standing still takes contact damage. Collect gems to level up (aura / speed / life) and beat the boss within 45 seconds.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Survival Run" src="../../../../play/survival-run/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 
@@ -29,13 +29,13 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / WAVES AND DIFFICULTY</p>
         <h2>How does one formula<br>create three waves of tension?</h2>
-        <p class="lesson-lead">Spawn interval and enemy speed are both computed from elapsed seconds. <code>interval = max(14, 42 - sec/2)</code> shrinks the gap between spawns linearly. <code>speed = 0.85 + sec × 0.018</code> raises enemy velocity over time. These two expressions are the entire difficulty curve — a fixed boss appears at 35 seconds as the final threat.</p>
+        <p class="lesson-lead">Spawn interval and enemy speed are both computed from elapsed seconds. <code>interval = max(10, 34 - sec/2)</code> shrinks the gap between spawns linearly. <code>speed = 1.15 + sec × 0.018</code> raises enemy velocity over time. These two expressions are the entire difficulty curve — a fixed boss appears at 35 seconds as the final threat.</p>
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>Shrinking spawn interval</h3><p>Starting at 42 frames, the interval decreases by half a frame per second. A floor of 14 frames prevents infinite simultaneous spawning as time grows large.</p><code>interval := max(14, 42-sec/2)</code></article>
-        <article><span class="concept-number">2</span><h3>Linear speed ramp</h3><p>Enemy movement speed starts at 0.85 and rises by 0.018 every second. By second 35 it reaches roughly 1.48 — noticeably faster than the opening wave.</p><code>speed := .85 + float64(sec)*.018</code></article>
-        <article><span class="concept-number">3</span><h3>Boss and HP bar</h3><p>At 35 seconds a large purple mob with HP 60 is appended. The aura deals 1 HP every 14 frames. Two rectangles draw the bar: background and a proportional fill.</p><code>g.mobs = append(g.mobs, mob{..., 60, 38, true})</code></article>
+        <article><span class="concept-number">1</span><h3>Shrinking spawn interval</h3><p>Starting at 42 frames, the interval decreases by half a frame per second. A floor of 14 frames prevents infinite simultaneous spawning as time grows large.</p><code>interval := max(10, 34-sec/2)</code></article>
+        <article><span class="concept-number">2</span><h3>Linear speed ramp</h3><p>Enemy movement speed starts at 0.85 and rises by 0.018 every second. By second 35 it reaches roughly 1.48 — noticeably faster than the opening wave.</p><code>speed := 1.15 + float64(sec)*.028</code></article>
+        <article><span class="concept-number">3</span><h3>Boss and HP bar</h3><p>At 35 seconds a large purple mob with HP 80 is appended. The aura deals 1 HP every 14 frames. Two rectangles draw the bar: background and a proportional fill.</p><code>g.mobs = append(g.mobs, mob{..., 80, 40, true})</code></article>
       </div>
 
       
@@ -51,7 +51,7 @@
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
         <div class="lab-visual">
-          <div class="lab-board" role="img" aria-label="lab"><div class="lab-mono-board">max(14, 42-sec/2)</div></div>
+          <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
           <div class="lab-values" aria-live="polite">
             <div><span>sec</span><strong data-lab-sec>0</strong><small></small></div>
             <div><span>interval</span><strong data-lab-interval>42</strong><small></small></div>
@@ -62,7 +62,7 @@
 
       <div class="formula">
         <p class="eyebrow">THE DIFFICULTY CURVE</p>
-        <div class="formula-lines"><code>interval := max(14, 42 - sec/2)</code><span>and</span><code>speed := .85 + float64(sec) * .018</code></div>
+        <div class="formula-lines"><code>interval := max(10, 34 - sec/2)</code><span>and</span><code>speed := .85 + float64(sec) * .018</code></div>
         <p>Both expressions are linear in time, so the difficulty ramp feels predictable — players can sense the pressure growing and mentally prepare for the boss. Non-linear curves (exponential or step-based) are alternatives worth experimenting with.</p>
       </div>
 
@@ -73,7 +73,7 @@
           <p>Each frame, compute elapsed seconds, derive interval and speed, then apply them. Regular mobs stop spawning at 35 seconds. The boss is slower (0.65) but has 60 HP and a proportional health bar drawn with two rects.</p>
         </div>
         <pre><code>sec := g.frame / 60
-interval := max(14, 42-sec/2)
+interval := max(10, 34-sec/2)
 <span>if</span> g.frame%interval == 0 &amp;&amp; sec &lt; 35 {
     g.mobs = append(g.mobs, mob{..., 1, 13, false})
 }
@@ -81,7 +81,7 @@ interval := max(14, 42-sec/2)
     g.bossSpawned = true
     g.mobs = append(g.mobs, mob{240, 95, 60, 38, true})
 }
-speed := .85 + float64(sec)*.018
+speed := 1.15 + float64(sec)*.028
 <span>for</span> i := range g.mobs {
     m := &amp;g.mobs[i]
     ms := speed
@@ -121,6 +121,10 @@ speed := .85 + float64(sec)*.018
         </form>
       </div>
     </section>
+
+
+
+
 
 
 

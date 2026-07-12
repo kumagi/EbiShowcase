@@ -1,8 +1,19 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Bomb Chain Reactions | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/bomb-maze/chain-explosion/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Bomb Maze Action</a><span>STEP 04 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">Pass explosion events to the next bomb</p><h1>Bomb Chain Reactions</h1><p>When a blast reaches another bomb, trigger it without waiting for its timer. Add triggered bombs to an event queue and use a processed mark so no bomb explodes twice.</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section>
 <section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Chain three bombs and clear five relays</h2><p>Move with arrows/WASD and place bombs with Space or X. Click or tap the bottom controls. Line up bombs within three open cells of each other, then escape before the first fuse ends.</p></div><div class="game-frame"><iframe src="../../../../play/chain-explosion/" title="Play Bomb Chain Reactions"></iframe></div></section>
 <section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Build a line of bombs to trigger next</h2><p>If A's blast reaches B and B's reaches C, new work keeps appearing. A queue stores that work and handles bombs in the order they were found.</p><div class="concept-row"><article><b>01</b><h3>Queue the starting event</h3><p>When a timer reaches zero, append that bomb's index to the list waiting for processing.</p></article><article><b>02</b><h3>Append bombs in the blast</h3><p>Detonate the front bomb. Any waiting bomb found in its blast cells joins the back of the queue.</p></article><article><b>03</b><h3>Skip processed bombs</h3><p>Two blasts may find the same bomb. A <code>processed</code> mark makes the second event harmless.</p></article></div></section>
-<section class="motion-lab" data-lab="turn"><div><p class="eyebrow">EVENT QUEUE LAB</p><h2>Watch A → B → C propagate</h2><p>Process one front event and append each newly discovered bomb to the back.</p></div><div class="lab-stage" data-states="Start with queue=[A] processed={},Explode A and mark it processed,A's blast finds B so queue=[B],Explode B and append C,Explode C and finish when the queue is empty"><div class="lab-entities" data-count="4"></div><p class="lab-readout" data-lab-state aria-live="polite">Start with queue=[A] processed={}</p><button type="button" data-lab-step>Next stage</button><button type="button" data-lab-reset>Reset</button></div></section>
-<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Propagate until the queue is empty</h2><p>The game queues bomb indexes. A fresh <code>processed</code> map records which bombs have already triggered during this one reaction.</p></div><pre><code>queue := append([]int(nil), starts...)
+<section class="motion-lab" data-lab="chain-bomb" data-chained="chained!" data-cleared="cleared" data-done="done" aria-labelledby="lab-title-chain-explosion">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / CHAIN</p>
+<h3 id="lab-title-chain-explosion">Let blasts ignite neighbor bombs</h3>
+<p>Ignite turns the first bomb into BLAST and spreads to neighbors. Clear removes flames. Queue or recursion both work.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-ignite>Ignite</button><button type="button" class="lab-button" data-lab-clear>Clear flames</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset layout</button></div>
+<p class="lab-hint">Resolve the whole chain in one frame, or stretch it across frames.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>flames</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+</section><div class="formula"><p class="eyebrow">BLAST TOUCHES BOMB</p><div class="formula-lines"><code>if flame hits bomb</code><span>then</span><code>arm that bomb too</code></div><p>A blasting flag prevents double-trigger bugs.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Propagate until the queue is empty</h2><p>The game queues bomb indexes. A fresh <code>processed</code> map records which bombs have already triggered during this one reaction.</p></div><pre><code>queue := append([]int(nil), starts...)
 processed := map[int]bool{}
 for len(queue) &gt; 0 {
     index := queue[0]
@@ -42,4 +53,8 @@ for len(queue) &gt; 0 {
         </form>
       </div>
     </section>
+
+
+
+
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

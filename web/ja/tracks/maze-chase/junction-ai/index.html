@@ -1,8 +1,19 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>交差点AI | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/maze-chase/junction-ai/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 迷路追跡ゲーム</a><span>STEP 05 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">敵に「性格」を持たせる</p><h1>交差点AI</h1><p>敵は交差点で進める方向を調べ、引き返す方向を外し、ターゲットまでの距離が短い道を選びます。ねらう場所を変えるだけで追い方も変わります。</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section>
 <section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>2つの予測をかわしてチップを8個集めよう</h2><p>矢印／WASD、クリック、タッチで移動します。赤いHUNTERは今いるマス、水色のAMBUSHERは進行方向の3マス先をねらいます。色の輪が敵のターゲット、黄色い線が選んだ方向です。</p></div><div class="game-frame"><iframe src="../../../../play/junction-ai/" title="交差点AIを遊ぶ"></iframe></div></section>
 <section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>追いかけ方を「候補・評価・性格」に分ける</h2><p>敵をプレイヤーへ直接動かすのではなく、まず通路というルールを守れる候補だけを集めます。それぞれの次のマスからターゲットまでのマンハッタン距離を計算し、いちばん小さい方向を選びます。</p><div class="concept-row"><article><b>01</b><h3>合法方向を列挙</h3><p>上下左右の次のマスを調べ、壁ではない方向だけを候補にします。</p></article><article><b>02</b><h3>逆走を除く</h3><p>候補が複数あるときは来た道を外します。ただし行き止まりでは引き返せるようにします。</p></article><article><b>03</b><h3>性格の目標を評価</h3><p>HUNTERは現在地、AMBUSHERは3マス先を目標にし、距離が最小の候補を選びます。</p></article></div></section>
-<section class="motion-lab" data-lab="turn"><div><p class="eyebrow">JUNCTION LAB</p><h2>方向決定を1段ずつ見る</h2><p>交差点に着いた敵が、どの順番で1つの方向を決めるか進めてみよう。</p></div><div class="lab-stage" data-states="合法方向を列挙,来た道を候補から除外,性格データから目標を計算,各候補の距離を評価,最小距離の方向へ進む"><div class="lab-entities" data-count="4"></div><p class="lab-readout" data-lab-state aria-live="polite">合法方向を列挙</p><button type="button" data-lab-step>次の段階へ</button><button type="button" data-lab-reset>最初から</button></div></section>
-<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>同じ選択関数へ性格ごとのtargetを渡す</h2><p><code>ahead</code>が0なら今いるマス、3なら進行方向の3マス先です。選択の仕組みを共通にし、データだけで敵の個性を作れます。</p></div><pre><code>target := player
+<section class="motion-lab" data-lab="junction-pick" data-chase="右を選んだ" data-scatter="上を選んだ" aria-labelledby="lab-title-junction-ai">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / JUNCTION</p>
+<h3 id="lab-title-junction-ai">交差点で1本だけ選ぶ</h3>
+<p>通路の交点では、入れる方向のうち目標に一番近いものを1つ選びます。Uターン禁止などのルールもここで足せます。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-chase>目標を右に</button><button type="button" class="lab-button" data-lab-scatter>目標を上に</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<p class="lab-hint">候補を列挙 → スコア付け → 最大を採用、が基本形です。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>採用</span><strong data-lab-choice>chase:right</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</section><div class="formula"><p class="eyebrow">SCORE EDGES</p><div class="formula-lines"><code>candidates = open neighbors</code><span>つぎに</span><code>pick min distance to target</code></div><p>ランダムより、距離スコアの方が読みやすい敵になります。</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>同じ選択関数へ性格ごとのtargetを渡す</h2><p><code>ahead</code>が0なら今いるマス、3なら進行方向の3マス先です。選択の仕組みを共通にし、データだけで敵の個性を作れます。</p></div><pre><code>target := player
 if enemy.personality.ahead &gt; 0 {
     target = player.add(playerDirection.mul(3))
 }
@@ -42,6 +53,10 @@ for _, dir := range legal[1:] {
         </form>
       </div>
     </section>
+
+
+
+
 
 
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

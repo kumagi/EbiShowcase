@@ -1,8 +1,19 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>曲がり角の先行入力 | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a class="lang" href="../../../../en/tracks/maze-chase/buffered-turn/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 迷路追跡ゲーム</a><span>STEP 02 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">次の曲がり角を予約する</p><h1>曲がり角の先行入力</h1><p>曲がる少し前に方向を押しても、ゲームがその入力を覚えていれば、タイルの中心で気持ちよく曲がれます。</p><div class="lesson-meta"><span>★★☆☆☆</span><strong>PLAYABLE</strong></div></div></section>
 <section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>光るゲートを10個通ろう</h2><p>矢印／WASD、クリック、タッチで次の方向を早めに入力します。CURRENTとQUEUEDの表示を比べてください。</p></div><div class="game-frame"><iframe src="../../../../play/buffered-turn/" title="曲がり角の先行入力を遊ぶ"></iframe></div></section>
 <section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>「いま進む向き」と「次に進みたい向き」を分ける</h2><p>入力ですぐ向きを変えると、壁にめり込んだり中心からずれたりします。そこで<code>current</code>と<code>queued</code>を別々に持ちます。</p><div class="concept-row"><article><b>01</b><h3>押した方向を保存</h3><p>キーやタッチを受けたら、まず<code>queued</code>だけを書き換えます。</p></article><article><b>02</b><h3>中心で予約を試す</h3><p>次のタイルが通路なら<code>queued</code>を<code>current</code>へ移します。</p></article><article><b>03</b><h3>だめなら直進</h3><p>予約方向が壁なら消さずに待ち、今の方向へ進める間は直進します。</p></article></div></section>
-<section class="motion-lab" data-lab="turn"><div><p class="eyebrow">INPUT BUFFER LAB</p><h2>入力から曲がるまでを分ける</h2><p>押す、覚える、中心で判定、曲がる、の順番を1段ずつ確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">早めに方向を押す</p><button type="button" class="lab-action">次の段階へ</button></div></section>
-<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>中心に着いた瞬間だけ向きを決める</h2><p><code>Update</code>は毎フレーム入力を保存できますが、方向変更はタイル到着時だけにします。</p></div><pre><code>if dir, ok := directionInput(); ok {
+<section class="motion-lab" data-lab="input-buffer" data-queued="予約した" data-turned="中心で曲がった" data-same="直進" data-moving="移動中" aria-labelledby="lab-title-buffered-turn">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / CURRENT vs QUEUED</p>
+<h3 id="lab-title-buffered-turn">押した向きを予約して、中心で反映</h3>
+<p>方向ボタンは queued だけを変えます。「移動中」にしてから「中心到着」で、予約が current に入ります。壁判定はこの瞬間だけです。</p>
+<div class="lab-controls"><button type="button" class="lab-button" data-lab-dir="N">↑</button><button type="button" class="lab-button" data-lab-dir="W">←</button><button type="button" class="lab-button lab-button-primary" data-lab-dir="E">→</button><button type="button" class="lab-button" data-lab-dir="S">↓</button><button type="button" class="lab-button" data-lab-move>マス間を進む</button><button type="button" class="lab-button" data-lab-center>中心に到着</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
+<p class="lab-hint">すぐに current を書き換えると、マスの途中で壁にめり込みやすくなります。</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>current</span><strong data-lab-current>E</strong></div><div><span>queued</span><strong data-lab-queued>E</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
+</div>
+</section><div class="formula"><p class="eyebrow">THE BUFFER RULE</p><div class="formula-lines"><code>input → queued</code><span>つぎに</span><code>at center: current = queued if passable</code></div><p>入力の瞬間と向きの確定を分けます。</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>中心に着いた瞬間だけ向きを決める</h2><p><code>Update</code>は毎フレーム入力を保存できますが、方向変更はタイル到着時だけにします。</p></div><pre><code>if dir, ok := directionInput(); ok {
     queued = dir
 }
 if reachedTileCenter {
@@ -37,6 +48,10 @@ if reachedTileCenter {
         </form>
       </div>
     </section>
+
+
+
+
 
 
 

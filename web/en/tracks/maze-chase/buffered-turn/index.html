@@ -1,8 +1,19 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Buffered Corner Turns | Ebi Showcase</title><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/maze-chase/buffered-turn/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 02 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">QUEUE THE NEXT CORNER</p><h1>Buffered Corner Turns</h1><p>When the game remembers a direction pressed slightly early, the runner can take it cleanly at the next tile center.</p><div class="lesson-meta"><span>★★☆☆☆</span><strong>PLAYABLE</strong></div></div></section>
 <section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Cross ten glowing gates</h2><p>Queue the next direction early with arrows/WASD, click, or touch. Compare the CURRENT and QUEUED readouts.</p></div><div class="game-frame"><iframe src="../../../../play/buffered-turn/" title="Play Buffered Corner Turns"></iframe></div></section>
 <section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Separate “moving now” from “want to move next”</h2><p>Turning immediately on input can push the runner into a wall or off a tile center. Keep <code>current</code> and <code>queued</code> as separate state.</p><div class="concept-row"><article><b>01</b><h3>Store the press</h3><p>A key or touch changes only <code>queued</code>.</p></article><article><b>02</b><h3>Try it at a center</h3><p>If the queued neighboring tile is open, copy it into <code>current</code>.</p></article><article><b>03</b><h3>Continue if blocked</h3><p>Keep the request waiting and continue straight while the current direction remains open.</p></article></div></section>
-<section class="motion-lab" data-lab="turn"><div><p class="eyebrow">INPUT BUFFER LAB</p><h2>Split a turn into steps</h2><p>Step through press, remember, center check, and turn.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">Press the direction early</p><button type="button" class="lab-action">Next phase</button></div></section>
-<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Choose direction only at tile centers</h2><p><code>Update</code> may remember input every frame, but it changes direction only when a tile is reached.</p></div><pre><code>if dir, ok := directionInput(); ok {
+<section class="motion-lab" data-lab="input-buffer" data-queued="queued" data-turned="turned at center" data-same="kept going" data-moving="moving" aria-labelledby="lab-title-buffered-turn">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / CURRENT vs QUEUED</p>
+<h3 id="lab-title-buffered-turn">Queue a facing, commit at center</h3>
+<p>Direction buttons only write queued. Move between tiles, then Arrive at center to copy queued into current if the next tile is open.</p>
+<div class="lab-controls"><button type="button" class="lab-button" data-lab-dir="N">↑</button><button type="button" class="lab-button" data-lab-dir="W">←</button><button type="button" class="lab-button lab-button-primary" data-lab-dir="E">→</button><button type="button" class="lab-button" data-lab-dir="S">↓</button><button type="button" class="lab-button" data-lab-move>Move between</button><button type="button" class="lab-button" data-lab-center>Arrive center</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<p class="lab-hint">Writing current immediately makes mid-tile wall clips common.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>current</span><strong data-lab-current>E</strong></div><div><span>queued</span><strong data-lab-queued>E</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+</section><div class="formula"><p class="eyebrow">THE BUFFER RULE</p><div class="formula-lines"><code>input → queued</code><span>then</span><code>at center: current = queued if passable</code></div><p>Split the press moment from the facing commit.</p></div><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Choose direction only at tile centers</h2><p><code>Update</code> may remember input every frame, but it changes direction only when a tile is reached.</p></div><pre><code>if dir, ok := directionInput(); ok {
     queued = dir
 }
 if reachedTileCenter {
@@ -37,6 +48,10 @@ if reachedTileCenter {
         </form>
       </div>
     </section>
+
+
+
+
 
 
 
