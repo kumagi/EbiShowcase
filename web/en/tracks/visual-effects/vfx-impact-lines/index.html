@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Expand circles from a tapped point and flash short radial lines. With no image assets, the center already reads like a special-move impact.">
+  <title>Shockwave Rings & Focus Lines | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-impact-lines/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Shockwave Rings &amp; Focus Lines | Ebi Showcase">
+    <meta property="og:description" content="Expand circles from a tapped point and flash short radial lines. With no image assets, the center already reads like a special-move impact.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-impact-lines/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-impact-lines.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Shockwave Rings &amp; Focus Lines">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Shockwave Rings &amp; Focus Lines | Ebi Showcase">
+    <meta name="twitter:description" content="Expand circles from a tapped point and flash short radial lines. With no image assets, the center already reads like a special-move impact.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-impact-lines.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Shockwave Rings &amp; Focus Lines">
+    <!-- ogp:end -->
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Lab home</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/visual-effects/vfx-impact-lines/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>BASIC 16</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
+      <h1>Shockwave Rings & Focus Lines</h1>
+      <p>Expand circles from a tapped point and flash short radial lines. With no image assets, the center already reads like a special-move impact.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>StrokeCircle + StrokeLine</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Trigger the impact</h2></div>
+        <p>Replay the ring and change the number of focus lines.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 16</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Shockwave Rings & Focus Lines" src="../../../../play/vfx-impact-lines/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / OPTICAL TRICK / IMPACT</p>
+        <h2>Punch the screen<br>with circles and lines</h2>
+        <p class="lesson-lead">Grow ring radius with age and fade it out. Leave a gap near the center of each focus line so the eye is pulled toward the collision. A short lifetime feels sharp.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Expand</h3>
+          <p>Multiply age by speed for radius.</p>
+          <code>radius := age*speed</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Focus</h3>
+          <p>Draw many angles from one center.</p>
+          <code>angle := i*2π/n</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Fade</h3>
+          <p>Lose alpha toward end of life.</p>
+          <code>alpha := 1-age/life</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="impact" aria-labelledby="lab-title-vfx-impact-lines">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / IMPACT</p>
+          <h3 id="lab-title-vfx-impact-lines">Trigger the impact</h3>
+          <p>Replay the ring and change the number of focus lines.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-impact>Impact!</button><button type="button" class="lab-button" data-lab-rays-down>Rays −</button><button type="button" class="lab-button" data-lab-rays-up>Rays +</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-optical lab-impact-demo" data-lab-board><div class="lab-impact-core"></div><div class="lab-impact-ring"></div><div class="lab-impact-rays" data-lab-rays></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>rays</span><strong data-lab-rays-value>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE WASM</p>
+          <h3>Share one center</h3>
+          <p>Circles and lines using one coordinate merge into one strong hit.</p>
+        </div>
+        <pre><code>radius := age * speed
+vector.StrokeCircle(screen, x, y, radius, width, color, true)
+for i := 0; i &lt; rays; i++ {
+    angle := float64(i) * 2 * math.Pi / float64(rays)
+    drawFocusLine(screen, x, y, angle, alpha)
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY A RING</p>
+          <h3>Force appears to spread</h3>
+          <p>Growing radius reads as transmitted impact.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY LINES</p>
+          <h3>The eye finds the center</h3>
+          <p>Radial lines point at the important spot.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>Freeze for two frames</h3>
+          <p>Pair it with hit stop for extra weight.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-outline/">← STEP 15<strong>Outline with Repeated Draws</strong></a>
+      <a href="../vfx-faux-bloom/">STEP 17 →<strong>Faux Bloom from Larger Copies</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/vfx-impact-lines/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

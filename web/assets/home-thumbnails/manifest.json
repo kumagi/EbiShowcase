@@ -176,6 +176,34 @@
   },
   {
     "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-squash/",
+    "route": "tracks/visual-effects/vfx-squash",
+    "slug": "vfx-squash",
+    "file": "tracks--visual-effects--vfx-squash.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-outline/",
+    "route": "tracks/visual-effects/vfx-outline",
+    "slug": "vfx-outline",
+    "file": "tracks--visual-effects--vfx-outline.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-impact-lines/",
+    "route": "tracks/visual-effects/vfx-impact-lines",
+    "slug": "vfx-impact-lines",
+    "file": "tracks--visual-effects--vfx-impact-lines.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-faux-bloom/",
+    "route": "tracks/visual-effects/vfx-faux-bloom",
+    "slug": "vfx-faux-bloom",
+    "file": "tracks--visual-effects--vfx-faux-bloom.webp"
+  },
+  {
+    "kind": "vfx",
     "href": "tracks/visual-effects/vfx-fx-tap/",
     "route": "tracks/visual-effects/vfx-fx-tap",
     "slug": "vfx-fx-tap",

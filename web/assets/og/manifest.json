@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-07-13T10:56:36.763Z",
+  "generatedAt": "2026-07-13T14:35:42.164Z",
   "pages": [
     {
       "file": "web/en/games/breakout/index.html",
@@ -2463,6 +2463,18 @@
       "image": "assets/og/en--tracks--visual-effects--vfx-alpha.png"
     },
     {
+      "file": "web/en/tracks/visual-effects/vfx-faux-bloom/index.html",
+      "path": "en/tracks/visual-effects/vfx-faux-bloom",
+      "key": "en--tracks--visual-effects--vfx-faux-bloom",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Faux Bloom from Larger Copies | Ebi Showcase",
+      "h1": "Faux Bloom from Larger Copies",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Draw the same light larger and fainter behind itself. It is not a true blur, but the eye reads a bright center spilling into bloom—a cheap s",
+      "image": "assets/og/en--tracks--visual-effects--vfx-faux-bloom.png"
+    },
+    {
       "file": "web/en/tracks/visual-effects/vfx-fx-breakout/index.html",
       "path": "en/tracks/visual-effects/vfx-fx-breakout",
       "key": "en--tracks--visual-effects--vfx-fx-breakout",
@@ -2607,6 +2619,18 @@
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-tap.png"
     },
     {
+      "file": "web/en/tracks/visual-effects/vfx-impact-lines/index.html",
+      "path": "en/tracks/visual-effects/vfx-impact-lines",
+      "key": "en--tracks--visual-effects--vfx-impact-lines",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Shockwave Rings & Focus Lines | Ebi Showcase",
+      "h1": "Shockwave Rings & Focus Lines",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Expand circles from a tapped point and flash short radial lines. With no image assets, the center already reads like a special-move impact.",
+      "image": "assets/og/en--tracks--visual-effects--vfx-impact-lines.png"
+    },
+    {
       "file": "web/en/tracks/visual-effects/vfx-magic-dark/index.html",
       "path": "en/tracks/visual-effects/vfx-magic-dark",
       "key": "en--tracks--visual-effects--vfx-magic-dark",
@@ -2667,6 +2691,18 @@
       "image": "assets/og/en--tracks--visual-effects--vfx-magic-thunder.png"
     },
     {
+      "file": "web/en/tracks/visual-effects/vfx-outline/index.html",
+      "path": "en/tracks/visual-effects/vfx-outline",
+      "key": "en--tracks--visual-effects--vfx-outline",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Outline with Repeated Draws | Ebi Showcase",
+      "h1": "Outline with Repeated Draws",
+      "eyebrow": "★★☆☆☆ / PLAYABLE",
+      "description": "Tint the same sprite, draw offset copies first, then cover the center with the original. The character stays readable even on a bright backg",
+      "image": "assets/og/en--tracks--visual-effects--vfx-outline.png"
+    },
+    {
       "file": "web/en/tracks/visual-effects/vfx-particles/index.html",
       "path": "en/tracks/visual-effects/vfx-particles",
       "key": "en--tracks--visual-effects--vfx-particles",
@@ -2689,6 +2725,18 @@
       "eyebrow": "★★★★★ / PLAYABLE",
       "description": "The grammar finale. Combine particles, color, additive, transparency, and lines as Ebi Tenjiroh casts three spells. Almost no new commands—a",
       "image": "assets/og/en--tracks--visual-effects--vfx-spells.png"
+    },
+    {
+      "file": "web/en/tracks/visual-effects/vfx-squash/index.html",
+      "path": "en/tracks/visual-effects/vfx-squash",
+      "key": "en--tracks--visual-effects--vfx-squash",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Squash & Stretch | Ebi Showcase",
+      "h1": "Squash & Stretch",
+      "eyebrow": "★★☆☆☆ / PLAYABLE",
+      "description": "Without drawing another frame, squash Ebi Tenjiroh before a jump and stretch on takeoff. Anchor the feet instead of the center so the body f",
+      "image": "assets/og/en--tracks--visual-effects--vfx-squash.png"
     },
     {
       "file": "web/en/tracks/visual-effects/vfx-stamp/index.html",
@@ -5283,6 +5331,18 @@
       "image": "assets/og/ja--tracks--visual-effects--vfx-alpha.png"
     },
     {
+      "file": "web/ja/tracks/visual-effects/vfx-faux-bloom/index.html",
+      "path": "ja/tracks/visual-effects/vfx-faux-bloom",
+      "key": "ja--tracks--visual-effects--vfx-faux-bloom",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "大きな薄いコピーで疑似ブルーム | Ebi Showcase",
+      "h1": "大きな薄いコピーで疑似ブルーム",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "光の絵を少しずつ大きく、薄くして後ろへ重ねます。正確なぼかしではありませんが、中心から光があふれるブルームに見えます。シェーダーへ進む前に使える軽い方法です。",
+      "image": "assets/og/ja--tracks--visual-effects--vfx-faux-bloom.png"
+    },
+    {
       "file": "web/ja/tracks/visual-effects/vfx-fx-breakout/index.html",
       "path": "ja/tracks/visual-effects/vfx-fx-breakout",
       "key": "ja--tracks--visual-effects--vfx-fx-breakout",
@@ -5427,6 +5487,18 @@
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-tap.png"
     },
     {
+      "file": "web/ja/tracks/visual-effects/vfx-impact-lines/index.html",
+      "path": "ja/tracks/visual-effects/vfx-impact-lines",
+      "key": "ja--tracks--visual-effects--vfx-impact-lines",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "衝撃波リングと集中線 | Ebi Showcase",
+      "h1": "衝撃波リングと集中線",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "タップした点から円を広げ、画面の外へ向かう短い線を一瞬だけ描きます。画像が1枚もなくても、中心へ力が集まった必殺技に見えます。",
+      "image": "assets/og/ja--tracks--visual-effects--vfx-impact-lines.png"
+    },
+    {
       "file": "web/ja/tracks/visual-effects/vfx-magic-dark/index.html",
       "path": "ja/tracks/visual-effects/vfx-magic-dark",
       "key": "ja--tracks--visual-effects--vfx-magic-dark",
@@ -5487,6 +5559,18 @@
       "image": "assets/og/ja--tracks--visual-effects--vfx-magic-thunder.png"
     },
     {
+      "file": "web/ja/tracks/visual-effects/vfx-outline/index.html",
+      "path": "ja/tracks/visual-effects/vfx-outline",
+      "key": "ja--tracks--visual-effects--vfx-outline",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "多重描画で輪郭を作る | Ebi Showcase",
+      "h1": "多重描画で輪郭を作る",
+      "eyebrow": "★★☆☆☆ / PLAYABLE",
+      "description": "同じ画像を黒く染め、少しずつ方向を変えて先に描きます。最後に本体を重ねるだけで、明るい背景でもキャラクターがくっきり読めます。",
+      "image": "assets/og/ja--tracks--visual-effects--vfx-outline.png"
+    },
+    {
       "file": "web/ja/tracks/visual-effects/vfx-particles/index.html",
       "path": "ja/tracks/visual-effects/vfx-particles",
       "key": "ja--tracks--visual-effects--vfx-particles",
@@ -5509,6 +5593,18 @@
       "eyebrow": "★★★★★ / PLAYABLE",
       "description": "最終章。粒・色・加算・半透明・線を組み合わせ、海老・天次郎が3つの魔法を放ちます。新しい命令はほとんど無し。ここまでの部品の“混ぜ方”がエフェクトの正体です。",
       "image": "assets/og/ja--tracks--visual-effects--vfx-spells.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-effects/vfx-squash/index.html",
+      "path": "ja/tracks/visual-effects/vfx-squash",
+      "key": "ja--tracks--visual-effects--vfx-squash",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "スクワッシュ＆ストレッチ | Ebi Showcase",
+      "h1": "スクワッシュ＆ストレッチ",
+      "eyebrow": "★★☆☆☆ / PLAYABLE",
+      "description": "新しいコマを描かなくても、跳ぶ前に横へ潰し、飛ぶ瞬間に縦へ伸ばすだけで、海老・天次郎の体が柔らかく見えます。大事なのは中心ではなく足元を動かさないことです。",
+      "image": "assets/og/ja--tracks--visual-effects--vfx-squash.png"
     },
     {
       "file": "web/ja/tracks/visual-effects/vfx-stamp/index.html",

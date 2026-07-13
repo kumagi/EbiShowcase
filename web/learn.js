@@ -140,6 +140,72 @@ document.querySelectorAll(".motion-lab[data-lab='hit-test']").forEach((lab) => {
   });
 });
 
+/* Optical-trick labs used by VFX BASIC 14–17. */
+document.querySelectorAll(".motion-lab[data-lab='squash']").forEach((lab) => {
+  const actor = lab.querySelector("[data-lab-actor]");
+  const xOut = lab.querySelector("[data-lab-xscale]");
+  const yOut = lab.querySelector("[data-lab-yscale]");
+  const setShape = (name) => {
+    const values = name === "squash" ? [1.28, .72] : name === "stretch" ? [.72, 1.28] : [1, 1];
+    actor.style.transform = `translateX(-50%) scale(${values[0]}, ${values[1]})`;
+    setText(xOut, values[0].toFixed(2)); setText(yOut, values[1].toFixed(2));
+  };
+  lab.querySelectorAll("[data-lab-shape]").forEach((b) => b.addEventListener("click", () => setShape(b.dataset.labShape)));
+  lab.querySelector("[data-lab-reset]")?.addEventListener("click", () => setShape("neutral"));
+  setShape("neutral");
+});
+
+document.querySelectorAll(".motion-lab[data-lab='outline']").forEach((lab) => {
+  const actor = lab.querySelector("[data-lab-outline]");
+  const widthOut = lab.querySelector("[data-lab-width]");
+  const modeOut = lab.querySelector("[data-lab-mode]");
+  let width = 4, light = false;
+  const render = () => {
+    const c = light ? "#fff" : "#091126";
+    actor.style.webkitTextStroke = `${width}px ${c}`;
+    setText(widthOut, `${width}px`); setText(modeOut, light ? "light" : "dark");
+  };
+  lab.querySelector("[data-lab-outline-down]")?.addEventListener("click", () => { width = Math.max(1, width - 1); render(); });
+  lab.querySelector("[data-lab-outline-up]")?.addEventListener("click", () => { width = Math.min(10, width + 1); render(); });
+  lab.querySelector("[data-lab-outline-color]")?.addEventListener("click", () => { light = !light; render(); });
+  lab.querySelector("[data-lab-reset]")?.addEventListener("click", () => { width = 4; light = false; render(); });
+  render();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='impact']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const raysNode = lab.querySelector("[data-lab-rays]");
+  const out = lab.querySelector("[data-lab-rays-value]");
+  let rays = 16;
+  const render = () => {
+    raysNode.innerHTML = Array.from({length: rays}, (_, i) => `<i style="transform:rotate(${i * 360 / rays}deg)"></i>`).join("");
+    setText(out, String(rays));
+  };
+  const burst = () => { board.classList.remove("is-burst"); void board.offsetWidth; board.classList.add("is-burst"); };
+  lab.querySelector("[data-lab-impact]")?.addEventListener("click", burst);
+  lab.querySelector("[data-lab-rays-down]")?.addEventListener("click", () => { rays = Math.max(6, rays - 2); render(); });
+  lab.querySelector("[data-lab-rays-up]")?.addEventListener("click", () => { rays = Math.min(32, rays + 2); render(); });
+  lab.querySelector("[data-lab-reset]")?.addEventListener("click", () => { rays = 16; render(); burst(); });
+  render(); burst();
+});
+
+document.querySelectorAll(".motion-lab[data-lab='bloom']").forEach((lab) => {
+  const orb = lab.querySelector("[data-lab-bloom]");
+  const copiesOut = lab.querySelector("[data-lab-copies]");
+  const modeOut = lab.querySelector("[data-lab-mode]");
+  let copies = 5, on = true;
+  const render = () => {
+    const spread = 18 + copies * 8;
+    orb.style.boxShadow = on ? `0 0 ${spread}px ${Math.round(spread*.45)}px rgba(73,210,255,.48),0 0 ${spread*2}px ${Math.round(spread*.2)}px rgba(126,92,255,.28)` : "none";
+    setText(copiesOut, String(copies)); setText(modeOut, on ? "ON" : "OFF");
+  };
+  lab.querySelector("[data-lab-bloom-down]")?.addEventListener("click", () => { copies = Math.max(1, copies - 1); render(); });
+  lab.querySelector("[data-lab-bloom-up]")?.addEventListener("click", () => { copies = Math.min(9, copies + 1); render(); });
+  lab.querySelector("[data-lab-bloom-toggle]")?.addEventListener("click", () => { on = !on; render(); });
+  lab.querySelector("[data-lab-reset]")?.addEventListener("click", () => { copies = 5; on = true; render(); });
+  render();
+});
+
 document.querySelectorAll(".motion-lab[data-lab='meter']").forEach((lab) => {
   const marker = lab.querySelector("[data-lab-marker]");
   const xOut = lab.querySelector("[data-lab-x]");

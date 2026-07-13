@@ -15,6 +15,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { advancedLessons } from "./vfx-advanced-lessons.mjs";
 import { advancedLessonsPart2 } from "./vfx-advanced-lessons-part2.mjs";
+import { illusionLessons } from "./vfx-illusion-lessons.mjs";
 
 const root = new URL("..", import.meta.url).pathname;
 const track = "visual-effects";
@@ -974,7 +975,7 @@ DrawImage(DarkPNG) // core normal, fringe additive`,
   },
 ].map((l) => ({ ...l, tier: l.tier || "basic" }));
 
-const lessons = [...basicLessons, ...advancedLessons, ...advancedLessonsPart2];
+const lessons = [...basicLessons, ...illusionLessons, ...advancedLessons, ...advancedLessonsPart2];
 
 // --- lab markup builders ----------------------------------------------------
 
@@ -1055,6 +1056,30 @@ function labParts(kind, lang) {
           btn('data-lab-spell="thunder"', lang === "ja" ? "雷" : "Thunder") + R,
         board: `<div class="lab-board lab-spell-stage" data-lab-board><p class="lab-spell-hint">${lang === "ja" ? "ボタンで魔法を唱えてみて" : "Cast a spell with the buttons"}</p></div>`,
         values: val("data-lab-done", lang === "ja" ? "習得" : "learned"),
+      };
+    case "squash":
+      return {
+        controls: btn('data-lab-shape="squash"', lang === "ja" ? "潰す" : "Squash") + btn('data-lab-shape="neutral"', lang === "ja" ? "普通" : "Neutral") + btn('data-lab-shape="stretch"', lang === "ja" ? "伸ばす" : "Stretch", "lab-button-primary") + R,
+        board: `<div class="lab-board lab-optical" data-lab-board><div class="lab-squash-floor"></div><div class="lab-squash-actor" data-lab-actor>EBI</div></div>`,
+        values: val("data-lab-xscale", "scaleX") + val("data-lab-yscale", "scaleY"),
+      };
+    case "outline":
+      return {
+        controls: btn("data-lab-outline-down", lang === "ja" ? "細く" : "Thinner") + btn("data-lab-outline-up", lang === "ja" ? "太く" : "Thicker", "lab-button-primary") + btn("data-lab-outline-color", lang === "ja" ? "黒 / 白" : "Dark / light") + R,
+        board: `<div class="lab-board lab-optical" data-lab-board><div class="lab-outline-demo" data-lab-outline>EBI</div></div>`,
+        values: val("data-lab-width", lang === "ja" ? "太さ" : "width") + val("data-lab-mode", lang === "ja" ? "色" : "color"),
+      };
+    case "impact":
+      return {
+        controls: btn("data-lab-impact", lang === "ja" ? "衝撃！" : "Impact!", "lab-button-primary") + btn("data-lab-rays-down", lang === "ja" ? "線 −" : "Rays −") + btn("data-lab-rays-up", lang === "ja" ? "線 +" : "Rays +") + R,
+        board: `<div class="lab-board lab-optical lab-impact-demo" data-lab-board><div class="lab-impact-core"></div><div class="lab-impact-ring"></div><div class="lab-impact-rays" data-lab-rays></div></div>`,
+        values: val("data-lab-rays-value", lang === "ja" ? "集中線" : "rays"),
+      };
+    case "bloom":
+      return {
+        controls: btn("data-lab-bloom-down", lang === "ja" ? "光 −" : "Glow −") + btn("data-lab-bloom-up", lang === "ja" ? "光 +" : "Glow +", "lab-button-primary") + btn("data-lab-bloom-toggle", lang === "ja" ? "ON / OFF" : "On / off") + R,
+        board: `<div class="lab-board lab-optical lab-bloom-demo" data-lab-board><div class="lab-bloom-orb" data-lab-bloom></div></div>`,
+        values: val("data-lab-copies", lang === "ja" ? "コピー" : "copies") + val("data-lab-mode", "bloom"),
       };
     case "magic-fire":
     case "magic-ice":
