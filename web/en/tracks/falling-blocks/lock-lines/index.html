@@ -49,6 +49,10 @@
 <strong>Board merging and row compaction</strong>
 </div>
 </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>lockPiece(); copy(board[1:y+1],board[0:y])</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Complete four rows with two-cell pieces.</h2></div><p>Move with ← → or the screen buttons. Drop with ↓ or Space. Filling each two-cell gap clears its row.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Lock and Clear Lines" src="../../../../play/lock-lines/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / LOCK AND COMPACT</p><h2>Copy the moving piece into the board, then remove every full row.</h2><p class="lesson-lead">The instant a piece lands, its two cells are <strong>locked into board</strong>. Then inspect every row, skip full rows, and copy every row worth keeping downward.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Detect landing</h3><p>If the next cell is the floor or occupied, the piece cannot descend. Write it into the board array, not only onto the screen.</p><code>board[y][x] = true</code></article><article><span class="concept-number">2</span><h3>Find full rows</h3><p>Keep a row if even one cell is empty. Only a row with all eight cells set to true counts as cleared.</p><code>full = full &amp;&amp; board[y][x]</code></article><article><span class="concept-number">3</span><h3>Compact kept rows</h3><p>Use read for the inspected row and write for its destination. Skip full rows and copy only the others downward.</p><code>board[write] = board[read]</code></article></div>
@@ -200,9 +204,8 @@ for write &gt;= 0 { board[write] = emptyRow; write-- }</code></pre></div>
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>lockPiece(); copy(board[1:y+1],board[0:y])</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main><script src="../../../../learn.js"></script>
 </body>
 </html>

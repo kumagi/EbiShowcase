@@ -35,7 +35,11 @@
     <p>4個、5個、L字の形を見つけ、それぞれ違う範囲を消す特殊ピースへ変身させます。</p>
     <div class="overview-concept"><small>このステップで学ぶこと</small><strong>形の判定と範囲効果</strong></div>
   </section>
-  <section class="play lesson-play">
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>形の判定は揃った座標が直線・L字・T字か読むこと、範囲効果は特殊ピースが消すマス一覧。①形からkindを決め、②kindごとに消す座標集合を返します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>cells := affectedCells(piece.kind, x, y)</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
+<section class="play lesson-play">
     <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3種類の特殊ピースを作って発動しよう。</h2></div><p>上の形をタップするか1・2・3キーで選びます。下のボタンまたはSpaceで「作る→発動→次へ」。全部にOKが付けばクリアです。</p></div>
     <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="特殊ピース工房" src="../../../../play/special-pieces/" allow="autoplay; fullscreen"></iframe></div></div>
   </section>
@@ -179,9 +183,8 @@ for p := range effectCells(kind, at, board) {
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>形の判定は揃った座標が直線・L字・T字か読むこと、範囲効果は特殊ピースが消すマス一覧。①形からkindを決め、②kindごとに消す座標集合を返します。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>cells := affectedCells(piece.kind, x, y)</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main>
 <script src="../../../../learn.js"></script>
 </body>

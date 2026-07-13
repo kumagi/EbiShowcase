@@ -37,8 +37,11 @@
       <p>対戦相手は人間ではなく、シンプルな<strong>CPU（コンピューターが動かすパドル）</strong>です。ボールは「右へどれだけ・下へどれだけ」の2つの速さで動きます。壁やパドルに当たったら、その向きの符号だけひっくり返す。反射の基本です。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>反射とベクトル</strong></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ベクトルは横の速さvxと縦の速さvyを組にしたもの。符号反転は+を-へ変え、壁へ向かう速さを反対向きにします。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>vx = -vx</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 
-    <p class="curriculum-bridge">ゲームの骨格は <a href="../tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> です。ここでは反射・ブロック・体の伸びなど、新しい部品だけを足します。見た目も当たりも図形のままです。</p>
+<p class="curriculum-bridge">ゲームの骨格は <a href="../tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> です。ここでは反射・ブロック・体の伸びなど、新しい部品だけを足します。見た目も当たりも図形のままです。</p>
 
 
     <section class="play lesson-play" id="play">
@@ -411,9 +414,8 @@ func main() {
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ベクトルは横の速さvxと縦の速さvyを組にしたもの。符号反転は+を-へ変え、壁へ向かう速さを反対向きにします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>vx = -vx</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../learn.js"></script>

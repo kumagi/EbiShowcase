@@ -140,8 +140,10 @@ function processPage(html, lang) {
 let pages = 0;
 let labs = 0;
 const missing = new Set();
+const requested = new Set(process.argv.slice(2));
 
 for (const item of curriculum) {
+  if (requested.size && !requested.has(item.slug)) continue;
   for (const lang of ["ja", "en"]) {
     const path = join(root, "web", lang, item.route, "index.html");
     if (!existsSync(path)) continue;

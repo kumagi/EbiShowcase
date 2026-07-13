@@ -40,8 +40,11 @@
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>敵AIと状態遷移</strong></div>
       <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>patrol（巡回）は決まった道の見回り、chase（追跡）は天次郎を追う状態。165pxなどは気付く距離を遊びながら調整した値です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if distance &lt; 165 { state = Chase }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="play lesson-play" id="play">
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>全ての敵を倒して脱出せよ。</h2></div><p>WASD または矢印キーで移動、スペースまたは上タッチで剣攻撃。敵を全て倒すと出口が開きます。ライフが0になるとゲームオーバーです。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 11</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Dungeon" src="../../../play/dungeon/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -593,9 +596,8 @@ func main() {
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>patrol（巡回）は決まった道の見回り、chase（追跡）は天次郎を追う状態。165pxなどは気付く距離を遊びながら調整した値です。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>if distance &lt; 165 { state = Chase }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../learn.js"></script>

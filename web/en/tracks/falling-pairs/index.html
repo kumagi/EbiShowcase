@@ -18,10 +18,12 @@
     <meta name="twitter:image:alt" content="Falling-pair Chain Puzzle">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/falling-pairs/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/falling-pairs/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-falling-pairs"><span class="track-letter">M</span><div><p class="eyebrow">Build a Puyo Puyo-style chain puzzle</p><h1>Falling-pair Chain Puzzle</h1><p>Build a Puyo Puyo-style chain puzzle where connecting four or more same-color blobs clears them. Start with a falling pair, then add color groups, clearing, gravity, rescanning, and chain scoring.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/falling-pairs/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-falling-pairs"><span class="track-letter">M</span><div><p class="eyebrow">Build a Puyo Puyo-style chain puzzle</p><h1>Falling-pair Chain Puzzle</h1><p>Build a Puyo Puyo-style chain puzzle where connecting four or more same-color blobs clears them. Start with a falling pair, then add color groups, clearing, gravity, rescanning, and chain scoring.</p></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+
+<p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a playable world.</h2><p>Test data changes and algorithms in small games, reusing each step on the way to the final project.</p></div><a class="path-step" href="falling-pair/"><span>01</span><div><h3>Drop a Pair</h3><p>Drop a pivot piece and a child attached at a relative position.</p><strong>Pivot and child positions</strong></div><b>→</b></a>
 <a class="path-step" href="pair-rotation/"><span>02</span><div><h3>Rotate the Pair</h3><p>Rotate through four orientations and adjust near walls and occupied cells.</p><strong>Four orientations and wall correction</strong></div><b>→</b></a>
 <a class="path-step" href="color-groups/"><span>03</span><div><h3>Find Color Groups</h3><p>Paint connected same-color blobs (flood fill) using a function that calls itself (recursion) or a queue, marking visited cells so none are counted twice, then test whether a group has four or more.</p><strong>Painting connected color blobs (flood fill) and visited cells</strong></div><b>→</b></a>
@@ -55,6 +57,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

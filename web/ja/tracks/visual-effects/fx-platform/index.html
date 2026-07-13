@@ -44,6 +44,10 @@
       <p>wasOnGround から onGround へ切り替わった瞬間だけ着地演出。物理の grounded は play、塵は fx。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>接地イベントと塵</strong></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>接地は天次郎の足が床へ触れた状態、イベントは状態が『空中→接地』へ変わった一瞬。塵はその一瞬に生む粒です。Updateで接地印を比べ、Drawで天次郎と塵を重ねます。 Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if !wasGrounded &amp;&amp; grounded { fx.Dust(x,y) }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 
     <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
 
@@ -161,9 +165,6 @@ if landed { g.fx.Burst(g.x, g.y+h, 20, 2.5, dust, true) }</code></pre>
         </form>
       </div>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>接地は天次郎の足が床へ触れた状態、イベントは状態が『空中→接地』へ変わった一瞬。塵はその一瞬に生む粒です。Updateで接地印を比べ、Drawで天次郎と塵を重ねます。 Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>if !wasGrounded &amp;&amp; grounded { fx.Dust(x,y) }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>

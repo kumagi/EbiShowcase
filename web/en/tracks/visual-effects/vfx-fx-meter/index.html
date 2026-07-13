@@ -44,6 +44,10 @@
       <p>Stop in the zone: Perfect gets a big burst, Miss a gray puff. Map game states to FX strength.</p>
       <div class="overview-concept"><small>What you learn here</small><strong>FX per game state</strong></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>result := judge(math.Abs(marker-center))</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
 
@@ -86,21 +90,28 @@
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-meter">
+      <div class="motion-lab" data-lab="fx-meter-grade" aria-labelledby="lab-title-vfx-fx-meter">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / TWO BOXES</p>
-          <h3 id="lab-title-vfx-fx-meter">Grade ≠ sparks</h3>
-          <p>Judging logic and particle lifetime are different boxes.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Tick FX 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <p class="eyebrow">TRY IT / GRADE → FX</p>
+          <h3 id="lab-title-vfx-fx-meter">Turn a stopped position into FX strength</h3>
+          <p>Move the marker and press Judge. play turns distance from center into Perfect / OK / Miss, then passes only that grade to fx. The same position always produces the same score and burst.</p>
+          <div class="lab-controls"><label class="lab-meter-slider"><span>stop position</span><input type="range" min="0" max="100" value="50" data-lab-meter-position></label><button type="button" class="lab-button lab-button-primary" data-lab-meter-judge>Judge!</button><button type="button" class="lab-button" data-lab-meter-miss>Try Miss</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play (rules / score)</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx (sparks)</h4><ul data-lab-fx-list></ul></div>
-          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
+          <div class="lab-board lab-grade-demo" data-lab-board>
+          <div class="lab-grade-track" aria-label="timing grade zones">
+            <span class="lab-grade-zone lab-grade-zone-ok"></span><span class="lab-grade-zone lab-grade-zone-perfect"></span>
+            <span class="lab-grade-marker" data-lab-grade-marker></span>
+          </div>
+          <div class="lab-grade-flow">
+            <div class="lab-grade-play"><small>play</small><strong data-lab-grade-result>—</strong><span data-lab-grade-rule>measure center distance</span></div>
+            <b aria-hidden="true">→</b>
+            <div class="lab-grade-fx"><small>fx</small><strong data-lab-grade-strength>—</strong><span>choose strength from grade</span></div>
+          </div>
+          <div class="lab-grade-burst" data-lab-grade-burst aria-hidden="true"></div>
+          <p class="lab-grade-explain" data-lab-grade-explain aria-live="polite"></p>
         </div>
-        <p class="lab-fx-hint" data-lab-fx-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>score (play)</span><strong data-lab-score>—</strong></div><div><span>sparks (fx)</span><strong data-lab-fx-n>—</strong></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>center distance (play)</span><strong data-lab-grade-distance>—</strong></div><div><span>particles (fx)</span><strong data-lab-grade-particles>—</strong></div></div>
         </div>
       </div>
 
@@ -164,9 +175,6 @@ g.fx.Update()</code></pre>
         </form>
       </div>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>result := judge(math.Abs(marker-center))</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
-<!-- END BEGINNER BRIDGE -->
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>

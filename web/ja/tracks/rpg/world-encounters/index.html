@@ -45,8 +45,11 @@
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>シーン遷移と敵テーブル</strong></div>
       <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>シーン変数は『村・フィールド・戦闘』の今の画面番号。敵テーブルは場所ごとに出せる敵の候補一覧、シーン遷移は番号を替えて別のUpdate/Drawへ渡すことです。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>scene=Battle; enemy=enemyTable[area].Pick()</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="play lesson-play" id="play">
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div>
           <p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
@@ -297,9 +300,8 @@
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>シーン変数は『村・フィールド・戦闘』の今の画面番号。敵テーブルは場所ごとに出せる敵の候補一覧、シーン遷移は番号を替えて別のUpdate/Drawへ渡すことです。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>scene=Battle; enemy=enemyTable[area].Pick()</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main>
   <footer>
     <div class="brand"><span>EBI</span> SHOWCASE</div>

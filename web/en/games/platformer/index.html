@@ -40,8 +40,11 @@
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Collision resolution and camera</strong></div>
       <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>cameraX += (playerX-cameraX) * .09</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="play lesson-play" id="play">
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Run, jump, collect every coin.</h2></div><p>A/D or arrow keys to run, Space or tap the upper screen to jump. Collect all 7 coins and reach the goal. Falling off the stage is a miss.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 10</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Platformer" src="../../../play/platformer/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -543,9 +546,8 @@ func main() {
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>cameraX += (playerX-cameraX) * .09</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../learn.js"></script>

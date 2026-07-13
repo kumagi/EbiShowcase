@@ -40,8 +40,11 @@
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>タイルマップ</strong></div>
       <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>論理座標は『何列・何行』、描画座標は画面のピクセル。天次郎が1マス動く間はmoving=trueにして入力を待たせ、Drawだけ途中位置を描きます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if moving { progress++; return nil }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="play lesson-play" id="play">
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>箱をすべてゴールへ押せ。</h2></div><p>矢印キーまたはWASDで移動します。箱に向かって進むと押せます。Z/BackspaceでUndo、Rでリセットです。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 09</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Sokoban" src="../../../play/sokoban/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -610,9 +613,8 @@ func main() {
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>論理座標は『何列・何行』、描画座標は画面のピクセル。天次郎が1マス動く間はmoving=trueにして入力を待たせ、Drawだけ途中位置を描きます。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>if moving { progress++; return nil }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../learn.js"></script>

@@ -37,7 +37,11 @@
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>爆発イベントを次の爆弾へ渡す</strong></div>
       <p class="cast-note">動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
     </section>
-    <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>別爆弾へ届いたらタイマーを0にします。処理前にexploded=trueとしてA→B→Aの二重爆発を防ぎます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if b.exploded { return }; b.exploded=true</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
+<p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
 
     <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3個以上を連鎖させ、リレーを5個消そう</h2></div><p>矢印／WASDで移動、SpaceまたはXで爆弾を置きます。クリックとタッチは下のボタンを使います。爆弾を射程3以内の同じ通路へ並べ、最初の爆発前に遠くへ逃げましょう。</p></div>
@@ -164,10 +168,9 @@ for len(queue) &gt; 0 {
 
 
 
-  <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>別爆弾へ届いたらタイマーを0にします。処理前にexploded=trueとしてA→B→Aの二重爆発を防ぎます。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>if b.exploded { return }; b.exploded=true</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
-</main>
+
+
+  </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
 </body>

@@ -37,8 +37,11 @@
       <p>左右に動く白い線を、真ん中の帯で止めます。「毎フレーム少し動かす」と「今は動いている／止まっている」の切り替えが、このゲームの心臓です。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>時間とゲーム状態</strong></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>状態は『狙っている・判定を見ている・再挑戦待ち』のような今の場面。switchは状態ごとの処理をif/elseより読みやすく並べます。%は割り算の余りです。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>phase := frame % 120</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="play lesson-play" id="play">
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>タイミングをねらって止めよう。</h2></div><p>スペース、クリック、タップで停止。中央に近いほど高得点です。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="ストップ・ザ・メーター" src="../../../play/timing-meter/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -385,9 +388,8 @@ func main() {
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>状態は『狙っている・判定を見ている・再挑戦待ち』のような今の場面。switchは状態ごとの処理をif/elseより読みやすく並べます。%は割り算の余りです。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>phase := frame % 120</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../learn.js"></script>

@@ -49,6 +49,10 @@
 <strong>ドラッグベクトルと発射速度</strong>
 </div>
 </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>押し始めから現在までの差dx,dyを取り、離したら反対向きの-dx,-dyへ倍率を掛けて速度にします。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>vx, vy = -dx*power, -dy*power</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 <p class="curriculum-bridge">これは共通基礎の続きです。まだゲームループを知らない人は、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。ここでは入力から速度を作るところへ進みます。</p>
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>真珠を引っぱり、3つのリングへ届けよう。</h2></div><p>真珠からドラッグして離します。矢印キーで引く向きを変え、Spaceで発射することもできます。6発以内でクリア。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="ひっぱって発射" src="../../../../play/drag-launch/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / OPPOSITE VECTOR</p><h2>引いた矢印を、マイナスでひっくり返す。</h2><p class="lesson-lead">真珠の中心から指までの差を<strong>ドラッグベクトル</strong>として保存します。離した瞬間、XとYの両方にマイナスを付けると、引っぱった向きと正反対の発射速度になります。</p></div>
@@ -192,9 +196,8 @@ if released {
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>押し始めから現在までの差dx,dyを取り、離したら反対向きの-dx,-dyへ倍率を掛けて速度にします。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>vx, vy = -dx*power, -dy*power</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main><script src="../../../../learn.js"></script>
 </body>
 </html>

@@ -887,6 +887,19 @@ export const catalog = {
       "data-lab-reset": { clear: true },
     },
   },
+  "shot-event-queue": {
+    lines: [
+      { id: "move", code: "shot.pos = shot.pos.add(shot.velocity)" },
+      { id: "push", code: "if contact(enemy) { queue = append(queue, HitEvent{enemy.ID}) }" },
+      { id: "pop", code: "event, queue := queue[0], queue[1:]" },
+      { id: "apply", code: "enemies[event.target].HP--" },
+    ],
+    buttons: {
+      "data-lab-launch": { ids: ["move", "push"] },
+      "data-lab-pop": { ids: ["pop", "apply"] },
+      "data-lab-reset": { clear: true },
+    },
+  },
   "height-layers": {
     lines: [
       { id: "noise", code: "h = sampleNoise(x, z)" },

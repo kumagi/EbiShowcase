@@ -49,6 +49,10 @@
 <strong>変更できるタイルマップ</strong>
 </div>
 </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>画面座標をTileSizeで割ると列と行。入力を『壊す』『置く』へ変換してから地図を更新します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>tx, ty := mouseX/TileSize, mouseY/TileSize</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 <p class="curriculum-bridge">共通基礎の続きです。ゲームループが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。ここでは入力で盤面データを書き換えます。</p>
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>素材を回収し、6マスの設計図を完成させよう。</h2></div><p>黄色の枠が設計図。PLACE/BREAKとDIRT/STONEを選び、明るい操作範囲をタップ。PCはP/B、1/2とクリックも使えます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="置く・壊す" src="../../../../play/place-break/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / MUTABLE TILE MAP</p><h2>マスの番号を書き換えると、世界の形が変わる。</h2><p class="lesson-lead">盤面は <strong>board[y][x]</strong> という数字の表です。0は空気、1は土、2は石。置く時は在庫を1減らして番号を書き、壊す時は番号を0へ戻して素材を在庫へ返します。</p></div>
@@ -193,9 +197,8 @@ board[y][x] = empty</code></pre></div>
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>画面座標をTileSizeで割ると列と行。入力を『壊す』『置く』へ変換してから地図を更新します。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>tx, ty := mouseX/TileSize, mouseY/TileSize</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main><script src="../../../../learn.js"></script>
 </body>
 </html>

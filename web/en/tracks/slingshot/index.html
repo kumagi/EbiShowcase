@@ -18,10 +18,12 @@
     <meta name="twitter:image:alt" content="Slingshot Reflection Action">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/slingshot/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/slingshot/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-slingshot"><span class="track-letter">J</span><div><p class="eyebrow">Build a Monster Strike-style game</p><h1>Slingshot Reflection Action</h1><p>Build a Monster Strike-style battle where you pull back and release characters like a slingshot. Start with drag aiming, then add circle reflection, damping, contact attacks, and friendship effects triggered by touching allies.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/slingshot/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-slingshot"><span class="track-letter">J</span><div><p class="eyebrow">Build a Monster Strike-style game</p><h1>Slingshot Reflection Action</h1><p>Build a Monster Strike-style battle where you pull back and release characters like a slingshot. Start with drag aiming, then add circle reflection, damping, contact attacks, and friendship effects triggered by touching allies.</p></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+
+<p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>Connect small rules<br>into a complete game.</h2><p>Keep every step small and playable, inspect its algorithm, and then add the next system.</p></div><a class="path-step" href="drag-launch/"><span>01</span><div><h3>Drag and Launch</h3><p>Pull back with your finger to draw an aim arrow (a drag vector), then launch in the opposite direction.</p><strong>Pulling back to aim (a drag vector) and launch velocity</strong></div><b>→</b></a>
 <a class="path-step" href="wall-bounce/"><span>02</span><div><h3>Wall-bouncing Ball</h3><p>Bounce off walls like a mirror (normal reflection), losing a little energy each time (how bouncy it is is called restitution).</p><strong>Bouncing off walls (normal reflection) and how bouncy it is (restitution)</strong></div><b>→</b></a>
 <a class="path-step" href="circle-battle/"><span>03</span><div><h3>Circle Character Collisions</h3><p>Damage enemies on contact and control repeated hits against the same target.</p><strong>Circle collision and contact damage</strong></div><b>→</b></a>
@@ -55,6 +57,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

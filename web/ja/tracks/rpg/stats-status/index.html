@@ -44,8 +44,11 @@
       <p>攻撃力・防御力・強化・毒を計算に組み込みます。<strong>ダメージ = 攻撃 − 防御</strong> という引き算の式に、一時的な効果を足すだけで本格的なバトルになります。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>ダメージ式と一時効果</strong></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ダメージは基本的に攻撃-防御で、最低1に丸めます。一時効果は数ターンだけ攻撃や防御を増減する値。structはHP/ATK/DEFと残りターンを一組にする箱です。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>damage:=max(1, attacker.ATK-defender.DEF)</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 
-    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。</p>
+<p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。</p>
 
 
     <section class="play lesson-play" id="play">
@@ -292,9 +295,8 @@ g.hp -= max(1, enemyAttack-g.defense)
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ダメージは基本的に攻撃-防御で、最低1に丸めます。一時効果は数ターンだけ攻撃や防御を増減する値。structはHP/ATK/DEFと残りターンを一組にする箱です。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>damage:=max(1, attacker.ATK-defender.DEF)</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main>
   <footer>
     <div class="brand"><span>EBI</span> SHOWCASE</div>

@@ -1107,6 +1107,30 @@ function labParts(kind, lang) {
           val("data-lab-score", lang === "ja" ? "スコア(play)" : "score (play)") +
           val("data-lab-fx-n", lang === "ja" ? "粒(fx)" : "sparks (fx)"),
       };
+    case "fx-meter-grade":
+      return {
+        controls:
+          `<label class="lab-meter-slider"><span>${lang === "ja" ? "止める位置" : "stop position"}</span><input type="range" min="0" max="100" value="50" data-lab-meter-position></label>` +
+          btn("data-lab-meter-judge", lang === "ja" ? "判定！" : "Judge!", "lab-button-primary") +
+          btn("data-lab-meter-miss", lang === "ja" ? "Miss の位置" : "Try Miss") +
+          R,
+        board: `<div class="lab-board lab-grade-demo" data-lab-board>
+          <div class="lab-grade-track" aria-label="${lang === "ja" ? "タイミング判定ゾーン" : "timing grade zones"}">
+            <span class="lab-grade-zone lab-grade-zone-ok"></span><span class="lab-grade-zone lab-grade-zone-perfect"></span>
+            <span class="lab-grade-marker" data-lab-grade-marker></span>
+          </div>
+          <div class="lab-grade-flow">
+            <div class="lab-grade-play"><small>play</small><strong data-lab-grade-result>—</strong><span data-lab-grade-rule>${lang === "ja" ? "中心との差を計算" : "measure center distance"}</span></div>
+            <b aria-hidden="true">→</b>
+            <div class="lab-grade-fx"><small>fx</small><strong data-lab-grade-strength>—</strong><span>${lang === "ja" ? "判定値で強さを選ぶ" : "choose strength from grade"}</span></div>
+          </div>
+          <div class="lab-grade-burst" data-lab-grade-burst aria-hidden="true"></div>
+          <p class="lab-grade-explain" data-lab-grade-explain aria-live="polite"></p>
+        </div>`,
+        values:
+          val("data-lab-grade-distance", lang === "ja" ? "中心との差(play)" : "center distance (play)") +
+          val("data-lab-grade-particles", lang === "ja" ? "粒の数(fx)" : "particles (fx)"),
+      };
     case "fx-breakout":
       return {
         controls:

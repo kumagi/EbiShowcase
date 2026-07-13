@@ -18,9 +18,11 @@
     <meta name="twitter:image:alt" content="コマンドRPG">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/rpg/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/rpg/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>9 STEPS</span></div><section class="track-hero track-rpg"><span class="track-letter">D</span><div><p class="eyebrow">ドラゴンクエスト型ゲームを作る</p><h1>コマンドRPG</h1><p>ドラゴンクエストのような、コマンドを選んで進めるRPGを作ります。町の探索、会話から始め、順番に「たたかう」などのコマンドを選ぶ戦闘（ターン制戦闘）、成長、装備、世界地図を順に統合します。</p></div><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公はオリジナルの 海老・天次郎（えび・てんじろう） です。</p></section><!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>村→会話→戦闘→持ち物の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/rpg/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>9 STEPS</span></div><section class="track-hero track-rpg"><span class="track-letter">D</span><div><p class="eyebrow">ドラゴンクエスト型ゲームを作る</p><h1>コマンドRPG</h1><p>ドラゴンクエストのような、コマンドを選んで進めるRPGを作ります。町の探索、会話から始め、順番に「たたかう」などのコマンドを選ぶ戦闘（ターン制戦闘）、成長、装備、世界地図を順に統合します。</p></div><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公はオリジナルの 海老・天次郎（えび・てんじろう） です。</p></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>村→会話→戦闘→持ち物の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>小さな完成を<br>積み重ねる。</h2><p>各ステップは単独で遊べるミニゲームです。前の仕組みを再利用しながら、最後に1本の作品へ統合します。</p></div><a class="path-step" href="village-walk/"><span>01</span><div><h3>小さな村を歩く</h3><p>マス目の村を歩き、壁を通れないようにし、向きを記録します。</p><strong>タイル衝突と向き</strong></div><b>→</b></a>
 <a class="path-step" href="dialogue-flags/"><span>02</span><div><h3>村人との会話</h3><p>話しかけた相手や出来事によって、会話の内容を変えます。</p><strong>文章送りとイベントフラグ</strong></div><b>→</b></a>
 <a class="path-step" href="command-battle/"><span>03</span><div><h3>1対1コマンドバトル</h3><p>「たたかう」「ぼうぎょ」「どうぐ」などのコマンドを選び、味方の行動、敵の行動、勝敗判定の順番で進めます（この決まった手順を状態機械と呼びます）。</p><strong>順番にコマンドを選ぶ戦闘の流れ（ターン制・状態機械）</strong></div><b>→</b></a>
@@ -55,6 +57,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

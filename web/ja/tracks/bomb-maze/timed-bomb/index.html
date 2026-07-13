@@ -37,7 +37,11 @@
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>床に置いたものが時間で変わる</strong></div>
       <p class="cast-note">動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
     </section>
-    <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>Updateごとにtimer--し、0なら爆発へ進みます。待ち時間でゲーム全体を止めません。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>bomb.timer--; if bomb.timer &lt;= 0 { explode() }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
+<p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
 
     <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>印のマスを5つ爆破しよう</h2></div><p>矢印／WASDで移動、Spaceで設置。クリックとタッチは画面下のボタンを使います。置いたら同じマスから逃げましょう。</p></div>
@@ -156,10 +160,9 @@
 
 
 
-  <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>Updateごとにtimer--し、0なら爆発へ進みます。待ち時間でゲーム全体を止めません。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>bomb.timer--; if bomb.timer &lt;= 0 { explode() }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
-</main>
+
+
+  </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>
 </body>

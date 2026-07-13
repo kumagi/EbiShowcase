@@ -49,6 +49,10 @@
 <strong>Circle collision and contact damage</strong>
 </div>
 </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>for i := range enemies { checkCircle(projectile, enemies[i]) }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Build speed and defeat three coral guards.</h2></div><p>Accelerate with arrows/WASD or hold the place you want to travel. Hit every guard hard three times within 45 seconds.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Circle Character Collisions" src="../../../../play/circle-battle/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CIRCLE CONTACT</p><h2>Measure center distance, then push out by the overlap.</h2><p class="lesson-lead">Two circles overlap when the distance between centers is <strong>shorter than their radii added together</strong>. Move the pearl back to the edge, and deal damage only when impact is fast enough.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Find circle overlap</h3><p>Compute center distance from the X and Y differences. With radii 20 and 30, any distance below 50 is contact.</p><code>distance &lt; playerR + enemyR</code></article><article><span class="concept-number">2</span><h3>Push back to the edge</h3><p>Normalize the direction from enemy to pearl, then place the pearl one sum-of-radii away.</p><code>player = enemy + normal * minDistance</code></article><article><span class="concept-number">3</span><h3>One hit per contact</h3><p>Keep a 24-frame cooldown after damage. HP cannot fall on every frame while circles remain close.</p><code>if cooldown == 0 { hp--; cooldown = 24 }</code></article></div>
@@ -193,9 +197,8 @@
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>for i := range enemies { checkCircle(projectile, enemies[i]) }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main><script src="../../../../learn.js"></script>
 </body>
 </html>

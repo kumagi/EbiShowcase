@@ -49,6 +49,10 @@
 <strong>Mutable tile maps</strong>
 </div>
 </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>tx, ty := mouseX/TileSize, mouseY/TileSize</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 <p class="curriculum-bridge">This continues the shared foundation. If the game loop is new, first visit <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>. Here, input changes board data.</p>
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Recover materials and finish the six-cell blueprint.</h2></div><p>Outlines mark the plan. Choose PLACE/BREAK and DIRT/STONE, then tap a bright in-range cell. On PC, use P/B, 1/2, and click.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Place and Break" src="../../../../play/place-break/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / MUTABLE TILE MAP</p><h2>Change a cell's number and the world changes shape.</h2><p class="lesson-lead">The board is a table of numbers called <strong>board[y][x]</strong>. Zero is air, one is dirt, and two is stone. Placing spends one item and writes its number; breaking writes zero and returns the material to inventory.</p></div>
@@ -193,9 +197,8 @@ board[y][x] = empty</code></pre></div>
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>tx, ty := mouseX/TileSize, mouseY/TileSize</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main><script src="../../../../learn.js"></script>
 </body>
 </html>

@@ -18,9 +18,11 @@
     <meta name="twitter:image:alt" content="Command RPG">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/rpg/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/rpg/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>9 STEPS</span></div><section class="track-hero track-rpg"><span class="track-letter">D</span><div><p class="eyebrow">Build a Dragon Quest-style game</p><h1>Command RPG</h1><p>Build a Dragon Quest-style RPG where you pick a command each turn. Start with town exploration and dialogue, then add turn-based combat (taking turns to pick Attack, Defend, or Item), growth, equipment, and a world map.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section><!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/rpg/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>9 STEPS</span></div><section class="track-hero track-rpg"><span class="track-letter">D</span><div><p class="eyebrow">Build a Dragon Quest-style game</p><h1>Command RPG</h1><p>Build a Dragon Quest-style RPG where you pick a command each turn. Start with town exploration and dialogue, then add turn-based combat (taking turns to pick Attack, Defend, or Item), growth, equipment, and a world map.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>Build it through<br>small completions.</h2><p>Every step is a small playable game. Reuse each previous system and combine everything into one final project.</p></div><a class="path-step" href="village-walk/"><span>01</span><div><h3>Walk Through a Village</h3><p>Walk around a tiled village, block walls, and remember facing direction.</p><strong>Tile collision and facing</strong></div><b>→</b></a>
 <a class="path-step" href="dialogue-flags/"><span>02</span><div><h3>Village Conversations</h3><p>Change dialogue according to who is speaking and what has happened.</p><strong>Dialogue flow and event flags</strong></div><b>→</b></a>
 <a class="path-step" href="command-battle/"><span>03</span><div><h3>One-on-one Command Battle</h3><p>Pick a command like Attack, Defend, or Item, then advance through player action, enemy action, and results in a fixed order (that fixed order is called a state machine).</p><strong>Taking turns to pick commands (turn-based combat, state machines)</strong></div><b>→</b></a>
@@ -55,6 +57,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -21,6 +21,10 @@
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/monster-collection/party-switch/">EN</a></nav></header><main class="overview-main">
 <div class="lesson-breadcrumb"><a href="../">← モンスター収集RPG</a><span>STEP 04 / 07</span></div>
 <section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>パーティと交代</h1><p>3体のうち1体を前衛、残りを控えにし、相性とHPを見て戦闘中に入れ替えます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>前衛インデックス・交代ターン・強制交代</strong></div></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>選んだ番号selectedと先頭0番を同時交換します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>party[0], party[selected] = party[selected], party[0]</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>相性のよい前衛へ交代し、12ターン以内に3戦勝とう。</h2></div><p>仲間カードをタップするか1・2・3で交代、ATTACKまたはA/Spaceで攻撃。予定した交代は1ターン使い、倒れた時は生きている控えを必ず選びます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="前衛と控えを交代するパーティ戦" src="../../../../play/party-switch/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ACTIVE INDEX</p><h2>パーティ全員を消さず、「今戦う番号」だけを変える。</h2><p class="lesson-lead">3体はずっとsliceの中に残り、それぞれのHPを持ち続けます。前衛は別のコピーではなく<code>active</code>という番号です。交代はこの番号を控えの番号へ変える状態遷移で、<strong>自分から交代する時</strong>と<strong>倒れて選び直す時</strong>ではターンの扱いが違います。</p></div>
@@ -133,7 +137,6 @@
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>選んだ番号selectedと先頭0番を同時交換します。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>party[0], party[selected] = party[selected], party[0]</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main><script src="../../../../learn.js"></script></body></html>

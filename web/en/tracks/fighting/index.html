@@ -18,9 +18,11 @@
     <meta name="twitter:image:alt" content="2D Fighting Game">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/fighting/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/fighting/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>9 STEPS</span></div><section class="track-hero track-fighting"><span class="track-letter">E</span><div><p class="eyebrow">Build a fighter from collision boxes</p><h1>2D Fighting Game</h1><p>Build a one-on-one arcade-style fighting game where you and an opponent trade moves. Start with pushboxes (boxes that keep characters from overlapping), hurtboxes (boxes that can get hit), and hitboxes, then add move frames, hitstop (freezing time for an instant on impact), and combos.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section><!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/fighting/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>9 STEPS</span></div><section class="track-hero track-fighting"><span class="track-letter">E</span><div><p class="eyebrow">Build a fighter from collision boxes</p><h1>2D Fighting Game</h1><p>Build a one-on-one arcade-style fighting game where you and an opponent trade moves. Start with pushboxes (boxes that keep characters from overlapping), hurtboxes (boxes that can get hit), and hitboxes, then add move frames, hitstop (freezing time for an instant on impact), and combos.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a complete game.</h2><p>Break difficult systems into small playable games. Reuse each previous step, then combine them at the end.</p></div><a class="path-step" href="box-viewer/"><span>01</span><div><h3>Collision Box Viewer</h3><p>Separate three rectangle types by role and inspect the exact moment they overlap.</p><strong>Pushboxes, hurtboxes, and hitboxes</strong></div><b>→</b></a>
 <a class="path-step" href="frame-attack/"><span>02</span><div><h3>Three-phase Punch</h3><p>Split one attack into startup, active, and recovery phases.</p><strong>Startup, active, and recovery frames</strong></div><b>→</b></a>
 <a class="path-step" href="hit-reaction/"><span>03</span><div><h3>Hit Reaction Dojo</h3><p>Freeze the impact, disable the defender briefly, and push them backward.</p><strong>Freezing time for an instant (hitstop), hitstun, and knockback</strong></div><b>→</b></a>
@@ -55,6 +57,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

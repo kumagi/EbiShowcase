@@ -18,9 +18,11 @@
     <meta name="twitter:image:alt" content="Merge Physics Puzzle">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/merge-physics/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/merge-physics/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-merge-physics"><span class="track-letter">F</span><div><p class="eyebrow">Build a Suika Game-style physics puzzle</p><h1>Merge Physics Puzzle</h1><p>Build a Suika Game-style puzzle where matching fruit merge into a bigger one when they touch. Start with falling circles, then add gravity, collision, pushing overlapping circles apart until they don't overlap (penetration correction), bounce, and merging.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section><!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/merge-physics/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-merge-physics"><span class="track-letter">F</span><div><p class="eyebrow">Build a Suika Game-style physics puzzle</p><h1>Merge Physics Puzzle</h1><p>Build a Suika Game-style puzzle where matching fruit merge into a bigger one when they touch. Start with falling circles, then add gravity, collision, pushing overlapping circles apart until they don't overlap (penetration correction), bounce, and merging.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a complete game.</h2><p>Break difficult systems into small playable games. Reuse each previous step, then combine them at the end.</p></div><a class="path-step" href="falling-circles/"><span>01</span><div><h3>Falling Circles</h3><p>Drop circles of different sizes with updates independent of device speed.</p><strong>Circles, gravity, and fixed time steps</strong></div><b>→</b></a>
 <a class="path-step" href="circle-collision/"><span>02</span><div><h3>Circle Collision Lab</h3><p>Detect overlap from center distance and calculate the direction of separation.</p><strong>Center distance and contact normals</strong></div><b>→</b></a>
 <a class="path-step" href="stacking-bounce/"><span>03</span><div><h3>Stacking and Bounce</h3><p>Push overlapping circles apart until they no longer overlap, then change velocity using mass and bounciness (restitution).</p><strong>Pushing circles apart (penetration correction) and impulses</strong></div><b>→</b></a>
@@ -54,6 +56,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

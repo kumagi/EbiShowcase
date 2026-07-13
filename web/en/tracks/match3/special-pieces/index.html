@@ -30,7 +30,11 @@
 <main class="overview-main">
   <div class="lesson-breadcrumb"><a href="../">← Match-three Puzzle</a><span>STEP 05 / 06</span></div>
   <section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Special Piece Workshop</h1><p>Find lines of four, lines of five, and L shapes, then transform each into a special piece with a different reach.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Pattern detection and area effects</strong></div></section>
-  <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Forge and activate all three special pieces.</h2></div><p>Tap a shape above or press 1, 2, or 3. Use the bottom button or Space to forge, activate, and continue. Earn OK on all three to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Special Piece Workshop" src="../../../../play/special-pieces/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>cells := affectedCells(piece.kind, x, y)</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Forge and activate all three special pieces.</h2></div><p>Tap a shape above or press 1, 2, or 3. Use the bottom button or Space to forge, activate, and continue. Earn OK on all three to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Special Piece Workshop" src="../../../../play/special-pieces/" allow="autoplay; fullscreen"></iframe></div></div></section>
   <section class="physics" id="learn">
     <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DETECT → KIND → EFFECT</p><h2>Specials are two functions: shape detect, then blast set.</h2><p class="lesson-lead">Special pieces are not magic. <strong>1) Read a shape</strong> (4-run, 5-run, L/T), <strong>2) Return the cells that kind clears</strong>. Effects differ only in how the set is built; the final clear path matches a normal match.</p></div>
 <div class="concept-row">
@@ -171,9 +175,8 @@ for p := range effectCells(kind, at, board) {
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>cells := affectedCells(piece.kind, x, y)</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main>
 <script src="../../../../learn.js"></script>
 </body>

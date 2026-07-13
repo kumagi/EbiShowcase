@@ -1780,6 +1780,66 @@ document.querySelectorAll(".motion-lab[data-lab='fx-split']").forEach((lab) => {
   render();
 });
 
+document.querySelectorAll(".motion-lab[data-lab='fx-meter-grade']").forEach((lab) => {
+  const position = bind(lab, "[data-lab-meter-position]");
+  const marker = bind(lab, "[data-lab-grade-marker]");
+  const resultOut = bind(lab, "[data-lab-grade-result]");
+  const ruleOut = bind(lab, "[data-lab-grade-rule]");
+  const strengthOut = bind(lab, "[data-lab-grade-strength]");
+  const distanceOut = bind(lab, "[data-lab-grade-distance]");
+  const particlesOut = bind(lab, "[data-lab-grade-particles]");
+  const burst = bind(lab, "[data-lab-grade-burst]");
+  const explain = bind(lab, "[data-lab-grade-explain]");
+  const ja = document.documentElement.lang === "ja";
+
+  const moveMarker = () => {
+    if (marker && position) marker.style.left = `${Number(position.value)}%`;
+  };
+  const judge = () => {
+    const stoppedAt = Number(position?.value || 50);
+    const distance = Math.abs(stoppedAt - 50);
+    const grade = distance <= 5 ? "PERFECT" : distance <= 18 ? "OK" : "MISS";
+    const score = grade === "PERFECT" ? 100 : grade === "OK" ? 40 : 0;
+    const particles = grade === "PERFECT" ? 18 : grade === "OK" ? 8 : 2;
+    const strength = grade === "PERFECT" ? (ja ? "大花火" : "BIG BURST") : grade === "OK" ? (ja ? "中花火" : "MEDIUM") : (ja ? "小さな煙" : "TINY PUFF");
+
+    setText(resultOut, `${grade} / +${score}`);
+    setText(ruleOut, ja ? `|${stoppedAt} − 50| = ${distance} → ${grade}` : `|${stoppedAt} − 50| = ${distance} → ${grade}`);
+    setText(strengthOut, strength);
+    setText(distanceOut, String(distance));
+    setText(particlesOut, String(particles));
+    setText(explain, ja
+      ? `play が ${grade} を決定 → fx は「${particles}粒」として見せる。fx は位置を判定し直しません。`
+      : `play decides ${grade} → fx presents it as ${particles} particles. fx does not judge the position again.`);
+    if (burst) {
+      burst.className = `lab-grade-burst is-${grade.toLowerCase()}`;
+      burst.innerHTML = Array.from({ length: particles }, (_, i) =>
+        `<span style="--r:${18 + i * 2}px;--a:${(i * 137.5).toFixed(1)}deg"></span>`).join("");
+    }
+  };
+  const reset = () => {
+    if (position) position.value = "50";
+    moveMarker();
+    setText(resultOut, "—");
+    setText(ruleOut, ja ? "中心との差を計算" : "measure center distance");
+    setText(strengthOut, "—");
+    setText(distanceOut, "—");
+    setText(particlesOut, "—");
+    setText(explain, ja ? "マーカーを動かして「判定！」を押そう。" : "Move the marker, then press Judge.");
+    if (burst) { burst.className = "lab-grade-burst"; burst.innerHTML = ""; }
+  };
+
+  position?.addEventListener("input", moveMarker);
+  bind(lab, "[data-lab-meter-judge]")?.addEventListener("click", judge);
+  bind(lab, "[data-lab-meter-miss]")?.addEventListener("click", () => {
+    if (position) position.value = "15";
+    moveMarker();
+    judge();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", reset);
+  reset();
+});
+
 const escapeCodeHTML = (value) => value.replace(/[&<>"']/g, (character) => ({
   "&": "&amp;",
   "<": "&lt;",
@@ -2564,6 +2624,128 @@ document.querySelectorAll(".motion-lab[data-lab='event-queue']").forEach((lab) =
   });
   bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
     q = []; n = 1; setText(note, "—"); render();
+  });
+  render();
+});
+
+// Ebi Strike: connect the visible physics path to the event queue it creates.
+document.querySelectorAll(".motion-lab[data-lab='shot-event-queue']").forEach((lab) => {
+  const board = lab.querySelector("[data-lab-board]");
+  const countOut = bind(lab, "[data-lab-count]");
+  const hitsOut = bind(lab, "[data-lab-hits]");
+  const note = bind(lab, "[data-lab-note]");
+  const launchButton = bind(lab, "[data-lab-launch]");
+  const labels = (lab.dataset.events || "HIT A,HIT B,HIT C,TURN END").split(",");
+  const points = [[8, 78], [31, 25], [57, 70], [83, 30], [94, 58]];
+  let queue = [];
+  let hits = 0;
+  let hp = [2, 2, 2];
+  let launched = false;
+  let progress = 0;
+  let run = 0;
+
+  const message = (key, replacements = {}) => {
+    let value = lab.dataset[key] || "";
+    for (const [name, replacement] of Object.entries(replacements)) {
+      value = value.replace(`{${name}}`, replacement);
+    }
+    return value;
+  };
+  const positionAt = (t) => {
+    const segment = Math.min(points.length - 2, Math.floor(t * (points.length - 1)));
+    const local = t * (points.length - 1) - segment;
+    return [
+      points[segment][0] + (points[segment + 1][0] - points[segment][0]) * local,
+      points[segment][1] + (points[segment + 1][1] - points[segment][1]) * local,
+    ];
+  };
+  const render = () => {
+    if (countOut) setText(countOut, String(queue.length));
+    if (hitsOut) setText(hitsOut, `${hits}/3`);
+    if (!board) return;
+    const [x, y] = positionAt(progress);
+    const trail = points.map((point) => point.join(",")).join(" ");
+    board.innerHTML = `<div class="lab-shot-queue-demo">
+      <div class="lab-shot-arena" aria-label="shot path through three enemies">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><polyline points="${trail}"/></svg>
+        <i class="lab-shot-ball" style="left:${x}%;top:${y}%"></i>
+        ${hp.map((value, i) => `<span class="lab-shot-enemy ${hits > i ? "contact" : ""} ${value < 2 ? "resolved" : ""}" style="left:${points[i + 1][0]}%;top:${points[i + 1][1]}%"><b>${String.fromCharCode(65 + i)}</b><small>HP ${value}</small></span>`).join("")}
+      </div>
+      <div class="lab-shot-queue" aria-label="event queue">
+        <strong>EVENT QUEUE</strong>
+        <div>${queue.length ? queue.map((event, i) => `<span class="${i === 0 ? "front" : ""}"><b>${i + 1}</b>${event.label}</span>`).join("") : `<em>${lab.dataset.empty || "queue empty"}</em>`}</div>
+      </div>
+    </div>`;
+  };
+  const enqueue = (index) => {
+    const label = labels[index] || `HIT ${String.fromCharCode(65 + index)}`;
+    queue.push({ label, target: index < 3 ? String.fromCharCode(65 + index) : "" });
+    if (index < 3) {
+      hits = index + 1;
+      setText(note, message("contact", { e: label }));
+    } else {
+      setText(note, message("finished"));
+    }
+    render();
+  };
+  const launch = () => {
+    run += 1;
+    const thisRun = run;
+    queue = [];
+    hits = 0;
+    hp = [2, 2, 2];
+    progress = 0;
+    launched = true;
+    if (launchButton) launchButton.disabled = true;
+    setText(note, message("launched"));
+    render();
+    let previous = 0;
+    let lastTime = performance.now();
+    const frame = (now) => {
+      if (thisRun !== run) return;
+      const elapsed = Math.min(34, now - lastTime);
+      lastTime = now;
+      progress = Math.min(1, progress + elapsed / 2100);
+      [0.25, 0.5, 0.75].forEach((threshold, index) => {
+        if (previous < threshold && progress >= threshold) enqueue(index);
+      });
+      previous = progress;
+      render();
+      if (progress < 1) requestAnimationFrame(frame);
+      else {
+        enqueue(3);
+        launched = false;
+        if (launchButton) launchButton.disabled = false;
+      }
+    };
+    requestAnimationFrame(frame);
+  };
+  launchButton?.addEventListener("click", launch);
+  bind(lab, "[data-lab-pop]")?.addEventListener("click", () => {
+    if (!queue.length) {
+      setText(note, lab.dataset.empty || "queue empty");
+      return;
+    }
+    const event = queue.shift();
+    if (event.target) {
+      const index = event.target.charCodeAt(0) - 65;
+      hp[index] = Math.max(0, hp[index] - 1);
+      setText(note, message("resolved", { e: event.label, target: event.target }));
+    } else {
+      setText(note, message("turn"));
+    }
+    render();
+  });
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => {
+    run += 1;
+    queue = [];
+    hits = 0;
+    hp = [2, 2, 2];
+    progress = 0;
+    launched = false;
+    if (launchButton) launchButton.disabled = false;
+    setText(note, "—");
+    render();
   });
   render();
 });

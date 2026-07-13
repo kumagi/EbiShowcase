@@ -38,8 +38,11 @@
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>ウェーブ設計・ボス・難易度曲線</strong></div>
       <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ウェーブは時間で区切った敵の波、ボスは区切りの最後に出る強敵、難易度曲線は時間とともに数・速さ・HPを少しずつ増やす設計です。目標時間まで生き残ればクリアです。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>wave := elapsed / waveSeconds</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="play lesson-play" id="play">
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3ウェーブを乗り越えてボスを倒せ！</h2></div><p>WASD・方向キー・ドラッグで移動。立ち止まると接触ダメージを受けます。ジェムを集めてレベルアップ（オーラ／速さ／ライフ）を選び、45秒以内にボスを倒そう。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="サバイバルラン" src="../../../../play/survival-run/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -240,9 +243,8 @@ speed := .85 + float64(sec)*.018
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ウェーブは時間で区切った敵の波、ボスは区切りの最後に出る強敵、難易度曲線は時間とともに数・速さ・HPを少しずつ増やす設計です。目標時間まで生き残ればクリアです。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>wave := elapsed / waveSeconds</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>

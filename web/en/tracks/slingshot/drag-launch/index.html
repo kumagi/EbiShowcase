@@ -49,6 +49,10 @@
 <strong>Drag vectors and launch velocity</strong>
 </div>
 </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>vx, vy = -dx*power, -dy*power</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 <p class="curriculum-bridge">This continues the shared foundation. If the game loop is new, first visit <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>. Here, input becomes launch velocity.</p>
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Pull the pearl into all three signal rings.</h2></div><p>Drag from the pearl and release. You can also change the pull with arrow keys and launch with Space. Reach all rings in six shots.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Drag and Launch" src="../../../../play/drag-launch/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / OPPOSITE VECTOR</p><h2>Flip the pull arrow with a minus sign.</h2><p class="lesson-lead">Store the difference from the pearl's center to the pointer as a <strong>drag vector</strong>. On release, put a minus sign on both X and Y. That makes launch velocity point exactly opposite the pull.</p></div>
@@ -192,9 +196,8 @@ if released {
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>vx, vy = -dx*power, -dy*power</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main><script src="../../../../learn.js"></script>
 </body>
 </html>

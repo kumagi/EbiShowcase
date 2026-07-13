@@ -23,6 +23,9 @@
 <body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="#layers">LAYERS</a><a href="#example">EXAMPLE</a><a class="lang" href="../../../en/guides/game-data/">EN</a></nav></header>
 <main><div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>SPECIAL GUIDE</span></div>
 <section class="data-hero"><p class="eyebrow">ゲームの中身を分ける考え方</p><h1>ゲームを作るとは、<br><em>世界を組み立てること。</em></h1><p>小さなゲームなら、敵の位置も会話もプログラムに直接書けます。世界が大きくなると、「どう動くか（仕組み）」と「何があるか（中身）」を分けた方が作りやすくなります。まずは下の図で、1本のゲームがどんな部品でできているかを見てみましょう。</p></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>データ駆動とは、村・台詞・敵をコードへ直接書かず、交換できるデータとして読む作り方。asset loaderはそのファイルをゲームへ渡す係、IDは部品同士を結ぶ名前札です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>village := loadMap("village.json")</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 
 <section class="data-basics" aria-labelledby="data-basics-title"><div><p class="eyebrow">TWO WORDS FIRST / 先に2つの用語</p><h2 id="data-basics-title">マス目と、<br>並べる箱。</h2><p>この先で何度も使う「タイルマップ」と「スライス」を、図で先に確かめます。</p></div><article><h3>タイルマップ</h3><div class="tile-map-mini" role="img" aria-label="5列4行のマス目に壁、道、主人公、宝箱を置いた地図"><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span>道</span><span>道</span><span class="chest">箱</span><span class="wall">壁</span><span class="wall">壁</span><span>道</span><span class="hero">人</span><span>道</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span></div><p><strong>ゲームの世界を同じ大きさのマスに分ける方法</strong>です。「2列目・3行目は道」のように数字で保存でき、絵は後から各マスへ描きます。</p></article><article><h3>配列・スライス・リスト</h3><p><code>[4]int</code> の<strong>配列</strong>は、長さ4で固定された箱。<code>[]int</code> の<strong>スライス</strong>は、必要に応じて要素を増減しやすい並びです。この教材で「敵のリスト」と呼ぶものは、Goコードではたいていスライスを使います。</p><code>enemies := []Enemy{...}</code></article></section>
 
@@ -233,7 +236,6 @@
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>データ駆動とは、村・台詞・敵をコードへ直接書かず、交換できるデータとして読む作り方。asset loaderはそのファイルをゲームへ渡す係、IDは部品同士を結ぶ名前札です。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>village := loadMap("village.json")</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main></body></html>

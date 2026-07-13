@@ -49,6 +49,10 @@
 <strong>盤面への合成と行の圧縮</strong>
 </div>
 </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>盤面への合成は落下中の四マスをboardへ固定すること、行の圧縮は満杯行より上を一段下へコピーして空きを詰めることです。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>lockPiece(); copy(board[1:y+1],board[0:y])</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>2マスのピースで4行を完成させよう。</h2></div><p>← →または画面ボタンで移動、↓かSpaceで落下。空いた2マスを埋めると行が消えます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="固定とライン消去" src="../../../../play/lock-lines/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / LOCK AND COMPACT</p><h2>動くピースを盤面へ写してから、満員の行を取り除く。</h2><p class="lesson-lead">接地した瞬間、落下中の2マスを<strong>boardへ固定</strong>します。次に各行を調べ、全部埋まった行は飛ばし、それ以外を下から順にコピーします。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>接地を調べる</h3><p>1マス下が床か使用中なら、もう落下できません。見た目だけでなく盤面配列へ書き込みます。</p><code>board[y][x] = true</code></article><article><span class="concept-number">2</span><h3>満員の行を探す</h3><p>左から右まで1個でも空きがあれば残します。8マスすべてtrueの行だけを消去数へ足します。</p><code>full = full &amp;&amp; board[y][x]</code></article><article><span class="concept-number">3</span><h3>残す行を下へ詰める</h3><p>readで読む行、writeで書く行を分けます。満員の行はコピーせず、残った行だけを下へ移します。</p><code>board[write] = board[read]</code></article></div>
@@ -200,9 +204,8 @@ for write &gt;= 0 { board[write] = emptyRow; write-- }</code></pre></div>
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>盤面への合成は落下中の四マスをboardへ固定すること、行の圧縮は満杯行より上を一段下へコピーして空きを詰めることです。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>lockPiece(); copy(board[1:y+1],board[0:y])</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main><script src="../../../../learn.js"></script>
 </body>
 </html>

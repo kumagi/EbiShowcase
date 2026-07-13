@@ -18,9 +18,11 @@
     <meta name="twitter:image:alt" content="Side-scrolling Action">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/platformer/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/platformer/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-platformer"><span class="track-letter">A</span><div><p class="eyebrow">Build a Mario-style game</p><h1>Side-scrolling Action</h1><p>Build a side-scrolling action game like Super Mario. Start with jumping, then add moving platforms, enemies, a camera, and power-ups.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section><!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/platformer/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-platformer"><span class="track-letter">A</span><div><p class="eyebrow">Build a Mario-style game</p><h1>Side-scrolling Action</h1><p>Build a side-scrolling action game like Super Mario. Start with jumping, then add moving platforms, enemies, a camera, and power-ups.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>Build it through<br>small completions.</h2><p>Every step is a small playable game. Reuse each previous system and combine everything into one final project.</p></div><a class="path-step" href="tiny-platformer/"><span>01</span><div><h3>One-screen Platformer</h3><p>Jump across one screen and resolve collisions with floors, walls, and ceilings.</p><strong>Ground detection and jumping</strong></div><b>→</b></a>
 <a class="path-step" href="moving-platforms/"><span>02</span><div><h3>Moving Platform Valley</h3><p>Ride platforms that slide up, down, left, or right. You copy the platform's own movement onto the player so you don't slide off.</p><strong>Copying a platform's movement onto the player (relative motion)</strong></div><b>→</b></a>
 <a class="path-step" href="patrol-enemies/"><span>03</span><div><h3>Stompable Enemy Garden</h3><p>Stomp patrolling enemies from above and take damage from the side.</p><strong>Enemy states and stomp collision</strong></div><b>→</b></a>
@@ -54,6 +56,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

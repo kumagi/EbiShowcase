@@ -396,34 +396,34 @@ const specs = {
       "QUEUE THEN RESOLVE", ["on contact: push event", "later: pop & apply"], "Split the physics moment from effect resolve."),
   ),
   "ebi-strike": L(
-    "event-queue",
+    "shot-event-queue",
     {
       eye: "TRY IT / SHOT EVENTS",
-      title: "1ショットで起きた出来事を順に処理",
-      body: "壁反射・敵接触・ターン終了はイベントです。発生順にキューし、手番のルールで1件ずつ処理すると、同時ヒットでも破綻しません。",
-      hint: "描画用の火花はイベント結果から出します。",
+      title: "弾の接触とイベントキューを同時に見る",
+      body: "「1ショット発射」で弾が軌道を進み、敵A・B・Cへ触れた瞬間にHITイベントが右のキューへ積まれます。「先頭を1件処理」で古いイベントからHPへ反映される様子を比べましょう。",
+      hint: "物理は接触した順にpushし、ゲームルールは先頭からpopします。軌道と待ち行列を同時に追ってください。",
       controls: [
-        ["data-lab-push", "イベント追加", "lab-button-primary"],
-        ["data-lab-pop", "手番で1件"],
-        ["data-lab-reset", "空にする", "lab-button-quiet"],
+        ["data-lab-launch", "1ショット発射", "lab-button-primary"],
+        ["data-lab-pop", "先頭を1件処理"],
+        ["data-lab-reset", "最初から", "lab-button-quiet"],
       ],
-      values: [["data-lab-count", "待ち"], ["data-lab-note", "結果"]],
+      values: [["data-lab-hits", "接触"], ["data-lab-count", "キュー"], ["data-lab-note", "今の処理"]],
       board: true,
-      data: 'data-event="shot" data-pushed="記録" data-popped="{e} 処理" data-empty="空"',
+      data: 'data-events="HIT A,HIT B,HIT C,TURN END" data-launched="弾が軌道を進んでいます" data-contact="接触 → {e} をpush" data-finished="停止 → TURN ENDをpush" data-resolved="{e} をpop → 敵{target} HP -1" data-turn="TURN ENDをpop → 次の手番へ" data-empty="キューは空です"',
     },
     {
       eye: "TRY IT / SHOT EVENTS",
-      title: "Process everything one shot caused",
-      body: "Wall bounces, enemy hits, and turn ends are events. Queue them in order and resolve one per turn rule so multi-hits stay sane.",
-      hint: "Spawn sparks from resolved events, not mid-physics.",
+      title: "Watch contacts and the event queue together",
+      body: "Launch one shot and watch it cross enemies A, B, and C. Each contact pushes a HIT event into the queue on the right. Resolve Front pops the oldest event and applies it to HP.",
+      hint: "Physics pushes in contact order; game rules pop from the front. Follow the path and queue at the same time.",
       controls: [
-        ["data-lab-push", "Queue event", "lab-button-primary"],
-        ["data-lab-pop", "Resolve one"],
-        ["data-lab-reset", "Clear", "lab-button-quiet"],
+        ["data-lab-launch", "Launch one shot", "lab-button-primary"],
+        ["data-lab-pop", "Resolve front"],
+        ["data-lab-reset", "Start over", "lab-button-quiet"],
       ],
-      values: [["data-lab-count", "waiting"], ["data-lab-note", "result"]],
+      values: [["data-lab-hits", "contacts"], ["data-lab-count", "queued"], ["data-lab-note", "now"]],
       board: true,
-      data: 'data-event="shot" data-pushed="queued" data-popped="resolve {e}" data-empty="empty"',
+      data: 'data-events="HIT A,HIT B,HIT C,TURN END" data-launched="shot moving along its path" data-contact="contact → push {e}" data-finished="stopped → push TURN END" data-resolved="pop {e} → enemy {target} HP -1" data-turn="pop TURN END → pass the turn" data-empty="the queue is empty"',
     },
     F("TURN OWNS THE QUEUE", ["physics pushes events", "turn pops events"], "物理と手番ロジックの境界です。",
       "TURN OWNS THE QUEUE", ["physics pushes events", "turn pops events"], "That’s the physics / turn boundary."),
@@ -916,7 +916,9 @@ function findRoute(slug) {
 
 let updated = 0;
 let missing = [];
+const requested = new Set(process.argv.slice(2));
 for (const [slug, spec] of Object.entries(specs)) {
+  if (requested.size && !requested.has(slug)) continue;
   const route = findRoute(slug);
   if (!route) {
     missing.push(slug);
@@ -929,7 +931,7 @@ for (const [slug, spec] of Object.entries(specs)) {
       continue;
     }
     const html = readFileSync(path, "utf8");
-    if (!html.includes('data-lab="entities"')) {
+    if (!html.includes('data-lab="entities"') && !requested.has(slug)) {
       console.log("skip (no entities)", lang, route);
       continue;
     }

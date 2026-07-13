@@ -21,6 +21,10 @@
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/falling-pairs/color-groups/">日本語</a></nav></header><main class="overview-main">
 <div class="lesson-breadcrumb"><a href="../">← Falling-pair Chain Puzzle</a><span>STEP 03 / 06</span></div>
 <section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Find Color Groups</h1><p>Place a falling pair, then collect same-color cells connected up, down, left, and right with a queue.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>BFS, four-way connectivity, and visited cells</strong></div></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>visit(x,y); visit(x+1,y); visit(x,y+1)</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Place pairs and complete three groups of four.</h2></div><p>Tap LEFT, TURN, RIGHT, or DROP. Keyboard uses Left/Up/Right and Space, plus A/W/D. Yellow numbers show BFS order after locking; white outlines show size four or more. Three misses lose.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Place falling pairs to make same-color groups of four" src="../../../../play/color-groups/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / BREADTH-FIRST FLOOD FILL</p><h2>Start at one cell and spread only along same-color paths.</h2><p class="lesson-lead">Right after a pair locks, choose an unvisited colored cell as an entrance. Put it in a queue, remove one, and add same-colored neighbors. Recording each discovered cell in <strong>visited</strong> prevents adjacent cells from adding each other forever.</p></div>
@@ -134,7 +138,6 @@
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>visit(x,y); visit(x+1,y); visit(x,y+1)</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main><script src="../../../../learn.js"></script></body></html>

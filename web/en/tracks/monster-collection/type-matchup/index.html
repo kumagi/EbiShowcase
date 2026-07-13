@@ -49,6 +49,10 @@
 <strong>Affinity tables and multipliers</strong>
 </div>
 </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>damage *= matchup[attackType][defendType]</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Read guard and counter forecasts; win within eight turns.</h2></div><p>Tap TIDE, FLAME, or LEAF. On PC use 1–3 or T/F/L. Your chosen attack type also becomes your defensive stance for that turn.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Affinity Matchup Lab" src="../../../../play/type-matchup/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / MATCHUP TABLE</p><h2>Look up two types instead of adding more if-statements.</h2><p class="lesson-lead">Make a <strong>3×3 multiplier table</strong> with attack types as rows and defense types as columns. Multiply move power by the result, and one damage formula handles strong, normal, and weak matchups.</p></div>
 <div class="matchup-grid" aria-label="matchup table"><table><caption>row = attack / column = defense</caption>
@@ -199,9 +203,8 @@ damage := int(basePower * mult)</code></pre></div>
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>damage *= matchup[attackType][defendType]</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main><script src="../../../../learn.js"></script>
 </body>
 </html>

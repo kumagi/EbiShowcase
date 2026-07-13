@@ -49,6 +49,10 @@
 <strong>円衝突と接触ダメージ</strong>
 </div>
 </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>全敵を一度ずつ調べ、中心距離²が半径合計²未満なら命中。敵数が小さい教材ではこのO(n)走査が最も読みやすい方法です。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>for i := range enemies { checkCircle(projectile, enemies[i]) }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>勢いをつけ、3体のサンゴガードを倒そう。</h2></div><p>矢印/WASD、または行きたい場所を押し続けて真珠を加速。45秒以内に各3回、速くぶつかります。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="円形キャラクターの衝突" src="../../../../play/circle-battle/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CIRCLE CONTACT</p><h2>中心の距離を測り、重なった分だけ外へ戻す。</h2><p class="lesson-lead">2つの円は、中心間の距離が<strong>半径の合計より短い</strong>と重なっています。判定したら真珠を円のふちまで押し戻し、十分な速さで初めてダメージを与えます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>円の重なりを探す</h3><p>XとYの差から中心間の距離を計算します。半径20と30なら、距離50未満が接触です。</p><code>distance &lt; playerR + enemyR</code></article><article><span class="concept-number">2</span><h3>ふちまで押し戻す</h3><p>敵から真珠へ向かう方向を長さ1にそろえ、半径の合計だけ離れた位置へ置きます。</p><code>player = enemy + normal * minDistance</code></article><article><span class="concept-number">3</span><h3>1接触を1回にする</h3><p>命中後24フレームはcooldownを残します。重なりが続いてもHPを毎フレーム減らしません。</p><code>if cooldown == 0 { hp--; cooldown = 24 }</code></article></div>
@@ -193,9 +197,8 @@
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>全敵を一度ずつ調べ、中心距離²が半径合計²未満なら命中。敵数が小さい教材ではこのO(n)走査が最も読みやすい方法です。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>for i := range enemies { checkCircle(projectile, enemies[i]) }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main><script src="../../../../learn.js"></script>
 </body>
 </html>

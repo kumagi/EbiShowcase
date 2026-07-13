@@ -49,6 +49,10 @@
 <strong>相性表と倍率</strong>
 </div>
 </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>火→木→水→火を表で引き、有利1.5倍・不利.75倍にします。倍率は遊びやすさで変える値です。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>damage *= matchup[attackType][defendType]</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>守りと反撃予告を読み、8ターン以内に勝とう。</h2></div><p>TIDE・FLAME・LEAFをタップ。PCは1〜3またはT/F/L。選んだ攻撃タイプは、そのターンの守りタイプにもなります。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="タイプ相性研究所" src="../../../../play/type-matchup/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / MATCHUP TABLE</p><h2>if文を増やさず、2つのタイプで表を引く。</h2><p class="lesson-lead">攻撃タイプを行、防御タイプを列にした<strong>3×3の倍率表</strong>を用意します。技の威力に倍率をかければ、同じダメージ式で「強い」「普通」「弱い」を計算できます。</p>
 <div class="matchup-grid" aria-label="相性表のイメージ">
@@ -201,9 +205,8 @@ damage := int(basePower * mult)</code></pre></div>
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>火→木→水→火を表で引き、有利1.5倍・不利.75倍にします。倍率は遊びやすさで変える値です。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>damage *= matchup[attackType][defendType]</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main><script src="../../../../learn.js"></script>
 </body>
 </html>

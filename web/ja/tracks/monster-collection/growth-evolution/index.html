@@ -49,6 +49,10 @@
 <strong>成長曲線・レベル・進化条件</strong>
 </div>
 </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>経験値追加後、前level<5かつ新level>=5なら一度だけ進化を始めます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if oldLevel &lt; 5 &amp;&amp; level >= 5 { evolve() }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 <section class="overview-plan">
 <p class="eyebrow">PLAY / INSPECT / BUILD</p>
 <h2>データの変化を見て、<br>ルールを組み立てる。</h2>
@@ -215,9 +219,8 @@ if level &gt;= 4 {
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>経験値追加後、前level<5かつ新level>=5なら一度だけ進化を始めます。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>if oldLevel &lt; 5 &amp;&amp; level >= 5 { evolve() }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main><script src="../../../../learn.js"></script>
 </body>
 </html>

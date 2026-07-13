@@ -43,6 +43,10 @@
     <h1>まっさらなパソコンから、<br><em>空の窓</em>を開くまで。</h1>
     <p>このサイトのレッスンはブラウザでも遊べます。でも自分の PC でコードを動かしたいときは、まず Go と Ebitengine の準備が必要です。Windows と Mac、どちらの手順も書きます。最後に「何もしない」暗い青い窓が開けば成功です。</p>
   </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>go.modは『このゲームの名前と使う部品』を書いた目次ファイル。PowerShell/ターミナルは文字で命令する同じ役目の窓です。天次郎の最初の一コマを出すところまで進みます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 
   <section class="setup-goals">
     <div class="guide-heading">
@@ -204,9 +208,6 @@ func main() {
       </div>
     </section>
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>go.modは『このゲームの名前と使う部品』を書いた目次ファイル。PowerShell/ターミナルは文字で命令する同じ役目の窓です。天次郎の最初の一コマを出すところまで進みます。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
 </main>
 <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
 <script src="../../../learn.js"></script>

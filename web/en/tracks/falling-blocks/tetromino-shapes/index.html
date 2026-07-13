@@ -23,6 +23,10 @@
 <body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/falling-blocks/tetromino-shapes/">日本語</a></nav></header><main class="overview-main">
 <div class="lesson-breadcrumb"><a href="../">← Falling-block Puzzle</a><span>STEP 02 / 06</span></div>
 <section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Four-cell Shapes</h1><p>Store four cells as offsets from one origin, keeping them together while the shape falls.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Relative coordinates and shape data</strong></div></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>boardX := pieceX + cell.dx</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Deliver four shapes to their dotted docks.</h2></div><p>Move with the left and right buttons or Arrow keys/A/D. Use the center button or Space to hard drop. Fit I, O, T, and S before making three mistakes.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Four-cell Shapes" src="../../../../play/tetromino-shapes/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RELATIVE COORDINATES</p><h2>A shape can move as “one origin plus four offsets.”</h2><p class="lesson-lead">Moving four screen positions separately could pull the cells apart. Instead give the piece one origin <code>(x, y)</code>. Each cell remembers only its <strong>offset</strong> from that origin. Move the origin one cell and all four move together.</p></div>
@@ -154,7 +158,6 @@ for _, offset := range shape.blocks {
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>boardX := pieceX + cell.dx</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main><script src="../../../../learn.js"></script></body></html>

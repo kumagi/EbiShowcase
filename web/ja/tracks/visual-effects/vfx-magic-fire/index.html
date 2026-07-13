@@ -44,6 +44,10 @@
       <p>ショーケース第1弾。ボタンを長押しして熱を溜め、離すと炎が噴き上がります。小学生向けの簡単さは捨てて、「層を重ねる」ことで迫力を出します。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>チャージ炎のレイヤー</strong></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>レイヤーは奥から手前へ重ねる絵の層。チャージ炎は、押しているフレーム数を力として、奥の光→炎本体→手前の火花の順に描きます。しきい値は段階が変わる境目で、60フレームなら約1秒です。 Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>drawBackGlow(); drawFire(); drawFrontSparks()</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+
 
     <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
 
@@ -161,9 +165,6 @@ else if wasHolding {
         </form>
       </div>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>レイヤーは奥から手前へ重ねる絵の層。チャージ炎は、押しているフレーム数を力として、奥の光→炎本体→手前の火花の順に描きます。しきい値は段階が変わる境目で、60フレームなら約1秒です。 Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>drawBackGlow(); drawFire(); drawFrontSparks()</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>

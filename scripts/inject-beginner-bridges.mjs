@@ -173,18 +173,37 @@ for(const path of walk(root).filter(p=>p.endsWith(".html"))){
   const isHub=bits[1]==="tracks"&&bits.length===3;
   let pair=notes[lookupSlug]?["ここを先に見よう",...notes[lookupSlug].split("|")]:undefined;
   if(isHub&&trackParts[slug]) pair=[`このコースの組み立て図`,`${trackParts[slug]}の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。`,`func (g *Game) Update() error { return nil }`];
-  if(!pair){const hit=generic.find(([r])=>r.test(html)); if(hit)pair=["コードを読む前の用語メモ",hit[1],"func (g *Game) Update() error { return nil }"]}
+  // A bridge is useful only when it can explain this lesson's own rule.  A
+  // generic Update/Draw card repeated on every page hides the actual lesson.
   if(!pair)continue;
   if(lang==="ja"&&route.includes("/tracks/visual-effects/")){
     pair[1]+=" Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。";
   }
   if(lang==="ja"&&route.includes("/tracks/")&&!route.includes("/tracks/visual-effects/")&&!isHub){
-    pair[1]+=" PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。";
+    pair[1]+=" PLAYABLEは『このページで実際に操作できる』という印です。";
   }
-  if(lang==="en")pair=["Read the game as small parts","Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.",pair[2] || "func (g *Game) Update() error { return nil }"];
+  if(lang==="en")pair=["Trace one rule first","Find where this one line is used, then follow how its value changes on screen.",pair[2] || "func (g *Game) Update() error { return nil }"];
   pair[2] ||= "func (g *Game) Update() error { return nil }";
   const esc=s=>s.replaceAll("&","&amp;").replaceAll("<","&lt;");
-  const block=`<!-- BEGIN BEGINNER BRIDGE -->\n<section class="beginner-bridge"><div><p class="eyebrow">${lang==="ja"?"はじめて読む人へ":"FIRST-TIME READER"}</p><h2>${pair[0]}</h2><p>${pair[1]}</p></div><div class="beginner-code"><p><strong>${lang==="ja"?"海老・天次郎の見方":"Ebi Tenjiroh's view"}</strong><br>${lang==="ja"?"Updateが天次郎の数字を変え、Drawが次の一コマを描きます。":"Update changes Tenjiroh's numbers; Draw paints the next frame."}</p><pre><code>${esc(pair[2])}</code></pre><p class="receiver-note">${lang==="ja"?"func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。":"(g *Game) is the receiver: a name tag that lets the function use this Game's state."}</p></div></section>\n<!-- END BEGINNER BRIDGE -->\n`;
-  const anchor=html.includes('<section class="path-list"')?'<section class="path-list"':html.includes('<section class="play-panel"')?'<section class="play-panel"':"</main>";
-  writeFileSync(path,html.replace(anchor,block+anchor));
+  const block=`<!-- BEGIN BEGINNER BRIDGE -->\n<section class="beginner-bridge"><div><p class="eyebrow">${lang==="ja"?"はじめて読む人へ":"FIRST-TIME READER"}</p><h2>${pair[0]}</h2><p>${pair[1]}</p></div><div class="beginner-code"><p><strong>${lang==="ja"?"このページの1本":"ONE RULE TO TRACE"}</strong><br>${lang==="ja"?"説明と次のコードを対応させてから、ゲームで変化を確かめよう。":"Match the explanation to this line, then test the change in the game."}</p><pre><code>${esc(pair[2])}</code></pre></div></section>\n<!-- END BEGINNER BRIDGE -->\n`;
+
+  // Put the orientation card directly after the page hero.  Falling back to
+  // </main> used to leave it below the feedback form, long after it was useful.
+  const heroClasses=["data-hero","lesson-hero","track-hero","overview-hero","setup-hero","catalog-hero"];
+  let inserted=false;
+  for(const className of heroClasses){
+    const start=html.search(new RegExp(`<section[^>]*class=["'][^"']*\\b${className}\\b[^"']*["']`));
+    if(start<0)continue;
+    const end=html.indexOf("</section>",start);
+    if(end<0)continue;
+    const at=end+"</section>".length;
+    html=html.slice(0,at)+"\n"+block+html.slice(at);
+    inserted=true;
+    break;
+  }
+  if(!inserted){
+    const anchor=html.includes('<section class="path-list"')?'<section class="path-list"':html.includes('<section class="play-panel"')?'<section class="play-panel"':html.includes('<section class="feedback-section"')?'<section class="feedback-section"':"</main>";
+    html=html.replace(anchor,block+anchor);
+  }
+  writeFileSync(path,html);
 }

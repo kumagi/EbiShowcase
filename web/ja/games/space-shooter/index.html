@@ -40,8 +40,11 @@
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>種類ごとのリスト</strong></div>
       <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>自機・弾・敵を別リストにすると、それぞれ同じUpdateを繰り返せます。全弾×全敵を調べる総当たりは、教材の小さな数なら十分です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>for _, b := range bullets { for _, e := range enemies { check(b,e) } }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="play lesson-play" id="play">
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>全ウェーブを生き残れ。</h2></div><p>矢印キーまたはドラッグで自機を動かし、スペース／タッチで弾を発射します。敵は「ウェーブ」というグループ単位で時間差で降ってきます。今のウェーブをすべて倒すと次のウェーブが来ます。ライフが0になるとゲームオーバーです。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Space Shooter" src="../../../play/space-shooter/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -578,9 +581,8 @@ func main() {
 
 
 
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>自機・弾・敵を別リストにすると、それぞれ同じUpdateを繰り返せます。全弾×全敵を調べる総当たりは、教材の小さな数なら十分です。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>for _, b := range bullets { for _, e := range enemies { check(b,e) } }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
-<!-- END BEGINNER BRIDGE -->
+
+
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../learn.js"></script>
