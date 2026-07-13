@@ -304,6 +304,9 @@
 
 
 
+
+
+
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>状態機械は『入力待ち→味方行動→敵行動→結果』の今の場面を一つのstateで覚える仕組み。A/B/Cまたは画面ボタンをAttack/Guard/Skillへ翻訳し、ターンを順に進めます。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>switch state { case Choose: readCommand(); case Enemy: enemyTurn() }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
 <!-- END BEGINNER BRIDGE -->

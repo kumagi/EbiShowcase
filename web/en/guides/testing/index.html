@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="A four-step guide to extracting pure rules from Ebitengine Update and checking behavior with Go unit tests without opening the game."><title>Make games testable | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Make games testable | Ebi Showcase">
+    <meta property="og:description" content="A four-step guide to extracting pure rules from Ebitengine Update and checking behavior with Go unit tests without opening the game.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Check it in code before playing it.">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Make games testable | Ebi Showcase">
+    <meta name="twitter:description" content="A four-step guide to extracting pure rules from Ebitengine Update and checking behavior with Go unit tests without opening the game.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Check it in code before playing it.">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="./">TESTING</a><a class="lang" href="../../../ja/guides/testing/" lang="ja">日本語</a></nav></header><main><section class="test-hero"><p class="eyebrow">SPECIAL GUIDE / UNIT TESTING</p><h1>Check it in code<br><em>before playing it.</em></h1><p>A person should still play the finished game. But you do not need to manually revisit every collision, score edge, and gauge boundary. Lift the number-in/answer-out rules out of Update and let Go check them repeatedly.</p></section><section class="test-boundary" aria-label="logic boundary"><div><small>Ebitengine layer</small><b>read input</b></div><i>→</i><div class="is-pure"><small>Pure rule</small><b>turn numbers into an answer</b><em>no window, GPU, or touch</em></div><i>→</i><div><small>Back to the game</small><b>update state</b></div></section><section class="test-terminal"><code>$ go test ./...</code><strong>✓ ok  internal/lessonlogic</strong></section><section class="test-course"><p class="eyebrow">COURSE MAP</p><h2>Four small refactors</h2><p>We genuinely refactor earlier lessons into testable code. There is no demo: code and case tables are the visuals.</p><div class="test-course-grid"><a class="test-course-card" href="pure-functions/"><span>01</span><h3>Lift the rule out of the screen</h3><p>Move the circle hit test out of Ebitengine input code and into a tiny function that knows only numbers. The game owns input and drawing; pure logic owns the answer.</p><strong>READ →</strong></a><a class="test-course-card" href="table-tests/"><span>02</span><h3>Turn boundaries into a test table</h3><p>PERFECT / GREAT / GOOD / MISS has bug-prone edges. Put inputs and expected answers in a table instead of copying the same test many times.</p><strong>READ →</strong></a><a class="test-course-card" href="state-transitions/"><span>03</span><h3>Compare the state one tick later</h3><p>An active-battle RPG adds speed to a gauge every tick. Test the exact transition that becomes READY at 1000, one step at a time.</p><strong>READ →</strong></a><a class="test-course-card" href="regression-tests/"><span>04</span><h3>Never reintroduce a fixed bug</h3><p>Match-three special pieces are hard to reproduce by hand. Freeze the failing board as small data and keep a test that fails before the fix.</p><strong>READ →</strong></a></div></section>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/guides/testing/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer><script src="../../../learn.js"></script></body></html>

@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"image/color"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
-	"image/color"
+	"github.com/kumagi/EbiShowcase/internal/lessonlogic"
 )
 
 const W, H = 480, 720
@@ -25,10 +27,10 @@ func (g *game) Update() error {
 	g.tick++
 	for i := range g.rs {
 		r := &g.rs[i]
-		r.gauge += r.speed
-		if r.gauge >= 1000 {
+		var ready bool
+		r.gauge, ready = lessonlogic.AdvanceGauge(r.gauge, r.speed, 1000)
+		if ready {
 			r.wins++
-			r.gauge = 0
 		}
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) || inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || len(inpututil.AppendJustPressedTouchIDs(nil)) > 0 {

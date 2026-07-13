@@ -1,0 +1,69 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="3マッチの特殊ピースは、十字消しや連鎖のように手動確認が難しい仕組みです。バグが起きた盤面を小さなデータで再現し、修正前に失敗するテストとして残します。"><title>直したバグを二度と戻さない | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/testing/regression-tests/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="直したバグを二度と戻さない | Ebi Showcase">
+    <meta property="og:description" content="3マッチの特殊ピースは、十字消しや連鎖のように手動確認が難しい仕組みです。バグが起きた盤面を小さなデータで再現し、修正前に失敗するテストとして残します。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/guides/testing/regression-tests/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--regression-tests.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="直したバグを二度と戻さない">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="直したバグを二度と戻さない | Ebi Showcase">
+    <meta name="twitter:description" content="3マッチの特殊ピースは、十字消しや連鎖のように手動確認が難しい仕組みです。バグが起きた盤面を小さなデータで再現し、修正前に失敗するテストとして残します。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--regression-tests.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="直したバグを二度と戻さない">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../en/guides/testing/regression-tests/" lang="en">EN</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">STEP 04 / 04</p><h1>直したバグを二度と戻さない</h1><p>3マッチの特殊ピースは、十字消しや連鎖のように手動確認が難しい仕組みです。バグが起きた盤面を小さなデータで再現し、修正前に失敗するテストとして残します。</p></section><section class="test-rule-strip"><span>入力・状態</span><i>→</i><strong>純粋関数</strong><i>→</i><span>次の状態・答え</span></section><section class="test-explain"><div><p class="eyebrow">なぜこれで安心できる？</p><h2>再現盤面は『バグを閉じ込めた標本』です。将来コードを整理しても、同じ失敗が戻れば go test が知らせます。</h2></div><div class="test-case-table"><p class="eyebrow">先に、確かめたい例を並べる</p><table><tbody><tr><th>4個・横</th><td><code>row</code></td><td><code>横一列を消す</code></td></tr><tr><th>5個</th><td><code>rainbow</code></td><td><code>同じ色を消す</code></td></tr><tr><th>十字/T字</th><td><code>burst</code></td><td><code>周囲を消す</code></td></tr><tr><th>特殊×特殊</th><td><code>chain</code></td><td><code>連鎖が続く</code></td></tr></tbody></table></div></section><section class="test-code-compare"><article><p>BEFORE / Updateに全部ある</p><pre><code>// 人の確認だけ
+// 1. ゲームを起動
+// 2. 何度も交換
+// 3. 5個並ぶまで待つ
+// 4. 特殊ピースの連鎖を目で見る</code></pre></article><article class="is-after"><p>AFTER / ルールを分ける</p><pre><code>board := [8][8]int{
+  {1, 2, 3, 4, 5, 1, 2, 3},
+  // 必要な並びだけを固定して書く
+}
+
+got := specialForMatch(board, matchedCells)
+want := specialRainbow
+if got != want {
+  t.Fatalf("got %v, want %v", got, want)
+}</code></pre></article></section><section class="test-code-focus"><div><p class="eyebrow">TEST / 期待する答えを書く</p><h2>_test.go</h2><p>再現盤面は『バグを閉じ込めた標本』です。将来コードを整理しても、同じ失敗が戻れば go test が知らせます。</p></div><pre><code>func TestSpecialForMatch(t *testing.T) {
+  tests := []struct {
+    name  string
+    cells []cell
+    want  specialKind
+  }{
+    {"four horizontal", fourInRow(), specialRow},
+    {"five", fiveInRow(), specialRainbow},
+    {"cross", crossShape(), specialBurst},
+  }
+  // 同じ入力を、同じ期待値と比べる
+}</code></pre></section><section class="test-run"><p>このリポジトリで実行</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS — ゲーム画面を開かずに確認できました</strong></section><section class="test-challenge"><p class="eyebrow">YOUR TURN</p><h2>次に見つけたバグは、直す前に最小の盤面で失敗するテストを書こう。直したあと、そのテストは消さずに残します。</h2></section><nav class="test-pager"><a href="../state-transitions/">← 前へ</a><span>4 / 4</span><a href="../">次へ →</a></nav>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/guides/testing/regression-tests/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>コードを読む前の用語メモ</h2><p>structは位置・速さ・HPなど関係する値を一つの箱へまとめる書き方です。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

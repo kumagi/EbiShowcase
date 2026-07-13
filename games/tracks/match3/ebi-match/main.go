@@ -22,6 +22,11 @@ const (
 	boardX       = 48
 	boardY       = 150
 	empty        = -1
+	specialNone  = 0
+	specialRow   = 1
+	specialCol   = 2
+	specialColor = 3
+	specialArea  = 4
 )
 
 var pieceColors = []color.RGBA{
@@ -53,8 +58,8 @@ var firstStage = stage{
 		{0, 1, 2, 3, 4, 0},
 		{1, 2, 0, 4, 0, 1},
 		{2, 0, 3, 0, 1, 2},
-		{3, 2, 0, 1, 2, 3},
-		{4, 0, 1, 2, 3, 4},
+		{3, 0, 0, 1, 0, 3},
+		{4, 4, 1, 2, 3, 4},
 		{0, 1, 2, 3, 4, 0},
 		{1, 2, 3, 4, 0, 1},
 	},
@@ -73,7 +78,7 @@ var stages = []stage{
 }
 
 type faller struct {
-	kind          int
+	kind, special int
 	x, fromY, toY int
 }
 
@@ -85,6 +90,7 @@ type particle struct {
 type game struct {
 	level            stage
 	board            [rows][cols]int
+	specials         [rows][cols]int
 	rng              *rand.Rand
 	cursor, selected point
 	hasSelection     bool
@@ -97,9 +103,18 @@ type game struct {
 	bestScore        int
 	tick, shake      int
 	particles        []particle
+	forge            map[point]int
+	forgeAnchor      point
+	forgeAnchorValid bool
 
-	// Juice: flash matched cells, then lerp falls. Input is ignored while busy.
+	// Juice: animate swaps, flash matched cells, then lerp falls. Input is
+	// ignored while one of these visual states is active.
 	busy      bool
+	swapping  bool
+	swapBack  bool
+	swapFrom  point
+	swapTo    point
+	swapT     float64
 	flash     map[point]bool
 	flashLeft int
 	falling   bool
@@ -152,6 +167,10 @@ func (g *game) Update() error {
 	}
 
 	if g.busy {
+		if g.swapping {
+			g.updateSwap()
+			return nil
+		}
 		if g.flashLeft > 0 {
 			g.flashLeft--
 			if g.flashLeft == 0 {
@@ -221,15 +240,52 @@ func (g *game) choose(p point) {
 
 	a := g.selected
 	g.hasSelection = false
-	g.board[a.y][a.x], g.board[p.y][p.x] = g.board[p.y][p.x], g.board[a.y][a.x]
-	if len(scan(g.board)) == 0 {
-		g.board[a.y][a.x], g.board[p.y][p.x] = g.board[p.y][p.x], g.board[a.y][a.x]
+	g.busy = true
+	g.swapping = true
+	g.swapBack = false
+	g.swapFrom = a
+	g.swapTo = p
+	g.swapT = 0
+	g.message = "Swapping..."
+}
+
+func (g *game) updateSwap() {
+	g.swapT += 0.12
+	if g.swapT < 1 {
+		return
+	}
+	if g.swapBack {
+		g.swapping = false
+		g.busy = false
+		g.swapT = 0
 		g.message = "No line—swap returned. Try again!"
 		return
 	}
 
+	test := g.board
+	a, b := g.swapFrom, g.swapTo
+	test[a.y][a.x], test[b.y][b.x] = test[b.y][b.x], test[a.y][a.x]
+	matches := scan(test)
+	if len(matches) == 0 {
+		g.swapBack = true
+		g.swapT = 0
+		g.message = "No match—returning the pieces."
+		return
+	}
+
+	g.board = test
+	g.specials[a.y][a.x], g.specials[b.y][b.x] = g.specials[b.y][b.x], g.specials[a.y][a.x]
+	g.swapping = false
+	g.swapT = 0
 	g.moves--
 	g.combo = 0
+	if matches[b] {
+		g.forgeAnchor = b
+		g.forgeAnchorValid = true
+	} else if matches[a] {
+		g.forgeAnchor = a
+		g.forgeAnchorValid = true
+	}
 	g.resolveMatches()
 }
 
@@ -237,6 +293,7 @@ func (g *game) resolveMatches() {
 	matches := scan(g.board)
 	if len(matches) == 0 {
 		g.pending = false
+		g.forgeAnchorValid = false
 		if !hasValidSwap(g.board) {
 			g.makePlayableBoard()
 		}
@@ -251,6 +308,16 @@ func (g *game) resolveMatches() {
 		}
 		return
 	}
+	g.forge = nil
+	forgedName := ""
+	if g.forgeAnchorValid && matches[g.forgeAnchor] && g.specials[g.forgeAnchor.y][g.forgeAnchor.x] == specialNone {
+		if special := specialForMatch(g.board, g.forgeAnchor); special != specialNone {
+			g.forge = map[point]int{g.forgeAnchor: special}
+			forgedName = specialName(special)
+		}
+	}
+	g.forgeAnchorValid = false
+	matches = g.expandSpecials(matches)
 	g.combo++
 	multiplier := g.combo + g.level.chainBoost
 	gain := len(matches) * 10 * multiplier
@@ -271,7 +338,11 @@ func (g *game) resolveMatches() {
 			g.particles = append(g.particles, particle{float64(boardX + p.x*cell + cell/2), float64(boardY + p.y*cell + cell/2), math.Cos(a) * (1 + float64(g.combo)*.2), math.Sin(a) * (1 + float64(g.combo)*.2), 24, g.board[p.y][p.x]})
 		}
 	}
-	g.message = fmt.Sprintf("%d pieces! Chain x%d", len(matches), g.combo)
+	if forgedName != "" {
+		g.message = fmt.Sprintf("%s forged! %d cleared", forgedName, len(matches)-1)
+	} else {
+		g.message = fmt.Sprintf("%d pieces! Chain x%d", len(matches), g.combo)
+	}
 	g.flash = matches
 	g.flashLeft = 10
 	g.busy = true
@@ -280,6 +351,7 @@ func (g *game) resolveMatches() {
 
 func (g *game) beginFall() {
 	old := g.board
+	oldSpecials := g.specials
 	g.fallOnly()
 	g.fallers = nil
 	for x := 0; x < cols; x++ {
@@ -297,7 +369,7 @@ func (g *game) beginFall() {
 			from := src[si]
 			si++
 			if from != y {
-				g.fallers = append(g.fallers, faller{kind: g.board[y][x], x: x, fromY: from, toY: y})
+				g.fallers = append(g.fallers, faller{kind: g.board[y][x], special: oldSpecials[from][x], x: x, fromY: from, toY: y})
 			}
 		}
 	}
@@ -319,14 +391,17 @@ func (g *game) fallOnly() {
 		for y := rows - 1; y >= 0; y-- {
 			if g.board[y][x] != empty {
 				g.board[write][x] = g.board[y][x]
+				g.specials[write][x] = g.specials[y][x]
 				if write != y {
 					g.board[y][x] = empty
+					g.specials[y][x] = specialNone
 				}
 				write--
 			}
 		}
 		for write >= 0 {
 			g.board[write][x] = empty
+			g.specials[write][x] = specialNone
 			write--
 		}
 	}
@@ -337,6 +412,7 @@ func (g *game) refillEmpties() {
 		for x := 0; x < cols; x++ {
 			if g.board[y][x] == empty {
 				g.board[y][x] = g.rng.Intn(len(pieceColors))
+				g.specials[y][x] = specialNone
 			}
 		}
 	}
@@ -373,10 +449,113 @@ func scan(board [rows][cols]int) map[point]bool {
 	return found
 }
 
+func runAt(board [rows][cols]int, p point, dx, dy int) int {
+	kind := board[p.y][p.x]
+	if kind == empty {
+		return 0
+	}
+	count := 1
+	for x, y := p.x-dx, p.y-dy; x >= 0 && x < cols && y >= 0 && y < rows && board[y][x] == kind; x, y = x-dx, y-dy {
+		count++
+	}
+	for x, y := p.x+dx, p.y+dy; x >= 0 && x < cols && y >= 0 && y < rows && board[y][x] == kind; x, y = x+dx, y+dy {
+		count++
+	}
+	return count
+}
+
+func specialForMatch(board [rows][cols]int, p point) int {
+	horizontal := runAt(board, p, 1, 0)
+	vertical := runAt(board, p, 0, 1)
+	if horizontal >= 3 && vertical >= 3 {
+		return specialArea
+	}
+	if horizontal >= 5 || vertical >= 5 {
+		return specialColor
+	}
+	if horizontal >= 4 {
+		return specialRow
+	}
+	if vertical >= 4 {
+		return specialCol
+	}
+	return specialNone
+}
+
+func specialName(special int) string {
+	switch special {
+	case specialRow:
+		return "ROW ROCKET"
+	case specialCol:
+		return "COLUMN ROCKET"
+	case specialColor:
+		return "COLOR WAVE"
+	case specialArea:
+		return "AREA BOMB"
+	default:
+		return "SPECIAL"
+	}
+}
+
+func (g *game) expandSpecials(matches map[point]bool) map[point]bool {
+	for {
+		changed := false
+		for p := range matches {
+			special := g.specials[p.y][p.x]
+			if special == specialNone {
+				continue
+			}
+			add := func(q point) {
+				if !matches[q] {
+					matches[q] = true
+					changed = true
+				}
+			}
+			switch special {
+			case specialRow:
+				for x := 0; x < cols; x++ {
+					add(point{x, p.y})
+				}
+			case specialCol:
+				for y := 0; y < rows; y++ {
+					add(point{p.x, y})
+				}
+			case specialColor:
+				kind := g.board[p.y][p.x]
+				for y := 0; y < rows; y++ {
+					for x := 0; x < cols; x++ {
+						if g.board[y][x] == kind {
+							add(point{x, y})
+						}
+					}
+				}
+			case specialArea:
+				for y := max(0, p.y-1); y <= min(rows-1, p.y+1); y++ {
+					for x := max(0, p.x-1); x <= min(cols-1, p.x+1); x++ {
+						add(point{x, y})
+					}
+				}
+			}
+			// Mark this special as consumed for this resolution pass. Any newly
+			// reached special remains available and will be expanded next.
+			g.specials[p.y][p.x] = specialNone
+		}
+		if !changed {
+			return matches
+		}
+	}
+}
+
 func (g *game) clear(matches map[point]bool) {
 	for p := range matches {
+		if special, keep := g.forge[p]; keep {
+			g.specials[p.y][p.x] = special
+			continue
+		}
 		g.board[p.y][p.x] = empty
+		g.specials[p.y][p.x] = specialNone
 	}
+	g.forge = nil
 }
 
 func (g *game) fallAndRefill() {
@@ -399,6 +578,7 @@ func (g *game) makePlayableBoard() {
 						continue
 					}
 					g.board[y][x] = kind
+					g.specials[y][x] = specialNone
 					break
 				}
 			}
@@ -449,12 +629,16 @@ func (g *game) Draw(screen *ebiten.Image) {
 	ebitenutil.DebugPrintAt(screen, g.message, 112, 132)
 
 	animating := map[point]bool{}
+	if g.swapping {
+		animating[g.swapFrom] = true
+		animating[g.swapTo] = true
+	}
 	if g.falling {
 		for _, f := range g.fallers {
 			animating[point{f.x, f.toY}] = true
 			py := float32(boardY) + float32(float64(f.fromY)+float64(f.toY-f.fromY)*g.progress)*cell
-			px := float32(boardX + f.x*cell)
-			trackatlas.Draw(screen, trackatlas.Gem(f.kind), float64(px+3)+ox, float64(py+3), float64(cell-6))
+			px := float64(boardX+f.x*cell+cell/2) + ox
+			drawPiece(screen, f.kind, f.special, px, float64(py)+cell/2, cell-6, 1)
 		}
 	}
 	for y := 0; y < rows; y++ {
@@ -475,6 +659,11 @@ func (g *game) Draw(screen *ebiten.Image) {
 				bob := math.Sin(float64(g.tick)*.06+float64(x+y)) * .8
 				trackatlas.Draw(screen, trackatlas.Gem(g.board[y][x]), float64(px+3)+ox, float64(py+3)+bob, float64(cell-6))
 			}
+			special := g.specials[y][x]
+			if forged, ok := g.forge[point{x, y}]; ok {
+				special = forged
+			}
+			drawSpecial(screen, special, float64(px+cell/2)+ox, float64(py+cell/2), cell-6, 1)
 			if g.hasSelection && g.selected == (point{x, y}) {
 				vector.StrokeRect(screen, px+2, py+2, cell-4, cell-4, 6, color.White, false)
 			}
@@ -483,12 +672,24 @@ func (g *game) Draw(screen *ebiten.Image) {
 			}
 		}
 	}
+	if g.swapping {
+		t := smoothstep(g.swapT)
+		if g.swapBack {
+			t = 1 - t
+		}
+		a, b := g.swapFrom, g.swapTo
+		ax, ay := cellCenter(a)
+		bx, by := cellCenter(b)
+		drawPiece(screen, g.board[a.y][a.x], g.specials[a.y][a.x], ax+(bx-ax)*t+ox, ay+(by-ay)*t, cell-6, 1)
+		drawPiece(screen, g.board[b.y][b.x], g.specials[b.y][b.x], bx+(ax-bx)*t+ox, by+(ay-by)*t, cell-6, 1)
+	}
 	for _, p := range g.particles {
 		c := pieceColors[p.kind%len(pieceColors)]
 		vector.DrawFilledCircle(screen, float32(p.x+ox), float32(p.y), float32(2+p.life/10), c, true)
 	}
-	ebitenutil.DebugPrintAt(screen, "Tap two neighbors  |  Arrows + Space", 90, 628)
-	ebitenutil.DebugPrintAt(screen, "Reach the gold score before moves run out", 74, 654)
+	ebitenutil.DebugPrintAt(screen, "4: ROCKET   5: WAVE   L/T: BOMB", 91, 615)
+	ebitenutil.DebugPrintAt(screen, "Tap two neighbors  |  Arrows + Space", 90, 641)
+	ebitenutil.DebugPrintAt(screen, "Reach the gold score before moves run out", 74, 667)
 	if g.won {
 		next := "NEXT REEF"
 		if g.stageIndex == len(stages)-1 {
@@ -498,6 +699,55 @@ func (g *game) Draw(screen *ebiten.Image) {
 	}
 	if g.lost {
 		overlay(screen, "OUT OF MOVES\n\nTAP / SPACE TO RETRY")
+	}
+}
+
+func cellCenter(p point) (float64, float64) {
+	return float64(boardX + p.x*cell + cell/2), float64(boardY + p.y*cell + cell/2)
+}
+
+func smoothstep(t float64) float64 {
+	if t < 0 {
+		t = 0
+	}
+	if t > 1 {
+		t = 1
+	}
+	return t * t * (3 - 2*t)
+}
+
+func drawPiece(screen *ebiten.Image, kind, special int, x, y, size, alpha float64) {
+	trackatlas.DrawCentered(screen, trackatlas.Gem(kind), x, y, float64(size))
+	drawSpecial(screen, special, x, y, size, alpha)
+}
+
+func drawSpecial(screen *ebiten.Image, special int, x, y, size, alpha float64) {
+	if special == specialNone {
+		return
+	}
+	a := uint8(255 * alpha)
+	white := color.RGBA{255, 255, 255, a}
+	gold := color.RGBA{255, 214, 82, a}
+	fx, fy := float32(x), float32(y)
+	r := float32(size * 0.31)
+	switch special {
+	case specialRow:
+		vector.DrawFilledRect(screen, fx-r, fy-5, r*2, 10, color.RGBA{25, 31, 55, a}, false)
+		vector.StrokeLine(screen, fx-r, fy, fx+r, fy, 4, white, false)
+		vector.StrokeCircle(screen, fx, fy, 7, 3, gold, false)
+	case specialCol:
+		vector.DrawFilledRect(screen, fx-5, fy-r, 10, r*2, color.RGBA{25, 31, 55, a}, false)
+		vector.StrokeLine(screen, fx, fy-r, fx, fy+r, 4, white, false)
+		vector.StrokeCircle(screen, fx, fy, 7, 3, gold, false)
+	case specialColor:
+		vector.DrawFilledCircle(screen, fx, fy, r*.72, color.RGBA{20, 26, 48, 220}, false)
+		vector.StrokeCircle(screen, fx, fy, r*.8, 4, white, false)
+		vector.StrokeCircle(screen, fx, fy, r*.45, 3, gold, false)
+	case specialArea:
+		vector.DrawFilledCircle(screen, fx, fy, r*.72, color.RGBA{25, 31, 55, 235}, false)
+		vector.StrokeCircle(screen, fx, fy, r*.8, 4, gold, false)
+		vector.StrokeLine(screen, fx-r*.6, fy, fx+r*.6, fy, 3, white, false)
+		vector.StrokeLine(screen, fx, fy-r*.6, fx, fy+r*.6, 3, white, false)
 	}
 }
 

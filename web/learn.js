@@ -882,12 +882,19 @@ document.querySelectorAll(".motion-lab[data-lab='flag']").forEach((lab) => {
 });
 
 document.querySelectorAll(".motion-lab[data-lab='turn']").forEach((lab) => {
-  const stateOut = bind(lab, "[data-lab-state]");
+  const stateOut = bind(lab, "[data-lab-state]") || lab.querySelector(".lab-readout");
+  const board = lab.querySelector("[data-lab-board], .lab-board, .lab-entities");
   const states = (lab.dataset.states || "select,player,enemy,win").split(",");
   if (!stateOut) return;
   let i = 0;
-  const render = () => setText(stateOut, states[i]);
-  bind(lab, "[data-lab-step]")?.addEventListener("click", () => { i = (i + 1) % states.length; render(); });
+  const render = () => {
+    setText(stateOut, states[i]);
+    if (board) {
+      board.innerHTML = `<div class="lab-turn-row">${states.map((state, n) =>
+        `<span class="${n === i ? "now" : n < i ? "done" : ""}">${state}</span>`).join("<b>→</b>")}</div>`;
+    }
+  };
+  (bind(lab, "[data-lab-step]") || lab.querySelector(".lab-action"))?.addEventListener("click", () => { i = (i + 1) % states.length; render(); });
   bind(lab, "[data-lab-reset]")?.addEventListener("click", () => { i = 0; render(); });
   render();
 });
@@ -3129,7 +3136,7 @@ document.querySelectorAll(".motion-lab[data-lab='fx-snake']").forEach((lab) => {
 /* --- Mono-board visual upgrade (paint empty data-lab-board from live values) --- */
 
 function labBoard(lab) {
-  return lab.querySelector("[data-lab-board]") || lab.querySelector(".lab-board");
+  return lab.querySelector("[data-lab-board]") || lab.querySelector(".lab-board") || lab.querySelector(".lab-entities");
 }
 
 function watchLabPaint(lab, paint) {

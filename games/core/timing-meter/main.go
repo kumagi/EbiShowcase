@@ -5,6 +5,8 @@ import (
 	"image/color"
 	"math"
 
+	"github.com/kumagi/EbiShowcase/internal/lessonlogic"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -43,16 +45,7 @@ func justPressed() bool {
 
 // 中心からの距離で得点を決める
 func pointsForDistance(distance float64) (points int, label string) {
-	switch {
-	case distance <= 8:
-		return 100, "PERFECT +100"
-	case distance <= 28:
-		return 50, "GREAT +50"
-	case distance <= 55:
-		return 10, "GOOD +10"
-	default:
-		return 0, "MISS"
-	}
+	return lessonlogic.TimingScore(distance)
 }
 
 // --- ここから Update ---
@@ -81,13 +74,7 @@ func (g *game) Update() error {
 	}
 
 	// 線を動かす
-	g.markerX += g.speed
-
-	// 端に当たったら向きを変える
-	if g.markerX < barLeft || g.markerX > barRight {
-		g.speed = -g.speed
-		g.markerX = math.Max(barLeft, math.Min(barRight, g.markerX))
-	}
+	g.markerX, g.speed = lessonlogic.BouncedPosition(g.markerX, g.speed, barLeft, barRight)
 	return nil
 }
 

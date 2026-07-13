@@ -6,6 +6,8 @@ import (
 	"math"
 	"math/rand"
 
+	"github.com/kumagi/EbiShowcase/internal/lessonlogic"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -88,10 +90,7 @@ func (g *game) Update() error {
 
 	// 押した瞬間だけ、丸との距離を調べる
 	if pressed {
-		dx := float64(px) - g.circleX
-		dy := float64(py) - g.circleY
-		distance := math.Hypot(dx, dy)
-		if distance <= g.radius {
+		if lessonlogic.PointInCircle(float64(px), float64(py), g.circleX, g.circleY, g.radius) {
 			g.score++
 			// 当たるほど丸を少し小さくする
 			g.radius = math.Max(22, 38-float64(g.score)/2)

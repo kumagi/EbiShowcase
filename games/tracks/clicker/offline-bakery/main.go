@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
+	"image/color"
+	"math"
+	"strconv"
+	"time"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
-	"image/color"
-	"math"
-	"strconv"
-	"syscall/js"
-	"time"
 )
 
 const width, height = 480, 720
@@ -38,20 +38,24 @@ func newGame() *game {
 func (g *game) rate() float64     { return float64(g.ovens)*2 + float64(g.mixers)*15 + float64(g.shops)*80 }
 func (g *game) tapPower() float64 { return 1 + float64(g.ovens)*.25 + float64(g.mixers) }
 func (g *game) load() {
-	store := js.Global().Get("localStorage")
-	raw := store.Call("getItem", prefix+"sweets")
-	if raw.Type() != js.TypeString {
+	raw, ok := storageGet(prefix + "sweets")
+	if !ok {
 		return
 	}
-	g.sweets, _ = strconv.ParseFloat(raw.String(), 64)
-	g.total, _ = strconv.ParseFloat(store.Call("getItem", prefix+"total").String(), 64)
-	g.ovens, _ = strconv.Atoi(store.Call("getItem", prefix+"ovens").String())
-	g.mixers, _ = strconv.Atoi(store.Call("getItem", prefix+"mixers").String())
-	g.shops, _ = strconv.Atoi(store.Call("getItem", prefix+"shops").String())
+	g.sweets, _ = strconv.ParseFloat(raw, 64)
+	total, _ := storageGet(prefix + "total")
+	ovens, _ := storageGet(prefix + "ovens")
+	mixers, _ := storageGet(prefix + "mixers")
+	shops, _ := storageGet(prefix + "shops")
+	g.total, _ = strconv.ParseFloat(total, 64)
+	g.ovens, _ = strconv.Atoi(ovens)
+	g.mixers, _ = strconv.Atoi(mixers)
+	g.shops, _ = strconv.Atoi(shops)
 	g.cost = 20 * math.Pow(1.25, float64(g.ovens))
 	g.mixerCost = 180 * math.Pow(1.32, float64(g.mixers))
 	g.shopCost = 1600 * math.Pow(1.38, float64(g.shops))
-	stamp, _ := strconv.ParseInt(store.Call("getItem", prefix+"time").String(), 10, 64)
+	timeValue, _ := storageGet(prefix + "time")
+	stamp, _ := strconv.ParseInt(timeValue, 10, 64)
 	away := math.Min(8*3600, float64(time.Now().Unix()-stamp))
 	if away > 0 {
 		g.offline = away * g.rate()
@@ -60,13 +64,12 @@ func (g *game) load() {
 	}
 }
 func (g *game) save() {
-	s := js.Global().Get("localStorage")
-	s.Call("setItem", prefix+"sweets", fmt.Sprintf("%.3f", g.sweets))
-	s.Call("setItem", prefix+"total", fmt.Sprintf("%.3f", g.total))
-	s.Call("setItem", prefix+"ovens", strconv.Itoa(g.ovens))
-	s.Call("setItem", prefix+"mixers", strconv.Itoa(g.mixers))
-	s.Call("setItem", prefix+"shops", strconv.Itoa(g.shops))
-	s.Call("setItem", prefix+"time", strconv.FormatInt(time.Now().Unix(), 10))
+	storageSet(prefix+"sweets", fmt.Sprintf("%.3f", g.sweets))
+	storageSet(prefix+"total", fmt.Sprintf("%.3f", g.total))
+	storageSet(prefix+"ovens", strconv.Itoa(g.ovens))
+	storageSet(prefix+"mixers", strconv.Itoa(g.mixers))
+	storageSet(prefix+"shops", strconv.Itoa(g.shops))
+	storageSet(prefix+"time", strconv.FormatInt(time.Now().Unix(), 10))
 	g.lastSave = 2
 }
 func (g *game) Update() error {
@@ -106,13 +109,9 @@ func (g *game) Update() error {
 		g.save()
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
-		s := js.Global().Get("localStorage")
-		s.Call("removeItem", prefix+"sweets")
-		s.Call("removeItem", prefix+"total")
-		s.Call("removeItem", prefix+"ovens")
-		s.Call("removeItem", prefix+"mixers")
-		s.Call("removeItem", prefix+"shops")
-		s.Call("removeItem", prefix+"time")
+		for _, key := range []string{"sweets", "total", "ovens", "mixers", "shops", "time"} {
+			storageRemove(prefix + key)
+		}
 		*g = *newGame()
 		return nil
 	}

@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
+	"image/color"
+	"math"
+	"strconv"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/hero"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
-	"image/color"
-	"math"
-	"strconv"
-	"syscall/js"
 )
 
 const width, height, tile = 480, 720, 48
@@ -31,24 +31,25 @@ func newGame() *game {
 	return g
 }
 func (g *game) load() {
-	s := js.Global().Get("localStorage")
-	q := s.Call("getItem", saveKey+"quest")
-	if q.Type() != js.TypeString {
+	q, ok := storageGet(saveKey + "quest")
+	if !ok {
 		return
 	}
-	g.quest, _ = strconv.Atoi(q.String())
-	g.x, _ = strconv.Atoi(s.Call("getItem", saveKey+"x").String())
-	g.y, _ = strconv.Atoi(s.Call("getItem", saveKey+"y").String())
-	g.hp, _ = strconv.Atoi(s.Call("getItem", saveKey+"hp").String())
+	x, _ := storageGet(saveKey + "x")
+	y, _ := storageGet(saveKey + "y")
+	hp, _ := storageGet(saveKey + "hp")
+	g.quest, _ = strconv.Atoi(q)
+	g.x, _ = strconv.Atoi(x)
+	g.y, _ = strconv.Atoi(y)
+	g.hp, _ = strconv.Atoi(hp)
 	g.companion = g.quest > 0
 	g.setMessage()
 }
 func (g *game) save() {
-	s := js.Global().Get("localStorage")
-	s.Call("setItem", saveKey+"quest", strconv.Itoa(g.quest))
-	s.Call("setItem", saveKey+"x", strconv.Itoa(g.x))
-	s.Call("setItem", saveKey+"y", strconv.Itoa(g.y))
-	s.Call("setItem", saveKey+"hp", strconv.Itoa(g.hp))
+	storageSet(saveKey+"quest", strconv.Itoa(g.quest))
+	storageSet(saveKey+"x", strconv.Itoa(g.x))
+	storageSet(saveKey+"y", strconv.Itoa(g.y))
+	storageSet(saveKey+"hp", strconv.Itoa(g.hp))
 }
 func (g *game) Update() error {
 	g.tick++
@@ -59,9 +60,8 @@ func (g *game) Update() error {
 		g.flash--
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
-		s := js.Global().Get("localStorage")
 		for _, k := range []string{"quest", "x", "y", "hp"} {
-			s.Call("removeItem", saveKey+k)
+			storageRemove(saveKey + k)
 		}
 		*g = *newGame()
 		return nil
@@ -137,9 +137,8 @@ func (g *game) startBattle(enemy, hp int, msg string) {
 	g.message = msg
 }
 func (g *game) resetSave() {
-	s := js.Global().Get("localStorage")
 	for _, k := range []string{"quest", "x", "y", "hp"} {
-		s.Call("removeItem", saveKey+k)
+		storageRemove(saveKey + k)
 	}
 }
 func (g *game) battle() error {

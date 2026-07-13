@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-07-13T07:09:57.506Z",
+  "generatedAt": "2026-07-13T10:56:36.763Z",
   "pages": [
     {
       "file": "web/en/games/breakout/index.html",
@@ -181,6 +181,66 @@
       "eyebrow": "START HERE / ENVIRONMENT",
       "description": "Step-by-step: install Go and Ebitengine on a fresh Windows or macOS machine, then run a do-nothing empty window.",
       "image": "assets/og/en--guides--setup.png"
+    },
+    {
+      "file": "web/en/guides/testing/index.html",
+      "path": "en/guides/testing",
+      "key": "en--guides--testing",
+      "lang": "en",
+      "kind": "guide",
+      "title": "Make games testable | Ebi Showcase",
+      "h1": "Check it in code before playing it.",
+      "eyebrow": "SPECIAL GUIDE / UNIT TESTING",
+      "description": "A four-step guide to extracting pure rules from Ebitengine Update and checking behavior with Go unit tests without opening the game.",
+      "image": "assets/og/en--guides--testing.png"
+    },
+    {
+      "file": "web/en/guides/testing/pure-functions/index.html",
+      "path": "en/guides/testing/pure-functions",
+      "key": "en--guides--testing--pure-functions",
+      "lang": "en",
+      "kind": "guide",
+      "title": "Lift the rule out of the screen | Ebi Showcase",
+      "h1": "Lift the rule out of the screen",
+      "eyebrow": "STEP 01 / 04",
+      "description": "Move the circle hit test out of Ebitengine input code and into a tiny function that knows only numbers. The game owns input and drawing; pure logic owns the answer.",
+      "image": "assets/og/en--guides--testing--pure-functions.png"
+    },
+    {
+      "file": "web/en/guides/testing/regression-tests/index.html",
+      "path": "en/guides/testing/regression-tests",
+      "key": "en--guides--testing--regression-tests",
+      "lang": "en",
+      "kind": "guide",
+      "title": "Never reintroduce a fixed bug | Ebi Showcase",
+      "h1": "Never reintroduce a fixed bug",
+      "eyebrow": "STEP 04 / 04",
+      "description": "Match-three special pieces are hard to reproduce by hand. Freeze the failing board as small data and keep a test that fails before the fix.",
+      "image": "assets/og/en--guides--testing--regression-tests.png"
+    },
+    {
+      "file": "web/en/guides/testing/state-transitions/index.html",
+      "path": "en/guides/testing/state-transitions",
+      "key": "en--guides--testing--state-transitions",
+      "lang": "en",
+      "kind": "guide",
+      "title": "Compare the state one tick later | Ebi Showcase",
+      "h1": "Compare the state one tick later",
+      "eyebrow": "STEP 03 / 04",
+      "description": "An active-battle RPG adds speed to a gauge every tick. Test the exact transition that becomes READY at 1000, one step at a time.",
+      "image": "assets/og/en--guides--testing--state-transitions.png"
+    },
+    {
+      "file": "web/en/guides/testing/table-tests/index.html",
+      "path": "en/guides/testing/table-tests",
+      "key": "en--guides--testing--table-tests",
+      "lang": "en",
+      "kind": "guide",
+      "title": "Turn boundaries into a test table | Ebi Showcase",
+      "h1": "Turn boundaries into a test table",
+      "eyebrow": "STEP 02 / 04",
+      "description": "PERFECT / GREAT / GOOD / MISS has bug-prone edges. Put inputs and expected answers in a table instead of copying the same test many times.",
+      "image": "assets/og/en--guides--testing--table-tests.png"
     },
     {
       "file": "web/en/index.html",
@@ -995,7 +1055,7 @@
       "title": "Ebi Match | Ebi Showcase",
       "h1": "Ebi Match",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Connect swapping, matching, falling, and cascades into a level where you chase a score before your moves run out.",
+      "description": "The complete game combines animated swaps, matches, falling, cascades, and special pieces before moves run out.",
       "image": "assets/og/en--tracks--match3--ebi-match.png"
     },
     {
@@ -2943,6 +3003,66 @@
       "image": "assets/og/ja--guides--setup.png"
     },
     {
+      "file": "web/ja/guides/testing/index.html",
+      "path": "ja/guides/testing",
+      "key": "ja--guides--testing",
+      "lang": "ja",
+      "kind": "guide",
+      "title": "ゲームをテストできる形にする | Ebi Showcase",
+      "h1": "遊んで確かめる前に、 コードで確かめる。",
+      "eyebrow": "SPECIAL GUIDE / UNIT TESTING",
+      "description": "EbitengineのUpdateから純粋なゲームルールを取り出し、Goのユニットテストで画面を開かずに挙動を確かめる4ステップ教材。",
+      "image": "assets/og/ja--guides--testing.png"
+    },
+    {
+      "file": "web/ja/guides/testing/pure-functions/index.html",
+      "path": "ja/guides/testing/pure-functions",
+      "key": "ja--guides--testing--pure-functions",
+      "lang": "ja",
+      "kind": "guide",
+      "title": "画面からルールを取り出す | Ebi Showcase",
+      "h1": "画面からルールを取り出す",
+      "eyebrow": "STEP 01 / 04",
+      "description": "クリック位置と丸の当たり判定を、Ebitengineを知らない小さな関数へ移します。入力と描画はゲーム側、答えを出す計算は純粋ロジック側です。",
+      "image": "assets/og/ja--guides--testing--pure-functions.png"
+    },
+    {
+      "file": "web/ja/guides/testing/regression-tests/index.html",
+      "path": "ja/guides/testing/regression-tests",
+      "key": "ja--guides--testing--regression-tests",
+      "lang": "ja",
+      "kind": "guide",
+      "title": "直したバグを二度と戻さない | Ebi Showcase",
+      "h1": "直したバグを二度と戻さない",
+      "eyebrow": "STEP 04 / 04",
+      "description": "3マッチの特殊ピースは、十字消しや連鎖のように手動確認が難しい仕組みです。バグが起きた盤面を小さなデータで再現し、修正前に失敗するテストとして残します。",
+      "image": "assets/og/ja--guides--testing--regression-tests.png"
+    },
+    {
+      "file": "web/ja/guides/testing/state-transitions/index.html",
+      "path": "ja/guides/testing/state-transitions",
+      "key": "ja--guides--testing--state-transitions",
+      "lang": "ja",
+      "kind": "guide",
+      "title": "1フレーム後の状態を比べる | Ebi Showcase",
+      "h1": "1フレーム後の状態を比べる",
+      "eyebrow": "STEP 03 / 04",
+      "description": "アクティブ戦闘RPGでは、毎フレーム『ゲージ + 素早さ』を計算します。1000に届いた瞬間だけREADYになる状態遷移を、1歩ずつテストします。",
+      "image": "assets/og/ja--guides--testing--state-transitions.png"
+    },
+    {
+      "file": "web/ja/guides/testing/table-tests/index.html",
+      "path": "ja/guides/testing/table-tests",
+      "key": "ja--guides--testing--table-tests",
+      "lang": "ja",
+      "kind": "guide",
+      "title": "境目をテストの表にする | Ebi Showcase",
+      "h1": "境目をテストの表にする",
+      "eyebrow": "STEP 02 / 04",
+      "description": "タイミングメーターの PERFECT / GREAT / GOOD / MISS は、境目でバグが起きやすいルールです。似た確認をコピーせず、入力と期待する答えを表にします。",
+      "image": "assets/og/ja--guides--testing--table-tests.png"
+    },
+    {
       "file": "web/ja/index.html",
       "path": "ja",
       "key": "ja",
@@ -3755,7 +3875,7 @@
       "title": "Ebi Match | Ebi Showcase",
       "h1": "Ebi Match",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "交換、3個並び、落下、連鎖を一つにつなぎ、手数がなくなる前に目標点をめざすステージを完成させます。",
+      "description": "交換アニメーション、3個並び、落下、連鎖、特殊ピースを全部つなぎ、手数がなくなる前に目標点をめざす完成版です。",
       "image": "assets/og/ja--tracks--match3--ebi-match.png"
     },
     {

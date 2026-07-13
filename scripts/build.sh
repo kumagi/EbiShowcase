@@ -2,6 +2,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 node "$ROOT/scripts/gen-setup-guide.mjs"
+node "$ROOT/scripts/gen-testing-guide.mjs"
 node "$ROOT/scripts/gen-visual-effects.mjs"
 node "$ROOT/scripts/gen-expansion-tracks.mjs"
 node "$ROOT/scripts/gen-tactics-polish.mjs"

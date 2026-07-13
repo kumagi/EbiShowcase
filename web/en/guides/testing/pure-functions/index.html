@@ -1,0 +1,68 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Move the circle hit test out of Ebitengine input code and into a tiny function that knows only numbers. The game owns input and drawing; pure logic owns the answer."><title>Lift the rule out of the screen | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/pure-functions/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Lift the rule out of the screen | Ebi Showcase">
+    <meta property="og:description" content="Move the circle hit test out of Ebitengine input code and into a tiny function that knows only numbers. The game owns input and drawing; pure logic owns the answer.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/pure-functions/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--pure-functions.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Lift the rule out of the screen">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Lift the rule out of the screen | Ebi Showcase">
+    <meta name="twitter:description" content="Move the circle hit test out of Ebitengine input code and into a tiny function that knows only numbers. The game owns input and drawing; pure logic owns the answer.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--pure-functions.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Lift the rule out of the screen">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/pure-functions/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">STEP 01 / 04</p><h1>Lift the rule out of the screen</h1><p>Move the circle hit test out of Ebitengine input code and into a tiny function that knows only numbers. The game owns input and drawing; pure logic owns the answer.</p></section><section class="test-rule-strip"><span>input + state</span><i>→</i><strong>pure function</strong><i>→</i><span>next state + answer</span></section><section class="test-explain"><div><p class="eyebrow">Why does this build confidence?</p><h2>A function that always returns the same answer for the same numbers can be checked repeatedly without opening a window.</h2></div><div class="test-case-table"><p class="eyebrow">List the cases first</p><table><tbody><tr><th>center</th><td><code>(100, 80)</code></td><td><code>true</code></td></tr><tr><th>edge</th><td><code>(130, 80)</code></td><td><code>true</code></td></tr><tr><th>1px outside</th><td><code>(131, 80)</code></td><td><code>false</code></td></tr></tbody></table></div></section><section class="test-code-compare"><article><p>BEFORE / Everything lives in Update</p><pre><code>func (g *game) Update() error {
+  px, py := ebiten.CursorPosition()
+  dx := float64(px) - g.circleX
+  dy := float64(py) - g.circleY
+  if math.Hypot(dx, dy) &lt;= g.radius {
+    g.score++
+  }
+  return nil
+}</code></pre></article><article class="is-after"><p>AFTER / Separate the rule</p><pre><code>// This file does not import Ebitengine.
+func PointInCircle(px, py, cx, cy, radius float64) bool {
+  dx := px - cx
+  dy := py - cy
+  return math.Hypot(dx, dy) &lt;= radius
+}
+
+// Update only connects input to state.
+if lessonlogic.PointInCircle(px, py, g.circleX, g.circleY, g.radius) {
+  g.score++
+}</code></pre></article></section><section class="test-code-focus"><div><p class="eyebrow">TEST / Write the expected answer</p><h2>_test.go</h2><p>A function that always returns the same answer for the same numbers can be checked repeatedly without opening a window.</p></div><pre><code>func TestPointInCircle(t *testing.T) {
+  got := PointInCircle(130, 80, 100, 80, 30)
+  if !got {
+    t.Fatal("a point on the edge should hit")
+  }
+}</code></pre></section><section class="test-run"><p>Run it in this repository</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS — checked without opening the game</strong></section><section class="test-challenge"><p class="eyebrow">YOUR TURN</p><h2>What should happen when the radius is zero? Predict it, then add one more case.</h2></section><nav class="test-pager"><a href="../">← PREVIOUS</a><span>1 / 4</span><a href="../table-tests/">NEXT →</a></nav>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/guides/testing/pure-functions/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>
