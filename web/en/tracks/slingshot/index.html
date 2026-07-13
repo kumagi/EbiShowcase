@@ -18,13 +18,20 @@
     <meta name="twitter:image:alt" content="Slingshot Reflection Action">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/slingshot/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/slingshot/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>6 STEPS</span></div><section class="track-hero track-slingshot"><span class="track-letter">J</span><div><p class="eyebrow">Build a Monster Strike-style game</p><h1>Slingshot Reflection Action</h1><p>Build a Monster Strike-style battle where you pull back and release characters like a slingshot. Start with drag aiming, then add circle reflection, damping, contact attacks, and friendship effects triggered by touching allies.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/slingshot/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-slingshot"><span class="track-letter">J</span><div><p class="eyebrow">Build a Monster Strike-style game</p><h1>Slingshot Reflection Action</h1><p>Build a Monster Strike-style battle where you pull back and release characters like a slingshot. Start with drag aiming, then add circle reflection, damping, contact attacks, and friendship effects triggered by touching allies.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>Connect small rules<br>into a complete game.</h2><p>Keep every step small and playable, inspect its algorithm, and then add the next system.</p></div><a class="path-step" href="drag-launch/"><span>01</span><div><h3>Drag and Launch</h3><p>Pull back with your finger to draw an aim arrow (a drag vector), then launch in the opposite direction.</p><strong>Pulling back to aim (a drag vector) and launch velocity</strong></div><b>→</b></a>
 <a class="path-step" href="wall-bounce/"><span>02</span><div><h3>Wall-bouncing Ball</h3><p>Bounce off walls like a mirror (normal reflection), losing a little energy each time (how bouncy it is is called restitution).</p><strong>Bouncing off walls (normal reflection) and how bouncy it is (restitution)</strong></div><b>→</b></a>
 <a class="path-step" href="circle-battle/"><span>03</span><div><h3>Circle Character Collisions</h3><p>Damage enemies on contact and control repeated hits against the same target.</p><strong>Circle collision and contact damage</strong></div><b>→</b></a>
 <a class="path-step" href="friction-stop/"><span>04</span><div><h3>Slow Down and Stop</h3><p>Damp velocity, snap to rest below a threshold, then advance the turn.</p><strong>Friction, rest thresholds, and turn end</strong></div><b>→</b></a>
 <a class="path-step" href="ally-effects/"><span>05</span><div><h3>Ally-triggered Effects</h3><p>Trigger a "friendship effect"—a laser, healing, or other ability chosen from data—when touching allies.</p><strong>Friendship effects triggered by touching allies</strong></div><b>→</b></a>
-<a class="path-step" href="ebi-strike/"><span>06</span><div><h3>Ebi Strike</h3><p>Combine character turns, special moves, enemy AI, and obstacles into a complete stage.</p><strong>Turns, special moves, and stage gimmicks</strong></div><b>→</b></a></section>
+<!-- sling-polish:start -->
+<a class="path-step" href="trajectory-preview/"><span>06</span><div><h3>Preview the Launch with Dots</h3><p>Simulate the first few frames from the pull velocity and show them as white dots before release.</p><strong>Reuse the movement formula for prediction</strong></div><b>→</b></a>
+<a class="path-step" href="stage-gimmicks/"><span>07</span><div><h3>Three Stages That Change the Bounce</h3><p>Load three boards with different peg layouts, enemy counts, and hit goals from stage data.</p><strong>Feed different boards into the same reflection rules</strong></div><b>→</b></a>
+<!-- sling-polish:end -->
+<a class="path-step" href="ebi-strike/"><span>08</span><div><h3>Ebi Strike</h3><p>Combine character turns, special moves, enemy AI, and obstacles into a complete stage.</p><strong>Turns, special moves, and stage gimmicks</strong></div><b>→</b></a></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -48,6 +55,21 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

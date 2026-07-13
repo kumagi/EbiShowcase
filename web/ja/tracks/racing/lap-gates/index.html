@@ -1,0 +1,45 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>順番つきゲートと周回 | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/racing/lap-gates/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="順番つきゲートと周回 | Ebi Showcase">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/racing/lap-gates/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--racing--lap-gates.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="順番つきゲートと周回">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="順番つきゲートと周回 | Ebi Showcase">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--racing--lap-gates.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="順番つきゲートと周回">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/racing/lap-gates/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 見下ろし型2Dレーシング</a><span>STEP 3/5</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>順番つきゲートと周回</h1><p>次に通るゲートだけを光らせ、すべて順番に通ったときだけ周回を増やします。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>順番つきゲートと周回</h2><p>次に通るゲートだけを光らせ、すべて順番に通ったときだけ周回を増やします。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/lap-gates/" title="順番つきゲートと周回"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ショートカットを防ぐチェックポイント</h2><p>接触したゲートがnextと一致したときだけ番号を進めます。最後から0へ戻った瞬間が1周の完了です。</p><div class="concept-row"><article><b>01</b><h3>INPUT</h3><p>次に通るゲートだけを光らせ、すべて順番に通ったときだけ周回を増やします。</p></article><article><b>02</b><h3>UPDATE</h3><p>接触したゲートがnextと一致したときだけ番号を進めます。最後から0へ戻った瞬間が1周の完了です。</p></article><article><b>03</b><h3>REPLAY</h3><p>タイムと走行ラインを比べます。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>ショートカットを防ぐチェックポイント</h2><p>接触したゲートがnextと一致したときだけ番号を進めます。最後から0へ戻った瞬間が1周の完了です。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>ショートカットを防ぐチェックポイント</h2><p>次に通るゲートだけを光らせ、すべて順番に通ったときだけ周回を増やします。</p></div><pre><code>if hit(gates[next]) {
+ next = (next+1)%len(gates)
+ if next==0 { lap++ }
+}</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>接触したゲートがnextと一致したときだけ番号を進めます。最後から0へ戻った瞬間が1周の完了です。</p></article><article><h3>CHANGE</h3><p>係数を1つ変えて操作感を比べます。</p></article><article><h3>CHALLENGE</h3><p>別のコースでも試そう。</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>見下ろし型2Dレーシング</strong></a><a href="../ebi-racing/">FINAL →<strong>Ebi Circuit Cup</strong></a></nav>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/racing/lap-gates/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

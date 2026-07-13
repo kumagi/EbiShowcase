@@ -18,14 +18,21 @@
     <meta name="twitter:image:alt" content="2D Block Sandbox">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/sandbox/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/sandbox/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>7 STEPS</span></div><section class="track-hero track-sandbox"><span class="track-letter">K</span><div><p class="eyebrow">Build a world you can mine and create</p><h1>2D Block Sandbox</h1><p>Build a Minecraft-style game where you place and break blocks to shape a world. Start by placing one block, then add chunks (the world cut into squares), crafting, creatures, and persistent worlds.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/sandbox/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>9 STEPS</span></div><section class="track-hero track-sandbox"><span class="track-letter">K</span><div><p class="eyebrow">Build a world you can mine and create</p><h1>2D Block Sandbox</h1><p>Build a Minecraft-style game where you place and break blocks to shape a world. Start by placing one block, then add chunks (the world cut into squares), crafting, creatures, and persistent worlds.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a playable world.</h2><p>Test data changes and algorithms in small games, reusing each step on the way to the final project.</p></div><a class="path-step" href="place-break/"><span>01</span><div><h3>Place and Break</h3><p>Change the selected cell to place and break blocks.</p><strong>Mutable tile maps</strong></div><b>→</b></a>
 <a class="path-step" href="terrain-generation/"><span>02</span><div><h3>Generate Terrain</h3><p>Generate reproducible dirt, stone, and caves from a world seed, using bumpy randomness (noise) that stays smooth instead of jumping around.</p><strong>Bumpy randomness for terrain (noise), layers, and seeds</strong></div><b>→</b></a>
 <a class="path-step" href="chunk-world/"><span>03</span><div><h3>Chunked World</h3><p>Cut the world into chunks—square pieces—and update and draw only the ones near the player (skipping the rest is called culling).</p><strong>Loading by chunk and skipping the unseen (culling)</strong></div><b>→</b></a>
 <a class="path-step" href="inventory-crafting/"><span>04</span><div><h3>Inventory and Crafting</h3><p>Stack collected blocks and turn recipe ingredients into new tools.</p><strong>Stacks, recipes, and consumption</strong></div><b>→</b></a>
 <a class="path-step" href="tools-light/"><span>05</span><div><h3>Tools and Light</h3><p>Add material-specific tools and simple light spreading from torches.</p><strong>Mining speed and tile lighting</strong></div><b>→</b></a>
 <a class="path-step" href="creature-world/"><span>06</span><div><h3>A Living World</h3><p>Make creatures appear (spawn) based on time of day and terrain, then give them simple behavior like walking or chasing.</p><strong>Creatures appearing (spawning), day cycles, and simple AI</strong></div><b>→</b></a>
-<a class="path-step" href="ebi-craft/"><span>07</span><div><h3>Ebi Craft</h3><p>Save changed chunks, inventory, and player position to restore the world.</p><strong>World diffs and restoration</strong></div><b>→</b></a></section>
+<!-- sandbox-polish:start -->
+<a class="path-step" href="block-feedback/"><span>07</span><div><h3>Build the Moment a Block Breaks</h3><p>Split a tool swing into anticipation, contact, flying chips, and recovery.</p><strong>Resolve the result once on the contact frame</strong></div><b>→</b></a>
+<a class="path-step" href="island-director/"><span>08</span><div><h3>Build Three Adventures from Island Data</h3><p>Store terrain, resources, enemies, and required lights as data, then play different islands with the same rules.</p><strong>Build clear conditions from data</strong></div><b>→</b></a>
+<!-- sandbox-polish:end -->
+<a class="path-step" href="ebi-craft/"><span>09</span><div><h3>Ebi Craft Expedition</h3><p>Cross Moss Camp, Crystal Cave, and Ember Isle, joining gathering, tools, building, and enemies into one adventure.</p><strong>Try a different gathering route against the best total</strong></div><b>→</b></a></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -49,6 +56,21 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

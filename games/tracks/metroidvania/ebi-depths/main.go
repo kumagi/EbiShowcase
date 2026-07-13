@@ -18,13 +18,16 @@ const (
 )
 
 type game struct {
-	x, y, vx, vy, cam         float64
-	onGround, dash, won, lost bool
-	revealed                  map[int]bool
-	relics                    map[int]bool
-	frames                    int
-	message                   string
+	x, y, vx, vy, cam                   float64
+	onGround, dash, highJump, won, lost bool
+	revealed                            map[int]bool
+	relics                              map[int]bool
+	frames                              int
+	message                             string
+	flash, shake, bestFrames            int
+	sparks                              []spark
 }
+type spark struct{ x, y, vx, vy, life float64 }
 
 func newGame() *game {
 	return &game{x: 80, y: ground - 36, revealed: map[int]bool{}, relics: map[int]bool{720: true, 1450: true, 2350: true, 2980: true}, message: "Explore the huge world. The map reveals one room at a time."}
@@ -41,11 +44,28 @@ func floorAt(x float64) float64 {
 func (g *game) Update() error {
 	if g.won || g.lost {
 		if retry() {
+			best := g.bestFrames
 			*g = *newGame()
+			g.bestFrames = best
 		}
 		return nil
 	}
 	g.frames++
+	if g.flash > 0 {
+		g.flash--
+	}
+	if g.shake > 0 {
+		g.shake--
+	}
+	for i := len(g.sparks) - 1; i >= 0; i-- {
+		p := &g.sparks[i]
+		p.x += p.vx
+		p.y += p.vy
+		p.life--
+		if p.life <= 0 {
+			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
+		}
+	}
 	left, right, jump, dash := controls()
 	acc := .45
 	if left {
@@ -63,13 +83,29 @@ func (g *game) Update() error {
 		} else {
 			g.vx = 9
 		}
+		for i := 0; i < 8; i++ {
+			g.sparks = append(g.sparks, spark{g.x - float64(i)*5, g.y + 20, -.3, 0, 18})
+		}
 	}
 	if jump && g.onGround {
 		g.vy = -9
+		if g.highJump {
+			g.vy = -12
+		}
 		g.onGround = false
 	}
 	g.vy += .45
 	g.x += g.vx
+	if !g.dash && g.x > 1710 {
+		g.x = 1710
+		g.vx = 0
+		g.message = "A sealed current blocks the path. Find the dash crest."
+	}
+	if !g.highJump && g.x > 2520 {
+		g.x = 2520
+		g.vx = 0
+		g.message = "The crystal ledge is too high. Find the tide wings."
+	}
 	g.y += g.vy
 	f := floorAt(g.x)
 	if g.y >= f-36 {
@@ -88,25 +124,62 @@ func (g *game) Update() error {
 			if rx == 1450 {
 				g.dash = true
 				g.message = "Dash crest found! Hold a direction and press X."
+			} else if rx == 2350 {
+				g.highJump = true
+				g.message = "Tide wings found! Jumps now reach high ledges."
 			} else {
 				g.message = "Map fragment found. More of the world is recorded."
 			}
+			g.burst(float64(rx), g.y, 18)
 		}
 	}
 	if len(g.relics) == 0 && g.x > 3100 {
 		g.won = true
+		if g.bestFrames == 0 || g.frames < g.bestFrames {
+			g.bestFrames = g.frames
+		}
+		g.burst(g.x, g.y, 36)
+	}
+	for _, hx := range []float64{1080, 2050, 2790} {
+		if math.Abs(g.x-hx) < 22 && g.onGround {
+			g.flash = 20
+			g.shake = 7
+			g.x = math.Max(40, float64(int(g.x/400))*400+40)
+			g.vx = 0
+			g.message = "Spikes! Returned to the room entrance."
+		}
 	}
 	if g.y > 690 || g.frames > 150*60 {
 		g.lost = true
 	}
 	return nil
 }
+func (g *game) burst(x, y float64, n int) {
+	for i := 0; i < n; i++ {
+		a := float64(i) * math.Pi * 2 / float64(n)
+		g.sparks = append(g.sparks, spark{x, y, math.Cos(a) * float64(1+i%3), math.Sin(a) * float64(1+i%3), 26 + float64(i%8)})
+	}
+}
 func (g *game) Draw(s *ebiten.Image) {
-	s.Fill(color.RGBA{10, 18, 33, 255})
+	region := minInt(2, int(g.x/1100))
+	bgs := []color.RGBA{{10, 18, 33, 255}, {23, 31, 53, 255}, {47, 24, 48, 255}}
+	s.Fill(bgs[region])
+	ox := 0.0
+	if g.shake > 0 {
+		ox = math.Sin(float64(g.frames)*2) * 5
+	}
 	for x := int(g.cam/40) * 40; x < int(g.cam)+W+80; x += 40 {
-		sx := float32(float64(x) - g.cam)
+		sx := float32(float64(x) - g.cam + ox)
 		f := float32(floorAt(float64(x)))
 		vector.DrawFilledRect(s, sx, f, 42, H-f, color.RGBA{42, 67, 73, 255}, false)
+	}
+	for _, hx := range []float64{1080, 2050, 2790} {
+		sx := float32(hx - g.cam + ox)
+		if sx > -30 && sx < W+30 {
+			for i := 0; i < 3; i++ {
+				vector.DrawFilledRect(s, sx+float32(i*12-18), float32(floorAt(hx)-15), 8, 15, color.RGBA{245, 90, 90, 255}, false)
+			}
+		}
 	}
 	for rx := range g.relics {
 		sx := float32(float64(rx) - g.cam)
@@ -114,10 +187,21 @@ func (g *game) Draw(s *ebiten.Image) {
 			vector.DrawFilledCircle(s, sx, float32(floorAt(float64(rx))-60), 14, color.RGBA{245, 190, 68, 255}, false)
 		}
 	}
-	px, py := float32(g.x-g.cam), float32(g.y)
-	vector.DrawFilledRect(s, px-12, py, 24, 36, color.RGBA{231, 91, 77, 255}, false)
+	for _, p := range g.sparks {
+		vector.DrawFilledCircle(s, float32(p.x-g.cam+ox), float32(p.y), float32(2+p.life/14), color.RGBA{255, 211, 62, 255}, true)
+	}
+	px, py := float32(g.x-g.cam+ox), float32(g.y)
+	pc := color.RGBA{231, 91, 77, 255}
+	if g.flash%4 < 2 && g.flash > 0 {
+		pc = color.RGBA{255, 255, 255, 255}
+	}
+	bob := float32(0)
+	if math.Abs(g.vx) > .3 && g.onGround {
+		bob = float32(math.Sin(float64(g.frames)*.3) * 3)
+	}
+	vector.DrawFilledRect(s, px-12, py+bob, 24, 36-bob, pc, false)
 	vector.DrawFilledRect(s, 0, 0, W, 80, color.RGBA{5, 11, 24, 235}, false)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("WORLD %04d/%d  ROOMS %d/8  RELICS LEFT %d  DASH %v", int(g.x), worldW, len(g.revealed), len(g.relics), g.dash), 38, 18)
+	ebitenutil.DebugPrintAt(s, fmt.Sprintf("REGION %d/3 WORLD %04d ROOMS %d/8 RELICS %d DASH %v WINGS %v BEST %.1f", region+1, int(g.x), len(g.revealed), len(g.relics), g.dash, g.highJump, float64(g.bestFrames)/60), 10, 18)
 	ebitenutil.DebugPrintAt(s, g.message, 25, 46)
 	for i := 0; i < 8; i++ {
 		c := color.RGBA{39, 48, 64, 255}
@@ -184,6 +268,12 @@ func overlay(s *ebiten.Image, t string) {
 	ebitenutil.DebugPrintAt(s, t, 110, 330)
 }
 func (g *game) Layout(int, int) (int, int) { return W, H }
+func minInt(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
 func main() {
 	ebiten.SetWindowSize(W, H)
 	ebiten.SetWindowTitle("Ebi Depths")

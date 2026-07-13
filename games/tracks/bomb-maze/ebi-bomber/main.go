@@ -8,6 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"image/color"
+	"math"
 )
 
 const (
@@ -35,23 +36,51 @@ type item struct {
 	at   point
 	kind int
 }
+type spark struct{ x, y, vx, vy, life float64 }
 type game struct {
-	player, enemy, exit                               point
-	soft                                              map[point]bool
-	bombs                                             []bomb
-	flames                                            []flame
-	items                                             []item
-	power, capacity, speed, broken, frames, enemyTick int
-	enemyAlive, exitOpen, won, lost                   bool
-	message                                           string
+	player, enemy, exit                                  point
+	soft                                                 map[point]bool
+	bombs                                                []bomb
+	flames                                               []flame
+	items                                                []item
+	power, capacity, speed, broken, frames, enemyTick    int
+	enemyAlive, exitOpen, won, lost                      bool
+	message                                              string
+	stage, totalFrames, bestFrames, requiredBreak, shake int
+	sparks                                               []spark
 }
 
 func newGame() *game {
-	g := &game{player: point{1, 1}, enemy: point{7, 7}, exit: point{7, 1}, soft: map[point]bool{}, power: 2, capacity: 1, speed: 1, enemyAlive: true, message: "Break walls, collect upgrades, defeat the scout, then reach EXIT."}
-	for _, p := range []point{{3, 1}, {5, 1}, {1, 3}, {3, 3}, {5, 3}, {7, 3}, {1, 5}, {3, 5}, {5, 5}, {7, 5}, {3, 7}, {5, 7}} {
+	g := &game{stage: 1}
+	g.loadStage()
+	return g
+}
+func (g *game) loadStage() {
+	players := []point{{1, 1}, {1, 7}, {7, 7}}
+	enemies := []point{{7, 7}, {7, 1}, {1, 1}}
+	exits := []point{{7, 1}, {1, 1}, {7, 1}}
+	walls := [][]point{{{3, 1}, {5, 1}, {1, 3}, {3, 3}, {5, 3}, {7, 3}, {1, 5}, {3, 5}, {5, 5}, {7, 5}, {3, 7}, {5, 7}}, {{1, 1}, {3, 1}, {5, 1}, {3, 3}, {7, 3}, {1, 5}, {5, 5}, {7, 5}, {1, 7}, {3, 7}, {5, 7}}, {{1, 1}, {3, 1}, {5, 1}, {7, 1}, {1, 3}, {5, 3}, {7, 3}, {1, 5}, {3, 5}, {7, 5}, {1, 7}, {3, 7}, {5, 7}}}
+	g.player = players[g.stage-1]
+	g.enemy = enemies[g.stage-1]
+	g.exit = exits[g.stage-1]
+	g.soft = map[point]bool{}
+	for _, p := range walls[g.stage-1] {
 		g.soft[p] = true
 	}
-	return g
+	g.power = 2
+	g.capacity = 1
+	g.speed = 1
+	g.enemyAlive = true
+	g.requiredBreak = []int{6, 8, 10}[g.stage-1]
+	g.bombs = nil
+	g.flames = nil
+	g.items = nil
+	g.broken = 0
+	g.frames = 0
+	g.exitOpen = false
+	g.won = false
+	g.lost = false
+	g.message = "Break walls, collect upgrades, defeat the scout, then reach EXIT."
 }
 func hard(p point) bool {
 	return p.x < 0 || p.x >= cols || p.y < 0 || p.y >= rows || p.x == 0 || p.y == 0 || p.x == cols-1 || p.y == rows-1 || (p.x%2 == 0 && p.y%2 == 0)
@@ -60,11 +89,37 @@ func (g *game) blocked(p point) bool { return hard(p) || g.soft[p] || g.bombAt(p
 func (g *game) Update() error {
 	if g.won || g.lost {
 		if retry() {
-			*g = *newGame()
+			if g.won && g.stage < 3 {
+				g.totalFrames += g.frames
+				g.stage++
+				g.loadStage()
+			} else {
+				best := g.bestFrames
+				if g.won {
+					total := g.totalFrames + g.frames
+					if best == 0 || total < best {
+						best = total
+					}
+				}
+				*g = *newGame()
+				g.bestFrames = best
+			}
 		}
 		return nil
 	}
 	g.frames++
+	if g.shake > 0 {
+		g.shake--
+	}
+	for i := len(g.sparks) - 1; i >= 0; i-- {
+		p := &g.sparks[i]
+		p.x += p.vx
+		p.y += p.vy
+		p.life--
+		if p.life <= 0 {
+			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
+		}
+	}
 	if d, ok := inputDir(); ok {
 		for n := 0; n < g.speed; n++ {
 			p := point{g.player.x + d.x, g.player.y + d.y}
@@ -101,6 +156,8 @@ func (g *game) updateBombs() {
 	for _, b := range g.bombs {
 		b.timer--
 		if b.timer <= 0 {
+			g.shake = 6
+			g.burst(tileCX(b.at), tileCY(b.at), 18)
 			for _, p := range g.blast(b.at) {
 				g.flames = append(g.flames, flame{p, blastLife})
 				if g.soft[p] {
@@ -134,8 +191,14 @@ func (g *game) updateFlames() {
 		}
 	}
 	g.flames = next
-	if !g.enemyAlive && g.broken >= 8 {
+	if !g.enemyAlive && g.broken >= g.requiredBreak {
 		g.exitOpen = true
+	}
+}
+func (g *game) burst(x, y float64, n int) {
+	for i := 0; i < n; i++ {
+		a := float64(i) * 6.283 / float64(n)
+		g.sparks = append(g.sparks, spark{x, y, math.Cos(a) * float64(1+i%3), math.Sin(a) * float64(1+i%3), 24 + float64(i%8)})
 	}
 }
 func (g *game) blast(o point) []point {
@@ -214,14 +277,19 @@ func (g *game) bombAt(p point) bool {
 	return false
 }
 func (g *game) Draw(s *ebiten.Image) {
-	s.Fill(color.RGBA{7, 15, 29, 255})
+	bgs := []color.RGBA{{7, 15, 29, 255}, {30, 20, 48, 255}, {53, 20, 29, 255}}
+	s.Fill(bgs[g.stage-1])
+	ox := 0.0
+	if g.shake > 0 {
+		ox = math.Sin(float64(g.frames)*2) * 5
+	}
 	ebitenutil.DebugPrintAt(s, "EBI BOMBER", 203, 17)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("WALLS %d/8  POWER %d  BOMBS %d  SPEED %d  TIME %02d", g.broken, g.power, g.capacity, g.speed, max(0, 90-g.frames/60)), 60, 43)
+	ebitenutil.DebugPrintAt(s, fmt.Sprintf("STAGE %d/3 WALLS %d/%d POWER %d BOMBS %d TIME %02d BEST %02d", g.stage, g.broken, g.requiredBreak, g.power, g.capacity, max(0, 90-g.frames/60), g.bestFrames/60), 35, 43)
 	ebitenutil.DebugPrintAt(s, g.message, 28, 72)
 	for y := 0; y < rows; y++ {
 		for x := 0; x < cols; x++ {
 			p := point{x, y}
-			px, py := float32(boardX+x*cell), float32(boardY+y*cell)
+			px, py := float32(boardX+x*cell)+float32(ox), float32(boardY+y*cell)
 			c := color.RGBA{25, 47, 51, 255}
 			vector.DrawFilledRect(s, px+1, py+1, cell-2, cell-2, c, false)
 			if hard(p) {
@@ -247,9 +315,12 @@ func (g *game) Draw(s *ebiten.Image) {
 		ebitenutil.DebugPrintAt(s, fmt.Sprintf("%.1f", float64(b.timer)/60), int(tileCX(b.at))-12, int(tileCY(b.at))-5)
 	}
 	for _, f := range g.flames {
-		trackatlas.DrawCentered(s, "flame", tileCX(f.at), tileCY(f.at), 34)
+		trackatlas.DrawCentered(s, "flame", tileCX(f.at)+ox, tileCY(f.at), 34+math.Sin(float64(f.timer)*.7)*5)
 	}
-	trackatlas.DrawCentered(s, "hero", tileCX(g.player), tileCY(g.player), 34)
+	for _, p := range g.sparks {
+		vector.DrawFilledCircle(s, float32(p.x+ox), float32(p.y), float32(2+p.life/14), color.RGBA{255, 180, 70, 255}, true)
+	}
+	trackatlas.DrawCentered(s, "hero", tileCX(g.player)+ox, tileCY(g.player), 34)
 	if g.enemyAlive {
 		trackatlas.DrawCentered(s, "scout", tileCX(g.enemy), tileCY(g.enemy), 34)
 	}
@@ -260,7 +331,11 @@ func (g *game) Draw(s *ebiten.Image) {
 	}
 	ebitenutil.DebugPrintAt(s, "Arrows/WASD + Space | tap controls", 107, 688)
 	if g.won {
-		overlay(s, "STAGE CLEAR!\n\nTAP / ENTER TO RETRY")
+		msg := "STAGE CLEAR!\n\nTAP / ENTER FOR NEXT STAGE"
+		if g.stage == 3 {
+			msg = "ALL MAZES CLEAR!\n\nTAP / ENTER FOR A NEW RUN"
+		}
+		overlay(s, msg)
 	}
 	if g.lost {
 		overlay(s, "MISSION FAILED\n\nTAP / ENTER TO RETRY")

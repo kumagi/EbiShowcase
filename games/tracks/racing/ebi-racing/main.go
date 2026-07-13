@@ -21,26 +21,82 @@ type car struct {
 	ai                 bool
 }
 
-var gates = [][2]float64{{240, 90}, {400, 220}, {380, 500}, {240, 620}, {90, 500}, {70, 220}}
+type course struct {
+	rx, ry  float64
+	road    float64
+	aiSpeed float64
+	laps    int
+	name    string
+	bg      color.RGBA
+}
+
+var courses = []course{{175, 265, .42, 2.8, 1, "SUNNY OVAL", color.RGBA{42, 112, 67, 255}}, {150, 245, .34, 3.15, 2, "NARROW REEF", color.RGBA{39, 75, 94, 255}}, {195, 225, .30, 3.45, 2, "STORM RING", color.RGBA{77, 54, 70, 255}}}
+
+type spark struct{ x, y, vx, vy, life float64 }
 
 type game struct {
-	cars      []car
-	frames    int
-	won, lost bool
-	message   string
+	cars                                  []car
+	frames                                int
+	won, lost                             bool
+	message                               string
+	stage, totalFrames, bestFrames, shake int
+	gates                                 [][2]float64
+	sparks                                []spark
 }
 
 func newGame() *game {
-	return &game{cars: []car{{240, 125, 0, 0, 0, 1, false}, {220, 145, 0, 0, 0, 1, true}}, message: "Accelerate, steer, and pass the glowing gates in order."}
+	g := &game{stage: 1}
+	g.loadCourse()
+	return g
+}
+func (g *game) loadCourse() {
+	c := courses[g.stage-1]
+	g.gates = nil
+	for i := 0; i < 8; i++ {
+		a := -math.Pi/2 + float64(i)*math.Pi/4
+		g.gates = append(g.gates, [2]float64{240 + math.Cos(a)*c.rx, 355 + math.Sin(a)*c.ry})
+	}
+	start := g.gates[0]
+	g.cars = []car{{start[0], start[1] + 35, 0, 0, 0, 1, false}, {start[0] - 25, start[1] + 55, 0, 0, 0, 1, true}}
+	g.frames = 0
+	g.won = false
+	g.lost = false
+	g.message = "Accelerate, steer, and pass the glowing gates in order."
 }
 func (g *game) Update() error {
 	if g.won || g.lost {
 		if retry() {
-			*g = *newGame()
+			if g.won && g.stage < 3 {
+				g.totalFrames += g.frames
+				g.stage++
+				g.loadCourse()
+			} else {
+				best := g.bestFrames
+				if g.won {
+					total := g.totalFrames + g.frames
+					if best == 0 || total < best {
+						best = total
+					}
+				}
+				*g = *newGame()
+				g.bestFrames = best
+			}
 		}
 		return nil
 	}
 	g.frames++
+	if g.shake > 0 {
+		g.shake--
+	}
+	for i := len(g.sparks) - 1; i >= 0; i-- {
+		p := &g.sparks[i]
+		p.x += p.vx
+		p.y += p.vy
+		p.life--
+		if p.life <= 0 {
+			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
+		}
+	}
 	p := &g.cars[0]
 	gas, brake, left, right := controls()
 	if gas {
@@ -60,19 +116,20 @@ func (g *game) Update() error {
 	}
 	g.move(p)
 	a := &g.cars[1]
-	tx, ty := gates[a.next][0], gates[a.next][1]
+	tx, ty := g.gates[a.next][0], g.gates[a.next][1]
 	target := math.Atan2(ty-a.y, tx-a.x) + math.Pi/2
 	diff := angleDiff(target, a.angle)
 	a.angle += math.Max(-.025, math.Min(.025, diff))
-	a.speed = 3.0
+	a.speed = courses[g.stage-1].aiSpeed
 	g.move(a)
 	g.checkGate(p)
 	g.checkGate(a)
-	if p.lap >= 2 {
+	if p.lap >= courses[g.stage-1].laps {
 		g.won = true
-		g.message = "Two laps complete!"
+		g.message = "Course complete!"
+		g.burst(p.x, p.y, 28)
 	}
-	if a.lap >= 2 || g.frames > 100*60 {
+	if a.lap >= courses[g.stage-1].laps || g.frames > 100*60 {
 		g.lost = true
 		g.message = "The rival finished first."
 	}
@@ -81,32 +138,48 @@ func (g *game) Update() error {
 func (g *game) move(c *car) {
 	c.x += math.Sin(c.angle) * c.speed
 	c.y -= math.Cos(c.angle) * c.speed
-	if !onRoad(c.x, c.y) {
+	if !g.onRoad(c.x, c.y) {
 		c.speed *= .91
+		if g.frames%8 == 0 {
+			g.sparks = append(g.sparks, spark{c.x, c.y, 0, .4, 18})
+		}
 	}
 	c.x = math.Max(25, math.Min(W-25, c.x))
 	c.y = math.Max(65, math.Min(650, c.y))
 }
-func onRoad(x, y float64) bool {
-	dx, dy := (x-240)/175, (y-355)/265
+func (g *game) onRoad(x, y float64) bool {
+	c := courses[g.stage-1]
+	dx, dy := (x-240)/c.rx, (y-355)/c.ry
 	r := dx*dx + dy*dy
-	return r > .38 && r < 1.22
+	return r > c.road && r < 1.22
 }
 func (g *game) checkGate(c *car) {
-	q := gates[c.next]
+	q := g.gates[c.next]
 	if math.Hypot(c.x-q[0], c.y-q[1]) < 48 {
-		c.next = (c.next + 1) % len(gates)
+		c.next = (c.next + 1) % len(g.gates)
 		if c.next == 0 {
 			c.lap++
 		}
 	}
 }
+func (g *game) burst(x, y float64, n int) {
+	g.shake = 7
+	for i := 0; i < n; i++ {
+		a := float64(i) * math.Pi * 2 / float64(n)
+		g.sparks = append(g.sparks, spark{x, y, math.Cos(a) * float64(1+i%3), math.Sin(a) * float64(1+i%3), 28 + float64(i%9)})
+	}
+}
 func angleDiff(a, b float64) float64 { d := math.Mod(a-b+math.Pi, 2*math.Pi) - math.Pi; return d }
 func (g *game) Draw(s *ebiten.Image) {
-	s.Fill(color.RGBA{42, 112, 67, 255})
-	drawEllipse(s, 240, 355, 178, 268, 90, color.RGBA{68, 72, 84, 255})
-	drawEllipse(s, 240, 355, 178, 268, 3, color.RGBA{255, 255, 255, 255})
-	q := gates[g.cars[0].next]
+	course := courses[g.stage-1]
+	s.Fill(course.bg)
+	ox := 0.0
+	if g.shake > 0 {
+		ox = math.Sin(float64(g.frames)*2) * 5
+	}
+	drawEllipse(s, 240+float32(ox), 355, float32(course.rx), float32(course.ry), 90, color.RGBA{68, 72, 84, 255})
+	drawEllipse(s, 240+float32(ox), 355, float32(course.rx), float32(course.ry), 3, color.RGBA{255, 255, 255, 255})
+	q := g.gates[g.cars[0].next]
 	vector.StrokeCircle(s, float32(q[0]), float32(q[1]), 32, 6, color.RGBA{246, 198, 72, 255}, false)
 	for i, c := range g.cars {
 		col := color.RGBA{235, 91, 76, 255}
@@ -118,18 +191,25 @@ func (g *game) Draw(s *ebiten.Image) {
 		img.Fill(col)
 		op.GeoM.Translate(-13, -20)
 		op.GeoM.Rotate(c.angle)
-		op.GeoM.Translate(c.x, c.y)
+		op.GeoM.Translate(c.x+ox, c.y)
 		s.DrawImage(img, op)
 	}
+	for _, p := range g.sparks {
+		vector.DrawFilledCircle(s, float32(p.x+ox), float32(p.y), float32(2+p.life/14), color.RGBA{255, 211, 62, 255}, true)
+	}
 	vector.DrawFilledRect(s, 0, 0, W, 60, color.RGBA{8, 17, 31, 230}, false)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("LAP %d/2  SPEED %.1f  NEXT GATE %d  RIVAL LAP %d", g.cars[0].lap+1, math.Abs(g.cars[0].speed), g.cars[0].next+1, g.cars[1].lap+1), 55, 20)
+	ebitenutil.DebugPrintAt(s, fmt.Sprintf("COURSE %d/3 %s LAP %d/%d SPEED %.1f BEST %.2f", g.stage, course.name, g.cars[0].lap+1, course.laps, math.Abs(g.cars[0].speed), float64(g.bestFrames)/60), 25, 20)
 	labels := []string{"LEFT", "GAS", "BRAKE", "RIGHT"}
 	for i, l := range labels {
 		vector.DrawFilledRect(s, float32(i*120+5), 650, 110, 55, color.RGBA{45, 78, 113, 255}, false)
 		ebitenutil.DebugPrintAt(s, l, i*120+38, 675)
 	}
 	if g.won {
-		overlay(s, "RACE WIN!\n\nTAP / ENTER TO RETRY")
+		msg := "COURSE WIN!\n\nTAP / ENTER FOR NEXT COURSE"
+		if g.stage == 3 {
+			msg = "CUP COMPLETE!\n\nTAP / ENTER FOR A NEW CUP"
+		}
+		overlay(s, msg)
 	}
 	if g.lost {
 		overlay(s, "RACE LOST\n\nTAP / ENTER TO RETRY")

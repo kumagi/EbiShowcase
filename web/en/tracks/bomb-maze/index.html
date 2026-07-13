@@ -18,13 +18,20 @@
     <meta name="twitter:image:alt" content="Bomb Maze Action">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/bomb-maze/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/bomb-maze/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>6 STEPS</span></div><section class="track-hero track-bomb-maze"><span class="track-letter">O</span><div><p class="eyebrow">Build a Bomberman-style blast game</p><h1>Bomb Maze Action</h1><p>Build a Bomberman-style game where you drop bombs in a maze to blast walls and enemies. Start with timed bombs, then add a cross-shaped blast that grows up, down, left, and right until it hits a wall, breakable walls, chain reactions, items, and enemy AI.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p></section>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/bomb-maze/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-bomb-maze"><span class="track-letter">O</span><div><p class="eyebrow">Build a Bomberman-style blast game</p><h1>Bomb Maze Action</h1><p>Build a Bomberman-style game where you drop bombs in a maze to blast walls and enemies. Start with timed bombs, then add a cross-shaped blast that grows up, down, left, and right until it hits a wall, breakable walls, chain reactions, items, and enemy AI.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a playable world.</h2><p>Test data changes and algorithms in small games, reusing each step on the way to the final project.</p></div><a class="path-step" href="timed-bomb/"><span>01</span><div><h3>Place a Timed Bomb</h3><p>Place a bomb on the current cell and switch it to exploding after a timer.</p><strong>Placement rules and timers</strong></div><b>→</b></a>
 <a class="path-step" href="cross-blast/"><span>02</span><div><h3>Cross-shaped Blast</h3><p>Grow the blast cell by cell up, down, left, and right from the bomb, stopping at a hard wall or once it reaches its range.</p><strong>Growing a blast in four directions (ray traversal)</strong></div><b>→</b></a>
 <a class="path-step" href="breakable-walls/"><span>03</span><div><h3>Breakable Walls and Items</h3><p>Turn blasted walls into floor and sometimes reveal power-ups.</p><strong>Tile changes and random drops</strong></div><b>→</b></a>
 <a class="path-step" href="chain-explosion/"><span>04</span><div><h3>Bomb Chain Reactions</h3><p>Detonate bombs hit by blasts immediately, letting the explosion spread from bomb to bomb (event propagation), while marking each bomb so it's never processed twice (deduplication).</p><strong>Explosions spreading bomb to bomb (event propagation) and deduplication</strong></div><b>→</b></a>
 <a class="path-step" href="escape-ai/"><span>05</span><div><h3>Blast-escape AI</h3><p>Predict which cells are about to become blasts, mark them on a map of danger, and find a path to safety around them.</p><strong>Maps of danger (danger maps) and safe paths</strong></div><b>→</b></a>
-<a class="path-step" href="ebi-bomber/"><span>06</span><div><h3>Ebi Bomber</h3><p>Combine bomb count, blast range, movement, enemies, and exits into a complete stage.</p><strong>Power-ups, enemies, and progression</strong></div><b>→</b></a></section>
+<!-- bomb-polish:start -->
+<a class="path-step" href="blast-feedback/"><span>06</span><div><h3>Telegraph and Sell the Blast</h3><p>Speed up the bomb pulse, then layer flash, particles, and shake when it explodes.</p><strong>Connect danger tells and results through time</strong></div><b>→</b></a>
+<a class="path-step" href="bomb-maze-director/"><span>07</span><div><h3>Direct Three Bomb Mazes</h3><p>Load three stages with different walls, break goals, and enemy starting positions.</p><strong>Put the maze and victory condition in stage data</strong></div><b>→</b></a>
+<!-- bomb-polish:end -->
+<a class="path-step" href="ebi-bomber/"><span>08</span><div><h3>Ebi Bomber</h3><p>Combine bomb count, blast range, movement, enemies, and exits into a complete stage.</p><strong>Power-ups, enemies, and progression</strong></div><b>→</b></a></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -48,6 +55,21 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

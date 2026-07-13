@@ -19,9 +19,9 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/falling-pairs/ebi-chain/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/falling-pairs/ebi-chain/">日本語</a></nav></header><main class="overview-main">
-<div class="lesson-breadcrumb"><a href="../">← Falling-pair Chain Puzzle</a><span>STEP 06 / 06</span></div>
+<div class="lesson-breadcrumb"><a href="../">← Falling-pair Chain Puzzle</a><span>STEP 08 / 08</span></div>
 <section class="overview-hero"><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>Ebi Chain</h1><p>Combine falling pairs, kicked rotation, color search, simultaneous clears, gravity, rescans, chain score, all-clears, and versus garbage.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Integrated resolution phases and versus results</strong></div></section>
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Build two 2-chains and overflow the rival with 12 garbage.</h2></div><p>Tap LEFT, TURN, RIGHT, and DROP. Keyboard uses Left/Up/Right or A/W/D and Space. White groups clear together and the board rescans after gravity. Three empty moves lose.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Chain cascade and garbage duel" src="../../../../play/ebi-chain/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Win three reef duels with changing goals and counterattacks.</h2></div><p>Tap LEFT, TURN, RIGHT, and DROP. Keyboard uses Left/Up/Right or A/W/D and Space. White groups clear together and the board rescans after gravity. The miss limit changes by reef, so watch MISSES at the top.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Chain cascade and garbage duel" src="../../../../play/ebi-chain/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RESOLUTION STATE MACHINE</p><h2>Lock input and loop until the board settles.</h2><p class="lesson-lead">After a pair locks, control passes from the player to board resolution. Repeat <code>find → clear all → gravity → find again</code> until nothing is found. Only then commit score and garbage and spawn the next pair. These <strong>phase boundaries</strong> connect the previous five systems safely.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Separate current and next pair</h3><p>Spawn moves preview data into the active pair, then refills the preview. Draw reads active and NEXT from separate values.</p><code>pivotKind = nextPivotKind; refillNext()</code></article><article><span class="concept-number">2</span><h3>Alternate clear and gravity</h3><p>Collect every four-way group into marked, clear together, compact columns, then rescan. A new group increments chain and returns to CLEAR.</p><code>CLEAR → GRAVITY → RESCAN → CLEAR ...</code></article><article><span class="concept-number">3</span><h3>Send versus results at settle</h3><p>Each chain sends two garbage, plus two if the board becomes empty. A no-chain move instead drops one gray garbage on your board.</p><code>sent := chain*2 + allClearBonus</code></article></div>
@@ -89,4 +89,22 @@ spawn()</code></pre></div>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>updateInput(); updateFall(); resolveBoard()</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 </main><script src="../../../../learn.js"></script></body></html>

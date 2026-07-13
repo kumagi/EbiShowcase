@@ -94,4 +94,22 @@ if remaining == 0 { clear = true }</code></pre></div>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>tile値0=壁、1=通路、2=えさと決め、天次郎のマスが2なら1へ変えて得点します。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>if maze[y][x] == Pellet { maze[y][x]=Floor; score++ }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 </main><script src="../../../../learn.js"></script></body></html>

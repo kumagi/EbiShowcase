@@ -18,13 +18,20 @@
     <meta name="twitter:image:alt" content="Falling-pair Chain Puzzle">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/falling-pairs/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/falling-pairs/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>6 STEPS</span></div><section class="track-hero track-falling-pairs"><span class="track-letter">M</span><div><p class="eyebrow">Build a Puyo Puyo-style chain puzzle</p><h1>Falling-pair Chain Puzzle</h1><p>Build a Puyo Puyo-style chain puzzle where connecting four or more same-color blobs clears them. Start with a falling pair, then add color groups, clearing, gravity, rescanning, and chain scoring.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/falling-pairs/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-falling-pairs"><span class="track-letter">M</span><div><p class="eyebrow">Build a Puyo Puyo-style chain puzzle</p><h1>Falling-pair Chain Puzzle</h1><p>Build a Puyo Puyo-style chain puzzle where connecting four or more same-color blobs clears them. Start with a falling pair, then add color groups, clearing, gravity, rescanning, and chain scoring.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a playable world.</h2><p>Test data changes and algorithms in small games, reusing each step on the way to the final project.</p></div><a class="path-step" href="falling-pair/"><span>01</span><div><h3>Drop a Pair</h3><p>Drop a pivot piece and a child attached at a relative position.</p><strong>Pivot and child positions</strong></div><b>→</b></a>
 <a class="path-step" href="pair-rotation/"><span>02</span><div><h3>Rotate the Pair</h3><p>Rotate through four orientations and adjust near walls and occupied cells.</p><strong>Four orientations and wall correction</strong></div><b>→</b></a>
 <a class="path-step" href="color-groups/"><span>03</span><div><h3>Find Color Groups</h3><p>Paint connected same-color blobs (flood fill) using a function that calls itself (recursion) or a queue, marking visited cells so none are counted twice, then test whether a group has four or more.</p><strong>Painting connected color blobs (flood fill) and visited cells</strong></div><b>→</b></a>
 <a class="path-step" href="clear-gravity/"><span>04</span><div><h3>Clear and Drop</h3><p>Clear all qualifying groups together and compact remaining pieces downward.</p><strong>Group clearing and column compaction</strong></div><b>→</b></a>
 <a class="path-step" href="chain-score/"><span>05</span><div><h3>Chain Scoring Lab</h3><p>Show the clear visually first, then rescan after falling and multiply the score for each consecutive clear (a chain multiplier).</p><strong>Rescanning and a score multiplier for longer chains (chain multiplier)</strong></div><b>→</b></a>
-<a class="path-step" href="ebi-chain/"><span>06</span><div><h3>Ebi Chain</h3><p>Combine next-pair preview, all-clear bonuses, and chain-generated garbage.</p><strong>Preview, garbage, and versus rules</strong></div><b>→</b></a></section>
+<!-- pairs-polish:start -->
+<a class="path-step" href="chain-presentation/"><span>06</span><div><h3>Present a Chain with Animation</h3><p>Give anticipation, clearing, falling, and the next clear their own beats, with stronger particles and shake for larger chains.</p><strong>Split board changes into readable time</strong></div><b>→</b></a>
+<a class="path-step" href="duel-director/"><span>07</span><div><h3>Direct Three Reef Duels</h3><p>Store the garbage goal, miss limit, and counterattack size as data for a three-match run.</p><strong>Feed new match conditions into the same chain rules</strong></div><b>→</b></a>
+<!-- pairs-polish:end -->
+<a class="path-step" href="ebi-chain/"><span>08</span><div><h3>Ebi Chain</h3><p>Combine next-pair preview, all-clear bonuses, and chain-generated garbage.</p><strong>Preview, garbage, and versus rules</strong></div><b>→</b></a></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -48,6 +55,21 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

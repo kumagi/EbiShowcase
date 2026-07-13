@@ -793,3 +793,7 @@ footer p{color:#67719c}
 .matchup-grid caption{caption-side:top;text-align:left;margin-bottom:8px;color:var(--ink-soft);font:800 12px var(--font-mono)}
 .matchup-grid .hot{background:rgba(255,120,80,.25);color:#ffb089}
 .matchup-grid .cold{background:rgba(80,160,255,.18);color:#9ec9ff}
+
+.beginner-bridge{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(1rem,3vw,2rem);margin:clamp(2rem,5vw,4rem) 0;padding:clamp(1.25rem,4vw,2.5rem);border:1px solid rgba(255,202,75,.36);border-radius:20px;background:linear-gradient(135deg,rgba(255,202,75,.1),rgba(52,211,153,.06))}
+.beginner-bridge h2{margin:.35rem 0 .8rem}.beginner-code{min-width:0}.beginner-code pre{margin:.8rem 0;overflow-x:auto}.receiver-note{font-size:.92rem;opacity:.82}
+@media(max-width:720px){.beginner-bridge{grid-template-columns:1fr}}

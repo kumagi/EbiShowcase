@@ -18,13 +18,20 @@
     <meta name="twitter:image:alt" content="落ちものブロックパズル">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/falling-blocks/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/falling-blocks/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>6 STEPS</span></div><section class="track-hero track-falling-blocks"><span class="track-letter">I</span><div><p class="eyebrow">テトリス型ゲームを作る</p><h1>落ちものブロックパズル</h1><p>テトリスのような、マス目を落ちてくるブロックを積んで並べるパズルを作ります。マス目を落ちる1個のブロックから、回転、固定、ライン消去、ホールドまで広げます。</p></div></section><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公が登場するステップではオリジナルの 海老・天次郎（えび・てんじろう） を使います。</p>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/falling-blocks/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>8 STEPS</span></div><section class="track-hero track-falling-blocks"><span class="track-letter">I</span><div><p class="eyebrow">テトリス型ゲームを作る</p><h1>落ちものブロックパズル</h1><p>テトリスのような、マス目を落ちてくるブロックを積んで並べるパズルを作ります。マス目を落ちる1個のブロックから、回転、固定、ライン消去、ホールドまで広げます。</p></div></section><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公が登場するステップではオリジナルの 海老・天次郎（えび・てんじろう） を使います。</p>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>一マス→形→回転→固定→行消去の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>小さなルールを<br>つないで完成へ。</h2><p>各ステップを単独で遊べる大きさにし、アルゴリズムを目で確認してから次の仕組みへ進みます。</p></div><a class="path-step" href="falling-cell/"><span>01</span><div><h3>1マスを落とす</h3><p>一定時間ごとに1マス下へ進み、床に着いたら盤面へ固定します。</p><strong>一定間隔更新とグリッド移動</strong></div><b>→</b></a>
 <a class="path-step" href="tetromino-shapes/"><span>02</span><div><h3>4マスの形</h3><p>形の中心を基準にした位置（相対座標）で複数のマスを定義し、ひとつの物体として動かします。</p><strong>中心を基準にした位置（相対座標）と形データ</strong></div><b>→</b></a>
 <a class="path-step" href="rotation-kicks/"><span>03</span><div><h3>回転と壁ぎわ補正</h3><p>ピースを中心のまわりで90度スピンさせ、壁にぶつかるときは少しずらした候補を試します。</p><strong>中心のまわりでスピンする計算（回転行列）と回転候補</strong></div><b>→</b></a>
 <a class="path-step" href="lock-lines/"><span>04</span><div><h3>固定とライン消去</h3><p>落下中の形を盤面へ書き込み、すきまなく埋まった行を消して、残りの行を下へ詰めます（行の圧縮）。</p><strong>盤面への合成と、消した分を詰める処理（行の圧縮）</strong></div><b>→</b></a>
 <a class="path-step" href="bag-hold-ghost/"><span>05</span><div><h3>バッグ・ホールド・ゴースト</h3><p>形の偏りを防ぐバッグ方式、形の保留、着地位置の予告を加えます。</p><strong>公平な抽選と着地点予測</strong></div><b>→</b></a>
-<a class="path-step" href="ebi-blocks/"><span>06</span><div><h3>Ebi Blocks</h3><p>レベルごとの速度、同時消去数、連続消しを統合して完成させます。</p><strong>落下速度・連続消し・スコア</strong></div><b>→</b></a></section>
+<!-- falling-blocks-polish:start -->
+<a class="path-step" href="line-clear-show/"><span>06</span><div><h3>ライン消去をショーにする</h3><p>そろった行をすぐ消さず、光る中間フレーム、粒子、画面揺れを順番に見せます。</p><strong>ルールの答えと見せる時間を分ける</strong></div><b>→</b></a>
+<a class="path-step" href="rule-stages/"><span>07</span><div><h3>3つのルール海域を作る</h3><p>落下速度、目標ライン、最初のおじゃま段をデータにして、性格の違う3ステージを航海します。</p><strong>難しさをコードではなくステージデータにする</strong></div><b>→</b></a>
+<!-- falling-blocks-polish:end -->
+<a class="path-step" href="ebi-blocks/"><span>08</span><div><h3>Ebi Blocks</h3><p>レベルごとの速度、同時消去数、連続消しを統合して完成させます。</p><strong>落下速度・連続消し・スコア</strong></div><b>→</b></a></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -48,6 +55,21 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

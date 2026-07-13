@@ -1,53 +1,30 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Maze | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Maze Marathon | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/maze-chase/ebi-maze/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Maze | Ebi Showcase">
-    <meta property="og:description" content="Integrate center movement, buffered input, a pearl layer, enemy modes, and junction scoring into one maze chase.">
+    <meta property="og:title" content="Ebi Maze Marathon | Ebi Showcase">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/maze-chase/ebi-maze/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--maze-chase--ebi-maze.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Ebi Maze">
+    <meta property="og:image:alt" content="Ebi Maze Marathon">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Maze | Ebi Showcase">
-    <meta name="twitter:description" content="Integrate center movement, buffered input, a pearl layer, enemy modes, and junction scoring into one maze chase.">
+    <meta name="twitter:title" content="Ebi Maze Marathon | Ebi Showcase">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--maze-chase--ebi-maze.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Ebi Maze">
-    <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/maze-chase/ebi-maze/">
-<link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/maze-chase/ebi-maze/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 06 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Maze</h1><p>Integrate center movement, buffered input, a pearl layer, enemy modes, and junction scoring into one maze chase.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Update order across several systems</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Recover twenty pearls before getting caught three times.</h2></div><p>Press the next direction during movement to turn automatically at a center. Two guards switch patrol, chase, and search. Use arrows/WASD or hold mouse/touch buttons.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Maze" src="../../../../play/ebi-maze/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / INTEGRATED UPDATE ORDER</p><h2>A finished game passes small states in a deliberate order.</h2><p class="lesson-lead">Maze, runner, pearls, and guards are separate data. Update processes input buffer, runner motion, pearl collection, enemy mode, junction choice, then contact. This <strong>update order</strong> keeps rules and visuals consistent.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>The runner buffers wanted direction</h3><p>Save input into wanted even during motion. At a center, try wanted; if blocked, continue using current dir.</p><code>wanted = input; chooseAtCenter(wanted, dir)</code></article><article><span class="concept-number">2</span><h3>Pearls use a separate layer</h3><p>Delete pellets[tile] without changing walls. When a catch resets positions, collected pearls stay gone.</p><code>delete(pellets, player.tile)</code></article><article><span class="concept-number">3</span><h3>Mode selects each guard target</h3><p>Choose a patrol point, current runner, or last seen tile, then score legal junction directions by distance while excluding reverse.</p><code>dir = chooseAtJunction(tile, dir, target)</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="input,move,enemy,pellets,draw" data-loop="next frame" aria-labelledby="lab-title-ebi-maze">
-<div class="lab-copy">
-<p class="eyebrow">TRY IT / FRAME ORDER</p>
-<h3 id="lab-title-ebi-maze">Run one frame’s jobs in order</h3>
-<p>The full maze game is a pipe: input → move → enemy AI → pellets → draw prep. Fixed order makes edge cases explainable.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">Next job</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Frame start</button></div>
-<p class="lab-hint">Draw last—never touch pixels earlier.</p>
-</div>
-<div class="lab-visual">
-<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
-<div class="lab-values" aria-live="polite"><div><span>step</span><strong data-lab-stepn>0</strong></div><div><span>now</span><strong data-lab-note>—</strong></div></div>
-</div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
-<span data-go-line="step">input → sim → resolve → draw</span>
-<span data-go-line="loop">// then next frame</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
-</div>
-</div><div class="formula"><p class="eyebrow">FIXED ORDER</p><div class="formula-lines"><code>run systems in list order</code><span>then</span><code>draw is last</code></div><p>AI-before-pellets can change who wins a tie.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Keep each system's responsibility small</h3><p>Instead of one giant function, readable Update calls runner, guard, and contact functions in order. Each updates its own state.</p></div><pre><code>func (g *game) Update() error {
-    g.player.wanted = readInput()
-    g.updatePlayer()       // center movement + collect
-    for i := range g.guards {
-        g.updateGuard(i)   // mode + junction choice
-    }
-    g.checkContacts()      // after every position changed
-    return nil
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY COLLECT BEFORE CONTACT?</p><h3>Finalize the arrived tile first</h3><p>Take a pearl on the arrival frame, then test enemy tile contact, making the result deterministic.</p></article><article><p class="eyebrow">WHY KEEP PELLETS?</p><h3>Progress survives a mistake</h3><p>A catch resets only runner and guards, preserving the collection layer and meaningful recovery.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Make stage data</h3><p>Move maze, starts, patrol points, and time limit into a stage struct and load a second map.</p></article></div></section><nav class="lesson-pager"><a href="../junction-ai/">← STEP 05<strong>Junction AI</strong></a><a href="../">BACK TO PATH →<strong>Maze Chase</strong></a></nav>
-
-
+    <meta name="twitter:image:alt" content="Ebi Maze Marathon">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/maze-chase/ebi-maze/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 08 / FINAL</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Maze Marathon</h1><p>Ebi Tenjiroh runs three mazes, reading patrol, search, and ambush modes while collecting pearls.</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>updatePlayer(); collectPellet(); updateEnemies()</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Maze Marathon</h2><p>Ebi Tenjiroh runs three mazes, reading patrol, search, and ambush modes while collecting pearls.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-maze/" title="Ebi Maze Marathon" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Ebi Maze Marathon</h2><p>The final game links three differently shaped mazes. Labels show each guard's current AI state, and both Ebi Tenjiroh and guards bob while moving. Pearl particles, damage flash, shake, and clear bursts communicate results, while a total based on lives and speed becomes the best score for the next route.</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>Clear three mazes with distinct paths and AI teams</p></article><article><b>02</b><h3>DECIDE</h3><p>Make movement, collection, and damage readable with motion</p></article><article><b>03</b><h3>REPLAY</h3><p>Reconsider safety and speed against the best total</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Make movement, collection, and damage readable with motion</h2><p>The final game links three differently shaped mazes. Labels show each guard's current AI state, and both Ebi Tenjiroh and guards bob while moving. Pearl particles, damage flash, shake, and clear bursts communicate results, while a total based on lives and speed becomes the best score for the next route.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Make movement, collection, and damage readable with motion</h2><p>Ebi Tenjiroh runs three mazes, reading patrol, search, and ambush modes while collecting pearls.</p></div><pre><code>stage := stages[stageIndex]
+guards = spawn(stage.guards)
+if pearls == stage.goal {
+    stageIndex++
+}</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>The final game links three differently shaped mazes. Labels show each guard's current AI state, and both Ebi Tenjiroh and guards bob while moving. Pearl particles, damage flash, shake, and clear bursts communicate results, while a total based on lives and speed becomes the best score for the next route.</p></article><article><h3>CHANGE</h3><p>Reconsider safety and speed against the best total</p></article><article><h3>CHALLENGE</h3><p>Add a timer that shrinks unless pearls are chained.</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>Maze Chase</strong></a><a href="../">PATH →<strong>Maze Chase</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -69,19 +46,4 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main><script src="../../../../learn.js"></script></body></html>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

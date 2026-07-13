@@ -18,13 +18,20 @@
     <meta name="twitter:image:alt" content="爆弾迷路アクション">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/bomb-maze/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/bomb-maze/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>6 STEPS</span></div><section class="track-hero track-bomb-maze"><span class="track-letter">O</span><div><p class="eyebrow">ボンバーマン型の爆風ゲームを作る</p><h1>爆弾迷路アクション</h1><p>ボンバーマンのような、迷路に爆弾を置いて壁や敵を吹き飛ばすゲームを作ります。時限爆弾から、上下左右に壁で止まるまで伸びていく十字の爆風、壊れる壁、連鎖爆発、アイテム、敵AIへ進みます。</p></div><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公が登場するステップではオリジナルの 海老・天次郎（えび・てんじろう） を使います。</p></section>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/bomb-maze/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>8 STEPS</span></div><section class="track-hero track-bomb-maze"><span class="track-letter">O</span><div><p class="eyebrow">ボンバーマン型の爆風ゲームを作る</p><h1>爆弾迷路アクション</h1><p>ボンバーマンのような、迷路に爆弾を置いて壁や敵を吹き飛ばすゲームを作ります。時限爆弾から、上下左右に壁で止まるまで伸びていく十字の爆風、壊れる壁、連鎖爆発、アイテム、敵AIへ進みます。</p></div><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公が登場するステップではオリジナルの 海老・天次郎（えび・てんじろう） を使います。</p></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>タイマー→十字爆風→壁→連鎖→逃走の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>ひとつの仕組みから、<br>遊べる世界へ。</h2><p>データの変化とアルゴリズムを小さなゲームで確かめ、前のステップを再利用しながら完成形へ進みます。</p></div><a class="path-step" href="timed-bomb/"><span>01</span><div><h3>時限爆弾を置く</h3><p>立っているマスへ爆弾を置き、一定時間後に状態を爆発へ変えます。</p><strong>設置制限とタイマー</strong></div><b>→</b></a>
 <a class="path-step" href="cross-blast/"><span>02</span><div><h3>十字に伸びる爆風</h3><p>爆弾を置いたマスから上・下・左・右へ、爆風が1マスずつ伸びていくように調べ、固い壁に当たるか届く距離（射程）まで来たら止めます。</p><strong>上下左右に伸びていく爆風の調べ方（4方向レイ探索）</strong></div><b>→</b></a>
 <a class="path-step" href="breakable-walls/"><span>03</span><div><h3>壊れる壁とアイテム</h3><p>爆風を受けた壁を床へ変え、確率で能力アップを出現させます。</p><strong>タイル変化と確率ドロップ</strong></div><b>→</b></a>
 <a class="path-step" href="chain-explosion/"><span>04</span><div><h3>爆弾の連鎖爆発</h3><p>爆風が別の爆弾へ届いたら即座に爆発させ、その爆発が伝わっていきます（イベント伝播）。同じ爆弾を二度爆発させないよう記録しておきます（二重処理防止）。</p><strong>爆発が次々伝わる仕組み（イベント伝播）と二重処理防止</strong></div><b>→</b></a>
 <a class="path-step" href="escape-ai/"><span>05</span><div><h3>爆風から逃げる敵</h3><p>これから爆風になるマスを予測して「危ないマス」の地図（危険マップ）を作り、そこを避けて安全な場所までの経路を探します。</p><strong>危ないマスの地図（危険マップ）と安全経路</strong></div><b>→</b></a>
-<a class="path-step" href="ebi-bomber/"><span>06</span><div><h3>Ebi Bomber</h3><p>爆弾数、火力、移動、敵、出口を統合して迷路アクションを完成させます。</p><strong>能力アップ・敵・ステージ進行</strong></div><b>→</b></a></section>
+<!-- bomb-polish:start -->
+<a class="path-step" href="blast-feedback/"><span>06</span><div><h3>爆発の予告と手応え</h3><p>爆弾の脈動を速くし、爆発時に閃光・粒子・揺れを重ねます。</p><strong>危険の予告と結果を時間でつなぐ</strong></div><b>→</b></a>
+<a class="path-step" href="bomb-maze-director/"><span>07</span><div><h3>3つの爆弾迷路を設計する</h3><p>壁配置、必要破壊数、敵の開始位置が異なる3面をデータから読み込みます。</p><strong>迷路と勝利条件をステージデータにする</strong></div><b>→</b></a>
+<!-- bomb-polish:end -->
+<a class="path-step" href="ebi-bomber/"><span>08</span><div><h3>Ebi Bomber</h3><p>爆弾数、火力、移動、敵、出口を統合して迷路アクションを完成させます。</p><strong>能力アップ・敵・ステージ進行</strong></div><b>→</b></a></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -48,6 +55,21 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

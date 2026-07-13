@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-07-13T01:00:38.402Z",
+  "generatedAt": "2026-07-13T04:24:58.412Z",
   "pages": [
     {
       "file": "web/en/games/breakout/index.html",
@@ -49,6 +49,18 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "Learn enemy AI and state transitions in Go and Ebitengine: patrol versus chase modes switched by distance to the player.",
       "image": "assets/og/en--games--dungeon.png"
+    },
+    {
+      "file": "web/en/games/dungeon-crawler/index.html",
+      "path": "en/games/dungeon-crawler",
+      "key": "en--games--dungeon-crawler",
+      "lang": "en",
+      "kind": "core",
+      "title": "Continue to the dungeon lesson | Ebi Showcase",
+      "h1": "The dungeon lesson has moved",
+      "eyebrow": "LEVEL 11",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--games--dungeon-crawler.png"
     },
     {
       "file": "web/en/games/flappy/index.html",
@@ -183,6 +195,30 @@
       "image": "assets/og/en.png"
     },
     {
+      "file": "web/en/tracks/active-rpg/action-motion/index.html",
+      "path": "en/tracks/active-rpg/action-motion",
+      "key": "en--tracks--active-rpg--action-motion",
+      "lang": "en",
+      "kind": "track",
+      "title": "Show an Action in Three Beats | Ebi Showcase",
+      "h1": "Show an Action in Three Beats",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--active-rpg--action-motion.png"
+    },
+    {
+      "file": "web/en/tracks/active-rpg/command-roles/index.html",
+      "path": "en/tracks/active-rpg/command-roles",
+      "key": "en--tracks--active-rpg--command-roles",
+      "lang": "en",
+      "kind": "track",
+      "title": "Give Commands Clear Roles | Ebi Showcase",
+      "h1": "Give Commands Clear Roles",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--active-rpg--command-roles.png"
+    },
+    {
       "file": "web/en/tracks/active-rpg/ebi-active-battle/index.html",
       "path": "en/tracks/active-rpg/ebi-active-battle",
       "key": "en--tracks--active-rpg--ebi-active-battle",
@@ -195,6 +231,30 @@
       "image": "assets/og/en--tracks--active-rpg--ebi-active-battle.png"
     },
     {
+      "file": "web/en/tracks/active-rpg/encounter-director/index.html",
+      "path": "en/tracks/active-rpg/encounter-director",
+      "key": "en--tracks--active-rpg--encounter-director",
+      "lang": "en",
+      "kind": "track",
+      "title": "Direct Three Enemy Formations | Ebi Showcase",
+      "h1": "Direct Three Enemy Formations",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--active-rpg--encounter-director.png"
+    },
+    {
+      "file": "web/en/tracks/active-rpg/gauge-race/index.html",
+      "path": "en/tracks/active-rpg/gauge-race",
+      "key": "en--tracks--active-rpg--gauge-race",
+      "lang": "en",
+      "kind": "track",
+      "title": "Race Action Gauges | Ebi Showcase",
+      "h1": "Race Action Gauges",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--active-rpg--gauge-race.png"
+    },
+    {
       "file": "web/en/tracks/active-rpg/index.html",
       "path": "en/tracks/active-rpg",
       "key": "en--tracks--active-rpg",
@@ -205,6 +265,42 @@
       "eyebrow": "Let speed create the action order",
       "description": "Add speed into ally and enemy action gauges, then choose a command whenever an ally reaches READY.",
       "image": "assets/og/en--tracks--active-rpg.png"
+    },
+    {
+      "file": "web/en/tracks/active-rpg/ready-queue/index.html",
+      "path": "en/tracks/active-rpg/ready-queue",
+      "key": "en--tracks--active-rpg--ready-queue",
+      "lang": "en",
+      "kind": "track",
+      "title": "Queue Every READY Actor | Ebi Showcase",
+      "h1": "Queue Every READY Actor",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--active-rpg--ready-queue.png"
+    },
+    {
+      "file": "web/en/tracks/bomb-maze/blast-feedback/index.html",
+      "path": "en/tracks/bomb-maze/blast-feedback",
+      "key": "en--tracks--bomb-maze--blast-feedback",
+      "lang": "en",
+      "kind": "track",
+      "title": "Telegraph and Sell the Blast | Ebi Showcase",
+      "h1": "Telegraph and Sell the Blast",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--bomb-maze--blast-feedback.png"
+    },
+    {
+      "file": "web/en/tracks/bomb-maze/bomb-maze-director/index.html",
+      "path": "en/tracks/bomb-maze/bomb-maze-director",
+      "key": "en--tracks--bomb-maze--bomb-maze-director",
+      "lang": "en",
+      "kind": "track",
+      "title": "Direct Three Bomb Mazes | Ebi Showcase",
+      "h1": "Direct Three Bomb Mazes",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--bomb-maze--bomb-maze-director.png"
     },
     {
       "file": "web/en/tracks/bomb-maze/breakable-walls/index.html",
@@ -291,6 +387,18 @@
       "image": "assets/og/en--tracks--bomb-maze--timed-bomb.png"
     },
     {
+      "file": "web/en/tracks/clicker/factory-animation/index.html",
+      "path": "en/tracks/clicker/factory-animation",
+      "key": "en--tracks--clicker--factory-animation",
+      "lang": "en",
+      "kind": "track",
+      "title": "An Automated Factory You Can See | Ebi Showcase",
+      "h1": "An Automated Factory You Can See",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--clicker--factory-animation.png"
+    },
+    {
       "file": "web/en/tracks/clicker/first-shop/index.html",
       "path": "en/tracks/clicker/first-shop",
       "key": "en--tracks--clicker--first-shop",
@@ -339,6 +447,18 @@
       "image": "assets/og/en--tracks--clicker.png"
     },
     {
+      "file": "web/en/tracks/clicker/milestone-districts/index.html",
+      "path": "en/tracks/clicker/milestone-districts",
+      "key": "en--tracks--clicker--milestone-districts",
+      "lang": "en",
+      "kind": "track",
+      "title": "A Sweet City Built by Milestones | Ebi Showcase",
+      "h1": "A Sweet City Built by Milestones",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--clicker--milestone-districts.png"
+    },
+    {
       "file": "web/en/tracks/clicker/offline-bakery/index.html",
       "path": "en/tracks/clicker/offline-bakery",
       "key": "en--tracks--clicker--offline-bakery",
@@ -373,6 +493,18 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "Choose a connected destination and cross battles, rests, and shops on the way to the boss.",
       "image": "assets/og/en--tracks--deckbuilder--branching-map.png"
+    },
+    {
+      "file": "web/en/tracks/deckbuilder/card-motion/index.html",
+      "path": "en/tracks/deckbuilder/card-motion",
+      "key": "en--tracks--deckbuilder--card-motion",
+      "lang": "en",
+      "kind": "track",
+      "title": "Make a Card Fly and Land | Ebi Showcase",
+      "h1": "Make a Card Fly and Land",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--deckbuilder--card-motion.png"
     },
     {
       "file": "web/en/tracks/deckbuilder/card-rewards/index.html",
@@ -447,6 +579,18 @@
       "image": "assets/og/en--tracks--deckbuilder--play-a-card.png"
     },
     {
+      "file": "web/en/tracks/deckbuilder/run-director/index.html",
+      "path": "en/tracks/deckbuilder/run-director",
+      "key": "en--tracks--deckbuilder--run-director",
+      "lang": "en",
+      "kind": "track",
+      "title": "Direct a Five-floor Run | Ebi Showcase",
+      "h1": "Direct a Five-floor Run",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--deckbuilder--run-director.png"
+    },
+    {
       "file": "web/en/tracks/deckbuilder/turn-energy/index.html",
       "path": "en/tracks/deckbuilder/turn-energy",
       "key": "en--tracks--deckbuilder--turn-energy",
@@ -479,7 +623,7 @@
       "title": "Ebi Blocks | Ebi Showcase",
       "h1": "Ebi Blocks",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Combine seven shapes, rotation, wall kicks, locking, line clears, a bag, HOLD, and a ghost into one complete game.",
+      "description": "Combine seven shapes and the core rules with three rule seas, animated line clears, particles, shake, and a best score.",
       "image": "assets/og/en--tracks--falling-blocks--ebi-blocks.png"
     },
     {
@@ -507,6 +651,18 @@
       "image": "assets/og/en--tracks--falling-blocks.png"
     },
     {
+      "file": "web/en/tracks/falling-blocks/line-clear-show/index.html",
+      "path": "en/tracks/falling-blocks/line-clear-show",
+      "key": "en--tracks--falling-blocks--line-clear-show",
+      "lang": "en",
+      "kind": "track",
+      "title": "Turn a Line Clear into a Show | Ebi Showcase",
+      "h1": "Turn a Line Clear into a Show",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--falling-blocks--line-clear-show.png"
+    },
+    {
       "file": "web/en/tracks/falling-blocks/lock-lines/index.html",
       "path": "en/tracks/falling-blocks/lock-lines",
       "key": "en--tracks--falling-blocks--lock-lines",
@@ -531,6 +687,18 @@
       "image": "assets/og/en--tracks--falling-blocks--rotation-kicks.png"
     },
     {
+      "file": "web/en/tracks/falling-blocks/rule-stages/index.html",
+      "path": "en/tracks/falling-blocks/rule-stages",
+      "key": "en--tracks--falling-blocks--rule-stages",
+      "lang": "en",
+      "kind": "track",
+      "title": "Build Three Rule Seas | Ebi Showcase",
+      "h1": "Build Three Rule Seas",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--falling-blocks--rule-stages.png"
+    },
+    {
       "file": "web/en/tracks/falling-blocks/tetromino-shapes/index.html",
       "path": "en/tracks/falling-blocks/tetromino-shapes",
       "key": "en--tracks--falling-blocks--tetromino-shapes",
@@ -541,6 +709,18 @@
       "eyebrow": "★★☆☆☆ / PLAYABLE",
       "description": "Store four cells as offsets from one origin, keeping them together while the shape falls.",
       "image": "assets/og/en--tracks--falling-blocks--tetromino-shapes.png"
+    },
+    {
+      "file": "web/en/tracks/falling-pairs/chain-presentation/index.html",
+      "path": "en/tracks/falling-pairs/chain-presentation",
+      "key": "en--tracks--falling-pairs--chain-presentation",
+      "lang": "en",
+      "kind": "track",
+      "title": "Present a Chain with Animation | Ebi Showcase",
+      "h1": "Present a Chain with Animation",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--falling-pairs--chain-presentation.png"
     },
     {
       "file": "web/en/tracks/falling-pairs/chain-score/index.html",
@@ -577,6 +757,18 @@
       "eyebrow": "★★★☆☆ / PLAYABLE",
       "description": "Place a falling pair, then collect same-color cells connected up, down, left, and right with a queue.",
       "image": "assets/og/en--tracks--falling-pairs--color-groups.png"
+    },
+    {
+      "file": "web/en/tracks/falling-pairs/duel-director/index.html",
+      "path": "en/tracks/falling-pairs/duel-director",
+      "key": "en--tracks--falling-pairs--duel-director",
+      "lang": "en",
+      "kind": "track",
+      "title": "Direct Three Reef Duels | Ebi Showcase",
+      "h1": "Direct Three Reef Duels",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--falling-pairs--duel-director.png"
     },
     {
       "file": "web/en/tracks/falling-pairs/ebi-chain/index.html",
@@ -675,6 +867,18 @@
       "image": "assets/og/en--tracks--fighting--ebi-fighters.png"
     },
     {
+      "file": "web/en/tracks/fighting/footsies-ai/index.html",
+      "path": "en/tracks/fighting/footsies-ai",
+      "key": "en--tracks--fighting--footsies-ai",
+      "lang": "en",
+      "kind": "track",
+      "title": "A Rival AI That Reads Spacing | Ebi Showcase",
+      "h1": "A Rival AI That Reads Spacing",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--fighting--footsies-ai.png"
+    },
+    {
       "file": "web/en/tracks/fighting/frame-attack/index.html",
       "path": "en/tracks/fighting/frame-attack",
       "key": "en--tracks--fighting--frame-attack",
@@ -721,6 +925,18 @@
       "eyebrow": "Build a fighter from collision boxes",
       "description": "Build a one-on-one arcade-style fighting game where you and an opponent trade moves. Start with pushboxes (boxes that keep characters from overlapping), hurtboxes (boxes that can g",
       "image": "assets/og/en--tracks--fighting.png"
+    },
+    {
+      "file": "web/en/tracks/fighting/round-presentation/index.html",
+      "path": "en/tracks/fighting/round-presentation",
+      "key": "en--tracks--fighting--round-presentation",
+      "lang": "en",
+      "kind": "track",
+      "title": "Present the Round | Ebi Showcase",
+      "h1": "Present the Round",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--fighting--round-presentation.png"
     },
     {
       "file": "web/en/tracks/match3/cascade/index.html",
@@ -795,6 +1011,18 @@
       "image": "assets/og/en--tracks--match3.png"
     },
     {
+      "file": "web/en/tracks/match3/reef-director/index.html",
+      "path": "en/tracks/match3/reef-director",
+      "key": "en--tracks--match3--reef-director",
+      "lang": "en",
+      "kind": "track",
+      "title": "Direct Three Reef Stages | Ebi Showcase",
+      "h1": "Direct Three Reef Stages",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--match3--reef-director.png"
+    },
+    {
       "file": "web/en/tracks/match3/special-pieces/index.html",
       "path": "en/tracks/match3/special-pieces",
       "key": "en--tracks--match3--special-pieces",
@@ -805,6 +1033,18 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "Find lines of four, lines of five, and L shapes, then transform each into a special piece with a different reach.",
       "image": "assets/og/en--tracks--match3--special-pieces.png"
+    },
+    {
+      "file": "web/en/tracks/match3/swap-motion/index.html",
+      "path": "en/tracks/match3/swap-motion",
+      "key": "en--tracks--match3--swap-motion",
+      "lang": "en",
+      "kind": "track",
+      "title": "Animate Every Swap | Ebi Showcase",
+      "h1": "Animate Every Swap",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--match3--swap-motion.png"
     },
     {
       "file": "web/en/tracks/maze-chase/buffered-turn/index.html",
@@ -824,11 +1064,23 @@
       "key": "en--tracks--maze-chase--ebi-maze",
       "lang": "en",
       "kind": "track",
-      "title": "Ebi Maze | Ebi Showcase",
-      "h1": "Ebi Maze",
+      "title": "Ebi Maze Marathon | Ebi Showcase",
+      "h1": "Ebi Maze Marathon",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Integrate center movement, buffered input, a pearl layer, enemy modes, and junction scoring into one maze chase.",
+      "description": "Learn Ebitengine through playable mini games.",
       "image": "assets/og/en--tracks--maze-chase--ebi-maze.png"
+    },
+    {
+      "file": "web/en/tracks/maze-chase/guard-memory/index.html",
+      "path": "en/tracks/maze-chase/guard-memory",
+      "key": "en--tracks--maze-chase--guard-memory",
+      "lang": "en",
+      "kind": "track",
+      "title": "Give a Guard Memory | Ebi Showcase",
+      "h1": "Give a Guard Memory",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--maze-chase--guard-memory.png"
     },
     {
       "file": "web/en/tracks/maze-chase/index.html",
@@ -853,6 +1105,18 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "At each junction, an enemy finds legal directions, removes the way back, and picks the step closest to its target. Change only the target data and its chasing style changes.",
       "image": "assets/og/en--tracks--maze-chase--junction-ai.png"
+    },
+    {
+      "file": "web/en/tracks/maze-chase/maze-director/index.html",
+      "path": "en/tracks/maze-chase/maze-director",
+      "key": "en--tracks--maze-chase--maze-director",
+      "lang": "en",
+      "kind": "track",
+      "title": "Grow Enemy AI Across Three Mazes | Ebi Showcase",
+      "h1": "Grow Enemy AI Across Three Mazes",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--maze-chase--maze-director.png"
     },
     {
       "file": "web/en/tracks/maze-chase/patrol-chase/index.html",
@@ -889,6 +1153,18 @@
       "eyebrow": "★★☆☆☆ / PLAYABLE",
       "description": "Represent a maze with wall and corridor tiles, moving straight to the center of each legal next tile.",
       "image": "assets/og/en--tracks--maze-chase--tile-runner.png"
+    },
+    {
+      "file": "web/en/tracks/merge-physics/challenge-stages/index.html",
+      "path": "en/tracks/merge-physics/challenge-stages",
+      "key": "en--tracks--merge-physics--challenge-stages",
+      "lang": "en",
+      "kind": "track",
+      "title": "Three Gravity Challenges | Ebi Showcase",
+      "h1": "Three Gravity Challenges",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--merge-physics--challenge-stages.png"
     },
     {
       "file": "web/en/tracks/merge-physics/circle-collision/index.html",
@@ -939,6 +1215,18 @@
       "image": "assets/og/en--tracks--merge-physics.png"
     },
     {
+      "file": "web/en/tracks/merge-physics/merge-feedback/index.html",
+      "path": "en/tracks/merge-physics/merge-feedback",
+      "key": "en--tracks--merge-physics--merge-feedback",
+      "lang": "en",
+      "kind": "track",
+      "title": "Make Every Merge Satisfying | Ebi Showcase",
+      "h1": "Make Every Merge Satisfying",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--merge-physics--merge-feedback.png"
+    },
+    {
       "file": "web/en/tracks/merge-physics/merge-rule/index.html",
       "path": "en/tracks/merge-physics/merge-rule",
       "key": "en--tracks--merge-physics--merge-rule",
@@ -975,6 +1263,42 @@
       "image": "assets/og/en--tracks--merge-physics--stacking-bounce.png"
     },
     {
+      "file": "web/en/tracks/metroidvania/ability-route/index.html",
+      "path": "en/tracks/metroidvania/ability-route",
+      "key": "en--tracks--metroidvania--ability-route",
+      "lang": "en",
+      "kind": "track",
+      "title": "Reinterpret Old Routes with Abilities | Ebi Showcase",
+      "h1": "Reinterpret Old Routes with Abilities",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--metroidvania--ability-route.png"
+    },
+    {
+      "file": "web/en/tracks/metroidvania/camera-rooms/index.html",
+      "path": "en/tracks/metroidvania/camera-rooms",
+      "key": "en--tracks--metroidvania--camera-rooms",
+      "lang": "en",
+      "kind": "track",
+      "title": "World Coordinates and a Follow Camera | Ebi Showcase",
+      "h1": "World Coordinates and a Follow Camera",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--metroidvania--camera-rooms.png"
+    },
+    {
+      "file": "web/en/tracks/metroidvania/dash-gate/index.html",
+      "path": "en/tracks/metroidvania/dash-gate",
+      "key": "en--tracks--metroidvania--dash-gate",
+      "lang": "en",
+      "kind": "track",
+      "title": "A Dash-gated Passage | Ebi Showcase",
+      "h1": "A Dash-gated Passage",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--metroidvania--dash-gate.png"
+    },
+    {
       "file": "web/en/tracks/metroidvania/ebi-depths/index.html",
       "path": "en/tracks/metroidvania/ebi-depths",
       "key": "en--tracks--metroidvania--ebi-depths",
@@ -985,6 +1309,18 @@
       "eyebrow": "Expand the world through camera, map, and abilities",
       "description": "Learn Ebitengine through playable mini games.",
       "image": "assets/og/en--tracks--metroidvania--ebi-depths.png"
+    },
+    {
+      "file": "web/en/tracks/metroidvania/exploration-map/index.html",
+      "path": "en/tracks/metroidvania/exploration-map",
+      "key": "en--tracks--metroidvania--exploration-map",
+      "lang": "en",
+      "kind": "track",
+      "title": "A Map that Grows as You Explore | Ebi Showcase",
+      "h1": "A Map that Grows as You Explore",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--metroidvania--exploration-map.png"
     },
     {
       "file": "web/en/tracks/metroidvania/index.html",
@@ -1011,6 +1347,18 @@
       "image": "assets/og/en--tracks--monster-collection--capture.png"
     },
     {
+      "file": "web/en/tracks/monster-collection/capture-sequence/index.html",
+      "path": "en/tracks/monster-collection/capture-sequence",
+      "key": "en--tracks--monster-collection--capture-sequence",
+      "lang": "en",
+      "kind": "track",
+      "title": "Stage the Capture Moment | Ebi Showcase",
+      "h1": "Stage the Capture Moment",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--monster-collection--capture-sequence.png"
+    },
+    {
       "file": "web/en/tracks/monster-collection/ebi-monsters/index.html",
       "path": "en/tracks/monster-collection/ebi-monsters",
       "key": "en--tracks--monster-collection--ebi-monsters",
@@ -1019,7 +1367,7 @@
       "title": "Ebi Monsters | Ebi Showcase",
       "h1": "Ebi Monsters",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Explore regions, weaken with moves and matchups, grow captured instances, then save the bestiary, party, and storage box to JSON.",
+      "description": "Unite three regional tables, research stamps, capture, and growth with attack and capture animation, particles, shake, and a fastest expedition record.",
       "image": "assets/og/en--tracks--monster-collection--ebi-monsters.png"
     },
     {
@@ -1071,6 +1419,18 @@
       "image": "assets/og/en--tracks--monster-collection--party-switch.png"
     },
     {
+      "file": "web/en/tracks/monster-collection/region-expedition/index.html",
+      "path": "en/tracks/monster-collection/region-expedition",
+      "key": "en--tracks--monster-collection--region-expedition",
+      "lang": "en",
+      "kind": "track",
+      "title": "Design Encounters by Region | Ebi Showcase",
+      "h1": "Design Encounters by Region",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--monster-collection--region-expedition.png"
+    },
+    {
       "file": "web/en/tracks/monster-collection/species-data/index.html",
       "path": "en/tracks/monster-collection/species-data",
       "key": "en--tracks--monster-collection--species-data",
@@ -1093,6 +1453,18 @@
       "eyebrow": "★★★☆☆ / PLAYABLE",
       "description": "Look up an effect multiplier from attacking and defending affinities.",
       "image": "assets/og/en--tracks--monster-collection--type-matchup.png"
+    },
+    {
+      "file": "web/en/tracks/platformer/game-feel/index.html",
+      "path": "en/tracks/platformer/game-feel",
+      "key": "en--tracks--platformer--game-feel",
+      "lang": "en",
+      "kind": "track",
+      "title": "A Satisfying Time Attack | Ebi Showcase",
+      "h1": "A Satisfying Time Attack",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--platformer--game-feel.png"
     },
     {
       "file": "web/en/tracks/platformer/index.html",
@@ -1143,6 +1515,18 @@
       "image": "assets/og/en--tracks--platformer--powerup-adventure.png"
     },
     {
+      "file": "web/en/tracks/platformer/run-animation/index.html",
+      "path": "en/tracks/platformer/run-animation",
+      "key": "en--tracks--platformer--run-animation",
+      "lang": "en",
+      "kind": "track",
+      "title": "Animate Ebi's Run | Ebi Showcase",
+      "h1": "Animate Ebi's Run",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--platformer--run-animation.png"
+    },
+    {
       "file": "web/en/tracks/platformer/scrolling-stage/index.html",
       "path": "en/tracks/platformer/scrolling-stage",
       "key": "en--tracks--platformer--scrolling-stage",
@@ -1155,6 +1539,18 @@
       "image": "assets/og/en--tracks--platformer--scrolling-stage.png"
     },
     {
+      "file": "web/en/tracks/platformer/stage-data/index.html",
+      "path": "en/tracks/platformer/stage-data",
+      "key": "en--tracks--platformer--stage-data",
+      "lang": "en",
+      "kind": "track",
+      "title": "Build Stages from Data | Ebi Showcase",
+      "h1": "Build Stages from Data",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--platformer--stage-data.png"
+    },
+    {
       "file": "web/en/tracks/platformer/tiny-platformer/index.html",
       "path": "en/tracks/platformer/tiny-platformer",
       "key": "en--tracks--platformer--tiny-platformer",
@@ -1165,6 +1561,18 @@
       "eyebrow": "★☆☆☆☆ / PLAYABLE",
       "description": "Learn ground detection and jumping in an Ebitengine side-scroller. Explains why you can only jump from solid ground, with real Go code.",
       "image": "assets/og/en--tracks--platformer--tiny-platformer.png"
+    },
+    {
+      "file": "web/en/tracks/racing/acceleration-lab/index.html",
+      "path": "en/tracks/racing/acceleration-lab",
+      "key": "en--tracks--racing--acceleration-lab",
+      "lang": "en",
+      "kind": "track",
+      "title": "Throttle and Drag | Ebi Showcase",
+      "h1": "Throttle and Drag",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--racing--acceleration-lab.png"
     },
     {
       "file": "web/en/tracks/racing/ebi-racing/index.html",
@@ -1189,6 +1597,54 @@
       "eyebrow": "Combine acceleration, steering, and lap order",
       "description": "Build speed with the throttle, steer according to speed, and complete two laps through ordered checkpoints.",
       "image": "assets/og/en--tracks--racing.png"
+    },
+    {
+      "file": "web/en/tracks/racing/lap-gates/index.html",
+      "path": "en/tracks/racing/lap-gates",
+      "key": "en--tracks--racing--lap-gates",
+      "lang": "en",
+      "kind": "track",
+      "title": "Ordered Gates and Laps | Ebi Showcase",
+      "h1": "Ordered Gates and Laps",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--racing--lap-gates.png"
+    },
+    {
+      "file": "web/en/tracks/racing/rival-line/index.html",
+      "path": "en/tracks/racing/rival-line",
+      "key": "en--tracks--racing--rival-line",
+      "lang": "en",
+      "kind": "track",
+      "title": "A Rival that Follows the Racing Line | Ebi Showcase",
+      "h1": "A Rival that Follows the Racing Line",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--racing--rival-line.png"
+    },
+    {
+      "file": "web/en/tracks/racing/steering-grip/index.html",
+      "path": "en/tracks/racing/steering-grip",
+      "key": "en--tracks--racing--steering-grip",
+      "lang": "en",
+      "kind": "track",
+      "title": "Steering that Changes with Speed | Ebi Showcase",
+      "h1": "Steering that Changes with Speed",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--racing--steering-grip.png"
+    },
+    {
+      "file": "web/en/tracks/rpg/battle-animation/index.html",
+      "path": "en/tracks/rpg/battle-animation",
+      "key": "en--tracks--rpg--battle-animation",
+      "lang": "en",
+      "kind": "track",
+      "title": "Split an Attack into Three Beats | Ebi Showcase",
+      "h1": "Split an Attack into Three Beats",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--rpg--battle-animation.png"
     },
     {
       "file": "web/en/tracks/rpg/command-battle/index.html",
@@ -1239,6 +1695,18 @@
       "image": "assets/og/en--tracks--rpg.png"
     },
     {
+      "file": "web/en/tracks/rpg/intent-battle/index.html",
+      "path": "en/tracks/rpg/intent-battle",
+      "key": "en--tracks--rpg--intent-battle",
+      "lang": "en",
+      "kind": "track",
+      "title": "Read the Enemy's Next Move | Ebi Showcase",
+      "h1": "Read the Enemy's Next Move",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--rpg--intent-battle.png"
+    },
+    {
       "file": "web/en/tracks/rpg/inventory-shop/index.html",
       "path": "en/tracks/rpg/inventory-shop",
       "key": "en--tracks--rpg--inventory-shop",
@@ -1287,6 +1755,18 @@
       "image": "assets/og/en--tracks--rpg--world-encounters.png"
     },
     {
+      "file": "web/en/tracks/sandbox/block-feedback/index.html",
+      "path": "en/tracks/sandbox/block-feedback",
+      "key": "en--tracks--sandbox--block-feedback",
+      "lang": "en",
+      "kind": "track",
+      "title": "Build the Moment a Block Breaks | Ebi Showcase",
+      "h1": "Build the Moment a Block Breaks",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--sandbox--block-feedback.png"
+    },
+    {
       "file": "web/en/tracks/sandbox/chunk-world/index.html",
       "path": "en/tracks/sandbox/chunk-world",
       "key": "en--tracks--sandbox--chunk-world",
@@ -1316,10 +1796,10 @@
       "key": "en--tracks--sandbox--ebi-craft",
       "lang": "en",
       "kind": "track",
-      "title": "Ebi Craft | Ebi Showcase",
-      "h1": "Ebi Craft",
+      "title": "Ebi Craft Expedition | Ebi Showcase",
+      "h1": "Ebi Craft Expedition",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Explore three chunks and combine gathering, crafting, building, light, and creatures to protect the world at night.",
+      "description": "Learn Ebitengine through playable mini games.",
       "image": "assets/og/en--tracks--sandbox--ebi-craft.png"
     },
     {
@@ -1345,6 +1825,18 @@
       "eyebrow": "★★★☆☆ / PLAYABLE",
       "description": "Stack collected blocks and turn recipe ingredients into new tools.",
       "image": "assets/og/en--tracks--sandbox--inventory-crafting.png"
+    },
+    {
+      "file": "web/en/tracks/sandbox/island-director/index.html",
+      "path": "en/tracks/sandbox/island-director",
+      "key": "en--tracks--sandbox--island-director",
+      "lang": "en",
+      "kind": "track",
+      "title": "Build Three Adventures from Island Data | Ebi Showcase",
+      "h1": "Build Three Adventures from Island Data",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--sandbox--island-director.png"
     },
     {
       "file": "web/en/tracks/sandbox/place-break/index.html",
@@ -1455,6 +1947,30 @@
       "image": "assets/og/en--tracks--slingshot.png"
     },
     {
+      "file": "web/en/tracks/slingshot/stage-gimmicks/index.html",
+      "path": "en/tracks/slingshot/stage-gimmicks",
+      "key": "en--tracks--slingshot--stage-gimmicks",
+      "lang": "en",
+      "kind": "track",
+      "title": "Three Stages That Change the Bounce | Ebi Showcase",
+      "h1": "Three Stages That Change the Bounce",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--slingshot--stage-gimmicks.png"
+    },
+    {
+      "file": "web/en/tracks/slingshot/trajectory-preview/index.html",
+      "path": "en/tracks/slingshot/trajectory-preview",
+      "key": "en--tracks--slingshot--trajectory-preview",
+      "lang": "en",
+      "kind": "track",
+      "title": "Preview the Launch with Dots | Ebi Showcase",
+      "h1": "Preview the Launch with Dots",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--slingshot--trajectory-preview.png"
+    },
+    {
       "file": "web/en/tracks/slingshot/wall-bounce/index.html",
       "path": "en/tracks/slingshot/wall-bounce",
       "key": "en--tracks--slingshot--wall-bounce",
@@ -1503,6 +2019,18 @@
       "image": "assets/og/en--tracks--survivors--experience-draft.png"
     },
     {
+      "file": "web/en/tracks/survivors/impact-feedback/index.html",
+      "path": "en/tracks/survivors/impact-feedback",
+      "key": "en--tracks--survivors--impact-feedback",
+      "lang": "en",
+      "kind": "track",
+      "title": "Attack Impact Lab | Ebi Showcase",
+      "h1": "Attack Impact Lab",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--survivors--impact-feedback.png"
+    },
+    {
       "file": "web/en/tracks/survivors/index.html",
       "path": "en/tracks/survivors",
       "key": "en--tracks--survivors",
@@ -1539,6 +2067,18 @@
       "image": "assets/og/en--tracks--survivors--swarm.png"
     },
     {
+      "file": "web/en/tracks/survivors/wave-director/index.html",
+      "path": "en/tracks/survivors/wave-director",
+      "key": "en--tracks--survivors--wave-director",
+      "lang": "en",
+      "kind": "track",
+      "title": "Wave Director and Boss Tells | Ebi Showcase",
+      "h1": "Wave Director and Boss Tells",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--survivors--wave-director.png"
+    },
+    {
       "file": "web/en/tracks/survivors/weapon-evolution/index.html",
       "path": "en/tracks/survivors/weapon-evolution",
       "key": "en--tracks--survivors--weapon-evolution",
@@ -1563,6 +2103,18 @@
       "image": "assets/og/en--tracks--tactics--ebi-tactics.png"
     },
     {
+      "file": "web/en/tracks/tactics/enemy-intent/index.html",
+      "path": "en/tracks/tactics/enemy-intent",
+      "key": "en--tracks--tactics--enemy-intent",
+      "lang": "en",
+      "kind": "track",
+      "title": "Show the Enemy's Intent | Ebi Showcase",
+      "h1": "Show the Enemy's Intent",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--tactics--enemy-intent.png"
+    },
+    {
       "file": "web/en/tracks/tactics/index.html",
       "path": "en/tracks/tactics",
       "key": "en--tracks--tactics",
@@ -1571,8 +2123,44 @@
       "title": "Terrain-aware Tactical RPG | Ebi Showcase",
       "h1": "Terrain-aware Tactical RPG",
       "eyebrow": "Move a squad by reading terrain and range",
-      "description": "Read a board where plains, forests, and mountains cost different movement, then defeat the enemy with a blade unit and an archer.",
+      "description": "Learn movement cost, weapon range, enemy intent, and mission data in small games, then fight through three complete battlefields.",
       "image": "assets/og/en--tracks--tactics.png"
+    },
+    {
+      "file": "web/en/tracks/tactics/mission-director/index.html",
+      "path": "en/tracks/tactics/mission-director",
+      "key": "en--tracks--tactics--mission-director",
+      "lang": "en",
+      "kind": "track",
+      "title": "Direct Three Data-driven Missions | Ebi Showcase",
+      "h1": "Direct Three Data-driven Missions",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--tactics--mission-director.png"
+    },
+    {
+      "file": "web/en/tracks/tactics/terrain-reach/index.html",
+      "path": "en/tracks/tactics/terrain-reach",
+      "key": "en--tracks--tactics--terrain-reach",
+      "lang": "en",
+      "kind": "track",
+      "title": "Build Movement from Terrain Cost | Ebi Showcase",
+      "h1": "Build Movement from Terrain Cost",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--tactics--terrain-reach.png"
+    },
+    {
+      "file": "web/en/tracks/tactics/weapon-range/index.html",
+      "path": "en/tracks/tactics/weapon-range",
+      "key": "en--tracks--tactics--weapon-range",
+      "lang": "en",
+      "kind": "track",
+      "title": "Read Blade and Bow Range | Ebi Showcase",
+      "h1": "Read Blade and Bow Range",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--tactics--weapon-range.png"
     },
     {
       "file": "web/en/tracks/visual-effects/index.html",
@@ -1887,14 +2475,50 @@
       "image": "assets/og/en--tracks--visual-effects--vfx-walk.png"
     },
     {
+      "file": "web/en/tracks/visual-novel/chapter-director/index.html",
+      "path": "en/tracks/visual-novel/chapter-director",
+      "key": "en--tracks--visual-novel--chapter-director",
+      "lang": "en",
+      "kind": "track",
+      "title": "Direct a Three-chapter Story | Ebi Showcase",
+      "h1": "Direct a Three-chapter Story",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--visual-novel--chapter-director.png"
+    },
+    {
+      "file": "web/en/tracks/visual-novel/choice-flags/index.html",
+      "path": "en/tracks/visual-novel/choice-flags",
+      "key": "en--tracks--visual-novel--choice-flags",
+      "lang": "en",
+      "kind": "track",
+      "title": "Turn Choices into Story Flags | Ebi Showcase",
+      "h1": "Turn Choices into Story Flags",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--visual-novel--choice-flags.png"
+    },
+    {
+      "file": "web/en/tracks/visual-novel/dialogue-window/index.html",
+      "path": "en/tracks/visual-novel/dialogue-window",
+      "key": "en--tracks--visual-novel--dialogue-window",
+      "lang": "en",
+      "kind": "track",
+      "title": "Build a Typewriter Dialogue Window | Ebi Showcase",
+      "h1": "Build a Typewriter Dialogue Window",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--visual-novel--dialogue-window.png"
+    },
+    {
       "file": "web/en/tracks/visual-novel/ebi-dialogue-stage/index.html",
       "path": "en/tracks/visual-novel/ebi-dialogue-stage",
       "key": "en--tracks--visual-novel--ebi-dialogue-stage",
       "lang": "en",
       "kind": "track",
-      "title": "Ebi Dialogue Stage | Ebi Showcase",
-      "h1": "Ebi Dialogue Stage",
-      "eyebrow": "Stage portraits and dialogue from data",
+      "title": "Moon Lantern Stories | Ebi Showcase",
+      "h1": "Moon Lantern Stories",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
       "description": "Learn Ebitengine through playable mini games.",
       "image": "assets/og/en--tracks--visual-novel--ebi-dialogue-stage.png"
     },
@@ -1906,9 +2530,21 @@
       "kind": "track",
       "title": "Branching Dialogue Game | Ebi Showcase",
       "h1": "Branching Dialogue Game",
-      "eyebrow": "Stage portraits and dialogue from data",
-      "description": "Play dialogue windows, expressions, entrances, and choices from scene data, then branch to an ending through your answers.",
+      "eyebrow": "From one line to chapters and ending collection",
+      "description": "Begin with a readable dialogue window, then add portrait staging, choice flags, and chapter data before collecting four endings.",
       "image": "assets/og/en--tracks--visual-novel.png"
+    },
+    {
+      "file": "web/en/tracks/visual-novel/portrait-staging/index.html",
+      "path": "en/tracks/visual-novel/portrait-staging",
+      "key": "en--tracks--visual-novel--portrait-staging",
+      "lang": "en",
+      "kind": "track",
+      "title": "Stage a Portrait Entrance | Ebi Showcase",
+      "h1": "Stage a Portrait Entrance",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--visual-novel--portrait-staging.png"
     },
     {
       "file": "web/index.html",
@@ -1969,6 +2605,18 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "GoとEbitengineで作ったダンジョン探索ゲームから、敵AIの状態遷移（巡回・追跡の切り替え）を学ぶレッスンです。",
       "image": "assets/og/ja--games--dungeon.png"
+    },
+    {
+      "file": "web/ja/games/dungeon-crawler/index.html",
+      "path": "ja/games/dungeon-crawler",
+      "key": "ja--games--dungeon-crawler",
+      "lang": "ja",
+      "kind": "core",
+      "title": "ダンジョン教材へ移動 | Ebi Showcase",
+      "h1": "ダンジョン教材は新しいURLへ移動しました",
+      "eyebrow": "LEVEL 11",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--games--dungeon-crawler.png"
     },
     {
       "file": "web/ja/games/flappy/index.html",
@@ -2103,6 +2751,30 @@
       "image": "assets/og/ja.png"
     },
     {
+      "file": "web/ja/tracks/active-rpg/action-motion/index.html",
+      "path": "ja/tracks/active-rpg/action-motion",
+      "key": "ja--tracks--active-rpg--action-motion",
+      "lang": "ja",
+      "kind": "track",
+      "title": "行動を3つの時間で見せる | Ebi Showcase",
+      "h1": "行動を3つの時間で見せる",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--active-rpg--action-motion.png"
+    },
+    {
+      "file": "web/ja/tracks/active-rpg/command-roles/index.html",
+      "path": "ja/tracks/active-rpg/command-roles",
+      "key": "ja--tracks--active-rpg--command-roles",
+      "lang": "ja",
+      "kind": "track",
+      "title": "攻撃・大技・回復の役割 | Ebi Showcase",
+      "h1": "攻撃・大技・回復の役割",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--active-rpg--command-roles.png"
+    },
+    {
       "file": "web/ja/tracks/active-rpg/ebi-active-battle/index.html",
       "path": "ja/tracks/active-rpg/ebi-active-battle",
       "key": "ja--tracks--active-rpg--ebi-active-battle",
@@ -2115,6 +2787,30 @@
       "image": "assets/og/ja--tracks--active-rpg--ebi-active-battle.png"
     },
     {
+      "file": "web/ja/tracks/active-rpg/encounter-director/index.html",
+      "path": "ja/tracks/active-rpg/encounter-director",
+      "key": "ja--tracks--active-rpg--encounter-director",
+      "lang": "ja",
+      "kind": "track",
+      "title": "3つの敵編成をデータにする | Ebi Showcase",
+      "h1": "3つの敵編成をデータにする",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--active-rpg--encounter-director.png"
+    },
+    {
+      "file": "web/ja/tracks/active-rpg/gauge-race/index.html",
+      "path": "ja/tracks/active-rpg/gauge-race",
+      "key": "ja--tracks--active-rpg--gauge-race",
+      "lang": "ja",
+      "kind": "track",
+      "title": "素早さのゲージ競走 | Ebi Showcase",
+      "h1": "素早さのゲージ競走",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--active-rpg--gauge-race.png"
+    },
+    {
       "file": "web/ja/tracks/active-rpg/index.html",
       "path": "ja/tracks/active-rpg",
       "key": "ja--tracks--active-rpg",
@@ -2125,6 +2821,42 @@
       "eyebrow": "素早さが行動順を作るバトル",
       "description": "味方と敵の行動ゲージへ素早さを足し、満タンになった仲間からコマンドを選びます。",
       "image": "assets/og/ja--tracks--active-rpg.png"
+    },
+    {
+      "file": "web/ja/tracks/active-rpg/ready-queue/index.html",
+      "path": "ja/tracks/active-rpg/ready-queue",
+      "key": "ja--tracks--active-rpg--ready-queue",
+      "lang": "ja",
+      "kind": "track",
+      "title": "READYを待ち行列に入れる | Ebi Showcase",
+      "h1": "READYを待ち行列に入れる",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--active-rpg--ready-queue.png"
+    },
+    {
+      "file": "web/ja/tracks/bomb-maze/blast-feedback/index.html",
+      "path": "ja/tracks/bomb-maze/blast-feedback",
+      "key": "ja--tracks--bomb-maze--blast-feedback",
+      "lang": "ja",
+      "kind": "track",
+      "title": "爆発の予告と手応え | Ebi Showcase",
+      "h1": "爆発の予告と手応え",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--bomb-maze--blast-feedback.png"
+    },
+    {
+      "file": "web/ja/tracks/bomb-maze/bomb-maze-director/index.html",
+      "path": "ja/tracks/bomb-maze/bomb-maze-director",
+      "key": "ja--tracks--bomb-maze--bomb-maze-director",
+      "lang": "ja",
+      "kind": "track",
+      "title": "3つの爆弾迷路を設計する | Ebi Showcase",
+      "h1": "3つの爆弾迷路を設計する",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--bomb-maze--bomb-maze-director.png"
     },
     {
       "file": "web/ja/tracks/bomb-maze/breakable-walls/index.html",
@@ -2211,6 +2943,18 @@
       "image": "assets/og/ja--tracks--bomb-maze--timed-bomb.png"
     },
     {
+      "file": "web/ja/tracks/clicker/factory-animation/index.html",
+      "path": "ja/tracks/clicker/factory-animation",
+      "key": "ja--tracks--clicker--factory-animation",
+      "lang": "ja",
+      "kind": "track",
+      "title": "動いて見える自動工場 | Ebi Showcase",
+      "h1": "動いて見える自動工場",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--clicker--factory-animation.png"
+    },
+    {
       "file": "web/ja/tracks/clicker/first-shop/index.html",
       "path": "ja/tracks/clicker/first-shop",
       "key": "ja--tracks--clicker--first-shop",
@@ -2259,6 +3003,18 @@
       "image": "assets/og/ja--tracks--clicker.png"
     },
     {
+      "file": "web/ja/tracks/clicker/milestone-districts/index.html",
+      "path": "ja/tracks/clicker/milestone-districts",
+      "key": "ja--tracks--clicker--milestone-districts",
+      "lang": "ja",
+      "kind": "track",
+      "title": "目標で広がるお菓子の街 | Ebi Showcase",
+      "h1": "目標で広がるお菓子の街",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--clicker--milestone-districts.png"
+    },
+    {
       "file": "web/ja/tracks/clicker/offline-bakery/index.html",
       "path": "ja/tracks/clicker/offline-bakery",
       "key": "ja--tracks--clicker--offline-bakery",
@@ -2293,6 +3049,18 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "つながった次の地点を選び、戦闘・休憩・店を通ってボスを目指します。",
       "image": "assets/og/ja--tracks--deckbuilder--branching-map.png"
+    },
+    {
+      "file": "web/ja/tracks/deckbuilder/card-motion/index.html",
+      "path": "ja/tracks/deckbuilder/card-motion",
+      "key": "ja--tracks--deckbuilder--card-motion",
+      "lang": "ja",
+      "kind": "track",
+      "title": "カードが飛んで命中する | Ebi Showcase",
+      "h1": "カードが飛んで命中する",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--deckbuilder--card-motion.png"
     },
     {
       "file": "web/ja/tracks/deckbuilder/card-rewards/index.html",
@@ -2367,6 +3135,18 @@
       "image": "assets/og/ja--tracks--deckbuilder--play-a-card.png"
     },
     {
+      "file": "web/ja/tracks/deckbuilder/run-director/index.html",
+      "path": "ja/tracks/deckbuilder/run-director",
+      "key": "ja--tracks--deckbuilder--run-director",
+      "lang": "ja",
+      "kind": "track",
+      "title": "5階層のラン設計 | Ebi Showcase",
+      "h1": "5階層のラン設計",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--deckbuilder--run-director.png"
+    },
+    {
       "file": "web/ja/tracks/deckbuilder/turn-energy/index.html",
       "path": "ja/tracks/deckbuilder/turn-energy",
       "key": "ja--tracks--deckbuilder--turn-energy",
@@ -2399,7 +3179,7 @@
       "title": "Ebi Blocks | Ebi Showcase",
       "h1": "Ebi Blocks",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "7種類の形、回転、壁蹴り、固定、ライン消去、バッグ、HOLD、ゴーストを一つのゲームへ統合します。",
+      "description": "7種類の形と基本ルールを、3つの海域、ライン消去アニメーション、粒子、画面揺れ、自己ベストまで備えた完成ゲームへ統合します。",
       "image": "assets/og/ja--tracks--falling-blocks--ebi-blocks.png"
     },
     {
@@ -2427,6 +3207,18 @@
       "image": "assets/og/ja--tracks--falling-blocks.png"
     },
     {
+      "file": "web/ja/tracks/falling-blocks/line-clear-show/index.html",
+      "path": "ja/tracks/falling-blocks/line-clear-show",
+      "key": "ja--tracks--falling-blocks--line-clear-show",
+      "lang": "ja",
+      "kind": "track",
+      "title": "ライン消去をショーにする | Ebi Showcase",
+      "h1": "ライン消去をショーにする",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--falling-blocks--line-clear-show.png"
+    },
+    {
       "file": "web/ja/tracks/falling-blocks/lock-lines/index.html",
       "path": "ja/tracks/falling-blocks/lock-lines",
       "key": "ja--tracks--falling-blocks--lock-lines",
@@ -2451,6 +3243,18 @@
       "image": "assets/og/ja--tracks--falling-blocks--rotation-kicks.png"
     },
     {
+      "file": "web/ja/tracks/falling-blocks/rule-stages/index.html",
+      "path": "ja/tracks/falling-blocks/rule-stages",
+      "key": "ja--tracks--falling-blocks--rule-stages",
+      "lang": "ja",
+      "kind": "track",
+      "title": "3つのルール海域を作る | Ebi Showcase",
+      "h1": "3つのルール海域を作る",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--falling-blocks--rule-stages.png"
+    },
+    {
       "file": "web/ja/tracks/falling-blocks/tetromino-shapes/index.html",
       "path": "ja/tracks/falling-blocks/tetromino-shapes",
       "key": "ja--tracks--falling-blocks--tetromino-shapes",
@@ -2461,6 +3265,18 @@
       "eyebrow": "★★☆☆☆ / PLAYABLE",
       "description": "4個のマスを中心からの相対座標で覚え、ばらばらにせず一つの形として落とします。",
       "image": "assets/og/ja--tracks--falling-blocks--tetromino-shapes.png"
+    },
+    {
+      "file": "web/ja/tracks/falling-pairs/chain-presentation/index.html",
+      "path": "ja/tracks/falling-pairs/chain-presentation",
+      "key": "ja--tracks--falling-pairs--chain-presentation",
+      "lang": "ja",
+      "kind": "track",
+      "title": "連鎖をアニメーションで伝える | Ebi Showcase",
+      "h1": "連鎖をアニメーションで伝える",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--falling-pairs--chain-presentation.png"
     },
     {
       "file": "web/ja/tracks/falling-pairs/chain-score/index.html",
@@ -2497,6 +3313,18 @@
       "eyebrow": "★★★☆☆ / PLAYABLE",
       "description": "落下ペアを置いた盤面から、上下左右につながる同色をキューで集め、4個以上を見つけます。",
       "image": "assets/og/ja--tracks--falling-pairs--color-groups.png"
+    },
+    {
+      "file": "web/ja/tracks/falling-pairs/duel-director/index.html",
+      "path": "ja/tracks/falling-pairs/duel-director",
+      "key": "ja--tracks--falling-pairs--duel-director",
+      "lang": "ja",
+      "kind": "track",
+      "title": "3つの海底デュエルを設計する | Ebi Showcase",
+      "h1": "3つの海底デュエルを設計する",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--falling-pairs--duel-director.png"
     },
     {
       "file": "web/ja/tracks/falling-pairs/ebi-chain/index.html",
@@ -2595,6 +3423,18 @@
       "image": "assets/og/ja--tracks--fighting--ebi-fighters.png"
     },
     {
+      "file": "web/ja/tracks/fighting/footsies-ai/index.html",
+      "path": "ja/tracks/fighting/footsies-ai",
+      "key": "ja--tracks--fighting--footsies-ai",
+      "lang": "ja",
+      "kind": "track",
+      "title": "間合いを読むライバルAI | Ebi Showcase",
+      "h1": "間合いを読むライバルAI",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--fighting--footsies-ai.png"
+    },
+    {
       "file": "web/ja/tracks/fighting/frame-attack/index.html",
       "path": "ja/tracks/fighting/frame-attack",
       "key": "ja--tracks--fighting--frame-attack",
@@ -2641,6 +3481,18 @@
       "eyebrow": "判定矩形から対戦格闘を作る",
       "description": "ゲームセンターにあるような、1対1で技を出し合う対戦格闘ゲームを作ります。キャラクター同士がぶつからないための箱（押し合い判定）、攻撃が当たる場所を示す箱（喰らい判定・攻撃判定）から始め、技のフレーム、当たった瞬間だけ時間を止める「ヒットストップ」、コンボへ進みます。",
       "image": "assets/og/ja--tracks--fighting.png"
+    },
+    {
+      "file": "web/ja/tracks/fighting/round-presentation/index.html",
+      "path": "ja/tracks/fighting/round-presentation",
+      "key": "ja--tracks--fighting--round-presentation",
+      "lang": "ja",
+      "kind": "track",
+      "title": "ラウンドを盛り上げる演出 | Ebi Showcase",
+      "h1": "ラウンドを盛り上げる演出",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--fighting--round-presentation.png"
     },
     {
       "file": "web/ja/tracks/match3/cascade/index.html",
@@ -2715,6 +3567,18 @@
       "image": "assets/og/ja--tracks--match3.png"
     },
     {
+      "file": "web/ja/tracks/match3/reef-director/index.html",
+      "path": "ja/tracks/match3/reef-director",
+      "key": "ja--tracks--match3--reef-director",
+      "lang": "ja",
+      "kind": "track",
+      "title": "3つの海底ステージをつなぐ | Ebi Showcase",
+      "h1": "3つの海底ステージをつなぐ",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--match3--reef-director.png"
+    },
+    {
       "file": "web/ja/tracks/match3/special-pieces/index.html",
       "path": "ja/tracks/match3/special-pieces",
       "key": "ja--tracks--match3--special-pieces",
@@ -2725,6 +3589,18 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "4個、5個、L字の形を見つけ、それぞれ違う範囲を消す特殊ピースへ変身させます。",
       "image": "assets/og/ja--tracks--match3--special-pieces.png"
+    },
+    {
+      "file": "web/ja/tracks/match3/swap-motion/index.html",
+      "path": "ja/tracks/match3/swap-motion",
+      "key": "ja--tracks--match3--swap-motion",
+      "lang": "ja",
+      "kind": "track",
+      "title": "交換をアニメーションにする | Ebi Showcase",
+      "h1": "交換をアニメーションにする",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--match3--swap-motion.png"
     },
     {
       "file": "web/ja/tracks/maze-chase/buffered-turn/index.html",
@@ -2744,11 +3620,23 @@
       "key": "ja--tracks--maze-chase--ebi-maze",
       "lang": "ja",
       "kind": "track",
-      "title": "Ebi Maze | Ebi Showcase",
-      "h1": "Ebi Maze",
+      "title": "Ebi Maze Marathon | Ebi Showcase",
+      "h1": "Ebi Maze Marathon",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "中心間移動、先行入力、真珠レイヤー、敵モード、交差点での経路評価を一つの迷路追跡ゲームへ統合します。",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
       "image": "assets/og/ja--tracks--maze-chase--ebi-maze.png"
+    },
+    {
+      "file": "web/ja/tracks/maze-chase/guard-memory/index.html",
+      "path": "ja/tracks/maze-chase/guard-memory",
+      "key": "ja--tracks--maze-chase--guard-memory",
+      "lang": "ja",
+      "kind": "track",
+      "title": "見失った場所を覚える敵 | Ebi Showcase",
+      "h1": "見失った場所を覚える敵",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--maze-chase--guard-memory.png"
     },
     {
       "file": "web/ja/tracks/maze-chase/index.html",
@@ -2773,6 +3661,18 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "敵は交差点で進める方向を調べ、引き返す方向を外し、ターゲットまでの距離が短い道を選びます。ねらう場所を変えるだけで追い方も変わります。",
       "image": "assets/og/ja--tracks--maze-chase--junction-ai.png"
+    },
+    {
+      "file": "web/ja/tracks/maze-chase/maze-director/index.html",
+      "path": "ja/tracks/maze-chase/maze-director",
+      "key": "ja--tracks--maze-chase--maze-director",
+      "lang": "ja",
+      "kind": "track",
+      "title": "敵AIが育つ3つの迷路 | Ebi Showcase",
+      "h1": "敵AIが育つ3つの迷路",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--maze-chase--maze-director.png"
     },
     {
       "file": "web/ja/tracks/maze-chase/patrol-chase/index.html",
@@ -2809,6 +3709,18 @@
       "eyebrow": "★★☆☆☆ / PLAYABLE",
       "description": "迷路を壁と通路のタイルで表し、通れる次タイルの中心までまっすぐ進みます。",
       "image": "assets/og/ja--tracks--maze-chase--tile-runner.png"
+    },
+    {
+      "file": "web/ja/tracks/merge-physics/challenge-stages/index.html",
+      "path": "ja/tracks/merge-physics/challenge-stages",
+      "key": "ja--tracks--merge-physics--challenge-stages",
+      "lang": "ja",
+      "kind": "track",
+      "title": "重力が変わる3つの課題 | Ebi Showcase",
+      "h1": "重力が変わる3つの課題",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--merge-physics--challenge-stages.png"
     },
     {
       "file": "web/ja/tracks/merge-physics/circle-collision/index.html",
@@ -2859,6 +3771,18 @@
       "image": "assets/og/ja--tracks--merge-physics.png"
     },
     {
+      "file": "web/ja/tracks/merge-physics/merge-feedback/index.html",
+      "path": "ja/tracks/merge-physics/merge-feedback",
+      "key": "ja--tracks--merge-physics--merge-feedback",
+      "lang": "ja",
+      "kind": "track",
+      "title": "合体が気持ちいい瞬間 | Ebi Showcase",
+      "h1": "合体が気持ちいい瞬間",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--merge-physics--merge-feedback.png"
+    },
+    {
       "file": "web/ja/tracks/merge-physics/merge-rule/index.html",
       "path": "ja/tracks/merge-physics/merge-rule",
       "key": "ja--tracks--merge-physics--merge-rule",
@@ -2895,6 +3819,42 @@
       "image": "assets/og/ja--tracks--merge-physics--stacking-bounce.png"
     },
     {
+      "file": "web/ja/tracks/metroidvania/ability-route/index.html",
+      "path": "ja/tracks/metroidvania/ability-route",
+      "key": "ja--tracks--metroidvania--ability-route",
+      "lang": "ja",
+      "kind": "track",
+      "title": "能力で昔の道を読み替える | Ebi Showcase",
+      "h1": "能力で昔の道を読み替える",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--metroidvania--ability-route.png"
+    },
+    {
+      "file": "web/ja/tracks/metroidvania/camera-rooms/index.html",
+      "path": "ja/tracks/metroidvania/camera-rooms",
+      "key": "ja--tracks--metroidvania--camera-rooms",
+      "lang": "ja",
+      "kind": "track",
+      "title": "世界座標と追従カメラ | Ebi Showcase",
+      "h1": "世界座標と追従カメラ",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--metroidvania--camera-rooms.png"
+    },
+    {
+      "file": "web/ja/tracks/metroidvania/dash-gate/index.html",
+      "path": "ja/tracks/metroidvania/dash-gate",
+      "key": "ja--tracks--metroidvania--dash-gate",
+      "lang": "ja",
+      "kind": "track",
+      "title": "能力で開くダッシュゲート | Ebi Showcase",
+      "h1": "能力で開くダッシュゲート",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--metroidvania--dash-gate.png"
+    },
+    {
       "file": "web/ja/tracks/metroidvania/ebi-depths/index.html",
       "path": "ja/tracks/metroidvania/ebi-depths",
       "key": "ja--tracks--metroidvania--ebi-depths",
@@ -2905,6 +3865,18 @@
       "eyebrow": "カメラ・地図・能力解放で世界を広げる",
       "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
       "image": "assets/og/ja--tracks--metroidvania--ebi-depths.png"
+    },
+    {
+      "file": "web/ja/tracks/metroidvania/exploration-map/index.html",
+      "path": "ja/tracks/metroidvania/exploration-map",
+      "key": "ja--tracks--metroidvania--exploration-map",
+      "lang": "ja",
+      "kind": "track",
+      "title": "歩いた部屋だけ広がる地図 | Ebi Showcase",
+      "h1": "歩いた部屋だけ広がる地図",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--metroidvania--exploration-map.png"
     },
     {
       "file": "web/ja/tracks/metroidvania/index.html",
@@ -2931,6 +3903,18 @@
       "image": "assets/og/ja--tracks--monster-collection--capture.png"
     },
     {
+      "file": "web/ja/tracks/monster-collection/capture-sequence/index.html",
+      "path": "ja/tracks/monster-collection/capture-sequence",
+      "key": "ja--tracks--monster-collection--capture-sequence",
+      "lang": "ja",
+      "kind": "track",
+      "title": "捕獲の一瞬を演出する | Ebi Showcase",
+      "h1": "捕獲の一瞬を演出する",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--monster-collection--capture-sequence.png"
+    },
+    {
       "file": "web/ja/tracks/monster-collection/ebi-monsters/index.html",
       "path": "ja/tracks/monster-collection/ebi-monsters",
       "key": "ja--tracks--monster-collection--ebi-monsters",
@@ -2939,7 +3923,7 @@
       "title": "Ebi Monsters | Ebi Showcase",
       "h1": "Ebi Monsters",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "地域を探索し、技と相性で弱らせ、捕獲した個体を育て、図鑑・パーティ・預かり箱をJSONへ保存します。",
+      "description": "3地域の遭遇表、研究スタンプ、捕獲と成長を、攻撃・捕獲アニメーション、粒子、画面揺れ、最速記録のある遠征へ統合します。",
       "image": "assets/og/ja--tracks--monster-collection--ebi-monsters.png"
     },
     {
@@ -2991,6 +3975,18 @@
       "image": "assets/og/ja--tracks--monster-collection--party-switch.png"
     },
     {
+      "file": "web/ja/tracks/monster-collection/region-expedition/index.html",
+      "path": "ja/tracks/monster-collection/region-expedition",
+      "key": "ja--tracks--monster-collection--region-expedition",
+      "lang": "ja",
+      "kind": "track",
+      "title": "地域ごとの出会いを設計する | Ebi Showcase",
+      "h1": "地域ごとの出会いを設計する",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--monster-collection--region-expedition.png"
+    },
+    {
       "file": "web/ja/tracks/monster-collection/species-data/index.html",
       "path": "ja/tracks/monster-collection/species-data",
       "key": "ja--tracks--monster-collection--species-data",
@@ -3013,6 +4009,18 @@
       "eyebrow": "★★★☆☆ / PLAYABLE",
       "description": "攻撃側と防御側のタイプから、効果の倍率を表で引きます。",
       "image": "assets/og/ja--tracks--monster-collection--type-matchup.png"
+    },
+    {
+      "file": "web/ja/tracks/platformer/game-feel/index.html",
+      "path": "ja/tracks/platformer/game-feel",
+      "key": "ja--tracks--platformer--game-feel",
+      "lang": "ja",
+      "kind": "track",
+      "title": "手応えのあるタイムアタック | Ebi Showcase",
+      "h1": "手応えのあるタイムアタック",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--platformer--game-feel.png"
     },
     {
       "file": "web/ja/tracks/platformer/index.html",
@@ -3063,6 +4071,18 @@
       "image": "assets/og/ja--tracks--platformer--powerup-adventure.png"
     },
     {
+      "file": "web/ja/tracks/platformer/run-animation/index.html",
+      "path": "ja/tracks/platformer/run-animation",
+      "key": "ja--tracks--platformer--run-animation",
+      "lang": "ja",
+      "kind": "track",
+      "title": "走る海老のアニメーション | Ebi Showcase",
+      "h1": "走る海老のアニメーション",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--platformer--run-animation.png"
+    },
+    {
       "file": "web/ja/tracks/platformer/scrolling-stage/index.html",
       "path": "ja/tracks/platformer/scrolling-stage",
       "key": "ja--tracks--platformer--scrolling-stage",
@@ -3075,6 +4095,18 @@
       "image": "assets/og/ja--tracks--platformer--scrolling-stage.png"
     },
     {
+      "file": "web/ja/tracks/platformer/stage-data/index.html",
+      "path": "ja/tracks/platformer/stage-data",
+      "key": "ja--tracks--platformer--stage-data",
+      "lang": "ja",
+      "kind": "track",
+      "title": "ステージをデータで増やす | Ebi Showcase",
+      "h1": "ステージをデータで増やす",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--platformer--stage-data.png"
+    },
+    {
       "file": "web/ja/tracks/platformer/tiny-platformer/index.html",
       "path": "ja/tracks/platformer/tiny-platformer",
       "key": "ja--tracks--platformer--tiny-platformer",
@@ -3085,6 +4117,18 @@
       "eyebrow": "★☆☆☆☆ / PLAYABLE",
       "description": "接地判定とジャンプのしくみを学ぶEbitengine横スクロールアクション入門。地面にいる時だけジャンプできる理由をGoコードで解説します。",
       "image": "assets/og/ja--tracks--platformer--tiny-platformer.png"
+    },
+    {
+      "file": "web/ja/tracks/racing/acceleration-lab/index.html",
+      "path": "ja/tracks/racing/acceleration-lab",
+      "key": "ja--tracks--racing--acceleration-lab",
+      "lang": "ja",
+      "kind": "track",
+      "title": "アクセルと摩擦 | Ebi Showcase",
+      "h1": "アクセルと摩擦",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--racing--acceleration-lab.png"
     },
     {
       "file": "web/ja/tracks/racing/ebi-racing/index.html",
@@ -3109,6 +4153,54 @@
       "eyebrow": "加速・旋回・コース順を組み立てる",
       "description": "アクセルで速度を増やし、速度に応じた旋回で楕円コースを2周します。チェックポイントを順番に通ることで周回を判定します。",
       "image": "assets/og/ja--tracks--racing.png"
+    },
+    {
+      "file": "web/ja/tracks/racing/lap-gates/index.html",
+      "path": "ja/tracks/racing/lap-gates",
+      "key": "ja--tracks--racing--lap-gates",
+      "lang": "ja",
+      "kind": "track",
+      "title": "順番つきゲートと周回 | Ebi Showcase",
+      "h1": "順番つきゲートと周回",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--racing--lap-gates.png"
+    },
+    {
+      "file": "web/ja/tracks/racing/rival-line/index.html",
+      "path": "ja/tracks/racing/rival-line",
+      "key": "ja--tracks--racing--rival-line",
+      "lang": "ja",
+      "kind": "track",
+      "title": "ゲートを追うライバルAI | Ebi Showcase",
+      "h1": "ゲートを追うライバルAI",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--racing--rival-line.png"
+    },
+    {
+      "file": "web/ja/tracks/racing/steering-grip/index.html",
+      "path": "ja/tracks/racing/steering-grip",
+      "key": "ja--tracks--racing--steering-grip",
+      "lang": "ja",
+      "kind": "track",
+      "title": "速度で変わる旋回 | Ebi Showcase",
+      "h1": "速度で変わる旋回",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--racing--steering-grip.png"
+    },
+    {
+      "file": "web/ja/tracks/rpg/battle-animation/index.html",
+      "path": "ja/tracks/rpg/battle-animation",
+      "key": "ja--tracks--rpg--battle-animation",
+      "lang": "ja",
+      "kind": "track",
+      "title": "攻撃を3つの時間に分ける | Ebi Showcase",
+      "h1": "攻撃を3つの時間に分ける",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--rpg--battle-animation.png"
     },
     {
       "file": "web/ja/tracks/rpg/command-battle/index.html",
@@ -3159,6 +4251,18 @@
       "image": "assets/og/ja--tracks--rpg.png"
     },
     {
+      "file": "web/ja/tracks/rpg/intent-battle/index.html",
+      "path": "ja/tracks/rpg/intent-battle",
+      "key": "ja--tracks--rpg--intent-battle",
+      "lang": "ja",
+      "kind": "track",
+      "title": "敵の次の行動を読む | Ebi Showcase",
+      "h1": "敵の次の行動を読む",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--rpg--intent-battle.png"
+    },
+    {
       "file": "web/ja/tracks/rpg/inventory-shop/index.html",
       "path": "ja/tracks/rpg/inventory-shop",
       "key": "ja--tracks--rpg--inventory-shop",
@@ -3207,6 +4311,18 @@
       "image": "assets/og/ja--tracks--rpg--world-encounters.png"
     },
     {
+      "file": "web/ja/tracks/sandbox/block-feedback/index.html",
+      "path": "ja/tracks/sandbox/block-feedback",
+      "key": "ja--tracks--sandbox--block-feedback",
+      "lang": "ja",
+      "kind": "track",
+      "title": "ブロックが壊れる一瞬を作る | Ebi Showcase",
+      "h1": "ブロックが壊れる一瞬を作る",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--sandbox--block-feedback.png"
+    },
+    {
       "file": "web/ja/tracks/sandbox/chunk-world/index.html",
       "path": "ja/tracks/sandbox/chunk-world",
       "key": "ja--tracks--sandbox--chunk-world",
@@ -3236,10 +4352,10 @@
       "key": "ja--tracks--sandbox--ebi-craft",
       "lang": "ja",
       "kind": "track",
-      "title": "Ebi Craft | Ebi Showcase",
-      "h1": "Ebi Craft",
+      "title": "Ebi Craft Expedition | Ebi Showcase",
+      "h1": "Ebi Craft Expedition",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "3つのチャンクを探索し、採取・クラフト・建築・明かりで夜の生き物から世界を守ります。",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
       "image": "assets/og/ja--tracks--sandbox--ebi-craft.png"
     },
     {
@@ -3265,6 +4381,18 @@
       "eyebrow": "★★★☆☆ / PLAYABLE",
       "description": "集めたブロックを束ね、材料の組み合わせから新しい道具を作ります。",
       "image": "assets/og/ja--tracks--sandbox--inventory-crafting.png"
+    },
+    {
+      "file": "web/ja/tracks/sandbox/island-director/index.html",
+      "path": "ja/tracks/sandbox/island-director",
+      "key": "ja--tracks--sandbox--island-director",
+      "lang": "ja",
+      "kind": "track",
+      "title": "島データから3つの冒険を作る | Ebi Showcase",
+      "h1": "島データから3つの冒険を作る",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--sandbox--island-director.png"
     },
     {
       "file": "web/ja/tracks/sandbox/place-break/index.html",
@@ -3375,6 +4503,30 @@
       "image": "assets/og/ja--tracks--slingshot.png"
     },
     {
+      "file": "web/ja/tracks/slingshot/stage-gimmicks/index.html",
+      "path": "ja/tracks/slingshot/stage-gimmicks",
+      "key": "ja--tracks--slingshot--stage-gimmicks",
+      "lang": "ja",
+      "kind": "track",
+      "title": "反射を変える3つのステージ | Ebi Showcase",
+      "h1": "反射を変える3つのステージ",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--slingshot--stage-gimmicks.png"
+    },
+    {
+      "file": "web/ja/tracks/slingshot/trajectory-preview/index.html",
+      "path": "ja/tracks/slingshot/trajectory-preview",
+      "key": "ja--tracks--slingshot--trajectory-preview",
+      "lang": "ja",
+      "kind": "track",
+      "title": "点で見える発射予測 | Ebi Showcase",
+      "h1": "点で見える発射予測",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--slingshot--trajectory-preview.png"
+    },
+    {
       "file": "web/ja/tracks/slingshot/wall-bounce/index.html",
       "path": "ja/tracks/slingshot/wall-bounce",
       "key": "ja--tracks--slingshot--wall-bounce",
@@ -3423,6 +4575,18 @@
       "image": "assets/og/ja--tracks--survivors--experience-draft.png"
     },
     {
+      "file": "web/ja/tracks/survivors/impact-feedback/index.html",
+      "path": "ja/tracks/survivors/impact-feedback",
+      "key": "ja--tracks--survivors--impact-feedback",
+      "lang": "ja",
+      "kind": "track",
+      "title": "攻撃の手応えラボ | Ebi Showcase",
+      "h1": "攻撃の手応えラボ",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--survivors--impact-feedback.png"
+    },
+    {
       "file": "web/ja/tracks/survivors/index.html",
       "path": "ja/tracks/survivors",
       "key": "ja--tracks--survivors",
@@ -3459,6 +4623,18 @@
       "image": "assets/og/ja--tracks--survivors--swarm.png"
     },
     {
+      "file": "web/ja/tracks/survivors/wave-director/index.html",
+      "path": "ja/tracks/survivors/wave-director",
+      "key": "ja--tracks--survivors--wave-director",
+      "lang": "ja",
+      "kind": "track",
+      "title": "ウェーブ監督とボス予告 | Ebi Showcase",
+      "h1": "ウェーブ監督とボス予告",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--survivors--wave-director.png"
+    },
+    {
       "file": "web/ja/tracks/survivors/weapon-evolution/index.html",
       "path": "ja/tracks/survivors/weapon-evolution",
       "key": "ja--tracks--survivors--weapon-evolution",
@@ -3483,6 +4659,18 @@
       "image": "assets/og/ja--tracks--tactics--ebi-tactics.png"
     },
     {
+      "file": "web/ja/tracks/tactics/enemy-intent/index.html",
+      "path": "ja/tracks/tactics/enemy-intent",
+      "key": "ja--tracks--tactics--enemy-intent",
+      "lang": "ja",
+      "kind": "track",
+      "title": "敵の狙いを見せる | Ebi Showcase",
+      "h1": "敵の狙いを見せる",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--tactics--enemy-intent.png"
+    },
+    {
       "file": "web/ja/tracks/tactics/index.html",
       "path": "ja/tracks/tactics",
       "key": "ja--tracks--tactics",
@@ -3491,8 +4679,44 @@
       "title": "地形を読む戦略SLG | Ebi Showcase",
       "h1": "地形を読む戦略SLG",
       "eyebrow": "森・山・射程を読んで部隊を動かす",
-      "description": "平地・森・山で移動コストが変わる盤面を読み、剣士と弓使いで敵部隊を倒します。",
+      "description": "移動コスト、武器射程、敵の狙い、任務データを小さなゲームで学び、3つの戦場を戦う完成版へ進みます。",
       "image": "assets/og/ja--tracks--tactics.png"
+    },
+    {
+      "file": "web/ja/tracks/tactics/mission-director/index.html",
+      "path": "ja/tracks/tactics/mission-director",
+      "key": "ja--tracks--tactics--mission-director",
+      "lang": "ja",
+      "kind": "track",
+      "title": "任務をデータで3つ作る | Ebi Showcase",
+      "h1": "任務をデータで3つ作る",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--tactics--mission-director.png"
+    },
+    {
+      "file": "web/ja/tracks/tactics/terrain-reach/index.html",
+      "path": "ja/tracks/tactics/terrain-reach",
+      "key": "ja--tracks--tactics--terrain-reach",
+      "lang": "ja",
+      "kind": "track",
+      "title": "地形コストで移動範囲を作る | Ebi Showcase",
+      "h1": "地形コストで移動範囲を作る",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--tactics--terrain-reach.png"
+    },
+    {
+      "file": "web/ja/tracks/tactics/weapon-range/index.html",
+      "path": "ja/tracks/tactics/weapon-range",
+      "key": "ja--tracks--tactics--weapon-range",
+      "lang": "ja",
+      "kind": "track",
+      "title": "剣と弓の射程を読み分ける | Ebi Showcase",
+      "h1": "剣と弓の射程を読み分ける",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--tactics--weapon-range.png"
     },
     {
       "file": "web/ja/tracks/visual-effects/index.html",
@@ -3807,14 +5031,50 @@
       "image": "assets/og/ja--tracks--visual-effects--vfx-walk.png"
     },
     {
+      "file": "web/ja/tracks/visual-novel/chapter-director/index.html",
+      "path": "ja/tracks/visual-novel/chapter-director",
+      "key": "ja--tracks--visual-novel--chapter-director",
+      "lang": "ja",
+      "kind": "track",
+      "title": "3章の物語をデータで進める | Ebi Showcase",
+      "h1": "3章の物語をデータで進める",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--visual-novel--chapter-director.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-novel/choice-flags/index.html",
+      "path": "ja/tracks/visual-novel/choice-flags",
+      "key": "ja--tracks--visual-novel--choice-flags",
+      "lang": "ja",
+      "kind": "track",
+      "title": "選択を物語のフラグにする | Ebi Showcase",
+      "h1": "選択を物語のフラグにする",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--visual-novel--choice-flags.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-novel/dialogue-window/index.html",
+      "path": "ja/tracks/visual-novel/dialogue-window",
+      "key": "ja--tracks--visual-novel--dialogue-window",
+      "lang": "ja",
+      "kind": "track",
+      "title": "一文字ずつ話す会話窓 | Ebi Showcase",
+      "h1": "一文字ずつ話す会話窓",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--visual-novel--dialogue-window.png"
+    },
+    {
       "file": "web/ja/tracks/visual-novel/ebi-dialogue-stage/index.html",
       "path": "ja/tracks/visual-novel/ebi-dialogue-stage",
       "key": "ja--tracks--visual-novel--ebi-dialogue-stage",
       "lang": "ja",
       "kind": "track",
-      "title": "Ebi Dialogue Stage | Ebi Showcase",
-      "h1": "Ebi Dialogue Stage",
-      "eyebrow": "立ち絵と台詞をデータから演出する",
+      "title": "Moon Lantern Stories | Ebi Showcase",
+      "h1": "Moon Lantern Stories",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
       "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
       "image": "assets/og/ja--tracks--visual-novel--ebi-dialogue-stage.png"
     },
@@ -3826,9 +5086,21 @@
       "kind": "track",
       "title": "選択肢で分かれる会話ゲーム | Ebi Showcase",
       "h1": "選択肢で分かれる会話ゲーム",
-      "eyebrow": "立ち絵と台詞をデータから演出する",
-      "description": "会話ウィンドウ、表情、登場演出、選択肢をシーンデータとして再生し、選んだ答えで結末を分けます。",
+      "eyebrow": "台詞から複数章と結末収集へ",
+      "description": "一文字ずつ読める会話窓から始め、立ち絵演出、選択フラグ、章データを一つずつ加えて、4つの結末を集める物語へ進みます。",
       "image": "assets/og/ja--tracks--visual-novel.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-novel/portrait-staging/index.html",
+      "path": "ja/tracks/visual-novel/portrait-staging",
+      "key": "ja--tracks--visual-novel--portrait-staging",
+      "lang": "ja",
+      "kind": "track",
+      "title": "立ち絵の登場を演出する | Ebi Showcase",
+      "h1": "立ち絵の登場を演出する",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--visual-novel--portrait-staging.png"
     }
   ]
 }

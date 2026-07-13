@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"image/color"
+	"math"
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -70,15 +71,25 @@ type saveData struct {
 	BoxSpecies   []int   `json:"box_species"`
 	Dex          [4]bool `json:"dex"`
 	Visits       [3]int  `json:"region_visits"`
+	Badges       [3]bool `json:"region_badges"`
+	BestFrames   int     `json:"best_frames"`
 }
 
 var saveSlot []byte
+
+type sparkle struct {
+	x, y, vx, vy float64
+	life         int
+	c            color.RGBA
+}
 
 type game struct {
 	party               []monster
 	box                 []monster
 	dex                 [4]bool
 	visits              [3]int
+	badges              [3]bool
+	currentRegion       int
 	active              int
 	mode                int
 	wildSpecies, wildHP int
@@ -90,6 +101,13 @@ type game struct {
 	rng                 *rand.Rand
 	message             string
 	savePreview         string
+	actionFrame         int
+	actionKind          int
+	hitFlash, shake     int
+	pendingCapture      bool
+	bestFrames          int
+	sparkles            []sparkle
+	scene               *ebiten.Image
 }
 
 func newGame() *game {
@@ -98,6 +116,7 @@ func newGame() *game {
 		orbs:    8,
 		rng:     rand.New(rand.NewSource(8707)),
 		message: "Start at EMBER COVE: regional tables decide who appears.",
+		scene:   ebiten.NewImage(width, height),
 	}
 	g.dex[0] = true
 	if len(saveSlot) > 0 {
@@ -107,9 +126,34 @@ func newGame() *game {
 }
 
 func (g *game) Update() error {
+	for i := len(g.sparkles) - 1; i >= 0; i-- {
+		p := &g.sparkles[i]
+		p.x += p.vx
+		p.y += p.vy
+		p.vy += 0.05
+		p.life--
+		if p.life <= 0 {
+			g.sparkles = append(g.sparkles[:i], g.sparkles[i+1:]...)
+		}
+	}
+	if g.hitFlash > 0 {
+		g.hitFlash--
+	}
+	if g.shake > 0 {
+		g.shake--
+	}
+	if g.actionFrame > 0 {
+		g.actionFrame--
+		if g.actionFrame == 0 && g.pendingCapture {
+			g.finishCapture()
+		}
+		return nil
+	}
 	if g.clear || g.over {
 		if retryPressed() {
+			best := g.bestFrames
 			*g = *newGame()
+			g.bestFrames = best
 		}
 		return nil
 	}
@@ -161,6 +205,7 @@ func (g *game) explore(region int) {
 	g.wildHP = 40
 	g.moveUses = [2]int{moves[0].maxUses, moves[1].maxUses}
 	g.mode = modeBattle
+	g.currentRegion = region
 	g.turns = 0
 	g.mustSwitch = false
 	g.message = fmt.Sprintf("%s encounter: wild %s! Weaken, then use an orb.", regionNames[region], speciesBook[g.wildSpecies].name)
@@ -201,8 +246,13 @@ func (g *game) useMove(index int) {
 		g.wildHP = max(1, g.wildHP-damage)
 		front.exp += 3
 		g.message = fmt.Sprintf("%s x%.1f dealt %d. Wild HP %d/40.", data.name, multiplier, damage, g.wildHP)
+		g.hitFlash = 12
+		g.shake = 7
+		g.burst(355, 235, speciesBook[g.wildSpecies].color, 18)
 	}
 	g.wildCounter()
+	g.actionFrame = 24
+	g.actionKind = 1
 }
 
 func (g *game) throwOrb() {
@@ -217,8 +267,20 @@ func (g *game) throwOrb() {
 	if roll >= chance {
 		g.message = fmt.Sprintf("Capture failed: roll %d >= %d%%.", roll, chance)
 		g.wildCounter()
+		g.actionFrame = 38
+		g.actionKind = 2
+		g.burst(355, 235, color.RGBA{240, 185, 70, 255}, 12)
 		return
 	}
+	g.pendingCapture = true
+	g.actionFrame = 54
+	g.actionKind = 2
+	g.message = "The capture orb rocks... hold your breath!"
+	return
+}
+
+func (g *game) finishCapture() {
+	g.pendingCapture = false
 	captured := monster{speciesID: g.wildSpecies, hp: speciesBook[g.wildSpecies].maxHP}
 	if len(g.party) < partyLimit {
 		g.party = append(g.party, captured)
@@ -230,14 +292,20 @@ func (g *game) throwOrb() {
 	if g.wildSpecies < len(g.dex) {
 		g.dex[g.wildSpecies] = true
 	}
+	if g.wildSpecies == encounterTables[g.currentRegion][0] {
+		g.badges[g.currentRegion] = true
+		g.message += " Region research badge earned!"
+	}
+	g.burst(355, 235, color.RGBA{255, 222, 92, 255}, 42)
+	g.shake = 12
 	for i := range g.party {
 		g.party[i].exp += 20
 		g.evolveIfReady(i)
 	}
 	g.mode = modeMap
 	g.active = min(g.active, len(g.party)-1)
-	if g.dexCount() == 4 && g.starterEvolved() {
-		g.message += " Bestiary complete: press SAVE to finish."
+	if g.badgeCount() == 3 && g.starterEvolved() {
+		g.message += " Three regions complete: press SAVE to finish."
 	} else {
 		g.message += " EXP shared; check growth and choose the next region."
 	}
@@ -245,6 +313,24 @@ func (g *game) throwOrb() {
 		g.over = true
 		g.message = "Every orb was used before all four species were registered."
 	}
+}
+
+func (g *game) burst(x, y float64, c color.RGBA, amount int) {
+	for i := 0; i < amount; i++ {
+		a := g.rng.Float64() * math.Pi * 2
+		speed := 0.8 + g.rng.Float64()*3
+		g.sparkles = append(g.sparkles, sparkle{x, y, math.Cos(a) * speed, math.Sin(a)*speed - 0.7, 20 + g.rng.Intn(24), c})
+	}
+}
+
+func (g *game) badgeCount() int {
+	count := 0
+	for _, earned := range g.badges {
+		if earned {
+			count++
+		}
+	}
+	return count
 }
 
 func (g *game) wildCounter() {
@@ -332,11 +418,14 @@ func (g *game) dexCount() int {
 }
 
 func (g *game) save() {
-	if g.dexCount() < 4 || !g.starterEvolved() {
-		g.message = "SAVE locked: register 4 species and evolve REEFLET first."
+	if g.badgeCount() < 3 || !g.starterEvolved() {
+		g.message = "SAVE locked: earn 3 region badges and evolve REEFLET first."
 		return
 	}
-	payload := saveData{Dex: g.dex, Visits: g.visits}
+	if g.bestFrames == 0 || g.frames < g.bestFrames {
+		g.bestFrames = g.frames
+	}
+	payload := saveData{Dex: g.dex, Visits: g.visits, Badges: g.badges, BestFrames: g.bestFrames}
 	for _, m := range g.party {
 		payload.PartySpecies = append(payload.PartySpecies, m.speciesID)
 		payload.PartyExp = append(payload.PartyExp, m.exp)
@@ -356,9 +445,23 @@ func (g *game) save() {
 }
 
 func (g *game) Draw(screen *ebiten.Image) {
+	g.scene.Clear()
+	g.drawScene(g.scene)
+	op := &ebiten.DrawImageOptions{}
+	if g.shake > 0 {
+		op.GeoM.Translate(float64((g.frames%3-1)*3), float64(((g.frames/2)%3-1)*2))
+	}
+	screen.DrawImage(g.scene, op)
+}
+
+func (g *game) drawScene(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{9, 20, 39, 255})
 	ebitenutil.DebugPrintAt(screen, "EBI MONSTERS EXPEDITION", 160, 18)
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("DEX %d/4   PARTY %d/3   BOX %d   ORBS %d   TIME %02d", g.dexCount(), len(g.party), len(g.box), g.orbs, max(0, 100-g.frames/60)), 77, 44)
+	best := "--"
+	if g.bestFrames > 0 {
+		best = fmt.Sprintf("%02d", g.bestFrames/60)
+	}
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("BADGES %d/3 DEX %d/4 PARTY %d/3 ORBS %d TIME %02d BEST %s", g.badgeCount(), g.dexCount(), len(g.party), g.orbs, max(0, 100-g.frames/60), best), 42, 44)
 	g.drawRoster(screen)
 	if g.mode == modeMap {
 		g.drawMap(screen)
@@ -375,6 +478,10 @@ func (g *game) Draw(screen *ebiten.Image) {
 		ebitenutil.DebugPrintAt(screen, g.message, 58, 342)
 		ebitenutil.DebugPrintAt(screen, g.savePreview, 92, 374)
 		ebitenutil.DebugPrintAt(screen, "TAP / ENTER TO RESTART", 139, 409)
+	}
+	for _, p := range g.sparkles {
+		alpha := uint8(min(255, p.life*10))
+		vector.DrawFilledCircle(screen, float32(p.x), float32(p.y), 3, color.RGBA{p.c.R, p.c.G, p.c.B, alpha}, false)
 	}
 }
 
@@ -412,9 +519,14 @@ func (g *game) drawMap(screen *ebiten.Image) {
 		ebitenutil.DebugPrintAt(screen, "A: "+first, x+13, 278)
 		ebitenutil.DebugPrintAt(screen, "B: "+second, x+13, 306)
 		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("VISITS %d", g.visits[i]), x+39, 344)
+		badge := "BADGE: --"
+		if g.badges[i] {
+			badge = "BADGE: STAR"
+		}
+		ebitenutil.DebugPrintAt(screen, badge, x+33, 362)
 		next := encounterTables[i][g.visits[i]%2]
-		ebitenutil.DebugPrintAt(screen, "NEXT", x+55, 376)
-		ebitenutil.DebugPrintAt(screen, speciesBook[next].name, x+34, 403)
+		ebitenutil.DebugPrintAt(screen, "NEXT", x+55, 386)
+		ebitenutil.DebugPrintAt(screen, speciesBook[next].name, x+34, 411)
 	}
 	ebitenutil.DebugPrintAt(screen, g.message, 43, 477)
 	for i, name := range regionNames {
@@ -422,7 +534,7 @@ func (g *game) drawMap(screen *ebiten.Image) {
 		vector.DrawFilledRect(screen, float32(x+8), 540, 144, 75, color.RGBA{52, 91, 122, 255}, false)
 		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%d %s", i+1, name), x+25, 572)
 	}
-	ready := g.dexCount() == 4 && g.starterEvolved()
+	ready := g.badgeCount() == 3 && g.starterEvolved()
 	fill := color.RGBA{55, 61, 75, 255}
 	if ready {
 		fill = color.RGBA{75, 166, 111, 255}
@@ -438,9 +550,29 @@ func (g *game) drawBattle(screen *ebiten.Image) {
 	wild := speciesBook[g.wildSpecies]
 	front := g.party[g.active]
 	frontSpecies := speciesBook[front.speciesID]
-	vector.DrawFilledRect(screen, 20, 150, 440, 305, color.RGBA{28, 54, 70, 255}, false)
-	trackatlas.DrawCentered(screen, trackatlas.Species(front.speciesID), 125, 260, 108)
-	trackatlas.DrawCentered(screen, trackatlas.Species(g.wildSpecies), 355, 235, 124)
+	regionColors := [...]color.RGBA{{28, 70, 91, 255}, {83, 45, 46, 255}, {33, 76, 55, 255}}
+	vector.DrawFilledRect(screen, 20, 150, 440, 305, regionColors[g.currentRegion], false)
+	bob := math.Sin(float64(g.frames)*0.12) * 4
+	frontX, wildX := 125.0, 355.0
+	if g.actionKind == 1 && g.actionFrame > 10 {
+		frontX += float64(24-g.actionFrame) * 4
+	}
+	trackatlas.DrawCentered(screen, trackatlas.Species(front.speciesID), frontX, 260+bob, 108)
+	wildSize := 124.0
+	if g.hitFlash > 0 && g.hitFlash%4 < 2 {
+		wildSize = 136
+	}
+	trackatlas.DrawCentered(screen, trackatlas.Species(g.wildSpecies), wildX, 235-bob, wildSize)
+	if g.actionKind == 2 && g.actionFrame > 0 {
+		progress := 1 - float64(g.actionFrame)/54
+		if progress < 0 {
+			progress = 0
+		}
+		orbX := 130 + (355-130)*progress
+		orbY := 260 - math.Sin(progress*math.Pi)*125
+		vector.DrawFilledCircle(screen, float32(orbX), float32(orbY), 12, color.RGBA{250, 196, 70, 255}, false)
+		vector.StrokeCircle(screen, float32(orbX), float32(orbY), 12, 3, color.RGBA{255, 245, 195, 255}, false)
+	}
 	ebitenutil.DebugPrintAt(screen, "FRONT "+frontSpecies.name, 75, 327)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%s HP%d LV%d", typeNames[frontSpecies.kind], front.hp, level(front.exp)), 82, 351)
 	ebitenutil.DebugPrintAt(screen, "WILD "+wild.name, 313, 315)

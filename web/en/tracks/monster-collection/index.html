@@ -18,14 +18,21 @@
     <meta name="twitter:image:alt" content="Creature Collection RPG">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/monster-collection/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/monster-collection/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>7 STEPS</span></div><section class="track-hero track-monster-collection"><span class="track-letter">L</span><div><p class="eyebrow">Build a collect-and-train battle game</p><h1>Creature Collection RPG</h1><p>Build a Pokémon-style game where you catch, raise, and battle creatures. Grow one creature definition into moves, type affinities, parties, capture, growth, and a bestiary.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/monster-collection/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>9 STEPS</span></div><section class="track-hero track-monster-collection"><span class="track-letter">L</span><div><p class="eyebrow">Build a collect-and-train battle game</p><h1>Creature Collection RPG</h1><p>Build a Pokémon-style game where you catch, raise, and battle creatures. Grow one creature definition into moves, type affinities, parties, capture, growth, and a bestiary.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a playable world.</h2><p>Test data changes and algorithms in small games, reusing each step on the way to the final project.</p></div><a class="path-step" href="species-data/"><span>01</span><div><h3>Define One Creature</h3><p>Separate a species "template" (name and base stats) from this one creature's own HP and experience.</p><strong>Species template vs. this one creature's state</strong></div><b>→</b></a>
 <a class="path-step" href="move-battle/"><span>02</span><div><h3>Choose-a-move Battle</h3><p>Choose moves with power, accuracy, and uses, then resolve their effects.</p><strong>Move data, accuracy, and damage</strong></div><b>→</b></a>
 <a class="path-step" href="type-matchup/"><span>03</span><div><h3>Affinity Matchup Lab</h3><p>Look up whether an attack is stronger or weaker from the attacking and defending types (an affinity table) and apply that multiplier.</p><strong>Type strengths and weaknesses (affinity table) and multipliers</strong></div><b>→</b></a>
 <a class="path-step" href="party-switch/"><span>04</span><div><h3>Party and Switching</h3><p>Manage several allies and switch when one falls or strategy changes.</p><strong>Party composition and switching</strong></div><b>→</b></a>
 <a class="path-step" href="capture/"><span>05</span><div><h3>Capture Challenge</h3><p>Calculate how likely a capture is to succeed—higher with lower remaining HP and the right item—then store the new ally.</p><strong>Capture chance and storage</strong></div><b>→</b></a>
 <a class="path-step" href="growth-evolution/"><span>06</span><div><h3>Experience and Evolution</h3><p>Derive levels from experience and change species when evolution conditions are met.</p><strong>Growth curves, levels, and evolution</strong></div><b>→</b></a>
-<a class="path-step" href="ebi-monsters/"><span>07</span><div><h3>Ebi Monsters</h3><p>Combine regional encounters, capture records, parties, storage, and save data.</p><strong>Encounters, bestiary, and saving</strong></div><b>→</b></a></section>
+<!-- monster-polish:start -->
+<a class="path-step" href="region-expedition/"><span>07</span><div><h3>Design Encounters by Region</h3><p>Give three regions separate encounter tables and research stamps, then let players choose their journey.</p><strong>Keep place, encounter table, and progress together</strong></div><b>→</b></a>
+<a class="path-step" href="capture-sequence/"><span>08</span><div><h3>Stage the Capture Moment</h3><p>Use throw, flight, three rocks, and a success burst as in-between frames worth waiting for.</p><strong>Present one probability result as a short sequence</strong></div><b>→</b></a>
+<!-- monster-polish:end -->
+<a class="path-step" href="ebi-monsters/"><span>09</span><div><h3>Ebi Monsters</h3><p>Combine regional encounters, capture records, parties, storage, and save data.</p><strong>Encounters, bestiary, and saving</strong></div><b>→</b></a></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -49,6 +56,21 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

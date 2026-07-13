@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"image/color"
+	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -28,7 +29,7 @@ type enemy struct {
 	hp, attack int
 }
 
-var encounters = []enemy{{"REEF SCOUT", 36, 7}, {"IRON CRAB", 52, 10}, {"ABYSS KING", 76, 14}}
+var encounters = []enemy{{"REEF SCOUT", 32, 6}, {"SHELL MAGE", 42, 8}, {"IRON CRAB", 54, 10}, {"TIDE KNIGHT", 66, 12}, {"ABYSS KING", 88, 14}}
 var rewards = []card{{"PEARL STRIKE", 12, 0, color.RGBA{219, 91, 76, 255}}, {"TIDAL SHELL", 0, 12, color.RGBA{70, 148, 226, 255}}, {"EBI COMET", 16, 0, color.RGBA{169, 88, 211, 255}}}
 
 type game struct {
@@ -36,7 +37,10 @@ type game struct {
 	hp, enemyHP, energy, block, floor, phase, route int
 	message                                         string
 	clear, over                                     bool
+	turn, tick, flash, shake, fx, score, best       int
+	sparks                                          []spark
 }
+type spark struct{ x, y, vx, vy, life float64 }
 
 func newGame() *game {
 	g := &game{hp: 46, phase: phaseBattle, message: "Play cards, then end the turn."}
@@ -58,9 +62,30 @@ func (g *game) drawHand() {
 	}
 }
 func (g *game) Update() error {
+	g.tick++
+	if g.flash > 0 {
+		g.flash--
+	}
+	if g.shake > 0 {
+		g.shake--
+	}
+	if g.fx > 0 {
+		g.fx--
+	}
+	for i := len(g.sparks) - 1; i >= 0; i-- {
+		p := &g.sparks[i]
+		p.x += p.vx
+		p.y += p.vy
+		p.life--
+		if p.life <= 0 {
+			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
+		}
+	}
 	if g.clear || g.over {
 		if restart() {
+			best := g.best
 			*g = *newGame()
+			g.best = best
 		}
 		return nil
 	}
@@ -111,6 +136,10 @@ func (g *game) Update() error {
 			g.floor++
 			if g.floor >= len(encounters) {
 				g.clear = true
+				g.score = g.hp*20 + len(g.deck)*75
+				if g.score > g.best {
+					g.best = g.score
+				}
 			} else {
 				g.startBattle()
 			}
@@ -124,6 +153,14 @@ func (g *game) updateBattle(choice int, end bool) {
 		g.energy--
 		g.enemyHP -= c.damage
 		g.block += c.block
+		g.fx = 16
+		if c.damage > 0 {
+			g.flash = 7
+			g.shake = 4
+			g.burst(240, 165, 10)
+		} else {
+			g.burst(240, 360, 7)
+		}
 		g.hand = append(g.hand[:choice], g.hand[choice+1:]...)
 		g.message = fmt.Sprintf("%s: damage %d, block %d.", c.name, c.damage, c.block)
 		if g.enemyHP <= 0 {
@@ -134,20 +171,30 @@ func (g *game) updateBattle(choice int, end bool) {
 	}
 	if end {
 		e := encounters[g.floor]
-		taken := max(0, e.attack-g.block)
+		intent := e.attack + []int{0, 4, -2}[g.turn%3]
+		taken := max(0, intent-g.block)
 		g.hp -= taken
 		g.block = 0
 		g.energy = 3
 		g.drawHand()
+		g.turn++
+		g.shake = 5
 		g.message = fmt.Sprintf("%s dealt %d. New hand drawn.", e.name, taken)
 		if g.hp <= 0 {
 			g.over = true
 		}
 	}
 }
+func (g *game) burst(x, y float64, n int) {
+	for i := 0; i < n; i++ {
+		a := float64(i) * 6.283 / float64(n)
+		g.sparks = append(g.sparks, spark{x, y, math.Cos(a) * float64(1+i%3), math.Sin(a) * float64(1+i%3), 25 + float64(i%9)})
+	}
+}
 func (g *game) Draw(s *ebiten.Image) {
-	s.Fill(color.RGBA{18, 27, 45, 255})
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("EBI ASCENT   FLOOR %d/3   HP %02d/46   DECK %d", g.floor+1, max(0, g.hp), len(g.deck)), 85, 35)
+	bgs := []color.RGBA{{18, 27, 45, 255}, {30, 43, 58, 255}, {45, 31, 55, 255}, {54, 39, 31, 255}, {45, 20, 32, 255}}
+	s.Fill(bgs[min(g.floor, 4)])
+	ebitenutil.DebugPrintAt(s, fmt.Sprintf("EBI ASCENT FLOOR %d/5 HP %02d/46 DECK %d BEST %04d", g.floor+1, max(0, g.hp), len(g.deck), g.best), 55, 35)
 	switch g.phase {
 	case phaseBattle:
 		g.drawBattle(s)
@@ -174,15 +221,35 @@ func cardSprite(c card) string {
 }
 func (g *game) drawBattle(s *ebiten.Image) {
 	e := encounters[g.floor]
-	trackatlas.DrawCentered(s, "king-crab", 240, 150, 124)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("%s  HP %02d/%02d  NEXT %d", e.name, max(0, g.enemyHP), e.hp, e.attack), 125, 75)
+	ox := 0.0
+	if g.shake > 0 {
+		ox = math.Sin(float64(g.tick)*2) * 5
+	}
+	sprites := []string{"swarm", "slug", "boss-crab", "species-3", "king-crab"}
+	sprite := sprites[g.floor]
+	size := 110 + float64(g.floor)*10
+	if g.flash > 0 {
+		trackatlas.DrawTinted(s, sprite, 240+ox, 150, size, 1, 1, .3, 1)
+	} else {
+		trackatlas.DrawCentered(s, sprite, 240+ox, 150+math.Sin(float64(g.tick)*.13)*3, size)
+	}
+	intent := e.attack + []int{0, 4, -2}[g.turn%3]
+	intentName := []string{"STRIKE", "HEAVY", "FEINT"}[g.turn%3]
+	ebitenutil.DebugPrintAt(s, fmt.Sprintf("%s HP %02d/%02d NEXT %s %d", e.name, max(0, g.enemyHP), e.hp, intentName, intent), 95, 75)
+	for _, p := range g.sparks {
+		vector.DrawFilledCircle(s, float32(p.x+ox), float32(p.y), float32(2+p.life/14), color.RGBA{255, 211, 62, 255}, true)
+	}
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("ENERGY %d/3   BLOCK %d", g.energy, g.block), 160, 340)
 	ebitenutil.DebugPrintAt(s, g.message, 45, 390)
 	if len(g.hand) > 0 {
 		w := float32(width / len(g.hand))
 		for i, c := range g.hand {
 			x := float32(i)*w + 3
-			vector.DrawFilledRect(s, x, 465, w-6, 155, c.color, false)
+			y := float32(465)
+			if i%2 == 0 {
+				y -= float32(math.Sin(float64(g.tick)*.08)) * 3
+			}
+			vector.DrawFilledRect(s, x, y, w-6, 155, c.color, false)
 			trackatlas.DrawCentered(s, cardSprite(c), float64(x+w/2-3), 505, 40)
 			ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d %s\nDMG %d\nBLK %d", i+1, c.name, c.damage, c.block), int(x)+8, 550)
 		}

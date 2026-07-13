@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"image/color"
+	"math"
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -37,6 +38,8 @@ type stage struct {
 	moves       int
 	targetScore int
 	seed        int64
+	bonusKind   int // -1 means every gem is worth the same.
+	chainBoost  int // Added to the cascade multiplier.
 	board       [rows][cols]int
 }
 
@@ -45,6 +48,7 @@ var firstStage = stage{
 	moves:       12,
 	targetScore: 650,
 	seed:        6106,
+	bonusKind:   -1,
 	board: [rows][cols]int{
 		{0, 1, 2, 3, 4, 0},
 		{1, 2, 0, 4, 0, 1},
@@ -56,9 +60,26 @@ var firstStage = stage{
 	},
 }
 
+var stages = []stage{
+	firstStage,
+	{name: "TIDE TEMPLE", moves: 10, targetScore: 900, seed: 9123, bonusKind: 1, board: [rows][cols]int{
+		{0, 2, 1, 4, 3, 0}, {3, 1, 4, 0, 2, 1}, {2, 4, 0, 3, 1, 4}, {1, 3, 2, 4, 0, 2},
+		{4, 0, 3, 1, 2, 3}, {0, 2, 4, 3, 1, 0}, {3, 1, 0, 2, 4, 1},
+	}},
+	{name: "STARLIGHT REEF", moves: 9, targetScore: 1250, seed: 15721, bonusKind: -1, chainBoost: 1, board: [rows][cols]int{
+		{4, 1, 3, 0, 2, 4}, {0, 3, 1, 4, 2, 0}, {2, 4, 0, 1, 3, 2}, {1, 0, 4, 3, 2, 1},
+		{3, 2, 1, 0, 4, 3}, {4, 1, 3, 2, 0, 4}, {0, 3, 2, 4, 1, 0},
+	}},
+}
+
 type faller struct {
 	kind          int
 	x, fromY, toY int
+}
+
+type particle struct {
+	x, y, vx, vy, life float64
+	kind               int
 }
 
 type game struct {
@@ -71,6 +92,11 @@ type game struct {
 	combo            int
 	message          string
 	won, lost        bool
+	stageIndex       int
+	totalScore       int
+	bestScore        int
+	tick, shake      int
+	particles        []particle
 
 	// Juice: flash matched cells, then lerp falls. Input is ignored while busy.
 	busy      bool
@@ -91,10 +117,36 @@ func newGame(level stage) *game {
 	return g
 }
 
+func newRun(best int) *game {
+	g := newGame(stages[0])
+	g.bestScore = best
+	return g
+}
+
 func (g *game) Update() error {
+	g.tick++
+	if g.shake > 0 {
+		g.shake--
+	}
+	for i := len(g.particles) - 1; i >= 0; i-- {
+		p := &g.particles[i]
+		p.x += p.vx
+		p.y += p.vy
+		p.vy += .07
+		p.life--
+		if p.life <= 0 {
+			g.particles = append(g.particles[:i], g.particles[i+1:]...)
+		}
+	}
 	if g.won || g.lost {
 		if retryPressed() {
-			*g = *newGame(g.level)
+			if g.won && g.stageIndex < len(stages)-1 {
+				n := newGame(stages[g.stageIndex+1])
+				n.stageIndex, n.totalScore, n.bestScore = g.stageIndex+1, g.totalScore+g.score, g.bestScore
+				*g = *n
+			} else {
+				*g = *newRun(g.bestScore)
+			}
 		}
 		return nil
 	}
@@ -190,13 +242,35 @@ func (g *game) resolveMatches() {
 		}
 		if g.score >= g.level.targetScore {
 			g.won = true
+			final := g.totalScore + g.score + g.moves*50
+			if final > g.bestScore {
+				g.bestScore = final
+			}
 		} else if g.moves == 0 {
 			g.lost = true
 		}
 		return
 	}
 	g.combo++
-	g.score += len(matches) * 10 * g.combo
+	multiplier := g.combo + g.level.chainBoost
+	gain := len(matches) * 10 * multiplier
+	if g.level.bonusKind >= 0 {
+		for p := range matches {
+			if g.board[p.y][p.x] == g.level.bonusKind {
+				gain += 20
+			}
+		}
+	}
+	g.score += gain
+	if g.combo > 1 {
+		g.shake = 5 + g.combo
+	}
+	for p := range matches {
+		for i := 0; i < 4; i++ {
+			a := float64(i)*math.Pi/2 + float64(p.x+p.y)
+			g.particles = append(g.particles, particle{float64(boardX + p.x*cell + cell/2), float64(boardY + p.y*cell + cell/2), math.Cos(a) * (1 + float64(g.combo)*.2), math.Sin(a) * (1 + float64(g.combo)*.2), 24, g.board[p.y][p.x]})
+		}
+	}
 	g.message = fmt.Sprintf("%d pieces! Chain x%d", len(matches), g.combo)
 	g.flash = matches
 	g.flashLeft = 10
@@ -355,16 +429,24 @@ func hasValidSwap(board [rows][cols]int) bool {
 }
 
 func (g *game) Draw(screen *ebiten.Image) {
-	screen.Fill(color.RGBA{15, 25, 45, 255})
+	backgrounds := []color.RGBA{{15, 25, 45, 255}, {13, 42, 55, 255}, {30, 18, 57, 255}}
+	screen.Fill(backgrounds[g.stageIndex])
+	ox := 0.0
+	if g.shake > 0 {
+		ox = math.Sin(float64(g.tick)*2.4) * float64(g.shake)
+	}
+	vector.DrawFilledCircle(screen, float32(70+g.stageIndex*155), 80, 95, color.RGBA{40, 100, 120, 35}, true)
 	ebitenutil.DebugPrintAt(screen, "EBI MATCH / "+g.level.name, 145, 28)
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("MOVES %02d     SCORE %04d / %04d", g.moves, g.score, g.level.targetScore), 105, 67)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("REEF %d/3  MOVES %02d  SCORE %04d/%04d", g.stageIndex+1, g.moves, g.score, g.level.targetScore), 75, 67)
+	rules := []string{"CLASSIC: plan every swap", "TIDE: blue gems +20", "STORM: every chain starts x2"}
+	ebitenutil.DebugPrintAt(screen, rules[g.stageIndex], 145, 113)
 	barWidth := float32(360) * float32(g.score) / float32(g.level.targetScore)
 	if barWidth > 360 {
 		barWidth = 360
 	}
 	vector.DrawFilledRect(screen, 60, 94, 360, 14, color.RGBA{45, 61, 86, 255}, false)
 	vector.DrawFilledRect(screen, 60, 94, barWidth, 14, color.RGBA{245, 190, 69, 255}, false)
-	ebitenutil.DebugPrintAt(screen, g.message, 112, 122)
+	ebitenutil.DebugPrintAt(screen, g.message, 112, 132)
 
 	animating := map[point]bool{}
 	if g.falling {
@@ -372,7 +454,7 @@ func (g *game) Draw(screen *ebiten.Image) {
 			animating[point{f.x, f.toY}] = true
 			py := float32(boardY) + float32(float64(f.fromY)+float64(f.toY-f.fromY)*g.progress)*cell
 			px := float32(boardX + f.x*cell)
-			trackatlas.Draw(screen, trackatlas.Gem(f.kind), float64(px+3), float64(py+3), float64(cell-6))
+			trackatlas.Draw(screen, trackatlas.Gem(f.kind), float64(px+3)+ox, float64(py+3), float64(cell-6))
 		}
 	}
 	for y := 0; y < rows; y++ {
@@ -387,9 +469,11 @@ func (g *game) Draw(screen *ebiten.Image) {
 				continue
 			}
 			if g.flashLeft > 0 && g.flash[point{x, y}] {
-				trackatlas.DrawTinted(screen, trackatlas.Gem(g.board[y][x]), float64(px+cell/2), float64(py+cell/2), float64(cell-6), 2.4, 2.4, 2.4, 1)
+				pulse := 1 + math.Sin(float64(g.tick)*.5)*.12
+				trackatlas.DrawTinted(screen, trackatlas.Gem(g.board[y][x]), float64(px+cell/2)+ox, float64(py+cell/2), float64(cell-6)*pulse, 2.4, 2.4, 2.4, 1)
 			} else {
-				trackatlas.Draw(screen, trackatlas.Gem(g.board[y][x]), float64(px+3), float64(py+3), float64(cell-6))
+				bob := math.Sin(float64(g.tick)*.06+float64(x+y)) * .8
+				trackatlas.Draw(screen, trackatlas.Gem(g.board[y][x]), float64(px+3)+ox, float64(py+3)+bob, float64(cell-6))
 			}
 			if g.hasSelection && g.selected == (point{x, y}) {
 				vector.StrokeRect(screen, px+2, py+2, cell-4, cell-4, 6, color.White, false)
@@ -399,10 +483,18 @@ func (g *game) Draw(screen *ebiten.Image) {
 			}
 		}
 	}
+	for _, p := range g.particles {
+		c := pieceColors[p.kind%len(pieceColors)]
+		vector.DrawFilledCircle(screen, float32(p.x+ox), float32(p.y), float32(2+p.life/10), c, true)
+	}
 	ebitenutil.DebugPrintAt(screen, "Tap two neighbors  |  Arrows + Space", 90, 628)
 	ebitenutil.DebugPrintAt(screen, "Reach the gold score before moves run out", 74, 654)
 	if g.won {
-		overlay(screen, "STAGE CLEAR!\n\nTAP / SPACE TO PLAY AGAIN")
+		next := "NEXT REEF"
+		if g.stageIndex == len(stages)-1 {
+			next = "NEW RUN"
+		}
+		overlay(screen, fmt.Sprintf("STAGE CLEAR!  BONUS %d\nBEST RUN %d\n\nTAP / SPACE: %s", g.moves*50, g.bestScore, next))
 	}
 	if g.lost {
 		overlay(screen, "OUT OF MOVES\n\nTAP / SPACE TO RETRY")

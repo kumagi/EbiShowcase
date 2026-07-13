@@ -1,163 +1,30 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Ebi Craft | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Craft Expedition | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/sandbox/ebi-craft/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Craft | Ebi Showcase">
-    <meta property="og:description" content="Explore three chunks and combine gathering, crafting, building, light, and creatures to protect the world at night.">
+    <meta property="og:title" content="Ebi Craft Expedition | Ebi Showcase">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/sandbox/ebi-craft/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--sandbox--ebi-craft.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Ebi Craft">
+    <meta property="og:image:alt" content="Ebi Craft Expedition">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Craft | Ebi Showcase">
-    <meta name="twitter:description" content="Explore three chunks and combine gathering, crafting, building, light, and creatures to protect the world at night.">
+    <meta name="twitter:title" content="Ebi Craft Expedition | Ebi Showcase">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--sandbox--ebi-craft.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Ebi Craft">
-    <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/sandbox/ebi-craft/">
-<link rel="stylesheet" href="../../../../style.css">
-</head>
-<body class="overview-page">
-<header class="nav">
-<a class="brand" href="../../../">
-<span>EBI</span> SHOWCASE</a>
-<nav>
-<a href="../">PATH</a>
-<a href="#learn">HOW IT WORKS</a>
-<a class="lang" href="../../../../ja/tracks/sandbox/ebi-craft/">日本語</a>
-</nav>
-</header>
-<main class="overview-main">
-<div class="lesson-breadcrumb">
-<a href="../">← 2D Block Sandbox</a>
-<span>STEP 07 / 07</span>
-</div>
-<section class="overview-hero">
-<p class="eyebrow">★★★★☆ / PLAYABLE</p>
-<h1>Ebi Craft</h1>
-<p>Explore three chunks and combine gathering, crafting, building, light, and creatures to protect the world at night.</p>
-<div class="overview-concept">
-<small>NEW CONCEPT</small>
-<strong>Composed world systems and restoration</strong>
-</div>
-</section>
-<section class="play lesson-play">
-<div class="section-head">
-<div>
-<p class="eyebrow">PLAYABLE / WEBASSEMBLY</p>
-<h2>Build a lantern in all three chunks.</h2>
-</div>
-<p>Move with arrows/WASD or tap a neighboring cell. First craft a pickaxe from wood and stone, then mine crystal. Gather all three materials per chunk and CRAFT+PLACE. Try K or SAVE/LOAD to restore a checkpoint.</p>
-</div>
-<div class="game-shell">
-<div class="game-top">
-<span>● LIVE / GO + WASM</span>
-<span>STEP 07 / FINAL</span>
-</div>
-<div id="game-wrap">
-<iframe class="lesson-game-frame" title="Ebi Craft" src="../../../../play/ebi-craft/" allow="autoplay; fullscreen">
-</iframe>
-</div>
-</div>
-</section>
-<section class="physics" id="learn">
-<div class="lesson-intro">
-<p class="eyebrow">DEEP DIVE / COMPOSED WORLD STATE</p>
-<h2>Connect separate systems through the same world data.</h2>
-<p class="lesson-lead">Terrain, chunks, inventory, lanterns, creatures, and time of day are separate rules. They all read and write <strong>one game state</strong>. Harvest empties a tile and adds inventory; those items become light; light repels creatures. That chain of cause and effect becomes the game.</p>
-</div>
-<div class="concept-row">
-<article>
-<span class="concept-number">1</span>
-<h3>Split the world into states</h3>
-<p>tiles owns terrain, inventory owns counts, lanterns owns chunk goals, and creature owns AI. Their roles differ, but Update advances them in a clear order.</p>
-<code>world → inventory → light → creatures</code>
-</article>
-<article>
-<span class="concept-number">2</span>
-<h3>Connect rules by handoff</h3>
-<p>Harvest writes zero to tiles and adds items. Crafting spends items and writes a lantern. Nearby lantern tiles remove night creatures.</p>
-<code>tile → item → recipe → light → AI</code>
-</article>
-<article>
-<span class="concept-number">3</span>
-<h3>Save every needed state</h3>
-<p>Saving tiles alone cannot restore the same world if position and inventory reset. Copy every value required to continue into one snapshot.</p>
-<code>snapshot{tiles, player, inventory, lanterns}</code>
-</article>
-</div>
-<div class="motion-lab" data-lab="pipeline" data-steps="seed,chunks,inventory,player" data-loop="saved → reload" aria-labelledby="lab-title-ebi-craft">
-<div class="lab-copy">
-<p class="eyebrow">TRY IT / WORLD RESTORE</p>
-<h3 id="lab-title-ebi-craft">Collect savable state in order</h3>
-<p>Restoring a world is a pipe of what to save: seed → chunks → inventory → player. Load in the same order.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">Next field</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Start</button></div>
-<p class="lab-hint">Save seed + diffs, not raw images.</p>
-</div>
-<div class="lab-visual">
-<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
-<div class="lab-values" aria-live="polite"><div><span>field</span><strong data-lab-stepn>0</strong></div><div><span>now</span><strong data-lab-note>—</strong></div></div>
-</div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
-<span data-go-line="step">input → sim → resolve → draw</span>
-<span data-go-line="loop">// then next frame</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
-</div>
-</div><div class="formula"><p class="eyebrow">SAVE BOUNDARY</p><div class="formula-lines"><code>write fields in order</code><span>then</span><code>read fields in same order</code></div><p>Avoid half-old save layouts.</p></div><div class="code-lesson">
-<div>
-<p class="eyebrow">IN THE REAL GAME</p>
-<h3>Save and load travel through the same shape</h3>
-<p>Save copies current values into snapshot; load copies the same fields back into game. Add every new persistent system to this shape.</p>
-</div>
-<pre>
-<code>type snapshot struct {
-    tiles [worldH][worldW]int
-    px, py int
-    wood, stone, crystal int
-    lanterns [3]bool
-    pickaxe bool
-}
-saved = snapshot{tiles, px, py,
-    wood, stone, crystal, lanterns, pickaxe}
-// load copies the same fields back</code>
-</pre>
-</div>
-<div class="why-grid">
-<article>
-<p class="eyebrow">WHY COMPOSE?</p>
-<h3>One change creates the next choice</h3>
-<p>Gathering and AI become a purposeful world when each system consumes another system's result.</p>
-</article>
-<article>
-<p class="eyebrow">WHY CHUNKS?</p>
-<h3>Repeat a goal by region</h3>
-<p>Divide player x by chunkW to record which region received a lantern.</p>
-</article>
-<article class="challenge">
-<p class="eyebrow">TRY NEXT</p>
-<h3>Save only differences</h3>
-<p>Design a list that stores only coordinates and kinds that differ from generated terrain.</p>
-</article>
-</div>
-</section>
-<nav class="lesson-pager">
-<a href="../creature-world/">← STEP 06<strong>A Living World</strong>
-</a>
-<a href="../">BACK TO PATH →<strong>2D Block Sandbox</strong>
-</a>
-</nav>
-
-
+    <meta name="twitter:image:alt" content="Ebi Craft Expedition">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/sandbox/ebi-craft/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Learning path</a><span>STEP 09 / FINAL</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Craft Expedition</h1><p>Cross Moss Camp, Crystal Cave, and Ember Isle, joining gathering, tools, building, and enemies into one adventure.</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>handleInput(); updateWorld(); updateInventory()</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">Play first</p><h2>Ebi Craft Expedition</h2><p>Cross Moss Camp, Crystal Cave, and Ember Isle, joining gathering, tools, building, and enemies into one adventure.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-craft/" title="Ebi Craft Expedition" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Ebi Craft Expedition</h2><p>The final game loads three islands in sequence through the same game state. Resource positions, required lanterns, and night enemies change on each island. Mining has anticipation and contact, while chips, flash, and shake communicate the result. Remaining HP and speed become score, so a clear invites a faster route on the next expedition.</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>Load three islands' terrain, resources, and enemies from data</p></article><article><b>02</b><h3>UPDATE</h3><p>Connect mining and building with animation and particles</p></article><article><b>03</b><h3>FEEDBACK</h3><p>Try a different gathering route against the best total</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Ebi Craft Expedition</h2><p>The final game loads three islands in sequence through the same game state. Resource positions, required lanterns, and night enemies change on each island. Mining has anticipation and contact, while chips, flash, and shake communicate the result. Remaining HP and speed become score, so a clear invites a faster route on the next expedition.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Connect mining and building with animation and particles</h2><p>Cross Moss Camp, Crystal Cave, and Ember Isle, joining gathering, tools, building, and enemies into one adventure.</p></div><pre><code>stage := islands[stageIndex]
+load(stage.resources)
+if cleared(stage.goal) {
+    stageIndex++
+}</code></pre></section><section class="why-grid"><article><h3>Observe</h3><p>The final game loads three islands in sequence through the same game state. Resource positions, required lanterns, and night enemies change on each island. Mining has anticipation and contact, while chips, flash, and shake communicate the result. Remaining HP and speed become score, so a clear invites a faster route on the next expedition.</p></article><article><h3>Change</h3><p>Try a different gathering route against the best total</p></article><article><h3>CHALLENGE</h3><p>Add an exploration map that reveals only visited tiles.</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>2D Block Sandbox</strong></a><a href="../">PATH →<strong>2D Block Sandbox</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -179,67 +46,4 @@ saved = snapshot{tiles, px, py,
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main>
-<script src="../../../../learn.js">
-</script>
-</body>
-</html>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

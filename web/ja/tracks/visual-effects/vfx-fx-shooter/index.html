@@ -169,6 +169,24 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>三分割とは、弾bullets・敵enemies・爆発FXを別リストで管理すること。弾は命中判定、敵はHPと移動、FXは見た目だけを担当します。Updateで三つを順に進め、Drawで敵→弾→爆発の順に重ねます。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>updateBullets(); updateEnemies(); fx.Update()</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>

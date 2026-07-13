@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"image/color"
+	"math"
+	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -13,182 +15,220 @@ import (
 
 const (
 	width, height = 480, 720
-	worldW        = 12
-	worldH        = 8
-	chunkW        = 4
-	cell          = 38
-	ox, oy        = 12, 92
+	cols, rows    = 10, 8
+	cell          = 42
+	ox, oy        = 30, 105
 	ground        = 0
-	woodTile      = 1
-	stoneTile     = 2
-	crystalTile   = 3
-	lanternTile   = 4
+	wood          = 1
+	stone         = 2
+	crystal       = 3
+	lantern       = 4
 )
 
-type snapshot struct {
-	tiles                [worldH][worldW]int
-	px, py               int
-	wood, stone, crystal int
-	lanterns             [3]bool
-	pickaxe              bool
+type island struct {
+	name, hint string
+	sky, soil  color.RGBA
+	resources  [][3]int
+	goal       [3]int
+	enemies    int
+}
+
+var islands = []island{
+	{"MOSS CAMP", "Learn the recipe before sunset.", color.RGBA{31, 76, 91, 255}, color.RGBA{55, 102, 76, 255}, [][3]int{{1, 1, wood}, {2, 3, wood}, {4, 5, stone}, {7, 2, stone}, {8, 6, crystal}}, [3]int{1, 1, 1}, 1},
+	{"CRYSTAL CAVE", "Mine two crystals while crawlers patrol.", color.RGBA{27, 35, 76, 255}, color.RGBA{55, 61, 95, 255}, [][3]int{{1, 6, wood}, {3, 2, wood}, {5, 5, stone}, {8, 1, stone}, {6, 3, crystal}, {9, 7, crystal}}, [3]int{1, 1, 2}, 2},
+	{"EMBER ISLE", "Build two lanterns before the long night.", color.RGBA{92, 43, 46, 255}, color.RGBA{104, 68, 55, 255}, [][3]int{{0, 1, wood}, {2, 6, wood}, {3, 3, wood}, {5, 1, stone}, {7, 6, stone}, {9, 2, stone}, {4, 7, crystal}, {8, 4, crystal}}, [3]int{2, 2, 2}, 3},
+}
+
+type particle struct {
+	x, y, vx, vy float64
+	life         int
+	c            color.RGBA
+}
+type crawler struct {
+	x, y  int
+	phase float64
 }
 
 type game struct {
-	tiles                   [worldH][worldW]int
-	px, py                  int
-	wood, stone, crystal    int
-	lanterns                [3]bool
-	pickaxe                 bool
-	creatureX, creatureY    int
-	creatureAlive           bool
-	hp, frames, attackTimer int
-	saved                   snapshot
-	hasSave                 bool
-	clear, over             bool
-	message                 string
+	stage, px, py, frames, stageFrames           int
+	tiles                                        [rows][cols]int
+	bag                                          [3]int
+	placed, goalLanterns                         int
+	pickaxe                                      bool
+	hp, score, best, combo                       int
+	harvestPhase, targetX, targetY, shake, flash int
+	crawlers                                     []crawler
+	particles                                    []particle
+	clear, over                                  bool
+	message                                      string
+	rng                                          *rand.Rand
 }
 
 func newGame() *game {
-	g := &game{px: 0, py: 4, hp: 5, creatureX: 11, creatureY: 7, message: "Gather one set in each chunk; craft and place 3 lanterns."}
-	for chunk := 0; chunk < 3; chunk++ {
-		base := chunk * chunkW
-		g.tiles[1+chunk%2][base+1] = woodTile
-		g.tiles[4][base+2] = stoneTile
-		g.tiles[6-chunk%2][base+3] = crystalTile
-	}
-	// Chunk 1 also contains the extra wood and stone used to craft the pickaxe.
-	g.tiles[2][0], g.tiles[3][0] = woodTile, stoneTile
+	g := &game{hp: 5, rng: rand.New(rand.NewSource(44)), best: sessionBest}
+	g.loadIsland(0)
 	return g
 }
 
-func (g *game) night() bool { return (g.frames/900)%2 == 1 }
+var sessionBest int
+
+func (g *game) loadIsland(n int) {
+	g.stage, g.px, g.py, g.stageFrames = n, 0, rows/2, 0
+	g.tiles, g.bag, g.placed, g.pickaxe = [rows][cols]int{}, [3]int{}, 0, false
+	g.crawlers, g.particles = nil, nil
+	data := islands[n]
+	for _, r := range data.resources {
+		g.tiles[r[1]][r[0]] = r[2]
+	}
+	for i := 0; i < data.enemies; i++ {
+		g.crawlers = append(g.crawlers, crawler{cols - 1 - i, rows - 1 - i%2, float64(i)})
+	}
+	g.goalLanterns = 1
+	if n == 2 {
+		g.goalLanterns = 2
+	}
+	g.message = data.hint
+}
 
 func (g *game) move(dx, dy int) {
+	if g.harvestPhase > 0 {
+		return
+	}
 	nx, ny := g.px+dx, g.py+dy
-	if nx < 0 || nx >= worldW || ny < 0 || ny >= worldH {
-		return
+	if nx >= 0 && nx < cols && ny >= 0 && ny < rows {
+		g.px, g.py = nx, ny
 	}
-	g.px, g.py = nx, ny
 }
 
-func (g *game) harvest() {
-	kind := g.tiles[g.py][g.px]
-	if kind == crystalTile && !g.pickaxe {
-		g.message = "Crystal needs a pickaxe. Gather wood and stone, then craft."
+func (g *game) beginHarvest() {
+	k := g.tiles[g.py][g.px]
+	if k < wood || k > crystal {
+		g.message = "Stand on wood, stone, or crystal first."
 		return
 	}
-	switch kind {
-	case woodTile:
-		g.wood++
-	case stoneTile:
-		g.stone++
-	case crystalTile:
-		g.crystal++
-	default:
-		g.message = "No resource under Ebi Tenjiroh. Move onto a resource tile."
+	if k == crystal && !g.pickaxe {
+		g.message = "Crystal needs a pickaxe: craft with 1 wood + 1 stone."
 		return
 	}
-	g.tiles[g.py][g.px] = ground
-	g.message = "Harvested into inventory; this tile is now ground."
+	g.harvestPhase, g.targetX, g.targetY = 18, g.px, g.py
 }
 
-func (g *game) craftOrPlace() {
+func (g *game) resolveHarvest() {
+	k := g.tiles[g.targetY][g.targetX]
+	if k < wood || k > crystal {
+		return
+	}
+	g.tiles[g.targetY][g.targetX] = ground
+	g.bag[k-1]++
+	g.combo++
+	g.score += 60 + g.combo*10
+	g.shake, g.flash = 8, 5
+	colors := []color.RGBA{{232, 154, 72, 255}, {173, 191, 205, 255}, {100, 229, 237, 255}}
+	for i := 0; i < 14; i++ {
+		a := float64(i) * 0.75
+		g.particles = append(g.particles, particle{float64(ox + g.px*cell + cell/2), float64(oy + g.py*cell + cell/2), math.Cos(a) * 2.6, math.Sin(a)*2.6 - 1, 30, colors[k-1]})
+	}
+	g.message = fmt.Sprintf("Collected! Combo x%d — W%d S%d C%d", g.combo, g.bag[0], g.bag[1], g.bag[2])
+}
+
+func (g *game) craft() {
 	if !g.pickaxe {
-		if g.wood < 1 || g.stone < 1 {
-			g.message = "Pickaxe recipe needs 1 wood + 1 stone."
+		if g.bag[0] < 1 || g.bag[1] < 1 {
+			g.message = "Pickaxe needs 1 wood + 1 stone."
 			return
 		}
-		g.wood--
-		g.stone--
+		g.bag[0]--
+		g.bag[1]--
 		g.pickaxe = true
-		g.message = "Pickaxe crafted! Crystal tiles can now be harvested."
-		return
-	}
-	g.placeLantern()
-}
-
-func (g *game) placeLantern() {
-	chunk := g.px / chunkW
-	if g.lanterns[chunk] {
-		g.message = "This chunk already has a lantern."
+		g.score += 100
+		g.message = "Pickaxe crafted! Now crystal can break."
 		return
 	}
 	if g.tiles[g.py][g.px] != ground {
-		g.message = "Harvest this tile before building here."
+		g.message = "Build on an empty tile."
 		return
 	}
-	if g.wood < 1 || g.stone < 1 || g.crystal < 1 {
-		g.message = "Recipe needs 1 wood + 1 stone + 1 crystal."
+	if g.bag[0] < 1 || g.bag[1] < 1 || g.bag[2] < 1 {
+		g.message = "Lantern needs 1 wood + 1 stone + 1 crystal."
 		return
 	}
-	g.wood--
-	g.stone--
-	g.crystal--
-	g.tiles[g.py][g.px] = lanternTile
-	g.lanterns[chunk] = true
-	g.message = fmt.Sprintf("Lantern crafted and placed in chunk %d!", chunk+1)
-	if g.lanterns[0] && g.lanterns[1] && g.lanterns[2] {
+	g.bag[0]--
+	g.bag[1]--
+	g.bag[2]--
+	g.tiles[g.py][g.px] = lantern
+	g.placed++
+	g.score += 300
+	g.shake = 5
+	for i := 0; i < 20; i++ {
+		a := float64(i) * .6
+		g.particles = append(g.particles, particle{float64(ox + g.px*cell + 21), float64(oy + g.py*cell + 21), math.Cos(a) * 2, math.Sin(a) * 2, 36, color.RGBA{255, 210, 74, 255}})
+	}
+	if g.placed >= g.goalLanterns {
+		g.finishIsland()
+	} else {
+		g.message = "One light burns. Build the final lantern!"
+	}
+}
+
+func (g *game) finishIsland() {
+	g.score += max(0, 1800-g.stageFrames/2) + g.hp*100
+	if g.stage == len(islands)-1 {
 		g.clear = true
-		g.message = "All chunks are linked by light — Ebi Craft complete!"
-	}
-}
-
-func (g *game) saveOrLoad() {
-	if !g.hasSave {
-		g.saved = snapshot{g.tiles, g.px, g.py, g.wood, g.stone, g.crystal, g.lanterns, g.pickaxe}
-		g.hasSave = true
-		g.message = "Checkpoint saved: tile diffs, position, and inventory copied."
+		if g.score > sessionBest {
+			sessionBest = g.score
+		}
+		g.best = sessionBest
+		g.message = "Three islands shine! Try again for a higher expedition score."
 		return
 	}
-	g.tiles, g.px, g.py = g.saved.tiles, g.saved.px, g.saved.py
-	g.wood, g.stone, g.crystal = g.saved.wood, g.saved.stone, g.saved.crystal
-	g.lanterns = g.saved.lanterns
-	g.pickaxe = g.saved.pickaxe
-	g.message = "Checkpoint restored from the saved world snapshot."
+	g.loadIsland(g.stage + 1)
+	g.message = "New island unlocked — its recipe and danger are tougher."
 }
 
-func (g *game) updateCreature() {
-	if !g.night() {
-		g.creatureAlive = false
+func (g *game) updateCrawlers() {
+	if g.stageFrames < 8*60 {
 		return
 	}
-	if !g.creatureAlive {
-		g.creatureX, g.creatureY, g.creatureAlive = 11, 7, true
-	}
-	for y := max(0, g.creatureY-2); y <= min(worldH-1, g.creatureY+2); y++ {
-		for x := max(0, g.creatureX-2); x <= min(worldW-1, g.creatureX+2); x++ {
-			if g.tiles[y][x] == lanternTile {
-				g.creatureAlive = false
-				g.message = "Lantern light sent the night crawler away."
-				return
+	for i := range g.crawlers {
+		c := &g.crawlers[i]
+		c.phase += .12
+		lit := false
+		for y := max(0, c.y-2); y <= min(rows-1, c.y+2); y++ {
+			for x := max(0, c.x-2); x <= min(cols-1, c.x+2); x++ {
+				if g.tiles[y][x] == lantern {
+					lit = true
+				}
 			}
 		}
-	}
-	if g.frames%36 == 0 {
-		if g.creatureX < g.px {
-			g.creatureX++
-		} else if g.creatureX > g.px {
-			g.creatureX--
-		} else if g.creatureY < g.py {
-			g.creatureY++
-		} else if g.creatureY > g.py {
-			g.creatureY--
+		if lit {
+			continue
 		}
-	}
-	distance := abs(g.creatureX-g.px) + abs(g.creatureY-g.py)
-	if distance <= 1 {
-		g.attackTimer++
-		if g.attackTimer >= 50 {
+		if g.frames%(34-i*3) == 0 {
+			if abs(c.x-g.px) > abs(c.y-g.py) {
+				if c.x < g.px {
+					c.x++
+				} else if c.x > g.px {
+					c.x--
+				}
+			} else {
+				if c.y < g.py {
+					c.y++
+				} else if c.y > g.py {
+					c.y--
+				}
+			}
+		}
+		if c.x == g.px && c.y == g.py && g.frames%55 == 0 {
 			g.hp--
-			g.attackTimer = 0
-			g.message = "Night crawler hit! Reach lantern light."
+			g.combo = 0
+			g.flash = 10
+			g.shake = 10
+			g.message = "Crawler hit! A lantern makes a safe zone."
 		}
-	} else {
-		g.attackTimer = 0
 	}
 	if g.hp <= 0 {
 		g.over = true
-		g.message = "The night crawler won. Build light sooner!"
+		g.message = "The expedition ended. Retry and light safe zones sooner."
 	}
 }
 
@@ -200,11 +240,7 @@ func (g *game) Update() error {
 		return nil
 	}
 	g.frames++
-	if g.frames >= 90*60 {
-		g.over = true
-		g.message = "The long night arrived before the light network was ready."
-		return nil
-	}
+	g.stageFrames++
 	if inpututil.IsKeyJustPressed(ebiten.KeyArrowLeft) || inpututil.IsKeyJustPressed(ebiten.KeyA) {
 		g.move(-1, 0)
 	}
@@ -218,118 +254,132 @@ func (g *game) Update() error {
 		g.move(0, 1)
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyX) || inpututil.IsKeyJustPressed(ebiten.KeyH) {
-		g.harvest()
+		g.beginHarvest()
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyC) || inpututil.IsKeyJustPressed(ebiten.KeyP) {
-		g.craftOrPlace()
-	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyK) {
-		g.saveOrLoad()
+		g.craft()
 	}
 	if x, y, ok := pressPosition(); ok {
-		if y >= oy && y < oy+worldH*cell && x >= ox && x < ox+worldW*cell {
+		if x >= ox && x < ox+cols*cell && y >= oy && y < oy+rows*cell {
 			tx, ty := (x-ox)/cell, (y-oy)/cell
-			dx, dy := tx-g.px, ty-g.py
-			if abs(dx)+abs(dy) == 1 {
-				g.move(dx, dy)
+			if abs(tx-g.px)+abs(ty-g.py) == 1 {
+				g.move(tx-g.px, ty-g.py)
 			}
-		} else if y >= 545 {
-			switch {
-			case x < 160:
-				g.harvest()
-			case x < 320:
-				g.craftOrPlace()
-			default:
-				g.saveOrLoad()
+		} else if y >= 575 {
+			if x < 240 {
+				g.beginHarvest()
+			} else {
+				g.craft()
 			}
 		}
 	}
-	g.updateCreature()
+	if g.harvestPhase > 0 {
+		g.harvestPhase--
+		if g.harvestPhase == 8 {
+			g.resolveHarvest()
+		}
+	}
+	g.updateCrawlers()
+	for i := len(g.particles) - 1; i >= 0; i-- {
+		p := &g.particles[i]
+		p.x += p.vx
+		p.y += p.vy
+		p.vy += .08
+		p.life--
+		if p.life <= 0 {
+			g.particles = append(g.particles[:i], g.particles[i+1:]...)
+		}
+	}
+	if g.shake > 0 {
+		g.shake--
+	}
+	if g.flash > 0 {
+		g.flash--
+	}
 	return nil
 }
 
 func (g *game) Draw(screen *ebiten.Image) {
-	bg := color.RGBA{21, 52, 68, 255}
-	if g.night() {
-		bg = color.RGBA{8, 18, 39, 255}
+	d := islands[g.stage]
+	screen.Fill(d.sky)
+	dx, dy := 0, 0
+	if g.shake > 0 {
+		dx = g.rng.Intn(5) - 2
+		dy = g.rng.Intn(5) - 2
 	}
-	screen.Fill(bg)
-	phase := "DAY"
-	if g.night() {
-		phase = "NIGHT"
-	}
-	ebitenutil.DebugPrintAt(screen, "EBI CRAFT — THREE CHUNKS", 142, 18)
-	tool := "HAND"
-	if g.pickaxe {
-		tool = "PICK"
-	}
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%s HP%d W%d S%d C%d TOOL:%s", phase, g.hp, g.wood, g.stone, g.crystal, tool), 105, 47)
-	for y := 0; y < worldH; y++ {
-		for x := 0; x < worldW; x++ {
+	world := ebiten.NewImage(width, height)
+	world.Fill(color.RGBA{0, 0, 0, 0})
+	ebitenutil.DebugPrintAt(world, fmt.Sprintf("EBI CRAFT  ISLAND %d/3  %s", g.stage+1, d.name), 105, 16)
+	ebitenutil.DebugPrintAt(world, fmt.Sprintf("HP %d  SCORE %05d  LIGHT %d/%d", g.hp, g.score, g.placed, g.goalLanterns), 112, 43)
+	ebitenutil.DebugPrintAt(world, fmt.Sprintf("BAG W%d S%d C%d  TOOL:%v", g.bag[0], g.bag[1], g.bag[2], map[bool]string{false: "HAND", true: "PICK"}[g.pickaxe]), 108, 68)
+	for y := 0; y < rows; y++ {
+		for x := 0; x < cols; x++ {
 			px, py := float32(ox+x*cell), float32(oy+y*cell)
-			base := color.RGBA{45 + uint8((x/chunkW)*8), 86, 75, 255}
-			vector.DrawFilledRect(screen, px+1, py+1, cell-2, cell-2, base, false)
-			kind := g.tiles[y][x]
-			if kind != ground {
-				trackatlas.Draw(screen, tileSprite(kind), float64(px+3), float64(py+3), float64(cell-6))
+			shade := uint8((x + y + g.stage) % 3 * 5)
+			c := d.soil
+			c.R += shade
+			c.G += shade
+			vector.DrawFilledRect(world, px+1, py+1, cell-2, cell-2, c, false)
+			if k := g.tiles[y][x]; k != ground {
+				trackatlas.Draw(world, tileSprite(k), float64(px+4), float64(py+4), cell-8)
 			}
 		}
 	}
-	for c := 1; c < 3; c++ {
-		x := float32(ox + c*chunkW*cell)
-		vector.StrokeLine(screen, x, oy, x, oy+worldH*cell, 4, color.RGBA{245, 195, 75, 180}, false)
+	for _, c := range g.crawlers {
+		bounce := math.Sin(c.phase) * 3
+		trackatlas.DrawCentered(world, "slug", float64(ox+c.x*cell+21), float64(oy+c.y*cell+21)+bounce, 29)
 	}
-	if g.creatureAlive {
-		trackatlas.DrawCentered(screen, "slug", float64(ox+g.creatureX*cell+cell/2), float64(oy+g.creatureY*cell+cell/2), 28)
+	py := float64(oy + g.py*cell + 21)
+	if g.harvestPhase > 0 {
+		py -= math.Sin(float64(g.harvestPhase)/18*math.Pi) * 8
 	}
-	trackatlas.DrawCentered(screen, "hero", float64(ox+g.px*cell+cell/2), float64(oy+g.py*cell+cell/2), 30)
-	for c := 0; c < 3; c++ {
-		status := "DARK"
-		if g.lanterns[c] {
-			status = "LIT"
-		}
-		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("CHUNK %d %s", c+1, status), 30+c*155, 420)
+	trackatlas.DrawCentered(world, "hero", float64(ox+g.px*cell+21), py, 32)
+	if g.harvestPhase > 8 {
+		vector.StrokeLine(world, float32(ox+g.px*cell+25), float32(py), float32(ox+g.px*cell+36), float32(py-15), 4, color.White, false)
 	}
-	ebitenutil.DebugPrintAt(screen, g.message, 50, 482)
-	button(screen, 10, "HARVEST [X]", color.RGBA{177, 114, 59, 255})
-	button(screen, 170, "CRAFT+PLACE [C]", color.RGBA{211, 151, 59, 255})
-	label := "SAVE [K]"
-	if g.hasSave {
-		label = "LOAD [K]"
+	for _, p := range g.particles {
+		vector.DrawFilledCircle(world, float32(p.x), float32(p.y), float32(2+p.life%3), p.c, false)
 	}
-	button(screen, 330, label, color.RGBA{62, 125, 151, 255})
-	ebitenutil.DebugPrintAt(screen, "Tap a neighboring cell to move / arrows or WASD", 68, 632)
-	ebitenutil.DebugPrintAt(screen, "Pick: 1W+1S / Lantern: 1W+1S+1C", 92, 665)
+	ebitenutil.DebugPrintAt(world, g.message, 38, 470)
+	button(world, 10, "HARVEST [X]", color.RGBA{170, 101, 54, 255})
+	button(world, 250, "CRAFT / BUILD [C]", color.RGBA{209, 148, 49, 255})
+	ebitenutil.DebugPrintAt(world, "Tap a neighboring tile to move / arrows or WASD", 65, 655)
+	ebitenutil.DebugPrintAt(world, "Finish all 3 islands. Faster + more HP = more score.", 55, 680)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(float64(dx), float64(dy))
+	screen.DrawImage(world, op)
+	if g.flash > 0 {
+		vector.DrawFilledRect(screen, 0, 0, width, height, color.RGBA{255, 255, 255, 55}, false)
+	}
 	if g.clear || g.over {
-		title := "EBI CRAFT COMPLETE!"
+		vector.DrawFilledRect(screen, 28, 235, 424, 220, color.RGBA{5, 13, 28, 245}, false)
+		title := "EXPEDITION COMPLETE!"
 		if g.over {
-			title = "WORLD LOST TO NIGHT!"
+			title = "EXPEDITION LOST"
 		}
-		vector.DrawFilledRect(screen, 36, 250, 408, 168, color.RGBA{5, 13, 28, 247}, false)
-		ebitenutil.DebugPrintAt(screen, title, 146, 297)
-		ebitenutil.DebugPrintAt(screen, g.message, 68, 334)
-		ebitenutil.DebugPrintAt(screen, "TAP / ENTER TO RETRY", 146, 382)
+		ebitenutil.DebugPrintAt(screen, title, 151, 275)
+		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %05d   BEST %05d", g.score, max(g.best, sessionBest)), 145, 316)
+		ebitenutil.DebugPrintAt(screen, g.message, 47, 353)
+		ebitenutil.DebugPrintAt(screen, "TAP / ENTER TO EXPLORE AGAIN", 125, 409)
 	}
 }
 
-func tileSprite(kind int) string {
-	switch kind {
-	case woodTile:
+func tileSprite(k int) string {
+	switch k {
+	case wood:
 		return "tile-wood"
-	case stoneTile:
+	case stone:
 		return "tile-stone"
-	case crystalTile:
+	case crystal:
 		return "tile-glass"
 	default:
 		return "tile-lantern"
 	}
 }
-
-func button(screen *ebiten.Image, x int, label string, c color.RGBA) {
-	vector.DrawFilledRect(screen, float32(x), 545, 140, 58, c, false)
-	ebitenutil.DebugPrintAt(screen, label, x+15, 568)
+func button(s *ebiten.Image, x int, label string, c color.RGBA) {
+	vector.DrawFilledRect(s, float32(x), 575, 220, 58, c, false)
+	ebitenutil.DebugPrintAt(s, label, x+47, 598)
 }
-
 func pressPosition() (int, int, bool) {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		x, y := ebiten.CursorPosition()
@@ -342,23 +392,19 @@ func pressPosition() (int, int, bool) {
 	}
 	return 0, 0, false
 }
-
 func retryPressed() bool {
 	return inpututil.IsKeyJustPressed(ebiten.KeyEnter) || inpututil.IsKeyJustPressed(ebiten.KeySpace) || inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || len(inpututil.AppendJustPressedTouchIDs(nil)) > 0
 }
-
 func abs(v int) int {
 	if v < 0 {
 		return -v
 	}
 	return v
 }
-
 func (g *game) Layout(_, _ int) (int, int) { return width, height }
-
 func main() {
 	ebiten.SetWindowSize(width, height)
-	ebiten.SetWindowTitle("Ebi Craft — Ebitengine")
+	ebiten.SetWindowTitle("Ebi Craft Expedition")
 	if err := ebiten.RunGame(newGame()); err != nil {
 		panic(err)
 	}

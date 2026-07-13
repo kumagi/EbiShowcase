@@ -18,13 +18,20 @@
     <meta name="twitter:image:alt" content="Maze Chase">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/maze-chase/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/maze-chase/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>6 STEPS</span></div><section class="track-hero track-maze-chase"><span class="track-letter">N</span><div><p class="eyebrow">Build a Pac-Man-style chase</p><h1>Maze Chase</h1><p>Build a Pac-Man-style game where you eat pellets in a maze while running from enemies. Start with tile movement, then add remembering your next turn early (buffered input), intersections, enemy modes, path choice, and power states.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/maze-chase/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-maze-chase"><span class="track-letter">N</span><div><p class="eyebrow">Build a Pac-Man-style chase</p><h1>Maze Chase</h1><p>Build a Pac-Man-style game where you eat pellets in a maze while running from enemies. Start with tile movement, then add remembering your next turn early (buffered input), intersections, enemy modes, path choice, and power states.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a playable world.</h2><p>Test data changes and algorithms in small games, reusing each step on the way to the final project.</p></div><a class="path-step" href="tile-runner/"><span>01</span><div><h3>Run the Maze</h3><p>Move smoothly along corridor centers and block turns into walls.</p><strong>Tile centers and direction</strong></div><b>→</b></a>
 <a class="path-step" href="buffered-turn/"><span>02</span><div><h3>Buffered Corner Turns</h3><p>Remember an early direction press (buffering it) and turn automatically at the next intersection.</p><strong>Remembering the next turn early (input buffering) and intersections</strong></div><b>→</b></a>
 <a class="path-step" href="pellet-map/"><span>03</span><div><h3>Pellet Maze</h3><p>Track each pellet and clear the stage when none remain.</p><strong>Collectible state and completion</strong></div><b>→</b></a>
 <a class="path-step" href="patrol-chase/"><span>04</span><div><h3>Patrol and Chase</h3><p>Give enemies patrol, chase, and flee modes with different targets.</p><strong>Enemy modes and target tiles</strong></div><b>→</b></a>
 <a class="path-step" href="junction-ai/"><span>05</span><div><h3>Junction AI</h3><p>At each junction, compare every legal direction and choose whichever gets closest to the target—for example, picking right over down because it's a shorter remaining distance (distance evaluation).</p><strong>Choosing the direction that's closest to the target (distance evaluation) and no-reverse rules</strong></div><b>→</b></a>
-<a class="path-step" href="ebi-maze/"><span>06</span><div><h3>Ebi Maze</h3><p>Combine vulnerable enemies, returning home, speed changes, and multiple stages.</p><strong>Power states, respawn, and difficulty</strong></div><b>→</b></a></section>
+<!-- maze-polish:start -->
+<a class="path-step" href="guard-memory/"><span>06</span><div><h3>Give a Guard Memory</h3><p>Split a guard into patrol, chase, and search so it visits the last seen tile after the hero hides.</p><strong>Switch from chase into a search state</strong></div><b>→</b></a>
+<a class="path-step" href="maze-director/"><span>07</span><div><h3>Grow Enemy AI Across Three Mazes</h3><p>Store maze, pearl count, guards, sight, and speed as stage data, adding a new mind game on every clear.</p><strong>Increase guard count, sight, and speed by stage</strong></div><b>→</b></a>
+<!-- maze-polish:end -->
+<a class="path-step" href="ebi-maze/"><span>08</span><div><h3>Ebi Maze Marathon</h3><p>Ebi Tenjiroh runs three mazes, reading patrol, search, and ambush modes while collecting pearls.</p><strong>Reconsider safety and speed against the best total</strong></div><b>→</b></a></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -48,6 +55,21 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -3,7 +3,7 @@
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Monsters | Ebi Showcase">
-    <meta property="og:description" content="地域を探索し、技と相性で弱らせ、捕獲した個体を育て、図鑑・パーティ・預かり箱をJSONへ保存します。">
+    <meta property="og:description" content="3地域の遭遇表、研究スタンプ、捕獲と成長を、攻撃・捕獲アニメーション、粒子、画面揺れ、最速記録のある遠征へ統合します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/monster-collection/ebi-monsters/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--monster-collection--ebi-monsters.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -13,15 +13,15 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Monsters | Ebi Showcase">
-    <meta name="twitter:description" content="地域を探索し、技と相性で弱らせ、捕獲した個体を育て、図鑑・パーティ・預かり箱をJSONへ保存します。">
+    <meta name="twitter:description" content="3地域の遭遇表、研究スタンプ、捕獲と成長を、攻撃・捕獲アニメーション、粒子、画面揺れ、最速記録のある遠征へ統合します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--monster-collection--ebi-monsters.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Monsters">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/monster-collection/ebi-monsters/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/monster-collection/ebi-monsters/">EN</a></nav></header><main class="overview-main">
-<div class="lesson-breadcrumb"><a href="../">← モンスター収集RPG</a><span>STEP 07 / 07</span></div>
-<section class="overview-hero"><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>Ebi Monsters</h1><p>地域を探索し、技と相性で弱らせ、捕獲した個体を育て、図鑑・パーティ・預かり箱をJSONへ保存します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>ゲーム進行をつなぐ状態遷移とセーブ境界</strong></div></section>
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>4種を図鑑へ登録し、REEFLETを進化させて保存しよう。</h2></div><p>マップでは地域をタップまたは1〜3。戦闘は技・捕獲・交代をタップまたは1〜4。おすすめはEMBER COVEから。条件達成後、SAVEまたはSでクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 07</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Monsters 地域探索・戦闘・捕獲・保存" src="../../../../play/ebi-monsters/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<div class="lesson-breadcrumb"><a href="../">← モンスター収集RPG</a><span>STEP 09 / 09</span></div>
+<section class="overview-hero"><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>Ebi Monsters</h1><p>3地域の遭遇表、研究スタンプ、捕獲と成長を、攻撃・捕獲アニメーション、粒子、画面揺れ、最速記録のある遠征へ統合します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>ゲーム進行をつなぐ状態遷移とセーブ境界</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>4種を図鑑へ登録し、REEFLETを進化させて保存しよう。</h2></div><p>マップでは地域をタップまたは1〜3。戦闘は技・捕獲・交代をタップまたは1〜4。おすすめはEMBER COVEから。条件達成後、SAVEまたはSでクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 09</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Monsters 地域探索・戦闘・捕獲・保存" src="../../../../play/ebi-monsters/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / INTEGRATED GAME STATE</p><h2>6個の仕組みを、1本の「冒険の流れ」にする。</h2><p class="lesson-lead">完成ゲームは機能を横に並べただけではありません。地域選択が遭遇データを選び、戦闘結果が捕獲確率を変え、捕獲成功が図鑑・経験値・パーティ・箱をまとめて更新します。各画面を<code>modeMap</code>と<code>modeBattle</code>で分け、結果を次の状態へ渡す<strong>状態遷移</strong>が背骨です。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>地域から個体を作る</h3><p>地域ごとの遭遇表は種族IDの並びです。訪問回数で次のIDを選び、種族定義から野生個体のHPとタイプを作ります。</p><code>wildSpecies = encounterTables[region][visits[region]%2]</code></article><article><span class="concept-number">2</span><h3>戦闘結果を一つの取引にする</h3><p>技の威力・命中・回数と相性表でHPを下げます。捕獲成功時だけ、図鑑登録、個体追加、全員への経験値、進化判定、マップ復帰をまとめて行います。</p><code>dex[id]=true; addMonster(); shareEXP(); mode=modeMap</code></article><article><span class="concept-number">3</span><h3>必要な状態だけ保存する</h3><p>画面の色やボタンは保存しません。パーティの種族とEXP、箱、図鑑、地域訪問数を<code>saveData</code>へ写し、JSONバイト列にします。</p><code>saveSlot, _ = json.Marshal(payload)</code></article></div>
@@ -101,4 +101,22 @@ if err == nil {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>完成形はSpecies・Stats・Moves・Partyの四箱から読みます。まず一匹のspeciesを選び、能力、技、仲間順にたどります。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>monster := Monster{Species: speciesID, Stats: baseStats[speciesID]} </code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 </main><script src="../../../../learn.js"></script></body></html>

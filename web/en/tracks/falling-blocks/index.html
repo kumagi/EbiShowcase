@@ -18,13 +18,20 @@
     <meta name="twitter:image:alt" content="Falling-block Puzzle">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/falling-blocks/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/falling-blocks/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>6 STEPS</span></div><section class="track-hero track-falling-blocks"><span class="track-letter">I</span><div><p class="eyebrow">Build a Tetris-style game</p><h1>Falling-block Puzzle</h1><p>Build a Tetris-style puzzle where you stack falling pieces to clear full rows. Grow one falling block into rotation, locking, line clears, hold, and modern scoring.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/falling-blocks/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-falling-blocks"><span class="track-letter">I</span><div><p class="eyebrow">Build a Tetris-style game</p><h1>Falling-block Puzzle</h1><p>Build a Tetris-style puzzle where you stack falling pieces to clear full rows. Grow one falling block into rotation, locking, line clears, hold, and modern scoring.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>Connect small rules<br>into a complete game.</h2><p>Keep every step small and playable, inspect its algorithm, and then add the next system.</p></div><a class="path-step" href="falling-cell/"><span>01</span><div><h3>Drop One Cell</h3><p>Move down one cell at fixed intervals and lock into the board at the floor.</p><strong>Timed updates and grid movement</strong></div><b>→</b></a>
 <a class="path-step" href="tetromino-shapes/"><span>02</span><div><h3>Four-cell Shapes</h3><p>Define shapes as positions measured from a center point (relative coordinates) and move each as one object.</p><strong>Positions measured from a center (relative coordinates) and shape data</strong></div><b>→</b></a>
 <a class="path-step" href="rotation-kicks/"><span>03</span><div><h3>Rotation and Wall Kicks</h3><p>Spin the piece 90 degrees around its center and test shifted positions near walls.</p><strong>Spinning around a center point (rotation transforms) and kick tests</strong></div><b>→</b></a>
 <a class="path-step" href="lock-lines/"><span>04</span><div><h3>Lock and Clear Lines</h3><p>Merge the falling shape into the board, then clear full rows and drop the rest down to fill the gap (row compaction).</p><strong>Board merging and dropping rows to fill cleared gaps (row compaction)</strong></div><b>→</b></a>
 <a class="path-step" href="bag-hold-ghost/"><span>05</span><div><h3>Bag, Hold, and Ghost</h3><p>Add bag randomization, held pieces, and a predicted landing ghost.</p><strong>Fair randomization and landing prediction</strong></div><b>→</b></a>
-<a class="path-step" href="ebi-blocks/"><span>06</span><div><h3>Ebi Blocks</h3><p>Combine level speed, line counts, back-to-back clears, and scoring.</p><strong>Drop speed, chains, and scoring</strong></div><b>→</b></a></section>
+<!-- falling-blocks-polish:start -->
+<a class="path-step" href="line-clear-show/"><span>06</span><div><h3>Turn a Line Clear into a Show</h3><p>Hold a completed row for glowing in-between frames, then add particles and screen shake.</p><strong>Separate the rule result from presentation time</strong></div><b>→</b></a>
+<a class="path-step" href="rule-stages/"><span>07</span><div><h3>Build Three Rule Seas</h3><p>Store fall speed, row target, and starting garbage as data, then voyage through three distinct stages.</p><strong>Put difficulty in stage data, not scattered code</strong></div><b>→</b></a>
+<!-- falling-blocks-polish:end -->
+<a class="path-step" href="ebi-blocks/"><span>08</span><div><h3>Ebi Blocks</h3><p>Combine level speed, line counts, back-to-back clears, and scoring.</p><strong>Drop speed, chains, and scoring</strong></div><b>→</b></a></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -48,6 +55,21 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

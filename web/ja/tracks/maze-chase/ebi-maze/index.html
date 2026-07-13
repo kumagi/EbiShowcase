@@ -1,53 +1,30 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Maze | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Maze Marathon | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/maze-chase/ebi-maze/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Maze | Ebi Showcase">
-    <meta property="og:description" content="中心間移動、先行入力、真珠レイヤー、敵モード、交差点での経路評価を一つの迷路追跡ゲームへ統合します。">
+    <meta property="og:title" content="Ebi Maze Marathon | Ebi Showcase">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/maze-chase/ebi-maze/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--maze-chase--ebi-maze.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Ebi Maze">
+    <meta property="og:image:alt" content="Ebi Maze Marathon">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Maze | Ebi Showcase">
-    <meta name="twitter:description" content="中心間移動、先行入力、真珠レイヤー、敵モード、交差点での経路評価を一つの迷路追跡ゲームへ統合します。">
+    <meta name="twitter:title" content="Ebi Maze Marathon | Ebi Showcase">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--maze-chase--ebi-maze.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Ebi Maze">
-    <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/maze-chase/ebi-maze/">
-<link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/maze-chase/ebi-maze/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 迷路追跡ゲーム</a><span>STEP 06 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Maze</h1><p>中心間移動、先行入力、真珠レイヤー、敵モード、交差点での経路評価を一つの迷路追跡ゲームへ統合します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>複数システムの更新順序</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3回捕まる前に20個の真珠を回収しよう。</h2></div><p>移動中に次の方向を押すと中心で自動的に曲がります。2体の敵は巡回・追跡・捜索を切り替えます。矢印/WASD、マウス・タッチ長押し。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Maze" src="../../../../play/ebi-maze/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / INTEGRATED UPDATE ORDER</p><h2>完成ゲームは、学んだ小さな状態を決まった順で渡す。</h2><p class="lesson-lead">迷路、走者、真珠、敵は別のデータです。Updateでは入力予約→走者移動→真珠回収→敵モード→交差点選択→接触の順に処理します。この<strong>更新順序</strong>が、画面とルールの食い違いを防ぎます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>走者はwantedを予約する</h3><p>移動中でも入力をwantedへ保存します。中心へ着いたらwantedが通れるか試し、だめなら今のdirで直進します。</p><code>wanted = input; chooseAtCenter(wanted, dir)</code></article><article><span class="concept-number">2</span><h3>真珠は独立レイヤー</h3><p>壁を変えず、pellets[tile]だけを削除します。捕まって位置が戻っても、すでに取った真珠は復活しません。</p><code>delete(pellets, player.tile)</code></article><article><span class="concept-number">3</span><h3>敵はmodeからtargetを決める</h3><p>巡回点、現在の走者、最後に見た場所からtargetを選び、交差点では合法方向を距離で比べ、逆走を除きます。</p><code>dir = chooseAtJunction(tile, dir, target)</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="input,move,enemy,pellets,draw" data-loop="次フレーム" aria-labelledby="lab-title-ebi-maze">
-<div class="lab-copy">
-<p class="eyebrow">TRY IT / FRAME ORDER</p>
-<h3 id="lab-title-ebi-maze">1フレームの仕事を順番に処理</h3>
-<p>迷路総合はパイプです。入力→移動→敵AI→ドット→描画準備。順序を守ると、食べた直後の敵接触なども説明しやすくなります。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">次の仕事</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>フレーム先頭</button></div>
-<p class="lab-hint">描画は最後。ここより前で画面を触らない。</p>
-</div>
-<div class="lab-visual">
-<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
-<div class="lab-values" aria-live="polite"><div><span>工程</span><strong data-lab-stepn>0</strong></div><div><span>今</span><strong data-lab-note>—</strong></div></div>
-</div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
-<span data-go-line="step">input → sim → resolve → draw</span>
-<span data-go-line="loop">// then next frame</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
-</div>
-</div><div class="formula"><p class="eyebrow">FIXED ORDER</p><div class="formula-lines"><code>run systems in list order</code><span>つぎに</span><code>draw is last</code></div><p>AIが先かドットが先かで勝敗が変わることがあります。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>各システムの責任を小さく保つ</h3><p>一つの巨大な関数にせず、順番を読むUpdateから走者、敵、接触の関数を呼びます。各関数は自分の状態だけを更新します。</p></div><pre><code>func (g *game) Update() error {
-    g.player.wanted = readInput()
-    g.updatePlayer()       // center movement + collect
-    for i := range g.guards {
-        g.updateGuard(i)   // mode + junction choice
-    }
-    g.checkContacts()      // after every position changed
-    return nil
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY COLLECT BEFORE CONTACT?</p><h3>到着したマスを先に確定</h3><p>中心へ到着したフレームで真珠を取り、その後に敵との同じタイル判定を行うため、結果が毎回同じです。</p></article><article><p class="eyebrow">WHY KEEP PELLETS?</p><h3>失敗しても進みは残る</h3><p>接触時は走者と敵だけを初期位置へ戻し、収集レイヤーは保存します。再挑戦の意味が保たれます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>ステージデータ化</h3><p>maze、開始位置、巡回点、制限時間をstage構造体へ移し、2面目を読み込めるようにしよう。</p></article></div></section><nav class="lesson-pager"><a href="../junction-ai/">← STEP 05<strong>交差点AI</strong></a><a href="../">コース全体へ →<strong>迷路追跡ゲーム</strong></a></nav>
-
-
+    <meta name="twitter:image:alt" content="Ebi Maze Marathon">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/maze-chase/ebi-maze/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 迷路追跡ゲーム</a><span>STEP 08 / FINAL</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Maze Marathon</h1><p>海老・天次郎が3つの迷路を走り、巡回・捜索・先回りを見分けて真珠を集めます。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>完成形の地図は固定タイルデータから読み、移動・えさ・AIを別関数にします。迷路生成アルゴリズムはこの教材の必須部品ではありません。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>updatePlayer(); collectPellet(); updateEnemies()</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Maze Marathon</h2><p>海老・天次郎が3つの迷路を走り、巡回・捜索・先回りを見分けて真珠を集めます。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-maze/" title="Ebi Maze Marathon" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Ebi Maze Marathon</h2><p>完成版は形の異なる3迷路を連続で遊びます。敵の頭上に今のAI状態を表示し、海老・天次郎と敵は走行中に上下します。真珠の粒子、被弾点滅、画面揺れ、面クリア演出が結果を伝え、命と速さを含む合計得点とベスト記録が次の走り方を作ります。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>3迷路を異なる通路とAI構成で攻略する</p></article><article><b>02</b><h3>DECIDE</h3><p>移動・収集・被弾を動きと粒子で読ませる</p></article><article><b>03</b><h3>REPLAY</h3><p>合計得点とBESTを見て安全と速さを選び直す</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>移動・収集・被弾を動きと粒子で読ませる</h2><p>完成版は形の異なる3迷路を連続で遊びます。敵の頭上に今のAI状態を表示し、海老・天次郎と敵は走行中に上下します。真珠の粒子、被弾点滅、画面揺れ、面クリア演出が結果を伝え、命と速さを含む合計得点とベスト記録が次の走り方を作ります。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>移動・収集・被弾を動きと粒子で読ませる</h2><p>海老・天次郎が3つの迷路を走り、巡回・捜索・先回りを見分けて真珠を集めます。</p></div><pre><code>stage := stages[stageIndex]
+guards = spawn(stage.guards)
+if pearls == stage.goal {
+    stageIndex++
+}</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>完成版は形の異なる3迷路を連続で遊びます。敵の頭上に今のAI状態を表示し、海老・天次郎と敵は走行中に上下します。真珠の粒子、被弾点滅、画面揺れ、面クリア演出が結果を伝え、命と速さを含む合計得点とベスト記録が次の走り方を作ります。</p></article><article><h3>CHANGE</h3><p>合計得点とBESTを見て安全と速さを選び直す</p></article><article><h3>CHALLENGE</h3><p>真珠を連続で取るほど短くなる制限時間を作ろう。</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>迷路追跡ゲーム</strong></a><a href="../">PATH →<strong>迷路追跡ゲーム</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -69,19 +46,4 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</main><script src="../../../../learn.js"></script></body></html>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

@@ -15,13 +15,16 @@ import (
 const width, height = 480, 720
 
 type fighter struct {
-	x                float64
-	hp, attack, stun int
-	guard            bool
+	x                            float64
+	hp, attack, attackKind, stun int
+	guard                        bool
 }
+type spark struct{ x, y, vx, vy, life float64 }
 type game struct {
 	p, ai                                    fighter
 	frame, round, pWins, aiWins, pInv, aiInv int
+	hitstop, shake, streak, bestStreak       int
+	sparks                                   []spark
 	message                                  string
 	matchOver                                bool
 	rng                                      *rand.Rand
@@ -41,11 +44,29 @@ func (g *game) resetRound() {
 func (g *game) Update() error {
 	if g.matchOver {
 		if any() {
+			best, streak := g.bestStreak, g.streak
 			*g = *newGame()
+			g.bestStreak, g.streak = best, streak
 		}
 		return nil
 	}
+	if g.hitstop > 0 {
+		g.hitstop--
+		return nil
+	}
 	g.frame++
+	if g.shake > 0 {
+		g.shake--
+	}
+	for i := len(g.sparks) - 1; i >= 0; i-- {
+		p := &g.sparks[i]
+		p.x += p.vx
+		p.y += p.vy
+		p.life--
+		if p.life <= 0 {
+			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
+		}
+	}
 	if g.pInv > 0 {
 		g.pInv--
 	}
@@ -55,11 +76,12 @@ func (g *game) Update() error {
 	left := ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyLeft)
 	right := ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyRight)
 	hit := inpututil.IsKeyJustPressed(ebiten.KeyJ) || inpututil.IsKeyJustPressed(ebiten.KeyX)
+	heavy := inpututil.IsKeyJustPressed(ebiten.KeyU) || inpututil.IsKeyJustPressed(ebiten.KeyZ)
 	g.p.guard = ebiten.IsKeyPressed(ebiten.KeyK) || ebiten.IsKeyPressed(ebiten.KeyC)
 	for _, id := range ebiten.AppendTouchIDs(nil) {
 		x, y := ebiten.TouchPosition(id)
 		if y > 560 {
-			switch min(3, x/(width/4)) {
+			switch min(4, x/(width/5)) {
 			case 0:
 				left = true
 			case 1:
@@ -67,6 +89,8 @@ func (g *game) Update() error {
 			case 2:
 				hit = true
 			case 3:
+				heavy = true
+			case 4:
 				g.p.guard = true
 			}
 		}
@@ -81,7 +105,10 @@ func (g *game) Update() error {
 			g.p.x += 3
 		}
 		if hit && g.p.attack == 0 {
-			g.p.attack = 20
+			g.p.attack, g.p.attackKind = 20, 1
+		}
+		if heavy && g.p.attack == 0 {
+			g.p.attack, g.p.attackKind = 32, 2
 		}
 	}
 	if g.ai.stun > 0 {
@@ -92,7 +119,11 @@ func (g *game) Update() error {
 		if dist > 100 {
 			g.ai.x -= 1.8
 		} else if g.frame%55 == 0 {
-			g.ai.attack = 20
+			if g.rng.Intn(3) == 0 {
+				g.ai.attack, g.ai.attackKind = 32, 2
+			} else {
+				g.ai.attack, g.ai.attackKind = 20, 1
+			}
 		} else if g.rng.Intn(100) < 3 {
 			g.ai.guard = true
 		}
@@ -105,9 +136,14 @@ func (g *game) Update() error {
 	if g.p.hp <= 0 || g.ai.hp <= 0 || seconds <= 0 {
 		if g.p.hp > g.ai.hp {
 			g.pWins++
+			g.streak++
+			if g.streak > g.bestStreak {
+				g.bestStreak = g.streak
+			}
 			g.message = "EBI WINS THE ROUND!"
 		} else {
 			g.aiWins++
+			g.streak = 0
 			g.message = "RIVAL WINS THE ROUND!"
 		}
 		if g.pWins >= 2 || g.aiWins >= 2 {
@@ -124,25 +160,55 @@ func (g *game) updateAttack(a, b *fighter, inv *int, player bool) {
 		return
 	}
 	a.attack--
-	if a.attack == 12 && *inv == 0 && math.Abs(b.x-a.x) < 105 {
-		d := 14
+	active := 12
+	reach := 105.0
+	d := 14
+	if a.attackKind == 2 {
+		active = 16
+		reach = 125
+		d = 24
+	}
+	if a.attack == active && *inv == 0 && math.Abs(b.x-a.x) < reach {
 		if b.guard {
-			d = 3
+			d = max(2, d/5)
 			g.message = "GUARDED! CHIP DAMAGE"
 		} else {
 			b.stun = 18
 			g.message = "CLEAN HIT!"
 		}
 		b.hp -= d
+		g.hitstop = 5
+		if a.attackKind == 2 {
+			g.hitstop = 9
+			g.shake = 7
+		}
+		g.burst((a.x+b.x)/2, 520, 8+a.attackKind*5)
 		*inv = 20
 	}
 	_ = player
 }
+func (g *game) burst(x, y float64, n int) {
+	for i := 0; i < n; i++ {
+		a := float64(i) * math.Pi * 2 / float64(n)
+		g.sparks = append(g.sparks, spark{x, y, math.Cos(a) * float64(1+i%3), math.Sin(a) * float64(1+i%3), 24 + float64(i%8)})
+	}
+}
 func (g *game) Draw(s *ebiten.Image) {
-	s.Fill(color.RGBA{22, 31, 48, 255})
-	vector.DrawFilledRect(s, 0, 590, 480, 130, color.RGBA{59, 67, 79, 255}, false)
-	draw(s, g.p, "fighter-p1", true)
-	draw(s, g.ai, "fighter-p2", false)
+	bg := []color.RGBA{{22, 31, 48, 255}, {45, 27, 54, 255}, {25, 52, 57, 255}}
+	s.Fill(bg[(g.round-1)%3])
+	ox := 0.0
+	if g.shake > 0 {
+		ox = math.Sin(float64(g.frame)*2) * 5
+	}
+	for i := 0; i < 7; i++ {
+		vector.DrawFilledCircle(s, float32((i*83+g.round*17)%480)+float32(ox), float32(180+(i%3)*90), float32(8+g.round*2), color.RGBA{255, 220, 120, 24}, true)
+	}
+	vector.DrawFilledRect(s, float32(ox), 590, 480, 130, color.RGBA{59, 67, 79, 255}, false)
+	draw(s, g.p, "fighter-p1", true, ox)
+	draw(s, g.ai, "fighter-p2", false, ox)
+	for _, p := range g.sparks {
+		vector.DrawFilledCircle(s, float32(p.x+ox), float32(p.y), float32(2+p.life/14), color.RGBA{255, 211, 62, 255}, true)
+	}
 	vector.DrawFilledRect(s, 30, 45, 190, 18, color.RGBA{57, 60, 76, 255}, false)
 	vector.DrawFilledRect(s, 260, 45, 190, 18, color.RGBA{57, 60, 76, 255}, false)
 	vector.DrawFilledRect(s, 30, 45, float32(190*max(g.p.hp, 0)/100), 18, color.RGBA{45, 225, 194, 255}, false)
@@ -150,22 +216,34 @@ func (g *game) Draw(s *ebiten.Image) {
 	sec := max(0, 45-g.frame/60)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("EBI %d  HP %03d      %02d      HP %03d  RIVAL %d", g.pWins, max(0, g.p.hp), sec, max(0, g.ai.hp), g.aiWins), 55, 75)
 	ebitenutil.DebugPrintAt(s, g.message, 155, 115)
-	labels := []string{"LEFT", "RIGHT", "ATTACK", "GUARD"}
+	labels := []string{"LEFT", "RIGHT", "JAB", "HEAVY", "GUARD"}
 	for i, l := range labels {
-		x := float32(4 + i*119)
-		vector.DrawFilledRect(s, x, 620, 113, 65, color.RGBA{70, 125 + uint8(i)*20, 200, 255}, false)
-		ebitenutil.DebugPrintAt(s, l, int(x)+28, 650)
+		x := float32(3 + i*95)
+		vector.DrawFilledRect(s, x, 620, 90, 65, color.RGBA{70, 120 + uint8(i)*18, 200, 255}, false)
+		ebitenutil.DebugPrintAt(s, l, int(x)+15, 650)
 	}
 	if g.matchOver {
 		result := "MATCH LOST"
 		if g.pWins > g.aiWins {
 			result = "EBI WINS THE MATCH!"
 		}
-		overlay(s, result+"\n\nTAP / SPACE TO REMATCH")
+		overlay(s, fmt.Sprintf("%s\nWIN STREAK %d  BEST %d\n\nTAP / SPACE TO REMATCH", result, g.streak, g.bestStreak))
 	}
 }
-func draw(s *ebiten.Image, f fighter, sprite string, right bool) {
-	x := f.x
+func draw(s *ebiten.Image, f fighter, sprite string, right bool, offset float64) {
+	x := f.x + offset
+	if f.attack > 0 {
+		progress := 0.0
+		if f.attackKind == 1 {
+			progress = math.Sin(float64(20-f.attack)/20*math.Pi) * 18
+		} else {
+			progress = math.Sin(float64(32-f.attack)/32*math.Pi) * 30
+		}
+		if !right {
+			progress = -progress
+		}
+		x += progress
+	}
 	trackatlas.DrawCentered(s, sprite, x, 540, 130)
 	if f.guard {
 		vector.StrokeCircle(s, float32(x), 540, 45, 6, color.RGBA{100, 165, 255, 255}, false)

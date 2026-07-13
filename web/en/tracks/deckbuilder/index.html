@@ -18,14 +18,21 @@
     <meta name="twitter:image:alt" content="Deck-building Card Game">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/deckbuilder/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/deckbuilder/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>7 STEPS</span></div><section class="track-hero track-deckbuilder"><span class="track-letter">G</span><div><p class="eyebrow">Build a Slay the Spire-style game</p><h1>Deck-building Card Game</h1><p>Build a Slay the Spire-style game where you choose cards to build your deck as you climb. Start by playing one card, then add deck circulation (draw → play → discard → reshuffle), enemy intents, status effects like poison or strength that last over turns, rewards, and a branching map.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/deckbuilder/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>9 STEPS</span></div><section class="track-hero track-deckbuilder"><span class="track-letter">G</span><div><p class="eyebrow">Build a Slay the Spire-style game</p><h1>Deck-building Card Game</h1><p>Build a Slay the Spire-style game where you choose cards to build your deck as you climb. Start by playing one card, then add deck circulation (draw → play → discard → reshuffle), enemy intents, status effects like poison or strength that last over turns, rewards, and a branching map.</p></div></section><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a complete game.</h2><p>Break difficult systems into small playable games. Reuse each previous step, then combine them at the end.</p></div><a class="path-step" href="play-a-card/"><span>01</span><div><h3>Play One Card</h3><p>Describe cost, name, and effects as data, then resolve the selected card.</p><strong>Card data and effect resolution</strong></div><b>→</b></a>
 <a class="path-step" href="turn-energy/"><span>02</span><div><h3>Energy-based Turns</h3><p>Advance turn start, card play, turn end, and enemy action through a fixed order (a state machine).</p><strong>Turn phases and action resources</strong></div><b>→</b></a>
 <a class="path-step" href="deck-cycle/"><span>03</span><div><h3>Draw, Hand, and Discard</h3><p>Move cards among draw, hand, discard, and exhaust piles, reshuffling when needed.</p><strong>Shuffling and card-zone movement</strong></div><b>→</b></a>
 <a class="path-step" href="intent-status/"><span>04</span><div><h3>Enemy Intents and Statuses</h3><p>Show the enemy's next action and tick status effects like poison, weakness, and strength at defined times.</p><strong>Telegraphed actions and effect duration (status effects)</strong></div><b>→</b></a>
 <a class="path-step" href="card-rewards/"><span>05</span><div><h3>Card Rewards and Upgrades</h3><p>Choose a card after battle and tune the deck through removal and upgrades.</p><strong>Choice rewards, rarity, and deck editing</strong></div><b>→</b></a>
 <a class="path-step" href="branching-map/"><span>06</span><div><h3>Journey Through a Branching Map</h3><p>Generate a branching route containing battles, rest sites, shops, and events.</p><strong>Node generation, encounters, and run saves</strong></div><b>→</b></a>
-<a class="path-step" href="ebi-ascent/"><span>07</span><div><h3>Ebi Ascent</h3><p>Combine data-driven cards, enemies, and events into a replayable complete run.</p><strong>Characters, card pools, and bosses</strong></div><b>→</b></a></section>
+<!-- deck-polish:start -->
+<a class="path-step" href="card-motion/"><span>07</span><div><h3>Make a Card Fly and Land</h3><p>Move the selected card from the hand to the enemy and resolve its effect on the contact frame.</p><strong>Split card resolution into timed beats</strong></div><b>→</b></a>
+<a class="path-step" href="run-director/"><span>08</span><div><h3>Direct a Five-floor Run</h3><p>Choose between two routes with different danger and reward on every floor, then reach the fifth-floor boss.</p><strong>Put decisions and growth around combat</strong></div><b>→</b></a>
+<!-- deck-polish:end -->
+<a class="path-step" href="ebi-ascent/"><span>09</span><div><h3>Ebi Ascent</h3><p>Combine data-driven cards, enemies, and events into a replayable complete run.</p><strong>Characters, card pools, and bosses</strong></div><b>→</b></a></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -49,6 +56,21 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

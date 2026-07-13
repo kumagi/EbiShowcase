@@ -18,12 +18,19 @@
     <meta name="twitter:image:alt" content="Merge Physics Puzzle">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/merge-physics/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/merge-physics/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>6 STEPS</span></div><section class="track-hero track-merge-physics"><span class="track-letter">F</span><div><p class="eyebrow">Build a Suika Game-style physics puzzle</p><h1>Merge Physics Puzzle</h1><p>Build a Suika Game-style puzzle where matching fruit merge into a bigger one when they touch. Start with falling circles, then add gravity, collision, pushing overlapping circles apart until they don't overlap (penetration correction), bounce, and merging.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a complete game.</h2><p>Break difficult systems into small playable games. Reuse each previous step, then combine them at the end.</p></div><a class="path-step" href="falling-circles/"><span>01</span><div><h3>Falling Circles</h3><p>Drop circles of different sizes with updates independent of device speed.</p><strong>Circles, gravity, and fixed time steps</strong></div><b>→</b></a>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/merge-physics/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-merge-physics"><span class="track-letter">F</span><div><p class="eyebrow">Build a Suika Game-style physics puzzle</p><h1>Merge Physics Puzzle</h1><p>Build a Suika Game-style puzzle where matching fruit merge into a bigger one when they touch. Start with falling circles, then add gravity, collision, pushing overlapping circles apart until they don't overlap (penetration correction), bounce, and merging.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section><!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a complete game.</h2><p>Break difficult systems into small playable games. Reuse each previous step, then combine them at the end.</p></div><a class="path-step" href="falling-circles/"><span>01</span><div><h3>Falling Circles</h3><p>Drop circles of different sizes with updates independent of device speed.</p><strong>Circles, gravity, and fixed time steps</strong></div><b>→</b></a>
 <a class="path-step" href="circle-collision/"><span>02</span><div><h3>Circle Collision Lab</h3><p>Detect overlap from center distance and calculate the direction of separation.</p><strong>Center distance and contact normals</strong></div><b>→</b></a>
 <a class="path-step" href="stacking-bounce/"><span>03</span><div><h3>Stacking and Bounce</h3><p>Push overlapping circles apart until they no longer overlap, then change velocity using mass and bounciness (restitution).</p><strong>Pushing circles apart (penetration correction) and impulses</strong></div><b>→</b></a>
 <a class="path-step" href="stable-simulation/"><span>04</span><div><h3>Stable Physics World</h3><p>Push overlapping circles apart a little at a time, over and over (iterative solving), and let resting circles sleep so a big pile stays stable.</p><strong>Solving overlaps a bit at a time (iterative solving), sleeping, and checking only nearby circles (broad phase)</strong></div><b>→</b></a>
 <a class="path-step" href="merge-rule/"><span>05</span><div><h3>Matching Fruit Merge</h3><p>Replace two matching bodies with the next size at their shared center.</p><strong>Collision events and entity replacement</strong></div><b>→</b></a>
-<a class="path-step" href="ebi-merge/"><span>06</span><div><h3>Ebi Merge</h3><p>Combine the next-piece preview, dropping, scoring, and danger line into a complete puzzle.</p><strong>Preview, scoring, and game over</strong></div><b>→</b></a></section>
+<!-- merge-polish:start -->
+<a class="path-step" href="merge-feedback/"><span>06</span><div><h3>Make Every Merge Satisfying</h3><p>Start a pulse, particles, and shake at the merge point, then present consecutive merges as a combo.</p><strong>Start timed feedback from a collision event</strong></div><b>→</b></a>
+<a class="path-step" href="challenge-stages/"><span>07</span><div><h3>Three Gravity Challenges</h3><p>Load three stages with different target tiers and gravity values from data.</p><strong>Put physics constants and goals in stage data</strong></div><b>→</b></a>
+<!-- merge-polish:end -->
+<a class="path-step" href="ebi-merge/"><span>08</span><div><h3>Ebi Merge</h3><p>Combine the next-piece preview, dropping, scoring, and danger line into a complete puzzle.</p><strong>Preview, scoring, and game over</strong></div><b>→</b></a></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -47,6 +54,21 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

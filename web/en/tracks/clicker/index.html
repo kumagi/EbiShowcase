@@ -18,11 +18,18 @@
     <meta name="twitter:image:alt" content="Idle Clicker">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/clicker/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/clicker/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>5 STEPS</span></div><section class="track-hero track-clicker"><span class="track-letter">C</span><div><p class="eyebrow">Build a Cookie Clicker-style game</p><h1>Idle Clicker</h1><p>Build an idle clicker like the phone games where a button tap makes numbers go up on their own. Grow one click into automatic production, prices that rise on a set schedule (a price curve), saving, and offline progress—earning even while the game is closed.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>Build it through<br>small completions.</h2><p>Every step is a small playable game. Reuse each previous system and combine everything into one final project.</p></div><a class="path-step" href="tap-counter/"><span>01</span><div><h3>Treat Counter</h3><p>Create the smallest clicker: one large button that increases a number.</p><strong>Click input and numeric display</strong></div><b>→</b></a>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/clicker/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>7 STEPS</span></div><section class="track-hero track-clicker"><span class="track-letter">C</span><div><p class="eyebrow">Build a Cookie Clicker-style game</p><h1>Idle Clicker</h1><p>Build an idle clicker like the phone games where a button tap makes numbers go up on their own. Grow one click into automatic production, prices that rise on a set schedule (a price curve), saving, and offline progress—earning even while the game is closed.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section><!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>Build it through<br>small completions.</h2><p>Every step is a small playable game. Reuse each previous system and combine everything into one final project.</p></div><a class="path-step" href="tap-counter/"><span>01</span><div><h3>Treat Counter</h3><p>Create the smallest clicker: one large button that increases a number.</p><strong>Click input and numeric display</strong></div><b>→</b></a>
 <a class="path-step" href="first-shop/"><span>02</span><div><h3>The First Shop</h3><p>Buy producers with saved points and reject purchases that cost too much.</p><strong>Purchase conditions and costs</strong></div><b>→</b></a>
 <a class="path-step" href="idle-factory/"><span>03</span><div><h3>Idle Factory</h3><p>Calculate production per second from elapsed time rather than frame count.</p><strong>Delta time and production per second</strong></div><b>→</b></a>
 <a class="path-step" href="growth-curves/"><span>04</span><div><h3>Growth Curve Lab</h3><p>Build prices that get much more expensive with each purchase, plus readable formatting for enormous numbers.</p><strong>Fast-rising prices (exponential costs) and large numbers</strong></div><b>→</b></a>
-<a class="path-step" href="offline-bakery/"><span>05</span><div><h3>Ebi Bakery</h3><p>Save timestamps and calculate production earned while the game was closed.</p><strong>Save, restore, and earning while closed (offline progress)</strong></div><b>→</b></a></section>
+<!-- clicker-polish:start -->
+<a class="path-step" href="factory-animation/"><span>05</span><div><h3>An Automated Factory You Can See</h3><p>Make each purchased machine add a moving product so the factory visibly comes alive.</p><strong>Turn production numbers into moving objects</strong></div><b>→</b></a>
+<a class="path-step" href="milestone-districts/"><span>06</span><div><h3>A Sweet City Built by Milestones</h3><p>Unlock districts, backgrounds, and workers whenever lifetime production crosses a goal.</p><strong>Choose progression stages from a lifetime total</strong></div><b>→</b></a>
+<!-- clicker-polish:end -->
+<a class="path-step" href="offline-bakery/"><span>07</span><div><h3>Ebi Bakery</h3><p>Save timestamps and calculate production earned while the game was closed.</p><strong>Save, restore, and earning while closed (offline progress)</strong></div><b>→</b></a></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -46,6 +53,21 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

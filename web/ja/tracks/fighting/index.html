@@ -18,13 +18,20 @@
     <meta name="twitter:image:alt" content="2D格闘ゲーム">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/fighting/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/fighting/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>7 STEPS</span></div><section class="track-hero track-fighting"><span class="track-letter">E</span><div><p class="eyebrow">判定矩形から対戦格闘を作る</p><h1>2D格闘ゲーム</h1><p>ゲームセンターにあるような、1対1で技を出し合う対戦格闘ゲームを作ります。キャラクター同士がぶつからないための箱（押し合い判定）、攻撃が当たる場所を示す箱（喰らい判定・攻撃判定）から始め、技のフレーム、当たった瞬間だけ時間を止める「ヒットストップ」、コンボへ進みます。</p></div><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公はオリジナルの 海老・天次郎（えび・てんじろう） です。</p></section><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>小さな仕組みから<br>完成形へ。</h2><p>難しい部分を一度に作らず、単独で動くミニゲームへ分解します。各ステップで前のコードを再利用し、最後に統合します。</p></div><a class="path-step" href="box-viewer/"><span>01</span><div><h3>判定矩形ビューワー</h3><p>3種類の矩形を色と役割で分け、重なった瞬間を目で確認します。</p><strong>ぶつかる箱・当たる箱・攻撃の箱（押し合い・喰らい・攻撃判定）</strong></div><b>→</b></a>
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/fighting/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>9 STEPS</span></div><section class="track-hero track-fighting"><span class="track-letter">E</span><div><p class="eyebrow">判定矩形から対戦格闘を作る</p><h1>2D格闘ゲーム</h1><p>ゲームセンターにあるような、1対1で技を出し合う対戦格闘ゲームを作ります。キャラクター同士がぶつからないための箱（押し合い判定）、攻撃が当たる場所を示す箱（喰らい判定・攻撃判定）から始め、技のフレーム、当たった瞬間だけ時間を止める「ヒットストップ」、コンボへ進みます。</p></div><p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公はオリジナルの 海老・天次郎（えび・てんじろう） です。</p></section><!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>攻撃矩形→フレーム→反応→防御→連続技の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>小さな仕組みから<br>完成形へ。</h2><p>難しい部分を一度に作らず、単独で動くミニゲームへ分解します。各ステップで前のコードを再利用し、最後に統合します。</p></div><a class="path-step" href="box-viewer/"><span>01</span><div><h3>判定矩形ビューワー</h3><p>3種類の矩形を色と役割で分け、重なった瞬間を目で確認します。</p><strong>ぶつかる箱・当たる箱・攻撃の箱（押し合い・喰らい・攻撃判定）</strong></div><b>→</b></a>
 <a class="path-step" href="frame-attack/"><span>02</span><div><h3>3段階パンチ</h3><p>攻撃を発生、持続、硬直に分け、攻撃判定が出る時間を制御します。</p><strong>発生・持続・硬直</strong></div><b>→</b></a>
 <a class="path-step" href="hit-reaction/"><span>03</span><div><h3>ヒットリアクション道場</h3><p>当たった瞬間を止め、相手を動けなくして後方へ押し出します。</p><strong>当たった瞬間だけ時間を止める工夫（ヒットストップ）・のけぞり・ノックバック</strong></div><b>→</b></a>
 <a class="path-step" href="guard-throw/"><span>04</span><div><h3>ガードと投げの読み合い</h3><p>打撃を防ぐガードと、ガードに勝つ投げの優先順位を整理します。</p><strong>防御状態と判定の優先順位</strong></div><b>→</b></a>
 <a class="path-step" href="combo-cancel/"><span>05</span><div><h3>コンボとキャンセル</h3><p>少し早い入力を保存し、当たった技から次の技へつなげます。</p><strong>入力バッファとキャンセル条件</strong></div><b>→</b></a>
 <a class="path-step" href="command-fighter/"><span>06</span><div><h3>コマンド技ファイター</h3><p>方向キーを↓↘→のように動かした入力の記録から「波形コマンド」を読み取り、必殺技を出します。</p><strong>入力の記録から技を読み取る仕組み（コマンド認識）</strong></div><b>→</b></a>
-<a class="path-step" href="ebi-fighters/"><span>07</span><div><h3>Ebi Fighters</h3><p>2人のキャラクター、ラウンド進行、時間切れを統合して対戦を完成させます。</p><strong>ラウンド・体力・対戦ルール</strong></div><b>→</b></a></section>
+<!-- fighting-polish:start -->
+<a class="path-step" href="footsies-ai/"><span>07</span><div><h3>間合いを読むライバルAI</h3><p>遠ければ近づき、近すぎれば下がり、攻撃できる距離で技を出す対戦相手を作ります。</p><strong>距離から接近・後退・攻撃を選ぶ</strong></div><b>→</b></a>
+<a class="path-step" href="round-presentation/"><span>08</span><div><h3>ラウンドを盛り上げる演出</h3><p>命中時の停止・粒子・揺れと、ラウンドごとの舞台変化をまとめます。</p><strong>強い瞬間と試合の区切りを見せる</strong></div><b>→</b></a>
+<!-- fighting-polish:end -->
+<a class="path-step" href="ebi-fighters/"><span>09</span><div><h3>Ebi Fighters</h3><p>2人のキャラクター、ラウンド進行、時間切れを統合して対戦を完成させます。</p><strong>ラウンド・体力・対戦ルール</strong></div><b>→</b></a></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -48,6 +55,21 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

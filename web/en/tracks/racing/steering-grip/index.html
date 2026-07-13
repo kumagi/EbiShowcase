@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Steering that Changes with Speed | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/racing/steering-grip/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Steering that Changes with Speed | Ebi Showcase">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/racing/steering-grip/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--racing--steering-grip.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Steering that Changes with Speed">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Steering that Changes with Speed | Ebi Showcase">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--racing--steering-grip.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Steering that Changes with Speed">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/racing/steering-grip/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Top-down Racing</a><span>STEP 2/5</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Steering that Changes with Speed</h1><p>Move from car angle and speed, then change steering response with speed.</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Steering that Changes with Speed</h2><p>Move from car angle and speed, then change steering response with speed.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/steering-grip/" title="Steering that Changes with Speed"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Angle, speed, and grip</h2><p>Use sine and cosine for the forward direction. Scale steering from low to high speed to make control feel driven rather than grid-like.</p><div class="concept-row"><article><b>01</b><h3>INPUT</h3><p>Move from car angle and speed, then change steering response with speed.</p></article><article><b>02</b><h3>UPDATE</h3><p>Use sine and cosine for the forward direction. Scale steering from low to high speed to make control feel driven rather than grid-like.</p></article><article><b>03</b><h3>REPLAY</h3><p>Compare time and racing line.</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Angle, speed, and grip</h2><p>Use sine and cosine for the forward direction. Scale steering from low to high speed to make control feel driven rather than grid-like.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Angle, speed, and grip</h2><p>Move from car angle and speed, then change steering response with speed.</p></div><pre><code>turn := baseTurn * (0.3 + speed/maxSpeed)
+angle += steering * turn
+x += math.Sin(angle) * speed</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>Use sine and cosine for the forward direction. Scale steering from low to high speed to make control feel driven rather than grid-like.</p></article><article><h3>CHANGE</h3><p>Change one coefficient and compare feel.</p></article><article><h3>CHALLENGE</h3><p>Try it on another course.</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>Top-down Racing</strong></a><a href="../ebi-racing/">FINAL →<strong>Ebi Circuit Cup</strong></a></nav>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/racing/steering-grip/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

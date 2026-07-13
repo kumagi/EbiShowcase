@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Make a Card Fly and Land | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/deckbuilder/card-motion/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Make a Card Fly and Land | Ebi Showcase">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/deckbuilder/card-motion/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--card-motion.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Make a Card Fly and Land">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Make a Card Fly and Land | Ebi Showcase">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--card-motion.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Make a Card Fly and Land">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/deckbuilder/card-motion/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Deckbuilder</a><span>POLISH 1/2</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Make a Card Fly and Land</h1><p>Move the selected card from the hand to the enemy and resolve its effect on the contact frame.</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Make a Card Fly and Land</h2><p>Move the selected card from the hand to the enemy and resolve its effect on the contact frame.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/card-motion/" title="Make a Card Fly and Land" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Split card resolution into timed beats</h2><p>Do not change numbers immediately on click. Advance selection, travel, contact, and return with a phase, then start damage, flash, particles, and shake exactly at contact.</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>Move the selected card from the hand to the enemy and resolve its effect on the contact frame.</p></article><article><b>02</b><h3>RESOLVE</h3><p>Do not change numbers immediately on click. Advance selection, travel, contact, and return with a phase, then start damage, flash, particles, and shake exactly at contact.</p></article><article><b>03</b><h3>REPLAY</h3><p>Carry different choices into the next run.</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Split card resolution into timed beats</h2><p>Do not change numbers immediately on click. Advance selection, travel, contact, and return with a phase, then start damage, flash, particles, and shake exactly at contact.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Split card resolution into timed beats</h2><p>Move the selected card from the hand to the enemy and resolve its effect on the contact frame.</p></div><pre><code>cardPhase = travel
+if cardPhase == contact {
+    resolve(card.effect)
+    spawnParticles()
+}</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>Do not change numbers immediately on click. Advance selection, travel, contact, and return with a phase, then start damage, flash, particles, and shake exactly at contact.</p></article><article><h3>CHANGE</h3><p>Change travel time or rewards.</p></article><article><h3>CHALLENGE</h3><p>Add an event node.</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>Deckbuilder</strong></a><a href="../ebi-ascent/">FINAL →<strong>Ebi Ascent</strong></a></nav>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/deckbuilder/card-motion/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

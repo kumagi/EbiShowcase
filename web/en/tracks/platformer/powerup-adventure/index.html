@@ -50,8 +50,8 @@
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Grab the orb and stomp foes.</h2></div>
-        <p>Move and jump to collect coins and the green orb, stomp foes, reach the goal.</p>
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Clear four distinct stages.</h2></div>
+        <p>Move and jump through changing terrain: rising islands, sunset gaps, and a night-time staircase. Coins, power-ups, and stomps burst into particles while Ebi bounces through a short run cycle.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div>
@@ -245,6 +245,24 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>if playerRect.Overlaps(itemRect) { apply(item.kind) }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>

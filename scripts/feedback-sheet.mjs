@@ -10,6 +10,7 @@
  * Commands:
  *   node scripts/feedback-sheet.mjs list
  *   node scripts/feedback-sheet.mjs check 12
+ *   node scripts/feedback-sheet.mjs check-range 12 20
  *   node scripts/feedback-sheet.mjs delete 12
  */
 import { createSign, randomBytes } from "node:crypto";
@@ -26,6 +27,7 @@ const oauthRedirect = "http://localhost:53682/oauth2callback";
 const statusHeaders = ["対応済み", "処理済み", "対応", "done", "status"];
 const command = process.argv[2] || "list";
 const rowArgument = Number(process.argv[3]);
+const endRowArgument = Number(process.argv[4]);
 
 const base64url = (value) => Buffer.from(value).toString("base64url");
 const json = (value) => JSON.stringify(value);
@@ -216,6 +218,13 @@ try {
   const sheet = await getSheet();
   const rows = await getRows(sheet);
   if (command === "list") await list(sheet, rows);
+  else if (command === "check-range") {
+    if (!Number.isInteger(rowArgument) || !Number.isInteger(endRowArgument) || rowArgument < 2 || endRowArgument < rowArgument) throw new Error("開始行と終了行を指定してください（例: check-range 12 20）。");
+    const column = await findStatusColumn(sheet, rows);
+    const values = Array.from({ length: endRowArgument - rowArgument + 1 }, () => ["✅"]);
+    await updateValues(sheet, `${sheet.title}!${columnName(column)}${rowArgument}:${columnName(column)}${endRowArgument}`, values);
+    console.log(`対応済みにしました: ${sheet.title}!${columnName(column)}${rowArgument}:${columnName(column)}${endRowArgument}`);
+  }
   else if (!Number.isInteger(rowArgument) || rowArgument < 2) throw new Error("行番号を指定してください（例: check 12）。1行目は見出しです。");
   else if (command === "check") {
     const column = await findStatusColumn(sheet, rows);
@@ -224,7 +233,7 @@ try {
   } else if (command === "delete") {
     await deleteRow(sheet, rowArgument);
     console.log(`削除しました: ${sheet.title} row ${rowArgument}`);
-  } else throw new Error(`不明なコマンド: ${command}（list / check / delete）`);
+  } else throw new Error(`不明なコマンド: ${command}（list / check / check-range / delete）`);
 } catch (error) {
   console.error(error.message);
   process.exit(1);

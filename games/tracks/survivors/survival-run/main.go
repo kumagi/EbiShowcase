@@ -19,9 +19,14 @@ const width, height = 480, 720
 type mob struct {
 	x, y, hp, r float64
 	boss        bool
+	kind, flash int
 }
 
 type gem struct{ x, y float64 }
+type spark struct {
+	x, y, vx, vy, life float64
+	c                  color.RGBA
+}
 
 type game struct {
 	px, py                             float64
@@ -34,6 +39,8 @@ type game struct {
 	auraTick                           int
 	bossSpawned, drafting, clear, over bool
 	pickA, pickB, pickC                string
+	sparks                             []spark
+	shake, bestKills, area             int
 }
 
 func newGame() *game {
@@ -48,7 +55,9 @@ func newGame() *game {
 func (g *game) Update() error {
 	if g.clear || g.over {
 		if restart() {
+			best := g.bestKills
 			*g = *newGame()
+			g.bestKills = best
 		}
 		return nil
 	}
@@ -62,14 +71,31 @@ func (g *game) Update() error {
 	g.movePlayer()
 	sec := g.frame / 60
 	interval := max(10, 34-sec/2)
-	if g.frame%interval == 0 && sec < 35 {
+	if g.frame%interval == 0 && sec < 40 {
 		a := g.rng.Float64() * math.Pi * 2
 		dist := 280.0 + g.rng.Float64()*80
-		g.mobs = append(g.mobs, mob{g.px + math.Cos(a)*dist, g.py + math.Sin(a)*dist, 1, 14, false})
+		kind := min(2, sec/14)
+		hp := []float64{1, 2, 3}[kind]
+		r := []float64{14, 17, 12}[kind]
+		g.mobs = append(g.mobs, mob{x: g.px + math.Cos(a)*dist, y: g.py + math.Sin(a)*dist, hp: hp, r: r, kind: kind})
 	}
-	if sec >= 35 && !g.bossSpawned {
+	if sec >= 40 && !g.bossSpawned {
 		g.bossSpawned = true
-		g.mobs = append(g.mobs, mob{240, 95, 80, 40, true})
+		g.mobs = append(g.mobs, mob{x: 240, y: 95, hp: 70, r: 40, boss: true, kind: 3})
+	}
+	g.area = min(2, sec/15)
+	for i := len(g.sparks) - 1; i >= 0; i-- {
+		p := &g.sparks[i]
+		p.x += p.vx
+		p.y += p.vy
+		p.vy += .03
+		p.life--
+		if p.life <= 0 {
+			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
+		}
+	}
+	if g.shake > 0 {
+		g.shake--
 	}
 	chase := 1.15 + float64(sec)*0.028
 	for i := len(g.mobs) - 1; i >= 0; i-- {
@@ -81,6 +107,16 @@ func (g *game) Update() error {
 		ms := chase
 		if m.boss {
 			ms = 0.85
+			if g.frame%240 > 185 {
+				ms = 2.65
+			}
+		} else if m.kind == 1 {
+			ms *= .72
+		} else if m.kind == 2 {
+			ms *= 1.45
+		}
+		if m.flash > 0 {
+			m.flash--
 		}
 		m.x += (g.px - m.x) / d * ms
 		m.y += (g.py - m.y) / d * ms
@@ -97,13 +133,21 @@ func (g *game) Update() error {
 
 		if d < g.aura && g.frame%g.auraTick == 0 {
 			m.hp--
+			m.flash = 5
+			g.burst(m.x, m.y, color.RGBA{255, 211, 62, 255}, 3)
 			if m.hp <= 0 {
 				if m.boss {
 					g.clear = true
+					if g.kills > g.bestKills {
+						g.bestKills = g.kills
+					}
+					g.burst(m.x, m.y, color.RGBA{255, 118, 92, 255}, 30)
 				} else {
 					g.kills++
 					g.gems = append(g.gems, gem{m.x, m.y})
+					g.burst(m.x, m.y, color.RGBA{91, 224, 255, 255}, 9)
 				}
+				g.shake = 4
 				g.mobs = append(g.mobs[:i], g.mobs[i+1:]...)
 			}
 		}
@@ -117,13 +161,14 @@ func (g *game) Update() error {
 		}
 		if d < 22 {
 			g.xp++
+			g.burst(gem.x, gem.y, color.RGBA{128, 255, 210, 255}, 5)
 			g.gems = append(g.gems[:i], g.gems[i+1:]...)
 			if g.xp >= g.need {
 				g.openDraft()
 			}
 		}
 	}
-	if sec >= 45 && g.bossSpawned {
+	if sec >= 55 && g.bossSpawned {
 		bossAlive := false
 		for _, m := range g.mobs {
 			if m.boss {
@@ -135,6 +180,14 @@ func (g *game) Update() error {
 		}
 	}
 	return nil
+}
+
+func (g *game) burst(x, y float64, c color.RGBA, n int) {
+	for i := 0; i < n; i++ {
+		a := float64(i) * math.Pi * 2 / float64(n)
+		speed := 1 + float64(i%4)*.45
+		g.sparks = append(g.sparks, spark{x, y, math.Cos(a) * speed, math.Sin(a) * speed, 22 + float64(i%12), c})
+	}
 }
 
 func (g *game) movePlayer() {
@@ -224,9 +277,20 @@ func (g *game) updateDraft() error {
 }
 
 func (g *game) Draw(s *ebiten.Image) {
-	s.Fill(color.RGBA{10, 24, 39, 255})
+	backgrounds := []color.RGBA{{10, 24, 39, 255}, {38, 22, 58, 255}, {58, 26, 24, 255}}
+	s.Fill(backgrounds[g.area])
+	offsetX := 0.0
+	if g.shake > 0 {
+		offsetX = math.Sin(float64(g.frame)*2.4) * 4
+	}
+	// Landmarks make each fifteen-second arena phase visually distinct.
+	for i := 0; i < 8; i++ {
+		x := float32((i*83 + g.area*31) % width)
+		y := float32(100 + (i*71)%560)
+		vector.DrawFilledCircle(s, x+float32(offsetX), y, float32(3+g.area*2), color.RGBA{130, 180, 190, 45}, true)
+	}
 	for _, gem := range g.gems {
-		trackatlas.DrawCentered(s, "xp-gem", gem.x, gem.y, 18)
+		trackatlas.DrawCentered(s, "xp-gem", gem.x+offsetX, gem.y, 18+math.Sin(float64(g.frame)*.15+gem.x)*2)
 	}
 	for _, m := range g.mobs {
 		sprite := "swarm"
@@ -234,20 +298,38 @@ func (g *game) Draw(s *ebiten.Image) {
 		if m.boss {
 			sprite = "boss-crab"
 		}
-		trackatlas.DrawCentered(s, sprite, m.x, m.y, size)
+		if m.kind == 1 {
+			sprite = "slug"
+		}
+		if m.kind == 2 {
+			size *= .72
+		}
+		bob := math.Sin(float64(g.frame)*.16+m.x) * 2
+		if m.flash > 0 {
+			trackatlas.DrawTinted(s, sprite, m.x+offsetX, m.y+bob, size, 1, 1, .35, 1)
+		} else {
+			trackatlas.DrawCentered(s, sprite, m.x+offsetX, m.y+bob, size)
+		}
 		if m.boss {
+			if g.frame%240 > 150 && g.frame%240 <= 185 {
+				vector.StrokeCircle(s, float32(m.x+offsetX), float32(m.y), float32(55+(g.frame%12)*2), 3, color.RGBA{255, 100, 80, 210}, true)
+			}
 			vector.DrawFilledRect(s, float32(m.x-45), float32(m.y-52), 90, 7, color.RGBA{50, 48, 70, 255}, false)
 			vector.DrawFilledRect(s, float32(m.x-45), float32(m.y-52), float32(90*m.hp/80), 7, color.RGBA{255, 211, 62, 255}, false)
 		}
 	}
-	vector.DrawFilledCircle(s, float32(g.px), float32(g.py), float32(g.aura), color.RGBA{255, 211, 62, 28}, false)
-	vector.StrokeCircle(s, float32(g.px), float32(g.py), float32(g.aura), 2, color.RGBA{255, 211, 62, 170}, false)
+	for _, p := range g.sparks {
+		vector.DrawFilledCircle(s, float32(p.x+offsetX), float32(p.y), float32(2+p.life/15), p.c, true)
+	}
+	pulse := g.aura + math.Sin(float64(g.frame)*.22)*4
+	vector.DrawFilledCircle(s, float32(g.px+offsetX), float32(g.py), float32(pulse), color.RGBA{255, 211, 62, 28}, false)
+	vector.StrokeCircle(s, float32(g.px+offsetX), float32(g.py), float32(pulse), 2, color.RGBA{255, 211, 62, 170}, false)
 	if g.inv%10 < 5 {
-		hero.DrawCentered(s, g.px, g.py, 34)
+		hero.DrawCentered(s, g.px+offsetX, g.py+math.Sin(float64(g.frame)*.18)*2, 34)
 	}
 	sec := g.frame / 60
 	wave := min(3, sec/15+1)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("TIME %02d/45  LV%d  XP %d/%d  LIFE %d  KILLS %03d", sec, g.level, g.xp, g.need, g.life, g.kills), 28, 24)
+	ebitenutil.DebugPrintAt(s, fmt.Sprintf("TIME %02d/55  LV%d  XP %d/%d  LIFE %d  KILLS %03d", sec, g.level, g.xp, g.need, g.life, g.kills), 28, 24)
 	msg := "WAVE 1 — KEEP MOVING"
 	if wave == 2 {
 		msg = "WAVE 2 — ENEMIES SPEED UP"
@@ -266,7 +348,7 @@ func (g *game) Draw(s *ebiten.Image) {
 		ebitenutil.DebugPrintAt(s, "1/2/3 or TAP a card", 150, 400)
 	}
 	if g.clear {
-		overlay(s, "EBI SURVIVORS CLEAR!\n\nTAP / SPACE TO PLAY AGAIN")
+		overlay(s, fmt.Sprintf("EBI SURVIVORS CLEAR!\nKILLS %d  BEST %d\n\nTAP / SPACE TO PLAY AGAIN", g.kills, g.bestKills))
 	} else if g.over {
 		overlay(s, "RUN ENDED!\n\nTAP / SPACE TO RETRY")
 	}

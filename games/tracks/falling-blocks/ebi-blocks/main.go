@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"image/color"
+	"math"
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -13,15 +14,14 @@ import (
 )
 
 const (
-	screenW     = 480
-	screenH     = 720
-	cols        = 10
-	rows        = 18
-	cell        = 26
-	boardX      = 110
-	boardY      = 92
-	targetScore = 1200
-	noPiece     = -1
+	screenW = 480
+	screenH = 720
+	cols    = 10
+	rows    = 18
+	cell    = 26
+	boardX  = 110
+	boardY  = 92
+	noPiece = -1
 )
 
 type point struct{ x, y int }
@@ -29,6 +29,25 @@ type point struct{ x, y int }
 type piece struct {
 	kind, rotation int
 	pos            point
+}
+
+type stageRule struct {
+	name       string
+	goal       int
+	baseFall   int
+	background color.RGBA
+}
+
+type spark struct {
+	x, y, vx, vy float64
+	life         int
+	c            color.RGBA
+}
+
+var stages = [...]stageRule{
+	{"SUNSET DOCK", 2, 42, color.RGBA{11, 20, 38, 255}},
+	{"CORAL CAVE", 3, 34, color.RGBA{25, 15, 48, 255}},
+	{"AURORA DECK", 4, 27, color.RGBA{7, 38, 50, 255}},
 }
 
 var shapeNames = [...]string{"I", "O", "T", "L", "J", "S", "Z"}
@@ -56,12 +75,18 @@ type game struct {
 	canHold                   bool
 	tick, score, lines, combo int
 	level                     int
+	stage, stageLines, pieces int
+	best                      int
+	clearFlash, shake         int
+	frame                     int
+	sparks                    []spark
+	scene                     *ebiten.Image
 	message                   string
 	won, lost                 bool
 }
 
 func newGame() *game {
-	g := &game{rng: rand.New(rand.NewSource(6606)), hold: noPiece, level: 1, combo: -1}
+	g := &game{rng: rand.New(rand.NewSource(6606)), hold: noPiece, level: 1, combo: -1, scene: ebiten.NewImage(screenW, screenH)}
 	for y := range g.board {
 		for x := range g.board[y] {
 			g.board[y][x] = noPiece
@@ -69,7 +94,7 @@ func newGame() *game {
 	}
 	g.fillQueue()
 	g.spawn(g.takeNext())
-	g.message = "Clear lines and score 1200!"
+	g.message = "Clear 2 lines to cross the sunset dock!"
 	return g
 }
 
@@ -106,9 +131,28 @@ func (g *game) spawn(kind int) {
 }
 
 func (g *game) Update() error {
+	g.frame++
+	if g.clearFlash > 0 {
+		g.clearFlash--
+	}
+	if g.shake > 0 {
+		g.shake--
+	}
+	for i := len(g.sparks) - 1; i >= 0; i-- {
+		p := &g.sparks[i]
+		p.x += p.vx
+		p.y += p.vy
+		p.vy += .08
+		p.life--
+		if p.life <= 0 {
+			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
+		}
+	}
 	if g.won || g.lost {
 		if retryPressed() {
+			best := g.best
 			*g = *newGame()
+			g.best = best
 		}
 		return nil
 	}
@@ -168,7 +212,7 @@ func (g *game) Update() error {
 	}
 
 	g.tick++
-	fallEvery := max(10, 42-(g.level-1)*5)
+	fallEvery := max(8, stages[g.stage].baseFall-(g.level-1)*3)
 	if g.tick >= fallEvery {
 		g.tick = 0
 		if !g.move(0, 1) {
@@ -267,22 +311,53 @@ func (g *game) lock() {
 		g.board[b.y][b.x] = g.active.kind
 	}
 	cleared := g.clearLines()
+	g.pieces++
 	if cleared > 0 {
 		g.combo++
 		points := [...]int{0, 100, 300, 500, 800}
 		g.score += points[cleared]*g.level + g.combo*50
 		g.lines += cleared
+		g.stageLines += cleared
 		g.level = 1 + g.lines/5
+		g.clearFlash = 20
+		g.shake = 10 + cleared*3
+		g.burst(cleared)
 		g.message = fmt.Sprintf("%d line(s)! Combo %d, level %d.", cleared, g.combo+1, g.level)
 	} else {
 		g.combo = -1
 		g.message = "Piece locked. Build a full row."
 	}
-	if g.score >= targetScore {
-		g.won = true
-		return
+	if g.score > g.best {
+		g.best = g.score
+	}
+	if g.stageLines >= stages[g.stage].goal {
+		if g.stage == len(stages)-1 {
+			g.won = true
+			if g.score > g.best {
+				g.best = g.score
+			}
+			return
+		}
+		g.stage++
+		g.stageLines = 0
+		for y := range g.board {
+			for x := range g.board[y] {
+				g.board[y][x] = noPiece
+			}
+		}
+		g.message = fmt.Sprintf("STAGE %d! %s: clear %d lines.", g.stage+1, stages[g.stage].name, stages[g.stage].goal)
+		g.clearFlash = 45
 	}
 	g.spawn(g.takeNext())
+}
+
+func (g *game) burst(lines int) {
+	for i := 0; i < 18+lines*12; i++ {
+		a := g.rng.Float64() * math.Pi * 2
+		sp := 1.2 + g.rng.Float64()*3.4
+		g.sparks = append(g.sparks, spark{x: boardX + cols*cell/2, y: boardY + rows*cell - 20,
+			vx: math.Cos(a) * sp, vy: math.Sin(a)*sp - 1, life: 24 + g.rng.Intn(22), c: shapeColors[g.rng.Intn(len(shapeColors))]})
+	}
 }
 
 func (g *game) clearLines() int {
@@ -312,10 +387,21 @@ func (g *game) clearLines() int {
 }
 
 func (g *game) Draw(screen *ebiten.Image) {
-	screen.Fill(color.RGBA{11, 20, 38, 255})
+	g.scene.Clear()
+	g.drawScene(g.scene)
+	op := &ebiten.DrawImageOptions{}
+	if g.shake > 0 {
+		op.GeoM.Translate(float64((g.frame%3-1)*3), float64(((g.frame/2)%3-1)*2))
+	}
+	screen.DrawImage(g.scene, op)
+}
+
+func (g *game) drawScene(screen *ebiten.Image) {
+	screen.Fill(stages[g.stage].background)
 	ebitenutil.DebugPrintAt(screen, "EBI BLOCKS", 202, 18)
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %04d/%04d   LINES %02d   LEVEL %d", g.score, targetScore, g.lines, g.level), 112, 45)
-	ebitenutil.DebugPrintAt(screen, g.message, 92, 68)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("STAGE %d/3 %-11s  LINES %d/%d", g.stage+1, stages[g.stage].name, g.stageLines, stages[g.stage].goal), 98, 42)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %05d  BEST %05d  LEVEL %d", g.score, g.best, g.level), 120, 58)
+	ebitenutil.DebugPrintAt(screen, g.message, 76, 76)
 
 	vector.DrawFilledRect(screen, boardX-3, boardY-3, cols*cell+6, rows*cell+6, color.RGBA{35, 48, 70, 255}, false)
 	for y := 0; y < rows; y++ {
@@ -334,6 +420,22 @@ func (g *game) Draw(screen *ebiten.Image) {
 		for _, b := range g.blocks(g.active) {
 			drawCell(screen, b.x, b.y, shapeColors[g.active.kind], 255)
 		}
+		// A breathing highlight provides in-between frames even while the piece waits.
+		pulse := uint8(25 + 20*(1+math.Sin(float64(g.frame)*.14)))
+		for _, b := range g.blocks(g.active) {
+			drawCell(screen, b.x, b.y, color.RGBA{255, 255, 255, 255}, pulse)
+		}
+	}
+	for _, p := range g.sparks {
+		a := uint8(min(255, p.life*9))
+		vector.DrawFilledCircle(screen, float32(p.x), float32(p.y), 2.5, color.RGBA{p.c.R, p.c.G, p.c.B, a}, false)
+	}
+	if g.clearFlash > 0 {
+		a := uint8(g.clearFlash * 3)
+		if a > 80 {
+			a = 80
+		}
+		vector.DrawFilledRect(screen, boardX, boardY, cols*cell, rows*cell, color.RGBA{255, 245, 180, a}, false)
 	}
 
 	drawSide(screen, 8, 110, "HOLD", g.hold)
@@ -357,7 +459,7 @@ func (g *game) Draw(screen *ebiten.Image) {
 		ebitenutil.DebugPrintAt(screen, label, i*80+18, 650)
 	}
 	if g.won {
-		overlay(screen, "EBI BLOCKS CLEAR!\n\nTAP / ENTER TO RETRY")
+		overlay(screen, fmt.Sprintf("ALL 3 STAGES CLEAR!\nSCORE %d  PIECES %d\n\nTAP / ENTER TO PLAY AGAIN", g.score, g.pieces))
 	}
 	if g.lost {
 		overlay(screen, "STACK REACHED THE TOP\n\nTAP / ENTER TO RETRY")

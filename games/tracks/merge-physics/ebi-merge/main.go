@@ -22,16 +22,22 @@ type fruit struct {
 	tier         int
 	dead         bool
 }
+type spark struct {
+	x, y, vx, vy, life float64
+	c                  color.RGBA
+}
 type game struct {
-	fruits                               []fruit
-	rng                                  *rand.Rand
-	next, after, score, danger, cooldown int
-	cursor                               float64
-	clear, over                          bool
+	fruits                                []fruit
+	rng                                   *rand.Rand
+	next, after, score, danger, cooldown  int
+	cursor                                float64
+	clear, over                           bool
+	level, combo, comboTimer, shake, best int
+	sparks                                []spark
 }
 
 func newGame() *game {
-	g := &game{rng: rand.New(rand.NewSource(4806)), cursor: 240}
+	g := &game{rng: rand.New(rand.NewSource(4806)), cursor: 240, level: 1}
 	g.next = g.rng.Intn(3)
 	g.after = g.rng.Intn(3)
 	return g
@@ -39,12 +45,41 @@ func newGame() *game {
 func (g *game) Update() error {
 	if g.clear || g.over {
 		if any() {
-			*g = *newGame()
+			if g.clear && g.level < 3 {
+				g.level++
+				g.fruits = nil
+				g.danger = 0
+				g.clear = false
+				g.next = g.rng.Intn(3)
+				g.after = g.rng.Intn(3)
+			} else {
+				best := g.best
+				*g = *newGame()
+				g.best = best
+			}
 		}
 		return nil
 	}
 	if g.cooldown > 0 {
 		g.cooldown--
+	}
+	if g.comboTimer > 0 {
+		g.comboTimer--
+	} else {
+		g.combo = 0
+	}
+	if g.shake > 0 {
+		g.shake--
+	}
+	for i := len(g.sparks) - 1; i >= 0; i-- {
+		p := &g.sparks[i]
+		p.x += p.vx
+		p.y += p.vy
+		p.vy += .04
+		p.life--
+		if p.life <= 0 {
+			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
+		}
 	}
 	if x, ok := pointerX(); ok {
 		g.cursor = math.Max(45, math.Min(435, float64(x)))
@@ -57,7 +92,7 @@ func (g *game) Update() error {
 	}
 	for i := range g.fruits {
 		f := &g.fruits[i]
-		f.vy += .46
+		f.vy += []float64{.40, .48, .56}[g.level-1]
 		f.x += f.vx
 		f.y += f.vy
 		r := radii[f.tier]
@@ -101,8 +136,17 @@ func (g *game) Update() error {
 					a.dead, b.dead = true, true
 					spawn = append(spawn, fruit{x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, vx: (a.vx + b.vx) / 2, vy: -2.5, tier: tier})
 					g.score += (tier + 1) * (tier + 1) * 10
-					if tier == 6 {
+					g.combo++
+					g.comboTimer = 100
+					g.score += g.combo * 15
+					g.shake = min(8, 3+tier)
+					g.burst((a.x+b.x)/2, (a.y+b.y)/2, 8+tier*2)
+					target := []int{4, 5, 6}[g.level-1]
+					if tier == target {
 						g.clear = true
+						if g.score > g.best {
+							g.best = g.score
+						}
 					}
 					break
 				}
@@ -146,9 +190,20 @@ func (g *game) Update() error {
 	}
 	return nil
 }
+func (g *game) burst(x, y float64, n int) {
+	for i := 0; i < n; i++ {
+		a := float64(i) * math.Pi * 2 / float64(n)
+		g.sparks = append(g.sparks, spark{x, y, math.Cos(a) * float64(1+i%3), math.Sin(a) * float64(1+i%3), 28 + float64(i%9), color.RGBA{255, 211, 62, 255}})
+	}
+}
 func (g *game) Draw(s *ebiten.Image) {
-	s.Fill(color.RGBA{18, 28, 44, 255})
-	vector.DrawFilledRect(s, 20, 70, 440, 615, color.RGBA{35, 44, 61, 255}, false)
+	bgs := []color.RGBA{{18, 28, 44, 255}, {39, 28, 55, 255}, {52, 29, 31, 255}}
+	s.Fill(bgs[g.level-1])
+	ox := 0.0
+	if g.shake > 0 {
+		ox = math.Sin(float64(g.cooldown+g.comboTimer)*2) * 5
+	}
+	vector.DrawFilledRect(s, 20+float32(ox), 70, 440, 615, color.RGBA{35, 44, 61, 255}, false)
 	line := color.RGBA{240, 90, 95, 90}
 	if g.danger > 0 {
 		line = color.RGBA{255, 70, 75, 220}
@@ -156,15 +211,28 @@ func (g *game) Draw(s *ebiten.Image) {
 	vector.StrokeLine(s, 25, 175, 455, 175, 3, line, false)
 	for _, f := range g.fruits {
 		r := radii[f.tier]
-		trackatlas.DrawCentered(s, trackatlas.Merge(f.tier+1), f.x, f.y, r*2)
+		pulse := 1.0
+		if g.comboTimer > 90 {
+			pulse = 1.08
+		}
+		trackatlas.DrawCentered(s, trackatlas.Merge(f.tier+1), f.x+ox, f.y, r*2*pulse)
 		ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d", f.tier+1), int(f.x)-3, int(f.y)-5)
+	}
+	for _, p := range g.sparks {
+		vector.DrawFilledCircle(s, float32(p.x+ox), float32(p.y), float32(2+p.life/15), p.c, true)
 	}
 	vector.StrokeLine(s, float32(g.cursor), 75, float32(g.cursor), 135, 2, color.RGBA{255, 255, 255, 130}, false)
 	trackatlas.DrawCentered(s, trackatlas.Merge(g.next+1), g.cursor, 92, radii[g.next]*2)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("SCORE %05d   NEXT %d   AFTER %d   DANGER %03d/180", g.score, g.next+1, g.after+1, g.danger), 55, 28)
-	ebitenutil.DebugPrintAt(s, "MOVE POINTER, TAP TO DROP — CREATE TIER 7", 75, 700)
+	target := []int{5, 6, 7}[g.level-1]
+	ebitenutil.DebugPrintAt(s, fmt.Sprintf("STAGE %d/3 SCORE %05d BEST %05d COMBO x%d", g.level, g.score, g.best, g.combo), 55, 25)
+	ebitenutil.DebugPrintAt(s, fmt.Sprintf("NEXT %d AFTER %d DANGER %03d/180 TARGET TIER %d", g.next+1, g.after+1, g.danger, target), 65, 48)
+	ebitenutil.DebugPrintAt(s, "MOVE POINTER, TAP TO DROP — BUILD THE TARGET", 65, 700)
 	if g.clear {
-		overlay(s, "EBI MERGE COMPLETE!\n\nTAP / SPACE TO PLAY AGAIN")
+		msg := "STAGE CLEAR!\n\nTAP / SPACE FOR NEXT STAGE"
+		if g.level == 3 {
+			msg = "EBI MERGE COMPLETE!\n\nTAP / SPACE TO PLAY AGAIN"
+		}
+		overlay(s, msg)
 	} else if g.over {
 		overlay(s, "STACK CROSSED THE LINE!\n\nTAP / SPACE TO RETRY")
 	}

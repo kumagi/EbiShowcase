@@ -9,6 +9,8 @@ Ebi Showcase is a static, bilingual learning site that teaches 2D game developme
 
 The current completion gate is `110/110` playable core + genre entries. A core/genre lesson page or design mockup without a working Ebitengine game is not complete. The separately counted Visual Effects Lab is the intentional exception: its Ebitengine programs are focused interactive drawing toys rather than full games.
 
+The original playable gate is only the baseline. The ongoing advanced-track quality pass is tracked in `docs/ADVANCED_QUALITY_CHECKLIST.md`; do not mark a genre complete there until its final game, intermediate lessons, bilingual content, replay loop, and real desktop/mobile play checks all satisfy that sheet.
+
 ## Start here: repository mental model
 
 Before editing, identify which of these four surfaces the request belongs to. They have different completion rules and different sources of truth.
@@ -191,8 +193,29 @@ Know the owner before editing:
 - `dist/` is disposable build output and is ignored. Never patch it.
 - VFX hub/lesson HTML is owned by the content table in `scripts/gen-visual-effects.mjs`. Regenerate instead of hand-editing those pages.
 - Expansion tracks P–T (`tactics`, `active-rpg`, `visual-novel`, `racing`, and `metroidvania`) are owned by the content table in `scripts/gen-expansion-tracks.mjs`. Edit that table and regenerate instead of hand-editing those hub and lesson pages.
+- Tactics steps and five-step hub are restored after the base expansion generator by `scripts/gen-tactics-polish.mjs`.
+- Active-RPG steps and six-step hub are restored after the base expansion generator by `scripts/gen-active-rpg-polish.mjs`.
+- Visual-novel steps and five-step hub are restored after the base expansion generator by `scripts/gen-visual-novel-polish.mjs`.
+- Racing steps 1–4 and their five-step hub are layered on top of the expansion generator by `scripts/gen-racing-track.mjs`; run it after `gen-expansion-tracks.mjs`.
+- Metroidvania steps 1–4 and their five-step hub are layered on top of the expansion generator by `scripts/gen-metroidvania-track.mjs`; run it after `gen-expansion-tracks.mjs`.
+- Platformer polish lessons (`run-animation`, `stage-data`, and `game-feel`) and their hub cards are owned by `scripts/gen-platformer-polish.mjs`.
+- Survivors polish lessons (`impact-feedback` and `wave-director`) and their hub cards are owned by `scripts/gen-survivors-polish.mjs`.
+- Clicker polish lessons (`factory-animation` and `milestone-districts`) and their hub cards are owned by `scripts/gen-clicker-polish.mjs`.
+- Command-RPG polish lessons (`intent-battle` and `battle-animation`) and their hub cards are owned by `scripts/gen-rpg-polish.mjs`.
+- Fighting polish lessons (`footsies-ai` and `round-presentation`) and their hub cards are owned by `scripts/gen-fighting-polish.mjs`.
+- Merge-physics polish lessons (`merge-feedback` and `challenge-stages`) and their hub cards are owned by `scripts/gen-merge-polish.mjs`.
+- Deckbuilder polish lessons (`card-motion` and `run-director`) and their hub cards are owned by `scripts/gen-deckbuilder-polish.mjs`.
+- Slingshot polish lessons (`trajectory-preview` and `stage-gimmicks`) and their hub cards are owned by `scripts/gen-slingshot-polish.mjs`.
+- Falling-blocks polish lessons (`line-clear-show` and `rule-stages`) and their hub/final-page updates are owned by `scripts/gen-falling-blocks-polish.mjs`.
+- Match-three polish lessons (`swap-motion` and `reef-director`) and their hub/final-page updates are owned by `scripts/gen-match3-polish.mjs`.
+- Sandbox polish lessons (`block-feedback` and `island-director`) and their hub/final-page updates are owned by `scripts/gen-sandbox-polish.mjs`.
+- Bomb-maze polish lessons (`blast-feedback` and `bomb-maze-director`) and their hub cards are owned by `scripts/gen-bomb-maze-polish.mjs`.
+- Monster-collection polish lessons (`region-expedition` and `capture-sequence`) and their hub/final-page updates are owned by `scripts/gen-monster-polish.mjs`.
+- Falling-pairs polish lessons (`chain-presentation` and `duel-director`) and their hub/final-page updates are owned by `scripts/gen-falling-pairs-polish.mjs`.
+- Maze-chase polish lessons (`guard-memory` and `maze-director`) and their hub/final-page updates are owned by `scripts/gen-maze-chase-polish.mjs`.
 - Core full-source slots are owned by `data-embed-source` plus `scripts/embed-lesson-sources.mjs`. Edit the Go source and surrounding explanation, not the generated code inside `data-embed-slot`.
 - Feedback markup is owned by `scripts/insert-feedback-form.mjs`. Do not hand-edit one page's copied form; change the injector when site-wide behavior or wording changes.
+- First-time-reader cards are owned by `scripts/inject-beginner-bridges.mjs`. They define unfamiliar terms, show one representative rule, explain the Go receiver, and connect the mechanic to 海老・天次郎 / Ebi Tenjiroh. Add route-specific material to that injector instead of editing its generated block in HTML.
 - Character and effect PNG/JSON assets are owned by `cmd/gen-atlas`, `cmd/gen-track-atlas`, `cmd/gen-vfx`, and their layout packages. Regenerate them; do not paint over generated binaries.
 
 `scripts/build.sh` is not read-only with respect to source: before creating `dist/`, it refreshes expansion-track pages, embedded source blocks, feedback sections, and OGP metadata/images inside `web/`. Expect a build to modify tracked HTML when generated content was stale. Inspect those diffs; do not blindly discard or stage them.
@@ -210,6 +233,7 @@ From the repository root:
 ```sh
 node scripts/feedback-sheet.mjs list      # print every response with its sheet row number
 node scripts/feedback-sheet.mjs check 12  # mark row 12 as handled (✅ in 対応済み)
+node scripts/feedback-sheet.mjs check-range 12 20 # mark an already-reviewed contiguous batch
 node scripts/feedback-sheet.mjs delete 12 # permanently delete row 12
 ```
 
