@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="From images laid out in one sheet, cut a single frame with SubImage and draw it. Advance the cut position with a timer and the character app">
   <title>Sprite Walk (Frame by Frame) | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-walk/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
@@ -23,7 +24,6 @@
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-walk.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Sprite Walk (Frame by Frame)">
     <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-walk/">
   <link rel="stylesheet" href="../../../../style.css">
 </head>
 <body class="overview-page">
@@ -174,35 +174,6 @@ screen.DrawImage(frame, op)</code></pre>
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>frame := sheet.SubImage(frameRect).(*ebiten.Image)</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
 <!-- END BEGINNER BRIDGE -->

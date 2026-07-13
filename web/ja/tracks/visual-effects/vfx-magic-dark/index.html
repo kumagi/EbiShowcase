@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="ショーケース最終弾。粒が螺旋を描いて中心へ吸い込まれます。炎や光が「外へ」なのに対し、闇は「内へ」。向きを反転するだけで属性が変わります。">
   <title>かっこいい闇魔法を作ろう | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-magic-dark/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
@@ -23,7 +24,6 @@
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-magic-dark.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="かっこいい闇魔法を作ろう">
     <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-magic-dark/">
   <link rel="stylesheet" href="../../../../style.css">
 </head>
 <body class="overview-page">
@@ -158,35 +158,6 @@ DrawImage(DarkPNG) // core normal, fringe additive</code></pre>
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>渦は中心の周りを回る点の列、吸い込みは中心までの距離rを毎コマ減らす動き。角度を増やしながらrを減らすと、らせん状に中心へ入ります。強さ2.0は一度に近づく量です。 Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>r -= 2; angle += .12</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
 <!-- END BEGINNER BRIDGE -->

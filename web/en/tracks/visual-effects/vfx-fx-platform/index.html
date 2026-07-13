@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="Rising edge wasOnGround to onGround triggers land FX. Grounded flag is play; dust is fx.">
   <title>Jump & Land Dust | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-fx-platform/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
@@ -23,7 +24,6 @@
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-fx-platform.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Jump &amp; Land Dust">
     <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-fx-platform/">
   <link rel="stylesheet" href="../../../../style.css">
 </head>
 <body class="overview-page">
@@ -161,35 +161,6 @@ if landed { g.fx.Burst(g.x, g.y+h, 20, 2.5, dust, true) }</code></pre>
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>if !wasGrounded &amp;&amp; grounded { fx.Dust(x,y) }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
 <!-- END BEGINNER BRIDGE -->

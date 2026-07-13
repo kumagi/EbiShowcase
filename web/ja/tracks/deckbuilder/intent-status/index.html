@@ -150,6 +150,10 @@ intentIndex = (intentIndex+1) % len(intents)</code></pre></div><div class="why-g
 
 
 
+
+
+
+
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>予告行動は敵が次に何をするかの表示、持続期間は毒や弱体があと何ターン残るか。Updateで残りターンを減らし、Drawで予告の絵と数字を見せます。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>status.turns--; drawIntent(enemy.intent)</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
 <!-- END BEGINNER BRIDGE -->

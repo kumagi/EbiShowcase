@@ -11,7 +11,7 @@
  *
  * Usage: node scripts/gen-visual-effects.mjs
  */
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { advancedLessons } from "./vfx-advanced-lessons.mjs";
 import { advancedLessonsPart2 } from "./vfx-advanced-lessons-part2.mjs";
@@ -1309,6 +1309,68 @@ function hubPage(lang) {
 `;
 }
 
+function homeSection(lang) {
+  const basic = lessons.filter((lesson) => lesson.tier !== "advanced");
+  const advanced = lessons.filter((lesson) => lesson.tier === "advanced");
+  const copy = lang === "ja"
+    ? {
+        eyebrow: "VISUAL EFFECTS / 表現編",
+        title: "ルールを覚えたら、<br>画面に手ざわりを足そう。",
+        lead: "基礎編で作った動きに、回転・色・光・アニメーション・粒を足します。前半は描画の道具を1つずつ触り、後半はLEVEL 01〜12へ演出を組み込みます。ここもすべてブラウザで操作できます。",
+        basicEyebrow: "DRAWING BASICS / 描画の基本",
+        basicTitle: "まずは、絵を変える13の道具。",
+        basicLead: "置く、回す、染める、透かす、光らせる。気になるパネルから触って大丈夫です。",
+        advancedEyebrow: "GAME FX / ゲーム演出",
+        advancedTitle: "次に、12のゲームへ演出を足す。",
+        advancedLead: "得点や当たり判定はそのままに、光や粒だけを別の仕組みとして重ねます。",
+        concept: "今回の道具",
+        open: "工房の全体を見る",
+      }
+    : {
+        eyebrow: "VISUAL EFFECTS / PRESENTATION",
+        title: "Once the rules work,<br>give the screen some feel.",
+        lead: "Add rotation, color, light, animation, and particles to the movement from Basics. First touch one drawing tool at a time; then wire effects into LEVEL 01–12. Every panel runs in the browser.",
+        basicEyebrow: "DRAWING BASICS",
+        basicTitle: "Start with thirteen ways to change a picture.",
+        basicLead: "Place, spin, tint, fade, and glow. It is fine to begin with whichever panel catches your eye.",
+        advancedEyebrow: "GAME FX",
+        advancedTitle: "Then dress up all twelve core games.",
+        advancedLead: "Keep score and collisions intact while layering light and particles as a separate system.",
+        concept: "TOOL",
+        open: "View the whole lab",
+      };
+  const cards = (items, tier) => items.map((lesson) => `<a class="vfx-course-card vfx-course-${tier}" href="tracks/${track}/${lesson.slug}/"><div class="vfx-course-meta"><span>${tier === "basic" ? "BASIC" : "FX"} ${lesson.step}</span><span>${lesson.stars}</span></div><h3>${lesson[lang].title}</h3><p>${lesson.hubDesc[lang]}</p><div class="vfx-course-concept"><small>${copy.concept}</small><strong>${lesson.concept[lang]}</strong></div><span class="vfx-course-status">TRY IT →</span></a>`).join("\n");
+
+  return `<!-- visual-effects-home:start -->
+<section class="vfx-curriculum" id="visual-effects">
+  <div class="vfx-curriculum-head"><div><p class="eyebrow">${copy.eyebrow}</p><h2>${copy.title}</h2></div><p>${copy.lead}</p></div>
+  <div class="vfx-course-group"><div class="vfx-group-head"><div><p class="eyebrow">${copy.basicEyebrow}</p><h3>${copy.basicTitle}</h3></div><p>${copy.basicLead}</p></div><div class="vfx-course-grid">${cards(basic, "basic")}</div></div>
+  <div class="vfx-course-group vfx-course-group-advanced"><div class="vfx-group-head"><div><p class="eyebrow">${copy.advancedEyebrow}</p><h3>${copy.advancedTitle}</h3></div><p>${copy.advancedLead}</p></div><div class="vfx-course-grid">${cards(advanced, "advanced")}</div></div>
+  <a class="vfx-hub-link" href="tracks/${track}/"><span>${copy.open}</span><b>→</b></a>
+</section>
+<!-- visual-effects-home:end -->`;
+}
+
+function updateHome(lang) {
+  const file = join(root, "web", lang, "index.html");
+  let html = readFileSync(file, "utf8");
+  const section = homeSection(lang);
+  const generated = /<!-- visual-effects-home:start -->[\s\S]*?<!-- visual-effects-home:end -->/;
+  const oldPromo = /<section class="architecture-promo vfx-promo" id="visual-effects">[\s\S]*?<\/section>/;
+  if (generated.test(html)) html = html.replace(generated, section);
+  else if (oldPromo.test(html)) html = html.replace(oldPromo, section);
+  else throw new Error(`Visual Effects home slot not found: ${file}`);
+  html = html.replace(
+    lang === "ja" ? '<p class="eyebrow">YOUR LEARNING PATH</p>' : '<p class="eyebrow">YOUR LEARNING PATH</p>',
+    lang === "ja" ? '<p class="eyebrow">BASIC / 基礎編</p>' : '<p class="eyebrow">BASIC / CORE LESSONS</p>',
+  );
+  html = html.replace(
+    '<p class="eyebrow">CHOOSE YOUR NEXT ADVENTURE</p>',
+    lang === "ja" ? '<p class="eyebrow">ADVANCED / 応用編</p>' : '<p class="eyebrow">ADVANCED / SPECIALIZATIONS</p>',
+  );
+  writeFileSync(file, html);
+}
+
 // --- write files ------------------------------------------------------------
 
 let written = 0;
@@ -1316,6 +1378,7 @@ for (const lang of ["ja", "en"]) {
   const base = join(root, "web", lang, "tracks", track);
   mkdirSync(base, { recursive: true });
   writeFileSync(join(base, "index.html"), hubPage(lang));
+  updateHome(lang);
   written++;
   lessons.forEach((lesson, idx) => {
     const dir = join(base, lesson.slug);

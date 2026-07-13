@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="wasOnGround から onGround へ切り替わった瞬間だけ着地演出。物理の grounded は play、塵は fx。">
   <title>ジャンプと着地に塵を足す | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-fx-platform/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
@@ -23,7 +24,6 @@
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-fx-platform.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="ジャンプと着地に塵を足す">
     <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-fx-platform/">
   <link rel="stylesheet" href="../../../../style.css">
 </head>
 <body class="overview-page">
@@ -161,35 +161,6 @@ if landed { g.fx.Burst(g.x, g.y+h, 20, 2.5, dust, true) }</code></pre>
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>接地は天次郎の足が床へ触れた状態、イベントは状態が『空中→接地』へ変わった一瞬。塵はその一瞬に生む粒です。Updateで接地印を比べ、Drawで天次郎と塵を重ねます。 Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>if !wasGrounded &amp;&amp; grounded { fx.Dust(x,y) }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
 <!-- END BEGINNER BRIDGE -->

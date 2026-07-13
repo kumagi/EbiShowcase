@@ -22,7 +22,7 @@ Before editing, identify which of these four surfaces the request belongs to. Th
 
 The public learning path is therefore:
 
-`optional local setup (Go + empty window) → LEVEL 01 game loop → core mechanics → optional Visual Effects Lab → genre specialization → data/architecture thinking`
+`optional local setup (Go + empty window) → LEVEL 01 game loop → core mechanics → Visual Effects Lab → genre specialization → data/architecture thinking`
 
 Do not flatten these into one undifferentiated list. A rendering toy is not a missing game, a guide is not PLAYABLE, and a genre step must not reintroduce `Update`/`Draw` as if LEVEL 01 did not exist.
 
@@ -72,6 +72,8 @@ The build creates a separate game at `dist/play/<slug>/` for every implementatio
 
 ## Visual Effects Lab (between core and tracks)
 
+- The Lab is a first-class middle stage on the bilingual home pages, not a side-content promo. Keep its Basic and Game FX lesson panels between the 12 core cards and the genre specializations. `scripts/gen-visual-effects.mjs` owns this home-page block as well as the Lab pages; edit and rerun the generator instead of hand-editing those generated cards.
+- Every clickable learning card on the bilingual home pages carries a real 480×720 WebP capture under `web/assets/home-thumbnails/`. Core and VFX cards show their own WASM demo; each genre card shows the final integrated game in that track. `scripts/home-thumbnails.mjs` resolves and injects these mappings during the build. When a home card or capstone changes, recapture the affected image rather than substituting an illustration or an OGP title card.
 - The Visual Effects Lab is a distinct group that sits between the 12 core lessons and the genre tracks. It teaches Ebitengine's drawing pipeline (`GeoM` translate/rotate/scale, `ColorScale`, `Blend`/`BlendLighter`, `SubImage` frame animation, particle slices) through hands-on toys, then stretches into advanced magic showcases (charged fire, crystal ice, branching thunder, flare light, void dark) that are allowed to be harder than primary-school simplicity.
 - Its games live at `games/tracks/visual-effects/<slug>/main.go` with `vfx-` slugs, and its pages at `web/{ja,en}/tracks/visual-effects/`. It appears in `curriculum.mjs` ordered right after LEVEL 12.
 - It is counted **separately** from the `110/110` gate. `curriculum.mjs` exports `gated` (core + genre tracks) which drives `next`/`status`; the summary reports `vfx: { total, playable }` on the side. Do not fold the Visual Effects Lab into the 110 total.

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="Add Rotate and Scale to the same GeoM and the image spins and stretches. Order matters: move the center to the origin first, then rotate to ">
   <title>Rotate, Scale & the Pivot | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-transform/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
@@ -23,7 +24,6 @@
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-transform.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Rotate, Scale &amp; the Pivot">
     <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-transform/">
   <link rel="stylesheet" href="../../../../style.css">
 </head>
 <body class="overview-page">
@@ -159,35 +159,6 @@ screen.DrawImage(sprite, op)</code></pre>
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>op.GeoM.Rotate(angle); op.GeoM.Scale(sx, sy)</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
 <!-- END BEGINNER BRIDGE -->

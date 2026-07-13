@@ -1,0 +1,401 @@
+[
+  {
+    "kind": "core",
+    "href": "games/tap-target/",
+    "route": "games/tap-target",
+    "slug": "tap-target",
+    "file": "games--tap-target.webp"
+  },
+  {
+    "kind": "core",
+    "href": "games/timing-meter/",
+    "route": "games/timing-meter",
+    "slug": "timing-meter",
+    "file": "games--timing-meter.webp"
+  },
+  {
+    "kind": "core",
+    "href": "games/catch-stars/",
+    "route": "games/catch-stars",
+    "slug": "catch-stars",
+    "file": "games--catch-stars.webp"
+  },
+  {
+    "kind": "core",
+    "href": "games/flappy/",
+    "route": "games/flappy",
+    "slug": "flappy",
+    "file": "games--flappy.webp"
+  },
+  {
+    "kind": "core",
+    "href": "games/pong/",
+    "route": "games/pong",
+    "slug": "pong",
+    "file": "games--pong.webp"
+  },
+  {
+    "kind": "core",
+    "href": "games/breakout/",
+    "route": "games/breakout",
+    "slug": "breakout",
+    "file": "games--breakout.webp"
+  },
+  {
+    "kind": "core",
+    "href": "games/snake/",
+    "route": "games/snake",
+    "slug": "snake",
+    "file": "games--snake.webp"
+  },
+  {
+    "kind": "core",
+    "href": "games/space-shooter/",
+    "route": "games/space-shooter",
+    "slug": "space-shooter",
+    "file": "games--space-shooter.webp"
+  },
+  {
+    "kind": "core",
+    "href": "games/sokoban/",
+    "route": "games/sokoban",
+    "slug": "sokoban",
+    "file": "games--sokoban.webp"
+  },
+  {
+    "kind": "core",
+    "href": "games/platformer/",
+    "route": "games/platformer",
+    "slug": "platformer",
+    "file": "games--platformer.webp"
+  },
+  {
+    "kind": "core",
+    "href": "games/dungeon/",
+    "route": "games/dungeon",
+    "slug": "dungeon",
+    "file": "games--dungeon.webp"
+  },
+  {
+    "kind": "core",
+    "href": "games/bullet-hell/",
+    "route": "games/bullet-hell",
+    "slug": "bullet-hell",
+    "file": "games--bullet-hell.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-stamp/",
+    "route": "tracks/visual-effects/vfx-stamp",
+    "slug": "vfx-stamp",
+    "file": "tracks--visual-effects--vfx-stamp.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-transform/",
+    "route": "tracks/visual-effects/vfx-transform",
+    "slug": "vfx-transform",
+    "file": "tracks--visual-effects--vfx-transform.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-tint/",
+    "route": "tracks/visual-effects/vfx-tint",
+    "slug": "vfx-tint",
+    "file": "tracks--visual-effects--vfx-tint.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-alpha/",
+    "route": "tracks/visual-effects/vfx-alpha",
+    "slug": "vfx-alpha",
+    "file": "tracks--visual-effects--vfx-alpha.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-additive/",
+    "route": "tracks/visual-effects/vfx-additive",
+    "slug": "vfx-additive",
+    "file": "tracks--visual-effects--vfx-additive.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-walk/",
+    "route": "tracks/visual-effects/vfx-walk",
+    "slug": "vfx-walk",
+    "file": "tracks--visual-effects--vfx-walk.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-particles/",
+    "route": "tracks/visual-effects/vfx-particles",
+    "slug": "vfx-particles",
+    "file": "tracks--visual-effects--vfx-particles.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-spells/",
+    "route": "tracks/visual-effects/vfx-spells",
+    "slug": "vfx-spells",
+    "file": "tracks--visual-effects--vfx-spells.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-magic-fire/",
+    "route": "tracks/visual-effects/vfx-magic-fire",
+    "slug": "vfx-magic-fire",
+    "file": "tracks--visual-effects--vfx-magic-fire.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-magic-ice/",
+    "route": "tracks/visual-effects/vfx-magic-ice",
+    "slug": "vfx-magic-ice",
+    "file": "tracks--visual-effects--vfx-magic-ice.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-magic-thunder/",
+    "route": "tracks/visual-effects/vfx-magic-thunder",
+    "slug": "vfx-magic-thunder",
+    "file": "tracks--visual-effects--vfx-magic-thunder.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-magic-light/",
+    "route": "tracks/visual-effects/vfx-magic-light",
+    "slug": "vfx-magic-light",
+    "file": "tracks--visual-effects--vfx-magic-light.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-magic-dark/",
+    "route": "tracks/visual-effects/vfx-magic-dark",
+    "slug": "vfx-magic-dark",
+    "file": "tracks--visual-effects--vfx-magic-dark.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-fx-tap/",
+    "route": "tracks/visual-effects/vfx-fx-tap",
+    "slug": "vfx-fx-tap",
+    "file": "tracks--visual-effects--vfx-fx-tap.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-fx-meter/",
+    "route": "tracks/visual-effects/vfx-fx-meter",
+    "slug": "vfx-fx-meter",
+    "file": "tracks--visual-effects--vfx-fx-meter.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-fx-catch/",
+    "route": "tracks/visual-effects/vfx-fx-catch",
+    "slug": "vfx-fx-catch",
+    "file": "tracks--visual-effects--vfx-fx-catch.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-fx-flight/",
+    "route": "tracks/visual-effects/vfx-fx-flight",
+    "slug": "vfx-fx-flight",
+    "file": "tracks--visual-effects--vfx-fx-flight.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-fx-pong/",
+    "route": "tracks/visual-effects/vfx-fx-pong",
+    "slug": "vfx-fx-pong",
+    "file": "tracks--visual-effects--vfx-fx-pong.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-fx-breakout/",
+    "route": "tracks/visual-effects/vfx-fx-breakout",
+    "slug": "vfx-fx-breakout",
+    "file": "tracks--visual-effects--vfx-fx-breakout.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-fx-snake/",
+    "route": "tracks/visual-effects/vfx-fx-snake",
+    "slug": "vfx-fx-snake",
+    "file": "tracks--visual-effects--vfx-fx-snake.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-fx-shooter/",
+    "route": "tracks/visual-effects/vfx-fx-shooter",
+    "slug": "vfx-fx-shooter",
+    "file": "tracks--visual-effects--vfx-fx-shooter.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-fx-sokoban/",
+    "route": "tracks/visual-effects/vfx-fx-sokoban",
+    "slug": "vfx-fx-sokoban",
+    "file": "tracks--visual-effects--vfx-fx-sokoban.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-fx-platform/",
+    "route": "tracks/visual-effects/vfx-fx-platform",
+    "slug": "vfx-fx-platform",
+    "file": "tracks--visual-effects--vfx-fx-platform.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-fx-dungeon/",
+    "route": "tracks/visual-effects/vfx-fx-dungeon",
+    "slug": "vfx-fx-dungeon",
+    "file": "tracks--visual-effects--vfx-fx-dungeon.webp"
+  },
+  {
+    "kind": "vfx",
+    "href": "tracks/visual-effects/vfx-fx-bullethell/",
+    "route": "tracks/visual-effects/vfx-fx-bullethell",
+    "slug": "vfx-fx-bullethell",
+    "file": "tracks--visual-effects--vfx-fx-bullethell.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/platformer/",
+    "route": "tracks/platformer",
+    "slug": "powerup-adventure",
+    "file": "tracks--platformer.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/survivors/",
+    "route": "tracks/survivors",
+    "slug": "survival-run",
+    "file": "tracks--survivors.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/clicker/",
+    "route": "tracks/clicker",
+    "slug": "offline-bakery",
+    "file": "tracks--clicker.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/rpg/",
+    "route": "tracks/rpg",
+    "slug": "ebi-quest",
+    "file": "tracks--rpg.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/fighting/",
+    "route": "tracks/fighting",
+    "slug": "ebi-fighters",
+    "file": "tracks--fighting.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/merge-physics/",
+    "route": "tracks/merge-physics",
+    "slug": "ebi-merge",
+    "file": "tracks--merge-physics.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/deckbuilder/",
+    "route": "tracks/deckbuilder",
+    "slug": "ebi-ascent",
+    "file": "tracks--deckbuilder.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/match3/",
+    "route": "tracks/match3",
+    "slug": "ebi-match",
+    "file": "tracks--match3.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/falling-blocks/",
+    "route": "tracks/falling-blocks",
+    "slug": "ebi-blocks",
+    "file": "tracks--falling-blocks.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/slingshot/",
+    "route": "tracks/slingshot",
+    "slug": "ebi-strike",
+    "file": "tracks--slingshot.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/sandbox/",
+    "route": "tracks/sandbox",
+    "slug": "ebi-craft",
+    "file": "tracks--sandbox.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/monster-collection/",
+    "route": "tracks/monster-collection",
+    "slug": "ebi-monsters",
+    "file": "tracks--monster-collection.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/falling-pairs/",
+    "route": "tracks/falling-pairs",
+    "slug": "ebi-chain",
+    "file": "tracks--falling-pairs.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/maze-chase/",
+    "route": "tracks/maze-chase",
+    "slug": "ebi-maze",
+    "file": "tracks--maze-chase.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/bomb-maze/",
+    "route": "tracks/bomb-maze",
+    "slug": "ebi-bomber",
+    "file": "tracks--bomb-maze.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/tactics/",
+    "route": "tracks/tactics",
+    "slug": "ebi-tactics",
+    "file": "tracks--tactics.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/active-rpg/",
+    "route": "tracks/active-rpg",
+    "slug": "ebi-active-battle",
+    "file": "tracks--active-rpg.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/visual-novel/",
+    "route": "tracks/visual-novel",
+    "slug": "ebi-dialogue-stage",
+    "file": "tracks--visual-novel.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/racing/",
+    "route": "tracks/racing",
+    "slug": "ebi-racing",
+    "file": "tracks--racing.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/metroidvania/",
+    "route": "tracks/metroidvania",
+    "slug": "ebi-depths",
+    "file": "tracks--metroidvania.webp"
+  }
+]

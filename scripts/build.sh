@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+node "$ROOT/scripts/gen-visual-effects.mjs"
 node "$ROOT/scripts/gen-expansion-tracks.mjs"
 node "$ROOT/scripts/gen-tactics-polish.mjs"
 node "$ROOT/scripts/gen-active-rpg-polish.mjs"
@@ -26,6 +27,7 @@ node "$ROOT/scripts/gen-legacy-aliases.mjs"
 node "$ROOT/scripts/embed-lesson-sources.mjs"
 node "$ROOT/scripts/insert-feedback-form.mjs"
 node "$ROOT/scripts/inject-beginner-bridges.mjs"
+node "$ROOT/scripts/home-thumbnails.mjs" inject
 node "$ROOT/scripts/inject-ogp.mjs"
 go run ./cmd/gen-og-images "$ROOT"
 rm -rf "$ROOT/dist"
