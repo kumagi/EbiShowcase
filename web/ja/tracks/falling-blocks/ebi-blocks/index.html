@@ -121,7 +121,15 @@
 
 
 
+
+
+
+
+
+
+
+
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>形[][]、回転候補[][][]、現在位置を別に持ちます。[]が一段増えるごとに『形の一覧』が一層増えると読めます。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>rotatedShape := rotations[piece][rotation]</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>状態の流れはSpawn→Fall→Lock→Clear→Spawnという小さな仕事の列。バッグは7種を公平に出す袋、ホールドは一個保管、ゴーストは着地点予測です。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>switch phase { case Fall: updateFall(); case Clear: clearLines() }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
 <!-- END BEGINNER BRIDGE -->
 </main><script src="../../../../learn.js"></script></body></html>

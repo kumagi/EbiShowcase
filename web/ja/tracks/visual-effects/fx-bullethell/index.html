@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。">
+  <title>ボムで弾を消し、爆発は演出へ | Ebi Showcase</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ボムで弾を消し、爆発は演出へ | Ebi Showcase">
+    <meta property="og:description" content="応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/fx-bullethell/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--fx-bullethell.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="ボムで弾を消し、爆発は演出へ">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ボムで弾を消し、爆発は演出へ | Ebi Showcase">
+    <meta name="twitter:description" content="応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--fx-bullethell.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="ボムで弾を消し、爆発は演出へ">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/fx-bullethell/">
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">工房トップ</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/visual-effects/vfx-fx-bullethell/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← ビジュアルエフェクト工房</a><span>ADV A12</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>ボムで弾を消し、爆発は演出へ</h1>
+      <p>応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>弾幕クリアとFXの総仕上げ</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>避けてボムせよ</h2></div>
+        <p>弾幕を避け、ボムで一掃。削除は play、爆発は fx。LIVE GO で bullets と fx.parts を見比べよう。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A12</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="ボムで弾を消し、爆発は演出へ" src="../../../../play/vfx-fx-bullethell/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / CAPSTONE</p>
+        <h2>危険な配列と、<br>安全な花火</h2>
+        <p class="lesson-lead">bullets は当たるとダメージ。fx.Parts は当たっても痛くない。この区別を自分の言葉で説明できたら、エフェクト設計の第一関門クリアです。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>弾</h3>
+          <p>危険。当たり判定あり。</p>
+          <code>bullets []</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>ボム</h3>
+          <p>弾を削除するルール。</p>
+          <code>filter bullets</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>花火</h3>
+          <p>安全。見た目だけ。</p>
+          <code>fx.Ring+Burst</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-bullethell">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / SPLIT</p>
+          <h3 id="lab-title-vfx-fx-bullethell">危険／安全</h3>
+          <p>左＝弾（危険）、右＝粒（安全）。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>命中！（play+fx）</button><button type="button" class="lab-button" data-lab-fx-tick>fx だけ 1F進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-fx-split" data-lab-board>
+          <div class="lab-fx-col" data-lab-play><h4>play（ルール・点数）</h4><ul data-lab-play-list></ul></div>
+          <div class="lab-fx-col" data-lab-fx><h4>fx（見た目の粒）</h4><ul data-lab-fx-list></ul></div>
+          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
+        </div>
+        <p class="lab-fx-hint" data-lab-fx-hint></p>
+          <div class="lab-values" aria-live="polite"><div><span>スコア(play)</span><strong data-lab-score>—</strong></div><div><span>粒(fx)</span><strong data-lab-fx-n>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE DEMO</p>
+          <h3>delete してから祝う</h3>
+          <p>Breakout の破壊二段と同じ型の総仕上げ。</p>
+        </div>
+        <pre><code>// bomb:
+bullets = withoutNear(bullets, x, y, r) // play
+g.fx.FlashScreen(1, 200, 220, 255)
+g.fx.Ring(x, y, 3, white)
+g.fx.Burst(x, y, 80, 6, white, true)   // fx only</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY CAPSTONE?</p>
+          <h3>全部つながる</h3>
+          <p>イベント、状態、配列分割、削除＋FX。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY SAFE FX?</p>
+          <h3>理不尽を避ける</h3>
+          <p>クリア演出に当たって死ぬと泣ける。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>自分のゲームへ</h3>
+          <p>ジャンルトラックで、同じ分け方を持ち込もう。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-fx-dungeon/">← STEP A11<strong>攻撃ヒットに閃光を足す</strong></a>
+      <a href="../../platformer/">応用トラックへ →<strong>作りたいゲームを選ぶ</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/fx-bullethell/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>弾幕は多数の弾で避け道を作る仕組み、ボムは画面内の弾を消す救済技、FXはその爆発を見せる演出です。Updateで弾リストを空にして勝敗へ反映し、Drawで爆発の光と粒を描きます。frame%120は120コマごとの周期です。 Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>bullets = bullets[:0]; fx.Bomb(playerX,playerY)</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

@@ -104,7 +104,15 @@ if rng.Intn(100) &lt; captureChance() {
 
 
 
+
+
+
+
+
+
+
+
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>60%は正解でなく調整値。HPが少ないほど成功率を上げ、0〜99の乱数が確率未満なら捕獲です。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>chance := 25 + (maxHP-hp)*60/maxHP</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>60%は正解でなく調整値。HPが少ないほど成功率を上げ、0〜99の乱数が確率未満なら捕獲です。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>chance := 25 + (maxHP-hp)*60/maxHP</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
 <!-- END BEGINNER BRIDGE -->
 </main><script src="../../../../learn.js"></script></body></html>

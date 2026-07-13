@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="発生・持続・硬直の3段階フレームデータを学ぶ、Ebitengine版格闘ゲームレッスン。">
+  <title>3段階パンチ | Ebi Showcase</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="3段階パンチ | Ebi Showcase">
+    <meta property="og:description" content="発生・持続・硬直の3段階フレームデータを学ぶ、Ebitengine版格闘ゲームレッスン。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/fighting/three-punch/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--fighting--three-punch.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="3段階パンチ">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="3段階パンチ | Ebi Showcase">
+    <meta name="twitter:description" content="発生・持続・硬直の3段階フレームデータを学ぶ、Ebitengine版格闘ゲームレッスン。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--fighting--three-punch.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="3段階パンチ">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/fighting/three-punch/">
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">コース</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/fighting/frame-attack/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← 2D格闘ゲーム</a><span>STEP 02 / 07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
+      <h1>3段階パンチ</h1>
+      <p>攻撃には「腕を伸ばす時間」「当たる時間」「戻る時間」の3段階があります。フレーム番号で区切ることで、技の速さや硬さをプログラムで表現できます。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>発生・持続・硬直（フレームデータ）</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。</p>
+
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>タイミングよくパンチを当てよう。</h2></div>
+        <p>スペース・X・タップでパンチ。赤い ACTIVE の4フレームで動く的に5回当てるとクリアです。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="3段階パンチ" src="../../../../play/frame-attack/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / FRAME DATA</p>
+        <h2>どうしてボタンを押した<br>瞬間に当たらないの？</h2>
+        <p class="lesson-lead">技には <strong>発生（Startup）</strong>・<strong>持続（Active）</strong>・<strong>硬直（Recovery）</strong> の3段階があります。ボタンを押すと「発生」が始まり、腕が伸びきるまでの間（フレーム1〜8）は当たりません。フレーム9〜12の4フレームだけ赤い攻撃判定が生まれ、フレーム13〜30は元の姿勢に戻るまで次の行動ができません。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>発生（Startup）</h3>
+          <p>フレーム1〜8は腕を伸ばす準備中です。攻撃判定はまだ出ていません。この時間が長いと「遅い技」、短いと「速い技」になります。</p>
+          <code>frame &lt;= 8  → STARTUP（黄色）</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>持続（Active）</h3>
+          <p>フレーム9〜12の4フレームだけ赤い攻撃判定が存在します。この時間に相手の喰らい判定と重なったときだけヒットです。</p>
+          <code>frame 9〜12 → ACTIVE（赤）</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>硬直（Recovery）</h3>
+          <p>フレーム13〜30は姿勢を元に戻す時間です。この間は次のボタン入力を受け付けません。硬直が長いと「隙が大きい技」になります。</p>
+          <code>frame &gt;= 13 → RECOVERY（青）</code>
+        </article>
+      </div>
+
+
+      <div class="motion-lab" data-lab="frames" data-startup="発生" data-active="持続" data-recovery="硬直" aria-labelledby="lab-title-frame-attack">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-frame-attack">発生・持続・硬直をコマ送り</h3>
+          <p>技は発生・持続・硬直の3相。持続のあいだだけ攻撃判定が出ます。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="tick active rec">1F進める</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>frame</span><strong data-lab-frame>0</strong><small></small></div>
+            <div><span>相</span><strong data-lab-phase>発生</strong><small></small></div>
+            <div><span>1-8 / 9-12 / 13+</span><strong></strong><small></small></div>
+          </div>
+        </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="start">if pressed { frame = 1 }</span>
+<span data-go-line="active">if frame &gt;= 9 &amp;&amp; frame &lt;= 12 { hitboxOn = true }</span>
+<span data-go-line="rec">if frame &gt; 12 { /* recovery */ }</span>
+<span data-go-line="tick">frame++</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
+
+      <div class="formula">
+        <p class="eyebrow">FRAME RANGES</p>
+        <div class="formula-lines">
+          <code>STARTUP   フレーム  1 〜  8  // まだ攻撃できない</code>
+          <span>↓</span>
+          <code>ACTIVE    フレーム  9 〜 12  // 攻撃判定が存在する</code>
+          <span>↓</span>
+          <code>RECOVERY  フレーム 13 〜 30  // 次の行動ができない</code>
+        </div>
+        <p>フレームは毎秒60回カウントされます（Ebitengineのデフォルト）。1フレームは約16.7ミリ秒です。フレーム9のときボタンを押しても、この技のカウンターが先に動くため同じフレームでは当たりません。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>押す → カウンターを進める → ACTIVE で当たりを調べる</h3>
+          <p>ボタンを押したフレームで <code>g.frame = 1</code> にし、毎フレーム1ずつ増やします。フレーム9〜12のときだけ攻撃判定を作り、相手の喰らい判定と重なるか調べます。</p>
+        </div>
+        <pre><code><span>if</span> g.frame == 0 &amp;&amp; press() {
+    g.frame = 1        // ボタンを押したら開始
+    g.hitThis = false
+} <span>else if</span> g.frame &gt; 0 {
+    g.frame++
+    <span>if</span> g.frame &gt;= 31 { g.frame = 0 }  // 技終了
+}
+
+// ACTIVE フレームだけ攻撃判定を作る
+<span>if</span> g.frame &gt;= 9 &amp;&amp; g.frame &lt;= 12 &amp;&amp; !g.hitThis {
+    attack := rect{235, 495, 105, 35}
+    <span>if</span> overlap(attack, g.target()) {
+        g.hits++
+        g.hitThis = true    // 同じ技で2回当たらないよう
+    }
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WITHOUT FRAME DATA</p>
+          <h3>ボタンを押したら即当たりになってしまう</h3>
+          <p>フレーム分割がなければすべての技が瞬時に当たります。読み合いや反応の面白さが生まれません。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WITH FRAME DATA</p>
+          <h3>技に「個性」が生まれる</h3>
+          <p>発生が速い技は隙が大きく、発生が遅い技は当たったときのリターンが大きいなど、バランス設計の基礎になります。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">YOUR FIRST TUNING</p>
+          <h3>ACTIVE フレームの長さを変えてみよう</h3>
+          <p><code>g.frame &lt;= 12</code> を <code>g.frame &lt;= 16</code> にすると ACTIVE が8フレームに延び、当てやすい技になります。逆に <code>10</code> にすると瞬間的な技になります。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../box-viewer/">← STEP 01<strong>判定矩形</strong></a>
+      <a href="../hit-reaction/">STEP 03 →<strong>ヒットリアクション</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/fighting/three-punch/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>60fpsで4フレームは約0.067秒。攻撃矩形はactiveの間だけ出し、その前後は当たりません。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>active := frame >= 6 &amp;&amp; frame &lt; 10</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

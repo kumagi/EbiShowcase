@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Reducing HP is play. Flashes and shards are fx. Choose knockback as physics or juice on purpose.">
+  <title>Dungeon Hit Flashes | Ebi Showcase</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Dungeon Hit Flashes | Ebi Showcase">
+    <meta property="og:description" content="Reducing HP is play. Flashes and shards are fx. Choose knockback as physics or juice on purpose.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-dungeon/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-dungeon.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Dungeon Hit Flashes">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Dungeon Hit Flashes | Ebi Showcase">
+    <meta name="twitter:description" content="Reducing HP is play. Flashes and shards are fx. Choose knockback as physics or juice on purpose.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-dungeon.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Dungeon Hit Flashes">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-dungeon/">
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Lab home</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/visual-effects/vfx-fx-dungeon/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>ADV A11</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Dungeon Hit Flashes</h1>
+      <p>Reducing HP is play. Flashes and shards are fx. Choose knockback as physics or juice on purpose.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Hit reactions are FX</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Smack the slime</h2></div>
+        <p>Move and attack. Hit juice is fx; HP is play.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A11</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Dungeon Hit Flashes" src="../../../../play/vfx-fx-dungeon/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / COMBAT FEEDBACK</p>
+        <h2>Painful numbers vs<br>painful looks</h2>
+        <p class="lesson-lead">Split HP truth from flash feedback and i-frames/combos get easier to add.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Damage</h3>
+          <p>Reduce HP.</p>
+          <code>hp -= dmg</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Reaction</h3>
+          <p>Flash and sparks.</p>
+          <code>fx.FlashScreen</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Split</h3>
+          <p>Don't invent HP from blinks.</p>
+          <code>bar from hp</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-dungeon">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / PLAY vs FX</p>
+          <h3 id="lab-title-vfx-fx-dungeon">A hit updates numbers and sparks</h3>
+          <p>Hit! grows score + sparks. Tick FX ages sparks only — score stays.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Tick FX 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-fx-split" data-lab-board>
+          <div class="lab-fx-col" data-lab-play><h4>play (rules / score)</h4><ul data-lab-play-list></ul></div>
+          <div class="lab-fx-col" data-lab-fx><h4>fx (sparks)</h4><ul data-lab-fx-list></ul></div>
+          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
+        </div>
+        <p class="lab-fx-hint" data-lab-fx-hint></p>
+          <div class="lab-values" aria-live="polite"><div><span>score (play)</span><strong data-lab-score>—</strong></div><div><span>sparks (fx)</span><strong data-lab-fx-n>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE DEMO</p>
+          <h3>FX at end of applyDamage</h3>
+          <p>Numbers first, looks second.</p>
+        </div>
+        <pre><code>func applyDamage(e *enemy, dmg int) {
+  e.hp -= dmg
+  g.fx.FlashScreen(0.5, 255, 80, 80)
+  g.fx.Burst(e.x, e.y, 28, 4, tint, true)
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY?</p>
+          <h3>Debug</h3>
+          <p>Log HP without the light show.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY FLASH?</p>
+          <h3>Feedback</h3>
+          <p>No hit feel = feels unfair.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>Bullet hell</h3>
+          <p>Finale: clear bombs vs bullets[].</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-fx-platform/">← STEP A10<strong>Jump & Land Dust</strong></a>
+      <a href="../vfx-fx-bullethell/">STEP A12 →<strong>Bomb Clears Bullets—Explosions Are FX</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/fx-dungeon/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>enemy.hp -= damage; enemy.flash = 8</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

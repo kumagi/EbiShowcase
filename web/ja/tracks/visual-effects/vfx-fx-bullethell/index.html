@@ -184,8 +184,16 @@ g.fx.Burst(x, y, 80, 6, white, true)   // fx only</code></pre>
 
 
 
+
+
+
+
+
+
+
+
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>弾幕は多数の弾で避け道を作る仕組み、ボムは画面内の弾を消す救済技、FXはその爆発を見せる演出です。Updateで弾リストを空にして勝敗へ反映し、Drawで爆発の光と粒を描きます。frame%120は120コマごとの周期です。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>bullets = bullets[:0]; fx.Bomb(playerX,playerY)</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>弾幕は多数の弾で避け道を作る仕組み、ボムは画面内の弾を消す救済技、FXはその爆発を見せる演出です。Updateで弾リストを空にして勝敗へ反映し、Drawで爆発の光と粒を描きます。frame%120は120コマごとの周期です。 Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>bullets = bullets[:0]; fx.Bomb(playerX,playerY)</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
 <!-- END BEGINNER BRIDGE -->
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>

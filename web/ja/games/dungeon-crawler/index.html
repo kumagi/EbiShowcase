@@ -1,23 +1,482 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="refresh" content="0;url=../dungeon/"><title>ダンジョン教材へ移動 | Ebi Showcase</title>
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="GoとEbitengineで作ったダンジョン探索ゲームから、敵AIの状態遷移（巡回・追跡の切り替え）を学ぶレッスンです。">
+  <title>LEVEL 11 — Dungeon | Ebi Showcase</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="ダンジョン教材へ移動 | Ebi Showcase">
-    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta property="og:title" content="LEVEL 11 — Dungeon | Ebi Showcase">
+    <meta property="og:description" content="GoとEbitengineで作ったダンジョン探索ゲームから、敵AIの状態遷移（巡回・追跡の切り替え）を学ぶレッスンです。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/games/dungeon-crawler/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--dungeon-crawler.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="ダンジョン教材は新しいURLへ移動しました">
+    <meta property="og:image:alt" content="Dungeon">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ダンジョン教材へ移動 | Ebi Showcase">
-    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta name="twitter:title" content="LEVEL 11 — Dungeon | Ebi Showcase">
+    <meta name="twitter:description" content="GoとEbitengineで作ったダンジョン探索ゲームから、敵AIの状態遷移（巡回・追跡の切り替え）を学ぶレッスンです。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--dungeon-crawler.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="ダンジョン教材は新しいURLへ移動しました">
+    <meta name="twitter:image:alt" content="Dungeon">
     <!-- ogp:end -->
-<link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/games/dungeon-crawler/"><link rel="stylesheet" href="../../../style.css"></head><body><main><section class="lesson-hero"><div><p class="eyebrow">LEVEL 11</p><h1>ダンジョン教材は新しいURLへ移動しました</h1><p>海老・天次郎の巡回・追跡AI、Update / Draw、コード例をそろえた完全版へ案内します。</p><p><a class="button" href="../dungeon/">ダンジョン教材を開く →</a></p></div></section>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/games/dungeon-crawler/">
+  <link rel="alternate" hreflang="ja" href="../../../ja/games/dungeon-crawler/">
+  <link rel="alternate" hreflang="en" href="../../../en/games/dungeon/">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../en/games/dungeon/" lang="en" data-language="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← 全レベル</a><span>LEVEL 11</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Dungeon</h1>
+      <p>敵はただまっすぐ動くだけでは面白くありません。「普段はランダムに歩き回り、プレイヤーが近づくと追いかける」という状態の切り替えが、生きているような敵AIを生み出します。</p>
+      <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>敵AIと状態遷移</strong></div>
+      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
+    </section>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>全ての敵を倒して脱出せよ。</h2></div><p>WASD または矢印キーで移動、スペースまたは上タッチで剣攻撃。敵を全て倒すと出口が開きます。ライフが0になるとゲームオーバーです。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 11</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Dungeon" src="../../../play/dungeon/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / ENEMY AI AND STATE TRANSITIONS</p>
+        <h2>敵は、どうやって<br>プレイヤーを追いかけるの？</h2>
+        <p class="lesson-lead">答えは、敵の「今の気分」を1つの数字で覚えておく仕組みです——これを<strong>状態遷移（じょうたいせんい）</strong>と呼びます。敵は常に「今どの状態か」を整数で持っています。状態0は<strong>巡回（じゅんかい）</strong>＝プレイヤーが遠いときに決まったルートを歩き回ること、状態1は<strong>追跡（ついせき）</strong>＝プレイヤーが近いときにまっすぐ追いかけることです。プレイヤーとの距離を毎フレーム測り、近ければ状態を1に切り替えます。状態によって動き方のルールを変えるだけで、まるで生きているような敵の動きが生まれます。</p>
+      </div>
+
+      <div class="concept-row">
+        <article><span class="concept-number">1</span><h3>stateフィールド</h3><p>敵の構造体に <code>state int</code> を持たせます。0 = 巡回、1 = 追跡。たった1つの整数が敵の「気持ち」を表します。</p><code>state, timer int</code></article>
+        <article><span class="concept-number">2</span><h3>距離で切り替え</h3><p>毎フレーム、プレイヤーとの距離を計算します。<strong>「見え始める」距離（165ピクセル）</strong>より近づいたら追跡モードへ、<strong>「遠すぎて見失う」距離（230ピクセル）</strong>まで離れたら巡回モードに戻ります。この2つの数字は「どのくらい近づいたら気づくか」を決めるつまみ（調整用の数値）です。</p><code>if dist &lt; 165 { e.state = 1 }</code></article>
+        <article><span class="concept-number">3</span><h3>状態ごとの動き</h3><p>state == 0（巡回）ではタイマーで向きを変えてランダムに動きます。state == 1（追跡）ではプレイヤーの方向へ一定速度で向かいます。</p><code>if e.state == 0 { … } else { … }</code></article>
+      </div>
+
+
+      <div class="motion-lab" data-lab="ai" data-patrol="パトロール" data-chase="追跡" aria-labelledby="lab-title-dungeon">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / LAB</p>
+          <h3 id="lab-title-dungeon">距離でパトロールと追跡を切替</h3>
+          <p>プレイヤーとの距離が 120 未満で追跡、それ以外はパトロールです。</p>
+          <div class="lab-controls">
+            <button type="button" class="lab-button lab-button-primary" data-lab-closer data-go-focus="dist chase">近づける</button>
+            <button type="button" class="lab-button" data-lab-farther data-go-focus="dist chase">離す</button>
+            <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
+          </div>
+          <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+          <div class="lab-values" aria-live="polite">
+            <div><span>状態</span><strong data-lab-state>パトロール</strong><small></small></div>
+            <div><span>距離</span><strong data-lab-dist>180</strong><small></small></div>
+            <div><span>閾値</span><strong>120</strong><small></small></div>
+          </div>
+        </div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="dist">d := math.Hypot(ex-px, ey-py)</span>
+<span data-go-line="chase">if d &lt; limit { mode = chase } else { mode = patrol }</span>
+<span data-go-line="step">moveToward(target)</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
+
+      <div class="formula">
+        <p class="eyebrow">THE CHASE DIRECTION</p>
+        <div class="formula-lines"><code>dx, dy := (player.x - enemy.x), (player.y - enemy.y)</code><span>正規化して</span><code>vx, vy = dx/dist * speed, dy/dist * speed</code></article></div>
+        <p>差ベクトル（dx, dy）の長さで割ることで方向だけを取り出し（正規化）、それにスピードを掛けます。どんな方向でも一定の速さで向かわせることができます。</p>
+        <p>巡回の <code>vx, vy = -vy, vx</code> は90度回転です。例: 右 <code>(1,0)</code> → <code>(0,1)</code> 下 → <code>(-1,0)</code> 左 → <code>(0,-1)</code> 上、と時計回りに曲がります。</p>
+        <p>距離が 0（ぴったり重なった）だと割り算で NaN になります。本番では <code>if dist &lt; 1 { dist = 1 }</code> のように下限を入れます。</p>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE REAL GAME</p>
+          <h3>距離で状態を切り替え、<br>状態で動きを変える</h3>
+          <p>毎フレーム、生きている敵全員について距離を測り、状態を更新し、状態に応じた動きをします。</p>
+        </div>
+        <pre><code><span>for</span> i := range g.enemies {
+    e := &amp;g.enemies[i]
+    <span>if</span> !e.alive { <span>continue</span> }
+    dist := math.Hypot((g.player.x+14)-e.x, (g.player.y+14)-e.y)
+    <i>// 距離で状態を切り替え</i>
+    <span>if</span> dist < 165 {
+        e.state = 1 <i>// 追跡モードへ</i>
+    } <span>else</span> <span>if</span> dist > 230 {
+        e.state = 0 <i>// 巡回モードへ</i>
+    }
+    <span>if</span> e.state == 0 { <i>// 巡回: タイマーで向きを変える</i>
+        e.timer--
+        <span>if</span> e.timer <= 0 {
+            e.vx, e.vy = -e.vy, e.vx <i>// 90度方向転換</i>
+            e.timer = 100
+        }
+    } <span>else</span> { <i>// 追跡: プレイヤーへ向かう</i>
+        <span>if</span> dist &lt; 1 { dist = 1 } <i>// 0割り防止</i>
+        e.vx = ((g.player.x+14) - e.x) / dist * 1.35
+        e.vy = ((g.player.y+14) - e.y) / dist * 1.35
+    }
+}</code></pre>
+      </div>
+
+
+            <div class="code-focus">
+        <p class="eyebrow">TODAY — まずここを見る</p>
+        <ol>
+          <li>うろつきと追跡</li>
+          <li>剣の当たり</li>
+          <li>出口オープン</li>
+        </ol>
+      </div>
+<p class="full-code-intro">下のコードがこのゲームの<strong>本体</strong>です（主人公の絵は共有パッケージ <code>internal/hero</code> から読みます）。コピーして手元で開けます。その前に、上の「まずここを見る」3つだけ追ってください。</p>
+      <div class="full-code" data-embed-source="games/core/dungeon/main.go">
+        <div class="full-code-head">
+          <span>main.go · ぜんぶのコード</span>
+          <button type="button" class="full-code-copy" data-copy data-copied-label="コピーした！">コピー</button>
+        </div>
+        <pre><code data-embed-slot>package main
+
+import (
+	"fmt"
+	"image/color"
+	"math"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/hero"
+)
+
+const (
+	screenWidth  = 480
+	screenHeight = 720
+	moveSpeed    = 3.3
+)
+
+type rect struct {
+	x, y, w, h float64
+}
+
+type enemy struct {
+	x, y   float64
+	vx, vy float64
+	state  int // 0=うろつき, 1=追跡
+	timer  int
+	alive  bool
+}
+
+type game struct {
+	player   rect
+	walls    []rect
+	enemies  []enemy
+	facingX  float64
+	facingY  float64
+	attack   int // 攻撃モーションの残りフレーム
+	life     int
+	cleared  bool
+	gameOver bool
+}
+
+func newGame() *game {
+	g := &amp;game{
+		player:  rect{48, 610, 28, 28},
+		facingY: -1,
+		life:    5,
+	}
+	g.walls = []rect{
+		{0, 72, 480, 24},
+		{0, 696, 480, 24},
+		{0, 72, 24, 648},
+		{456, 72, 24, 648},
+		{110, 170, 260, 24},
+		{110, 170, 24, 150},
+		{250, 265, 206, 24},
+		{345, 265, 24, 165},
+		{24, 405, 230, 24},
+		{110, 520, 260, 24},
+		{235, 405, 24, 115},
+	}
+	g.enemies = []enemy{
+		{180, 115, 0, 0, 0, 90, true},
+		{405, 220, 0, 0, 0, 30, true},
+		{70, 350, 0, 0, 0, 150, true},
+		{400, 470, 0, 0, 0, 60, true},
+		{175, 600, 0, 0, 0, 120, true},
+	}
+	return g
+}
+
+func overlap(a, b rect) bool {
+	return a.x &lt; b.x+b.w &amp;&amp; a.x+a.w &gt; b.x &amp;&amp; a.y &lt; b.y+b.h &amp;&amp; a.y+a.h &gt; b.y
+}
+
+func restartPressed() bool {
+	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+		return true
+	}
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+		return true
+	}
+	if len(inpututil.AppendJustPressedTouchIDs(nil)) &gt; 0 {
+		return true
+	}
+	return false
+}
+
+func overlay(screen *ebiten.Image, msg string) {
+	vector.DrawFilledRect(screen, 55, 280, 370, 150, color.RGBA{6, 18, 37, 235}, false)
+	ebitenutil.DebugPrintAt(screen, msg, 145, 330)
+}
+
+func (g *game) aliveCount() int {
+	n := 0
+	for _, e := range g.enemies {
+		if e.alive {
+			n++
+		}
+	}
+	return n
+}
+
+func (g *game) movePlayer(dx, dy float64) {
+	g.player.x += dx
+	g.player.y += dy
+	for _, w := range g.walls {
+		if overlap(g.player, w) {
+			g.player.x -= dx
+			g.player.y -= dy
+			return
+		}
+	}
+}
+
+func (g *game) moveEnemy(e *enemy, dx, dy float64) {
+	r := rect{e.x - 13 + dx, e.y - 13 + dy, 26, 26}
+	for _, w := range g.walls {
+		if overlap(r, w) {
+			// 壁に当たったら向きを90度回す
+			e.vx, e.vy = -e.vy, e.vx
+			return
+		}
+	}
+	e.x += dx
+	e.y += dy
+}
+
+func (g *game) readMove() (dx, dy float64) {
+	if ebiten.IsKeyPressed(ebiten.KeyLeft) || ebiten.IsKeyPressed(ebiten.KeyA) {
+		dx--
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyRight) || ebiten.IsKeyPressed(ebiten.KeyD) {
+		dx++
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyUp) || ebiten.IsKeyPressed(ebiten.KeyW) {
+		dy--
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyDown) || ebiten.IsKeyPressed(ebiten.KeyS) {
+		dy++
+	}
+	// 下半分タッチで移動
+	if ids := ebiten.AppendTouchIDs(nil); len(ids) &gt; 0 {
+		x, y := ebiten.TouchPosition(ids[0])
+		if y &gt; screenHeight/2 {
+			dx = float64(x) - g.player.x - g.player.w/2
+			dy = float64(y) - g.player.y - g.player.h/2
+		}
+	}
+	if dx != 0 || dy != 0 {
+		length := math.Hypot(dx, dy)
+		dx = dx / length * moveSpeed
+		dy = dy / length * moveSpeed
+		g.facingX = dx / moveSpeed
+		g.facingY = dy / moveSpeed
+	}
+	return dx, dy
+}
+
+// --- ここから Update ---
+func (g *game) Update() error {
+	if g.cleared || g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}
+
+	dx, dy := g.readMove()
+	g.movePlayer(dx, 0)
+	g.movePlayer(0, dy)
+
+	if g.attack &gt; 0 {
+		g.attack--
+	}
+
+	attackPressed := inpututil.IsKeyJustPressed(ebiten.KeySpace) ||
+		inpututil.IsKeyJustPressed(ebiten.KeyX) ||
+		inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft)
+	for _, id := range inpututil.AppendJustPressedTouchIDs(nil) {
+		_, y := ebiten.TouchPosition(id)
+		if y &lt;= screenHeight/2 {
+			attackPressed = true
+		}
+	}
+	if attackPressed &amp;&amp; g.attack == 0 {
+		g.attack = 18
+	}
+
+	playerCX := g.player.x + 14
+	playerCY := g.player.y + 14
+
+	for i := range g.enemies {
+		e := &amp;g.enemies[i]
+		if !e.alive {
+			continue
+		}
+
+		dist := math.Hypot(playerCX-e.x, playerCY-e.y)
+		if dist &lt; 165 {
+			e.state = 1 // 近づいたら追う
+		} else if dist &gt; 230 {
+			e.state = 0 // 離れたらうろつく
+		}
+
+		if e.state == 0 {
+			e.timer--
+			if e.timer &lt;= 0 {
+				e.vx, e.vy = -e.vy, e.vx
+				if e.vx == 0 &amp;&amp; e.vy == 0 {
+					e.vx = 1.1
+				}
+				e.timer = 100
+			}
+		} else {
+			if dist &lt; 1 {
+				dist = 1 // 重なったときの 0 割り（NaN）を防ぐ
+			}
+			e.vx = (playerCX - e.x) / dist * 1.35
+			e.vy = (playerCY - e.y) / dist * 1.35
+		}
+
+		g.moveEnemy(e, e.vx, 0)
+		g.moveEnemy(e, 0, e.vy)
+
+		// 剣の先端に当たったら倒す
+		swordX := playerCX + g.facingX*30
+		swordY := playerCY + g.facingY*30
+		if g.attack &gt; 8 &amp;&amp; math.Hypot(swordX-e.x, swordY-e.y) &lt; 35 {
+			e.alive = false
+		}
+
+		// 接触ダメージ（攻撃中は受けない）
+		if dist &lt; 22 &amp;&amp; g.attack == 0 {
+			g.life--
+			g.attack = 55 // のけぞりも兼ねる
+			if g.life &lt;= 0 {
+				g.gameOver = true
+			}
+		}
+	}
+
+	// 敵を全滅して出口へ
+	if g.aliveCount() == 0 &amp;&amp; g.player.y &lt; 115 &amp;&amp; g.player.x &gt; 390 {
+		g.cleared = true
+	}
+	return nil
+}
+
+// --- ここから Draw ---
+func (g *game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{10, 18, 30, 255})
+
+	for y := 96; y &lt; 696; y += 32 {
+		for x := 24; x &lt; 456; x += 32 {
+			c := color.RGBA{26, 39, 52, 255}
+			if (x/32+y/32)%2 == 0 {
+				c = color.RGBA{30, 44, 58, 255}
+			}
+			vector.DrawFilledRect(screen, float32(x), float32(y), 32, 32, c, false)
+		}
+	}
+
+	for _, w := range g.walls {
+		vector.DrawFilledRect(screen, float32(w.x), float32(w.y), float32(w.w), float32(w.h), color.RGBA{74, 78, 97, 255}, false)
+		vector.StrokeRect(screen, float32(w.x+3), float32(w.y+3), float32(w.w-6), float32(w.h-6), 2, color.RGBA{121, 123, 145, 255}, false)
+	}
+
+	exitColor := color.RGBA{115, 45, 61, 255}
+	if g.aliveCount() == 0 {
+		exitColor = color.RGBA{53, 210, 153, 255}
+	}
+	vector.DrawFilledRect(screen, 397, 76, 55, 36, exitColor, false)
+
+	for _, e := range g.enemies {
+		if !e.alive {
+			continue
+		}
+		c := color.RGBA{178, 86, 221, 255}
+		if e.state == 1 {
+			c = color.RGBA{245, 76, 98, 255}
+		}
+		vector.DrawFilledCircle(screen, float32(e.x), float32(e.y), 13, c, false)
+		vector.DrawFilledCircle(screen, float32(e.x-5), float32(e.y-3), 2, color.White, false)
+		vector.DrawFilledCircle(screen, float32(e.x+5), float32(e.y-3), 2, color.White, false)
+	}
+
+	px := float32(g.player.x + 14)
+	py := float32(g.player.y + 14)
+	hero.DrawCentered(screen, float64(px), float64(py), 36)
+	if g.attack &gt; 8 {
+		vector.StrokeLine(
+			screen,
+			px+float32(g.facingX*18), py+float32(g.facingY*18),
+			px+float32(g.facingX*48), py+float32(g.facingY*48),
+			7, color.RGBA{255, 222, 87, 255}, false,
+		)
+	}
+
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("LIFE %d     MONSTERS %d", g.life, g.aliveCount()), 18, 24)
+	ebitenutil.DebugPrintAt(screen, "MOVE: WASD / LOWER TOUCH    SWORD: SPACE / UPPER TOUCH", 52, 675)
+	if g.aliveCount() == 0 {
+		ebitenutil.DebugPrintAt(screen, "THE EXIT IS OPEN!", 190, 52)
+	}
+	if g.cleared {
+		overlay(screen, "DUNGEON CLEAR!\n\nTAP / SPACE TO RETURN")
+	} else if g.gameOver {
+		overlay(screen, "YOU FELL...\n\nTAP / SPACE TO RETRY")
+	}
+}
+
+func (g *game) Layout(_, _ int) (int, int) {
+	return screenWidth, screenHeight
+}
+
+func main() {
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Top-down Dungeon — Ebitengine")
+	if err := ebiten.RunGame(newGame()); err != nil {
+		panic(err)
+	}
+}
+</code></pre>
+      </div>
+
+    <div class="why-grid">
+        <article><p class="eyebrow">WITHOUT STATE MACHINE</p><h3>ただ追いかけるだけ</h3><p>常にプレイヤーへ向かうだけの敵は、最初から画面端からまっすぐ突進してきます。予測が簡単すぎて面白くありません。</p></article>
+        <article><p class="eyebrow">WITH STATE MACHINE</p><h3>巡回して、気づいて、追う</h3><p>普段はうろうろしていて、近づいたときだけ追ってくる。この「気づき」が緊張感を生み、ゲームにメリハリをつけます。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>数字を変えて実験しよう</h3><p>追跡開始距離 <code>165</code> を大きくすると、敵が早めに気づいてプレッシャーが増します。追跡速度 <code>1.35</code> を上げると敵が速くなります。巡回の方向転換タイマー <code>100</code> を変えると動きパターンが変わります。</p></article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../platformer/">← LEVEL 10<strong>Platformer</strong></a><a href="../bullet-hell/">LEVEL 12 →<strong>Bullet Hell</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -43,7 +502,94 @@
     </section>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>コードを読む前の用語メモ</h2><p>Updateは次の一コマの数字を決め、Drawはその数字を絵にします。これがEbitengineのゲームループです。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>コードを読む前の用語メモ</h2><p>func (g *Game)の(g *Game)は『このGameの仕事』という名札（レシーバー）。g.hpのように、そのゲームが覚えた値を使えます。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
 <!-- END BEGINNER BRIDGE -->
-</main></body></html>
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

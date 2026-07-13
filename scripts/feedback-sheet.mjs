@@ -9,6 +9,7 @@
  *
  * Commands:
  *   node scripts/feedback-sheet.mjs list
+ *   node scripts/feedback-sheet.mjs pending
  *   node scripts/feedback-sheet.mjs check 12
  *   node scripts/feedback-sheet.mjs check-range 12 20
  *   node scripts/feedback-sheet.mjs delete 12
@@ -190,6 +191,18 @@ async function list(sheet, rows) {
   });
 }
 
+async function listPending(sheet, rows) {
+  if (!rows.length) return;
+  const headers = rows[0];
+  const statusColumn = headers.findIndex((header) => statusHeaders.includes(String(header).trim().toLowerCase()));
+  console.log(`Sheet: ${sheet.title}`);
+  rows.slice(1).forEach((row, index) => {
+    if (statusColumn >= 0 && String(row[statusColumn] || "").trim()) return;
+    const values = headers.map((header, column) => `${header}=${String(row[column] || "").replaceAll("\n", "\\n")}`).join(" | ");
+    console.log(`${index + 2}: ${values}`);
+  });
+}
+
 async function findStatusColumn(sheet, rows) {
   const headers = rows[0] || [];
   let index = headers.findIndex((header) => statusHeaders.includes(String(header).trim().toLowerCase()));
@@ -218,6 +231,7 @@ try {
   const sheet = await getSheet();
   const rows = await getRows(sheet);
   if (command === "list") await list(sheet, rows);
+  else if (command === "pending") await listPending(sheet, rows);
   else if (command === "check-range") {
     if (!Number.isInteger(rowArgument) || !Number.isInteger(endRowArgument) || rowArgument < 2 || endRowArgument < rowArgument) throw new Error("開始行と終了行を指定してください（例: check-range 12 20）。");
     const column = await findStatusColumn(sheet, rows);
@@ -233,7 +247,7 @@ try {
   } else if (command === "delete") {
     await deleteRow(sheet, rowArgument);
     console.log(`削除しました: ${sheet.title} row ${rowArgument}`);
-  } else throw new Error(`不明なコマンド: ${command}（list / check / check-range / delete）`);
+  } else throw new Error(`不明なコマンド: ${command}（list / pending / check / check-range / delete）`);
 } catch (error) {
   console.error(error.message);
   process.exit(1);

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Blast-escape AI | Ebi Showcase</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Blast-escape AI | Ebi Showcase">
+    <meta property="og:description" content="The blue scout predicts which cells every bomb will burn and how many frames remain. Breadth-first search then finds a route that reaches a safe cell in time.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/maze-chase/escape-ai/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--maze-chase--escape-ai.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Blast-escape AI">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Blast-escape AI | Ebi Showcase">
+    <meta name="twitter:description" content="The blue scout predicts which cells every bomb will burn and how many frames remain. Breadth-first search then finds a route that reaches a safe cell in time.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--maze-chase--escape-ai.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Blast-escape AI">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/maze-chase/escape-ai/">
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/bomb-maze/escape-ai/">日本語</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Bomb Maze Action</a><span>STEP 05 / 06</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
+      <h1>Blast-escape AI</h1>
+      <p>The blue scout predicts which cells every bomb will burn and how many frames remain. Breadth-first search then finds a route that reaches a safe cell in time.</p>
+      <div class="overview-concept"><small>In this step</small><strong>Danger map & safe path</strong></div>
+      <p class="cast-note">The frame math sits in the same <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
+    </section>
+    <p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Watch the AI's escape route</h2></div><p>Move the red player with arrows / WASD and place bombs with Space / X. The bottom buttons work with mouse and touch. Help the blue AI survive six explosions. Red numbers show frames until danger; cyan dots show its planned route.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Play the blast-escape AI game" src="../../../../play/escape-ai/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE</p>
+        <h2>Safety combines a place and a time</h2>
+        <p class="lesson-lead">A cell may be safe now but explode exactly when the scout arrives. Build a danger table from every bomb's remaining fuse, then compare each danger time with the AI's arrival time.</p>
+      </div>
+
+      <div class="concept-row">
+<article><span class="concept-number">1</span><h3>Overlay future blasts</h3><p>List the cross-shaped cells for each bomb. If several bombs reach one cell, store the earliest time.</p></article><article><span class="concept-number">2</span><h3>Search with time attached</h3><p>Each breadth-first step costs movement time. A candidate whose arrival overlaps an explosion never enters the queue.</p></article><article><span class="concept-number">3</span><h3>Require lasting safety</h3><p>The goal is not merely safe on arrival; the scout chooses a cell where it can remain safe for another 50 frames.</p></article>
+</div>
+
+      <div class="motion-lab" data-lab="escape-timing" data-ok="still safe" data-bad="danger — reroute" data-far="path got longer" aria-labelledby="lab-title-escape-ai">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / TIME MAP</p>
+<h3 id="lab-title-escape-ai">Compare arrival time to the fuse</h3>
+<p>AI checks not only open cells, but whether the fuse outlasts the arrival. ETA+margin < fuse means the route is allowed.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-tick data-go-focus="eta ok">Advance time</button><button type="button" class="lab-button" data-lab-far data-go-focus="eta ok">Take a longer path</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
+<p class="lab-hint">Safe paths go deadly as time passes—replan every frame.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>fuse</span><strong data-lab-fuse>0</strong></div><div><span>ETA</span><strong data-lab-eta>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="eta">eta := pathCost(start, safe)</span>
+<span data-go-line="ok">if eta+margin &lt; fuse { takeRoute } else { reroute }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div>
+
+      <div class="formula"><p class="eyebrow">ETA vs FUSE</p><div class="formula-lines"><code>eta = steps * framesPerStep</code><span>then</span><code>safe if eta + margin < fuse</code></div><p>Escape AI is shortest path plus a time constraint.</p></div>
+
+      <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>Filter candidates by arrival time</h3><p><code>danger</code> maps a cell to the number of frames before its blast. The search considers waiting as well as movement in four directions.</p></div><pre><code>arrival := nextStep * moveEvery
+blastAt, threatened := danger[next]
+safe := !threatened ||
+    arrival+8 &lt; blastAt ||
+    arrival &gt; blastAt+blastLife
+if safe {
+    queue = append(queue, nextNode)
+}</code></pre></div>
+
+      <div class="why-grid"><article><p class="eyebrow">WHY IT WORKS</p><h2>A route in time beats nearest distance</h2><p>An AI that only seeks a nearby cell can wait in a blast at a corner. Adding future time lets it choose a longer route that clears danger before detonation.</p></article><article><p class="eyebrow">CHALLENGE</p><h2>Change its caution</h2><p>Increase the 8 in <code>arrival+8</code> so the AI avoids danger sooner. Then explain why a margin that is too large can leave it with no route.</p></article></div>
+    </section>
+
+    <nav class="lesson-pager"><a href="../chain-explosion/">← STEP 04<strong>Bomb Chain Reactions</strong></a><a href="../ebi-bomber/">STEP 06 →<strong>Ebi Bomber</strong></a></nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/maze-chase/escape-ai/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>queue = append(queue, neighbors(current)...)</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+</body>
+</html>

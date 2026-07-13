@@ -1,0 +1,148 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Matching Fruit Merge | Ebi Showcase</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Matching Fruit Merge | Ebi Showcase">
+    <meta property="og:description" content="When equal tiers touch, remove both and create one larger circle at their midpoint.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/merge-physics/same-merge/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--merge-physics--same-merge.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Matching Fruit Merge">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Matching Fruit Merge | Ebi Showcase">
+    <meta name="twitter:description" content="When equal tiers touch, remove both and create one larger circle at their midpoint.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--merge-physics--same-merge.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Matching Fruit Merge">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/merge-physics/same-merge/">
+<link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/merge-physics/merge-rule/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Merge Physics Puzzle</a><span>STEP 05 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Matching Fruit Merge</h1><p>When equal tiers touch, remove both and create one larger circle at their midpoint.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Collision events and replacement</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Match numbers and create TIER 6.</h2></div><p>Tap a horizontal position to drop the next fruit.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Matching Fruit Merge" src="../../../../play/merge-rule/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / REPLACE</p><h2>What happens in the slice when two become one?</h2><p class="lesson-lead">Removing during a loop shifts indices. First mark two as <strong>pending deletion</strong>, queue one new fruit, then replace everything at the end.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Same type</h3><p>Compare the tier of both touching circles.</p><code>a.tier == b.tier</code></article><article><span class="concept-number">2</span><h3>Midpoint</h3><p>Add both positions and divide by two.</p><code>(a.position+b.position)/2</code></article><article><span class="concept-number">3</span><h3>Replace</h3><p>Remove two old and add tier+1.</p><code>spawn(tier + 1)</code></article></div><div class="motion-lab" data-lab="merge-same" data-mismatch="tiers differ — no merge" data-merge="merged → T{n}" aria-labelledby="lab-title-merge-rule">
+<div class="lab-copy">
+<p class="eyebrow">TRY IT / SAME TIER</p>
+<h3 id="lab-title-merge-rule">Merge only matching tiers</h3>
+<p>Raise left/right until tiers match, then Merge. Different tiers do nothing—same one-line rule as the game.</p>
+<div class="lab-controls"><button type="button" class="lab-button" data-lab-bump-left>Raise left</button><button type="button" class="lab-button" data-lab-bump-right>Raise right</button><button type="button" class="lab-button lab-button-primary" data-lab-merge data-go-focus="touch merge">Merge!</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
+<p class="lab-hint">Real code merges only on contact + equal tier.</p>
+</div>
+<div class="lab-visual">
+<div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
+<div class="lab-values" aria-live="polite"><div><span>tiers</span><strong data-lab-tier>1 + 1</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
+</div>
+<div class="lab-go-block">
+<p class="eyebrow">TRY IT · GO</p>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="touch">if sameTier(a, b) &amp;&amp; overlapping(a, b)</span>
+<span data-go-line="merge">{ spawn(tier+1); remove(a, b) }</span></pre>
+<p class="lab-go-caption" data-lab-go-caption>—</p>
+</div>
+</div><div class="formula"><p class="eyebrow">THE ONE-LINE RULE</p><div class="formula-lines"><code>if tiers match</code><span>then</span><code>spawn next tier</code></div><p>Contact alone is not enough—equal tiers unlock the merge. One rule keeps balancing simple.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Mark during iteration</h3><p>dead prevents the same fruit merging twice in one frame.</p></div><pre><code>if a.tier == b.tier { a.dead, b.dead = true, true; spawned = append(spawned, nextFruit(a, b)) } / fruits = append(removeDead(fruits), spawned...)</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY MARK?</p><h3>Avoid index shifts</h3><p>Do not delete slice entries inside the pair loop.</p></article><article><p class="eyebrow">WHY MIDPOINT?</p><h3>Natural spawn position</h3><p>The next fruit appears between its parents.</p></article><article class="challenge"><p class="eyebrow">EVENT RULE</p><h3>Add score too</h3><p>Change points according to the new tier.</p></article></div></section><nav class="lesson-pager"><a href="../stable-simulation/">← STEP 04<strong>Stable Simulation</strong></a><a href="../ebi-merge/">STEP 06 →<strong>Ebi Merge</strong></a></nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/merge-physics/same-merge/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+</main><script src="../../../../learn.js"></script></body></html>

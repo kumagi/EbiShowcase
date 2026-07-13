@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Body is grid history. Only the eat moment gets fx. Don't hang particles on every cell.">
+  <title>Snake Eat FX | Ebi Showcase</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Snake Eat FX | Ebi Showcase">
+    <meta property="og:description" content="Body is grid history. Only the eat moment gets fx. Don't hang particles on every cell.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-snake/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-snake.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Snake Eat FX">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Snake Eat FX | Ebi Showcase">
+    <meta name="twitter:description" content="Body is grid history. Only the eat moment gets fx. Don't hang particles on every cell.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-snake.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Snake Eat FX">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-snake/">
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">Lab home</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../ja/tracks/visual-effects/vfx-fx-snake/" lang="ja" data-language="ja">日本語</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>ADV A07</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Snake Eat FX</h1>
+      <p>Body is grid history. Only the eat moment gets fx. Don't hang particles on every cell.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Body cells vs sparkles</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Eat and grow</h2></div>
+        <p>Steer to food. Eat fireworks are fx—compare body vs fx.parts.</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A07</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Snake Eat FX" src="../../../../play/vfx-fx-snake/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / GRID BODY</p>
+        <h2>Body is history,<br>fireworks are a moment</h2>
+        <p class="lesson-lead">Snake is a list of cells. Embedding FX per cell muddies the move logic.</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>Body</h3>
+          <p>Cells on a grid.</p>
+          <code>body []cell</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>Eat</h3>
+          <p>Burst at food.</p>
+          <code>fx.Burst(food)</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>Split</h3>
+          <p>No particle on cell.</p>
+          <code>no cell.fx</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="fx-snake" aria-labelledby="lab-title-vfx-fx-snake">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / SPLIT</p>
+          <h3 id="lab-title-vfx-fx-snake">Cells are data</h3>
+          <p>Don't mix sparkles into body data.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-snake-step>Move and eat</button><button type="button" class="lab-button" data-lab-snake-tick>Tick sparkles 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-fx-split" data-lab-board>
+          <div class="lab-fx-col"><h4>play (body and food)</h4>
+            <p data-lab-snake-grid></p><ul data-lab-snake-body></ul></div>
+          <div class="lab-fx-col"><h4>fx (eat sparkles)</h4><ul data-lab-snake-fx></ul></div>
+          <div class="lab-fx-stage" data-lab-snake-stage aria-hidden="true"></div>
+        </div><p class="lab-fx-hint" data-lab-snake-hint></p>
+          <div class="lab-values" aria-live="polite"><div><span>body cells (play)</span><strong data-lab-snake-length>—</strong></div><div><span>sparkles (fx)</span><strong data-lab-snake-parts>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE DEMO</p>
+          <h3>One place: eat</h3>
+          <p>Don't Burst every cell while moving.</p>
+        </div>
+        <pre><code>// on eat:
+body = grow(body)
+g.fx.Burst(food.x, food.y, 24, 3, tint, true)</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY?</p>
+          <h3>Grid is the lesson</h3>
+          <p>History matters; juice is garnish.</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY ONE BURST?</p>
+          <h3>Event</h3>
+          <p>Celebrate the eat instant only.</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>Shooter</h3>
+          <p>Bullets, enemies, FX—three piles.</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-fx-breakout/">← STEP A06<strong>Break Bricks in Two Steps</strong></a>
+      <a href="../vfx-fx-shooter/">STEP A08 →<strong>Bullets, Enemies, Explosions</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/visual-effects/fx-snake/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>drawFood(); drawBody(); fx.Draw()</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>

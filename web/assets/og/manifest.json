@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-07-13T04:24:58.412Z",
+  "generatedAt": "2026-07-13T04:55:25.789Z",
   "pages": [
     {
       "file": "web/en/games/breakout/index.html",
@@ -56,10 +56,10 @@
       "key": "en--games--dungeon-crawler",
       "lang": "en",
       "kind": "core",
-      "title": "Continue to the dungeon lesson | Ebi Showcase",
-      "h1": "The dungeon lesson has moved",
-      "eyebrow": "LEVEL 11",
-      "description": "Learn Ebitengine through playable mini games.",
+      "title": "LEVEL 11 — Dungeon | Ebi Showcase",
+      "h1": "Dungeon",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Learn enemy AI and state transitions in Go and Ebitengine: patrol versus chase modes switched by distance to the player.",
       "image": "assets/og/en--games--dungeon-crawler.png"
     },
     {
@@ -915,6 +915,18 @@
       "image": "assets/og/en--tracks--fighting--hit-reaction.png"
     },
     {
+      "file": "web/en/tracks/fighting/hit-reaction-dojyo/index.html",
+      "path": "en/tracks/fighting/hit-reaction-dojyo",
+      "key": "en--tracks--fighting--hit-reaction-dojyo",
+      "lang": "en",
+      "kind": "track",
+      "title": "Hit Reaction Dojo | Ebi Showcase",
+      "h1": "Hit Reaction Dojo",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "Learn hitstop, hitstun, and knockback in a fighting lesson.",
+      "image": "assets/og/en--tracks--fighting--hit-reaction-dojyo.png"
+    },
+    {
       "file": "web/en/tracks/fighting/index.html",
       "path": "en/tracks/fighting",
       "key": "en--tracks--fighting",
@@ -937,6 +949,18 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "Learn Ebitengine through playable mini games.",
       "image": "assets/og/en--tracks--fighting--round-presentation.png"
+    },
+    {
+      "file": "web/en/tracks/fighting/three-punch/index.html",
+      "path": "en/tracks/fighting/three-punch",
+      "key": "en--tracks--fighting--three-punch",
+      "lang": "en",
+      "kind": "track",
+      "title": "Three-phase Punch | Ebi Showcase",
+      "h1": "Three-phase Punch",
+      "eyebrow": "★★☆☆☆ / PLAYABLE",
+      "description": "Learn startup, active, and recovery attack frames — the frame-data fundamentals of 2D fighting games — in this Ebitengine lesson.",
+      "image": "assets/og/en--tracks--fighting--three-punch.png"
     },
     {
       "file": "web/en/tracks/match3/cascade/index.html",
@@ -1069,6 +1093,18 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "Learn Ebitengine through playable mini games.",
       "image": "assets/og/en--tracks--maze-chase--ebi-maze.png"
+    },
+    {
+      "file": "web/en/tracks/maze-chase/escape-ai/index.html",
+      "path": "en/tracks/maze-chase/escape-ai",
+      "key": "en--tracks--maze-chase--escape-ai",
+      "lang": "en",
+      "kind": "track",
+      "title": "Blast-escape AI | Ebi Showcase",
+      "h1": "Blast-escape AI",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "The blue scout predicts which cells every bomb will burn and how many frames remain. Breadth-first search then finds a route that reaches a safe cell in time.",
+      "image": "assets/og/en--tracks--maze-chase--escape-ai.png"
     },
     {
       "file": "web/en/tracks/maze-chase/guard-memory/index.html",
@@ -1237,6 +1273,18 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "When equal tiers touch, remove both and create one larger circle at their midpoint.",
       "image": "assets/og/en--tracks--merge-physics--merge-rule.png"
+    },
+    {
+      "file": "web/en/tracks/merge-physics/same-merge/index.html",
+      "path": "en/tracks/merge-physics/same-merge",
+      "key": "en--tracks--merge-physics--same-merge",
+      "lang": "en",
+      "kind": "track",
+      "title": "Matching Fruit Merge | Ebi Showcase",
+      "h1": "Matching Fruit Merge",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "When equal tiers touch, remove both and create one larger circle at their midpoint.",
+      "image": "assets/og/en--tracks--merge-physics--same-merge.png"
     },
     {
       "file": "web/en/tracks/merge-physics/stable-simulation/index.html",
@@ -1573,6 +1621,18 @@
       "eyebrow": "★★★☆☆ / PLAYABLE",
       "description": "Learn Ebitengine through playable mini games.",
       "image": "assets/og/en--tracks--racing--acceleration-lab.png"
+    },
+    {
+      "file": "web/en/tracks/racing/ebi-circuit/index.html",
+      "path": "en/tracks/racing/ebi-circuit",
+      "key": "en--tracks--racing--ebi-circuit",
+      "lang": "en",
+      "kind": "track",
+      "title": "Ebi Circuit | Ebi Showcase",
+      "h1": "Ebi Circuit",
+      "eyebrow": "Combine acceleration, steering, and lap order",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--racing--ebi-circuit.png"
     },
     {
       "file": "web/en/tracks/racing/ebi-racing/index.html",
@@ -2163,6 +2223,150 @@
       "image": "assets/og/en--tracks--tactics--weapon-range.png"
     },
     {
+      "file": "web/en/tracks/visual-effects/fx-breakout/index.html",
+      "path": "en/tracks/visual-effects/fx-breakout",
+      "key": "en--tracks--visual-effects--fx-breakout",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Break Bricks in Two Steps | Ebi Showcase",
+      "h1": "Break Bricks in Two Steps",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits.",
+      "image": "assets/og/en--tracks--visual-effects--fx-breakout.png"
+    },
+    {
+      "file": "web/en/tracks/visual-effects/fx-bullethell/index.html",
+      "path": "en/tracks/visual-effects/fx-bullethell",
+      "key": "en--tracks--visual-effects--fx-bullethell",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Bomb Clears Bullets—Explosions Are FX | Ebi Showcase",
+      "h1": "Bomb Clears Bullets—Explosions Are FX",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Advanced finale. A bomb deletes nearby bullets (play) and spawns a huge Ring/Flash (fx). Don't recycle live bullets as fireworks—delete, the",
+      "image": "assets/og/en--tracks--visual-effects--fx-bullethell.png"
+    },
+    {
+      "file": "web/en/tracks/visual-effects/fx-catch/index.html",
+      "path": "en/tracks/visual-effects/fx-catch",
+      "key": "en--tracks--visual-effects--fx-catch",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Catch Stars—Then Notice the Split | Ebi Showcase",
+      "h1": "Catch Stars—Then Notice the Split",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Stars fall; catches spawn sparks. One []any would force “is this a star or a spark?” every frame. You’ll want two boxes.",
+      "image": "assets/og/en--tracks--visual-effects--fx-catch.png"
+    },
+    {
+      "file": "web/en/tracks/visual-effects/fx-dungeon/index.html",
+      "path": "en/tracks/visual-effects/fx-dungeon",
+      "key": "en--tracks--visual-effects--fx-dungeon",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Dungeon Hit Flashes | Ebi Showcase",
+      "h1": "Dungeon Hit Flashes",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Reducing HP is play. Flashes and shards are fx. Choose knockback as physics or juice on purpose.",
+      "image": "assets/og/en--tracks--visual-effects--fx-dungeon.png"
+    },
+    {
+      "file": "web/en/tracks/visual-effects/fx-flight/index.html",
+      "path": "en/tracks/visual-effects/fx-flight",
+      "key": "en--tracks--visual-effects--fx-flight",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Flight with Whoosh FX | Ebi Showcase",
+      "h1": "Flight with Whoosh FX",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Velocity and gravity are play physics. Flap sparks and pass rings are fx. A Game.fx field should feel natural now.",
+      "image": "assets/og/en--tracks--visual-effects--fx-flight.png"
+    },
+    {
+      "file": "web/en/tracks/visual-effects/fx-meter/index.html",
+      "path": "en/tracks/visual-effects/fx-meter",
+      "key": "en--tracks--visual-effects--fx-meter",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "FX for Timing Grades | Ebi Showcase",
+      "h1": "FX for Timing Grades",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Stop in the zone: Perfect gets a big burst, Miss a gray puff. Map game states to FX strength.",
+      "image": "assets/og/en--tracks--visual-effects--fx-meter.png"
+    },
+    {
+      "file": "web/en/tracks/visual-effects/fx-platform/index.html",
+      "path": "en/tracks/visual-effects/fx-platform",
+      "key": "en--tracks--visual-effects--fx-platform",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Jump & Land Dust | Ebi Showcase",
+      "h1": "Jump & Land Dust",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Rising edge wasOnGround to onGround triggers land FX. Grounded flag is play; dust is fx.",
+      "image": "assets/og/en--tracks--visual-effects--fx-platform.png"
+    },
+    {
+      "file": "web/en/tracks/visual-effects/fx-pong/index.html",
+      "path": "en/tracks/visual-effects/fx-pong",
+      "key": "en--tracks--visual-effects--fx-pong",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Pong Sparks & Trails | Ebi Showcase",
+      "h1": "Pong Sparks & Trails",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Burst only on paddle/wall hits. Soft trail sparks while moving—still fx. Ball vx,vy stay play.",
+      "image": "assets/og/en--tracks--visual-effects--fx-pong.png"
+    },
+    {
+      "file": "web/en/tracks/visual-effects/fx-shooter/index.html",
+      "path": "en/tracks/visual-effects/fx-shooter",
+      "key": "en--tracks--visual-effects--fx-shooter",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Bullets, Enemies, Explosions | Ebi Showcase",
+      "h1": "Bullets, Enemies, Explosions",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Player shots, enemies, and burst FX. Muzzle flash is fx; HP is play.",
+      "image": "assets/og/en--tracks--visual-effects--fx-shooter.png"
+    },
+    {
+      "file": "web/en/tracks/visual-effects/fx-snake/index.html",
+      "path": "en/tracks/visual-effects/fx-snake",
+      "key": "en--tracks--visual-effects--fx-snake",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Snake Eat FX | Ebi Showcase",
+      "h1": "Snake Eat FX",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Body is grid history. Only the eat moment gets fx. Don't hang particles on every cell.",
+      "image": "assets/og/en--tracks--visual-effects--fx-snake.png"
+    },
+    {
+      "file": "web/en/tracks/visual-effects/fx-sokoban/index.html",
+      "path": "en/tracks/visual-effects/fx-sokoban",
+      "key": "en--tracks--visual-effects--fx-sokoban",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Sokoban Dust & Goal Glow | Ebi Showcase",
+      "h1": "Sokoban Dust & Goal Glow",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "The stage is numbers. Push dust and goal sparkles are fx—don't overload tiles with FX flags.",
+      "image": "assets/og/en--tracks--visual-effects--fx-sokoban.png"
+    },
+    {
+      "file": "web/en/tracks/visual-effects/fx-tap/index.html",
+      "path": "en/tracks/visual-effects/fx-tap",
+      "key": "en--tracks--visual-effects--fx-tap",
+      "lang": "en",
+      "kind": "vfx",
+      "title": "Add Effects to Tap | Ebi Showcase",
+      "h1": "Add Effects to Tap",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "Advanced track starts here. Take LEVEL 01’s tap-the-circle and add hit bursts and rings. Notice updatePlay() then a separate fx.Update().",
+      "image": "assets/og/en--tracks--visual-effects--fx-tap.png"
+    },
+    {
       "file": "web/en/tracks/visual-effects/index.html",
       "path": "en/tracks/visual-effects",
       "key": "en--tracks--visual-effects",
@@ -2612,10 +2816,10 @@
       "key": "ja--games--dungeon-crawler",
       "lang": "ja",
       "kind": "core",
-      "title": "ダンジョン教材へ移動 | Ebi Showcase",
-      "h1": "ダンジョン教材は新しいURLへ移動しました",
-      "eyebrow": "LEVEL 11",
-      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "title": "LEVEL 11 — Dungeon | Ebi Showcase",
+      "h1": "Dungeon",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "GoとEbitengineで作ったダンジョン探索ゲームから、敵AIの状態遷移（巡回・追跡の切り替え）を学ぶレッスンです。",
       "image": "assets/og/ja--games--dungeon-crawler.png"
     },
     {
@@ -3471,6 +3675,18 @@
       "image": "assets/og/ja--tracks--fighting--hit-reaction.png"
     },
     {
+      "file": "web/ja/tracks/fighting/hit-reaction-dojyo/index.html",
+      "path": "ja/tracks/fighting/hit-reaction-dojyo",
+      "key": "ja--tracks--fighting--hit-reaction-dojyo",
+      "lang": "ja",
+      "kind": "track",
+      "title": "ヒットリアクション道場 | Ebi Showcase",
+      "h1": "ヒットリアクション道場",
+      "eyebrow": "★★★☆☆ / PLAYABLE",
+      "description": "ヒットストップ・のけぞり・ノックバックを学ぶ格闘レッスン。",
+      "image": "assets/og/ja--tracks--fighting--hit-reaction-dojyo.png"
+    },
+    {
       "file": "web/ja/tracks/fighting/index.html",
       "path": "ja/tracks/fighting",
       "key": "ja--tracks--fighting",
@@ -3493,6 +3709,18 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
       "image": "assets/og/ja--tracks--fighting--round-presentation.png"
+    },
+    {
+      "file": "web/ja/tracks/fighting/three-punch/index.html",
+      "path": "ja/tracks/fighting/three-punch",
+      "key": "ja--tracks--fighting--three-punch",
+      "lang": "ja",
+      "kind": "track",
+      "title": "3段階パンチ | Ebi Showcase",
+      "h1": "3段階パンチ",
+      "eyebrow": "★★☆☆☆ / PLAYABLE",
+      "description": "発生・持続・硬直の3段階フレームデータを学ぶ、Ebitengine版格闘ゲームレッスン。",
+      "image": "assets/og/ja--tracks--fighting--three-punch.png"
     },
     {
       "file": "web/ja/tracks/match3/cascade/index.html",
@@ -3625,6 +3853,18 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
       "image": "assets/og/ja--tracks--maze-chase--ebi-maze.png"
+    },
+    {
+      "file": "web/ja/tracks/maze-chase/escape-ai/index.html",
+      "path": "ja/tracks/maze-chase/escape-ai",
+      "key": "ja--tracks--maze-chase--escape-ai",
+      "lang": "ja",
+      "kind": "track",
+      "title": "爆風から逃げる敵 | Ebi Showcase",
+      "h1": "爆風から逃げる敵",
+      "eyebrow": "むずかしさ ★★★★☆ / PLAYABLE",
+      "description": "青い偵察員は、すべての爆弾が「何フレーム後に、どのマスを焼くか」を予測します。間に合う安全マスまでの道を幅優先探索で選びます。",
+      "image": "assets/og/ja--tracks--maze-chase--escape-ai.png"
     },
     {
       "file": "web/ja/tracks/maze-chase/guard-memory/index.html",
@@ -3793,6 +4033,18 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "同じ段階の円が触れたら2個を消し、中点へ次の大きさを1個生成します。",
       "image": "assets/og/ja--tracks--merge-physics--merge-rule.png"
+    },
+    {
+      "file": "web/ja/tracks/merge-physics/same-merge/index.html",
+      "path": "ja/tracks/merge-physics/same-merge",
+      "key": "ja--tracks--merge-physics--same-merge",
+      "lang": "ja",
+      "kind": "track",
+      "title": "同じ実の合体 | Ebi Showcase",
+      "h1": "同じ実の合体",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "同じ段階の円が触れたら2個を消し、中点へ次の大きさを1個生成します。",
+      "image": "assets/og/ja--tracks--merge-physics--same-merge.png"
     },
     {
       "file": "web/ja/tracks/merge-physics/stable-simulation/index.html",
@@ -4129,6 +4381,18 @@
       "eyebrow": "★★★☆☆ / PLAYABLE",
       "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
       "image": "assets/og/ja--tracks--racing--acceleration-lab.png"
+    },
+    {
+      "file": "web/ja/tracks/racing/ebi-circuit/index.html",
+      "path": "ja/tracks/racing/ebi-circuit",
+      "key": "ja--tracks--racing--ebi-circuit",
+      "lang": "ja",
+      "kind": "track",
+      "title": "Ebi Circuit | Ebi Showcase",
+      "h1": "Ebi Circuit",
+      "eyebrow": "加速・旋回・コース順を組み立てる",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--racing--ebi-circuit.png"
     },
     {
       "file": "web/ja/tracks/racing/ebi-racing/index.html",
@@ -4717,6 +4981,150 @@
       "eyebrow": "★★★★☆ / PLAYABLE",
       "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
       "image": "assets/og/ja--tracks--tactics--weapon-range.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-effects/fx-breakout/index.html",
+      "path": "ja/tracks/visual-effects/fx-breakout",
+      "key": "ja--tracks--visual-effects--fx-breakout",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "ブロック破壊を二段にする | Ebi Showcase",
+      "h1": "ブロック破壊を二段にする",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "壊れたブロックは配列から削除（プレイ）。飛び散る破片・炎は fx。『壊れたオブジェクトを破片として残す』のを play 側でやると、当たり判定が残骸に引っかかります。",
+      "image": "assets/og/ja--tracks--visual-effects--fx-breakout.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-effects/fx-bullethell/index.html",
+      "path": "ja/tracks/visual-effects/fx-bullethell",
+      "key": "ja--tracks--visual-effects--fx-bullethell",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "ボムで弾を消し、爆発は演出へ | Ebi Showcase",
+      "h1": "ボムで弾を消し、爆発は演出へ",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。",
+      "image": "assets/og/ja--tracks--visual-effects--fx-bullethell.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-effects/fx-catch/index.html",
+      "path": "ja/tracks/visual-effects/fx-catch",
+      "key": "ja--tracks--visual-effects--fx-catch",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "落ちものに演出を足すと気づくこと | Ebi Showcase",
+      "h1": "落ちものに演出を足すと気づくこと",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "星が増え、キャッチのたびに粒も増える。もし全部を一つの []any に入れたら、Update で「これは星？粒？」と毎回聞くことになります。ここで分けたくなるはずです。",
+      "image": "assets/og/ja--tracks--visual-effects--fx-catch.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-effects/fx-dungeon/index.html",
+      "path": "ja/tracks/visual-effects/fx-dungeon",
+      "key": "ja--tracks--visual-effects--fx-dungeon",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "攻撃ヒットに閃光を足す | Ebi Showcase",
+      "h1": "攻撃ヒットに閃光を足す",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "HP を減らすのは play。閃光と破片は fx。ノックバックを入れるなら物理か演出か、意図を決めてから場を選ぶ。",
+      "image": "assets/og/ja--tracks--visual-effects--fx-dungeon.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-effects/fx-flight/index.html",
+      "path": "ja/tracks/visual-effects/fx-flight",
+      "key": "ja--tracks--visual-effects--fx-flight",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "ジャンプに羽ばたき演出を足す | Ebi Showcase",
+      "h1": "ジャンプに羽ばたき演出を足す",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "速度と重力はプレイの物理。羽ばたきで出る粒は演出。パイプ通過のリングも fx。ここまで来ると、Game 構造体に fx フィールドがあるのが自然に見えます。",
+      "image": "assets/og/ja--tracks--visual-effects--fx-flight.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-effects/fx-meter/index.html",
+      "path": "ja/tracks/visual-effects/fx-meter",
+      "key": "ja--tracks--visual-effects--fx-meter",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "タイミング判定に演出を振る | Ebi Showcase",
+      "h1": "タイミング判定に演出を振る",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "止めた位置の「状態」が Perfect なら大花火、Miss なら小さな煙。ゲーム状態の enum/分岐と、演出の強さを対応させる練習です。",
+      "image": "assets/og/ja--tracks--visual-effects--fx-meter.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-effects/fx-platform/index.html",
+      "path": "ja/tracks/visual-effects/fx-platform",
+      "key": "ja--tracks--visual-effects--fx-platform",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "ジャンプと着地に塵を足す | Ebi Showcase",
+      "h1": "ジャンプと着地に塵を足す",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "wasOnGround から onGround へ切り替わった瞬間だけ着地演出。物理の grounded は play、塵は fx。",
+      "image": "assets/og/ja--tracks--visual-effects--fx-platform.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-effects/fx-pong/index.html",
+      "path": "ja/tracks/visual-effects/fx-pong",
+      "key": "ja--tracks--visual-effects--fx-pong",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "ボールに火花とトレイルを足す | Ebi Showcase",
+      "h1": "ボールに火花とトレイルを足す",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "パドルや壁に当たったフレームだけ Burst。毎フレーム少しトレイルを足すのも fx。ボール自体の vx,vy は play のままです。",
+      "image": "assets/og/ja--tracks--visual-effects--fx-pong.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-effects/fx-shooter/index.html",
+      "path": "ja/tracks/visual-effects/fx-shooter",
+      "key": "ja--tracks--visual-effects--fx-shooter",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "弾と敵と爆発を分ける | Ebi Showcase",
+      "h1": "弾と敵と爆発を分ける",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "自弾、敵、爆発粒。役割ごとにスライス。撃った瞬間のマズルは fx、敵の HP は play。",
+      "image": "assets/og/ja--tracks--visual-effects--fx-shooter.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-effects/fx-snake/index.html",
+      "path": "ja/tracks/visual-effects/fx-snake",
+      "key": "ja--tracks--visual-effects--fx-snake",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "スネークに捕食演出を足す | Ebi Showcase",
+      "h1": "スネークに捕食演出を足す",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "体はマス目の履歴。食べた瞬間の花火だけ fx。体の各セルに粒を持たせない。",
+      "image": "assets/og/ja--tracks--visual-effects--fx-snake.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-effects/fx-sokoban/index.html",
+      "path": "ja/tracks/visual-effects/fx-sokoban",
+      "key": "ja--tracks--visual-effects--fx-sokoban",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "箱押しに塵とゴール輝きを足す | Ebi Showcase",
+      "h1": "箱押しに塵とゴール輝きを足す",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "ステージは二次元の数値。押した瞬間の塵、ゴールの輝きは fx。タイルに演出フラグを増やしすぎない。",
+      "image": "assets/og/ja--tracks--visual-effects--fx-sokoban.png"
+    },
+    {
+      "file": "web/ja/tracks/visual-effects/fx-tap/index.html",
+      "path": "ja/tracks/visual-effects/fx-tap",
+      "key": "ja--tracks--visual-effects--fx-tap",
+      "lang": "ja",
+      "kind": "vfx",
+      "title": "タッチにエフェクトを足す | Ebi Showcase",
+      "h1": "タッチにエフェクトを足す",
+      "eyebrow": "★★★★☆ / PLAYABLE",
+      "description": "応用編の入口。LEVEL 01 の「光る丸をタッチ」に、命中の粒とリングを足します。ゲームの点数処理のあとに、fx.Update() を別呼び出ししていることに注目してください。",
+      "image": "assets/og/ja--tracks--visual-effects--fx-tap.png"
     },
     {
       "file": "web/ja/tracks/visual-effects/index.html",

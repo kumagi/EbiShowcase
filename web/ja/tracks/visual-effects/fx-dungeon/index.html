@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="HP を減らすのは play。閃光と破片は fx。ノックバックを入れるなら物理か演出か、意図を決めてから場を選ぶ。">
+  <title>攻撃ヒットに閃光を足す | Ebi Showcase</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="攻撃ヒットに閃光を足す | Ebi Showcase">
+    <meta property="og:description" content="HP を減らすのは play。閃光と破片は fx。ノックバックを入れるなら物理か演出か、意図を決めてから場を選ぶ。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/fx-dungeon/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--fx-dungeon.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="攻撃ヒットに閃光を足す">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="攻撃ヒットに閃光を足す | Ebi Showcase">
+    <meta name="twitter:description" content="HP を減らすのは play。閃光と破片は fx。ノックバックを入れるなら物理か演出か、意図を決めてから場を選ぶ。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--fx-dungeon.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="攻撃ヒットに閃光を足す">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/fx-dungeon/">
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav">
+    <a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a>
+    <nav>
+      <a href="../">工房トップ</a>
+      <a href="#learn">HOW IT WORKS</a>
+      <a class="lang" href="../../../../en/tracks/visual-effects/vfx-fx-dungeon/" lang="en" data-language="en">EN</a>
+    </nav>
+  </header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../">← ビジュアルエフェクト工房</a><span>ADV A11</span></div>
+
+    <section class="overview-hero">
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>攻撃ヒットに閃光を足す</h1>
+      <p>HP を減らすのは play。閃光と破片は fx。ノックバックを入れるなら物理か演出か、意図を決めてから場を選ぶ。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>ヒット反応はFX</strong></div>
+    </section>
+
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+
+    <section class="play lesson-play" id="play">
+      <div class="section-head">
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>スライムを叩こう</h2></div>
+        <p>移動と攻撃。ヒット演出は fx。HP は play。</p>
+      </div>
+      <div class="game-shell">
+        <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A11</span></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="攻撃ヒットに閃光を足す" src="../../../../play/vfx-fx-dungeon/" allow="autoplay; fullscreen"></iframe></div>
+      </div>
+    </section>
+
+    <section class="physics" id="learn">
+      <div class="lesson-intro">
+        <p class="eyebrow">DEEP DIVE / COMBAT FEEDBACK</p>
+        <h2>痛い数字と、<br>痛い見た目</h2>
+        <p class="lesson-lead">数値の真実（HP）とフィードバック（フラッシュ）を分けると、無敵時間やコンボ演出を足しやすくなります。</p>
+      </div>
+
+      <div class="concept-row">
+        <article>
+          <span class="concept-number">1</span>
+          <h3>ダメージ</h3>
+          <p>HP を減らす。</p>
+          <code>hp -= dmg</code>
+        </article>
+        <article>
+          <span class="concept-number">2</span>
+          <h3>反応</h3>
+          <p>フラッシュと粒。</p>
+          <code>fx.FlashScreen</code>
+        </article>
+        <article>
+          <span class="concept-number">3</span>
+          <h3>分離</h3>
+          <p>見た目だけで倒した判定にしない。</p>
+          <code>bar from hp</code>
+        </article>
+      </div>
+
+      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-dungeon">
+        <div class="lab-copy">
+          <p class="eyebrow">TRY IT / PLAY vs FX</p>
+          <h3 id="lab-title-vfx-fx-dungeon">命中＝数字＋花火、どちらも別リスト</h3>
+          <p>「命中！」で play の点数と fx の粒が同時に増える。「fx 1F」では粒だけ減り、点数は残る。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>命中！（play+fx）</button><button type="button" class="lab-button" data-lab-fx-tick>fx だけ 1F進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+        </div>
+        <div class="lab-visual">
+          <div class="lab-board lab-fx-split" data-lab-board>
+          <div class="lab-fx-col" data-lab-play><h4>play（ルール・点数）</h4><ul data-lab-play-list></ul></div>
+          <div class="lab-fx-col" data-lab-fx><h4>fx（見た目の粒）</h4><ul data-lab-fx-list></ul></div>
+          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
+        </div>
+        <p class="lab-fx-hint" data-lab-fx-hint></p>
+          <div class="lab-values" aria-live="polite"><div><span>スコア(play)</span><strong data-lab-score>—</strong></div><div><span>粒(fx)</span><strong data-lab-fx-n>—</strong></div></div>
+        </div>
+      </div>
+
+      <div class="code-lesson">
+        <div>
+          <p class="eyebrow">IN THE DEMO</p>
+          <h3>applyDamage の末尾で FX</h3>
+          <p>先に数字、あとで見た目。</p>
+        </div>
+        <pre><code>func applyDamage(e *enemy, dmg int) {
+  e.hp -= dmg
+  g.fx.FlashScreen(0.5, 255, 80, 80)
+  g.fx.Burst(e.x, e.y, 28, 4, tint, true)
+}</code></pre>
+      </div>
+
+      <div class="why-grid">
+        <article>
+          <p class="eyebrow">WHY?</p>
+          <h3>デバッグ</h3>
+          <p>HP ログと演出を切り分けられる。</p>
+        </article>
+        <article>
+          <p class="eyebrow">WHY FLASH?</p>
+          <h3>フィードバック</h3>
+          <p>当たった感がないと下手に感じる。</p>
+        </article>
+        <article class="challenge">
+          <p class="eyebrow">TRY NEXT</p>
+          <h3>弾幕へ</h3>
+          <p>総仕上げ。弾クリアと大爆発。</p>
+        </article>
+      </div>
+    </section>
+
+    <nav class="lesson-pager">
+      <a href="../vfx-fx-platform/">← STEP A10<strong>ジャンプと着地に塵を足す</strong></a>
+      <a href="../vfx-fx-bullethell/">STEP A12 →<strong>ボムで弾を消し、爆発は演出へ</strong></a>
+    </nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-effects/fx-dungeon/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ヒット反応は攻撃が当たったことを伝える点滅・のけぞり・粒のFX。HPはゲームの本当の数なのでUpdateで減らし、flashは見た目用タイマーとして分けます。Drawはflash中だけ敵を明るく描きます。 Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>enemy.hp -= damage; enemy.flash = 8</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
+<!-- END BEGINNER BRIDGE -->
+</main>
+  <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
+  <script src="../../../../learn.js"></script>
+  <script>
+    document.querySelectorAll("[data-language]").forEach(a => a.addEventListener("click", () => localStorage.setItem("ebi-language", a.dataset.language)));
+  </script>
+</body>
+</html>
