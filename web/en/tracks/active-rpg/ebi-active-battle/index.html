@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Active Battle | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/active-rpg/ebi-active-battle/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Active Battle | Ebi Showcase">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/active-rpg/ebi-active-battle/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--active-rpg--ebi-active-battle.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Ebi Active Battle">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Active Battle | Ebi Showcase">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--active-rpg--ebi-active-battle.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Ebi Active Battle">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/active-rpg/ebi-active-battle/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Active Gauge RPG</a><span>SHOWCASE 01 / 01</span></div><section class="lesson-hero"><div><p class="eyebrow">Let speed create the action order</p><h1>Ebi Active Battle</h1><p>Add speed into ally and enemy action gauges, then choose a command whenever an ally reaches READY.</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Active Battle</h2><p>Play with keyboard, mouse, or touch. Watch the numbers and state labels on the game screen.</p></div><div class="game-frame"><iframe src="../../../../play/ebi-active-battle/" title="Ebi Active Battle"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Speed, action gauges, and waiting</h2><p>Actors do not wait for a shared turn. Faster actors fill sooner and may act more often. The gauge stores waiting time as a number.</p><div class="concept-row"><article><b>01</b><h3>Add every frame</h3><p>gauge += speed advances waiting time.</p></article><article><b>02</b><h3>Full means READY</h3><p>Only actors at the limit can act.</p></article><article><b>03</b><h3>Reset after action</h3><p>The acting character returns to zero.</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Speed, action gauges, and waiting</h2><p>Step through the system and follow data into the next operation.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Speed, action gauges, and waiting</h2><p>Here is the central rule used by the playable game.</p></div><pre><code>actor.gauge += actor.speed
+if actor.gauge &gt;= maxGauge {
+    actor.ready = true
+}
+// command resolved
+actor.gauge = 0</code></pre></section><section class="why-grid"><article><h3>Why this structure?</h3><p>Actors do not wait for a shared turn. Faster actors fill sooner and may act more often. The gauge stores waiting time as a number.</p></article><article><h3>Watch the data</h3><p>Only actors at the limit can act.</p></article><article><h3>CHALLENGE</h3><p>Change one value or data entry and compare how play changes.</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>Active Gauge RPG</strong></a><a href="../">COMPLETE →<strong>Ebi Active Battle</strong></a></nav>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/active-rpg/ebi-active-battle/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

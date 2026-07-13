@@ -1,0 +1,47 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Dialogue Stage | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-novel/ebi-dialogue-stage/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Dialogue Stage | Ebi Showcase">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-novel/ebi-dialogue-stage/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-novel--ebi-dialogue-stage.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Ebi Dialogue Stage">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Dialogue Stage | Ebi Showcase">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-novel--ebi-dialogue-stage.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Ebi Dialogue Stage">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/visual-novel/ebi-dialogue-stage/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 選択肢で分かれる会話ゲーム</a><span>SHOWCASE 01 / 01</span></div><section class="lesson-hero"><div><p class="eyebrow">立ち絵と台詞をデータから演出する</p><h1>Ebi Dialogue Stage</h1><p>会話ウィンドウ、表情、登場演出、選択肢をシーンデータとして再生し、選んだ答えで結末を分けます。</p><div class="lesson-meta"><span>★★★☆☆</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Dialogue Stage</h2><p>キーボード・マウス・タッチで遊べます。画面上の数値や状態表示にも注目してください。</p></div><div class="game-frame"><iframe src="../../../../play/ebi-dialogue-stage/" title="Ebi Dialogue Stage"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>会話データ・選択肢・立ち絵演出</h2><p>文章をコードへ直書きせず、話者・台詞・表情・次の場面を1件のデータにします。ゲーム側は現在の番号を進める再生機になります。</p><div class="concept-row"><article><b>01</b><h3>シーンデータ</h3><p>話者・台詞・表情・登場方法をまとめます。</p></article><article><b>02</b><h3>選択肢</h3><p>表示文と次のシーン番号を組にします。</p></article><article><b>03</b><h3>見せ方</h3><p>fade・slide・shakeを状態として補間します。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>会話データ・選択肢・立ち絵演出</h2><p>ゲーム内の処理を一段ずつ進め、データが次の処理へ渡る順番を確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>会話データ・選択肢・立ち絵演出</h2><p>実ゲームで使っている中心ルールを小さく抜き出します。</p></div><pre><code>type Choice struct { Text string; Next int }
+type Scene struct {
+    Speaker, Text, Expression, Enter string
+    Choices []Choice
+}
+current = scenes[choice.Next]</code></pre></section><section class="why-grid"><article><h3>なぜこの分け方？</h3><p>文章をコードへ直書きせず、話者・台詞・表情・次の場面を1件のデータにします。ゲーム側は現在の番号を進める再生機になります。</p></article><article><h3>データを見る</h3><p>表示文と次のシーン番号を組にします。</p></article><article><h3>CHALLENGE</h3><p>数値やデータを1つ変え、遊び方がどう変化するか比べてみよう。</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>選択肢で分かれる会話ゲーム</strong></a><a href="../">COMPLETE →<strong>Ebi Dialogue Stage</strong></a></nav>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/visual-novel/ebi-dialogue-stage/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>
