@@ -39,7 +39,7 @@
       <p class="curriculum-bridge" style="margin-top:22px">Want to run code on your own PC first? See <a href="../../guides/setup/">Getting started setup</a> (install Go → empty window). This page’s demo also works in the browser alone.</p>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *game) Update() error { return nil }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *game) Update() error { g.score++; return nil }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
 <section class="play lesson-play" id="play">
@@ -377,6 +377,14 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

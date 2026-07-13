@@ -66,7 +66,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / PIVOT</p>
         <h2>なぜ回すと<br>ズレて飛んでいく？</h2>
-        <p class="lesson-lead">変換は「行列のかけ算」で、書いた順に効きます。左上のまま回すと、絵は左上を軸にぐるっと大回り。先に中心を原点(-w/2,-h/2)へ動かしてから回し、最後に置きたい場所へ Translate すると、中心で回ります。</p>
+        <p class="lesson-lead">変換は「行列のかけ算」で、書いた順に効きます。左上のまま回すと、絵は左上を軸にぐるっと大回り。先に中心を原点(-w/2,-h/2)へ動かしてから回し、最後に置きたい場所へ Translate すると、中心で回ります。Rotate の角度は度ではなくラジアンです。0.7ラジアンは 0.7×180/π ≒ 40度。Scale(2,2) は原点を中心に2倍にするので、中心回転したいときは先に中心を原点へ置きます。</p>
       </div>
 
       <div class="concept-row">
@@ -112,7 +112,7 @@
         <pre><code>op := &amp;ebiten.DrawImageOptions{}
 op.GeoM.Translate(-w/2, -h/2) // 中心を原点へ
 op.GeoM.Scale(1.7, 1.7)
-op.GeoM.Rotate(0.7)           // ラジアンで回す
+op.GeoM.Rotate(0.7)           // 0.7 rad ≒ 40°（ラジアンで回す）
 op.GeoM.Translate(cx, cy)     // 置きたい場所へ
 screen.DrawImage(sprite, op)</code></pre>
       </div>

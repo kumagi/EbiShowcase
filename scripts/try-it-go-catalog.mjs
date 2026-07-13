@@ -698,7 +698,7 @@ export const catalog = {
   "deck-cycle": {
     lines: [
       { id: "play", code: "discard = append(discard, hand[i]); hand = remove(hand, i)" },
-      { id: "empty", code: "if len(draw) == 0 { draw = discard; discard = nil }" },
+      { id: "empty", code: "if len(draw) == 0 { draw = discard; discard = discard[:0] }" },
       { id: "shuffle", code: "rng.Shuffle(len(draw), func(i, j int) { draw[i], draw[j] = draw[j], draw[i] })" },
       { id: "draw", code: "hand = append(hand, draw[last]); draw = draw[:last]" },
     ],

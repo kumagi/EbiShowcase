@@ -38,7 +38,7 @@
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
 <pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="play">discard = append(discard, hand[i]); hand = remove(hand, i)</span>
-<span data-go-line="empty">if len(draw) == 0 { draw = discard; discard = nil }</span>
+<span data-go-line="empty">if len(draw) == 0 { draw = discard; discard = discard[:0] }</span>
 <span data-go-line="shuffle">rng.Shuffle(len(draw), func(i, j int) { draw[i], draw[j] = draw[j], draw[i] })</span>
 <span data-go-line="draw">hand = append(hand, draw[last]); draw = draw[:last]</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
@@ -46,7 +46,7 @@
 </div><div class="formula"><p class="eyebrow">THE CYCLE EDGE</p><div class="formula-lines"><code>play: hand → discard</code><span>then</span><code>turn end: draw / reshuffle</code></div><p>Keep cycling on the turn edge and mid-combat bugs drop.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Check draw before taking a card</h3><p>Draw until the hand has five. If draw is empty, move discard back and shuffle. <code>rng.Shuffle(n, swap)</code> needs a swap function: That callback is Fisher–Yates: Go picks pairs (i, j) and your function swaps <code>draw[i]</code> with <code>draw[j]</code>.</p></div><pre><code>for len(hand) &lt; 5 {
     if len(draw) == 0 {
         draw = append(draw, discard...)
-        discard = nil
+        discard = discard[:0] // reuse the slice; reset its length only
         rng.Shuffle(len(draw), swap)
     }
     last := len(draw) - 1
@@ -76,6 +76,14 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

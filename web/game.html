@@ -24,9 +24,6 @@
       return c;
     };
     document.addEventListener("pointerdown", focusCanvas, true);
-    const watch = new MutationObserver(() => { if (document.querySelector("canvas")) { focusCanvas(); watch.disconnect(); } });
-    watch.observe(document.documentElement, { childList: true, subtree: true });
-
     const go = new Go();
     WebAssembly.instantiateStreaming(fetch("game.wasm"), go.importObject)
       .then((r) => {

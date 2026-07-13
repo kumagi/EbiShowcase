@@ -36,6 +36,7 @@ SNS向けの OGP は `node scripts/inject-ogp.mjs` と `go run ./cmd/gen-og-imag
 - `web/ja/tracks/`・`web/en/tracks/` — 15の専門コースと93段階の発展教材
 - `web/*/guides/game-data/` — アセットデータとゲーム構成を学ぶ横断ガイド
 - `examples/data-driven/` — `go:embed`とJSONによるデータ読み込みの実例
+- `docs/Glossary.md` — フレーム、座標、ラジアン、`iota`、スライスなどの用語集
 - `web/game.html` — 両言語で共有するWASMローダー
 - `scripts/build.sh` — `dist/` を生成するビルド
 - `.github/workflows/pages.yml` — GitHub Pagesデプロイ

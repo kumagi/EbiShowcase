@@ -125,7 +125,7 @@ screen.DrawImage(tenjiroh, op)`,
       lead: "同じ GeoM に Rotate と Scale を足すと、絵が回って伸び縮みします。大事なのは順番。中心を原点へ寄せてから回すと、真ん中を軸にきれいに回ります。",
       deepEyebrow: "DEEP DIVE / PIVOT",
       deepH: "なぜ回すと<br>ズレて飛んでいく？",
-      deepLead: "変換は「行列のかけ算」で、書いた順に効きます。左上のまま回すと、絵は左上を軸にぐるっと大回り。先に中心を原点(-w/2,-h/2)へ動かしてから回し、最後に置きたい場所へ Translate すると、中心で回ります。",
+      deepLead: "変換は「行列のかけ算」で、書いた順に効きます。左上のまま回すと、絵は左上を軸にぐるっと大回り。先に中心を原点(-w/2,-h/2)へ動かしてから回し、最後に置きたい場所へ Translate すると、中心で回ります。Rotate の角度は度ではなくラジアンです。0.7ラジアンは 0.7×180/π ≒ 40度。Scale(2,2) は原点を中心に2倍にするので、中心回転したいときは先に中心を原点へ置きます。",
       concepts: [
         { h: "原点寄せ", p: "中心を (0,0) に持ってきます。", code: "Translate(-w/2,-h/2)" },
         { h: "回す・伸ばす", p: "その状態で回転と拡大をします。", code: "Rotate / Scale" },
@@ -149,7 +149,7 @@ screen.DrawImage(tenjiroh, op)`,
       lead: "Add Rotate and Scale to the same GeoM and the image spins and stretches. Order matters: move the center to the origin first, then rotate to spin cleanly about the middle.",
       deepEyebrow: "DEEP DIVE / PIVOT",
       deepH: "Why does spinning<br>fling it away?",
-      deepLead: "Transforms are matrix multiplications applied in the order you write them. Rotate while the top-left is the origin and the image swings in a big arc. Move the center to (-w/2,-h/2) first, rotate, then Translate to its place, and it spins in the middle.",
+      deepLead: "Transforms are matrix multiplications applied in the order you write them. Rotate while the top-left is the origin and the image swings in a big arc. Move the center to (-w/2,-h/2) first, rotate, then Translate to its place, and it spins in the middle. Rotate uses radians, not degrees: 0.7 rad is about 40°. Scale(2,2) doubles around the current origin, so move the center first when you want a center pivot.",
       concepts: [
         { h: "To origin", p: "Bring the center to (0,0).", code: "Translate(-w/2,-h/2)" },
         { h: "Rotate/Scale", p: "Now spin and stretch.", code: "Rotate / Scale" },
@@ -170,7 +170,7 @@ screen.DrawImage(tenjiroh, op)`,
     code: `op := &ebiten.DrawImageOptions{}
 op.GeoM.Translate(-w/2, -h/2) // 中心を原点へ
 op.GeoM.Scale(1.7, 1.7)
-op.GeoM.Rotate(0.7)           // ラジアンで回す
+op.GeoM.Rotate(0.7)           // 0.7 rad ≒ 40°（ラジアンで回す）
 op.GeoM.Translate(cx, cy)     // 置きたい場所へ
 screen.DrawImage(sprite, op)`,
   },
@@ -191,7 +191,7 @@ screen.DrawImage(sprite, op)`,
       lead: "絵のピクセルはそのまま、ColorScale で色を「かけ算」します。赤くティント、白フラッシュ、真っ黒なシルエット。1枚の絵から3つの表現が生まれます。",
       deepEyebrow: "DEEP DIVE / COLORSCALE",
       deepH: "1枚の絵から<br>何色も作れる？",
-      deepLead: "ColorScale は各色チャンネルにかける倍率です。(1,0.4,0.4,1) なら緑と青が減って赤っぽく。(6,6,6,1) なら明るさが振り切れて白フラッシュ。(0,0,0,α) なら色が抜けて影になります。",
+      deepLead: "ColorScale は各色チャンネルにかける倍率です。(1,0.4,0.4,1) なら緑と青が減って赤っぽく。(6,6,6,1) なら明るさが振り切れて白フラッシュ。(0,0,0,α) なら色が抜けて影になります。4つ目のアルファは0〜1が基本で、1は元の不透明度、0.5は半分、0は透明です。",
       concepts: [
         { h: "ティント", p: "色をかけ算して染めます。", code: "Scale(1,.4,.4,1)" },
         { h: "フラッシュ", p: "明るさを上げて白に。", code: "Scale(6,6,6,1)" },
@@ -215,7 +215,7 @@ screen.DrawImage(sprite, op)`,
       lead: "Keep the pixels, multiply the color with ColorScale. Red tint, white flash, pitch-black silhouette—three looks from one image.",
       deepEyebrow: "DEEP DIVE / COLORSCALE",
       deepH: "So many colors<br>from one image?",
-      deepLead: "ColorScale multiplies each color channel. (1,0.4,0.4,1) cuts green and blue for red. (6,6,6,1) blows brightness out to a white flash. (0,0,0,α) drains color into a shadow.",
+      deepLead: "ColorScale multiplies each color channel. (1,0.4,0.4,1) cuts green and blue for red. (6,6,6,1) blows brightness out to a white flash. (0,0,0,α) drains color into a shadow. Alpha is normally 0–1: 1 keeps opacity, 0.5 halves it, and 0 is transparent.",
       concepts: [
         { h: "Tint", p: "Multiply to dye the color.", code: "Scale(1,.4,.4,1)" },
         { h: "Flash", p: "Raise brightness to white.", code: "Scale(6,6,6,1)" },

@@ -77,6 +77,17 @@ func overlaps(a, b body) bool {
 	return math.Hypot(a.x-b.x, a.y-b.y) < a.radius+b.radius
 }
 
+// aimVelocity returns a vector with the requested length.  When the target is
+// exactly on the shooter, there is no direction to normalize, so return zero
+// instead of dividing by zero and producing NaN.
+func aimVelocity(dx, dy, speed float64) (float64, float64) {
+	length := math.Hypot(dx, dy)
+	if length == 0 {
+		return 0, 0
+	}
+	return dx / length * speed, dy / length * speed
+}
+
 func restartPressed() bool {
 	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		return true
@@ -222,11 +233,11 @@ func (g *game) Update() error {
 		if e.reload <= 0 && e.y > 60 {
 			dx := g.player.x - e.x
 			dy := g.player.y - e.y
-			length := math.Hypot(dx, dy)
+			vx, vy := aimVelocity(dx, dy, 2.3)
 			g.enemyBullets = append(g.enemyBullets, body{
 				x: e.x, y: e.y + 15,
-				vx:     dx / length * 2.3,
-				vy:     dy / length * 2.3,
+				vx:     vx,
+				vy:     vy,
 				radius: 7,
 			})
 			e.reload = float64(max(42, 125-g.wave*5) + g.rng.Intn(70))

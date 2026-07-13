@@ -200,7 +200,7 @@ func (g *game) activate(a *ally) {
 }
 
 func (g *game) nearestEnemy(x, y float64) int {
-	best, bestDistance := -1, math.MaxFloat64
+	best, bestDistance := -1, math.Inf(1)
 	for i, e := range g.enemies {
 		if e.hp <= 0 {
 			continue

@@ -378,7 +378,7 @@ func main() {
 
 
     <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>加速度は『速さが毎フレームどれだけ変わるか』。羽ばたき時の-7.4は上向きの初速度で、重力が少しずつ下向きへ戻します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>vy = -7.4; vy += gravity; y += vy</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>画面は上がY=0で、下へ行くほどYが増えます。加速度は『速さが毎フレームどれだけ変わるか』。羽ばたき時の-7.4px/frameは上向きの初速度、重力+0.42px/frame²が約16.7msごとに下向きへ戻します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>vy = -7.4; vy += gravity; y += vy</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
@@ -401,6 +401,14 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

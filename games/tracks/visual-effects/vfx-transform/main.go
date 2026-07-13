@@ -73,7 +73,7 @@ func (g *game) Draw(s *ebiten.Image) {
 	op.GeoM.Translate(cx, cy)
 	s.DrawImage(img, op)
 
-	g.shell.Hint = "pivotCtr ON = rotate around center  ·  OFF = around corner"
+	g.shell.Hint = "angle is radians (0.7 ≈ 40°) · pivotCtr ON = center · OFF = corner"
 	g.shell.Draw(s)
 }
 

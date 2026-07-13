@@ -2260,8 +2260,9 @@ document.querySelectorAll(".motion-lab[data-lab='tile']").forEach((lab) => {
     }
     board.innerHTML = `<div class="lab-tile-grid">${cells.join("")}</div>`;
   };
-  const mo = new MutationObserver(paint);
-  if (posOut) mo.observe(posOut, { childList: true, characterData: true, subtree: true });
+  // 値の変更はボタン操作から明示的に再描画する。MutationObserverに
+  // 頼らないので、iframeやモバイルブラウザでも同じ挙動になる。
+  lab.querySelector(".lab-controls")?.addEventListener("click", () => requestAnimationFrame(paint));
   paint();
 });
 
@@ -3392,8 +3393,7 @@ function watchLabPaint(lab, paint) {
   if (!board || board.dataset.visualized === "1") return;
   board.dataset.visualized = "1";
   const run = () => paint(board, lab);
-  const values = lab.querySelector(".lab-values");
-  if (values) new MutationObserver(run).observe(values, { subtree: true, childList: true, characterData: true });
+  // MutationObserverは使わず、操作イベントで再描画する（iframe互換）。
   lab.querySelector(".lab-controls")?.addEventListener("click", () => requestAnimationFrame(run));
   run();
 }
@@ -3635,6 +3635,132 @@ document.querySelectorAll(".motion-lab[data-lab='push']").forEach((lab) => {
     board.innerHTML = `<div class="lab-push-row">${cells.map((c) =>
       `<span class="${c === "P" ? "you" : c === "B" ? "box" : c === "#" ? "wall" : ""}">${c === "." ? "" : c}</span>`).join("")}</div>`;
   });
+});
+
+// Match-three swap lab: the board only resolves after the moving pieces meet.
+document.querySelectorAll(".motion-lab[data-lab='match-swap']").forEach((lab) => {
+  const grid = lab.querySelector("[data-match-grid]");
+  const phaseOut = lab.querySelector("[data-match-phase]");
+  const readout = lab.querySelector("[data-match-readout]");
+  const ja = lab.dataset.lang === "ja";
+  const colors = ["coral", "sun", "leaf", "sky", "violet"];
+  let run = 0;
+  let progress = 0;
+  let mode = "idle";
+
+  const render = () => {
+    const phase = mode === "idle" ? (ja ? "待機" : "READY") : mode === "valid" ? (progress < .42 ? "SWAP" : progress < .64 ? "CHECK MATCH" : progress < .85 ? "CLEAR" : "FALL") : (progress < .42 ? "SWAP" : progress < .7 ? "CHECK MATCH" : "RETURN");
+    setText(phaseOut, phase);
+    if (grid) {
+      grid.innerHTML = Array.from({ length: 25 }, (_, i) => {
+        const special = i === 11 ? "swap-a" : i === 12 ? "swap-b" : "";
+        const x = special === "swap-a" ? progress * 100 : special === "swap-b" ? -progress * 100 : 0;
+        const value = mode === "valid" && progress > .64 && i === 11 ? "" : colors[i % colors.length];
+        return `<span class="match-tile ${value} ${special} ${mode === "valid" && progress > .64 && i === 11 ? "is-cleared" : ""}" style="--swap-x:${x}%"></span>`;
+      }).join("");
+    }
+  };
+  const play = (nextMode) => {
+    if (mode !== "idle") return;
+    run++;
+    const current = run;
+    mode = nextMode;
+    progress = 0;
+    setText(readout, nextMode === "valid" ? (ja ? "2個が動き始めた" : "Two pieces started moving") : (ja ? "交換を確認中" : "Checking the swap"));
+    const start = performance.now();
+    const frame = (now) => {
+      if (current !== run) return;
+      progress = Math.min(1, (now - start) / 1500);
+      render();
+      if (progress < 1) requestAnimationFrame(frame);
+      else {
+        setText(readout, nextMode === "valid" ? (ja ? "3個が揃った → 消去して落下" : "Three match → clear, then fall") : (ja ? "揃わない → 元の場所へ戻る" : "No match → return to the original cells"));
+        mode = "idle";
+        progress = 0;
+        render();
+      }
+    };
+    requestAnimationFrame(frame);
+  };
+  lab.querySelector("[data-match-action='valid']")?.addEventListener("click", () => play("valid"));
+  lab.querySelector("[data-match-action='invalid']")?.addEventListener("click", () => play("invalid"));
+  lab.querySelector("[data-match-reset]")?.addEventListener("click", () => { run++; mode = "idle"; progress = 0; setText(readout, ja ? "ボタンを押して、状態の順番を見よう。" : "Choose a swap and follow each phase."); render(); });
+  render();
+});
+
+// Metroidvania ability route: make the old ledge a small, readable challenge.
+document.querySelectorAll(".motion-lab[data-lab='ability-gate']").forEach((lab) => {
+  const player = lab.querySelector("[data-lab-player]");
+  const ledge = lab.querySelector("[data-lab-ledge]");
+  const wings = lab.querySelector("[data-lab-wings]");
+  const status = lab.querySelector("[data-lab-status]");
+  const ability = lab.querySelector("[data-lab-ability]");
+  const ja = lab.dataset.lang === "ja";
+  let x = 82;
+  let hasWings = false;
+  let jumpCount = 0;
+  let won = false;
+
+  const render = () => {
+    if (player) player.style.left = `${x}%`;
+    player?.classList.toggle("is-air", jumpCount > 0 && !won);
+    wings?.classList.toggle("is-collected", hasWings);
+    ledge?.classList.toggle("is-reachable", won);
+    setText(ability, hasWings ? (ja ? "能力: 二段ジャンプ" : "ABILITY: DOUBLE JUMP") : (ja ? "能力: なし" : "ABILITY: none"));
+  };
+  const move = (dir) => {
+    if (won) return;
+    x = Math.max(8, Math.min(92, x + dir * 13));
+    if (!hasWings && x >= 72) {
+      hasWings = true;
+      setText(status, ja ? "羽を取得！左へ戻って高台を目指そう。" : "WINGS FOUND! Return left to the ledge.");
+    } else if (hasWings && x <= 31 && jumpCount >= 2) {
+      won = true;
+      setText(status, ja ? "高台に到着！同じ場所が道へ変わった。" : "LEDGE REACHED! The same place became a route.");
+    } else {
+      setText(status, x <= 35 && !hasWings ? (ja ? "まだ高さが足りない。右の羽を探そう。" : "Too low for this ledge. Find the wings on the right.") : (ja ? `位置 ${Math.round(x)}%` : `position ${Math.round(x)}%`));
+    }
+    render();
+  };
+  lab.querySelectorAll("[data-ability-move]").forEach((button) => button.addEventListener("click", () => move(button.dataset.abilityMove === "left" ? -1 : 1)));
+  lab.querySelector("[data-ability-jump]")?.addEventListener("click", () => {
+    if (won) return;
+    if (!hasWings) {
+      setText(status, ja ? "一段では届かない。まず右の羽を取得しよう。" : "One jump is not enough. Find the wings first.");
+    } else if (jumpCount < 2) {
+      jumpCount++;
+      setText(status, jumpCount === 1 ? (ja ? "空中！もう一度押せば二段ジャンプ。" : "In the air! Press again for the second jump.") : (ja ? "二段目！左へ戻ろう。" : "Second jump! Move back to the left."));
+    }
+    render();
+  });
+  lab.querySelector("[data-ability-reset]")?.addEventListener("click", () => {
+    x = 82; hasWings = false; jumpCount = 0; won = false;
+    setText(status, ja ? "右の羽を拾おう" : "Find the wings on the right");
+    render();
+  });
+  render();
+});
+
+// Metroidvania map lab: movement and the visited-room set are one visible action.
+document.querySelectorAll(".motion-lab[data-lab='metroid-map']").forEach((lab) => {
+  const path = lab.querySelector("[data-map-path]");
+  const readout = lab.querySelector("[data-map-readout]");
+  const ja = lab.dataset.lang === "ja";
+  let room = 0;
+  let visited = new Set([0]);
+  const render = () => {
+    if (path) {
+      path.innerHTML = Array.from({ length: 6 }, (_, i) => `<span class="map-room ${visited.has(i) ? "is-visited" : "is-hidden"} ${room === i ? "is-current" : ""}">${visited.has(i) ? `R${i}` : "?"}</span>`).join("");
+    }
+    setText(readout, ja ? `room ID ${room} / 訪問 ${visited.size}/6 — room := int(playerX/roomWidth)` : `room ID ${room} / visited ${visited.size}/6 — room := int(playerX/roomWidth)`);
+  };
+  lab.querySelectorAll("[data-map-move]").forEach((button) => button.addEventListener("click", () => {
+    room = Math.max(0, Math.min(5, room + (button.dataset.mapMove === "next" ? 1 : -1)));
+    visited.add(room);
+    render();
+  }));
+  lab.querySelector("[data-map-reset]")?.addEventListener("click", () => { room = 0; visited = new Set([0]); render(); });
+  render();
 });
 
 /* Auto-wire TRY IT · GO highlights from data-go-focus / data-go-clear */

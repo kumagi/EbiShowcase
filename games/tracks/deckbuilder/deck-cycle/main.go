@@ -51,7 +51,8 @@ func (g *game) startTurn() {
 				break
 			}
 			g.draw = append(g.draw, g.discard...)
-			g.discard = nil
+			// Keep the reusable backing array; only the cards' logical count is reset.
+			g.discard = g.discard[:0]
 			g.shuffleDraw()
 			g.shuffles++
 		}

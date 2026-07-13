@@ -66,7 +66,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / PIVOT</p>
         <h2>Why does spinning<br>fling it away?</h2>
-        <p class="lesson-lead">Transforms are matrix multiplications applied in the order you write them. Rotate while the top-left is the origin and the image swings in a big arc. Move the center to (-w/2,-h/2) first, rotate, then Translate to its place, and it spins in the middle.</p>
+        <p class="lesson-lead">Transforms are matrix multiplications applied in the order you write them. Rotate while the top-left is the origin and the image swings in a big arc. Move the center to (-w/2,-h/2) first, rotate, then Translate to its place, and it spins in the middle. Rotate uses radians, not degrees: 0.7 rad is about 40°. Scale(2,2) doubles around the current origin, so move the center first when you want a center pivot.</p>
       </div>
 
       <div class="concept-row">
@@ -112,7 +112,7 @@
         <pre><code>op := &amp;ebiten.DrawImageOptions{}
 op.GeoM.Translate(-w/2, -h/2) // 中心を原点へ
 op.GeoM.Scale(1.7, 1.7)
-op.GeoM.Rotate(0.7)           // ラジアンで回す
+op.GeoM.Rotate(0.7)           // 0.7 rad ≒ 40°（ラジアンで回す）
 op.GeoM.Translate(cx, cy)     // 置きたい場所へ
 screen.DrawImage(sprite, op)</code></pre>
       </div>

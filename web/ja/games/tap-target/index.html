@@ -39,7 +39,7 @@
       <p class="curriculum-bridge" style="margin-top:22px">自分の PC でコードを動かしたい人は、先に <a href="../../guides/setup/">はじめての環境づくり</a>（Go の入れ方〜空の窓）をどうぞ。このページのデモはブラウザだけで遊べます。</p>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>メソッドはGameという箱に結び付いた関数。Updateは天次郎や的の数字を変え、Drawは現在の数字を絵にし、Layoutは画面の基準サイズを返します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *game) Update() error { return nil }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>メソッドはGameという箱に結び付いた関数。Updateは1秒に約60回、スコアや位置を1コマ進めます。Drawはその数字を絵にし、Layoutは描画を管理するのではなく、ゲーム内部の基準サイズを返します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *game) Update() error { g.score++; return nil }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
 <section class="play lesson-play" id="play">
@@ -377,6 +377,14 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 
