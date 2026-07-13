@@ -80,6 +80,7 @@ document.querySelectorAll(".motion-lab[data-lab='hit-test']").forEach((lab) => {
   const board = lab.querySelector("[data-lab-board]");
   const tap = lab.querySelector("[data-lab-tap]");
   const result = lab.querySelector("[data-lab-result]");
+  const pointOut = lab.querySelector("[data-lab-point]");
   const dxOut = lab.querySelector("[data-lab-dx]");
   const dyOut = lab.querySelector("[data-lab-dy]");
   const distOut = lab.querySelector("[data-lab-dist]");
@@ -99,6 +100,7 @@ document.querySelectorAll(".motion-lab[data-lab='hit-test']").forEach((lab) => {
     tap.style.left = `${(x / 480) * 100}%`;
     tap.style.top = `${(y / 520) * 100}%`;
     tap.hidden = false;
+    if (pointOut) pointOut.textContent = `(${x.toFixed(0)}, ${y.toFixed(0)})`;
     dxOut.textContent = dx.toFixed(0);
     dyOut.textContent = dy.toFixed(0);
     distOut.textContent = dist.toFixed(1);
@@ -127,6 +129,7 @@ document.querySelectorAll(".motion-lab[data-lab='hit-test']").forEach((lab) => {
   lab.querySelector("[data-lab-sample-miss]")?.addEventListener("click", () => evaluate(390, 120));
   lab.querySelector("[data-lab-reset]")?.addEventListener("click", () => {
     tap.hidden = true;
+    if (pointOut) pointOut.textContent = "—";
     dxOut.textContent = "—";
     dyOut.textContent = "—";
     distOut.textContent = "—";
@@ -512,21 +515,24 @@ document.querySelectorAll(".motion-lab[data-lab='camera']").forEach((lab) => {
   const camOut = bind(lab, "[data-lab-cam]");
   const playerOut = bind(lab, "[data-lab-player]");
   const screenOut = bind(lab, "[data-lab-screen]");
+  const factorOut = bind(lab, "[data-lab-factor]");
   const actor = bind(lab, "[data-lab-actor]");
   if (!camOut || !playerOut || !screenOut) return;
-  let player = 200, cam = 0;
+  let player = 200, cam = 0, factor = Number(lab.dataset.factor || 0.09);
   const render = () => {
     const target = player - 160;
-    cam += (target - cam) * 0.15;
+    cam += (target - cam) * factor;
     setText(camOut, cam.toFixed(0));
     setText(playerOut, player.toFixed(0));
     setText(screenOut, (player - cam).toFixed(0));
+    setText(factorOut, factor.toFixed(2));
     if (actor) actor.style.left = `${((player - cam) / 480) * 100}%`;
   };
   bind(lab, "[data-lab-right]")?.addEventListener("click", () => { player += 40; render(); });
   bind(lab, "[data-lab-left]")?.addEventListener("click", () => { player = Math.max(40, player - 40); render(); });
   bind(lab, "[data-lab-step]")?.addEventListener("click", render);
-  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => { player = 200; cam = 0; render(); });
+  lab.querySelectorAll("[data-camera-factor]").forEach((button) => button.addEventListener("click", () => { factor = Number(button.dataset.cameraFactor); render(); }));
+  bind(lab, "[data-lab-reset]")?.addEventListener("click", () => { player = 200; cam = 0; factor = Number(lab.dataset.factor || 0.09); render(); });
   render();
 });
 

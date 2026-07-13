@@ -93,7 +93,7 @@
         <p class="eyebrow">THE CHASE DIRECTION</p>
         <div class="formula-lines"><code>dx, dy := (player.x - enemy.x), (player.y - enemy.y)</code><span>正規化して</span><code>vx, vy = dx/dist * speed, dy/dist * speed</code></article></div>
         <p>差ベクトル（dx, dy）の長さで割ることで方向だけを取り出し（正規化）、それにスピードを掛けます。どんな方向でも一定の速さで向かわせることができます。</p>
-        <p>巡回の <code>vx, vy = -vy, vx</code> は90度回転です。例: 右 <code>(1,0)</code> → <code>(0,1)</code> 下 → <code>(-1,0)</code> 左 → <code>(0,-1)</code> 上、と時計回りに曲がります。</p>
+        <p>巡回の <code>vx, vy = -vy, vx</code> は90度回転です。例: 右 <code>(1,0)</code> → <code>(0,1)</code> 下 → <code>(-1,0)</code> 左 → <code>(0,-1)</code> 上、と時計回りに曲がります。Goでは右辺の2つを先に計算してから左の2つへ同時に入れるため、途中で古い <code>vx</code> を失わずXとYを交換できます。</p>
         <p>距離が 0（ぴったり重なった）だと割り算で NaN になります。本番では <code>if dist &lt; 1 { dist = 1 }</code> のように下限を入れます。</p>
       </div>
 
@@ -500,6 +500,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

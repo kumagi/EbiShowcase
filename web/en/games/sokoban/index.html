@@ -53,6 +53,8 @@
         <p class="lesson-lead">With a <strong>tile map</strong>. The stage is a slice of strings. At startup the code reads every character, decides what each tile contains, and fills the game structs. Rendering later reads those structs back and draws each tile. Stage design and game logic stay completely separate.</p>
       </div>
 
+      <div class="tile-legend" aria-label="Tile-map symbol meanings"><h3>The four map symbols</h3><table><thead><tr><th>Symbol</th><th>Meaning</th><th>Job in the game</th></tr></thead><tbody><tr><td><code>#</code></td><td>Wall</td><td>A cell you cannot enter</td></tr><tr><td><code>@</code></td><td>Player</td><td>Starting position</td></tr><tr><td><code>$</code></td><td>Box</td><td>The object you push</td></tr><tr><td><code>.</code></td><td>Goal</td><td>Where a box belongs</td></tr></tbody></table><p>For example, tile <code>(2,3)</code> is drawn at <code>(2×48, 3×48) = (96,144)</code> because each tile is 48 pixels wide and tall.</p></div>
+
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>String-based stage</h3><p>The level is a <code>[]string</code> where each character encodes one tile. Looking at the source is like looking at the map itself.</p><code>var level = []string{…}</code></article>
         <article><span class="concept-number">2</span><h3>Logic tiles vs draw lerp</h3><p>Think of "which grid cell" and "which pixel on screen" as two different numbers. Grid cell <code>(2,3)</code> maps to pixel position <code>(2*48, 3*48) = (96,144)</code>. Collision always checks the grid cell; while <code>moving</code>, only <code>progress</code> (0→1) slides the pixel position on screen. Commit the logical tile when progress hits 1.</p><code>if moving { progress += …; return }</code></article>
@@ -516,6 +518,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

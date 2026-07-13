@@ -50,7 +50,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / COLLISION AND CAMERA</p>
         <h2>How does the player<br>stop exactly at surfaces?</h2>
-        <p class="lesson-lead">The trick is <strong>resolving X and Y separately</strong>. Move horizontally, check every platform, fix only the X coordinate if overlapping. Then move vertically and fix only Y. This two-pass approach lets the player slide along walls, bonk the ceiling without losing horizontal momentum, and land cleanly on floors — all without special cases.</p>
+        <p class="lesson-lead">The trick is <strong>resolving X and Y separately</strong>. Fixing both at once can move the player vertically after merely walking into a floor corner, causing bugs such as failing to land or losing a jump when touching a wall. Fix horizontal overlap on X, then vertical overlap on Y, and the player can slide along a wall and still land cleanly.</p>
       </div>
 
       <p class="lesson-lead">Read the overlap-fix ideas first, then the camera card.</p>
@@ -71,6 +71,9 @@
             <button type="button" class="lab-button" data-lab-left data-go-focus="target">Left</button>
             <button type="button" class="lab-button lab-button-primary" data-lab-right data-go-focus="target">Right</button>
             <button type="button" class="lab-button" data-lab-step data-go-focus="lerp draw" data-go-caption="Draw paints the frame">Ease camera</button>
+            <button type="button" class="lab-button" data-camera-factor="0.09">Smooth 0.09</button>
+            <button type="button" class="lab-button" data-camera-factor="0.5">Fast 0.5</button>
+            <button type="button" class="lab-button" data-camera-factor="1">Snap 1.0</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
@@ -81,6 +84,7 @@
             <div><span>camera</span><strong data-lab-cam>0</strong><small></small></div>
             <div><span>player</span><strong data-lab-player>200</strong><small></small></div>
             <div><span>screen X</span><strong data-lab-screen>200</strong><small></small></div>
+            <div><span>follow factor</span><strong data-lab-factor>0.09</strong><small>fraction of gap</small></div>
           </div>
         </div>
 <div class="lab-go-block">
@@ -446,6 +450,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

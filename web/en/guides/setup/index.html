@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="Step-by-step: install Go and Ebitengine on a fresh Windows or macOS machine, then run a do-nothing empty window.">
   <title>Getting Started — Open an Empty Window | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/setup/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
@@ -23,7 +24,6 @@
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--setup.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="From a blank computer to an empty window.">
     <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/setup/">
   <link rel="stylesheet" href="../../../style.css">
 </head>
 <body>
@@ -84,7 +84,7 @@
   <section class="setup-step" id="compiler">
     <p class="setup-n">STEP 02</p>
     <h2>Mac only: install a C compiler</h2>
-    <p class="setup-lead">Ebitengine also uses a little C under the hood. <strong>Windows school PCs can skip this.</strong> On Mac only, install Apple’s Command Line Tools (free). If your classroom PC is Windows, jump to step 3.</p>
+    <p class="setup-lead">Ebitengine also uses a little C under the hood. <strong>Windows school PCs can skip this.</strong> On Mac only, install Apple’s Command Line Tools—the behind-the-scenes tool kit used to build programs. You do not need to memorize the long name. If your classroom PC is Windows, jump to step 3.</p>
     <p class="setup-skip">On Windows, skip this step and go to “3. Verify”.</p>
     <pre class="setup-code"><code>xcode-select --install</code></pre>
     <ol class="setup-ol"><li>Paste the command above into Terminal and press Enter</li><li>In the dialog, choose Install (it can take several minutes)</li><li>If tools are already present, a message like “already installed” is fine</li></ol>
@@ -109,8 +109,8 @@
     <p class="setup-n">STEP 04</p>
     <h2>Make a project folder</h2>
     <p class="setup-lead">Desktop or Documents is fine. Here we create ebi-empty under your home folder.</p>
-    <ol class="setup-cmd-list"><li><code>mkdir ebi-empty</code><span>Create the folder</span></li><li><code>cd ebi-empty</code><span>Enter it</span></li><li><code>go mod init example.com/ebi-empty</code><span>Turn it into a Go module</span></li></ol>
-    <p class="setup-ok">You should see a small go.mod file. You can rename the module later.</p>
+    <ol class="setup-cmd-list"><li><code>mkdir ebi-empty</code><span>Create the folder</span></li><li><code>cd ebi-empty</code><span>Enter it</span></li><li><code>go mod init example.com/ebi-empty</code><span>Create the go.mod table of contents</span></li></ol>
+    <p class="setup-ok">go.mod is the project’s table-of-contents note: it records this game’s name and lets Go manage borrowed parts such as Ebitengine. With it, Go can prepare the same external packages again. Seeing the small go.mod file means success; you can rename the module later.</p>
   </section>
 
   <section class="setup-step" id="code">
@@ -203,39 +203,6 @@ func main() {
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Read the game as small parts</h2><p>Update changes Ebi Tenjiroh's game state; Draw shows that state as the next frame. In func (g *Game), (g *Game) is the receiver—the name tag for this Game.</p></div><div class="beginner-code"><p><strong>Ebi Tenjiroh's view</strong><br>Update changes Tenjiroh's numbers; Draw paints the next frame.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">(g *Game) is the receiver: a name tag that lets the function use this Game's state.</p></div></section>

@@ -53,6 +53,8 @@
         <p class="lesson-lead">答えは<strong>タイルマップ</strong>です。ステージを文字列の配列で書き、<code>#</code> が壁、<code>@</code> がプレイヤー、<code>$</code> が箱、<code>.</code> がゴールを表します。起動時にこの文字列を1文字ずつ読み、「どのタイル座標に何があるか」をデータへ変換します。1タイルは <strong>48×48 ピクセル</strong>（JSONではなく Go の文字列スライス）です。絵は後からタイル座標を元に描けばよいので、ステージ設計とコードが完全に分離できます。</p>
       </div>
 
+      <div class="tile-legend" aria-label="タイルマップ記号の意味"><h3>地図に使う4つの記号</h3><table><thead><tr><th>記号</th><th>意味</th><th>ゲーム内の役目</th></tr></thead><tbody><tr><td><code>#</code></td><td>壁</td><td>通れないマス</td></tr><tr><td><code>@</code></td><td>プレイヤー</td><td>開始位置</td></tr><tr><td><code>$</code></td><td>箱</td><td>押して動かす物</td></tr><tr><td><code>.</code></td><td>ゴール</td><td>箱を置く目的地</td></tr></tbody></table><p>たとえばマス <code>(2,3)</code> を描く位置は、1マス48ピクセルなので <code>(2×48, 3×48) = (96,144)</code> です。</p></div>
+
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>文字列でステージ</h3><p>ステージはGoの文字列スライス。<code>#</code> や <code>$</code> を読んで壁・箱のデータを作ります。見た目がそのままマップになるので設計しやすいです。</p><code>var level = []string{…}</code></article>
         <article><span class="concept-number">2</span><h3>論理座標と描画座標を分ける</h3><p>「マス座標（何列目・何行目）」と「画面のピクセル位置」は別の数字だと考えます。たとえばマス <code>(2,3)</code> は、画面上では <code>(2*48, 3*48) = (96,144)</code> のピクセル位置です。壁判定はいつもマス座標のほうで行い、<code>moving</code> 中は <code>progress</code>（0→1）で画面のピクセル位置だけをなめらかにずらします。着いた瞬間にマス座標を更新します。</p><code>if moving { progress += …; return }</code></article>
@@ -515,6 +517,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

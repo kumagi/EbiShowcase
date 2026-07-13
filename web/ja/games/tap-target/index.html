@@ -47,7 +47,7 @@
     <section class="learn" id="basics">
       <p class="eyebrow">WHAT'S INSIDE / BEFORE ANYTHING ELSE</p>
       <h2>ゲームの心臓部は、<br>たった3つのメソッド。</h2>
-      <p class="lesson-lead">Ebitengineのゲームは、パラパラ漫画と同じです。毎フレーム「数字を変える」→「画面に描く」をくり返します。このリズムがわかると、あとから出てくる重力も敵も、同じ枠の中に書けます。</p>
+      <p class="lesson-lead"><strong>メソッドは、Gameという箱に結び付いた関数（ひとまとまりの仕事）</strong>です。Ebitengineのゲームはパラパラ漫画と同じで、毎フレーム「数字を変える」→「画面に描く」をくり返します。このリズムがわかると、あとから出てくる重力も敵も、同じ枠の中に書けます。</p>
       <div class="steps" style="grid-template-columns:1fr 1fr">
         <article><b>01</b><h3>UPDATE</h3><p>入力を読み、スコアや位置などの<strong>数字</strong>を進めます。ここには絵を描きません。</p><code>func (g *Game) Update() error</code></article>
         <article><b>02</b><h3>DRAW</h3><p>いまの数字どおりに、丸や文字を<strong>画面へ描きます</strong>。計算はしません。</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
@@ -105,12 +105,12 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / INPUT &amp; COORDINATES</p>
         <h2>どうして、<br>押した場所がわかるの？</h2>
-        <p class="lesson-lead">ループの仕組みがわかったら、次は中身です。画面はマス目のないグラフ用紙。左上が <strong>(0, 0)</strong>。右へ行くほど X が、下へ行くほど Y が大きくなります。タッチした点と丸の中心の距離が、半径より短ければ「当たった！」です。</p>
+        <p class="lesson-lead">ループの仕組みがわかったら、次は中身です。画面はマス目のないグラフ用紙。画像のピクセルは左上から右へ、次の行へと数える約束なので、左上が <strong>(0, 0)</strong>、右へ行くほど X が、下へ行くほど Y が大きくなります。数学のグラフとはYの向きが逆です。タッチした点と丸の中心の距離が、半径より短ければ「当たった！」です。</p>
       </div>
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>座標</h3><p>画面のどこかを、2つの数で表します。丸の中心も、タッチした場所も、同じ X と Y で書けます。</p><code>circleX, circleY</code></article>
-        <article><span class="concept-number">2</span><h3>距離</h3><p>2点のあいだの長さです。<code>math.Hypot(dx, dy)</code> は、たて・よこの差から2点の距離を出す便利関数（中学の三平方の定理と同じ計算）。ゲーム本体はこれをそのまま使います。同じ判定を二乗のまま書く方法もあり、結果は同じです。</p><code>math.Hypot(dx, dy)</code></article>
+        <article><span class="concept-number">2</span><h3>距離</h3><p>2点のあいだの長さです。<code>math.Hypot(dx, dy)</code> は、たて・よこの差から2点の距離を出す便利関数（中学の三平方の定理と同じ計算）。これはGo標準のmathパッケージの道具なので、ファイル上部に <code>import "math"</code> が必要です。</p><code>math.Hypot(dx, dy)</code></article>
         <article><span class="concept-number">3</span><h3>当たり判定</h3><p>距離が半径以下ならヒット。得点して、次の丸を別の場所へ移します。</p><code>dist &lt;= radius</code></article>
       </div>
 
@@ -134,6 +134,7 @@
             <div class="lab-tap" data-lab-tap hidden aria-hidden="true"></div>
           </div>
           <div class="lab-values" aria-live="polite">
+            <div><span>押した座標</span><strong data-lab-point>—</strong><small>(X, Y)</small></div>
             <div><span>dx</span><strong data-lab-dx>—</strong><small>左右の差</small></div>
             <div><span>dy</span><strong data-lab-dy>—</strong><small>上下の差</small></div>
             <div><span>距離</span><strong data-lab-dist>—</strong><small class="lab-result" data-lab-result data-state="wait">タッチしてね</small></div>
@@ -374,6 +375,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

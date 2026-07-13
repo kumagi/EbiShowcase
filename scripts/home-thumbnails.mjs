@@ -72,13 +72,36 @@ export function collectHomeThumbnails() {
 function inject(lang, items) {
   const file = join(root, "web", lang, "index.html");
   let html = readFileSync(file, "utf8");
-  html = html.replace(/<span class="home-card-shot"><img[^>]*><\/span>/g, "");
+  const titles = new Map();
+  for (const item of items) {
+    const hrefAt = html.indexOf(`href="${item.href}"`);
+    const cardEnd = html.indexOf("</a>", hrefAt);
+    const titleStart = html.indexOf("<h3>", hrefAt);
+    const titleEnd = html.indexOf("</h3>", titleStart);
+    if (hrefAt < 0 || cardEnd < 0 || titleStart < 0 || titleStart > cardEnd || titleEnd > cardEnd) {
+      throw new Error(`No thumbnail title for ${lang} home card: ${item.href}`);
+    }
+    const rawTitle = html.slice(titleStart + 4, titleEnd);
+    const title = rawTitle
+      .replace(/<br\s*\/?>/gi, " ")
+      .replace(/<[^>]+>/g, "")
+      .replace(/&amp;/g, "&")
+      .replace(/\s+/g, " ")
+      .trim();
+    titles.set(item.href, title);
+  }
+  html = html.replace(/<span class="home-card-shot"><img[^>]*>(?:<span class="home-card-shot-label">[\s\S]*?<\/span>)?<\/span>/g, "");
   const byHref = new Map(items.map((item) => [item.href, item]));
   html = html.replace(cardPattern, (tag, classes, href) => {
     if (!cardKind(classes)) return tag;
     const item = byHref.get(href);
     if (!item) throw new Error(`No thumbnail mapping for ${lang} home card: ${href}`);
-    return `${tag}<span class="home-card-shot"><img src="../assets/home-thumbnails/${item.file}" width="480" height="720" loading="lazy" decoding="async" alt=""></span>`;
+    const title = titles.get(href);
+    if (!title) throw new Error(`No thumbnail title for ${lang} home card: ${href}`);
+    const prefix = lang === "ja"
+      ? { core: "このゲームを作る", vfx: "この絵を作る", track: "完成ゲーム" }[item.kind]
+      : { core: "BUILD THIS GAME", vfx: "CREATE THIS EFFECT", track: "FINAL GAME" }[item.kind];
+    return `${tag}<span class="home-card-shot"><img src="../assets/home-thumbnails/${item.file}" width="480" height="720" loading="lazy" decoding="async" alt=""><span class="home-card-shot-label"><small>${prefix}</small><strong>${title}</strong></span></span>`;
   });
   writeFileSync(file, html);
 }

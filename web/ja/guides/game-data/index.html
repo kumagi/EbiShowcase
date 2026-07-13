@@ -24,6 +24,8 @@
 <main><div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>SPECIAL GUIDE</span></div>
 <section class="data-hero"><p class="eyebrow">ゲームの中身を分ける考え方</p><h1>ゲームを作るとは、<br><em>世界を組み立てること。</em></h1><p>小さなゲームなら、敵の位置も会話もプログラムに直接書けます。世界が大きくなると、「どう動くか（仕組み）」と「何があるか（中身）」を分けた方が作りやすくなります。まずは下の図で、1本のゲームがどんな部品でできているかを見てみましょう。</p></section>
 
+<section class="data-basics" aria-labelledby="data-basics-title"><div><p class="eyebrow">TWO WORDS FIRST / 先に2つの用語</p><h2 id="data-basics-title">マス目と、<br>並べる箱。</h2><p>この先で何度も使う「タイルマップ」と「スライス」を、図で先に確かめます。</p></div><article><h3>タイルマップ</h3><div class="tile-map-mini" role="img" aria-label="5列4行のマス目に壁、道、主人公、宝箱を置いた地図"><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span>道</span><span>道</span><span class="chest">箱</span><span class="wall">壁</span><span class="wall">壁</span><span>道</span><span class="hero">人</span><span>道</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span></div><p><strong>ゲームの世界を同じ大きさのマスに分ける方法</strong>です。「2列目・3行目は道」のように数字で保存でき、絵は後から各マスへ描きます。</p></article><article><h3>配列・スライス・リスト</h3><p><code>[4]int</code> の<strong>配列</strong>は、長さ4で固定された箱。<code>[]int</code> の<strong>スライス</strong>は、必要に応じて要素を増減しやすい並びです。この教材で「敵のリスト」と呼ぶものは、Goコードではたいていスライスを使います。</p><code>enemies := []Enemy{...}</code></article></section>
+
 <section class="composition" id="layers"><div class="guide-heading"><p class="eyebrow">THE SIX LAYERS</p><h2>1本のゲームは、<br>6つの層でできている。</h2><p class="lesson-lead" style="max-width:40rem;margin:0.75rem auto 0">イメージ：レシピ（仕組み）と食材リスト（中身）を分けると、同じ炒め方で野菜も肉も作れます。ゲームも同じです。</p></div>
 <div class="composition-flow" role="img" aria-label="アセットデータをローダーが読み、ゲーム世界を組み立て、UpdateとDrawが再生し、進行状態をセーブする流れ">
 <div class="flow-sources"><span>MAP</span><span>SCENARIO</span><span>EVENT</span><span>IMAGE</span><span>AUDIO</span></div><b>↓ 読み込む</b><div class="flow-loader">ASSET LOADER<small>JSON・画像・音を型のあるデータへ</small></div><b>↓ 組み立てる</b><div class="flow-world">GAME WORLD<small>マップ・登場人物・イベントを配置</small></div><b>↓ 毎フレーム再生</b><div class="flow-runtime"><span>UPDATE</span><span>DRAW</span><span>SAVE</span></div></div>
@@ -138,6 +140,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

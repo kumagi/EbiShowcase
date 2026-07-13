@@ -12,9 +12,10 @@ import (
 )
 
 type game struct {
-	shell *vfxlive.Shell
-	trail [][2]float64
-	x, y  float64
+	shell            *vfxlive.Shell
+	trail            [][2]float64
+	x, y             float64
+	targetX, targetY float64
 }
 
 func newGame() *game {
@@ -29,13 +30,14 @@ func newGame() *game {
 				"  screen.DrawImage(tenjiroh, op)",
 				"}",
 			},
-			&vfxlive.Param{Key: "trail", Label: "trail", Value: 10, Min: 1, Max: 24, Step: 1, Format: "%.0f"},
+			&vfxlive.Param{Key: "trail", Label: "trail", Value: 24, Min: 1, Max: 24, Step: 1, Format: "%.0f"},
 			&vfxlive.Param{Key: "alpha", Label: "alpha", Value: 0.85, Min: 0.15, Max: 1, Format: "%.2f"},
-			&vfxlive.Param{Key: "ease", Label: "ease", Value: 0.2, Min: 0.05, Max: 0.5, Format: "%.2f"},
+			&vfxlive.Param{Key: "ease", Label: "ease", Value: 0.05, Min: 0.05, Max: 0.5, Format: "%.2f"},
 		),
 	}
 	_, sy, _, sh := g.shell.Stage()
 	g.x, g.y = 240, sy+sh/2
+	g.targetX, g.targetY = g.x, g.y
 	return g
 }
 
@@ -44,11 +46,12 @@ func (g *game) Update() error {
 	_, sy, _, sh := g.shell.Stage()
 	if !ate {
 		if x, y, ok := vfxui.Held(); ok && y >= sy && y <= sy+sh {
-			ease := g.shell.Get("ease")
-			g.x += (x - g.x) * ease
-			g.y += (y - g.y) * ease
+			g.targetX, g.targetY = x, y
 		}
 	}
+	ease := g.shell.Get("ease")
+	g.x += (g.targetX - g.x) * ease
+	g.y += (g.targetY - g.y) * ease
 	g.trail = append(g.trail, [2]float64{g.x, g.y})
 	n := int(g.shell.Get("trail") + 0.5)
 	if len(g.trail) > n {

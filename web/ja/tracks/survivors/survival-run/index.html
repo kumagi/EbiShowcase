@@ -233,6 +233,8 @@ speed := .85 + float64(sec)*.018
 
 
 
+
+
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ウェーブは時間で区切った敵の波、ボスは区切りの最後に出る強敵、難易度曲線は時間とともに数・速さ・HPを少しずつ増やす設計です。目標時間まで生き残ればクリアです。 PLAYABLEは『このページで実際に操作できる』という印です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>wave := elapsed / waveSeconds</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>
 <!-- END BEGINNER BRIDGE -->

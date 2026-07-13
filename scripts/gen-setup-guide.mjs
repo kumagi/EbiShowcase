@@ -178,7 +178,7 @@ function page(lang) {
           id: "compiler",
           n: "02",
           h: "Mac だけ：C コンパイラを入れる",
-          p: "Ebitengine は中で C の部品も使います。<strong>Windows の学校 PC はこのステップを飛ばして大丈夫</strong>です。Mac だけ、無料の「コマンドラインツール」を入れます。教室の PC が Windows なら、すぐ「3. 動作確認」へ進んでください。",
+          p: "Ebitengine は中で C の部品も使います。<strong>Windows の学校 PC はこのステップを飛ばして大丈夫</strong>です。Mac だけ、無料の「コマンドラインツール」——プログラムを作るときに裏側で使う道具一式——を入れます。長い名前を覚える必要はありません。教室の PC が Windows なら、すぐ「3. 動作確認」へ進んでください。",
           winSkip: "Windows の人はこのステップを飛ばして「3. 動作確認」へ進んでください。",
           macCmd: "xcode-select --install",
           macBody: [
@@ -208,9 +208,9 @@ function page(lang) {
           cmds: [
             ["mkdir ebi-empty", "フォルダを作る"],
             ["cd ebi-empty", "その中へ入る"],
-            ["go mod init example.com/ebi-empty", "このフォルダを Go プロジェクトにする"],
+            ["go mod init example.com/ebi-empty", "このフォルダの目次 go.mod を作る"],
           ],
-          after: "go.mod という小さなファイルができていれば OK です。モジュール名は後から変えられます。",
+          after: "go.mod は、このゲームの名前と、外から借りる部品（Ebitengine など）を Go が管理するための『プロジェクトの目次ノート』です。これがあることで、Go は必要な外部パッケージを同じ組み合わせで用意できます。小さな go.mod ができていれば OK。モジュール名は後から変えられます。",
         },
         step5: {
           id: "code",
@@ -343,7 +343,7 @@ function page(lang) {
           id: "compiler",
           n: "02",
           h: "Mac only: install a C compiler",
-          p: "Ebitengine also uses a little C under the hood. <strong>Windows school PCs can skip this.</strong> On Mac only, install Apple’s Command Line Tools (free). If your classroom PC is Windows, jump to step 3.",
+          p: "Ebitengine also uses a little C under the hood. <strong>Windows school PCs can skip this.</strong> On Mac only, install Apple’s Command Line Tools—the behind-the-scenes tool kit used to build programs. You do not need to memorize the long name. If your classroom PC is Windows, jump to step 3.",
           winSkip: "On Windows, skip this step and go to “3. Verify”.",
           macCmd: "xcode-select --install",
           macBody: [
@@ -373,9 +373,9 @@ function page(lang) {
           cmds: [
             ["mkdir ebi-empty", "Create the folder"],
             ["cd ebi-empty", "Enter it"],
-            ["go mod init example.com/ebi-empty", "Turn it into a Go module"],
+            ["go mod init example.com/ebi-empty", "Create the go.mod table of contents"],
           ],
-          after: "You should see a small go.mod file. You can rename the module later.",
+          after: "go.mod is the project’s table-of-contents note: it records this game’s name and lets Go manage borrowed parts such as Ebitengine. With it, Go can prepare the same external packages again. Seeing the small go.mod file means success; you can rename the module later.",
         },
         step5: {
           id: "code",

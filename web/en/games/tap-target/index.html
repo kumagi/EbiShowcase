@@ -47,7 +47,7 @@
     <section class="learn" id="basics">
       <p class="eyebrow">WHAT'S INSIDE / BEFORE ANYTHING ELSE</p>
       <h2>The heart of a game<br>is just three methods.</h2>
-      <p class="lesson-lead">An Ebitengine game is a flipbook. Every frame you <strong>change the numbers</strong>, then <strong>paint the screen</strong>. Once that rhythm clicks, gravity, enemies, and everything later fits in the same frame.</p>
+      <p class="lesson-lead">A <strong>method is a function—a named piece of work—attached to the Game box</strong>. An Ebitengine game is a flipbook. Every frame you change the numbers, then paint the screen. Once that rhythm clicks, gravity, enemies, and everything later fits in the same frame.</p>
       <div class="steps" style="grid-template-columns:1fr 1fr">
         <article><b>01</b><h3>UPDATE</h3><p>Read input and advance the <strong>numbers</strong>—score, positions, timers. Do not draw here.</p><code>func (g *Game) Update() error</code></article>
         <article><b>02</b><h3>DRAW</h3><p>Paint circles and text from the current numbers. Do not run game math here.</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
@@ -104,12 +104,12 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / INPUT &amp; COORDINATES</p>
         <h2>How does the game<br>know where you tapped?</h2>
-        <p class="lesson-lead">Once the loop makes sense, fill it with meaning. Think of the screen as graph paper without lines. The top-left is <strong>(0, 0)</strong>. X grows to the right, Y grows downward. If the distance from your tap to the circle center is shorter than the radius, it counts as a hit.</p>
+        <p class="lesson-lead">Once the loop makes sense, fill it with meaning. Image pixels are counted from the top-left, across one row and then down to the next, so the top-left is <strong>(0, 0)</strong>. X grows right and Y grows downward—the opposite Y direction from a math graph. If the distance from your tap to the circle center is shorter than the radius, it counts as a hit.</p>
       </div>
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>Coordinates</h3><p>Any place on screen is two numbers. The circle center and the tap use the same X and Y.</p><code>circleX, circleY</code></article>
-        <article><span class="concept-number">2</span><h3>Distance</h3><p><code>math.Hypot(dx, dy)</code> is a plain helper that turns a horizontal and a vertical difference into the straight-line distance between two points—the same calculation as the Pythagorean theorem you may know from math class. The game just calls it directly. Comparing squares instead is an optional shortcut with the same hit/miss result.</p><code>hypot(dx, dy)</code></article>
+        <article><span class="concept-number">2</span><h3>Distance</h3><p><code>math.Hypot(dx, dy)</code> turns horizontal and vertical differences into straight-line distance. It comes from Go's standard math package, so the file needs <code>import "math"</code> near the top.</p><code>math.Hypot(dx, dy)</code></article>
         <article><span class="concept-number">3</span><h3>Hit test</h3><p>If distance is less than or equal to the radius, score a hit and move the target.</p><code>dist &lt;= radius</code></article>
       </div>
 
@@ -133,6 +133,7 @@
             <div class="lab-tap" data-lab-tap hidden aria-hidden="true"></div>
           </div>
           <div class="lab-values" aria-live="polite">
+            <div><span>tap position</span><strong data-lab-point>—</strong><small>(X, Y)</small></div>
             <div><span>dx</span><strong data-lab-dx>—</strong><small>left/right</small></div>
             <div><span>dy</span><strong data-lab-dy>—</strong><small>up/down</small></div>
             <div><span>distance</span><strong data-lab-dist>—</strong><small class="lab-result" data-lab-result data-state="wait">TAP HERE</small></div>
@@ -374,6 +375,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

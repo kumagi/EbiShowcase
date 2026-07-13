@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。">
   <title>はじめての環境づくり — 空の窓を開くまで | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/setup/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
@@ -23,7 +24,6 @@
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--setup.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="まっさらなパソコンから、 空の窓を開くまで。">
     <!-- ogp:end -->
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/setup/">
   <link rel="stylesheet" href="../../../style.css">
 </head>
 <body>
@@ -84,7 +84,7 @@
   <section class="setup-step" id="compiler">
     <p class="setup-n">STEP 02</p>
     <h2>Mac だけ：C コンパイラを入れる</h2>
-    <p class="setup-lead">Ebitengine は中で C の部品も使います。<strong>Windows の学校 PC はこのステップを飛ばして大丈夫</strong>です。Mac だけ、無料の「コマンドラインツール」を入れます。教室の PC が Windows なら、すぐ「3. 動作確認」へ進んでください。</p>
+    <p class="setup-lead">Ebitengine は中で C の部品も使います。<strong>Windows の学校 PC はこのステップを飛ばして大丈夫</strong>です。Mac だけ、無料の「コマンドラインツール」——プログラムを作るときに裏側で使う道具一式——を入れます。長い名前を覚える必要はありません。教室の PC が Windows なら、すぐ「3. 動作確認」へ進んでください。</p>
     <p class="setup-skip">Windows の人はこのステップを飛ばして「3. 動作確認」へ進んでください。</p>
     <pre class="setup-code"><code>xcode-select --install</code></pre>
     <ol class="setup-ol"><li>ターミナルに上のコマンドを貼り付けて Enter</li><li>ダイアログが出たら「インストール」を選ぶ（数分〜十数分かかることがあります）</li><li>すでに入っている場合は「command line tools are already installed」のようなメッセージで大丈夫です</li></ol>
@@ -109,8 +109,8 @@
     <p class="setup-n">STEP 04</p>
     <h2>ゲーム用のフォルダを作る</h2>
     <p class="setup-lead">デスクトップでもドキュメントでも構いません。ここでは例として home の直下に ebi-empty を作ります。</p>
-    <ol class="setup-cmd-list"><li><code>mkdir ebi-empty</code><span>フォルダを作る</span></li><li><code>cd ebi-empty</code><span>その中へ入る</span></li><li><code>go mod init example.com/ebi-empty</code><span>このフォルダを Go プロジェクトにする</span></li></ol>
-    <p class="setup-ok">go.mod という小さなファイルができていれば OK です。モジュール名は後から変えられます。</p>
+    <ol class="setup-cmd-list"><li><code>mkdir ebi-empty</code><span>フォルダを作る</span></li><li><code>cd ebi-empty</code><span>その中へ入る</span></li><li><code>go mod init example.com/ebi-empty</code><span>このフォルダの目次 go.mod を作る</span></li></ol>
+    <p class="setup-ok">go.mod は、このゲームの名前と、外から借りる部品（Ebitengine など）を Go が管理するための『プロジェクトの目次ノート』です。これがあることで、Go は必要な外部パッケージを同じ組み合わせで用意できます。小さな go.mod ができていれば OK。モジュール名は後から変えられます。</p>
   </section>
 
   <section class="setup-step" id="code">
@@ -203,39 +203,6 @@ func main() {
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>go.modは『このゲームの名前と使う部品』を書いた目次ファイル。PowerShell/ターミナルは文字で命令する同じ役目の窓です。天次郎の最初の一コマを出すところまで進みます。</p></div><div class="beginner-code"><p><strong>海老・天次郎の見方</strong><br>Updateが天次郎の数字を変え、Drawが次の一コマを描きます。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre><p class="receiver-note">func (g *Game)の(g *Game)は、この仕事がGameの値を読むための名札（レシーバー）です。</p></div></section>

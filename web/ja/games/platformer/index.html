@@ -50,7 +50,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / COLLISION AND CAMERA</p>
         <h2>壁にめり込まず、<br>カメラはどう動くの？</h2>
-        <p class="lesson-lead">衝突解決の秘訣は<strong>X軸とY軸を別々に処理する</strong>ことです。X方向に動かして壁と重なったらX方向だけ戻す、次にY方向に動かして重なったらY方向だけ戻す。この2ステップにより、壁を滑るように歩けて、天井に頭をぶつけてジャンプが止まる、という自然な動きが生まれます。カメラは「目標位置」に向けて毎フレーム少しずつ近づくことで、なめらかな追従を実現します。</p>
+        <p class="lesson-lead">衝突解決の秘訣は<strong>X軸とY軸を別々に処理する</strong>ことです。横と縦を一度に直すと、右へ歩いて床の角に触れただけなのに縦位置まで戻され、「床に乗れない」「壁に触れるとジャンプが止まる」といったバグになります。X方向の重なりはXだけ、次にY方向の重なりはYだけ戻すと、壁を滑って床へ正しく着地できます。</p>
       </div>
 
       <p class="lesson-lead">まず「めり込みを直す」話を読んでから、あとのカードでカメラに進みましょう。</p>
@@ -71,6 +71,9 @@
             <button type="button" class="lab-button" data-lab-left data-go-focus="target">左へ</button>
             <button type="button" class="lab-button lab-button-primary" data-lab-right data-go-focus="target">右へ</button>
             <button type="button" class="lab-button" data-lab-step data-go-focus="lerp draw" data-go-caption="1枚引く">カメラ追従</button>
+            <button type="button" class="lab-button" data-camera-factor="0.09">ゆっくり 0.09</button>
+            <button type="button" class="lab-button" data-camera-factor="0.5">速い 0.5</button>
+            <button type="button" class="lab-button" data-camera-factor="1">瞬間 1.0</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
@@ -81,6 +84,7 @@
             <div><span>camera</span><strong data-lab-cam>0</strong><small></small></div>
             <div><span>player</span><strong data-lab-player>200</strong><small></small></div>
             <div><span>screen X</span><strong data-lab-screen>200</strong><small></small></div>
+            <div><span>追う割合</span><strong data-lab-factor>0.09</strong><small>残り距離の何倍</small></div>
           </div>
         </div>
 <div class="lab-go-block">
@@ -446,6 +450,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 
