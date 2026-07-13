@@ -393,6 +393,13 @@
   },
   {
     "kind": "track",
+    "href": "tracks/reversi/",
+    "route": "tracks/reversi",
+    "slug": "ebi-reversi",
+    "file": "tracks--reversi.webp"
+  },
+  {
+    "kind": "track",
     "href": "tracks/tactics/",
     "route": "tracks/tactics",
     "slug": "ebi-tactics",

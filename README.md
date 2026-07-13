@@ -37,6 +37,7 @@ SNS向けの OGP は `node scripts/inject-ogp.mjs` と `go run ./cmd/gen-og-imag
 - `web/*/guides/game-data/` — アセットデータとゲーム構成を学ぶ横断ガイド
 - `examples/data-driven/` — `go:embed`とJSONによるデータ読み込みの実例
 - `docs/Glossary.md` — フレーム、座標、ラジアン、`iota`、スライスなどの用語集
+- `scripts/ai_feedback_crawler.py` / `docs/AI_FEEDBACK_AGENT.md` — LM Studioで改善提案を巡回生成（送信は明示指定時のみ）
 - `web/game.html` — 両言語で共有するWASMローダー
 - `scripts/build.sh` — `dist/` を生成するビルド
 - `.github/workflows/pages.yml` — GitHub Pagesデプロイ

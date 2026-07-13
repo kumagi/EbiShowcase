@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Flip the Bracketed Stones | Ebi Showcase</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/reversi/flip-stones/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Flip the Bracketed Stones | Ebi Showcase">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/reversi/flip-stones/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--reversi--flip-stones.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Flip the Bracketed Stones">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Flip the Bracketed Stones | Ebi Showcase">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--reversi--flip-stones.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Flip the Bracketed Stones">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/reversi/flip-stones/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Build Reversi with a Computer</a><span>STEP 03 / 05</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>Flip the Bracketed Stones</h1><p>Walk in eight directions from a move and turn every bracketed opponent stone to your color.</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Flip the Bracketed Stones</h2><p>Use click or touch to play. Watch the coordinates, legal moves, and stone counts.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/flip-stones/" title="Flip the Bracketed Stones" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Separate legality from mutation</h2><p>Captures returns the coordinates to flip; Apply changes the board using that list. Separating the check from the mutation makes tests easier.</p><div class="concept-row"><article><b>01</b><h3>SEE</h3><p>Walk in eight directions from a move and turn every bracketed opponent stone to your color.</p></article><article><b>02</b><h3>STATE</h3><p>Captures returns the coordinates to flip; Apply changes the board using that list. Separating the check from the mutation makes tests easier.</p></article><article><b>03</b><h3>DECIDE</h3><p>Explain the reason for the next move from the visible board.</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="BOARD,SCAN,FLIP,SCORE"><div><p class="eyebrow">SYSTEM LAB</p><h2>Separate legality from mutation</h2><p>Step through the system and follow data into the next operation.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Separate legality from mutation</h2><p>Here is the central rule used by the playable game.</p></div><pre><code>captured := Captures(board, player, move)
+board[move.Y][move.X] = player
+for _, cell := range captured {
+    board[cell.Y][cell.X] = player
+}</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>Captures returns the coordinates to flip; Apply changes the board using that list. Separating the check from the mutation makes tests easier.</p></article><article><h3>CHANGE</h3><p>Change the score map or starting position and compare the result.</p></article><article class="challenge"><h3>CHALLENGE</h3><p>Improve the CPU so it looks one move ahead instead of only chasing corners.</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>Build Reversi with a Computer</strong></a><a href="../pass-and-score/">NEXT →<strong>Add Passes and a Score</strong></a></nav>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/reversi/flip-stones/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

@@ -3688,6 +3688,44 @@ document.querySelectorAll(".motion-lab[data-lab='match-swap']").forEach((lab) =>
   render();
 });
 
+// Reversi evaluation lab: make the weighted sum visible instead of leaving
+// the CPU's choice as a mysterious number.
+document.querySelectorAll(".motion-lab[data-lab='reversi-eval']").forEach((lab) => {
+  const map = lab.querySelector("[data-reversi-map]");
+  const score = lab.querySelector("[data-reversi-score]");
+  const ja = lab.dataset.lang === "ja";
+  const weights = [
+    [120, -20, 20, 5, 5, 20, -20, 120], [-20, -40, -5, -5, -5, -5, -40, -20],
+    [20, -5, 15, 3, 3, 15, -5, 20], [5, -5, 3, 3, 3, 3, -5, 5],
+    [5, -5, 3, 3, 3, 3, -5, 5], [20, -5, 15, 3, 3, 15, -5, 20],
+    [-20, -40, -5, -5, -5, -5, -40, -20], [120, -20, 20, 5, 5, 20, -20, 120],
+  ];
+  let stones = new Map();
+  const key = (x, y) => `${x},${y}`;
+  const render = () => {
+    let total = 0;
+    if (map) {
+      map.innerHTML = Array.from({ length: 64 }, (_, i) => {
+        const x = i % 8, y = Math.floor(i / 8), value = weights[y][x], stone = stones.get(key(x, y)) || "";
+        if (stone === "black") total += value;
+        if (stone === "white") total -= value;
+        const corner = (x === 0 || x === 7) && (y === 0 || y === 7) ? " is-corner" : "";
+        return `<span class="reversi-eval-cell ${stone ? `is-${stone}` : ""}${corner}">${stone === "black" ? "●" : stone === "white" ? "○" : value}</span>`;
+      }).join("");
+    }
+    if (score) score.textContent = ja ? `評価値 = ${total}（黒の石×マス点 − 白の石×マス点）` : `EVALUATION = ${total} (black stone×map − white stone×map)`;
+  };
+  lab.querySelectorAll("[data-reversi-place]").forEach((button) => button.addEventListener("click", () => {
+    const mode = button.dataset.reversiPlace;
+    if (mode === "corner") stones = new Map([[key(0, 0), "black"], [key(1, 0), "white"]]);
+    if (mode === "risky") stones = new Map([[key(1, 0), "black"], [key(0, 0), "white"]]);
+    if (mode === "center") stones = new Map([[key(3, 3), "black"], [key(4, 3), "white"]]);
+    if (mode === "reset") stones = new Map();
+    render();
+  }));
+  render();
+});
+
 // Metroidvania ability route: make the old ledge a small, readable challenge.
 document.querySelectorAll(".motion-lab[data-lab='ability-gate']").forEach((lab) => {
   const player = lab.querySelector("[data-lab-player]");

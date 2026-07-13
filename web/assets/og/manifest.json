@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-07-13T16:18:50.650Z",
+  "generatedAt": "2026-07-13T17:15:54.288Z",
   "pages": [
     {
       "file": "web/en/games/breakout/index.html",
@@ -1753,6 +1753,78 @@
       "eyebrow": "★★★☆☆ / PLAYABLE",
       "description": "Learn Ebitengine through playable mini games.",
       "image": "assets/og/en--tracks--racing--steering-grip.png"
+    },
+    {
+      "file": "web/en/tracks/reversi/board-grid/index.html",
+      "path": "en/tracks/reversi/board-grid",
+      "key": "en--tracks--reversi--board-grid",
+      "lang": "en",
+      "kind": "track",
+      "title": "Draw an 8×8 Board from Data | Ebi Showcase",
+      "h1": "Draw an 8×8 Board from Data",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--reversi--board-grid.png"
+    },
+    {
+      "file": "web/en/tracks/reversi/ebi-reversi/index.html",
+      "path": "en/tracks/reversi/ebi-reversi",
+      "key": "en--tracks--reversi--ebi-reversi",
+      "lang": "en",
+      "kind": "track",
+      "title": "Play a CPU Using an Evaluation Function | Ebi Showcase",
+      "h1": "Play a CPU Using an Evaluation Function",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--reversi--ebi-reversi.png"
+    },
+    {
+      "file": "web/en/tracks/reversi/flip-stones/index.html",
+      "path": "en/tracks/reversi/flip-stones",
+      "key": "en--tracks--reversi--flip-stones",
+      "lang": "en",
+      "kind": "track",
+      "title": "Flip the Bracketed Stones | Ebi Showcase",
+      "h1": "Flip the Bracketed Stones",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--reversi--flip-stones.png"
+    },
+    {
+      "file": "web/en/tracks/reversi/index.html",
+      "path": "en/tracks/reversi",
+      "key": "en--tracks--reversi",
+      "lang": "en",
+      "kind": "track",
+      "title": "Build Reversi with a Computer | Ebi Showcase",
+      "h1": "Build Reversi with a Computer",
+      "eyebrow": "Read the board, flip stones, beat the CPU",
+      "description": "Represent an 8×8 board, then add legal moves, flips, passes, and scores. Finish by playing a CPU that values corners.",
+      "image": "assets/og/en--tracks--reversi.png"
+    },
+    {
+      "file": "web/en/tracks/reversi/legal-moves/index.html",
+      "path": "en/tracks/reversi/legal-moves",
+      "key": "en--tracks--reversi--legal-moves",
+      "lang": "en",
+      "kind": "track",
+      "title": "Find Legal Moves | Ebi Showcase",
+      "h1": "Find Legal Moves",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--reversi--legal-moves.png"
+    },
+    {
+      "file": "web/en/tracks/reversi/pass-and-score/index.html",
+      "path": "en/tracks/reversi/pass-and-score",
+      "key": "en--tracks--reversi--pass-and-score",
+      "lang": "en",
+      "kind": "track",
+      "title": "Add Passes and a Score | Ebi Showcase",
+      "h1": "Add Passes and a Score",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Learn Ebitengine through playable mini games.",
+      "image": "assets/og/en--tracks--reversi--pass-and-score.png"
     },
     {
       "file": "web/en/tracks/rpg/battle-animation/index.html",
@@ -4621,6 +4693,78 @@
       "eyebrow": "★★★☆☆ / PLAYABLE",
       "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
       "image": "assets/og/ja--tracks--racing--steering-grip.png"
+    },
+    {
+      "file": "web/ja/tracks/reversi/board-grid/index.html",
+      "path": "ja/tracks/reversi/board-grid",
+      "key": "ja--tracks--reversi--board-grid",
+      "lang": "ja",
+      "kind": "track",
+      "title": "8×8の盤面をデータで描く | Ebi Showcase",
+      "h1": "8×8の盤面をデータで描く",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--reversi--board-grid.png"
+    },
+    {
+      "file": "web/ja/tracks/reversi/ebi-reversi/index.html",
+      "path": "ja/tracks/reversi/ebi-reversi",
+      "key": "ja--tracks--reversi--ebi-reversi",
+      "lang": "ja",
+      "kind": "track",
+      "title": "評価関数でCPUと対戦する | Ebi Showcase",
+      "h1": "評価関数でCPUと対戦する",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--reversi--ebi-reversi.png"
+    },
+    {
+      "file": "web/ja/tracks/reversi/flip-stones/index.html",
+      "path": "ja/tracks/reversi/flip-stones",
+      "key": "ja--tracks--reversi--flip-stones",
+      "lang": "ja",
+      "kind": "track",
+      "title": "はさんだ石を反転する | Ebi Showcase",
+      "h1": "はさんだ石を反転する",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--reversi--flip-stones.png"
+    },
+    {
+      "file": "web/ja/tracks/reversi/index.html",
+      "path": "ja/tracks/reversi",
+      "key": "ja--tracks--reversi",
+      "lang": "ja",
+      "kind": "track",
+      "title": "コンピュータと対戦できるリバーシを作ろう | Ebi Showcase",
+      "h1": "コンピュータと対戦できるリバーシを作ろう",
+      "eyebrow": "盤面を読む、石を返す、CPUに勝つ",
+      "description": "8×8の盤面をデータで持ち、合法手・石の反転・パス・勝敗を順番に実装します。最後は角を高く評価するCPUと対戦します。",
+      "image": "assets/og/ja--tracks--reversi.png"
+    },
+    {
+      "file": "web/ja/tracks/reversi/legal-moves/index.html",
+      "path": "ja/tracks/reversi/legal-moves",
+      "key": "ja--tracks--reversi--legal-moves",
+      "lang": "ja",
+      "kind": "track",
+      "title": "置ける場所を探す | Ebi Showcase",
+      "h1": "置ける場所を探す",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--reversi--legal-moves.png"
+    },
+    {
+      "file": "web/ja/tracks/reversi/pass-and-score/index.html",
+      "path": "ja/tracks/reversi/pass-and-score",
+      "key": "ja--tracks--reversi--pass-and-score",
+      "lang": "ja",
+      "kind": "track",
+      "title": "パスと勝敗を実装する | Ebi Showcase",
+      "h1": "パスと勝敗を実装する",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。",
+      "image": "assets/og/ja--tracks--reversi--pass-and-score.png"
     },
     {
       "file": "web/ja/tracks/rpg/battle-animation/index.html",
