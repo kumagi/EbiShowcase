@@ -246,6 +246,7 @@ node scripts/feedback-sheet.mjs list      # print every response with its sheet 
 node scripts/feedback-sheet.mjs pending   # print only rows whose handled cell is blank (including multiline feedback)
 node scripts/feedback-sheet.mjs check 12  # mark row 12 as handled (✅ in 対応済み)
 node scripts/feedback-sheet.mjs check-range 12 20 # mark an already-reviewed contiguous batch
+node scripts/feedback-sheet.mjs archive       # copy history to an archive tab and reset response rows
 node scripts/feedback-sheet.mjs delete 12 # permanently delete row 12
 ```
 

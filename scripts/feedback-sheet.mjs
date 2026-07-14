@@ -13,6 +13,7 @@
  *   node scripts/feedback-sheet.mjs check 12
  *   node scripts/feedback-sheet.mjs check-range 12 20
  *   node scripts/feedback-sheet.mjs delete 12
+ *   node scripts/feedback-sheet.mjs archive
  */
 import { createSign, randomBytes } from "node:crypto";
 import { createServer } from "node:http";
@@ -213,18 +214,48 @@ async function findStatusColumn(sheet, rows) {
 }
 
 async function deleteRow(sheet, rowNumber) {
+  await batchUpdate([{ deleteDimension: { range: {
+    sheetId: sheet.sheetId,
+    dimension: "ROWS",
+    startIndex: rowNumber - 1,
+    endIndex: rowNumber,
+  } } }]);
+}
+
+async function batchUpdate(requests) {
   const token = await getAccessToken();
   const response = await fetch(`${spreadsheetURL}:batchUpdate`, {
     method: "POST",
     headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
-    body: JSON.stringify({ requests: [{ deleteDimension: { range: {
-      sheetId: sheet.sheetId,
-      dimension: "ROWS",
-      startIndex: rowNumber - 1,
-      endIndex: rowNumber,
-    } } }] }),
+    body: JSON.stringify({ requests }),
   });
   if (!response.ok) throw new Error(`Google Sheets API ${response.status}: ${await response.text()}`);
+  return response.json();
+}
+
+async function archiveFeedback(sheet, rows) {
+  if (rows.length <= 1) {
+    console.log("アーカイブする回答がありません。見出しだけ残っています。");
+    return;
+  }
+  const stamp = new Date().toISOString().replace(/[-:TZ.]/g, "").slice(0, 14);
+  const title = `feedback_archive_${stamp}`;
+  const created = await batchUpdate([{ addSheet: { properties: { title } } }]);
+  const archive = created.replies?.[0]?.addSheet?.properties;
+  if (!archive?.title) throw new Error("アーカイブ用シートを作成できませんでした。");
+  const width = rows.reduce((max, row) => Math.max(max, row.length), 0);
+  const values = rows.map((row) => Array.from({ length: width }, (_, index) => row[index] || ""));
+  await updateValues(archive, `${archive.title}!A1:${columnName(width - 1)}${values.length}`, values);
+  // Keep the form response tab (and its header) intact, but remove all old
+  // response rows so the next form submission starts at row 2 again.
+  await batchUpdate([{ deleteDimension: { range: {
+    sheetId: sheet.sheetId,
+    dimension: "ROWS",
+    startIndex: 1,
+    endIndex: rows.length,
+  } } }]);
+  console.log(`アーカイブしました: ${sheet.title} → ${archive.title} (${rows.length - 1}件)`);
+  console.log("フォーム回答シートは見出しだけになり、次の回答は2行目から入ります。");
 }
 
 try {
@@ -232,6 +263,7 @@ try {
   const rows = await getRows(sheet);
   if (command === "list") await list(sheet, rows);
   else if (command === "pending") await listPending(sheet, rows);
+  else if (command === "archive") await archiveFeedback(sheet, rows);
   else if (command === "check-range") {
     if (!Number.isInteger(rowArgument) || !Number.isInteger(endRowArgument) || rowArgument < 2 || endRowArgument < rowArgument) throw new Error("開始行と終了行を指定してください（例: check-range 12 20）。");
     const column = await findStatusColumn(sheet, rows);
@@ -247,7 +279,7 @@ try {
   } else if (command === "delete") {
     await deleteRow(sheet, rowArgument);
     console.log(`削除しました: ${sheet.title} row ${rowArgument}`);
-  } else throw new Error(`不明なコマンド: ${command}（list / pending / check / check-range / delete）`);
+  } else throw new Error(`不明なコマンド: ${command}（list / pending / check / check-range / archive / delete）`);
 } catch (error) {
   console.error(error.message);
   process.exit(1);
