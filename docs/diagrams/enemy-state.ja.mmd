@@ -1,0 +1,11 @@
+flowchart LR
+  patrol["PATROL<br/>見回る"]
+  chase["CHASE<br/>近づく"]
+  attack["ATTACK<br/>攻撃する"]
+  hurt["HURT<br/>のけぞる"]
+  defeat["DEFEAT<br/>消える"]
+  patrol --> chase
+  chase --> attack
+  attack --> hurt
+  hurt --> chase
+  hurt --> defeat

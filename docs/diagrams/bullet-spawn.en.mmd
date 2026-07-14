@@ -1,0 +1,10 @@
+flowchart LR
+  clock["frame<br/>time"]
+  pattern["circle / spiral<br/>calculate angle"]
+  bullets["bullet list<br/>[]Bullet"]
+  hit["collision<br/>enemy / player"]
+  burst["burst FX<br/>emit particles"]
+  clock --> pattern
+  pattern --> bullets
+  bullets --> hit
+  hit --> burst

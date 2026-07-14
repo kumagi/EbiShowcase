@@ -1,0 +1,8 @@
+flowchart LR
+  json["stage-01.json<br/>stage-02.json"]
+  decode["Decode<br/>構造体へ"]
+  director["StageDirector<br/>配置する"]
+  play["同じルール<br/>別の面"]
+  json --> decode
+  decode --> director
+  director --> play

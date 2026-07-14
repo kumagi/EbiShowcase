@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="GoとEbitengineで作ったミニゲームを、ブラウザですぐ遊んで学べるショーケース。">
-  <title>LEVEL 04 — Ebi Flight | Ebi Showcase</title>
+  <meta name="description" content="GoとEbitengineで作ったミニゲームを、ブラウザですぐ遊んで学べるショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+  <title>Ebi Showcase – LEVEL 04 — Ebi Flight</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="LEVEL 04 — Ebi Flight | Ebi Showcase">
-    <meta property="og:description" content="GoとEbitengineで作ったミニゲームを、ブラウザですぐ遊んで学べるショーケース。">
+    <meta property="og:title" content="Ebi Showcase – LEVEL 04 — Ebi Flight">
+    <meta property="og:description" content="GoとEbitengineで作ったミニゲームを、ブラウザですぐ遊んで学べるショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/games/flappy/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--flappy.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="LEVEL 04 — Ebi Flight | Ebi Showcase">
-    <meta name="twitter:description" content="GoとEbitengineで作ったミニゲームを、ブラウザですぐ遊んで学べるショーケース。">
+    <meta name="twitter:title" content="Ebi Showcase – LEVEL 04 — Ebi Flight">
+    <meta name="twitter:description" content="GoとEbitengineで作ったミニゲームを、ブラウザですぐ遊んで学べるショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--flappy.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Goで、 主人公が落ちる。">
     <!-- ogp:end -->
@@ -44,7 +44,12 @@
       <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
     </section>
 
-    <section class="play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_velocity-vector.svg" alt="速度ベクトル" loading="lazy" decoding="async"><figcaption>速度ベクトルの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_flappy-pipes.svg" alt="パイプを一定間隔で出す" loading="lazy" decoding="async"><figcaption>パイプを一定間隔で出すの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play" id="play">
       <div class="section-head"><div><p class="eyebrow">LEVEL 04 / EBI FLIGHT</p><h2>まずは、飛んでみよう。</h2></div><p>クリック、タップ、またはスペースキーで上昇。パイプを抜けるたびに1ポイント。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / WEBASSEMBLY</span><button id="fullscreen" type="button">FULL SCREEN ↗</button></div><div id="game-wrap"><iframe id="game" title="Ebi Flight game" src="../../../game.html" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -374,11 +379,14 @@ func main() {
     </section>
 
 
-    <nav class="lesson-pager"><a href="../catch-stars/">← LEVEL 03<strong>落ちものキャッチ</strong></a><a href="../pong/">LEVEL 05 →<strong>Pong</strong></a></nav>
+    <nav class="lesson-pager"><a href="../catch-stars/" rel="prev">← LEVEL 03<strong>落ちものキャッチ</strong></a><a href="../pong/" rel="next">LEVEL 05 →<strong>Pong</strong></a></nav>
 
 
     <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>画面は上がY=0で、下へ行くほどYが増えます。加速度は『速さが毎フレームどれだけ変わるか』。羽ばたき時の-7.4px/frameは上向きの初速度、重力+0.42px/frame²が約16.7msごとに下向きへ戻します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>vy = -7.4; vy += gravity; y += vy</code></pre></div></section>
+<!-- feedback-note:games/flappy:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-flappy"><div><p class="eyebrow">重力を感じる</p><h2 id="feedback-note-games-flappy">重力は、毎フレーム下向きの速さを少し足す</h2><p>速度が整数だけだと動きが急に見えます。0.42のような小数を位置に使うと、約16msごとの小さな変化が積み重なり、なめらかな落下の弧になります。順番は速度を変える→位置を変えるです。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="重力が速度へ加わる順番"><span>速度 -7.4</span><b>+ 重力 0.42</b><strong>速度 -6.98</strong><b>→ 位置を更新</b><span>次のフレーム</span></div></div></section>
+<!-- feedback-note:games/flappy:end -->
 <!-- END BEGINNER BRIDGE -->
 <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
@@ -393,7 +401,7 @@ func main() {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -401,6 +409,19 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="description" content="A bomb is game data with a position and time remaining. Decrease it every frame and switch to the blast state at zero. Play the demo, read a short Go example, c">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Place a Timed Bomb | Ebi Showcase</title>
+  <title>Ebi Showcase – Place a Timed Bomb</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Place a Timed Bomb | Ebi Showcase">
-    <meta property="og:description" content="A bomb is game data with a position and time remaining. Decrease it every frame and switch to the blast state at zero.">
+    <meta property="og:title" content="Ebi Showcase – Place a Timed Bomb">
+    <meta property="og:description" content="A bomb is game data with a position and time remaining. Decrease it every frame and switch to the blast state at zero. Play the demo, read a short Go example, c">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/bomb-maze/timed-bomb/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--bomb-maze--timed-bomb.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Place a Timed Bomb | Ebi Showcase">
-    <meta name="twitter:description" content="A bomb is game data with a position and time remaining. Decrease it every frame and switch to the blast state at zero.">
+    <meta name="twitter:title" content="Ebi Showcase – Place a Timed Bomb">
+    <meta name="twitter:description" content="A bomb is game data with a position and time remaining. Decrease it every frame and switch to the blast state at zero. Play the demo, read a short Go example, c">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--bomb-maze--timed-bomb.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Place a Timed Bomb">
     <!-- ogp:end -->
@@ -43,7 +44,11 @@
 
 <p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_bomb-chain.svg" alt="Bomb chain reaction" loading="lazy" decoding="async"><figcaption>A visual map of Bomb chain reaction. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Blast five marked cells</h2></div><p>Move with arrows/WASD and place with Space. Click or touch the on-screen controls. Leave the bomb cell before its timer ends.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Play Place a Timed Bomb" src="../../../../play/timed-bomb/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -93,7 +98,7 @@
       <div class="why-grid"><article><p class="eyebrow">WITHOUT A SLICE</p><h3>One bomb is not enough</h3><p>A slice lets many bombs keep their own place and timer.</p></article><article><p class="eyebrow">WITH A FUSE</p><h3>Why limit placement?</h3><p>Prevent stacking on one tile so draw and hit tests stay clear.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Allow two at once</h3><p>Raise the place limit to 2 and watch different fuse times.</p></article></div>
     </section>
 
-    <nav class="lesson-pager"><span></span><a href="../cross-blast/">STEP 02 →<strong>Cross-shaped Blast</strong></a></nav>
+    <nav class="lesson-pager"><span></span><a href="../cross-blast/" rel="next">STEP 02 →<strong>Cross-shaped Blast</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -109,7 +114,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -117,6 +122,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

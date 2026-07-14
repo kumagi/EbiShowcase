@@ -432,5 +432,33 @@
     "route": "tracks/metroidvania",
     "slug": "ebi-depths",
     "file": "tracks--metroidvania.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/raycaster/",
+    "route": "tracks/raycaster",
+    "slug": "ebi-raycaster",
+    "file": "tracks--raycaster.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/rhythm/",
+    "route": "tracks/rhythm",
+    "slug": "ebi-rhythm",
+    "file": "tracks--rhythm.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/tower-defense/",
+    "route": "tracks/tower-defense",
+    "slug": "ebi-defense",
+    "file": "tracks--tower-defense.webp"
+  },
+  {
+    "kind": "track",
+    "href": "tracks/topdown-adventure/",
+    "route": "tracks/topdown-adventure",
+    "slug": "ebi-adventure",
+    "file": "tracks--topdown-adventure.webp"
   }
 ]

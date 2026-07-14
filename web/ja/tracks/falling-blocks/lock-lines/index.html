@@ -2,13 +2,14 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
+  <meta name="description" content="落下中の形を盤面へ書き込み、埋まった行を消して上の行を下げます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>固定とライン消去 | Ebi Showcase</title>
+<title>Ebi Showcase – 固定とライン消去</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="固定とライン消去 | Ebi Showcase">
-    <meta property="og:description" content="落下中の形を盤面へ書き込み、埋まった行を消して上の行を下げます。">
+    <meta property="og:title" content="Ebi Showcase – 固定とライン消去">
+    <meta property="og:description" content="落下中の形を盤面へ書き込み、埋まった行を消して上の行を下げます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/falling-blocks/lock-lines/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--falling-blocks--lock-lines.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="固定とライン消去 | Ebi Showcase">
-    <meta name="twitter:description" content="落下中の形を盤面へ書き込み、埋まった行を消して上の行を下げます。">
+    <meta name="twitter:title" content="Ebi Showcase – 固定とライン消去">
+    <meta name="twitter:description" content="落下中の形を盤面へ書き込み、埋まった行を消して上の行を下げます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--falling-blocks--lock-lines.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="固定とライン消去">
     <!-- ogp:end -->
@@ -53,6 +54,10 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>盤面への合成は落下中の四マスをboardへ固定すること、行の圧縮は満杯行より上を一段下へコピーして空きを詰めることです。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>lockPiece(); copy(board[1:y+1],board[0:y])</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_falling-blocks.svg" alt="落ちものの一手" loading="lazy" decoding="async"><figcaption>落ちものの一手の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>2マスのピースで4行を完成させよう。</h2></div><p>← →または画面ボタンで移動、↓かSpaceで落下。空いた2マスを埋めると行が消えます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="固定とライン消去" src="../../../../play/lock-lines/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / LOCK AND COMPACT</p><h2>動くピースを盤面へ写してから、満員の行を取り除く。</h2><p class="lesson-lead">接地した瞬間、落下中の2マスを<strong>boardへ固定</strong>します。次に各行を調べ、全部埋まった行は飛ばし、それ以外を下から順にコピーします。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>接地を調べる</h3><p>1マス下が床か使用中なら、もう落下できません。見た目だけでなく盤面配列へ書き込みます。</p><code>board[y][x] = true</code></article><article><span class="concept-number">2</span><h3>満員の行を探す</h3><p>左から右まで1個でも空きがあれば残します。8マスすべてtrueの行だけを消去数へ足します。</p><code>full = full &amp;&amp; board[y][x]</code></article><article><span class="concept-number">3</span><h3>残す行を下へ詰める</h3><p>readで読む行、writeで書く行を分けます。満員の行はコピーせず、残った行だけを下へ移します。</p><code>board[write] = board[read]</code></article></div>
@@ -83,9 +88,9 @@ for read := rows - 1; read &gt;= 0; read-- {
 for write &gt;= 0 { board[write] = emptyRow; write-- }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY LOCK FIRST?</p><h3>完成した行を正しく判定</h3><p>落下中のピースも書き込んでから調べないと、最後の2マスが数えられません。</p></article><article><p class="eyebrow">WHY BOTTOM-UP?</p><h3>行を上書きしない</h3><p>下から詰めれば、まだ読んでいない上の行を壊しません。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>同時消去に点をつける</h3><p>1行は100点、2行同時なら300点にしてみよう。</p></article></div></section>
 <nav class="lesson-pager">
-<a href="../rotation-kicks/">← STEP 03<strong>回転と壁ぎわ補正</strong>
+<a href="../rotation-kicks/" rel="prev">← STEP 03<strong>回転と壁ぎわ補正</strong>
 </a>
-<a href="../bag-hold-ghost/">STEP 05 →<strong>バッグ・ホールド・ゴースト</strong>
+<a href="../bag-hold-ghost/" rel="next">STEP 05 →<strong>バッグ・ホールド・ゴースト</strong>
 </a>
 </nav>
 
@@ -103,7 +108,7 @@ for write &gt;= 0 { board[write] = emptyRow; write-- }</code></pre></div>
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -111,6 +116,19 @@ for write &gt;= 0 { board[write] = emptyRow; write-- }</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

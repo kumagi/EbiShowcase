@@ -1,0 +1,8 @@
+flowchart LR
+  terrain["terrain<br/>plain / forest / mountain"]
+  cost["move cost<br/>1 / 2 / 3"]
+  range["range<br/>bow reaches 2"]
+  los["line of sight<br/>stops at wall"]
+  terrain --> cost
+  cost --> range
+  range --> los

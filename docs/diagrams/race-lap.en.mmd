@@ -1,0 +1,9 @@
+flowchart LR
+  steer["input<br/>accelerate / steer"]
+  gate["gates<br/>pass in order"]
+  lap["lap<br/>measure seconds"]
+  best["update BEST<br/>save it"]
+  steer --> gate
+  gate --> lap
+  lap --> best
+  best --> steer

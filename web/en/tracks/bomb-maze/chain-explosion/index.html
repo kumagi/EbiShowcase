@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="description" content="When a blast reaches another bomb, trigger it without waiting for its timer. Add triggered bombs to an event queue and use a processed mark so no bomb explodes">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Bomb Chain Reactions | Ebi Showcase</title>
+  <title>Ebi Showcase – Bomb Chain Reactions</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Bomb Chain Reactions | Ebi Showcase">
-    <meta property="og:description" content="When a blast reaches another bomb, trigger it without waiting for its timer. Add triggered bombs to an event queue and use a processed mark so no bomb explodes twice.">
+    <meta property="og:title" content="Ebi Showcase – Bomb Chain Reactions">
+    <meta property="og:description" content="When a blast reaches another bomb, trigger it without waiting for its timer. Add triggered bombs to an event queue and use a processed mark so no bomb explodes">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/bomb-maze/chain-explosion/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--bomb-maze--chain-explosion.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Bomb Chain Reactions | Ebi Showcase">
-    <meta name="twitter:description" content="When a blast reaches another bomb, trigger it without waiting for its timer. Add triggered bombs to an event queue and use a processed mark so no bomb explodes twice.">
+    <meta name="twitter:title" content="Ebi Showcase – Bomb Chain Reactions">
+    <meta name="twitter:description" content="When a blast reaches another bomb, trigger it without waiting for its timer. Add triggered bombs to an event queue and use a processed mark so no bomb explodes">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--bomb-maze--chain-explosion.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Bomb Chain Reactions">
     <!-- ogp:end -->
@@ -43,7 +44,11 @@
 
 <p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_bomb-chain.svg" alt="Bomb chain reaction" loading="lazy" decoding="async"><figcaption>A visual map of Bomb chain reaction. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Chain three bombs and clear five relays</h2></div><p>Move with arrows/WASD and place bombs with Space or X. Click or tap the bottom controls. Line up bombs within three open cells of each other, then escape before the first fuse ends.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Play Bomb Chain Reactions" src="../../../../play/chain-explosion/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -101,7 +106,7 @@ for len(queue) &gt; 0 {
       <div class="why-grid"><article><h3>Why not recurse immediately?</h3><p>A queue exposes how much work remains and gives every event the same ordering rule. Even a long chain stays easy to inspect.</p></article><article><h3>Why prevent duplicates?</h3><p>If both A and C reach B, B might create its blast and score twice. The processed mark keeps the result stable.</p></article><article><h3>Challenge</h3><p>Increase a score multiplier for chain order <code>#1, #2, #3</code> and reward carefully linked routes.</p></article></div>
     </section>
 
-    <nav class="lesson-pager"><a href="../breakable-walls/">← STEP 03<strong>Breakable Walls and Items</strong></a><a href="../escape-ai/">STEP 05 →<strong>Blast-escape AI</strong></a></nav>
+    <nav class="lesson-pager"><a href="../breakable-walls/" rel="prev">← STEP 03<strong>Breakable Walls and Items</strong></a><a href="../escape-ai/" rel="next">STEP 05 →<strong>Blast-escape AI</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -117,7 +122,7 @@ for len(queue) &gt; 0 {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -125,6 +130,19 @@ for len(queue) &gt; 0 {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

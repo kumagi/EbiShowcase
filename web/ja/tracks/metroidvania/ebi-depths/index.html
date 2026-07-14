@@ -1,10 +1,11 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Depths | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ebi Depths</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/metroidvania/ebi-depths/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Depths | Ebi Showcase">
-    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta property="og:title" content="Ebi Showcase – Ebi Depths">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/metroidvania/ebi-depths/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--metroidvania--ebi-depths.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -13,18 +14,21 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Depths | Ebi Showcase">
-    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta name="twitter:title" content="Ebi Showcase – Ebi Depths">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--metroidvania--ebi-depths.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Depths">
     <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/metroidvania/ebi-depths/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 巨大マップ探索アクション</a><span>SHOWCASE 01 / 01</span></div><section class="lesson-hero"><div><p class="eyebrow">カメラ・地図・能力解放で世界を広げる</p><h1>Ebi Depths</h1><p>画面より何倍も広い洞窟を歩き、部屋を地図へ記録し、ダッシュ能力を得てさらに奥へ進みます。</p><div class="lesson-meta"><span>★★★★★</span><strong>PLAYABLE</strong></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>巨大な世界は、世界座標・カメラ・訪問済み部屋・能力フラグを別々に覚えます。Updateで主人公と能力を進め、Drawではカメラの窓に入る部分だけを描きます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>screenX := worldX - cameraX</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Depths</h2><p>キーボード・マウス・タッチで遊べます。画面上の数値や状態表示にも注目してください。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-depths/" title="Ebi Depths" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>巨大ワールド・追従カメラ・探索地図</h2><p>世界座標は3200pxありますが、Drawが見せるのはカメラ周辺だけです。訪れた部屋を集合へ保存すれば、探索に合わせて地図が広がります。</p><div class="concept-row"><article><b>01</b><h3>世界と画面を分ける</h3><p>物体は世界座標、描画はworldX-cameraXです。</p></article><article><b>02</b><h3>カメラ追従</h3><p>主人公との差を少しずつ足して滑らかに追います。</p></article><article><b>03</b><h3>能力で再解釈</h3><p>ダッシュ取得後は同じ地形を別の方法で越えられます。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>巨大ワールド・追従カメラ・探索地図</h2><p>ゲーム内の処理を一段ずつ進め、データが次の処理へ渡る順番を確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>巨大ワールド・追従カメラ・探索地図</h2><p>実ゲームで使っている中心ルールを小さく抜き出します。</p></div><pre><code>cameraX += (playerX - screenCenter - cameraX) * 0.1
 screenX := worldX - cameraX
 revealed[int(playerX/roomWidth)] = true
-if hasDash { velocityX = dashSpeed }</code></pre></section><section class="why-grid"><article><h3>なぜこの分け方？</h3><p>世界座標は3200pxありますが、Drawが見せるのはカメラ周辺だけです。訪れた部屋を集合へ保存すれば、探索に合わせて地図が広がります。</p></article><article><h3>データを見る</h3><p>主人公との差を少しずつ足して滑らかに追います。</p></article><article><h3>CHALLENGE</h3><p>数値やデータを1つ変え、遊び方がどう変化するか比べてみよう。</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>巨大マップ探索アクション</strong></a><a href="../">COMPLETE →<strong>Ebi Depths</strong></a></nav>
+if hasDash { velocityX = dashSpeed }</code></pre></section><section class="why-grid"><article><h3>なぜこの分け方？</h3><p>世界座標は3200pxありますが、Drawが見せるのはカメラ周辺だけです。訪れた部屋を集合へ保存すれば、探索に合わせて地図が広がります。</p></article><article><h3>データを見る</h3><p>主人公との差を少しずつ足して滑らかに追います。</p></article><article><h3>CHALLENGE</h3><p>数値やデータを1つ変え、遊び方がどう変化するか比べてみよう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>巨大マップ探索アクション</strong></a><a href="../" rel="next">COMPLETE →<strong>Ebi Depths</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -38,7 +42,7 @@ if hasDash { velocityX = dashSpeed }</code></pre></section><section class="why-g
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

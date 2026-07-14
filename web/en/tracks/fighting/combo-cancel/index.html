@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Build input buffers and cancel windows to chain combos — the core of fighting-game flow — in this Ebitengine lesson.">
-  <title>Combo and Cancel | Ebi Showcase</title>
+  <meta name="description" content="Build input buffers and cancel windows to chain combos — the core of fighting-game flow — in this Ebitengine lesson. Play the demo, read a short Go example, cha">
+  <title>Ebi Showcase – Combo and Cancel</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Combo and Cancel | Ebi Showcase">
-    <meta property="og:description" content="Build input buffers and cancel windows to chain combos — the core of fighting-game flow — in this Ebitengine lesson.">
+    <meta property="og:title" content="Ebi Showcase – Combo and Cancel">
+    <meta property="og:description" content="Build input buffers and cancel windows to chain combos — the core of fighting-game flow — in this Ebitengine lesson. Play the demo, read a short Go example, cha">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/fighting/combo-cancel/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--fighting--combo-cancel.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Combo and Cancel | Ebi Showcase">
-    <meta name="twitter:description" content="Build input buffers and cancel windows to chain combos — the core of fighting-game flow — in this Ebitengine lesson.">
+    <meta name="twitter:title" content="Ebi Showcase – Combo and Cancel">
+    <meta name="twitter:description" content="Build input buffers and cancel windows to chain combos — the core of fighting-game flow — in this Ebitengine lesson. Play the demo, read a short Go example, cha">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--fighting--combo-cancel.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Combo and Cancel">
     <!-- ogp:end -->
@@ -51,7 +51,10 @@
 <p class="curriculum-bridge">This track still runs on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> <strong>Update → Draw</strong> loop—each step adds one new piece.</p>
 
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Chain light, light, heavy in rhythm.</h2></div>
         <p>J/Z for light attack, K/X for heavy (or tap left/right buttons). Complete the light→light→heavy 3-hit combo three times to clear.</p>
@@ -180,8 +183,8 @@ cancel := g.frame &gt;= 8 &amp;&amp; g.frame &lt;= 13
     </section>
 
     <nav class="lesson-pager">
-      <a href="../guard-throw/">← STEP 04<strong>Guard and Throw</strong></a>
-      <a href="../command-fighter/">STEP 06 →<strong>Command Fighter</strong></a>
+      <a href="../guard-throw/" rel="prev">← STEP 04<strong>Guard and Throw</strong></a>
+      <a href="../command-fighter/" rel="next">STEP 06 →<strong>Command Fighter</strong></a>
     </nav>
 
 
@@ -198,7 +201,7 @@ cancel := g.frame &gt;= 8 &amp;&amp; g.frame &lt;= 13
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -206,6 +209,19 @@ cancel := g.frame &gt;= 8 &amp;&amp; g.frame &lt;= 13
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

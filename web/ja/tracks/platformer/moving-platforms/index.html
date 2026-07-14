@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="動く足場に乗る仕組みを学ぶEbitengineレッスン。前フレームの位置との差をプレイヤーに加えることで、足場の動きに追従します。">
-  <title>STEP 02 — 動く足場の谷 | Ebi Showcase</title>
+  <meta name="description" content="動く足場に乗る仕組みを学ぶEbitengineレッスン。前フレームの位置との差をプレイヤーに加えることで、足場の動きに追従します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+  <title>Ebi Showcase – STEP 02 — 動く足場の谷</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="STEP 02 — 動く足場の谷 | Ebi Showcase">
-    <meta property="og:description" content="動く足場に乗る仕組みを学ぶEbitengineレッスン。前フレームの位置との差をプレイヤーに加えることで、足場の動きに追従します。">
+    <meta property="og:title" content="Ebi Showcase – STEP 02 — 動く足場の谷">
+    <meta property="og:description" content="動く足場に乗る仕組みを学ぶEbitengineレッスン。前フレームの位置との差をプレイヤーに加えることで、足場の動きに追従します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/platformer/moving-platforms/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--platformer--moving-platforms.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="STEP 02 — 動く足場の谷 | Ebi Showcase">
-    <meta name="twitter:description" content="動く足場に乗る仕組みを学ぶEbitengineレッスン。前フレームの位置との差をプレイヤーに加えることで、足場の動きに追従します。">
+    <meta name="twitter:title" content="Ebi Showcase – STEP 02 — 動く足場の谷">
+    <meta name="twitter:description" content="動く足場に乗る仕組みを学ぶEbitengineレッスン。前フレームの位置との差をプレイヤーに加えることで、足場の動きに追従します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--platformer--moving-platforms.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="動く足場の谷">
     <!-- ogp:end -->
@@ -49,6 +49,11 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>相対移動は『床が前のコマから何px動いたか』という差を天次郎にも足す考え方。動かす前のoldXを記録し、dx=新しいx-oldXを求めます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>oldX:=platform.x; platform.x+=platform.vx; player.x+=platform.x-oldX</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_jump-arc.svg" alt="ジャンプの軌道" loading="lazy" decoding="async"><figcaption>ジャンプの軌道の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_camera-offset.svg" alt="カメラのオフセット" loading="lazy" decoding="async"><figcaption>カメラのオフセットの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>動く足場に乗って旗を目指そう。</h2></div>
@@ -173,8 +178,8 @@
     </section>
 
     <nav class="lesson-pager">
-      <a href="../tiny-platformer/">← STEP 01<strong>1画面プラットフォーマー</strong></a>
-      <a href="../patrol-enemies/">STEP 03 →<strong>踏める敵の庭</strong></a>
+      <a href="../tiny-platformer/" rel="prev">← STEP 01<strong>1画面プラットフォーマー</strong></a>
+      <a href="../patrol-enemies/" rel="next">STEP 03 →<strong>踏める敵の庭</strong></a>
     </nav>
 
 
@@ -191,7 +196,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -199,6 +204,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

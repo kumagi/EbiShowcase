@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ally-triggered Effects | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Turn the instant of ally contact into an event, then use ability data to choose laser, healing, or a shockwave. Play the demo, read a short Go example, change a"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ally-triggered Effects</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ally-triggered Effects | Ebi Showcase">
-    <meta property="og:description" content="Turn the instant of ally contact into an event, then use ability data to choose laser, healing, or a shockwave.">
+    <meta property="og:title" content="Ebi Showcase – Ally-triggered Effects">
+    <meta property="og:description" content="Turn the instant of ally contact into an event, then use ability data to choose laser, healing, or a shockwave. Play the demo, read a short Go example, change a">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/slingshot/ally-effects/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--slingshot--ally-effects.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ally-triggered Effects | Ebi Showcase">
-    <meta name="twitter:description" content="Turn the instant of ally contact into an event, then use ability data to choose laser, healing, or a shockwave.">
+    <meta name="twitter:title" content="Ebi Showcase – Ally-triggered Effects">
+    <meta name="twitter:description" content="Turn the instant of ally contact into an event, then use ability data to choose laser, healing, or a shockwave. Play the demo, read a short Go example, change a">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--slingshot--ally-effects.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ally-triggered Effects">
     <!-- ogp:end -->
@@ -25,6 +26,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>spawnEffect(hitX, hitY, ally.effect)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Combine three allies to clear the coral guards.</h2></div><p>Hold or tap toward a destination. On keyboard use Arrows or WASD. Laser hits the nearest guard, Heal restores HP, and Pulse hits nearby guards. Clear all within 50 seconds.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ally-triggered Effects" src="../../../../play/ally-effects/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT EVENT</p><h2>Extract “contact began” from “still touching.”</h2><p class="lesson-lead">Checking overlap every frame could fire an ability 60 times while circles remain together. Compare this frame with the previous one and create an event only when <strong>touching now but separated before</strong>. That event reads the ally's ability data.</p></div>
@@ -54,7 +58,7 @@ if now &amp;&amp; !ally.wasTouching &amp;&amp; ally.cooldown == 0 {
 }
 ally.wasTouching = now</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY AN EDGE?</p><h3>One effect per contact</h3><p>Using contact start prevents repeated firing while two circles stay overlapped.</p></article><article><p class="eyebrow">WHY DATA?</p><h3>Add allies safely</h3><p>Separating movement from ability behavior lets a new effect join the same contact rule.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Combine effects</h3><p>Add an ally that boosts the next laser by changing the next event's power data.</p></article></div>
-</section><nav class="lesson-pager"><a href="../friction-stop/">← STEP 04<strong>Slow Down and Stop</strong></a><a href="../ebi-strike/">STEP 06 →<strong>Ebi Strike</strong></a></nav>
+</section><nav class="lesson-pager"><a href="../friction-stop/" rel="prev">← STEP 04<strong>Slow Down and Stop</strong></a><a href="../ebi-strike/" rel="next">STEP 06 →<strong>Ebi Strike</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -70,7 +74,7 @@ ally.wasTouching = now</code></pre></div>
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -78,6 +82,19 @@ ally.wasTouching = now</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

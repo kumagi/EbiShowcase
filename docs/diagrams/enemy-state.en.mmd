@@ -1,0 +1,11 @@
+flowchart LR
+  patrol["PATROL<br/>walk around"]
+  chase["CHASE<br/>move closer"]
+  attack["ATTACK<br/>strike"]
+  hurt["HURT<br/>react"]
+  defeat["DEFEAT<br/>leave"]
+  patrol --> chase
+  chase --> attack
+  attack --> hurt
+  hurt --> chase
+  hurt --> defeat

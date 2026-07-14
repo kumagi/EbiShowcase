@@ -1,0 +1,8 @@
+flowchart LR
+  bpm["BPM<br/>120 beats/min"]
+  seconds["60 ÷ BPM<br/>0.5 sec/beat"]
+  frames["0.5 × 60<br/>30 frames"]
+  meter["meter<br/>move in sync"]
+  bpm --> seconds
+  seconds --> frames
+  frames --> meter

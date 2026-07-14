@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>迷路を走る | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="迷路を壁と通路のタイルで表し、通れる次タイルの中心までまっすぐ進みます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbite"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 迷路を走る</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="迷路を走る | Ebi Showcase">
-    <meta property="og:description" content="迷路を壁と通路のタイルで表し、通れる次タイルの中心までまっすぐ進みます。">
+    <meta property="og:title" content="Ebi Showcase – 迷路を走る">
+    <meta property="og:description" content="迷路を壁と通路のタイルで表し、通れる次タイルの中心までまっすぐ進みます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbite">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/maze-chase/tile-runner/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--maze-chase--tile-runner.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="迷路を走る | Ebi Showcase">
-    <meta name="twitter:description" content="迷路を壁と通路のタイルで表し、通れる次タイルの中心までまっすぐ進みます。">
+    <meta name="twitter:title" content="Ebi Showcase – 迷路を走る">
+    <meta name="twitter:description" content="迷路を壁と通路のタイルで表し、通れる次タイルの中心までまっすぐ進みます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbite">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--maze-chase--tile-runner.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="迷路を走る">
     <!-- ogp:end -->
@@ -23,7 +24,10 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>一マスずつのリアルタイム移動で、天次郎→敵の順に更新します。移動先map[ny][nx]が壁でなければ座標を採用します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if map[ny][nx] != Wall { x,y = nx,ny }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
-<p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。ここではUpdateが現在タイルと移動の進み具合を変え、Drawがその途中位置へ走者を描きます。</p><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>45秒以内に迷路の真珠を12個集めよう。</h2></div><p>中心で進みたい方向を押し続けます。壁方向なら出発しません。矢印/WASD、画面下ボタンのマウス長押し・タッチ長押しに対応。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="迷路を走る" src="../../../../play/tile-runner/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CENTER TO CENTER</p><h2>自由な座標を、迷路のマスへ結びつける。</h2><p class="lesson-lead">迷路データはmaze[y][x]の文字表です。#なら壁、.なら通路。走者は現在タイルを覚え、方向を足した<strong>候補タイル</strong>が通路のときだけ、その中心へ移動を始めます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>タイルから中心座標を作る</h3><p>列xへタイル幅を掛け、盤面左と半マスを足します。行yも同じ式なので、どの通路にも中心があります。</p><code>centerX = mazeX + tileX*tileSize + tileSize/2</code></article><article><span class="concept-number">2</span><h3>次タイルが通れるか調べる</h3><p>現在タイルへ方向(-1,0)などを足します。範囲内でmaze[nextY][nextX]が#でなければ進めます。</p><code>passable := maze[next.y][next.x] != '#'</code></article><article><span class="concept-number">3</span><h3>中心から中心へ補間する</h3><p>progressを0から1へ増やし、fromとtoの間を描きます。1になったら現在タイルをtargetへそろえます。</p><code>screenX = fromX + (toX-fromX)*progress</code></article></div><div class="motion-lab" data-lab="tile" data-blocked="その方向は壁" aria-labelledby="lab-title-tile-runner">
+<p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。ここではUpdateが現在タイルと移動の進み具合を変え、Drawがその途中位置へ走者を描きます。</p><!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>45秒以内に迷路の真珠を12個集めよう。</h2></div><p>中心で進みたい方向を押し続けます。壁方向なら出発しません。矢印/WASD、画面下ボタンのマウス長押し・タッチ長押しに対応。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="迷路を走る" src="../../../../play/tile-runner/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CENTER TO CENTER</p><h2>自由な座標を、迷路のマスへ結びつける。</h2><p class="lesson-lead">迷路データはmaze[y][x]の文字表です。#なら壁、.なら通路。走者は現在タイルを覚え、方向を足した<strong>候補タイル</strong>が通路のときだけ、その中心へ移動を始めます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>タイルから中心座標を作る</h3><p>列xへタイル幅を掛け、盤面左と半マスを足します。行yも同じ式なので、どの通路にも中心があります。</p><code>centerX = mazeX + tileX*tileSize + tileSize/2</code></article><article><span class="concept-number">2</span><h3>次タイルが通れるか調べる</h3><p>現在タイルへ方向(-1,0)などを足します。範囲内でmaze[nextY][nextX]が#でなければ進めます。</p><code>passable := maze[next.y][next.x] != '#'</code></article><article><span class="concept-number">3</span><h3>中心から中心へ補間する</h3><p>progressを0から1へ増やし、fromとtoの間を描きます。1になったら現在タイルをtargetへそろえます。</p><code>screenX = fromX + (toX-fromX)*progress</code></article></div><div class="motion-lab" data-lab="tile" data-blocked="その方向は壁" aria-labelledby="lab-title-tile-runner">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / LEGAL TILE</p>
 <h3 id="lab-title-tile-runner">壁のマスには入れない</h3>
@@ -55,7 +59,7 @@ next := tile.add(direction)
 if passable(next) {
     target = next
     moving = true
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY TILE DATA?</p><h3>壁判定が一文字になる</h3><p>複雑な壁の四角を全部比べず、行と列から#かどうかを見るだけで通行を決められます。</p></article><article><p class="eyebrow">WHY CENTERS?</p><h3>通路からずれない</h3><p>毎回中心へ到着してから次へ進むため、長く走っても少しずつ壁側へずれません。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>早押しを覚えよう</h3><p>移動中に押した方向をwantedDirへ保存し、次の中心で試すとSTEP 02の先行入力になります。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../buffered-turn/">STEP 02 →<strong>曲がり角の先行入力</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY TILE DATA?</p><h3>壁判定が一文字になる</h3><p>複雑な壁の四角を全部比べず、行と列から#かどうかを見るだけで通行を決められます。</p></article><article><p class="eyebrow">WHY CENTERS?</p><h3>通路からずれない</h3><p>毎回中心へ到着してから次へ進むため、長く走っても少しずつ壁側へずれません。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>早押しを覚えよう</h3><p>移動中に押した方向をwantedDirへ保存し、次の中心で試すとSTEP 02の先行入力になります。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../buffered-turn/" rel="next">STEP 02 →<strong>曲がり角の先行入力</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -71,7 +75,7 @@ if passable(next) {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -79,6 +83,19 @@ if passable(next) {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

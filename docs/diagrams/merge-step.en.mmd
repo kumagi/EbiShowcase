@@ -1,0 +1,10 @@
+flowchart LR
+  drop["drop<br/>gravity"]
+  touch["contact<br/>circle distance"]
+  same["same type?<br/>id matches"]
+  merge["merge<br/>radius up"]
+  score["feedback and score<br/>spawn next"]
+  drop --> touch
+  touch --> same
+  same --> merge
+  merge --> score

@@ -1,0 +1,9 @@
+flowchart LR
+  line["台詞<br/>chapter.json"]
+  choice["選択肢<br/>A / B"]
+  flag["フラグ<br/>trust += 1"]
+  next["次の台詞<br/>分岐する"]
+  line --> choice
+  choice --> flag
+  flag --> next
+  next --> line

@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>バッグ・ホールド・ゴースト | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="7種類を公平に配る袋、形を一つ預ける棚、着地点を先に見せる影を組み合わせます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEb"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – バッグ・ホールド・ゴースト</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="バッグ・ホールド・ゴースト | Ebi Showcase">
-    <meta property="og:description" content="7種類を公平に配る袋、形を一つ預ける棚、着地点を先に見せる影を組み合わせます。">
+    <meta property="og:title" content="Ebi Showcase – バッグ・ホールド・ゴースト">
+    <meta property="og:description" content="7種類を公平に配る袋、形を一つ預ける棚、着地点を先に見せる影を組み合わせます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEb">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/falling-blocks/bag-hold-ghost/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--falling-blocks--bag-hold-ghost.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="バッグ・ホールド・ゴースト | Ebi Showcase">
-    <meta name="twitter:description" content="7種類を公平に配る袋、形を一つ預ける棚、着地点を先に見せる影を組み合わせます。">
+    <meta name="twitter:title" content="Ebi Showcase – バッグ・ホールド・ゴースト">
+    <meta name="twitter:description" content="7種類を公平に配る袋、形を一つ預ける棚、着地点を先に見せる影を組み合わせます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEb">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--falling-blocks--bag-hold-ghost.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="バッグ・ホールド・ゴースト">
     <!-- ogp:end -->
@@ -25,6 +26,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>公平な抽選7-bagは7種類を一つずつ袋へ入れ順番だけ混ぜる方法。ホールドは現在の形と保管形を状態交換し、ゴーストは衝突する直前まで仮に下げて着地点を予測します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>held,current = current,held</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>ゴーストを読み、2袋ぶんの14個を置こう。</h2></div><p>左右・回転・落下ボタンをタップ。PCでは←→、↑、Space。HOLDはボタンまたはC/Hで1手に1回です。積み上がる前に14個置けばクリア。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="バッグ・ホールド・ゴースト" src="../../../../play/bag-hold-ghost/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FAIR QUEUE AND PREDICTION</p><h2>見えない運を、見えるデータに変える。</h2><p class="lesson-lead">完全なくじ引きでは、欲しい形が何十回も来ないことがあります。7種バッグなら7個を一度ずつ混ぜて配るので大きな偏りがありません。さらにHOLDとゴーストを加えると、プレイヤーは運だけでなく<strong>予定を立てる</strong>ことができます。</p></div>
@@ -56,7 +60,7 @@
     return y
 }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY A BAG?</p><h3>ランダムでも約束がある</h3><p>どの7個にも全種類が一度ずつ入り、長すぎる待ち時間を防げます。</p></article><article><p class="eyebrow">WHY ONE HOLD?</p><h3>選択に値段をつける</h3><p>固定まで一回という制限があるから、「今使うか」がゲームの考えどころになります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>次の3個を表示</h3><p>袋の先頭3個を小さく描き、さらに先まで置き方を計画できるようにしよう。</p></article></div>
-</section><nav class="lesson-pager"><a href="../lock-lines/">← STEP 04<strong>固定とライン消去</strong></a><a href="../ebi-blocks/">STEP 06 →<strong>Ebi Blocks</strong></a></nav>
+</section><nav class="lesson-pager"><a href="../lock-lines/" rel="prev">← STEP 04<strong>固定とライン消去</strong></a><a href="../ebi-blocks/" rel="next">STEP 06 →<strong>Ebi Blocks</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -72,7 +76,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -80,6 +84,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

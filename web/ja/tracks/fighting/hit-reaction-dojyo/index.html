@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="ヒットストップ・のけぞり・ノックバックを学ぶ格闘レッスン。">
-  <title>ヒットリアクション道場 | Ebi Showcase</title>
+  <meta name="description" content="ヒットストップ・のけぞり・ノックバックを学ぶ格闘レッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲー">
+  <title>Ebi Showcase – ヒットリアクション道場</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="ヒットリアクション道場 | Ebi Showcase">
-    <meta property="og:description" content="ヒットストップ・のけぞり・ノックバックを学ぶ格闘レッスン。">
+    <meta property="og:title" content="Ebi Showcase – ヒットリアクション道場">
+    <meta property="og:description" content="ヒットストップ・のけぞり・ノックバックを学ぶ格闘レッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲー">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/fighting/hit-reaction-dojyo/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--fighting--hit-reaction-dojyo.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ヒットリアクション道場 | Ebi Showcase">
-    <meta name="twitter:description" content="ヒットストップ・のけぞり・ノックバックを学ぶ格闘レッスン。">
+    <meta name="twitter:title" content="Ebi Showcase – ヒットリアクション道場">
+    <meta name="twitter:description" content="ヒットストップ・のけぞり・ノックバックを学ぶ格闘レッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲー">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--fighting--hit-reaction-dojyo.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="ヒットリアクション道場">
     <!-- ogp:end -->
@@ -51,7 +51,10 @@
 <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。</p>
 
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>当てて、止め、押し出そう。</h2></div>
         <p>A・Dまたは画面下で近づき、スペース・X・画面上で攻撃。5回ヒットでクリア。</p>
@@ -172,8 +175,8 @@
     </section>
 
     <nav class="lesson-pager">
-      <a href="../frame-attack/">← STEP 02<strong>フレーム攻撃</strong></a>
-      <a href="../guard-throw/">STEP 04 →<strong>ガードと投げ</strong></a>
+      <a href="../frame-attack/" rel="prev">← STEP 02<strong>フレーム攻撃</strong></a>
+      <a href="../guard-throw/" rel="next">STEP 04 →<strong>ガードと投げ</strong></a>
     </nav>
 
 
@@ -190,7 +193,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -198,6 +201,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

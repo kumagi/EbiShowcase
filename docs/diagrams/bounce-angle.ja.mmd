@@ -1,0 +1,9 @@
+flowchart LR
+  ball["ボール<br/>vx / vy"]
+  hit["衝突位置<br/>上・左・右"]
+  normal["法線<br/>反対向き"]
+  reflect["速度を反射<br/>vy = -vy"]
+  ball --> hit
+  hit --> normal
+  normal --> reflect
+  reflect --> ball

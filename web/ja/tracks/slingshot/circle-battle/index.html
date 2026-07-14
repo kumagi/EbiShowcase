@@ -2,13 +2,14 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
+  <meta name="description" content="敵へ触れた速さと回数を判定し、同じ敵への連続ヒットを制御します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>円形キャラクターの衝突 | Ebi Showcase</title>
+<title>Ebi Showcase – 円形キャラクターの衝突</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="円形キャラクターの衝突 | Ebi Showcase">
-    <meta property="og:description" content="敵へ触れた速さと回数を判定し、同じ敵への連続ヒットを制御します。">
+    <meta property="og:title" content="Ebi Showcase – 円形キャラクターの衝突">
+    <meta property="og:description" content="敵へ触れた速さと回数を判定し、同じ敵への連続ヒットを制御します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/slingshot/circle-battle/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--slingshot--circle-battle.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="円形キャラクターの衝突 | Ebi Showcase">
-    <meta name="twitter:description" content="敵へ触れた速さと回数を判定し、同じ敵への連続ヒットを制御します。">
+    <meta name="twitter:title" content="Ebi Showcase – 円形キャラクターの衝突">
+    <meta name="twitter:description" content="敵へ触れた速さと回数を判定し、同じ敵への連続ヒットを制御します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--slingshot--circle-battle.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="円形キャラクターの衝突">
     <!-- ogp:end -->
@@ -53,6 +54,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>全敵を一度ずつ調べ、中心距離²が半径合計²未満なら命中。敵数が小さい教材ではこのO(n)走査が最も読みやすい方法です。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>for i := range enemies { checkCircle(projectile, enemies[i]) }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>勢いをつけ、3体のサンゴガードを倒そう。</h2></div><p>矢印/WASD、または行きたい場所を押し続けて真珠を加速。45秒以内に各3回、速くぶつかります。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="円形キャラクターの衝突" src="../../../../play/circle-battle/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CIRCLE CONTACT</p><h2>中心の距離を測り、重なった分だけ外へ戻す。</h2><p class="lesson-lead">2つの円は、中心間の距離が<strong>半径の合計より短い</strong>と重なっています。判定したら真珠を円のふちまで押し戻し、十分な速さで初めてダメージを与えます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>円の重なりを探す</h3><p>XとYの差から中心間の距離を計算します。半径20と30なら、距離50未満が接触です。</p><code>distance &lt; playerR + enemyR</code></article><article><span class="concept-number">2</span><h3>ふちまで押し戻す</h3><p>敵から真珠へ向かう方向を長さ1にそろえ、半径の合計だけ離れた位置へ置きます。</p><code>player = enemy + normal * minDistance</code></article><article><span class="concept-number">3</span><h3>1接触を1回にする</h3><p>命中後24フレームはcooldownを残します。重なりが続いてもHPを毎フレーム減らしません。</p><code>if cooldown == 0 { hp--; cooldown = 24 }</code></article></div>
@@ -76,9 +80,9 @@
 }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY PUSH OUT?</p><h3>円がくっつかない</h3><p>速度だけ反転しても重なりが残ると、次のフレームでも衝突します。</p></article><article><p class="eyebrow">WHY SPEED?</p><h3>そっと触るのと攻撃を分ける</h3><p>接触方向の速さを使えば、勢いをつける遊びになります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>大きい敵を重くする</h3><p>半径ごとに押し戻す割合を変えたら、手ごたえはどう変わる？</p></article></div></section>
 <nav class="lesson-pager">
-<a href="../wall-bounce/">← STEP 02<strong>壁で跳ね返るボール</strong>
+<a href="../wall-bounce/" rel="prev">← STEP 02<strong>壁で跳ね返るボール</strong>
 </a>
-<a href="../friction-stop/">STEP 04 →<strong>減速して止まる</strong>
+<a href="../friction-stop/" rel="next">STEP 04 →<strong>減速して止まる</strong>
 </a>
 </nav>
 
@@ -96,7 +100,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -104,6 +108,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

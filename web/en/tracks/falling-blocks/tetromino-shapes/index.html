@@ -1,10 +1,11 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Four-cell Shapes | Ebi Showcase</title>
+<html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Store four cells as offsets from one origin, keeping them together while the shape falls. Play the demo, read a short Go example, change a value, and apply the"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Four-cell Shapes</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Four-cell Shapes | Ebi Showcase">
-    <meta property="og:description" content="Store four cells as offsets from one origin, keeping them together while the shape falls.">
+    <meta property="og:title" content="Ebi Showcase – Four-cell Shapes">
+    <meta property="og:description" content="Store four cells as offsets from one origin, keeping them together while the shape falls. Play the demo, read a short Go example, change a value, and apply the">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/falling-blocks/tetromino-shapes/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--falling-blocks--tetromino-shapes.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -13,8 +14,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Four-cell Shapes | Ebi Showcase">
-    <meta name="twitter:description" content="Store four cells as offsets from one origin, keeping them together while the shape falls.">
+    <meta name="twitter:title" content="Ebi Showcase – Four-cell Shapes">
+    <meta name="twitter:description" content="Store four cells as offsets from one origin, keeping them together while the shape falls. Play the demo, read a short Go example, change a value, and apply the">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--falling-blocks--tetromino-shapes.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Four-cell Shapes">
     <!-- ogp:end -->
@@ -27,6 +28,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>boardX := pieceX + cell.dx</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Deliver four shapes to their dotted docks.</h2></div><p>Move with the left and right buttons or Arrow keys/A/D. Use the center button or Space to hard drop. Fit I, O, T, and S before making three mistakes.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Four-cell Shapes" src="../../../../play/tetromino-shapes/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RELATIVE COORDINATES</p><h2>A shape can move as “one origin plus four offsets.”</h2><p class="lesson-lead">Moving four screen positions separately could pull the cells apart. Instead give the piece one origin <code>(x, y)</code>. Each cell remembers only its <strong>offset</strong> from that origin. Move the origin one cell and all four move together.</p></div>
@@ -59,7 +63,7 @@ for _, offset := range shape.blocks {
     drawCell(boardX, boardY)
 }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY RELATIVE?</p><h3>Move as one object</h3><p>Only the origin moves, so spacing between the four cells never changes.</p></article><article><p class="eyebrow">WHY DATA?</p><h3>Reuse the rules</h3><p>An I and a T can use the same loop for drawing and wall tests.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Rotate coordinates</h3><p>Change <code>(x,y)</code> into <code>(-y,x)</code> to turn a shape 90 degrees.</p></article></div>
-</section><nav class="lesson-pager"><a href="../falling-cell/">← STEP 01<strong>Drop One Cell</strong></a><a href="../rotation-kicks/">STEP 03 →<strong>Rotation and Wall Kicks</strong></a></nav>
+</section><nav class="lesson-pager"><a href="../falling-cell/" rel="prev">← STEP 01<strong>Drop One Cell</strong></a><a href="../rotation-kicks/" rel="next">STEP 03 →<strong>Rotation and Wall Kicks</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -75,7 +79,7 @@ for _, offset := range shape.blocks {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -83,6 +87,19 @@ for _, offset := range shape.blocks {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

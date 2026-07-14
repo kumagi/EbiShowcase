@@ -49,6 +49,37 @@ function escAttr(s) {
     .replace(/</g, "&lt;");
 }
 
+function escText(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function normalizeTitle(raw) {
+  const source = String(raw || "Ebi Showcase").trim();
+  if (!source || /^Ebi Showcase$/i.test(source)) return "Ebi Showcase";
+  const name = source
+    .replace(/^Ebi Showcase\s*[—–-]\s*/i, "")
+    .replace(/\s*(?:\||[—–-])\s*Ebi Showcase\s*$/i, "")
+    .trim();
+  return name ? `Ebi Showcase – ${name}` : "Ebi Showcase";
+}
+
+function enrichDescription(description, lang) {
+  const source = String(description || "").replace(/\s+/g, " ").trim();
+  const tail = lang === "ja"
+    ? "遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。"
+    : "Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by step.";
+  const extra = lang === "ja"
+    ? "キーボードとタッチの両方で試せます。"
+    : "The demo works with keyboard and touch.";
+  let result = source || (lang === "ja" ? "遊べるミニゲームで学ぶEbitengineのレッスン。" : "Learn Ebitengine through a playable mini-game lesson.");
+  if (result.length < 120) result = `${result} ${tail}`;
+  if (result.length < 120) result = `${result} ${extra}`;
+  return result.slice(0, 160);
+}
+
 function pick(html, ...res) {
   for (const re of res) {
     const m = html.match(re);
@@ -89,7 +120,7 @@ function classify(pagePath) {
 
 function extract(html, pagePath) {
   const lang = pick(html, /<html[^>]*\blang="([^"]+)"/i) || (pagePath.startsWith("ja") ? "ja" : "en");
-  const title = pick(html, /<title>([^<]*)<\/title>/i) || "Ebi Showcase";
+  const title = normalizeTitle(pick(html, /<title>([^<]*)<\/title>/i) || "Ebi Showcase");
   let description = pick(html, /<meta\s+name="description"\s+content="([^"]*)"/i);
   if (!description) {
     description = pick(
@@ -107,7 +138,7 @@ function extract(html, pagePath) {
         ? "遊べるミニゲームで学ぶ Ebitengine ショーケース。"
         : "Learn Ebitengine through playable mini games.";
   }
-  description = description.slice(0, 180);
+  description = enrichDescription(description, lang);
   const h1 = pick(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) || title.split("|")[0].trim();
   const eyebrow = pick(
     html,
@@ -160,6 +191,30 @@ function ensureCanonical(html, pageURL) {
   return html.replace(/<\/title>/i, `</title>\n  <link rel="canonical" href="${escAttr(pageURL)}">`);
 }
 
+function ensureTitle(html, title) {
+  return html.replace(/<title>[^<]*<\/title>/i, `<title>${escText(title)}</title>`);
+}
+
+function ensureDescription(html, description) {
+  const tag = `<meta name="description" content="${escAttr(description)}">`;
+  if (/<meta\s+name="description"\s+content="[^"]*"\s*\/?\s*>/i.test(html)) {
+    return html.replace(/<meta\s+name="description"\s+content="[^"]*"\s*\/?\s*>/i, tag);
+  }
+  return html.replace(/<meta\s+charset="[^"]*"\s*\/?\s*>/i, (match) => `${match}\n  ${tag}`);
+}
+
+function ensurePagerRelations(html) {
+  return html.replace(/<nav\s+class="lesson-pager"[^>]*>([\s\S]*?)<\/nav>/gi, (whole, body) => {
+    const nextBody = body.replace(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi, (anchor, attrs, content) => {
+      const label = decodeEntities(content).replace(/\s+/g, " ").trim();
+      const relation = /(?:→|NEXT|FINAL|COMPLETE|次|完了)/i.test(label) ? "next" : "prev";
+      const cleanAttrs = attrs.replace(/\s+rel="[^"]*"/i, "");
+      return `<a${cleanAttrs} rel="${relation}">${content}</a>`;
+    });
+    return whole.replace(body, nextBody);
+  });
+}
+
 function inject(html, block) {
   let next = stripOldOgp(html);
   if (/<\/title>/i.test(next)) {
@@ -198,8 +253,11 @@ for (const file of files) {
     imageAlt: info.h1 || info.title,
   });
 
-  let next = inject(html, block);
+  let next = ensureTitle(html, info.title);
+  next = ensureDescription(next, info.description);
+  next = inject(next, block);
   next = ensureCanonical(next, pageURL);
+  next = ensurePagerRelations(next);
   if (next !== html) {
     writeFileSync(file, next);
     updated++;

@@ -1,0 +1,8 @@
+flowchart LR
+  seed["seed<br/>random start"]
+  chunk["chunk<br/>load nearby"]
+  noise["terrain rule<br/>height / resource"]
+  world["placement<br/>playable world"]
+  seed --> chunk
+  chunk --> noise
+  noise --> world

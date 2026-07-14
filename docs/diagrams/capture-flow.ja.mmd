@@ -1,0 +1,9 @@
+flowchart LR
+  weaken["弱らせる<br/>HPを減らす"]
+  throw["投げる<br/>軌道FX"]
+  shake["揺れる<br/>タイマー"]
+  result["捕獲成功？<br/>再挑戦"]
+  weaken --> throw
+  throw --> shake
+  shake --> result
+  result --> weaken

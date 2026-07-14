@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="Sparks, smoke, and sparkle are crowds of tiny dots. Hold an array of particles and each frame just move them, age them, and fade them for ma">
-  <title>Scatter Particles | Ebi Showcase</title>
+  <title>Ebi Showcase – Scatter Particles</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-particles/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Scatter Particles | Ebi Showcase">
+    <meta property="og:title" content="Ebi Showcase – Scatter Particles">
     <meta property="og:description" content="Sparks, smoke, and sparkle are crowds of tiny dots. Hold an array of particles and each frame just move them, age them, and fade them for ma">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-particles/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-particles.png?v=20260713-font1">
@@ -19,7 +19,7 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Scatter Particles | Ebi Showcase">
+    <meta name="twitter:title" content="Ebi Showcase – Scatter Particles">
     <meta name="twitter:description" content="Sparks, smoke, and sparkle are crowds of tiny dots. Hold an array of particles and each frame just move them, age them, and fade them for ma">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-particles.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Scatter Particles">
@@ -46,12 +46,19 @@
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if p.life > 0 { next = append(next, p) }</code></pre></div></section>
+<!-- feedback-note:tracks/visual-effects/vfx-particles:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-particles"><div><p class="eyebrow">Give particles life</p><h2 id="feedback-note-tracks-visual-effects-vfx-particles">Smoke, sparks, and dust need slightly different directions</h2><p>A particle is a tiny piece of data. Randomly vary its angle and speed so every dot does not travel in one straight line; the burst then looks like smoke or sparks.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="sparks with random directions"><span>✦</span><span>·</span><span>✧</span><span>•</span><b>random angle → natural spread</b></div></div></section>
+<!-- feedback-note:tracks/visual-effects/vfx-particles:end -->
 <!-- END BEGINNER BRIDGE -->
 
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_particle-lifecycle.svg" alt="A particle's life" loading="lazy" decoding="async"><figcaption>A visual map of A particle's life. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Burst them out</h2></div>
         <p>Press the button and particles fly out and fade. Dozens are born and die with one tap.</p>
@@ -139,8 +146,8 @@ for i := range ps { // Update
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-walk/">← STEP 06<strong>Sprite Walk (Frame by Frame)</strong></a>
-      <a href="../vfx-spells/">STEP 08 →<strong>Compose: Fire, Water, Lightning</strong></a>
+      <a href="../vfx-walk/" rel="prev">← STEP 06<strong>Sprite Walk (Frame by Frame)</strong></a>
+      <a href="../vfx-spells/" rel="next">STEP 08 →<strong>Compose: Fire, Water, Lightning</strong></a>
     </nav>
 
 
@@ -157,7 +164,7 @@ for i := range ps { // Update
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

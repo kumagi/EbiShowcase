@@ -2,13 +2,14 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
+  <meta name="description" content="経験値からレベルを求め、条件を満たした個体の種族データを切り替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbiten">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>経験値と進化 | Ebi Showcase</title>
+<title>Ebi Showcase – 経験値と進化</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="経験値と進化 | Ebi Showcase">
-    <meta property="og:description" content="経験値からレベルを求め、条件を満たした個体の種族データを切り替えます。">
+    <meta property="og:title" content="Ebi Showcase – 経験値と進化">
+    <meta property="og:description" content="経験値からレベルを求め、条件を満たした個体の種族データを切り替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbiten">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/monster-collection/growth-evolution/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--monster-collection--growth-evolution.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="経験値と進化 | Ebi Showcase">
-    <meta name="twitter:description" content="経験値からレベルを求め、条件を満たした個体の種族データを切り替えます。">
+    <meta name="twitter:title" content="Ebi Showcase – 経験値と進化">
+    <meta name="twitter:description" content="経験値からレベルを求め、条件を満たした個体の種族データを切り替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbiten">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--monster-collection--growth-evolution.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="経験値と進化">
     <!-- ogp:end -->
@@ -74,6 +75,10 @@
 </article>
 </div>
 </section>
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_monster-growth.svg" alt="モンスターを育てる" loading="lazy" decoding="async"><figcaption>モンスターを育てるの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>育成と休息を計画し、進化して勝とう。</h2></div><p>TRAIN・REST・CHALLENGEをタップ。PCは1〜3またはT/R/C。15ターン以内にレベル4へ育てます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="経験値と進化" src="../../../../play/growth-evolution/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GROWTH CURVE</p><h2>経験値を残し、レベルと能力を計算する。</h2><p class="lesson-lead">経験値を<strong>(次レベル)²×10</strong>の境界と比べます。進化では経験値や現在HPを消さず、基礎能力を持つ種族定義だけを替えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>曲線からレベル</h3><p>次の境界を超える間levelを増やします。</p><code>exp &gt;= (level+1)*(level+1)*10</code></article><article><span class="concept-number">2</span><h3>能力を再計算</h3><p>種族の基礎値へレベル成長を足します。</p><code>attack = baseAttack + level*2</code></article><article><span class="concept-number">3</span><h3>定義だけ切替</h3><p>レベル4でspeciesIDを変更し、expとhpは保持します。</p><code>m.speciesID = evolvedID</code></article></div><div class="motion-lab" data-lab="xp-level" data-gained="+4 XP" data-evolve="進化できる！" aria-labelledby="lab-title-growth-evolution">
 <div class="lab-copy">
@@ -98,9 +103,9 @@ if level &gt;= 4 {
     m.speciesID = evolvedID // exp, hpは保持
 }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY CURVE?</p><h3>成長速度を設計</h3><p>高レベルほど多くの経験値が必要です。</p></article><article><p class="eyebrow">WHY KEEP?</p><h3>同じ仲間の続き</h3><p>進化で努力や傷が消えません。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>道具条件</h3><p>レベルと道具の両方を必要にしよう。</p></article></div></section>
 <nav class="lesson-pager">
-<a href="../capture/">← STEP 05<strong>捕獲チャレンジ</strong>
+<a href="../capture/" rel="prev">← STEP 05<strong>捕獲チャレンジ</strong>
 </a>
-<a href="../ebi-monsters/">STEP 07 →<strong>Ebi Monsters</strong>
+<a href="../ebi-monsters/" rel="next">STEP 07 →<strong>Ebi Monsters</strong>
 </a>
 </nav>
 
@@ -118,7 +123,7 @@ if level &gt;= 4 {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -126,6 +131,19 @@ if level &gt;= 4 {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

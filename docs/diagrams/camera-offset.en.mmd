@@ -1,0 +1,8 @@
+flowchart LR
+  world["world position<br/>playerX"]
+  focus["follow zone<br/>screen center"]
+  camera["cameraX<br/>clamp at edges"]
+  screen["screen position<br/>world - camera"]
+  world --> focus
+  focus --> camera
+  camera --> screen

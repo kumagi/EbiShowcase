@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Physics lesson on circle–circle collision using center distance and contact normals.">
-  <title>Circle Collision | Ebi Showcase</title>
+  <meta name="description" content="Physics lesson on circle–circle collision using center distance and contact normals. Play the demo, read a short Go example, change a value, and apply the idea">
+  <title>Ebi Showcase – Circle Collision</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Circle Collision | Ebi Showcase">
-    <meta property="og:description" content="Physics lesson on circle–circle collision using center distance and contact normals.">
+    <meta property="og:title" content="Ebi Showcase – Circle Collision">
+    <meta property="og:description" content="Physics lesson on circle–circle collision using center distance and contact normals. Play the demo, read a short Go example, change a value, and apply the idea">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/merge-physics/circle-collision/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--merge-physics--circle-collision.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Circle Collision | Ebi Showcase">
-    <meta name="twitter:description" content="Physics lesson on circle–circle collision using center distance and contact normals.">
+    <meta name="twitter:title" content="Ebi Showcase – Circle Collision">
+    <meta name="twitter:description" content="Physics lesson on circle–circle collision using center distance and contact normals. Play the demo, read a short Go example, change a value, and apply the idea">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--merge-physics--circle-collision.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Circle Collision">
     <!-- ogp:end -->
@@ -50,7 +50,11 @@
 
 <p class="curriculum-bridge">This track still runs on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> <strong>Update → Draw</strong> loop—each step adds one new piece. Here the drawing and the hit test are both circles.</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_merge-step.svg" alt="Merge matching objects" loading="lazy" decoding="async"><figcaption>A visual map of Merge matching objects. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Observe ten collisions.</h2></div>
         <p>Tap to launch the green circle. Each bump with the red circle adds to the count.</p>
@@ -176,8 +180,8 @@ distance := math.Hypot(dx, dy)
     </section>
 
     <nav class="lesson-pager">
-      <a href="../falling-circles/">← STEP 01<strong>Falling Circles</strong></a>
-      <a href="../stacking-bounce/">STEP 03 →<strong>Stacking and Bounce</strong></a>
+      <a href="../falling-circles/" rel="prev">← STEP 01<strong>Falling Circles</strong></a>
+      <a href="../stacking-bounce/" rel="next">STEP 03 →<strong>Stacking and Bounce</strong></a>
     </nav>
 
 
@@ -194,7 +198,7 @@ distance := math.Hypot(dx, dy)
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -202,6 +206,19 @@ distance := math.Hypot(dx, dy)
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

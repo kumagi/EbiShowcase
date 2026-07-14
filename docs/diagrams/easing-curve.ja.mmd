@@ -1,0 +1,8 @@
+flowchart LR
+  start["開始<br/>t=0"]
+  ease["easeInOut<br/>ゆっくり"]
+  peak["中央<br/>速く"]
+  settle["停止<br/>t=1"]
+  start --> ease
+  ease --> peak
+  peak --> settle

@@ -1,0 +1,8 @@
+flowchart LR
+  event["イベント<br/>hit / miss"]
+  rule["ルール<br/>pointsFor…"]
+  score["score += points"]
+  feedback["Draw<br/>数字・色・音"]
+  event --> rule
+  rule --> score
+  score --> feedback

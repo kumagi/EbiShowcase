@@ -1,0 +1,11 @@
+flowchart LR
+  draw["draw pile<br/>Draw"]
+  hand["hand<br/>choose"]
+  play["Play<br/>resolve effect"]
+  discard["discard pile<br/>Discard"]
+  shuffle["when empty<br/>Shuffle"]
+  draw --> hand
+  hand --> play
+  play --> discard
+  discard --> shuffle
+  shuffle --> draw

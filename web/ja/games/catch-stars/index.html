@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="落ちる星をカゴで受けて、移動と矩形の当たり判定を学ぶEbitengineレッスン。">
-  <title>LEVEL 03 — 落ちものキャッチ | Ebi Showcase</title>
+  <meta name="description" content="落ちる星をカゴで受けて、移動と矩形の当たり判定を学ぶEbitengineレッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+  <title>Ebi Showcase – LEVEL 03 — 落ちものキャッチ</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="LEVEL 03 — 落ちものキャッチ | Ebi Showcase">
-    <meta property="og:description" content="落ちる星をカゴで受けて、移動と矩形の当たり判定を学ぶEbitengineレッスン。">
+    <meta property="og:title" content="Ebi Showcase – LEVEL 03 — 落ちものキャッチ">
+    <meta property="og:description" content="落ちる星をカゴで受けて、移動と矩形の当たり判定を学ぶEbitengineレッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/games/catch-stars/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--catch-stars.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="LEVEL 03 — 落ちものキャッチ | Ebi Showcase">
-    <meta name="twitter:description" content="落ちる星をカゴで受けて、移動と矩形の当たり判定を学ぶEbitengineレッスン。">
+    <meta name="twitter:title" content="Ebi Showcase – LEVEL 03 — 落ちものキャッチ">
+    <meta name="twitter:description" content="落ちる星をカゴで受けて、移動と矩形の当たり判定を学ぶEbitengineレッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--catch-stars.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="落ちものキャッチ">
     <!-- ogp:end -->
@@ -40,8 +40,16 @@
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>スライスは星を何個でも入れられる順番付きリスト。天次郎が星を受け止め、3個落とすとゲームオーバーです。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>stars = append(stars, newStar())</code></pre></div></section>
+<!-- feedback-note:games/catch-stars:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-catch-stars"><div><p class="eyebrow">見えない箱</p><h2 id="feedback-note-games-catch-stars">矩形判定は、星とカゴの箱が重なったかを見る</h2><p>見た目が丸い星でも、最初は四角い箱で十分です。カゴは左右に動かすゲームなのでXだけを変え、Yは落ち着いた高さに固定すると判定を考えやすくなります。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="星とカゴの矩形が重なる図"><span>★ 星の箱</span><b>重なる？</b><strong>▰ カゴの箱 = HIT</strong><code>basket.xだけ変える</code></div></div></section>
+<!-- feedback-note:games/catch-stars:end -->
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_collision-rect.svg" alt="矩形の重なり" loading="lazy" decoding="async"><figcaption>矩形の重なりの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_score-flow.svg" alt="得点の流れ" loading="lazy" decoding="async"><figcaption>得点の流れの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>主人公を動かして、星を集めよう。</h2></div><p>矢印キー、WASD、ドラッグに対応。3回落とすとゲームオーバーです。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="落ちものキャッチ" src="../../../play/catch-stars/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -327,7 +335,7 @@ func main() {
 
     <p class="lesson-lead">このゲームの星は、決めた <code>speed</code> のまま<strong>一定の速さ</strong>で落ちます。次のレベルでは、速さを毎フレーム変える「加速度」を加え、上昇から落下へ切り替わるジャンプの弧を作ります。</p>
 
-    <nav class="lesson-pager"><a href="../timing-meter/">← LEVEL 02<strong>ストップ・ザ・メーター</strong></a><a href="../flappy/">LEVEL 04 →<strong>Ebi Flight</strong></a></nav>
+    <nav class="lesson-pager"><a href="../timing-meter/" rel="prev">← LEVEL 02<strong>ストップ・ザ・メーター</strong></a><a href="../flappy/" rel="next">LEVEL 04 →<strong>Ebi Flight</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -343,7 +351,7 @@ func main() {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -351,6 +359,19 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

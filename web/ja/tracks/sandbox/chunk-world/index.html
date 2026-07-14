@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>チャンクで広い世界 | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="世界を8×8マスの区画へ分け、カメラの近くだけ生成・読み込み・描画します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbit"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – チャンクで広い世界</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="チャンクで広い世界 | Ebi Showcase">
-    <meta property="og:description" content="世界を8×8マスの区画へ分け、カメラの近くだけ生成・読み込み・描画します。">
+    <meta property="og:title" content="Ebi Showcase – チャンクで広い世界">
+    <meta property="og:description" content="世界を8×8マスの区画へ分け、カメラの近くだけ生成・読み込み・描画します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbit">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/sandbox/chunk-world/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--sandbox--chunk-world.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="チャンクで広い世界 | Ebi Showcase">
-    <meta name="twitter:description" content="世界を8×8マスの区画へ分け、カメラの近くだけ生成・読み込み・描画します。">
+    <meta name="twitter:title" content="Ebi Showcase – チャンクで広い世界">
+    <meta name="twitter:description" content="世界を8×8マスの区画へ分け、カメラの近くだけ生成・読み込み・描画します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbit">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--sandbox--chunk-world.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="チャンクで広い世界">
     <!-- ogp:end -->
@@ -23,6 +24,10 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>チャンクは広い地図の小区画。x/256が区画番号、x%256が区画内位置です。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>chunkX, localX := x/256, x%256</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_sandbox-seed.svg" alt="シードから世界を作る" loading="lazy" decoding="async"><figcaption>シードから世界を作るの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>75秒で12区画を訪れ、ビーコンを5個集めよう。</h2></div><p>矢印/WASDまたは画面下の方向ボタンで探索します。黄色い太線がチャンクの境目。上には現在座標、キャッシュ数、今描いている数が出ます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="チャンクで広い世界" src="../../../../play/chunk-world/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CHUNK CACHE</p><h2>大きな世界を、小さな地図カードに分ける。</h2><p class="lesson-lead">世界の全マスを一度に持つ代わりに、8×8マスを一つの<strong>チャンク</strong>として扱います。プレイヤーが新しい区画へ近づいたときだけ生成してmapへ保存し、画面外のチャンクは保存したまま描きません。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>世界のマスをチャンクへ割る</h3><p>世界タイルxを8で割った商がチャンクx、余りがチャンク内xです。負の座標では床方向に割る関数を使います。</p><code>chunkX = floorDiv(tileX, 8)</code></article><article><span class="concept-number">2</span><h3>なければ生成して保存</h3><p>カメラ中央の周囲5×5を調べ、mapにないキーだけ同じシードで生成します。戻ってきたときは同じデータを再利用します。</p><code>chunks[key] = generateChunk(key)</code></article><article><span class="concept-number">3</span><h3>画面と重なる区画だけ描く</h3><p>カメラの左上と右下をチャンク番号へ直し、その間だけDrawします。キャッシュ数が増えても描画数はほぼ一定です。</p><code>for cy := minCY; cy &lt;= maxCY; cy++</code></article></div><div class="motion-lab" data-lab="camera" aria-labelledby="chunk-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / CAMERA WINDOW</p><h3 id="chunk-lab-title">世界とカメラを別々に動かそう</h3><p>プレイヤーを動かし、カメラを追従させます。実ゲームではこのカメラ位置を8マス幅で割り、必要チャンクを決めます。</p><div class="lab-controls"><button type="button" class="lab-button" data-lab-left data-go-focus="target">左へ</button><button type="button" class="lab-button lab-button-primary" data-lab-right data-go-focus="target">右へ</button><button type="button" class="lab-button" data-lab-step data-go-focus="lerp draw" data-go-caption="1枚引く">カメラ追従</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button></div></div><div class="lab-visual"><div class="lab-board" role="img" aria-label="ワールド内のプレイヤーとカメラ"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-actor style="top:50%"></div></div></div><div class="lab-values"><div><span>camera</span><strong data-lab-cam>0</strong></div><div><span>player</span><strong data-lab-player>200</strong></div><div><span>screen X</span><strong data-lab-screen>200</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -39,7 +44,7 @@ for cy := center.y-2; cy &lt;= center.y+2; cy++ {
             chunks[key] = generateChunk(key)
         }
     }
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY CACHE?</p><h3>変更した世界を覚える</h3><p>拾ったビーコンはチャンク内で草へ変わります。再生成せずキャッシュを使うので、戻っても拾ったままです。</p></article><article><p class="eyebrow">WHY CULL?</p><h3>広さと描画量を分ける</h3><p>100区画を訪れても、今見える数枚だけ描けば1フレームの仕事は急に増えません。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>遠いキャッシュを保存しよう</h3><p>中心から10区画以上離れたチャンクをファイル用データへ移し、mapから外す仕組みを考えよう。</p></article></div></section><nav class="lesson-pager"><a href="../terrain-generation/">← STEP 02<strong>地形を生み出す</strong></a><a href="../inventory-crafting/">STEP 04 →<strong>道具袋とクラフト</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY CACHE?</p><h3>変更した世界を覚える</h3><p>拾ったビーコンはチャンク内で草へ変わります。再生成せずキャッシュを使うので、戻っても拾ったままです。</p></article><article><p class="eyebrow">WHY CULL?</p><h3>広さと描画量を分ける</h3><p>100区画を訪れても、今見える数枚だけ描けば1フレームの仕事は急に増えません。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>遠いキャッシュを保存しよう</h3><p>中心から10区画以上離れたチャンクをファイル用データへ移し、mapから外す仕組みを考えよう。</p></article></div></section><nav class="lesson-pager"><a href="../terrain-generation/" rel="prev">← STEP 02<strong>地形を生み出す</strong></a><a href="../inventory-crafting/" rel="next">STEP 04 →<strong>道具袋とクラフト</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -55,7 +60,7 @@ for cy := center.y-2; cy &lt;= center.y+2; cy++ {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -63,6 +68,19 @@ for cy := center.y-2; cy &lt;= center.y+2; cy++ {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

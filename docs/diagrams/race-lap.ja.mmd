@@ -1,0 +1,9 @@
+flowchart LR
+  steer["入力<br/>加速・旋回"]
+  gate["ゲート<br/>順番に通る"]
+  lap["ラップ<br/>秒を計る"]
+  best["BEST更新<br/>保存する"]
+  steer --> gate
+  gate --> lap
+  lap --> best
+  best --> steer

@@ -1,0 +1,8 @@
+flowchart LR
+  base["base color<br/>R G B A"]
+  scale["multiplier<br/>0 to 2"]
+  mode["state<br/>normal / poison / heal"]
+  draw["Draw<br/>color changes"]
+  base --> scale
+  scale --> mode
+  mode --> draw

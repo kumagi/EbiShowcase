@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="Learn camera scrolling, culling, and checkpoints in Ebitengine. One subtraction converts world coordinates to screen coordinates — explained with real Go code.">
-  <title>STEP 04 — Scrolling Hills | Ebi Showcase</title>
+  <title>Ebi Showcase – STEP 04 — Scrolling Hills</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="STEP 04 — Scrolling Hills | Ebi Showcase">
+    <meta property="og:title" content="Ebi Showcase – STEP 04 — Scrolling Hills">
     <meta property="og:description" content="Learn camera scrolling, culling, and checkpoints in Ebitengine. One subtraction converts world coordinates to screen coordinates — explained with real Go code.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/platformer/scrolling-stage/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--platformer--scrolling-stage.png?v=20260713-font1">
@@ -18,7 +18,7 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="STEP 04 — Scrolling Hills | Ebi Showcase">
+    <meta name="twitter:title" content="Ebi Showcase – STEP 04 — Scrolling Hills">
     <meta name="twitter:description" content="Learn camera scrolling, culling, and checkpoints in Ebitengine. One subtraction converts world coordinates to screen coordinates — explained with real Go code.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--platformer--scrolling-stage.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Scrolling Hills">
@@ -51,7 +51,11 @@
 <p class="curriculum-bridge">This track still runs on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> <strong>Update → Draw</strong> loop—each step adds one new piece.</p>
 
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_camera-offset.svg" alt="Camera offset" loading="lazy" decoding="async"><figcaption>A visual map of Camera offset. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Run through the hills to the goal.</h2></div>
         <p>A/D or tap the lower screen to move. Space or tap the upper screen to jump. Pass a green flag to set a checkpoint.</p>
@@ -171,8 +175,8 @@ g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
     </section>
 
     <nav class="lesson-pager">
-      <a href="../patrol-enemies/">← STEP 03<strong>Stompable Enemy Garden</strong></a>
-      <a href="../powerup-adventure/">STEP 05 →<strong>Ebi Adventure</strong></a>
+      <a href="../patrol-enemies/" rel="prev">← STEP 03<strong>Stompable Enemy Garden</strong></a>
+      <a href="../powerup-adventure/" rel="next">STEP 05 →<strong>Ebi Adventure</strong></a>
     </nav>
 
 
@@ -189,7 +193,7 @@ g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -197,6 +201,19 @@ g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

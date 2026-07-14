@@ -1,0 +1,9 @@
+flowchart LR
+  input["方向入力<br/>← ↑ → ↓"]
+  next["次のマス<br/>床？箱？"]
+  beyond["箱の先<br/>空いている？"]
+  move["同時に移動<br/>mapを更新"]
+  input --> next
+  next --> beyond
+  beyond --> move
+  move --> input

@@ -1,0 +1,8 @@
+flowchart LR
+  json["stage-01.json<br/>stage-02.json"]
+  decode["Decode<br/>into structs"]
+  director["StageDirector<br/>place entities"]
+  play["same rules<br/>new stage"]
+  json --> decode
+  decode --> director
+  director --> play

@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。">
-  <title>ボムで弾を消し、爆発は演出へ | Ebi Showcase</title>
+  <meta name="description" content="応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+  <title>Ebi Showcase – ボムで弾を消し、爆発は演出へ</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-fx-bullethell/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="ボムで弾を消し、爆発は演出へ | Ebi Showcase">
-    <meta property="og:description" content="応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。">
+    <meta property="og:title" content="Ebi Showcase – ボムで弾を消し、爆発は演出へ">
+    <meta property="og:description" content="応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-fx-bullethell/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-fx-bullethell.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,8 +19,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ボムで弾を消し、爆発は演出へ | Ebi Showcase">
-    <meta name="twitter:description" content="応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。">
+    <meta name="twitter:title" content="Ebi Showcase – ボムで弾を消し、爆発は演出へ">
+    <meta name="twitter:description" content="応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-fx-bullethell.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="ボムで弾を消し、爆発は演出へ">
     <!-- ogp:end -->
@@ -51,7 +51,11 @@
 
     <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_bullet-spawn.svg" alt="弾幕を時間で組み立てる" loading="lazy" decoding="async"><figcaption>弾幕を時間で組み立てるの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>避けてボムせよ</h2></div>
         <p>弾幕を避け、ボムで一掃。削除は play、爆発は fx。LIVE GO で bullets と fx.parts を見比べよう。</p>
@@ -141,8 +145,8 @@ g.fx.Burst(x, y, 80, 6, white, true)   // fx only</code></pre>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-dungeon/">← STEP A11<strong>攻撃ヒットに閃光を足す</strong></a>
-      <a href="../../platformer/">応用トラックへ →<strong>作りたいゲームを選ぶ</strong></a>
+      <a href="../vfx-fx-dungeon/" rel="prev">← STEP A11<strong>攻撃ヒットに閃光を足す</strong></a>
+      <a href="../../platformer/" rel="next">応用トラックへ →<strong>作りたいゲームを選ぶ</strong></a>
     </nav>
 
 
@@ -159,7 +163,7 @@ g.fx.Burst(x, y, 80, 6, white, true)   // fx only</code></pre>
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

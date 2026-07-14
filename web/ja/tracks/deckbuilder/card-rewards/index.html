@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>カード報酬と強化 | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="目標達成後に3枚から1枚を選び、デッキそのものを成長させます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengine"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – カード報酬と強化</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="カード報酬と強化 | Ebi Showcase">
-    <meta property="og:description" content="目標達成後に3枚から1枚を選び、デッキそのものを成長させます。">
+    <meta property="og:title" content="Ebi Showcase – カード報酬と強化">
+    <meta property="og:description" content="目標達成後に3枚から1枚を選び、デッキそのものを成長させます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengine">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/deckbuilder/card-rewards/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder--card-rewards.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="カード報酬と強化 | Ebi Showcase">
-    <meta name="twitter:description" content="目標達成後に3枚から1枚を選び、デッキそのものを成長させます。">
+    <meta name="twitter:title" content="Ebi Showcase – カード報酬と強化">
+    <meta name="twitter:description" content="目標達成後に3枚から1枚を選び、デッキそのものを成長させます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengine">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder--card-rewards.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="カード報酬と強化">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>選択報酬は戦闘後に一枚だけ選ぶごほうび、レア度は出にくさと強さの目安、デッキ編集は使うカード一覧を変えること。選んだ一枚だけappendします。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>deck = append(deck, chosenCard)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>強い1枚を選んで、次の目標へ。</h2></div><p>TRAINをタップまたはSpace。報酬は1〜3かカードをタップ。PCではUで強化、Rで古いカードを削除できます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="カード報酬と強化" src="../../../../play/card-rewards/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK EDITING</p><h2>報酬は「数字を増やす」だけでなく、次の遊び方を変える。</h2><p class="lesson-lead">候補をカードデータのリストとして作り、選ばれた<strong>たった1枚だけをdeckへappend</strong>します。レア度は色や出やすさを表すデータで、強さそのものとは分けて考えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>候補を作る</h3><p>戦闘番号に合う報酬表から3枚を表示します。画面に見えるカードと選択時に追加するカードは同じデータです。</p><code>rewards := rewardTable[stage]</code></article><article><span class="concept-number">2</span><h3>1枚だけ追加</h3><p>選ばれた番号のカードをデッキの末尾へ入れます。ほかの2枚は追加しないので選択に意味が生まれます。</p><code>deck = append(deck, rewards[choice])</code></article><article><span class="concept-number">3</span><h3>編集は元データを変える</h3><p>強化はdamageを増やし、削除はスライスから要素を抜きます。次の戦闘は編集後のdeckを読みます。</p><code>deck[i].damage += 3</code></article></div><div class="motion-lab" data-lab="deck-pick" data-cards="Strike,Guard,Rare Heal" data-picked="{c} を追加" aria-labelledby="lab-title-card-rewards">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / REWARD PICK</p>
@@ -46,7 +50,7 @@
     deck = append(deck, chosen)
     stage++
     selecting = false
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY CHOICE?</p><h3>自分のデッキになる</h3><p>毎回全部もらうのではなく1枚を選ぶから、遊ぶ人ごとに違うデッキが育ちます。</p></article><article><p class="eyebrow">WHY REMOVE?</p><h3>少ないほど狙いやすい</h3><p>弱いカードを抜くと、残した強いカードを引く確率が上がります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>重み付き抽選</h3><p>COMMONを70、UNCOMMONを25、RAREを5の重みで候補に出す関数を考えよう。</p></article></div></section><nav class="lesson-pager"><a href="../intent-status/">← STEP 04<strong>敵の予告と状態効果</strong></a><a href="../branching-map/">STEP 06 →<strong>分岐マップの旅</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY CHOICE?</p><h3>自分のデッキになる</h3><p>毎回全部もらうのではなく1枚を選ぶから、遊ぶ人ごとに違うデッキが育ちます。</p></article><article><p class="eyebrow">WHY REMOVE?</p><h3>少ないほど狙いやすい</h3><p>弱いカードを抜くと、残した強いカードを引く確率が上がります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>重み付き抽選</h3><p>COMMONを70、UNCOMMONを25、RAREを5の重みで候補に出す関数を考えよう。</p></article></div></section><nav class="lesson-pager"><a href="../intent-status/" rel="prev">← STEP 04<strong>敵の予告と状態効果</strong></a><a href="../branching-map/" rel="next">STEP 06 →<strong>分岐マップの旅</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -62,7 +66,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -70,6 +74,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

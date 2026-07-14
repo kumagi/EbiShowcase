@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Card Rewards and Upgrades | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Choose one of three cards after reaching a goal and grow the deck itself. Play the demo, read a short Go example, change a value, and apply the idea to your own"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Card Rewards and Upgrades</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Card Rewards and Upgrades | Ebi Showcase">
-    <meta property="og:description" content="Choose one of three cards after reaching a goal and grow the deck itself.">
+    <meta property="og:title" content="Ebi Showcase – Card Rewards and Upgrades">
+    <meta property="og:description" content="Choose one of three cards after reaching a goal and grow the deck itself. Play the demo, read a short Go example, change a value, and apply the idea to your own">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/deckbuilder/card-rewards/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--card-rewards.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Card Rewards and Upgrades | Ebi Showcase">
-    <meta name="twitter:description" content="Choose one of three cards after reaching a goal and grow the deck itself.">
+    <meta name="twitter:title" content="Ebi Showcase – Card Rewards and Upgrades">
+    <meta name="twitter:description" content="Choose one of three cards after reaching a goal and grow the deck itself. Play the demo, read a short Go example, change a value, and apply the idea to your own">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--card-rewards.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Card Rewards and Upgrades">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>deck = append(deck, chosenCard)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Choose one strong card for the next goal.</h2></div><p>Tap TRAIN or press Space. Pick rewards with 1–3 or a tap. On PC, U upgrades and R removes the oldest card.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Card Rewards and Upgrades" src="../../../../play/card-rewards/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK EDITING</p><h2>A reward changes your next strategy, not just one number.</h2><p class="lesson-lead">Build candidates as a list of card data, then <strong>append exactly one chosen card</strong> to deck. Rarity is data for color and appearance chance; keep it separate from raw power.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Build candidates</h3><p>Display three cards from the reward table for this stage. Drawing and selection use the same data, so what you see is what you get.</p><code>rewards := rewardTable[stage]</code></article><article><span class="concept-number">2</span><h3>Add only one</h3><p>Append the selected card to the end of the deck. The other two disappear, making the choice meaningful.</p><code>deck = append(deck, rewards[choice])</code></article><article><span class="concept-number">3</span><h3>Edit source data</h3><p>Upgrade increases damage; removal cuts an element from the slice. The next battle reads this edited deck.</p><code>deck[i].damage += 3</code></article></div><div class="motion-lab" data-lab="deck-pick" data-cards="Strike,Guard,Rare Heal" data-picked="added {c}" aria-labelledby="lab-title-card-rewards">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / REWARD PICK</p>
@@ -46,7 +50,7 @@
     deck = append(deck, chosen)
     stage++
     selecting = false
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY CHOICE?</p><h3>Make it your deck</h3><p>Choosing one instead of receiving all three makes every player's deck grow differently.</p></article><article><p class="eyebrow">WHY REMOVE?</p><h3>Small can be focused</h3><p>Removing a weak card raises the chance of drawing the strong cards you kept.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Weighted rarity</h3><p>Design a picker with weights 70 Common, 25 Uncommon, and 5 Rare.</p></article></div></section><nav class="lesson-pager"><a href="../intent-status/">← STEP 04<strong>Enemy Intents and Statuses</strong></a><a href="../branching-map/">STEP 06 →<strong>Journey Through a Branching Map</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY CHOICE?</p><h3>Make it your deck</h3><p>Choosing one instead of receiving all three makes every player's deck grow differently.</p></article><article><p class="eyebrow">WHY REMOVE?</p><h3>Small can be focused</h3><p>Removing a weak card raises the chance of drawing the strong cards you kept.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Weighted rarity</h3><p>Design a picker with weights 70 Common, 25 Uncommon, and 5 Rare.</p></article></div></section><nav class="lesson-pager"><a href="../intent-status/" rel="prev">← STEP 04<strong>Enemy Intents and Statuses</strong></a><a href="../branching-map/" rel="next">STEP 06 →<strong>Journey Through a Branching Map</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -62,7 +66,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -70,6 +74,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Capture Challenge | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Calculate capture chance from remaining HP, SLEEP, and tools, then save successful creatures into open storage slots. Play the demo, read a short Go example, ch"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Capture Challenge</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Capture Challenge | Ebi Showcase">
-    <meta property="og:description" content="Calculate capture chance from remaining HP, SLEEP, and tools, then save successful creatures into open storage slots.">
+    <meta property="og:title" content="Ebi Showcase – Capture Challenge">
+    <meta property="og:description" content="Calculate capture chance from remaining HP, SLEEP, and tools, then save successful creatures into open storage slots. Play the demo, read a short Go example, ch">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/monster-collection/capture/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--monster-collection--capture.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Capture Challenge | Ebi Showcase">
-    <meta name="twitter:description" content="Calculate capture chance from remaining HP, SLEEP, and tools, then save successful creatures into open storage slots.">
+    <meta name="twitter:title" content="Ebi Showcase – Capture Challenge">
+    <meta name="twitter:description" content="Calculate capture chance from remaining HP, SLEEP, and tools, then save successful creatures into open storage slots. Play the demo, read a short Go example, ch">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--monster-collection--capture.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Capture Challenge">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>chance := 25 + (maxHP-hp)*60/maxHP</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Capture three creatures while protecting HP and tools.</h2></div><p>Lower HP with GENTLE HIT, add SLEEP, inspect the chance, then choose a BASIC or REEF ORB. Click/tap or press 1–4. Failure costs the orb and triggers a counterattack.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Capture Challenge" src="../../../../play/capture/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / VISIBLE PROBABILITY</p><h2>Let preparation improve chance instead of relying on luck alone.</h2><p class="lesson-lead">Capture chance is always visible. Start at 15%, add up to 55% from missing HP, 20% for SLEEP, and 15% for a REEF ORB. Finally compare one 0–99 <strong>roll</strong> with that chance.</p><p><strong>Integer division trap:</strong> write <code>(maxHP-wildHP)*55/maxHP</code> (multiply first). <code>(maxHP-wildHP)/maxHP*55</code> becomes 0 in Go int math.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Build chance from current conditions</h3><p>HP 100 gives no bonus; HP 20 gives 44. Add status and tool bonuses, then cap the total at 95%.</p><code>chance = min(95, 15+hpBonus+status+item)</code></article><article><span class="concept-number">2</span><h3>Draw one random number</h3><p>Capture succeeds when roll is below chance. Showing both explains a result such as “79 &lt; 84, so success.”</p><code>captured := rng.Intn(100) &lt; chance</code></article><article><span class="concept-number">3</span><h3>Separate success and failure updates</h3><p>Success appends a name to storage. Failure consumes only the tool, removes SLEEP, and allows a counterattack.</p><code>storage = append(storage, wild.name)</code></article></div><div class="motion-lab" data-lab="capture-roll" data-caught="caught! {r} &lt; {p}%" data-missed="broke free — {r} ≥ {p}%" data-weakened="HP {hp} → rate up" data-slept="SLEEP +20%" data-orbed="ORB +15%" data-rate="35" data-baited="baited" data-caught="caught! ({r})" data-missed="broke free ({r})" aria-labelledby="lab-title-capture">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / CATCH RATE</p>
@@ -50,7 +54,7 @@
 
 if rng.Intn(100) &lt; captureChance() {
     storage = append(storage, wildName)
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY SHOW THE FORMULA?</p><h3>Plan the next action</h3><p>Visible contributions let players decide whether to attack once more or spend the stronger tool.</p></article><article><p class="eyebrow">WHY FAILURE RISK?</p><h3>Choose when to throw</h3><p>A lost tool and counterattack make repeated low-chance attempts a poor strategy.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Species capture rates</h3><p>Add baseRate to species data so rare creatures can begin with a lower base chance.</p></article></div></section><nav class="lesson-pager"><a href="../party-switch/">← STEP 04<strong>Party and Switching</strong></a><a href="../growth-evolution/">STEP 06 →<strong>Experience and Evolution</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY SHOW THE FORMULA?</p><h3>Plan the next action</h3><p>Visible contributions let players decide whether to attack once more or spend the stronger tool.</p></article><article><p class="eyebrow">WHY FAILURE RISK?</p><h3>Choose when to throw</h3><p>A lost tool and counterattack make repeated low-chance attempts a poor strategy.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Species capture rates</h3><p>Add baseRate to species data so rare creatures can begin with a lower base chance.</p></article></div></section><nav class="lesson-pager"><a href="../party-switch/" rel="prev">← STEP 04<strong>Party and Switching</strong></a><a href="../growth-evolution/" rel="next">STEP 06 →<strong>Experience and Evolution</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -66,7 +70,7 @@ if rng.Intn(100) &lt; captureChance() {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -74,6 +78,19 @@ if rng.Intn(100) &lt; captureChance() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

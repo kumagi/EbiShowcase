@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="Normal blending hides the back with the front. Additive (BlendLighter) adds color, so overlapping light gets brighter and the middle glows w">
-  <title>Additive Blending Glow | Ebi Showcase</title>
+  <title>Ebi Showcase – Additive Blending Glow</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-additive/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Additive Blending Glow | Ebi Showcase">
+    <meta property="og:title" content="Ebi Showcase – Additive Blending Glow">
     <meta property="og:description" content="Normal blending hides the back with the front. Additive (BlendLighter) adds color, so overlapping light gets brighter and the middle glows w">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-additive/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-additive.png?v=20260713-font1">
@@ -19,7 +19,7 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Additive Blending Glow | Ebi Showcase">
+    <meta name="twitter:title" content="Ebi Showcase – Additive Blending Glow">
     <meta name="twitter:description" content="Normal blending hides the back with the front. Additive (BlendLighter) adds color, so overlapping light gets brighter and the middle glows w">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-additive.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Additive Blending Glow">
@@ -46,12 +46,21 @@
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>op.Blend = ebiten.BlendLighter</code></pre></div></section>
+<!-- feedback-note:tracks/visual-effects/vfx-additive:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-additive"><div><p class="eyebrow">Calculate additive color</p><h2 id="feedback-note-tracks-visual-effects-vfx-additive">Red plus green makes yellow; all three make white</h2><p>Additive blending adds light colors. Red (1,0,0) plus green (0,1,0) becomes (1,1,0), yellow. Add blue too and the result is white.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="additive blending example">red + green = (1,0,0) + (0,1,0)
+          = (1,1,0) = yellow
+red + green + blue = white</pre></div></section>
+<!-- feedback-note:tracks/visual-effects/vfx-additive:end -->
 <!-- END BEGINNER BRIDGE -->
 
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_alpha-blend.svg" alt="Layer alpha" loading="lazy" decoding="async"><figcaption>A visual map of Layer alpha. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Toggle the blend mode</h2></div>
         <p>Overlap two lights and switch between normal and additive. With additive, only the overlap flares bright.</p>
@@ -135,8 +144,8 @@ screen.DrawImage(glow, op)</code></pre>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-alpha/">← STEP 04<strong>Alpha, Order & Afterimage</strong></a>
-      <a href="../vfx-walk/">STEP 06 →<strong>Sprite Walk (Frame by Frame)</strong></a>
+      <a href="../vfx-alpha/" rel="prev">← STEP 04<strong>Alpha, Order & Afterimage</strong></a>
+      <a href="../vfx-walk/" rel="next">STEP 06 →<strong>Sprite Walk (Frame by Frame)</strong></a>
     </nav>
 
 
@@ -153,7 +162,7 @@ screen.DrawImage(glow, op)</code></pre>
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

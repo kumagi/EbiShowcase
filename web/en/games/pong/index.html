@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Learn ball reflection and velocity vectors with an Ebitengine Pong lesson.">
-  <title>LEVEL 05 — Pong | Ebi Showcase</title>
+  <meta name="description" content="Learn ball reflection and velocity vectors with an Ebitengine Pong lesson. Play the demo, read a short Go example, change a value, and apply the idea to your ow">
+  <title>Ebi Showcase – LEVEL 05 — Pong</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="LEVEL 05 — Pong | Ebi Showcase">
-    <meta property="og:description" content="Learn ball reflection and velocity vectors with an Ebitengine Pong lesson.">
+    <meta property="og:title" content="Ebi Showcase – LEVEL 05 — Pong">
+    <meta property="og:description" content="Learn ball reflection and velocity vectors with an Ebitengine Pong lesson. Play the demo, read a short Go example, change a value, and apply the idea to your ow">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/games/pong/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--pong.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="LEVEL 05 — Pong | Ebi Showcase">
-    <meta name="twitter:description" content="Learn ball reflection and velocity vectors with an Ebitengine Pong lesson.">
+    <meta name="twitter:title" content="Ebi Showcase – LEVEL 05 — Pong">
+    <meta name="twitter:description" content="Learn ball reflection and velocity vectors with an Ebitengine Pong lesson. Play the demo, read a short Go example, change a value, and apply the idea to your ow">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--pong.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Pong">
     <!-- ogp:end -->
@@ -39,12 +39,19 @@
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>vx = -vx</code></pre></div></section>
+<!-- feedback-note:games/pong:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-pong"><div><p class="eyebrow">Practice alone</p><h2 id="feedback-note-games-pong">The CPU is your practice opponent</h2><p>The CPU paddle follows the ball, so you can practice reflections without another player. vx is horizontal speed and vy is vertical speed. Flip the matching sign when the ball hits a wall.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="velocity components and reflection"><code>vx = horizontal</code><code>vy = vertical</code><b>wall → vy = -vy</b><strong>bounce</strong></div></div></section>
+<!-- feedback-note:games/pong:end -->
 <!-- END BEGINNER BRIDGE -->
 
 <p class="curriculum-bridge">The skeleton is still the <a href="../tap-target/#basics">LEVEL 01</a> <strong>Update → Draw</strong> loop. This lesson only adds its new piece (bounce, bricks, or a growing body). Drawing and hits stay simple shapes.</p>
 
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_bounce-angle.svg" alt="Choose a bounce angle" loading="lazy" decoding="async"><figcaption>A visual map of Choose a bounce angle. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Return the ball with your paddle.</h2></div><p>Move with arrows, WASD, or drag. Score against the CPU.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Pong" src="../../../play/pong/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -297,7 +304,7 @@ func main() {
       </div>
     </section>
 
-    <nav class="lesson-pager"><a href="../flappy/">← LEVEL 04<strong>Ebi Flight</strong></a><a href="../breakout/">LEVEL 06 →<strong>Breakout</strong></a></nav>
+    <nav class="lesson-pager"><a href="../flappy/" rel="prev">← LEVEL 04<strong>Ebi Flight</strong></a><a href="../breakout/" rel="next">LEVEL 06 →<strong>Breakout</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -313,7 +320,7 @@ func main() {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -321,6 +328,19 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

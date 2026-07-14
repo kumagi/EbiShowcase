@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>A Living World | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Spawn creatures from time and terrain, then switch their states using distance and player actions. Play the demo, read a short Go example, change a value, and a"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – A Living World</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="A Living World | Ebi Showcase">
-    <meta property="og:description" content="Spawn creatures from time and terrain, then switch their states using distance and player actions.">
+    <meta property="og:title" content="Ebi Showcase – A Living World">
+    <meta property="og:description" content="Spawn creatures from time and terrain, then switch their states using distance and player actions. Play the demo, read a short Go example, change a value, and a">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/sandbox/creature-world/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--sandbox--creature-world.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="A Living World | Ebi Showcase">
-    <meta name="twitter:description" content="Spawn creatures from time and terrain, then switch their states using distance and player actions.">
+    <meta name="twitter:title" content="Ebi Showcase – A Living World">
+    <meta name="twitter:description" content="Spawn creatures from time and terrain, then switch their states using distance and player actions. Play the demo, read a short Go example, change a value, and a">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--sandbox--creature-world.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="A Living World">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>biome := biomeAt(seed, x, y)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Observe day and night, then befriend four grazers.</h2></div><p>Walk over berries, approach a yellow grazer until it is CURIOUS, and press FEED. Use TORCH to repel purple night prowlers. Supports arrows/WASD, E, Space, mouse, and touch.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="A Living World" src="../../../../play/creature-world/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CREATURE STATE MACHINE</p><h2>Separate “when and where” from “what it does.”</h2><p class="lesson-lead">Spawning decides how a creature enters the world; a state machine decides its life afterward. Day plus meadow creates grazers, while night plus rock creates prowlers. Each creature then changes its own <strong>state</strong> from distance, food, and torch events.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Spawn from time and terrain</h3><p>Check the day phase on a timer. Add grazers only in the left meadow by day and prowlers only in the right rocks at night.</p><code>if isDay() { spawnGrazer(meadow) }</code></article><article><span class="concept-number">2</span><h3>Select behavior from state</h3><p>WANDER picks random directions. A nearby grazer becomes CURIOUS, a prowler becomes CHASE, and torch light changes it to FLEE.</p><code>switch creature.state { ... }</code></article><article><span class="concept-number">3</span><h3>Let actions cause transitions</h3><p>Feeding a CURIOUS grazer changes it to FRIEND and follow. A CHASE contact costs HP, then sends that prowler into FLEE.</p><code>curious + feed → friend</code></article></div><div class="motion-lab" data-lab="ai" data-patrol="WANDER" data-chase="CURIOUS" aria-labelledby="creature-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / DISTANCE TRANSITION</p><h3 id="creature-lab-title">Switch WANDER and CURIOUS by distance</h3><p>Below 120 pixels the creature becomes interested in the player. Move away and it wanders again.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-closer data-go-focus="dist chase">Move closer</button><button type="button" class="lab-button" data-lab-farther data-go-focus="dist chase">Move farther</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board role="img" aria-label="Creature state changing with distance"></div><div class="lab-values"><div><span>State</span><strong data-lab-state>WANDER</strong></div><div><span>Distance</span><strong data-lab-dist>180</strong></div><div><span>Threshold</span><strong>120</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -42,7 +46,7 @@ case curious:
     if distance &gt; 170 {
         creature.state = wander
     }
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY TWO DISTANCES?</p><h3>Avoid boundary flicker</h3><p>Entering at 115 and leaving at 170 prevents tiny movements near one line from flipping state every frame.</p></article><article><p class="eyebrow">WHY STATE PER CREATURE?</p><h3>Individuals act differently</h3><p>One grazer can be FRIEND while another stays WANDER because every creature remembers its own state.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Add hunger</h3><p>Increase hunger each second and add SEEK_FOOD, used only when that value grows high.</p></article></div></section><nav class="lesson-pager"><a href="../tools-light/">← STEP 05<strong>Tools and Light</strong></a><a href="../ebi-craft/">STEP 07 →<strong>Ebi Craft</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY TWO DISTANCES?</p><h3>Avoid boundary flicker</h3><p>Entering at 115 and leaving at 170 prevents tiny movements near one line from flipping state every frame.</p></article><article><p class="eyebrow">WHY STATE PER CREATURE?</p><h3>Individuals act differently</h3><p>One grazer can be FRIEND while another stays WANDER because every creature remembers its own state.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Add hunger</h3><p>Increase hunger each second and add SEEK_FOOD, used only when that value grows high.</p></article></div></section><nav class="lesson-pager"><a href="../tools-light/" rel="prev">← STEP 05<strong>Tools and Light</strong></a><a href="../ebi-craft/" rel="next">STEP 07 →<strong>Ebi Craft</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -58,7 +62,7 @@ case curious:
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -66,6 +70,19 @@ case curious:
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

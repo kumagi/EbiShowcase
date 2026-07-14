@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Pellet Maze | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Parse one text map into fixed walls and mutable pellets, updating state and remaining count on collection. Play the demo, read a short Go example, change a valu"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Pellet Maze</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Pellet Maze | Ebi Showcase">
-    <meta property="og:description" content="Parse one text map into fixed walls and mutable pellets, updating state and remaining count on collection.">
+    <meta property="og:title" content="Ebi Showcase – Pellet Maze">
+    <meta property="og:description" content="Parse one text map into fixed walls and mutable pellets, updating state and remaining count on collection. Play the demo, read a short Go example, change a valu">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/maze-chase/pellet-map/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--maze-chase--pellet-map.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Pellet Maze | Ebi Showcase">
-    <meta name="twitter:description" content="Parse one text map into fixed walls and mutable pellets, updating state and remaining count on collection.">
+    <meta name="twitter:title" content="Ebi Showcase – Pellet Maze">
+    <meta name="twitter:description" content="Parse one text map into fixed walls and mutable pellets, updating state and remaining count on collection. Play the demo, read a short Go example, change a valu">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--maze-chase--pellet-map.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Pellet Maze">
     <!-- ogp:end -->
@@ -25,6 +26,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if maze[y][x] == Pellet { maze[y][x]=Floor; score++ }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Avoid the red chaser and collect every pellet in 60 seconds.</h2></div><p>Hold LEFT, UP, DOWN, or RIGHT. Keyboard uses Arrows or WASD; mouse can hold the buttons too. Zero remaining clears. Sharing a tile with the enemy or timing out loses.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Maze game with separate wall and pellet layers" src="../../../../play/pellet-map/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / STATIC AND MUTABLE LAYERS</p><h2>Separate “can I walk here?” from “is it still here?”</h2><p class="lesson-lead">Maze walls never change during this run, but a pellet disappears when collected. Instead of forcing both facts into one character, overlay equal-sized <code>walls</code> and <code>pellets</code> arrays. They share position <code>[y][x]</code> while fixed data and <strong>mutable state</strong> have different jobs.</p></div>
@@ -57,7 +61,7 @@
 removePellet(player)
 if remaining == 0 { clear = true }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY TWO LAYERS?</p><h3>Collect without breaking walls</h3><p>Changing a pellet to false leaves walls untouched, so movement never depends on collection state.</p></article><article><p class="eyebrow">WHY A COUNTER?</p><h3>Constant-time completion</h3><p>Even on a huge map, testing remaining against zero needs one comparison.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Add power pellets</h3><p>Replace bool with small, large, or empty values and score by collected kind.</p></article></div>
-</section><nav class="lesson-pager"><a href="../buffered-turn/">← STEP 02<strong>Buffered Corner Turns</strong></a><a href="../patrol-chase/">STEP 04 →<strong>Patrol and Chase</strong></a></nav>
+</section><nav class="lesson-pager"><a href="../buffered-turn/" rel="prev">← STEP 02<strong>Buffered Corner Turns</strong></a><a href="../patrol-chase/" rel="next">STEP 04 →<strong>Patrol and Chase</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -73,7 +77,7 @@ if remaining == 0 { clear = true }</code></pre></div>
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -81,6 +85,19 @@ if remaining == 0 { clear = true }</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

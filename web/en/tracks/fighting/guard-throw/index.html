@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Build the strike-guard-throw triangle and the reading game that makes 2D fighting great — an Ebitengine lesson.">
-  <title>Guard and Throw | Ebi Showcase</title>
+  <meta name="description" content="Build the strike-guard-throw triangle and the reading game that makes 2D fighting great — an Ebitengine lesson. Play the demo, read a short Go example, change a">
+  <title>Ebi Showcase – Guard and Throw</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Guard and Throw | Ebi Showcase">
-    <meta property="og:description" content="Build the strike-guard-throw triangle and the reading game that makes 2D fighting great — an Ebitengine lesson.">
+    <meta property="og:title" content="Ebi Showcase – Guard and Throw">
+    <meta property="og:description" content="Build the strike-guard-throw triangle and the reading game that makes 2D fighting great — an Ebitengine lesson. Play the demo, read a short Go example, change a">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/fighting/guard-throw/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--fighting--guard-throw.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Guard and Throw | Ebi Showcase">
-    <meta name="twitter:description" content="Build the strike-guard-throw triangle and the reading game that makes 2D fighting great — an Ebitengine lesson.">
+    <meta name="twitter:title" content="Ebi Showcase – Guard and Throw">
+    <meta name="twitter:description" content="Build the strike-guard-throw triangle and the reading game that makes 2D fighting great — an Ebitengine lesson. Play the demo, read a short Go example, change a">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--fighting--guard-throw.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Guard and Throw">
     <!-- ogp:end -->
@@ -51,7 +51,10 @@
 <p class="curriculum-bridge">This track still runs on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> <strong>Update → Draw</strong> loop—each step adds one new piece.</p>
 
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Read the enemy's telegraph and pick the counter.</h2></div>
         <p>While the enemy winds up, press 1 Strike / 2 Guard / 3 Throw — or tap the three lower buttons. Read the stance hint; score 5 to clear.</p>
@@ -186,8 +189,8 @@ func wins(a, b int) bool {
     </section>
 
     <nav class="lesson-pager">
-      <a href="../hit-reaction/">← STEP 03<strong>Hit Reaction</strong></a>
-      <a href="../combo-cancel/">STEP 05 →<strong>Combo and Cancel</strong></a>
+      <a href="../hit-reaction/" rel="prev">← STEP 03<strong>Hit Reaction</strong></a>
+      <a href="../combo-cancel/" rel="next">STEP 05 →<strong>Combo and Cancel</strong></a>
     </nav>
 
 
@@ -204,7 +207,7 @@ func wins(a, b int) bool {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -212,6 +215,19 @@ func wins(a, b int) bool {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

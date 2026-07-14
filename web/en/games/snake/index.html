@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Learn how Snake works in Go and Ebitengine: grids, position history, and slice-based body movement.">
-  <title>LEVEL 07 — Snake | Ebi Showcase</title>
+  <meta name="description" content="Learn how Snake works in Go and Ebitengine: grids, position history, and slice-based body movement. Play the demo, read a short Go example, change a value, and">
+  <title>Ebi Showcase – LEVEL 07 — Snake</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="LEVEL 07 — Snake | Ebi Showcase">
-    <meta property="og:description" content="Learn how Snake works in Go and Ebitengine: grids, position history, and slice-based body movement.">
+    <meta property="og:title" content="Ebi Showcase – LEVEL 07 — Snake">
+    <meta property="og:description" content="Learn how Snake works in Go and Ebitengine: grids, position history, and slice-based body movement. Play the demo, read a short Go example, change a value, and">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/games/snake/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--snake.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="LEVEL 07 — Snake | Ebi Showcase">
-    <meta name="twitter:description" content="Learn how Snake works in Go and Ebitengine: grids, position history, and slice-based body movement.">
+    <meta name="twitter:title" content="Ebi Showcase – LEVEL 07 — Snake">
+    <meta name="twitter:description" content="Learn how Snake works in Go and Ebitengine: grids, position history, and slice-based body movement. Play the demo, read a short Go example, change a value, and">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--snake.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Snake">
     <!-- ogp:end -->
@@ -41,12 +41,21 @@
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>body = append([]Cell{head}, body[:len(body)-1]...)</code></pre></div></section>
+<!-- feedback-note:games/snake:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-snake"><div><p class="eyebrow">Think in squares</p><h2 id="feedback-note-games-snake">480 px divided by 32 px makes a 15×15 grid</h2><p>A grid divides the screen into equal cells. Add the new head at the front of the history, then remove one tail cell when no food was eaten.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="15 by 15 grid and snake history">480 ÷ 32 = 15
+new head → [●][●][●] → drop tail
+             front       last</pre></div></section>
+<!-- feedback-note:games/snake:end -->
 <!-- END BEGINNER BRIDGE -->
 
 <p class="curriculum-bridge">The skeleton is still the <a href="../tap-target/#basics">LEVEL 01</a> <strong>Update → Draw</strong> loop. This lesson only adds its new piece (bounce, bricks, or a growing body). Drawing and hits stay simple shapes.</p>
 
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_snake-body.svg" alt="Move a body slice" loading="lazy" decoding="async"><figcaption>A visual map of Move a body slice. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Eat, grow, don't crash.</h2></div><p>Arrow keys or a tap in any direction turns the snake. Each piece of food adds one body segment. Hit a wall or yourself and the game ends.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 07</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Snake" src="../../../play/snake/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -421,7 +430,7 @@ func main() {
 
     <p class="lesson-lead">Next level you will move <strong>several lists at once</strong> (bullets, enemies, stars)—not one snake. Deleting from the back shows up again there.</p>
 
-    <nav class="lesson-pager"><a href="../breakout/">← LEVEL 06<strong>Breakout</strong></a><a href="../space-shooter/">LEVEL 08 →<strong>Space Shooter</strong></a></nav>
+    <nav class="lesson-pager"><a href="../breakout/" rel="prev">← LEVEL 06<strong>Breakout</strong></a><a href="../space-shooter/" rel="next">LEVEL 08 →<strong>Space Shooter</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -437,7 +446,7 @@ func main() {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -445,6 +454,19 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,10 +1,11 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>A Satisfying Time Attack | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – A Satisfying Time Attack</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/platformer/game-feel/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="A Satisfying Time Attack | Ebi Showcase">
-    <meta property="og:description" content="Learn Ebitengine through playable mini games.">
+    <meta property="og:title" content="Ebi Showcase – A Satisfying Time Attack">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/platformer/game-feel/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--platformer--game-feel.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -13,17 +14,20 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="A Satisfying Time Attack | Ebi Showcase">
-    <meta name="twitter:description" content="Learn Ebitengine through playable mini games.">
+    <meta name="twitter:title" content="Ebi Showcase – A Satisfying Time Attack">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--platformer--game-feel.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="A Satisfying Time Attack">
     <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/platformer/game-feel/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Platform Action</a><span>POLISH 3 / 3</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>A Satisfying Time Attack</h1><p>Add particles, screen shake, timing, and a best record to make an eight-coin sprint worth replaying.</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>hitStop=4; cameraShake=6</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>A Satisfying Time Attack</h2><p>Add particles, screen shake, timing, and a best record to make an eight-coin sprint worth replaying.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/game-feel/" title="A Satisfying Time Attack" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Feedback and records create one more try</h2><p>Correct collision is not enough if the result feels silent. Burst particles and briefly shake the screen at collection, then preserve the best finish time.</p><div class="concept-row"><article><b>01</b><h3>React at the event</h3><p>Spawn short-lived particles at the coin.</p></article><article><b>02</b><h3>Carry impact outward</h3><p>Offset the world for only a few frames.</p></article><article><b>03</b><h3>Leave a target</h3><p>Show this run beside the best time.</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Feedback and records create one more try</h2><p>Correct collision is not enough if the result feels silent. Burst particles and briefly shake the screen at collection, then preserve the best finish time.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Feedback and records create one more try</h2><p>This is the central rule from the playable game.</p></div><pre><code>spawnParticles(coinX, coinY)
 shakeFrames = 5
-if best == 0 || time &lt; best { best = time }</code></pre></section><section class="why-grid"><article><h3>TRY IT</h3><p>Change one value and compare the feel or difficulty.</p></article><article><h3>OBSERVE</h3><p>Offset the world for only a few frames.</p></article><article><h3>CHALLENGE</h3><p>Show this run beside the best time.</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>Platform Action</strong></a><a href="../powerup-adventure/">FINAL →<strong>Ebi Adventure</strong></a></nav>
+if best == 0 || time &lt; best { best = time }</code></pre></section><section class="why-grid"><article><h3>TRY IT</h3><p>Change one value and compare the feel or difficulty.</p></article><article><h3>OBSERVE</h3><p>Offset the world for only a few frames.</p></article><article><h3>CHALLENGE</h3><p>Show this run beside the best time.</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>Platform Action</strong></a><a href="../powerup-adventure/" rel="next">FINAL →<strong>Ebi Adventure</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -37,7 +41,7 @@ if best == 0 || time &lt; best { best = time }</code></pre></section><section cl
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

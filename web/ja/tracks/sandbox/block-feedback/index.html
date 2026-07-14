@@ -1,10 +1,11 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>ブロックが壊れる一瞬を作る | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – ブロックが壊れる一瞬を作る</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/sandbox/block-feedback/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="ブロックが壊れる一瞬を作る | Ebi Showcase">
-    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta property="og:title" content="Ebi Showcase – ブロックが壊れる一瞬を作る">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/sandbox/block-feedback/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--sandbox--block-feedback.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -13,16 +14,19 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ブロックが壊れる一瞬を作る | Ebi Showcase">
-    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta name="twitter:title" content="Ebi Showcase – ブロックが壊れる一瞬を作る">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--sandbox--block-feedback.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="ブロックが壊れる一瞬を作る">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/sandbox/block-feedback/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 学習コース</a><span>POLISH 1/2</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>ブロックが壊れる一瞬を作る</h1><p>道具を振りかぶり、当て、破片が飛び、元の姿勢へ戻るまでを時間に分けます。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">まず遊ぶ</p><h2>ブロックが壊れる一瞬を作る</h2><p>道具を振りかぶり、当て、破片が飛び、元の姿勢へ戻るまでを時間に分けます。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/block-feedback/" title="ブロックが壊れる一瞬を作る" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ブロックが壊れる一瞬を作る</h2><p>数字をすぐ減らすだけでは、何が起きたか目で追えません。攻撃を「予備動作・接触・戻り」に分け、接触した1フレームだけでHP、破片、揺れ、得点を同時に変えます。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>予備動作で次の出来事を知らせる</p></article><article><b>02</b><h3>UPDATE</h3><p>接触フレームで結果を一度だけ決める</p></article><article><b>03</b><h3>FEEDBACK</h3><p>破片とつぶれで素材の重さを伝える</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>ブロックが壊れる一瞬を作る</h2><p>数字をすぐ減らすだけでは、何が起きたか目で追えません。攻撃を「予備動作・接触・戻り」に分け、接触した1フレームだけでHP、破片、揺れ、得点を同時に変えます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>接触フレームで結果を一度だけ決める</h2><p>道具を振りかぶり、当て、破片が飛び、元の姿勢へ戻るまでを時間に分けます。</p></div><pre><code>phase--
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/sandbox/block-feedback/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 学習コース</a><span>POLISH 1/2</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>ブロックが壊れる一瞬を作る</h1><p>道具を振りかぶり、当て、破片が飛び、元の姿勢へ戻るまでを時間に分けます。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">まず遊ぶ</p><h2>ブロックが壊れる一瞬を作る</h2><p>道具を振りかぶり、当て、破片が飛び、元の姿勢へ戻るまでを時間に分けます。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/block-feedback/" title="ブロックが壊れる一瞬を作る" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ブロックが壊れる一瞬を作る</h2><p>数字をすぐ減らすだけでは、何が起きたか目で追えません。攻撃を「予備動作・接触・戻り」に分け、接触した1フレームだけでHP、破片、揺れ、得点を同時に変えます。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>予備動作で次の出来事を知らせる</p></article><article><b>02</b><h3>UPDATE</h3><p>接触フレームで結果を一度だけ決める</p></article><article><b>03</b><h3>FEEDBACK</h3><p>破片とつぶれで素材の重さを伝える</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>ブロックが壊れる一瞬を作る</h2><p>数字をすぐ減らすだけでは、何が起きたか目で追えません。攻撃を「予備動作・接触・戻り」に分け、接触した1フレームだけでHP、破片、揺れ、得点を同時に変えます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>接触フレームで結果を一度だけ決める</h2><p>道具を振りかぶり、当て、破片が飛び、元の姿勢へ戻るまでを時間に分けます。</p></div><pre><code>phase--
 if phase == contactFrame {
     block.HP--
     spawnChips()
     shake = 8
-}</code></pre></section><section class="why-grid"><article><h3>観察</h3><p>数字をすぐ減らすだけでは、何が起きたか目で追えません。攻撃を「予備動作・接触・戻り」に分け、接触した1フレームだけでHP、破片、揺れ、得点を同時に変えます。</p></article><article><h3>変える</h3><p>破片とつぶれで素材の重さを伝える</p></article><article><h3>CHALLENGE</h3><p>石と木で破片の飛び方を変えてみよう。</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>2Dブロックサンドボックス</strong></a><a href="../island-director/">次へ →<strong>島データから3つの冒険を作る</strong></a></nav>
+}</code></pre></section><section class="why-grid"><article><h3>観察</h3><p>数字をすぐ減らすだけでは、何が起きたか目で追えません。攻撃を「予備動作・接触・戻り」に分け、接触した1フレームだけでHP、破片、揺れ、得点を同時に変えます。</p></article><article><h3>変える</h3><p>破片とつぶれで素材の重さを伝える</p></article><article><h3>CHALLENGE</h3><p>石と木で破片の飛び方を変えてみよう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>2Dブロックサンドボックス</strong></a><a href="../island-director/" rel="next">次へ →<strong>島データから3つの冒険を作る</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -36,7 +40,7 @@ if phase == contactFrame {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

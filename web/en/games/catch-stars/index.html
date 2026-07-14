@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Catch falling stars and learn movement plus rectangle collision in Ebitengine.">
-  <title>LEVEL 03 — Catch the Stars | Ebi Showcase</title>
+  <meta name="description" content="Catch falling stars and learn movement plus rectangle collision in Ebitengine. Play the demo, read a short Go example, change a value, and apply the idea to you">
+  <title>Ebi Showcase – LEVEL 03 — Catch the Stars</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="LEVEL 03 — Catch the Stars | Ebi Showcase">
-    <meta property="og:description" content="Catch falling stars and learn movement plus rectangle collision in Ebitengine.">
+    <meta property="og:title" content="Ebi Showcase – LEVEL 03 — Catch the Stars">
+    <meta property="og:description" content="Catch falling stars and learn movement plus rectangle collision in Ebitengine. Play the demo, read a short Go example, change a value, and apply the idea to you">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/games/catch-stars/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--catch-stars.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="LEVEL 03 — Catch the Stars | Ebi Showcase">
-    <meta name="twitter:description" content="Catch falling stars and learn movement plus rectangle collision in Ebitengine.">
+    <meta name="twitter:title" content="Ebi Showcase – LEVEL 03 — Catch the Stars">
+    <meta name="twitter:description" content="Catch falling stars and learn movement plus rectangle collision in Ebitengine. Play the demo, read a short Go example, change a value, and apply the idea to you">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--catch-stars.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Catch the Stars">
     <!-- ogp:end -->
@@ -40,8 +40,16 @@
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>stars = append(stars, newStar())</code></pre></div></section>
+<!-- feedback-note:games/catch-stars:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-catch-stars"><div><p class="eyebrow">Invisible boxes</p><h2 id="feedback-note-games-catch-stars">A box hit checks whether the star and basket overlap</h2><p>Even a round-looking star can start as a simple rectangle. The basket only needs horizontal movement, so keep Y at a steady height and change X with the pointer or keys.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="star and basket boxes overlap"><span>★ star box</span><b>overlap?</b><strong>▰ basket box = HIT</strong><code>change basket.x only</code></div></div></section>
+<!-- feedback-note:games/catch-stars:end -->
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_collision-rect.svg" alt="Rectangle overlap" loading="lazy" decoding="async"><figcaption>A visual map of Rectangle overlap. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_score-flow.svg" alt="Score flow" loading="lazy" decoding="async"><figcaption>A visual map of Score flow. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Move the basket and catch stars.</h2></div><p>Arrow keys, WASD, and drag all work. Drop three stars and the round ends.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Catch the Stars" src="../../../play/catch-stars/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -326,7 +334,7 @@ func main() {
 
     <p class="lesson-lead">Stars in this game fall at one <strong>constant speed</strong> stored in <code>speed</code>. The next level adds acceleration—changing speed every frame—to make an arc that rises first and then falls.</p>
 
-    <nav class="lesson-pager"><a href="../timing-meter/">← LEVEL 02<strong>Stop the Meter</strong></a><a href="../flappy/">LEVEL 04 →<strong>Ebi Flight</strong></a></nav>
+    <nav class="lesson-pager"><a href="../timing-meter/" rel="prev">← LEVEL 02<strong>Stop the Meter</strong></a><a href="../flappy/" rel="next">LEVEL 04 →<strong>Ebi Flight</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -342,7 +350,7 @@ func main() {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -350,6 +358,19 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,5 +1,7 @@
 import unittest
 import sys
+from unittest.mock import patch
+from urllib.parse import parse_qs
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -26,11 +28,14 @@ class FeedbackCrawlerTests(unittest.TestCase):
             <h1>星をつかまえる</h1><p>本文</p>
             <a href='../next/'>次へ</a>
             <form action='https://docs.google.com/forms/d/e/demo/formResponse'>
+              <input type='hidden' name='entry.456' value='/ja/lesson/'>
               <input class='feedback-message' name='entry.123'>
             </form></body></html>"""
         )
         page = parser.result()
         self.assertEqual(page.form_field, "entry.123")
+        self.assertEqual(page.form_page_field, "entry.456")
+        self.assertEqual(page.form_page_value, "/ja/lesson/")
         self.assertEqual(page.form_action, "https://docs.google.com/forms/d/e/demo/formResponse")
         self.assertIn("https://example.test/EbiShowcase/ja/next/", page.links)
         self.assertIn("星をつかまえる", page.headings)
@@ -39,6 +44,38 @@ class FeedbackCrawlerTests(unittest.TestCase):
         page = Page("https://example.test/lesson/", "", [], "", [], "https://evil.test/formResponse", "entry.1", "ja")
         with self.assertRaises(ValueError):
             submit_feedback(page, "提案", 1)
+
+    def test_submit_includes_required_page_field_and_native_hidden_fields(self):
+        page = Page(
+            "https://example.test/lesson/",
+            "",
+            [],
+            "",
+            [],
+            "https://docs.google.com/forms/d/e/demo/formResponse",
+            "entry.2",
+            "ja",
+            "entry.1",
+            "/ja/lesson/",
+        )
+
+        class Response:
+            status = 200
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+        with patch("ai_feedback_crawler.urlopen", return_value=Response()) as mocked:
+            submit_feedback(page, "提案", 1)
+
+        request = mocked.call_args.args[0]
+        self.assertEqual(
+            parse_qs(request.data.decode("utf-8")),
+            {"entry.1": ["/ja/lesson/"], "entry.2": ["提案"], "fvv": ["1"], "pageHistory": ["0"]},
+        )
 
     def test_operator_instruction_is_added_to_every_page_prompt(self):
         page = Page("https://example.test/lesson/", "Lesson", ["Heading"], "本文", [], None, None, "ja")

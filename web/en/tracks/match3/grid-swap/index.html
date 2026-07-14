@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Swap Neighboring Cells | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Store a board as rows and columns, then swap only two cells sharing an edge. Play the demo, read a short Go example, change a value, and apply the idea to your"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Swap Neighboring Cells</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Swap Neighboring Cells | Ebi Showcase">
-    <meta property="og:description" content="Store a board as rows and columns, then swap only two cells sharing an edge.">
+    <meta property="og:title" content="Ebi Showcase – Swap Neighboring Cells">
+    <meta property="og:description" content="Store a board as rows and columns, then swap only two cells sharing an edge. Play the demo, read a short Go example, change a value, and apply the idea to your">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/match3/grid-swap/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--match3--grid-swap.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Swap Neighboring Cells | Ebi Showcase">
-    <meta name="twitter:description" content="Store a board as rows and columns, then swap only two cells sharing an edge.">
+    <meta name="twitter:title" content="Ebi Showcase – Swap Neighboring Cells">
+    <meta name="twitter:description" content="Store a board as rows and columns, then swap only two cells sharing an edge. Play the demo, read a short Go example, change a value, and apply the idea to your">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--match3--grid-swap.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Swap Neighboring Cells">
     <!-- ogp:end -->
@@ -23,6 +24,11 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>adjacent := abs(ax-bx)+abs(ay-by)==1</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_puzzle-rotation.svg" alt="Puzzle rotation pivot" loading="lazy" decoding="async"><figcaption>A visual map of Puzzle rotation pivot. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_match3-cascade.svg" alt="Match-3 cascade" loading="lazy" decoding="async"><figcaption>A visual map of Match-3 cascade. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Make ten legal neighboring swaps.</h2></div><p>Tap the first and second piece. Diagonal and distant cells are rejected. Mouse clicks work on PC.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Swap Neighboring Cells" src="../../../../play/grid-swap/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GRID &amp; ADJACENCY</p><h2>Turn screen coordinates into a board row and column.</h2><p class="lesson-lead">Store pieces in <strong>board[row][column]</strong>. Subtract the board's top-left from a tap and divide by cell size to get integer coordinates.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>A two-dimensional box</h3><p>A 7×6 array remembers type numbers in the same arrangement as the screen. board[2][4] is row three, column five.</p><code>var board [7][6]int</code></article><article><span class="concept-number">2</span><h3>Position to cell</h3><p>Subtract the board origin and divide by 64. Dropping the fraction maps every point inside a cell to one number.</p><code>col := (x - originX) / cellSize</code></article><article><span class="concept-number">3</span><h3>Distance one is adjacent</h3><p>Add the absolute row and column differences. One means up, down, left, or right; two means diagonal or farther.</p><code>abs(ax-bx) + abs(ay-by) == 1</code></article></div><div class="motion-lab" data-lab="hitbox"><div class="lab-copy"><p class="eyebrow">TRY IT / CELL HIT TEST</p><h3>Move a cell hitbox</h3><p>Move the rectangle and observe overlap. The game also treats each board cell as an equal rectangle for taps.</p><div class="lab-controls"><button class="lab-button" data-lab-left>← Left</button><button class="lab-button" data-lab-right>Right →</button><button class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="hitbox-stage"><div class="hitbox-box hitbox-a" data-lab-a>A</div><div class="hitbox-box hitbox-b" data-lab-b>B</div></div><div class="lab-values"><div><span>Result</span><strong data-lab-result>apart</strong></div><div><span>A position</span><strong data-lab-x>0</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -35,7 +41,7 @@
 if distance == 1 {
     board[a.y][a.x], board[b.y][b.x] =
         board[b.y][b.x], board[a.y][a.x]
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ROW &amp; COL?</p><h3>Create scan order</h3><p>The next step can inspect one row left-to-right and one column top-to-bottom.</p></article><article><p class="eyebrow">WHY ADJACENT?</p><h3>Create the puzzle</h3><p>Because any two cells cannot swap, players must plan how to form a line.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Drag controls</h3><p>Remember the pressed cell and swap when the release cell is adjacent.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../find-matches/">STEP 02 →<strong>Find Three in a Row</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ROW &amp; COL?</p><h3>Create scan order</h3><p>The next step can inspect one row left-to-right and one column top-to-bottom.</p></article><article><p class="eyebrow">WHY ADJACENT?</p><h3>Create the puzzle</h3><p>Because any two cells cannot swap, players must plan how to form a line.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Drag controls</h3><p>Remember the pressed cell and swap when the release cell is adjacent.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../find-matches/" rel="next">STEP 02 →<strong>Find Three in a Row</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -51,7 +57,7 @@ if distance == 1 {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -59,6 +65,19 @@ if distance == 1 {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

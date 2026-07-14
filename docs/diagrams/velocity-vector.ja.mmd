@@ -1,0 +1,8 @@
+flowchart LR
+  gravity["重力<br/>vy += 0.42"]
+  velocity["速度<br/>vx / vy"]
+  position["位置<br/>x += vx"]
+  draw["Draw<br/>なめらかな軌道"]
+  gravity --> velocity
+  velocity --> position
+  position --> draw

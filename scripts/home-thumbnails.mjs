@@ -16,7 +16,7 @@ import { dirname, join } from "node:path";
 
 const root = new URL("..", import.meta.url).pathname;
 const assetsDir = join(root, "web/assets/home-thumbnails");
-const cardPattern = /<a class="([^"]+)" href="([^"]+)">/g;
+const cardPattern = /<a class="([^"]*(?:course-card|track-card)[^"]*)" href="([^"]+)"[^>]*>/g;
 
 function cardKind(classes) {
   const names = classes.split(/\s+/);
@@ -28,6 +28,14 @@ function cardKind(classes) {
 
 function pageFile(lang, route) {
   return join(root, "web", lang, route, "index.html");
+}
+
+function escAttr(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 function playSlug(html) {
@@ -73,8 +81,10 @@ function inject(lang, items) {
   const file = join(root, "web", lang, "index.html");
   let html = readFileSync(file, "utf8");
   const titles = new Map();
+  const cardTags = [...html.matchAll(cardPattern)];
   for (const item of items) {
-    const hrefAt = html.indexOf(`href="${item.href}"`);
+    const cardTag = cardTags.find((match) => match[2] === item.href);
+    const hrefAt = cardTag?.index ?? -1;
     const cardEnd = html.indexOf("</a>", hrefAt);
     const titleStart = html.indexOf("<h3>", hrefAt);
     const titleEnd = html.indexOf("</h3>", titleStart);
@@ -101,7 +111,10 @@ function inject(lang, items) {
     const prefix = lang === "ja"
       ? { core: "このゲームを作る", vfx: "この絵を作る", track: "完成ゲーム" }[item.kind]
       : { core: "BUILD THIS GAME", vfx: "CREATE THIS EFFECT", track: "FINAL GAME" }[item.kind];
-    return `${tag}<span class="home-card-shot"><img src="../assets/home-thumbnails/${item.file}" width="480" height="720" loading="lazy" decoding="async" alt=""><span class="home-card-shot-label"><small>${prefix}</small><strong>${title}</strong></span></span>`;
+    const imageAlt = lang === "ja" ? `${title}のデモ画面` : `${title} demo screen`;
+    const cardLabel = lang === "ja" ? `${title}の学習パネル` : `${title} learning panel`;
+    const labeledTag = tag.includes("aria-label=") ? tag : tag.replace(/>$/, ` aria-label="${escAttr(cardLabel)}">`);
+    return `${labeledTag}<span class="home-card-shot"><img src="../assets/home-thumbnails/${item.file}" width="480" height="720" loading="lazy" decoding="async" alt="${escAttr(imageAlt)}"><span class="home-card-shot-label"><small>${prefix}</small><strong>${title}</strong></span></span>`;
   });
   writeFileSync(file, html);
 }

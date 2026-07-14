@@ -1,0 +1,51 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ebi Relic Dungeon</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/topdown-adventure/ebi-adventure/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Ebi Relic Dungeon">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/topdown-adventure/ebi-adventure/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--topdown-adventure--ebi-adventure.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Ebi Relic Dungeon">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Ebi Relic Dungeon">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--topdown-adventure--ebi-adventure.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Ebi Relic Dungeon">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/topdown-adventure/ebi-adventure/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 見下ろし型アクションアドベンチャー</a><span>STEP 08 / 08</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Relic Dungeon</h1><p>鍵の部屋、全滅戦、3道具の仕掛け、3段階ボスを一つの4部屋ダンジョンとして攻略します。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play-panel"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Relic Dungeon</h2><p>矢印/WASDまたは画面ボタンで移動。X/SpaceまたはATTACKで攻撃、Q/TOOLで道具を変更します。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-adventure/" title="Ebi Relic Dungeon" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Ebi Relic Dungeon</h2><p>完成版は各部屋を同時に動かさず、stage番号から必要なデータとルールだけを読み込みます。攻撃、被弾、鍵、仕掛け、ボスは同じgame状態を受け渡し、勝敗・得点・BESTまで一周します。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>4部屋を異なる目標と状態でつなぐ</p></article><article><b>02</b><h3>UPDATE</h3><p>攻撃・被弾・解錠・仕掛けを同じ更新順で解決する</p></article><article><b>03</b><h3>GOAL</h3><p>ボス撃破後の得点とBESTで再挑戦する</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM DIAGRAM / TRY IT</p><h2>攻撃・被弾・解錠・仕掛けを同じ更新順で解決する</h2><p>完成版は各部屋を同時に動かさず、stage番号から必要なデータとルールだけを読み込みます。攻撃、被弾、鍵、仕掛け、ボスは同じgame状態を受け渡し、勝敗・得点・BESTまで一周します。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">INPUT</p><button type="button" class="lab-action">NEXT</button></div></section><section class="formula"><p class="eyebrow">STATE FLOW</p><div class="formula-lines"><code>input</code><span>→</span><code>update state</code><span>→</span><code>resolve result</code><span>→</span><code>draw feedback</code></div><p>ボス撃破後の得点とBESTで再挑戦する</p></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>攻撃・被弾・解錠・仕掛けを同じ更新順で解決する</h2><p>鍵の部屋、全滅戦、3道具の仕掛け、3段階ボスを一つの4部屋ダンジョンとして攻略します。</p></div><pre><code>switch stage {
+case keyRoom: updateDoor()
+case fightRoom: updateEnemies()
+case puzzleRoom: updateTools()
+case bossRoom: updateBoss()
+}</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>完成版は各部屋を同時に動かさず、stage番号から必要なデータとルールだけを読み込みます。攻撃、被弾、鍵、仕掛け、ボスは同じgame状態を受け渡し、勝敗・得点・BESTまで一周します。</p></article><article><h3>CHANGE</h3><p>ボス撃破後の得点とBESTで再挑戦する</p></article><article><h3>CHALLENGE</h3><p>数値かデータを1つ変えて、新しい部屋の遊びを作ろう。</p></article></section><nav class="lesson-pager"><a href="../guardian-phases/" rel="prev">← PREV<strong>HPで変わる3段階ボス</strong></a><a href="../" rel="next">COMPLETE →<strong>見下ろし型アクションアドベンチャー</strong></a></nav>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/topdown-adventure/ebi-adventure/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

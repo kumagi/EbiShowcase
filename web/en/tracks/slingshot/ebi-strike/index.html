@@ -1,8 +1,9 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Strike | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Combine drag launching, reflection, friction, circle collisions, contact attacks, ally waves, and turns into one rescue game."><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ebi Strike</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Strike | Ebi Showcase">
+    <meta property="og:title" content="Ebi Showcase – Ebi Strike">
     <meta property="og:description" content="Combine drag launching, reflection, friction, circle collisions, contact attacks, ally waves, and turns into one rescue game.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/slingshot/ebi-strike/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--slingshot--ebi-strike.png?v=20260713-font1">
@@ -12,7 +13,7 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Strike | Ebi Showcase">
+    <meta name="twitter:title" content="Ebi Showcase – Ebi Strike">
     <meta name="twitter:description" content="Combine drag launching, reflection, friction, circle collisions, contact attacks, ally waves, and turns into one rescue game.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--slingshot--ebi-strike.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Strike">
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>aim(); launch(); move(); collide(); updateFX()</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Defeat every reef guard within eight turns.</h2></div><p>Drag backward from the glowing ally and release. Hit an enemy directly or hit your other ally to damage enemies within a 165px wave. Mouse and touch both work.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Strike" src="../../../../play/ebi-strike/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT PIPELINE</p><h2>Turn the same “bump” into events for each target.</h2><p class="lesson-lead">Every moving frame checks walls, rocks, enemies, and allies in order. Push overlapping circles apart and reflect first; then a guard receives direct damage while an ally sends an area wave. It remains one turn until motion stops.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Move and resolve contacts</h3><p>Advance by velocity, then push overlapping circles back to touching distance. Reflecting along the collision normal handles diagonal bounces too.</p><code>move(); bounceWalls(); reflectCircle()</code></article><article><span class="concept-number">2</span><h3>Choose an effect by target</h3><p>An enemy loses one HP. An ally sends one damage to every enemy within 165 pixels of that ally.</p><code>contactEnemy() / contactAlly()</code></article><article><span class="concept-number">3</span><h3>Friction ends the turn</h3><p>Multiply velocity by 0.982 after contacts. Below 0.11, snap to zero and switch active to the other ally.</p><code>if stopped { active = 1 - active }</code></article></div><div class="motion-lab" data-lab="shot-event-queue" data-events="HIT A,HIT B,HIT C,TURN END" data-launched="shot moving along its path" data-contact="contact → push {e}" data-finished="stopped → push TURN END" data-resolved="pop {e} → enemy {target} HP -1" data-turn="pop TURN END → pass the turn" data-empty="the queue is empty" aria-labelledby="lab-title-ebi-strike">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / SHOT EVENTS</p>
@@ -53,7 +57,7 @@ if active.velocity.length() &lt; stopSpeed {
     active.velocity = vec{}
     moving = false
     activeIndex = 1 - activeIndex
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY COOLDOWN?</p><h3>Count one contact once</h3><p>A short timer on each enemy prevents a circle overlapping for several frames from removing all HP at once.</p></article><article><p class="eyebrow">WHY ONE ALLY WAVE?</p><h3>Keep each shot meaningful</h3><p>One wave per shot prevents two allies bouncing together from creating endless free attacks.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Give allies different effects</h3><p>Make blue fire a straight beam and green make a circle wave, selecting an effect from the touched ally's kind.</p></article></div></section><nav class="lesson-pager"><a href="../ally-effects/">← STEP 05<strong>Ally-triggered Effects</strong></a><a href="../">BACK TO PATH →<strong>Slingshot Reflection Action</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY COOLDOWN?</p><h3>Count one contact once</h3><p>A short timer on each enemy prevents a circle overlapping for several frames from removing all HP at once.</p></article><article><p class="eyebrow">WHY ONE ALLY WAVE?</p><h3>Keep each shot meaningful</h3><p>One wave per shot prevents two allies bouncing together from creating endless free attacks.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Give allies different effects</h3><p>Make blue fire a straight beam and green make a circle wave, selecting an effect from the touched ally's kind.</p></article></div></section><nav class="lesson-pager"><a href="../ally-effects/" rel="prev">← STEP 05<strong>Ally-triggered Effects</strong></a><a href="../" rel="next">BACK TO PATH →<strong>Slingshot Reflection Action</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -69,7 +73,7 @@ if active.velocity.length() &lt; stopSpeed {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -77,6 +81,19 @@ if active.velocity.length() &lt; stopSpeed {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

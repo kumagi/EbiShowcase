@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+  <meta name="description" content="Stack collected blocks and turn recipe ingredients into new tools. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebiten">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Inventory and Crafting | Ebi Showcase</title>
+<title>Ebi Showcase – Inventory and Crafting</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Inventory and Crafting | Ebi Showcase">
-    <meta property="og:description" content="Stack collected blocks and turn recipe ingredients into new tools.">
+    <meta property="og:title" content="Ebi Showcase – Inventory and Crafting">
+    <meta property="og:description" content="Stack collected blocks and turn recipe ingredients into new tools. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebiten">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/sandbox/inventory-crafting/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--sandbox--inventory-crafting.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Inventory and Crafting | Ebi Showcase">
-    <meta name="twitter:description" content="Stack collected blocks and turn recipe ingredients into new tools.">
+    <meta name="twitter:title" content="Ebi Showcase – Inventory and Crafting">
+    <meta name="twitter:description" content="Stack collected blocks and turn recipe ingredients into new tools. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebiten">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--sandbox--inventory-crafting.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Inventory and Crafting">
     <!-- ogp:end -->
@@ -53,6 +54,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if released { slots[target] = selectedItem }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Gather, then craft a pickaxe and beacon.</h2></div><p>Tap gathering patches above and recipes below. On PC, gather with 1–3 and craft with R/P/B. Finish both tools within 50 seconds.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Inventory and Crafting" src="../../../../play/inventory-crafting/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RECIPE TRANSACTION</p><h2>Check ingredients, consume them together, then add the output.</h2><p class="lesson-lead">Identical materials are stacked as a <strong>kind and quantity pair</strong>. A recipe is a table of required counts. Check every count first; only a successful match subtracts ingredients and creates the result.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Add gathering to stacks</h3><p>Picking up two wood adds two to wood count instead of creating two separate objects. Display and saving stay small.</p><code>inventory[Wood] += 2</code></article><article><span class="concept-number">2</span><h3>Match the whole recipe</h3><p>Compare required wood, stone, fiber, and rope. If even one kind is short, consume nothing.</p><code>if haveWood &amp;&amp; haveStone &amp;&amp; haveRope</code></article><article><span class="concept-number">3</span><h3>Pair consumption and output</h3><p>After the check passes, subtract every cost and add the pickaxe or other output. Never stop halfway through.</p><code>wood -= 2; stone -= 2; pickaxe = true</code></article></div>
@@ -84,9 +88,9 @@ fiber -= r.fiber; rope -= r.rope
 addOutput(r.name)</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY CHECK FIRST?</p><h3>No half-consumption</h3><p>The complete craft either succeeds or leaves everything unchanged.</p></article><article><p class="eyebrow">WHY STACK?</p><h3>Count identical items</h3><p>Even 100 stones fit into one kind-and-quantity record.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Make recipes data</h3><p>Design a table where changing costs alone creates a new tool.</p></article></div></section>
 <nav class="lesson-pager">
-<a href="../chunk-world/">← STEP 03<strong>Chunked World</strong>
+<a href="../chunk-world/" rel="prev">← STEP 03<strong>Chunked World</strong>
 </a>
-<a href="../tools-light/">STEP 05 →<strong>Tools and Light</strong>
+<a href="../tools-light/" rel="next">STEP 05 →<strong>Tools and Light</strong>
 </a>
 </nav>
 
@@ -104,7 +108,7 @@ addOutput(r.name)</code></pre></div>
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -112,6 +116,19 @@ addOutput(r.name)</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

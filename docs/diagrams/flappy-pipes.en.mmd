@@ -1,0 +1,11 @@
+flowchart LR
+  timer["spawnTimer<br/>decrease each frame"]
+  gap["choose the gap<br/>random + clamp"]
+  spawn["top + bottom pipes<br/>add together"]
+  scroll["scroll left<br/>x -= speed"]
+  score["when passed<br/>score++"]
+  timer --> gap
+  gap --> spawn
+  spawn --> scroll
+  scroll --> score
+  score --> timer

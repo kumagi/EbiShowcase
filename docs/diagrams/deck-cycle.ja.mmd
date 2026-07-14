@@ -1,0 +1,11 @@
+flowchart LR
+  draw["山札<br/>Draw"]
+  hand["手札<br/>選ぶ"]
+  play["Play<br/>効果を解決"]
+  discard["捨て札<br/>Discard"]
+  shuffle["空なら混ぜる<br/>Shuffle"]
+  draw --> hand
+  hand --> play
+  play --> discard
+  discard --> shuffle
+  shuffle --> draw

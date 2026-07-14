@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Earn coins from defeated enemies and add towers without blocking the route. Play the demo, read a short Go example, change a value, and apply the idea to your o"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Place Towers with Currency</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/tower-defense/tower-economy/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Place Towers with Currency">
+    <meta property="og:description" content="Earn coins from defeated enemies and add towers without blocking the route. Play the demo, read a short Go example, change a value, and apply the idea to your o">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/tower-defense/tower-economy/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--tower-defense--tower-economy.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Place Towers with Currency">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Place Towers with Currency">
+    <meta name="twitter:description" content="Earn coins from defeated enemies and add towers without blocking the route. Play the demo, read a short Go example, change a value, and apply the idea to your o">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--tower-defense--tower-economy.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Place Towers with Currency">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/tower-defense/tower-economy/">JA</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Tower Defense</a><span>STEP 05 / 08</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Place Towers with Currency</h1><p>Earn coins from defeated enemies and add towers without blocking the route.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Placement rules and the currency loop</strong></div></section><!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Place Towers with Currency</h2></div><p>Tap open ground to build. Start with Space or START. Later steps use Q/W/E or touch buttons to select towers.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Place Towers with Currency" src="../../../../play/tower-economy/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE</p><h2>Placement rules and the currency loop</h2><p class="lesson-lead">Add a tower only when the tap is far enough from the road and coins cover its cost. Defeat rewards feed the next placement.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>DATA</h3><p>Earn coins from defeated enemies and add towers without blocking the route.</p></article><article><span class="concept-number">2</span><h3>UPDATE</h3><p>Add a tower only when the tap is far enough from the road and coins cover its cost. Defeat rewards feed the next placement.</p></article><article><span class="concept-number">3</span><h3>CHECK</h3><p>Check that circles, route, HP, and coins agree with the rule values.</p></article></div><div class="motion-lab" data-lab="turn"><div class="lab-copy"><p class="eyebrow">SYSTEM LAB</p><h3>Placement rules and the currency loop</h3><p>Add a tower only when the tap is far enough from the road and coins cover its cost. Defeat rewards feed the next placement.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></div><div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>Placement rules and the currency loop</h3><p>Earn coins from defeated enemies and add towers without blocking the route.</p></div><pre><code>if coins &gt;= cost &amp;&amp; !nearPath(pos) {
+    towers = append(towers, Tower{Pos: pos})
+    coins -= cost
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">OBSERVE</p><h3>Placement rules and the currency loop</h3><p>Add a tower only when the tap is far enough from the road and coins cover its cost. Defeat rewards feed the next placement.</p></article><article><p class="eyebrow">RULE / FX</p><h3>Separate rules and feedback</h3><p>Path, target, and damage are pure values; sparks and shake are a separate result layer.</p></article><article class="challenge"><p class="eyebrow">CHALLENGE</p><h3>Change one value</h3><p>Change range, speed, or cost and compare difficulty.</p></article></div></section><nav class="lesson-pager"><a href="../projectile-hit/" rel="prev">← PREV<strong>Launch and Land a Projectile</strong></a><a href="../wave-data/" rel="next">NEXT →<strong>Direct Waves with Data</strong></a></nav>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/tower-defense/tower-economy/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

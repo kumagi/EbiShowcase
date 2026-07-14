@@ -1,0 +1,9 @@
+flowchart LR
+  time["elapsed time<br/>seconds"]
+  wave["wave<br/>difficulty up"]
+  spawn["spawn enemies<br/>shorter interval"]
+  draft["reward draft<br/>upgrade weapon"]
+  time --> wave
+  wave --> spawn
+  spawn --> draft
+  draft --> time

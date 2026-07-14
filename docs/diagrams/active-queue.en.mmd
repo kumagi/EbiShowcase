@@ -1,0 +1,9 @@
+flowchart LR
+  speed["speed<br/>add each tick"]
+  gauge["action gauge<br/>0 → 100"]
+  ready["READY<br/>queue"]
+  resolve["resolve action<br/>reset gauge"]
+  speed --> gauge
+  gauge --> ready
+  ready --> resolve
+  resolve --> speed

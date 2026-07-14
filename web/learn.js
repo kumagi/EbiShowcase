@@ -1879,6 +1879,13 @@ document.querySelectorAll(".feedback-form").forEach((form) => {
   const status = form.querySelector(".feedback-status");
   const message = form.querySelector(".feedback-message");
   if (!button || !status || !message) return;
+  const syncFeedbackButton = () => {
+    const empty = !message.value.trim();
+    button.disabled = empty;
+    button.setAttribute("aria-disabled", String(empty));
+  };
+  message.addEventListener("input", syncFeedbackButton);
+  syncFeedbackButton();
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     button.disabled = true;
@@ -1897,7 +1904,7 @@ document.querySelectorAll(".feedback-form").forEach((form) => {
     } catch {
       status.textContent = message.dataset.failed || "送信できませんでした。時間をおいて再試行してください。";
     } finally {
-      button.disabled = false;
+      syncFeedbackButton();
     }
   });
 });

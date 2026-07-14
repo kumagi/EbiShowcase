@@ -2,13 +2,14 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
+  <meta name="description" content="消したあとに落とし、盤面が止まったらもう一度探します。続けて消えた回数が、そのまま得点の倍率になります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>連鎖スコア研究所 | Ebi Showcase</title>
+  <title>Ebi Showcase – 連鎖スコア研究所</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="連鎖スコア研究所 | Ebi Showcase">
-    <meta property="og:description" content="消したあとに落とし、盤面が止まったらもう一度探します。続けて消えた回数が、そのまま得点の倍率になります。">
+    <meta property="og:title" content="Ebi Showcase – 連鎖スコア研究所">
+    <meta property="og:description" content="消したあとに落とし、盤面が止まったらもう一度探します。続けて消えた回数が、そのまま得点の倍率になります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/falling-pairs/chain-score/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--falling-pairs--chain-score.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="連鎖スコア研究所 | Ebi Showcase">
-    <meta name="twitter:description" content="消したあとに落とし、盤面が止まったらもう一度探します。続けて消えた回数が、そのまま得点の倍率になります。">
+    <meta name="twitter:title" content="Ebi Showcase – 連鎖スコア研究所">
+    <meta name="twitter:description" content="消したあとに落とし、盤面が止まったらもう一度探します。続けて消えた回数が、そのまま得点の倍率になります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--falling-pairs--chain-score.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="連鎖スコア研究所">
     <!-- ogp:end -->
@@ -43,7 +44,10 @@
 
 <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>2連鎖を3回つくろう</h2></div><p>1〜3キー、クリック、タップで置き方を選びます。白く囲まれた仲間が消え、落下後にもう一度探索される様子を見てください。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="連鎖スコア研究所を遊ぶ" src="../../../../play/chain-score/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -89,7 +93,7 @@ case falling:
       <div class="why-grid"><article><h3>なぜ状態を分けるの？</h3><p>消去と落下を同時に書くより、途中を画面で見せやすく、バグが起きた段階も見つけやすいからです。</p></article><article><h3>得点はいつ足す？</h3><p>グループを見つけた瞬間です。<code>消した数 × 10 × 連鎖数</code>なら、後の連鎖ほど価値が上がります。</p></article><article><h3>チャレンジ</h3><p>倍率を二乗にしたり、同時に2グループ消したボーナスを加えたりして、遊び心地の違いを比べてみよう。</p></article></div>
     </section>
 
-    <nav class="lesson-pager"><a href="../clear-gravity/">← STEP 04<strong>消去とちぎれ落ち</strong></a><a href="../ebi-chain/">STEP 06 →<strong>Ebi Chain</strong></a></nav>
+    <nav class="lesson-pager"><a href="../clear-gravity/" rel="prev">← STEP 04<strong>消去とちぎれ落ち</strong></a><a href="../ebi-chain/" rel="next">STEP 06 →<strong>Ebi Chain</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -105,7 +109,7 @@ case falling:
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -113,6 +117,19 @@ case falling:
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

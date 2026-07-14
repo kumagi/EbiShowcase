@@ -1,10 +1,11 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Tactics | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ebi Tactics</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/tactics/ebi-tactics/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Tactics | Ebi Showcase">
-    <meta property="og:description" content="Learn Ebitengine through playable mini games.">
+    <meta property="og:title" content="Ebi Showcase – Ebi Tactics">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/tactics/ebi-tactics/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--tactics--ebi-tactics.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -13,17 +14,20 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Tactics | Ebi Showcase">
-    <meta name="twitter:description" content="Learn Ebitengine through playable mini games.">
+    <meta name="twitter:title" content="Ebi Showcase – Ebi Tactics">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--tactics--ebi-tactics.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Tactics">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/tactics/ebi-tactics/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Terrain-aware Tactical RPG</a><span>STEP 05 / 05</span></div><section class="lesson-hero"><div><p class="eyebrow">Move a squad by reading terrain and range</p><h1>Ebi Tactics</h1><p>Clear three missions with different terrain and enemy layouts using a blade unit and archer. Watch attack animation, impact particles, shake, and best turns.</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Tactics</h2><p>Play with keyboard, mouse, or touch. Watch the numbers and state labels on the game screen.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-tactics/" title="Ebi Tactics" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Weighted movement and weapon range</h2><p>Five movement points do not always mean five cells. Add terrain costs and discover reachable cells from the cheapest path first.</p><div class="concept-row"><article><b>01</b><h3>Terrain cost</h3><p>Plains cost 1, forests 2, mountains 3.</p></article><article><b>02</b><h3>Move area</h3><p>A priority queue confirms cheaper routes first.</p></article><article><b>03</b><h3>Attack range</h3><p>The blade hits adjacent cells; the bow reaches two cells.</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Weighted movement and weapon range</h2><p>Step through the system and follow data into the next operation.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Weighted movement and weapon range</h2><p>Here is the central rule used by the playable game.</p></div><pre><code>for queue.Len() &gt; 0 {
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/tactics/ebi-tactics/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Terrain-aware Tactical RPG</a><span>STEP 05 / 05</span></div><section class="lesson-hero"><div><p class="eyebrow">Move a squad by reading terrain and range</p><h1>Ebi Tactics</h1><p>Clear three missions with different terrain and enemy layouts using a blade unit and archer. Watch attack animation, impact particles, shake, and best turns.</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Tactics</h2><p>Play with keyboard, mouse, or touch. Watch the numbers and state labels on the game screen.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-tactics/" title="Ebi Tactics" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Weighted movement and weapon range</h2><p>Five movement points do not always mean five cells. Add terrain costs and discover reachable cells from the cheapest path first.</p><div class="concept-row"><article><b>01</b><h3>Terrain cost</h3><p>Plains cost 1, forests 2, mountains 3.</p></article><article><b>02</b><h3>Move area</h3><p>A priority queue confirms cheaper routes first.</p></article><article><b>03</b><h3>Attack range</h3><p>The blade hits adjacent cells; the bow reaches two cells.</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Weighted movement and weapon range</h2><p>Step through the system and follow data into the next operation.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Weighted movement and weapon range</h2><p>Here is the central rule used by the playable game.</p></div><pre><code>for queue.Len() &gt; 0 {
     cell := popCheapest()
     for _, next := range neighbors(cell) {
         nextCost := cell.cost + terrainCost(next)
         if nextCost &lt;= unit.move { push(next, nextCost) }
     }
-}</code></pre></section><section class="why-grid"><article><h3>Why this structure?</h3><p>Five movement points do not always mean five cells. Add terrain costs and discover reachable cells from the cheapest path first.</p></article><article><h3>Watch the data</h3><p>A priority queue confirms cheaper routes first.</p></article><article><h3>CHALLENGE</h3><p>Change one value or data entry and compare how play changes.</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>Terrain-aware Tactical RPG</strong></a><a href="../">COMPLETE →<strong>Ebi Tactics</strong></a></nav>
+}</code></pre></section><section class="why-grid"><article><h3>Why this structure?</h3><p>Five movement points do not always mean five cells. Add terrain costs and discover reachable cells from the cheapest path first.</p></article><article><h3>Watch the data</h3><p>A priority queue confirms cheaper routes first.</p></article><article><h3>CHALLENGE</h3><p>Change one value or data entry and compare how play changes.</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>Terrain-aware Tactical RPG</strong></a><a href="../" rel="next">COMPLETE →<strong>Ebi Tactics</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -37,7 +41,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

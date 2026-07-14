@@ -2,13 +2,14 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
+  <meta name="description" content="指したマスの種類を書き換え、ブロックの設置と破壊を作ります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>置く・壊す | Ebi Showcase</title>
+<title>Ebi Showcase – 置く・壊す</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="置く・壊す | Ebi Showcase">
-    <meta property="og:description" content="指したマスの種類を書き換え、ブロックの設置と破壊を作ります。">
+    <meta property="og:title" content="Ebi Showcase – 置く・壊す">
+    <meta property="og:description" content="指したマスの種類を書き換え、ブロックの設置と破壊を作ります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/sandbox/place-break/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--sandbox--place-break.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="置く・壊す | Ebi Showcase">
-    <meta name="twitter:description" content="指したマスの種類を書き換え、ブロックの設置と破壊を作ります。">
+    <meta name="twitter:title" content="Ebi Showcase – 置く・壊す">
+    <meta name="twitter:description" content="指したマスの種類を書き換え、ブロックの設置と破壊を作ります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--sandbox--place-break.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="置く・壊す">
     <!-- ogp:end -->
@@ -54,6 +55,9 @@
 <!-- END BEGINNER BRIDGE -->
 
 <p class="curriculum-bridge">共通基礎の続きです。ゲームループが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。ここでは入力で盤面データを書き換えます。</p>
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>素材を回収し、6マスの設計図を完成させよう。</h2></div><p>黄色の枠が設計図。PLACE/BREAKとDIRT/STONEを選び、明るい操作範囲をタップ。PCはP/B、1/2とクリックも使えます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="置く・壊す" src="../../../../play/place-break/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / MUTABLE TILE MAP</p><h2>マスの番号を書き換えると、世界の形が変わる。</h2><p class="lesson-lead">盤面は <strong>board[y][x]</strong> という数字の表です。0は空気、1は土、2は石。置く時は在庫を1減らして番号を書き、壊す時は番号を0へ戻して素材を在庫へ返します。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>画面をマス番号へ</h3><p>押した座標から盤面左上を引き、1マスの幅で割ります。これで列xと行yが決まります。</p><code>x = (pointerX - boardX) / cell</code></article><article><span class="concept-number">2</span><h3>範囲と在庫を確かめる</h3><p>作業者から3歩以内で、選んだ素材が1個以上の時だけ置けます。失敗した操作ではデータを変えません。</p><code>if inReach(x,y) &amp;&amp; stock[kind] &gt; 0</code></article><article><span class="concept-number">3</span><h3>置く・壊すを対にする</h3><p>設置は在庫から盤面へ、破壊は盤面から在庫へ素材を移します。素材の合計は勝手に増えません。</p><code>board[y][x] = kind; stock[kind]--</code></article></div>
@@ -78,7 +82,7 @@ board[y][x] = empty</code></pre></div>
 <nav class="lesson-pager">
 <span>
 </span>
-<a href="../terrain-generation/">STEP 02 →<strong>地形を生み出す</strong>
+<a href="../terrain-generation/" rel="next">STEP 02 →<strong>地形を生み出す</strong>
 </a>
 </nav>
 
@@ -96,7 +100,7 @@ board[y][x] = empty</code></pre></div>
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -104,6 +108,19 @@ board[y][x] = empty</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,9 @@
+flowchart LR
+  ball["ball<br/>vx / vy"]
+  hit["hit position<br/>top / left / right"]
+  normal["normal<br/>point outward"]
+  reflect["reflect velocity<br/>vy = -vy"]
+  ball --> hit
+  hit --> normal
+  normal --> reflect
+  reflect --> ball

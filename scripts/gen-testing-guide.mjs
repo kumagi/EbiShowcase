@@ -280,6 +280,69 @@ if got != want {
       challenge: "For the next bug, write the smallest failing board before the fix. Keep that test after it passes.",
     },
   },
+  {
+    slug: "readable-tests",
+    ja: {
+      step: "STEP 05", title: "テストはコードを読みやすくする", lead: "テスト名とAAA（準備・実行・確認）をそろえると、実装を読まなくても関数への期待が分かります。",
+      idea: "テストは答え合わせの表です。名前、Arrange、Act、Assertをそろえると、失敗したときにどこを見るかも読めます。",
+      before: `func TestRule(t *testing.T) {
+  got, _ := pointsForDistance(8)
+  if got != 100 { t.Fatal("wrong") }
+}`,
+      after: `func TestPointsForDistance_PerfectEdge(t *testing.T) {
+  // Arrange / 準備
+  distance := 8.0
+
+  // Act / 実行
+  got, label := pointsForDistance(distance)
+
+  // Assert / 確認
+  if got != 100 || label != "PERFECT +100" {
+    t.Fatalf("got (%d, %s)", got, label)
+  }
+}`,
+      test: `func TestPointsForDistance_PerfectEdge(t *testing.T) {
+  // Arrange
+  distance := 8.0
+  // Act
+  got, _ := pointsForDistance(distance)
+  // Assert
+  if got != 100 { t.Fatalf("got %d, want 100", got) }
+}`,
+      cases: [["名前", "TestPointsForDistance_PerfectEdge", "どんな例か分かる"], ["Arrange", "入力を用意", "準備"], ["Act", "関数を1回呼ぶ", "実行"], ["Assert", "期待値と比較", "確認"]],
+      challenge: "次のテストを、関数名_条件の名前にして、Arrange・Act・Assertの3つに分けよう。",
+    },
+    en: {
+      step: "STEP 05", title: "Make Tests Read Like Examples", lead: "Named tests and the AAA pattern—Arrange, Act, Assert—let a reader predict the function's promise without reading its implementation.",
+      idea: "A test is a small answer sheet. A clear name and three short parts also show where to look when it fails.",
+      before: `func TestRule(t *testing.T) {
+  got, _ := pointsForDistance(8)
+  if got != 100 { t.Fatal("wrong") }
+}`,
+      after: `func TestPointsForDistance_PerfectEdge(t *testing.T) {
+  // Arrange
+  distance := 8.0
+
+  // Act
+  got, label := pointsForDistance(distance)
+
+  // Assert
+  if got != 100 || label != "PERFECT +100" {
+    t.Fatalf("got (%d, %s)", got, label)
+  }
+}`,
+      test: `func TestPointsForDistance_PerfectEdge(t *testing.T) {
+  // Arrange
+  distance := 8.0
+  // Act
+  got, _ := pointsForDistance(distance)
+  // Assert
+  if got != 100 { t.Fatalf("got %d, want 100", got) }
+}`,
+      cases: [["name", "TestPointsForDistance_PerfectEdge", "names the example"], ["Arrange", "prepare input", "setup"], ["Act", "call the rule once", "run"], ["Assert", "compare expected value", "check"]],
+      challenge: "Give one older test a name_condition name and split it into Arrange, Act, and Assert.",
+    },
+  },
 ];
 
 const esc = (s) => String(s).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
@@ -295,13 +358,13 @@ function shell({lang, depth, title, desc, body}) {
 function hub(lang) {
   const ja = lang === "ja";
   const copy = ja ? {
-    title: "ゲームをテストできる形にする", desc: "EbitengineのUpdateから純粋なゲームルールを取り出し、Goのユニットテストで画面を開かずに挙動を確かめる4ステップ教材。",
+    title: "ゲームをテストできる形にする", desc: "EbitengineのUpdateから純粋なゲームルールを取り出し、Goのユニットテストで画面を開かずに挙動を確かめる5ステップ教材。",
     h1: "遊んで確かめる前に、<br><em>コードで確かめる。</em>", lead: "ゲームは最後に人が遊んで確かめます。でも、当たり判定や得点、ゲージの境目まで毎回目で試す必要はありません。Updateの奥にある『数字を受け取り、次の数字を返すルール』を取り出して、Goに何度でも確認してもらいましょう。",
-    eyebrow: "SPECIAL GUIDE / UNIT TESTING", left: "Ebitengineの仕事", mid: "純粋なルール", right: "またゲームへ", input: "入力を読む", rule: "数字から答えを出す", state: "状態を更新する", noWindow: "窓・GPU・タッチ操作なし", command: "$ go test ./...", pass: "ok  internal/lessonlogic", course: "4つの小さな改造", courseLead: "過去の教材を、テストしやすいコードへ本当にリファクタリングします。デモはありません。コードとケース表が、このコースのビジュアルです。", start: "読む →",
+    eyebrow: "SPECIAL GUIDE / UNIT TESTING", left: "Ebitengineの仕事", mid: "純粋なルール", right: "またゲームへ", input: "入力を読む", rule: "数字から答えを出す", state: "状態を更新する", noWindow: "窓・GPU・タッチ操作なし", command: "$ go test ./...", pass: "ok  internal/lessonlogic", course: "5つの小さな改造", courseLead: "過去の教材を、テストしやすいコードへ本当にリファクタリングします。デモはありません。コードとケース表が、このコースのビジュアルです。", start: "読む →",
   } : {
-    title: "Make games testable", desc: "A four-step guide to extracting pure rules from Ebitengine Update and checking behavior with Go unit tests without opening the game.",
+    title: "Make games testable", desc: "A five-step guide to extracting pure rules from Ebitengine Update and checking behavior with Go unit tests without opening the game.",
     h1: "Check it in code<br><em>before playing it.</em>", lead: "A person should still play the finished game. But you do not need to manually revisit every collision, score edge, and gauge boundary. Lift the number-in/answer-out rules out of Update and let Go check them repeatedly.",
-    eyebrow: "SPECIAL GUIDE / UNIT TESTING", left: "Ebitengine layer", mid: "Pure rule", right: "Back to the game", input: "read input", rule: "turn numbers into an answer", state: "update state", noWindow: "no window, GPU, or touch", command: "$ go test ./...", pass: "ok  internal/lessonlogic", course: "Four small refactors", courseLead: "We genuinely refactor earlier lessons into testable code. There is no demo: code and case tables are the visuals.", start: "READ →",
+    eyebrow: "SPECIAL GUIDE / UNIT TESTING", left: "Ebitengine layer", mid: "Pure rule", right: "Back to the game", input: "read input", rule: "turn numbers into an answer", state: "update state", noWindow: "no window, GPU, or touch", command: "$ go test ./...", pass: "ok  internal/lessonlogic", course: "Five small refactors", courseLead: "We genuinely refactor earlier lessons into testable code. There is no demo: code and case tables are the visuals.", start: "READ →",
   };
   const cards = lessons.map((lesson, i) => { const t = lesson[lang]; return `<a class="test-course-card" href="${lesson.slug}/"><span>0${i + 1}</span><h3>${t.title}</h3><p>${t.lead}</p><strong>${copy.start}</strong></a>`; }).join("");
   const body = `<section class="test-hero"><p class="eyebrow">${copy.eyebrow}</p><h1>${copy.h1}</h1><p>${copy.lead}</p></section><section class="test-boundary" aria-label="logic boundary"><div><small>${copy.left}</small><b>${copy.input}</b></div><i>→</i><div class="is-pure"><small>${copy.mid}</small><b>${copy.rule}</b><em>${copy.noWindow}</em></div><i>→</i><div><small>${copy.right}</small><b>${copy.state}</b></div></section><section class="test-terminal"><code>${copy.command}</code><strong>✓ ${copy.pass}</strong></section><section class="test-course"><p class="eyebrow">COURSE MAP</p><h2>${copy.course}</h2><p>${copy.courseLead}</p><div class="test-course-grid">${cards}</div></section>`;
@@ -316,7 +379,7 @@ function lessonPage(lang, index) {
   const next = index === lessons.length - 1 ? "../" : `../${lessons[index + 1].slug}/`;
   const rows = t.cases.map((r) => `<tr><th>${esc(r[0])}</th><td><code>${esc(r[1])}</code></td><td><code>${esc(r[2])}</code></td></tr>`).join("");
   const copy = ja ? { before: "BEFORE / Updateに全部ある", after: "AFTER / ルールを分ける", test: "TEST / 期待する答えを書く", table: "先に、確かめたい例を並べる", input: "入力・状態", pure: "純粋関数", answer: "次の状態・答え", why: "なぜこれで安心できる？", challenge: "YOUR TURN", run: "このリポジトリで実行", pass: "PASS — ゲーム画面を開かずに確認できました", back: "← 前へ", forward: "次へ →" } : { before: "BEFORE / Everything lives in Update", after: "AFTER / Separate the rule", test: "TEST / Write the expected answer", table: "List the cases first", input: "input + state", pure: "pure function", answer: "next state + answer", why: "Why does this build confidence?", challenge: "YOUR TURN", run: "Run it in this repository", pass: "PASS — checked without opening the game", back: "← PREVIOUS", forward: "NEXT →" };
-  const body = `<section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">${t.step} / 04</p><h1>${t.title}</h1><p>${t.lead}</p></section><section class="test-rule-strip"><span>${copy.input}</span><i>→</i><strong>${copy.pure}</strong><i>→</i><span>${copy.answer}</span></section><section class="test-explain"><div><p class="eyebrow">${copy.why}</p><h2>${t.idea}</h2></div><div class="test-case-table"><p class="eyebrow">${copy.table}</p><table><tbody>${rows}</tbody></table></div></section><section class="test-code-compare"><article><p>${copy.before}</p><pre><code>${esc(t.before)}</code></pre></article><article class="is-after"><p>${copy.after}</p><pre><code>${esc(t.after)}</code></pre></article></section><section class="test-code-focus"><div><p class="eyebrow">${copy.test}</p><h2>_test.go</h2><p>${t.idea}</p></div><pre><code>${esc(t.test)}</code></pre></section><section class="test-run"><p>${copy.run}</p><code>go test ./internal/lessonlogic</code><strong>✓ ${copy.pass}</strong></section><section class="test-challenge"><p class="eyebrow">${copy.challenge}</p><h2>${t.challenge}</h2></section><nav class="test-pager"><a href="${prev}">${copy.back}</a><span>${index + 1} / ${lessons.length}</span><a href="${next}">${copy.forward}</a></nav>`;
+  const body = `<section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">${t.step} / ${String(lessons.length).padStart(2, "0")}</p><h1>${t.title}</h1><p>${t.lead}</p></section><section class="test-rule-strip"><span>${copy.input}</span><i>→</i><strong>${copy.pure}</strong><i>→</i><span>${copy.answer}</span></section><section class="test-explain"><div><p class="eyebrow">${copy.why}</p><h2>${t.idea}</h2></div><div class="test-case-table"><p class="eyebrow">${copy.table}</p><table><tbody>${rows}</tbody></table></div></section><section class="test-code-compare"><article><p>${copy.before}</p><pre><code>${esc(t.before)}</code></pre></article><article class="is-after"><p>${copy.after}</p><pre><code>${esc(t.after)}</code></pre></article></section><section class="test-code-focus"><div><p class="eyebrow">${copy.test}</p><h2>_test.go</h2><p>${t.idea}</p></div><pre><code>${esc(t.test)}</code></pre></section><section class="test-run"><p>${copy.run}</p><code>go test ./internal/lessonlogic</code><strong>✓ ${copy.pass}</strong></section><section class="test-challenge"><p class="eyebrow">${copy.challenge}</p><h2>${t.challenge}</h2></section><nav class="test-pager"><a href="${prev}">${copy.back}</a><span>${index + 1} / ${lessons.length}</span><a href="${next}">${copy.forward}</a></nav>`;
   return shell({lang, depth: 4, title: {text: t.title, slug: lesson.slug}, desc: t.lead, body});
 }
 
@@ -335,7 +398,7 @@ for (const lang of ["ja", "en"]) {
   const file = path.join(root, "web", lang, "index.html");
   let html = fs.readFileSync(file, "utf8");
   const ja = lang === "ja";
-  const block = `<!-- testing-guide-home:start -->\n<section class="architecture-promo testing-promo"><div><p class="eyebrow">SPECIAL GUIDE / UNIT TESTING</p><h2>${ja ? "ゲームを起動せず、<br>ルールを確かめよう。" : "Check game rules<br>without launching the game."}</h2><p>${ja ? "Updateから純粋な計算を取り出し、当たり判定・得点の境目・行動ゲージ・過去のバグをGoのテストで守る4ステップです。" : "A four-step guide to extracting pure calculations from Update and protecting collisions, score edges, action gauges, and past bugs with Go tests."}</p></div><a href="guides/testing/"><span>READ THE GUIDE</span><strong>${ja ? "ゲームのユニットテスト入門" : "Unit testing for games"}</strong><b>→</b></a></section>\n<!-- testing-guide-home:end -->`;
+  const block = `<!-- testing-guide-home:start -->\n<section class="architecture-promo testing-promo"><div><p class="eyebrow">SPECIAL GUIDE / UNIT TESTING</p><h2>${ja ? "ゲームを起動せず、<br>ルールを確かめよう。" : "Check game rules<br>without launching the game."}</h2><p>${ja ? "Updateから純粋な計算を取り出し、当たり判定・得点の境目・行動ゲージ・過去のバグをGoのテストで守る5ステップです。" : "A five-step guide to extracting pure calculations from Update and protecting collisions, score edges, action gauges, and past bugs with Go tests."}</p></div><a href="guides/testing/"><span>READ THE GUIDE</span><strong>${ja ? "ゲームのユニットテスト入門" : "Unit testing for games"}</strong><b>→</b></a></section>\n<!-- testing-guide-home:end -->`;
   const re = /<!-- testing-guide-home:start -->[\s\S]*?<!-- testing-guide-home:end -->/;
   html = re.test(html) ? html.replace(re, block) : html.replace("<!-- visual-effects-home:start -->", `${block}\n<!-- visual-effects-home:start -->`);
   fs.writeFileSync(file, html);

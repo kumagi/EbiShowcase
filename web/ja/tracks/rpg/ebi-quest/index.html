@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="クエスト進行とセーブを統合したRPG最終レッスン。">
-  <title>Ebi Quest | Ebi Showcase</title>
+  <meta name="description" content="クエスト進行とセーブを統合したRPG最終レッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用">
+  <title>Ebi Showcase – Ebi Quest</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Quest | Ebi Showcase">
-    <meta property="og:description" content="クエスト進行とセーブを統合したRPG最終レッスン。">
+    <meta property="og:title" content="Ebi Showcase – Ebi Quest">
+    <meta property="og:description" content="クエスト進行とセーブを統合したRPG最終レッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/rpg/ebi-quest/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--rpg--ebi-quest.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Quest | Ebi Showcase">
-    <meta name="twitter:description" content="クエスト進行とセーブを統合したRPG最終レッスン。">
+    <meta name="twitter:title" content="Ebi Showcase – Ebi Quest">
+    <meta name="twitter:description" content="クエスト進行とセーブを統合したRPG最終レッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--rpg--ebi-quest.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Quest">
     <!-- ogp:end -->
@@ -49,6 +49,10 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>仲間は一緒に戦う人物データ、クエストは目的と進み具合の組、セーブはその状態を後で読める形で残すこと。クエスト番号で今の目的を選びます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>quest := quests[questID]</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_rpg-quest.svg" alt="クエストをイベントで進める" loading="lazy" decoding="async"><figcaption>クエストをイベントで進めるの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>モモと旅してボスを倒そう。</h2></div>
@@ -164,7 +168,7 @@
     </section>
 
     <nav class="lesson-pager">
-      <a href="../world-encounters/">← STEP 06<strong>世界地図とエンカウント</strong></a>
+      <a href="../world-encounters/" rel="prev">← STEP 06<strong>世界地図とエンカウント</strong></a>
       <span></span>
     </nav>
 
@@ -182,7 +186,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -190,6 +194,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

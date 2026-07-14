@@ -1,0 +1,10 @@
+flowchart LR
+  piece["falling<br/>mino"]
+  rotate["rotate<br/>90°"]
+  kick["wall kick<br/>try offsets"]
+  lock["lock<br/>into board"]
+  clear["clear lines<br/>score"]
+  piece --> rotate
+  rotate --> kick
+  kick --> lock
+  lock --> clear

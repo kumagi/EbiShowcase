@@ -1,0 +1,8 @@
+flowchart LR
+  data["map.json<br/>0=floor 1=wall"]
+  grid["2D slice<br/>map[y][x]"]
+  rule["can move?<br/>stop at a wall"]
+  draw["draw tiles<br/>at the same cells"]
+  data --> grid
+  grid --> rule
+  grid --> draw

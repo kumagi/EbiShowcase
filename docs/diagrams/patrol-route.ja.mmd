@@ -1,0 +1,9 @@
+flowchart LR
+  waypoint["Waypoint<br/>A → B → C"]
+  delta["目標との差<br/>dx / dy"]
+  move["正規化して移動<br/>速度を掛ける"]
+  turn["近づいたら<br/>次へ"]
+  waypoint --> delta
+  delta --> move
+  move --> turn
+  turn --> waypoint

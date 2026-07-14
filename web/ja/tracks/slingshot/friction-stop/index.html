@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>減速して止まる | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="速度へ摩擦の数を毎フレーム掛け、十分遅くなった瞬間に速度を0へそろえます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbit"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 減速して止まる</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="減速して止まる | Ebi Showcase">
-    <meta property="og:description" content="速度へ摩擦の数を毎フレーム掛け、十分遅くなった瞬間に速度を0へそろえます。">
+    <meta property="og:title" content="Ebi Showcase – 減速して止まる">
+    <meta property="og:description" content="速度へ摩擦の数を毎フレーム掛け、十分遅くなった瞬間に速度を0へそろえます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbit">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/slingshot/friction-stop/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--slingshot--friction-stop.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="減速して止まる | Ebi Showcase">
-    <meta name="twitter:description" content="速度へ摩擦の数を毎フレーム掛け、十分遅くなった瞬間に速度を0へそろえます。">
+    <meta name="twitter:title" content="Ebi Showcase – 減速して止まる">
+    <meta name="twitter:description" content="速度へ摩擦の数を毎フレーム掛け、十分遅くなった瞬間に速度を0へそろえます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbit">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--slingshot--friction-stop.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="減速して止まる">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>.95は現実の定数でなく操作感用。毎回95%へ減らし、十分小さければ0へ丸めます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>vx *= .95; if math.Abs(vx)&lt;.05 { vx=0 }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>6投以内に3つの島へぴたりと止めよう。</h2></div><p>赤い玉から引っぱって離します。ICE / NORMAL / SANDと停止値を変え、止まる距離を予想してください。PCは1〜3と-/+でも調整できます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="減速して止まる" src="../../../../play/friction-stop/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DAMP AND SNAP</p><h2>少しずつ弱め、最後はきっぱり0にする。</h2><p class="lesson-lead">摩擦を0.978にすると、速さは前のコマの97.8%になります。ずっと掛けても数字は0に近づくだけなので、<strong>停止しきい値</strong>より小さくなったら0を代入し、手番を終わらせます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>位置を速度だけ進める</h3><p>まず今の速度で位置を変えます。壁に当たれば向きを反転してから、次の計算へ進みます。</p><code>pos.x += velocity.x</code></article><article><span class="concept-number">2</span><h3>速度へ摩擦を掛ける</h3><p>0.990は長く滑り、0.960はすぐ減速します。xとyへ同じ数を掛ければ向きを保ったまま弱くなります。</p><code>velocity.x *= friction</code></article><article><span class="concept-number">3</span><h3>小さければ正確に止める</h3><p>速さがしきい値未満ならxもyも0にします。ここで着地点を調べ、次の手番へ進めます。</p><code>if speed &lt; stop { velocity = vec{} }</code></article></div><div class="motion-lab" data-lab="friction" data-friction="0.92" data-stop="0.35" data-moving="移動中" data-stopped="停止" aria-labelledby="friction-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / FRICTION</p><h3 id="friction-lab-title">1フレームずつ減速してみよう</h3><p>「進める」で位置を更新し、速度に摩擦を掛けます。十分遅くなったら 0 にそろえます。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="move damp snap" data-go-caption="位置を進める → 摩擦で減速 → 十分遅ければ0へ">1フレーム進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button></div><p class="lab-hint">本物のゲームは、止まった瞬間にターン終了や得点判定をします。</p></div><div class="lab-visual"><div class="lab-board" role="img" aria-label="摩擦で減速するパック"></div><div class="lab-values" aria-live="polite"><div><span>位置 X</span><strong data-lab-x>40</strong></div><div><span>速さ</span><strong data-lab-speed>8.00</strong></div><div><span>状態</span><strong data-lab-state>移動中</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -39,7 +43,7 @@ velocity.y *= friction
 if math.Hypot(velocity.x, velocity.y) &lt; stopThreshold {
     velocity = vec{}
     finishShot()
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY MULTIPLY?</p><h3>速いほど大きく減る</h3><p>同じ数を引くより、割合で減らすほうが最初は勢いよく、最後はゆっくり止まる動きになります。</p></article><article><p class="eyebrow">WHY A THRESHOLD?</p><h3>終わらない手番を防ぐ</h3><p>小数の速度は0になりきらないため、「ほとんど停止」を数字で決める必要があります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>床を半分に分けよう</h3><p>左半分は氷、右半分は砂にして、玉の位置から毎フレーム違う摩擦を選んでみよう。</p></article></div></section><nav class="lesson-pager"><a href="../circle-battle/">← STEP 03<strong>円形キャラクターの衝突</strong></a><a href="../ally-effects/">STEP 05 →<strong>味方に当てる友情効果</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY MULTIPLY?</p><h3>速いほど大きく減る</h3><p>同じ数を引くより、割合で減らすほうが最初は勢いよく、最後はゆっくり止まる動きになります。</p></article><article><p class="eyebrow">WHY A THRESHOLD?</p><h3>終わらない手番を防ぐ</h3><p>小数の速度は0になりきらないため、「ほとんど停止」を数字で決める必要があります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>床を半分に分けよう</h3><p>左半分は氷、右半分は砂にして、玉の位置から毎フレーム違う摩擦を選んでみよう。</p></article></div></section><nav class="lesson-pager"><a href="../circle-battle/" rel="prev">← STEP 03<strong>円形キャラクターの衝突</strong></a><a href="../ally-effects/" rel="next">STEP 05 →<strong>味方に当てる友情効果</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -55,7 +59,7 @@ if math.Hypot(velocity.x, velocity.y) &lt; stopThreshold {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -63,6 +67,19 @@ if math.Hypot(velocity.x, velocity.y) &lt; stopThreshold {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

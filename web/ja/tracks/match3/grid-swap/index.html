@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>となり同士を交換 | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="盤面を行と列で管理し、辺を接する2個だけを選んで交換します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – となり同士を交換</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="となり同士を交換 | Ebi Showcase">
-    <meta property="og:description" content="盤面を行と列で管理し、辺を接する2個だけを選んで交換します。">
+    <meta property="og:title" content="Ebi Showcase – となり同士を交換">
+    <meta property="og:description" content="盤面を行と列で管理し、辺を接する2個だけを選んで交換します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/match3/grid-swap/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--match3--grid-swap.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="となり同士を交換 | Ebi Showcase">
-    <meta name="twitter:description" content="盤面を行と列で管理し、辺を接する2個だけを選んで交換します。">
+    <meta name="twitter:title" content="Ebi Showcase – となり同士を交換">
+    <meta name="twitter:description" content="盤面を行と列で管理し、辺を接する2個だけを選んで交換します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--match3--grid-swap.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="となり同士を交換">
     <!-- ogp:end -->
@@ -23,6 +24,11 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>2次元グリッドはboard[行][列]で読む方眼紙、隣接判定は列差+行差が1かを調べること。隣同士だけa,b=b,aで交換し、3個並びがなければ戻します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>adjacent := abs(ax-bx)+abs(ay-by)==1</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_puzzle-rotation.svg" alt="パズルの回転中心" loading="lazy" decoding="async"><figcaption>パズルの回転中心の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_match3-cascade.svg" alt="マッチ3の連鎖" loading="lazy" decoding="async"><figcaption>マッチ3の連鎖の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>となり合うピースを10回交換しよう。</h2></div><p>1個目、2個目の順にタップ。斜めや離れたマスは交換できません。PCでもクリックで遊べます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="となり同士を交換" src="../../../../play/grid-swap/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GRID &amp; ADJACENCY</p><h2>画面の座標を、盤面の「何行・何列」へ変える。</h2><p class="lesson-lead">ピースを<strong>board[行][列]</strong>に保存します。タップ位置から盤面の左上を引き、マス幅で割ると、選ばれた列と行が整数で求まります。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>2次元の箱</h3><p>7行×6列の配列は、画面と同じ並びで種類番号を覚えます。board[2][4]は上から3行目、左から5列目です。</p><code>var board [7][6]int</code></article><article><span class="concept-number">2</span><h3>座標からマスへ</h3><p>盤面の開始位置を引いて64で割ります。割り算の小数を捨てることで、同じマス内は同じ番号になります。</p><code>col := (x - originX) / cellSize</code></article><article><span class="concept-number">3</span><h3>距離が1なら隣</h3><p>列の差と行の差の絶対値を足します。合計1なら上下左右、2以上なら斜めか遠い場所です。</p><code>abs(ax-bx) + abs(ay-by) == 1</code></article></div><div class="motion-lab" data-lab="hitbox"><div class="lab-copy"><p class="eyebrow">TRY IT / CELL HIT TEST</p><h3>マスの当たり判定を動かそう</h3><p>四角を動かして重なりを観察します。ゲームでは各マスも同じ大きさの四角としてタップ位置を判定します。</p><div class="lab-controls"><button class="lab-button" data-lab-left>← 左</button><button class="lab-button" data-lab-right>右 →</button><button class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div></div><div class="lab-visual"><div class="hitbox-stage"><div class="hitbox-box hitbox-a" data-lab-a>A</div><div class="hitbox-box hitbox-b" data-lab-b>B</div></div><div class="lab-values"><div><span>判定</span><strong data-lab-result>はなれている</strong></div><div><span>Aの位置</span><strong data-lab-x>0</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -35,7 +41,7 @@
 if distance == 1 {
     board[a.y][a.x], board[b.y][b.x] =
         board[b.y][b.x], board[a.y][a.x]
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ROW &amp; COL?</p><h3>調べる順番が作れる</h3><p>次のステップでは同じ行を左から右、同じ列を上から下へ調べられます。</p></article><article><p class="eyebrow">WHY ADJACENT?</p><h3>パズルの制限になる</h3><p>どこでも交換できず、となりだけだから並べ方を考える必要があります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>ドラッグ操作</h3><p>押したマスを覚え、指を離したマスが隣なら交換する操作へ変えてみよう。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../find-matches/">STEP 02 →<strong>3個並びを探す</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ROW &amp; COL?</p><h3>調べる順番が作れる</h3><p>次のステップでは同じ行を左から右、同じ列を上から下へ調べられます。</p></article><article><p class="eyebrow">WHY ADJACENT?</p><h3>パズルの制限になる</h3><p>どこでも交換できず、となりだけだから並べ方を考える必要があります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>ドラッグ操作</h3><p>押したマスを覚え、指を離したマスが隣なら交換する操作へ変えてみよう。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../find-matches/" rel="next">STEP 02 →<strong>3個並びを探す</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -51,7 +57,7 @@ if distance == 1 {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -59,6 +65,19 @@ if distance == 1 {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

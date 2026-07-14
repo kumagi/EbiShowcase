@@ -1,0 +1,9 @@
+flowchart LR
+  pool["空きスロット<br/>[]Bullet"]
+  fire["発射<br/>active=true"]
+  move["Update<br/>位置を進める"]
+  reuse["画面外<br/>空きへ戻す"]
+  pool --> fire
+  fire --> move
+  move --> reuse
+  reuse --> pool

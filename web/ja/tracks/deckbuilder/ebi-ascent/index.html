@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Ascent | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="カード戦闘、報酬、分岐を3階の1ランへ統合したコース完成ゲームです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbiteng"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ebi Ascent</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Ascent | Ebi Showcase">
-    <meta property="og:description" content="カード戦闘、報酬、分岐を3階の1ランへ統合したコース完成ゲームです。">
+    <meta property="og:title" content="Ebi Showcase – Ebi Ascent">
+    <meta property="og:description" content="カード戦闘、報酬、分岐を3階の1ランへ統合したコース完成ゲームです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbiteng">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/deckbuilder/ebi-ascent/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder--ebi-ascent.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Ascent | Ebi Showcase">
-    <meta name="twitter:description" content="カード戦闘、報酬、分岐を3階の1ランへ統合したコース完成ゲームです。">
+    <meta name="twitter:title" content="Ebi Showcase – Ebi Ascent">
+    <meta name="twitter:description" content="カード戦闘、報酬、分岐を3階の1ランへ統合したコース完成ゲームです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbiteng">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder--ebi-ascent.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Ascent">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>phaseは『戦闘中・報酬選択・道選択・休憩』など現在の場面。状態をつなぐとは、一つを終えたら次のphase番号へ替えてゲーム全体を進めることです。分岐マップは次の行き先を選べる旅の地図です。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>switch phase { case Battle: updateBattle() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>自分のデッキを育て、深海の王を倒そう。</h2></div><p>戦闘は1〜5・E、報酬と道は番号またはタップ。3体の敵を倒せばクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>FINAL STEP</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Ascent" src="../../../../play/ebi-ascent/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GAME COMPOSITION</p><h2>大きなゲームも、小さな画面を順番につないだもの。</h2><p class="lesson-lead">戦闘、報酬、経路選択を<strong>phaseという現在の場面</strong>で切り替えます。デッキ、HP、階数は場面を越えて同じgame構造体に残るため、一つの旅になります。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>場面を分ける</h3><p>Battleではカード入力、Rewardでは3択、Routeでは2択だけを読みます。同じタップでも場面ごとに意味が決まります。</p><code>switch phase { case Battle: ... }</code></article><article><span class="concept-number">2</span><h3>共有するデータを決める</h3><p>HP、deck、floorはラン全体のデータ。energyやblockは戦闘ごとに戻す一時データです。</p><code>type game struct { deck []card; floor int }</code></article><article><span class="concept-number">3</span><h3>出口を次の入口へ</h3><p>敵を倒したらReward、報酬を選んだらRoute、道を選んだら次のBattleへ進めます。</p><code>phase = phaseReward</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="map,battle,reward,rest" data-loop="次のフロアへ" aria-labelledby="lab-title-ebi-ascent">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / RUN LOOP</p>
@@ -49,7 +53,7 @@ case phaseReward:
     chooseReward()
 case phaseRoute:
     chooseRoute()
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ONE GAME?</p><h3>選択が次へ残る</h3><p>選んだカードや失ったHPが次の戦闘へ続くから、一回ごとの物語が生まれます。</p></article><article><p class="eyebrow">WHY DATA TABLES?</p><h3>敵やカードを増やせる</h3><p>仕組みを変えずにencountersやrewardsへデータを足せます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>ランを保存</h3><p>phase、floor、HP、deckをJSONへ変換し、途中から再開する設計を考えよう。</p></article></div></section><nav class="lesson-pager"><a href="../branching-map/">← STEP 06<strong>分岐マップの旅</strong></a><a href="../">コース全体へ →<strong>デッキ構築カードゲーム</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ONE GAME?</p><h3>選択が次へ残る</h3><p>選んだカードや失ったHPが次の戦闘へ続くから、一回ごとの物語が生まれます。</p></article><article><p class="eyebrow">WHY DATA TABLES?</p><h3>敵やカードを増やせる</h3><p>仕組みを変えずにencountersやrewardsへデータを足せます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>ランを保存</h3><p>phase、floor、HP、deckをJSONへ変換し、途中から再開する設計を考えよう。</p></article></div></section><nav class="lesson-pager"><a href="../branching-map/" rel="prev">← STEP 06<strong>分岐マップの旅</strong></a><a href="../" rel="next">コース全体へ →<strong>デッキ構築カードゲーム</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -65,7 +69,7 @@ case phaseRoute:
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -73,6 +77,19 @@ case phaseRoute:
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

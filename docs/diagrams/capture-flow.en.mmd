@@ -1,0 +1,9 @@
+flowchart LR
+  weaken["weaken<br/>lower HP"]
+  throw["throw<br/>trajectory FX"]
+  shake["shake<br/>timer"]
+  result["captured?<br/>try again"]
+  weaken --> throw
+  throw --> shake
+  shake --> result
+  result --> weaken

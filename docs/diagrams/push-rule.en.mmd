@@ -1,0 +1,9 @@
+flowchart LR
+  input["direction input<br/>← ↑ → ↓"]
+  next["next cell<br/>floor? box?"]
+  beyond["beyond the box<br/>empty?"]
+  move["move together<br/>update map"]
+  input --> next
+  next --> beyond
+  beyond --> move
+  move --> input

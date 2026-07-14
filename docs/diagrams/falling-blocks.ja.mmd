@@ -1,0 +1,10 @@
+flowchart LR
+  piece["落下中<br/>mino"]
+  rotate["回転<br/>90°"]
+  kick["壁キック<br/>候補を試す"]
+  lock["固定<br/>盤面へ"]
+  clear["列を消す<br/>score"]
+  piece --> rotate
+  rotate --> kick
+  kick --> lock
+  lock --> clear

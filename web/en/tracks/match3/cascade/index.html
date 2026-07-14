@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Cascade Reactions | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Scan again after falling and refilling, repeating resolution until no matches remain. Play the demo, read a short Go example, change a value, and apply the idea"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Cascade Reactions</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Cascade Reactions | Ebi Showcase">
-    <meta property="og:description" content="Scan again after falling and refilling, repeating resolution until no matches remain.">
+    <meta property="og:title" content="Ebi Showcase – Cascade Reactions">
+    <meta property="og:description" content="Scan again after falling and refilling, repeating resolution until no matches remain. Play the demo, read a short Go example, change a value, and apply the idea">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/match3/cascade/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--match3--cascade.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Cascade Reactions | Ebi Showcase">
-    <meta name="twitter:description" content="Scan again after falling and refilling, repeating resolution until no matches remain.">
+    <meta name="twitter:title" content="Ebi Showcase – Cascade Reactions">
+    <meta name="twitter:description" content="Scan again after falling and refilling, repeating resolution until no matches remain. Play the demo, read a short Go example, change a value, and apply the idea">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--match3--cascade.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Cascade Reactions">
     <!-- ogp:end -->
@@ -23,6 +24,10 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>phase = Find; if matched { phase = Clear }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_match3-cascade.svg" alt="Match-3 cascade" loading="lazy" decoding="async"><figcaption>A visual map of Match-3 cascade. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Resolve the white line and discover the next cascade.</h2></div><p>Tap the bottom button or press Space. Continue until settled and resolve three moves to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Cascade Reactions" src="../../../../play/cascade/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RESOLUTION LOOP</p><h2>“Check again” creates a cascade.</h2><p class="lesson-lead">Call scan after clear, fall, and refill. If the result is not empty, return to the same process; otherwise return control. <strong>A settled board</strong> is the loop's exit condition.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Resolve one link</h3><p>Clear current marked cells, compact columns, and refill holes. Do not read player swap input in the middle.</p><code>clear(); fall(); refill()</code></article><article><span class="concept-number">2</span><h3>Rescan the new board</h3><p>The fallen board is a new problem. Run scan again and store new lines in marked.</p><code>marked = scan(board)</code></article><article><span class="concept-number">3</span><h3>Turn chain count into score</h3><p>Multiply the first clear by one, the second by two, and so on, rewarding surprising long chains.</p><code>score += cells * 10 * combo</code></article></div><div class="motion-lab" data-lab="match-scan" data-found="cascade seed!" data-none="no match (cascade over)" data-cleared="fell — scan again" aria-labelledby="lab-title-cascade">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / CASCADE</p>
@@ -50,7 +55,7 @@ if len(matches) &gt; 0 {
     phase = ClearPhase
 } else {
     phase = PlayerPhase
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY RECHECK?</p><h3>Falling creates a new problem</h3><p>A line that did not exist before movement can appear, so old results are invalid.</p></article><article><p class="eyebrow">WHY SETTLE?</p><h3>Keep input separate</h3><p>Blocking swaps during cascades keeps board data synchronized with visuals.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Speed up</h3><p>Shorten falling animation as combo grows to make a long chain feel energetic.</p></article></div></section><nav class="lesson-pager"><a href="../clear-and-fall/">← STEP 03<strong>Clear and Fall</strong></a><a href="../special-pieces/">STEP 05 →<strong>Special Piece Workshop</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY RECHECK?</p><h3>Falling creates a new problem</h3><p>A line that did not exist before movement can appear, so old results are invalid.</p></article><article><p class="eyebrow">WHY SETTLE?</p><h3>Keep input separate</h3><p>Blocking swaps during cascades keeps board data synchronized with visuals.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Speed up</h3><p>Shorten falling animation as combo grows to make a long chain feel energetic.</p></article></div></section><nav class="lesson-pager"><a href="../clear-and-fall/" rel="prev">← STEP 03<strong>Clear and Fall</strong></a><a href="../special-pieces/" rel="next">STEP 05 →<strong>Special Piece Workshop</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -66,7 +71,7 @@ if len(matches) &gt; 0 {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -74,6 +79,19 @@ if len(matches) &gt; 0 {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

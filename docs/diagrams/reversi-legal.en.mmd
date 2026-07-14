@@ -1,0 +1,8 @@
+flowchart LR
+  candidate["empty cell<br/>try a stone"]
+  ray["eight directions<br/>check neighbor"]
+  bracket["opponent run<br/>closed by yours"]
+  flip["legal move<br/>flip stones"]
+  candidate --> ray
+  ray --> bracket
+  bracket --> flip

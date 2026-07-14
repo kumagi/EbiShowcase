@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="押し合い・喰らい・攻撃の3種類の矩形（ヒットボックス）でキャラクターの衝突を管理するEbitengine格闘ゲームレッスン。">
-  <title>判定矩形ビューワー | Ebi Showcase</title>
+  <meta name="description" content="押し合い・喰らい・攻撃の3種類の矩形（ヒットボックス）でキャラクターの衝突を管理するEbitengine格闘ゲームレッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+  <title>Ebi Showcase – 判定矩形ビューワー</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="判定矩形ビューワー | Ebi Showcase">
-    <meta property="og:description" content="押し合い・喰らい・攻撃の3種類の矩形（ヒットボックス）でキャラクターの衝突を管理するEbitengine格闘ゲームレッスン。">
+    <meta property="og:title" content="Ebi Showcase – 判定矩形ビューワー">
+    <meta property="og:description" content="押し合い・喰らい・攻撃の3種類の矩形（ヒットボックス）でキャラクターの衝突を管理するEbitengine格闘ゲームレッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/fighting/box-viewer/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--fighting--box-viewer.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="判定矩形ビューワー | Ebi Showcase">
-    <meta name="twitter:description" content="押し合い・喰らい・攻撃の3種類の矩形（ヒットボックス）でキャラクターの衝突を管理するEbitengine格闘ゲームレッスン。">
+    <meta name="twitter:title" content="Ebi Showcase – 判定矩形ビューワー">
+    <meta name="twitter:description" content="押し合い・喰らい・攻撃の3種類の矩形（ヒットボックス）でキャラクターの衝突を管理するEbitengine格闘ゲームレッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--fighting--box-viewer.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="判定矩形ビューワー">
     <!-- ogp:end -->
@@ -50,7 +50,10 @@
 
 <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3色の箱を重ねてみよう。</h2></div>
         <p>A・D または画面下で移動、スペース・X または画面上でパンチ。5回命中でクリアです。</p>
@@ -180,7 +183,7 @@ func overlap(a, b rect) bool {
 
     <nav class="lesson-pager">
       <span></span>
-      <a href="../frame-attack/">STEP 02 →<strong>3段階パンチ</strong></a>
+      <a href="../frame-attack/" rel="next">STEP 02 →<strong>3段階パンチ</strong></a>
     </nav>
 
 
@@ -197,7 +200,7 @@ func overlap(a, b rect) bool {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -205,6 +208,19 @@ func overlap(a, b rect) bool {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

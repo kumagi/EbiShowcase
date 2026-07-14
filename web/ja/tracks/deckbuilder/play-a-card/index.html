@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>1枚のカードを使う | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="コスト、名前、効果をデータ化し、選んだカードの命令を実行します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 1枚のカードを使う</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="1枚のカードを使う | Ebi Showcase">
-    <meta property="og:description" content="コスト、名前、効果をデータ化し、選んだカードの命令を実行します。">
+    <meta property="og:title" content="Ebi Showcase – 1枚のカードを使う">
+    <meta property="og:description" content="コスト、名前、効果をデータ化し、選んだカードの命令を実行します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/deckbuilder/play-a-card/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder--play-a-card.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="1枚のカードを使う | Ebi Showcase">
-    <meta name="twitter:description" content="コスト、名前、効果をデータ化し、選んだカードの命令を実行します。">
+    <meta name="twitter:title" content="Ebi Showcase – 1枚のカードを使う">
+    <meta name="twitter:description" content="コスト、名前、効果をデータ化し、選んだカードの命令を実行します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder--play-a-card.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="1枚のカードを使う">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>カードデータは名前・必要エナジー・効果を一組にした設計図。効果解決はカードの指示どおりHPや防御を変える処理です。同じresolve関数へ違うカードを渡すと、同じ手順で別効果を実行できます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>resolve(card)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3枚を使い分けてスライムを倒そう。</h2></div><p>カードをタップ、または1〜3キーで使います。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="1枚のカードを使う" src="../../../../play/play-a-card/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CARD DATA</p><h2>カード1枚は、絵ではなく小さな命令書</h2><p class="lesson-lead">名前、コスト、効果の種類、数値を1セットにします。画面は違っても、実行する仕組みは<strong>同じresolve関数</strong>です。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>カードデータ</h3><p>名前・コスト・種類・値をまとめます。</p><code>Card{Name, Cost, Kind, Value}</code></article><article><span class="concept-number">2</span><h3>支払い</h3><p>エナジーが足りる時だけ使えます。</p><code>energy &gt;= card.Cost</code></article><article><span class="concept-number">3</span><h3>効果解決</h3><p>Kindで攻撃・防御・回復を選びます。</p><code>switch card.Kind</code></article></div><div class="motion-lab" data-lab="card-play" data-poor="エナジー不足" data-enemy="敵の攻撃" aria-labelledby="lab-title-play-a-card">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / RESOLVE</p>
@@ -42,7 +46,7 @@
 <span data-go-line="fx">apply(card)</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</div><div class="formula"><p class="eyebrow">THE PAY → BRANCH RULE</p><div class="formula-lines"><code>energy -= cost</code><span>つぎに</span><code>switch kind { damage / block / heal }</code></div><p>カードを増やすときはデータ1行。解決の仕組みは変えません。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>データを読んで命令へ変える</h3><p>カードごとに別関数を作らず、KindとValueを読みます。</p></div><pre><code>if energy &gt;= card.Cost { energy -= card.Cost; switch card.Kind { case "damage": enemyHP -= card.Value; case "block": block += card.Value; case "heal": hp += card.Value } }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY DATA?</p><h3>カードを増やしやすい</h3><p>新しい行を足すだけで別の数値を作れます。</p></article><article><p class="eyebrow">WHY COST?</p><h3>選ぶ理由が生まれる</h3><p>強いカードをいつ使うか考えます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>新しいKind</h3><p>2回攻撃するカードを考えてみよう。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../turn-energy/">STEP 02 →<strong>エナジー制ターン</strong></a></nav>
+</div><div class="formula"><p class="eyebrow">THE PAY → BRANCH RULE</p><div class="formula-lines"><code>energy -= cost</code><span>つぎに</span><code>switch kind { damage / block / heal }</code></div><p>カードを増やすときはデータ1行。解決の仕組みは変えません。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>データを読んで命令へ変える</h3><p>カードごとに別関数を作らず、KindとValueを読みます。</p></div><pre><code>if energy &gt;= card.Cost { energy -= card.Cost; switch card.Kind { case "damage": enemyHP -= card.Value; case "block": block += card.Value; case "heal": hp += card.Value } }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY DATA?</p><h3>カードを増やしやすい</h3><p>新しい行を足すだけで別の数値を作れます。</p></article><article><p class="eyebrow">WHY COST?</p><h3>選ぶ理由が生まれる</h3><p>強いカードをいつ使うか考えます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>新しいKind</h3><p>2回攻撃するカードを考えてみよう。</p></article></div></section><nav class="lesson-pager"><span></span><a href="../turn-energy/" rel="next">STEP 02 →<strong>エナジー制ターン</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -58,7 +62,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -66,6 +70,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

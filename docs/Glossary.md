@@ -4,6 +4,22 @@
 Go の書き方を、ゲーム内の例と結び付けるための索引です。まずは LEVEL 01
 の `Update` → `Draw` を読み、分からない単語だけをここで引いてください。
 
+## 用語の概念マップ
+
+まずは、ゲームの数字がどの箱を通って画面へ届くかを眺めます。矢印を左から
+右へ追うと、`Update` は状態を変え、`Draw` はその状態を絵にする、と分かります。
+ステージを増やすときは、ルールをGoに残し、変わる数字をJSONへ移します。
+
+```mermaid
+flowchart LR
+  update["Update<br/>数字を進める"] --> state["状態<br/>position / score"]
+  state --> draw["Draw<br/>絵を描く"]
+  draw --> geom["GeoM<br/>場所・回転"]
+  state --> data["JSON<br/>面を増やす"]
+```
+
+![Update・Draw・GeoM・JSONの関係図](../web/assets/diagrams/ja_glossary-map.svg)
+
 ## 1フレームと単位
 
 - **フレーム**: 画面を描き直す1コマ。Ebitengine の `Update` は通常およそ

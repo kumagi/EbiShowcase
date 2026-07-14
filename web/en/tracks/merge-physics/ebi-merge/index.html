@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Merge | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="A complete game combining preview, dropping, physics, merging, score, and danger line. Play the demo, read a short Go example, change a value, and apply the ide"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ebi Merge</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Merge | Ebi Showcase">
-    <meta property="og:description" content="A complete game combining preview, dropping, physics, merging, score, and danger line.">
+    <meta property="og:title" content="Ebi Showcase – Ebi Merge">
+    <meta property="og:description" content="A complete game combining preview, dropping, physics, merging, score, and danger line. Play the demo, read a short Go example, change a value, and apply the ide">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/merge-physics/ebi-merge/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--merge-physics--ebi-merge.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Merge | Ebi Showcase">
-    <meta name="twitter:description" content="A complete game combining preview, dropping, physics, merging, score, and danger line.">
+    <meta name="twitter:title" content="Ebi Showcase – Ebi Merge">
+    <meta name="twitter:description" content="A complete game combining preview, dropping, physics, merging, score, and danger line. Play the demo, read a short Go example, change a value, and apply the ide">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--merge-physics--ebi-merge.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Merge">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if a.tier==b.tier { merge(a,b); score+=value }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Create a TIER 7 fruit.</h2></div><p>Move the pointer and tap to drop.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Merge" src="../../../../play/ebi-merge/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GAME LOOP</p><h2>How does a physics experiment become a game?</h2><p class="lesson-lead">Preview fruit creates <strong>planning time</strong>, merges gain score, and height creates failure. Goals and choices turn physics into play.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Preview</h3><p>Show next and after so placement can be planned.</p><code>next, after</code></article><article><span class="concept-number">2</span><h3>Score</h3><p>Higher tiers use a squared point curve.</p><code>score += tier*tier*10</code></article><article><span class="concept-number">3</span><h3>Danger line</h3><p>A quiet fruit above the line for 180 frames ends play.</p><code>danger &gt;= 180</code></article></div><div class="motion-lab" data-lab="preview-next" data-enqueued="queued" data-dropped="drop T{n}" data-empty="empty" aria-labelledby="lab-title-ebi-merge">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / NEXT QUEUE</p>
@@ -42,7 +46,7 @@
 <span data-go-line="enq">queue = append(queue, randomTier())</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</div><div class="formula"><p class="eyebrow">PREVIEW ≠ BOARD</p><div class="formula-lines"><code>queue.front → spawn</code><span>then</span><code>keep queue off the board</code></div><p>Never mix preview into the board slice.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Put every system in one clear order</h3><p>Input, physics, merge, then danger makes results deterministic.</p></div><pre><code>readDropInput() / simulatePhysics() / replaceMergedPairs() / updateScoreAndDanger() / decideClearOrGameOver()</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY PREVIEW?</p><h3>Reduce pure luck</h3><p>Knowing next allows placement plans.</p></article><article><p class="eyebrow">WHY DELAY DANGER?</p><h3>Allow brief bounces</h3><p>Crossing the line for one frame is safe.</p></article><article class="challenge"><p class="eyebrow">TUNE IT</p><h3>Score curve</h3><p>Change square to cube to reward large merges more.</p></article></div></section><nav class="lesson-pager"><a href="../merge-rule/">← STEP 05<strong>Merge Rule</strong></a><a href="../">PATH COMPLETE →<strong>Merge Physics Puzzle</strong></a></nav>
+</div><div class="formula"><p class="eyebrow">PREVIEW ≠ BOARD</p><div class="formula-lines"><code>queue.front → spawn</code><span>then</span><code>keep queue off the board</code></div><p>Never mix preview into the board slice.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Put every system in one clear order</h3><p>Input, physics, merge, then danger makes results deterministic.</p></div><pre><code>readDropInput() / simulatePhysics() / replaceMergedPairs() / updateScoreAndDanger() / decideClearOrGameOver()</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY PREVIEW?</p><h3>Reduce pure luck</h3><p>Knowing next allows placement plans.</p></article><article><p class="eyebrow">WHY DELAY DANGER?</p><h3>Allow brief bounces</h3><p>Crossing the line for one frame is safe.</p></article><article class="challenge"><p class="eyebrow">TUNE IT</p><h3>Score curve</h3><p>Change square to cube to reward large merges more.</p></article></div></section><nav class="lesson-pager"><a href="../merge-rule/" rel="prev">← STEP 05<strong>Merge Rule</strong></a><a href="../" rel="next">PATH COMPLETE →<strong>Merge Physics Puzzle</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -58,7 +62,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -66,6 +70,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

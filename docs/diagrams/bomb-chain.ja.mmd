@@ -1,0 +1,10 @@
+flowchart LR
+  fuse["タイマー<br/>0まで減る"]
+  blast["十字爆風<br/>上下左右"]
+  wall["壊れる壁<br/>通路を開く"]
+  chain["別の爆弾<br/>即起爆"]
+  danger["危険マス<br/>逃げる"]
+  fuse --> blast
+  blast --> wall
+  wall --> chain
+  chain --> danger

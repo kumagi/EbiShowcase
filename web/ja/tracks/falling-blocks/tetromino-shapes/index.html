@@ -1,10 +1,11 @@
 <!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>4マスの形 | Ebi Showcase</title>
+<html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="4個のマスを中心からの相対座標で覚え、ばらばらにせず一つの形として落とします。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEb"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 4マスの形</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="4マスの形 | Ebi Showcase">
-    <meta property="og:description" content="4個のマスを中心からの相対座標で覚え、ばらばらにせず一つの形として落とします。">
+    <meta property="og:title" content="Ebi Showcase – 4マスの形">
+    <meta property="og:description" content="4個のマスを中心からの相対座標で覚え、ばらばらにせず一つの形として落とします。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEb">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/falling-blocks/tetromino-shapes/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--falling-blocks--tetromino-shapes.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -13,8 +14,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="4マスの形 | Ebi Showcase">
-    <meta name="twitter:description" content="4個のマスを中心からの相対座標で覚え、ばらばらにせず一つの形として落とします。">
+    <meta name="twitter:title" content="Ebi Showcase – 4マスの形">
+    <meta name="twitter:description" content="4個のマスを中心からの相対座標で覚え、ばらばらにせず一つの形として落とします。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEb">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--falling-blocks--tetromino-shapes.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="4マスの形">
     <!-- ogp:end -->
@@ -27,6 +28,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>相対座標は形の中心から何マスずれたかを表す座標。四つのずれを形データにすると、基準位置へ足すだけで4マスの形を置けます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>boardX := pieceX + cell.dx</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>4種類の形を点線のドックへ届けよう。</h2></div><p>左右ボタンまたは←→・A/Dで移動し、中央ボタンかSpaceですぐ落とします。3回外す前にI・O・T・Sの全部をぴったり置けばクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="4マスの形" src="../../../../play/tetromino-shapes/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RELATIVE COORDINATES</p><h2>形は「親の場所＋4個のずれ」で動かせる。</h2><p class="lesson-lead">4個それぞれの画面座標を動かすと、途中で離れてしまうかもしれません。そこで形に一つの基準点 <code>(x, y)</code> を持たせ、各マスはそこからの<strong>ずれ</strong>だけを覚えます。親を1マス動かせば、4個が同時に動きます。</p></div>
@@ -59,7 +63,7 @@ for _, offset := range shape.blocks {
     drawCell(boardX, boardY)
 }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY RELATIVE?</p><h3>一つの物体として動く</h3><p>親だけを動かすので、4マスの間隔はいつでも同じです。</p></article><article><p class="eyebrow">WHY DATA?</p><h3>ルールを使い回せる</h3><p>I形でもT形でも、同じループで描画と壁判定ができます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>座標を回す</h3><p><code>(x,y)</code>を<code>(-y,x)</code>へ変えて、形を90度回してみよう。</p></article></div>
-</section><nav class="lesson-pager"><a href="../falling-cell/">← STEP 01<strong>1マスを落とす</strong></a><a href="../rotation-kicks/">STEP 03 →<strong>回転と壁ぎわ補正</strong></a></nav>
+</section><nav class="lesson-pager"><a href="../falling-cell/" rel="prev">← STEP 01<strong>1マスを落とす</strong></a><a href="../rotation-kicks/" rel="next">STEP 03 →<strong>回転と壁ぎわ補正</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -75,7 +79,7 @@ for _, offset := range shape.blocks {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -83,6 +87,19 @@ for _, offset := range shape.blocks {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

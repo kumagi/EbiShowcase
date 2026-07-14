@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>回転と壁ぎわ補正 | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="4マスの座標を90度回し、壁や床にぶつかったときは少しずらした置き場所を順番に試します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 回転と壁ぎわ補正</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="回転と壁ぎわ補正 | Ebi Showcase">
-    <meta property="og:description" content="4マスの座標を90度回し、壁や床にぶつかったときは少しずらした置き場所を順番に試します。">
+    <meta property="og:title" content="Ebi Showcase – 回転と壁ぎわ補正">
+    <meta property="og:description" content="4マスの座標を90度回し、壁や床にぶつかったときは少しずらした置き場所を順番に試します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/falling-blocks/rotation-kicks/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--falling-blocks--rotation-kicks.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="回転と壁ぎわ補正 | Ebi Showcase">
-    <meta name="twitter:description" content="4マスの座標を90度回し、壁や床にぶつかったときは少しずらした置き場所を順番に試します。">
+    <meta name="twitter:title" content="Ebi Showcase – 回転と壁ぎわ補正">
+    <meta name="twitter:description" content="4マスの座標を90度回し、壁や床にぶつかったときは少しずらした置き場所を順番に試します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--falling-blocks--rotation-kicks.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="回転と壁ぎわ補正">
     <!-- ogp:end -->
@@ -23,6 +24,10 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>座標回転は(dx,dy)を(-dy,dx)へ替えること。壁蹴り候補は回転後に重なった時のずらし案で、0、左1、右1、左2、右2を順に試します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>rotatedDX,rotatedDY := -dy,dx</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_falling-blocks.svg" alt="落ちものの一手" loading="lazy" decoding="async"><figcaption>落ちものの一手の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>回転8回、そのうち壁蹴り3回を成功させよう。</h2></div><p>左右ボタンで壁へ近づき、ROTATEで回転。8個のブロックを置く前に達成します。キーボードは←→、↑/Z、↓です。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="回転と壁ぎわ補正" src="../../../../play/rotation-kicks/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ROTATE THEN TEST</p><h2>回してから、「ここに置ける？」を調べる。</h2><p class="lesson-lead">ブロックの中心を原点(0, 0)と考えると、マス(x, y)を右へ90度回した場所は(-y, x)です。ただし回転後に壁へめり込むことがあります。そこで<strong>ずらす候補</strong>を小さい順に試します。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>4マスを同じ式で回す</h3><p>T字もL字も「中心から何マス離れたか」の4座標です。それぞれへ同じ変換を使います。</p><code>rotated = point{-p.y, p.x}</code></article><article><span class="concept-number">2</span><h3>候補を順番に試す</h3><p>まず移動なし。だめなら左1、右1、左2、右2、上1。最初に衝突しない候補を採用します。</p><code>kicks := []point{{0,0}, {-1,0}, {1,0}}</code></article><article><span class="concept-number">3</span><h3>全部だめなら回さない</h3><p>候補を全部調べても壁・床・積んだマスに重なるなら、位置も向きも元のままにします。</p><code>if noCandidate { return }</code></article></div><div class="motion-lab" data-lab="kick-try" data-kicks="0,0;1,0;-1,0;0,-1" data-ok="kick ({dx},{dy}) OK" data-blocked="kick ({dx},{dy}) 壁" data-fail="全部失敗→キャンセル" aria-labelledby="lab-title-rotation-kicks">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / WALL KICKS</p>
@@ -50,7 +55,7 @@ for _, kick := range kickTests {
         rotation = nextRotation
         break
     }
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY CENTER?</p><h3>形ごとの式がいらない</h3><p>中心からの座標で形を表すと、T字にもL字にも同じ回転計算を使えます。</p></article><article><p class="eyebrow">WHY ORDER?</p><h3>勝手な大移動を防ぐ</h3><p>移動なしから試すので、必要なときだけ最小の壁蹴りが選ばれます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>反時計回りも追加</h3><p>(x, y)→(y, -x)を使い、反対回転用のボタンと候補表を作ろう。</p></article></div></section><nav class="lesson-pager"><a href="../tetromino-shapes/">← STEP 02<strong>4マスの形</strong></a><a href="../lock-lines/">STEP 04 →<strong>固定とライン消去</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY CENTER?</p><h3>形ごとの式がいらない</h3><p>中心からの座標で形を表すと、T字にもL字にも同じ回転計算を使えます。</p></article><article><p class="eyebrow">WHY ORDER?</p><h3>勝手な大移動を防ぐ</h3><p>移動なしから試すので、必要なときだけ最小の壁蹴りが選ばれます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>反時計回りも追加</h3><p>(x, y)→(y, -x)を使い、反対回転用のボタンと候補表を作ろう。</p></article></div></section><nav class="lesson-pager"><a href="../tetromino-shapes/" rel="prev">← STEP 02<strong>4マスの形</strong></a><a href="../lock-lines/" rel="next">STEP 04 →<strong>固定とライン消去</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -66,7 +71,7 @@ for _, kick := range kickTests {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -74,6 +79,19 @@ for _, kick := range kickTests {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

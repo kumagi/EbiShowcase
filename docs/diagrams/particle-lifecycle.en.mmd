@@ -1,0 +1,8 @@
+flowchart LR
+  emit["emit<br/>position / velocity"]
+  move["move<br/>x += vx"]
+  fade["fade<br/>alpha--"]
+  remove["life=0<br/>remove from list"]
+  emit --> move
+  move --> fade
+  fade --> remove

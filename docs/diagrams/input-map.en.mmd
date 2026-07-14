@@ -1,0 +1,8 @@
+flowchart LR
+  keyboard["← ↑ ↓ →<br/>keyboard"]
+  touch["tap the screen<br/>touch"]
+  action["same action<br/>move / fire"]
+  state["Update<br/>change state"]
+  keyboard --> action
+  touch --> action
+  action --> state

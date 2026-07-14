@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="Without drawing another frame, squash Ebi Tenjiroh before a jump and stretch on takeoff. Anchor the feet instead of the center so the body f">
-  <title>Squash & Stretch | Ebi Showcase</title>
+  <title>Ebi Showcase – Squash &amp; Stretch</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-squash/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Squash &amp; Stretch | Ebi Showcase">
+    <meta property="og:title" content="Ebi Showcase – Squash &amp; Stretch">
     <meta property="og:description" content="Without drawing another frame, squash Ebi Tenjiroh before a jump and stretch on takeoff. Anchor the feet instead of the center so the body f">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-squash/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-squash.png?v=20260713-font1">
@@ -19,7 +19,7 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Squash &amp; Stretch | Ebi Showcase">
+    <meta name="twitter:title" content="Ebi Showcase – Squash &amp; Stretch">
     <meta name="twitter:description" content="Without drawing another frame, squash Ebi Tenjiroh before a jump and stretch on takeoff. Anchor the feet instead of the center so the body f">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-squash.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Squash &amp; Stretch">
@@ -47,7 +47,11 @@
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_easing-curve.svg" alt="Make motion feel good with easing" loading="lazy" decoding="async"><figcaption>A visual map of Make motion feel good with easing. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Switch the body shape</h2></div>
         <p>Compare squash, neutral, and stretch while the feet stay planted.</p>
@@ -132,8 +136,8 @@ screen.DrawImage(sprite, op)</code></pre>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-magic-dark/">← STEP 13<strong>Make Cool Dark Magic</strong></a>
-      <a href="../vfx-outline/">STEP 15 →<strong>Outline with Repeated Draws</strong></a>
+      <a href="../vfx-magic-dark/" rel="prev">← STEP 13<strong>Make Cool Dark Magic</strong></a>
+      <a href="../vfx-outline/" rel="next">STEP 15 →<strong>Outline with Repeated Draws</strong></a>
     </nav>
 
 
@@ -150,7 +154,7 @@ screen.DrawImage(sprite, op)</code></pre>
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

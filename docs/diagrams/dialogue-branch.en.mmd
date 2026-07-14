@@ -1,0 +1,9 @@
+flowchart LR
+  line["dialogue<br/>chapter.json"]
+  choice["choices<br/>A / B"]
+  flag["flag<br/>trust += 1"]
+  next["next line<br/>branch"]
+  line --> choice
+  choice --> flag
+  flag --> next
+  next --> line

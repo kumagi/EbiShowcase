@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="description" content="Clear, let pieces fall, then search again after the board settles. Each consecutive clear becomes the score multiplier. Play the demo, read a short Go example,">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Chain Scoring Lab | Ebi Showcase</title>
+  <title>Ebi Showcase – Chain Scoring Lab</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Chain Scoring Lab | Ebi Showcase">
-    <meta property="og:description" content="Clear, let pieces fall, then search again after the board settles. Each consecutive clear becomes the score multiplier.">
+    <meta property="og:title" content="Ebi Showcase – Chain Scoring Lab">
+    <meta property="og:description" content="Clear, let pieces fall, then search again after the board settles. Each consecutive clear becomes the score multiplier. Play the demo, read a short Go example,">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/falling-pairs/chain-score/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--falling-pairs--chain-score.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Chain Scoring Lab | Ebi Showcase">
-    <meta name="twitter:description" content="Clear, let pieces fall, then search again after the board settles. Each consecutive clear becomes the score multiplier.">
+    <meta name="twitter:title" content="Ebi Showcase – Chain Scoring Lab">
+    <meta name="twitter:description" content="Clear, let pieces fall, then search again after the board settles. Each consecutive clear becomes the score multiplier. Play the demo, read a short Go example,">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--falling-pairs--chain-score.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Chain Scoring Lab">
     <!-- ogp:end -->
@@ -43,7 +44,10 @@
 
 <p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Build three 2-chains</h2></div><p>Choose a plan with keys 1–3, a click, or a tap. Watch the outlined group clear and the whole board get searched again after gravity.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Play Chain Scoring Lab" src="../../../../play/chain-score/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -89,7 +93,7 @@ case falling:
       <div class="why-grid"><article><h3>Why separate phases?</h3><p>Clear stages make intermediate results visible and tell you exactly where a bug entered the loop.</p></article><article><h3>When should score be added?</h3><p>Add it when a group is found. <code>cells × 10 × chain</code> makes later clears more valuable.</p></article><article><h3>Challenge</h3><p>Try a squared multiplier or a bonus for two groups clearing together, then compare how planning changes.</p></article></div>
     </section>
 
-    <nav class="lesson-pager"><a href="../clear-gravity/">← STEP 04<strong>Clear and Drop</strong></a><a href="../ebi-chain/">STEP 06 →<strong>Ebi Chain</strong></a></nav>
+    <nav class="lesson-pager"><a href="../clear-gravity/" rel="prev">← STEP 04<strong>Clear and Drop</strong></a><a href="../ebi-chain/" rel="next">STEP 06 →<strong>Ebi Chain</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -105,7 +109,7 @@ case falling:
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -113,6 +117,19 @@ case falling:
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

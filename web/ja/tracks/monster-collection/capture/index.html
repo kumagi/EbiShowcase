@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>捕獲チャレンジ | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="残りHP、SLEEP、道具から捕獲率を計算し、成功した個体を空いている所持枠へ保存します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 捕獲チャレンジ</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="捕獲チャレンジ | Ebi Showcase">
-    <meta property="og:description" content="残りHP、SLEEP、道具から捕獲率を計算し、成功した個体を空いている所持枠へ保存します。">
+    <meta property="og:title" content="Ebi Showcase – 捕獲チャレンジ">
+    <meta property="og:description" content="残りHP、SLEEP、道具から捕獲率を計算し、成功した個体を空いている所持枠へ保存します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/monster-collection/capture/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--monster-collection--capture.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="捕獲チャレンジ | Ebi Showcase">
-    <meta name="twitter:description" content="残りHP、SLEEP、道具から捕獲率を計算し、成功した個体を空いている所持枠へ保存します。">
+    <meta name="twitter:title" content="Ebi Showcase – 捕獲チャレンジ">
+    <meta name="twitter:description" content="残りHP、SLEEP、道具から捕獲率を計算し、成功した個体を空いている所持枠へ保存します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--monster-collection--capture.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="捕獲チャレンジ">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>60%は正解でなく調整値。HPが少ないほど成功率を上げ、0〜99の乱数が確率未満なら捕獲です。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>chance := 25 + (maxHP-hp)*60/maxHP</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>HPと道具を守りながら3体を捕獲しよう。</h2></div><p>GENTLE HITでHPを下げ、SLEEPを付け、捕獲率を見てBASIC/REEF ORBを選びます。クリック/タップ、または1〜4。失敗は反撃と道具消費です。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="捕獲チャレンジ" src="../../../../play/capture/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / VISIBLE PROBABILITY</p><h2>運だけにせず、準備したぶん確率を上げる。</h2><p class="lesson-lead">捕獲率はいつも画面に見えます。基本15%へ、減ったHPから最大55%、SLEEPなら20%、REEF ORBなら15%を足します。最後に0〜99の<strong>roll</strong>が確率より小さいかを比べます。</p><p><strong>注意（整数の割り算）:</strong> <code>(maxHP-wildHP)*55/maxHP</code> のように<strong>先に掛け算してから割る</strong>必要があります。逆に <code>(maxHP-wildHP)/maxHP*55</code> と書くと、Goの整数どうしの割り算で途中が 0 になり、ボーナスがいつも 0 になります。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>今の条件から確率を作る</h3><p>HP100ならボーナス0。HP20なら44。SLEEPや道具も足し、強すぎないよう最大95%で止めます。</p><code>chance = min(95, 15+hpBonus+status+item)</code></article><article><span class="concept-number">2</span><h3>乱数を一度だけ引く</h3><p>rollがchance未満なら成功です。画面へ両方を出すと、「79 &lt; 84だから成功」のように結果を説明できます。</p><code>captured := rng.Intn(100) &lt; chance</code></article><article><span class="concept-number">3</span><h3>成功と失敗でデータを分ける</h3><p>成功はstorageへ名前を追加。失敗は道具だけ消え、SLEEPが解けて反撃を受けます。どちらも同じ状態にはしません。</p><code>storage = append(storage, wild.name)</code></article></div><div class="motion-lab" data-lab="capture-roll" data-caught="成功！ {r} &lt; {p}%" data-missed="失敗… {r} ≥ {p}%" data-weakened="HP {hp} → 率アップ" data-slept="SLEEP +20%" data-orbed="ORB +15%" data-rate="35" data-baited="エサ" data-caught="捕獲成功 ({r})" data-missed="逃げられた ({r})" aria-labelledby="lab-title-capture">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / CATCH RATE</p>
@@ -50,7 +54,7 @@
 
 if rng.Intn(100) &lt; captureChance() {
     storage = append(storage, wildName)
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY SHOW THE FORMULA?</p><h3>次の作戦を考えられる</h3><p>どの条件が何%増やしたか見えれば、攻撃をもう1回するか、強い道具を使うかを選べます。</p></article><article><p class="eyebrow">WHY FAILURE RISK?</p><h3>投げどきを選ぶ</h3><p>失敗で反撃と道具消費があるため、低確率で何度も試すだけでは勝ちにくくなります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>種族ごとの捕まりやすさ</h3><p>speciesへbaseRateを追加し、珍しい種族は基本値を低くするデータ設計を考えよう。</p></article></div></section><nav class="lesson-pager"><a href="../party-switch/">← STEP 04<strong>パーティと交代</strong></a><a href="../growth-evolution/">STEP 06 →<strong>経験値と進化</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY SHOW THE FORMULA?</p><h3>次の作戦を考えられる</h3><p>どの条件が何%増やしたか見えれば、攻撃をもう1回するか、強い道具を使うかを選べます。</p></article><article><p class="eyebrow">WHY FAILURE RISK?</p><h3>投げどきを選ぶ</h3><p>失敗で反撃と道具消費があるため、低確率で何度も試すだけでは勝ちにくくなります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>種族ごとの捕まりやすさ</h3><p>speciesへbaseRateを追加し、珍しい種族は基本値を低くするデータ設計を考えよう。</p></article></div></section><nav class="lesson-pager"><a href="../party-switch/" rel="prev">← STEP 04<strong>パーティと交代</strong></a><a href="../growth-evolution/" rel="next">STEP 06 →<strong>経験値と進化</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -66,7 +70,7 @@ if rng.Intn(100) &lt; captureChance() {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -74,6 +78,19 @@ if rng.Intn(100) &lt; captureChance() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

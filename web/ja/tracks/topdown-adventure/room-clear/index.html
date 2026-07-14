@@ -1,0 +1,49 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 全滅すると開く3つの部屋</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/topdown-adventure/room-clear/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – 全滅すると開く3つの部屋">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/topdown-adventure/room-clear/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--topdown-adventure--room-clear.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="全滅すると開く3つの部屋">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – 全滅すると開く3つの部屋">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--topdown-adventure--room-clear.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="全滅すると開く3つの部屋">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/topdown-adventure/room-clear/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 見下ろし型アクションアドベンチャー</a><span>STEP 04 / 08</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>全滅すると開く3つの部屋</h1><p>部屋へ入ると出口を閉じ、敵の残りが0になった時だけ次の部屋へ進めます。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play-panel"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>全滅すると開く3つの部屋</h2><p>矢印/WASDまたは画面ボタンで移動。X/SpaceまたはATTACKで攻撃、Q/TOOLで道具を変更します。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/room-clear/" title="全滅すると開く3つの部屋" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>全滅すると開く3つの部屋</h2><p>部屋はLocked、Fight、Clearedの状態を持ちます。敵を倒すたびに残数を減らし、最後の1体でClearedへ切り替えるため、扉と戦闘のルールが混ざりません。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>入室時にFightへ切り替える</p></article><article><b>02</b><h3>UPDATE</h3><p>敵の残数を部屋状態で数える</p></article><article><b>03</b><h3>GOAL</h3><p>Clearedだけが次の部屋を読み込む</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM DIAGRAM / TRY IT</p><h2>敵の残数を部屋状態で数える</h2><p>部屋はLocked、Fight、Clearedの状態を持ちます。敵を倒すたびに残数を減らし、最後の1体でClearedへ切り替えるため、扉と戦闘のルールが混ざりません。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">INPUT</p><button type="button" class="lab-action">NEXT</button></div></section><section class="formula"><p class="eyebrow">STATE FLOW</p><div class="formula-lines"><code>input</code><span>→</span><code>update state</code><span>→</span><code>resolve result</code><span>→</span><code>draw feedback</code></div><p>Clearedだけが次の部屋を読み込む</p></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>敵の残数を部屋状態で数える</h2><p>部屋へ入ると出口を閉じ、敵の残りが0になった時だけ次の部屋へ進めます。</p></div><pre><code>room.EnemyDefeated()
+if room.Phase == RoomCleared {
+    loadRoom(roomIndex + 1)
+}</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>部屋はLocked、Fight、Clearedの状態を持ちます。敵を倒すたびに残数を減らし、最後の1体でClearedへ切り替えるため、扉と戦闘のルールが混ざりません。</p></article><article><h3>CHANGE</h3><p>Clearedだけが次の部屋を読み込む</p></article><article><h3>CHALLENGE</h3><p>数値かデータを1つ変えて、新しい部屋の遊びを作ろう。</p></article></section><nav class="lesson-pager"><a href="../hurt-recovery/" rel="prev">← PREV<strong>ノックバックと無敵時間</strong></a><a href="../key-treasure/" rel="next">NEXT →<strong>鍵・扉・宝箱をつなぐ</strong></a></nav>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/topdown-adventure/room-clear/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

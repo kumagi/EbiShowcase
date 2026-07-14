@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+  <meta name="description" content="Move one cell down at fixed intervals, then lock into the board when the floor or another cell is below. Play the demo, read a short Go example, change a value,">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Drop One Cell | Ebi Showcase</title>
+<title>Ebi Showcase – Drop One Cell</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Drop One Cell | Ebi Showcase">
-    <meta property="og:description" content="Move one cell down at fixed intervals, then lock into the board when the floor or another cell is below.">
+    <meta property="og:title" content="Ebi Showcase – Drop One Cell">
+    <meta property="og:description" content="Move one cell down at fixed intervals, then lock into the board when the floor or another cell is below. Play the demo, read a short Go example, change a value,">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/falling-blocks/falling-cell/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--falling-blocks--falling-cell.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Drop One Cell | Ebi Showcase">
-    <meta name="twitter:description" content="Move one cell down at fixed intervals, then lock into the board when the floor or another cell is below.">
+    <meta name="twitter:title" content="Ebi Showcase – Drop One Cell">
+    <meta name="twitter:description" content="Move one cell down at fixed intervals, then lock into the board when the floor or another cell is below. Play the demo, read a short Go example, change a value,">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--falling-blocks--falling-cell.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Drop One Cell">
     <!-- ogp:end -->
@@ -53,6 +54,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>timer++; if timer>=fallInterval { row++; timer=0 }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play">
 <div class="section-head">
 <div>
@@ -157,7 +161,7 @@ if timer &gt;= dropFrames {
 <nav class="lesson-pager">
 <span>
 </span>
-<a href="../tetromino-shapes/">STEP 02 →<strong>Four-cell Shapes</strong>
+<a href="../tetromino-shapes/" rel="next">STEP 02 →<strong>Four-cell Shapes</strong>
 </a>
 </nav>
 
@@ -175,7 +179,7 @@ if timer &gt;= dropFrames {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -183,6 +187,19 @@ if timer &gt;= dropFrames {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

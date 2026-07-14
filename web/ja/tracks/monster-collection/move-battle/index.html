@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>技を選ぶバトル | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="威力、命中率、回数、優先度を持つ技を選び、行動の順番を作って一つずつ解決します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のE"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 技を選ぶバトル</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="技を選ぶバトル | Ebi Showcase">
-    <meta property="og:description" content="威力、命中率、回数、優先度を持つ技を選び、行動の順番を作って一つずつ解決します。">
+    <meta property="og:title" content="Ebi Showcase – 技を選ぶバトル">
+    <meta property="og:description" content="威力、命中率、回数、優先度を持つ技を選び、行動の順番を作って一つずつ解決します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のE">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/monster-collection/move-battle/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--monster-collection--move-battle.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="技を選ぶバトル | Ebi Showcase">
-    <meta name="twitter:description" content="威力、命中率、回数、優先度を持つ技を選び、行動の順番を作って一つずつ解決します。">
+    <meta name="twitter:title" content="Ebi Showcase – 技を選ぶバトル">
+    <meta name="twitter:description" content="威力、命中率、回数、優先度を持つ技を選び、行動の順番を作って一つずつ解決します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のE">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--monster-collection--move-battle.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="技を選ぶバトル">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>一ターンをPlayerMove→PlayerAttack→EnemyMove→EnemyAttackのphaseで進め、各phaseが終わるまで次を動かしません。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>phase = PlayerMove</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>限られた技でGloomfinのHPを0にしよう。</h2></div><p>技カードをクリックまたはタップ。キーボードは1〜4です。3ターンごとのABYSS ROARには先制ガードを合わせ、高威力低命中と確実な技を使い分けます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="技を選ぶバトル" src="../../../../play/move-battle/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / MOVE DATA AND ORDER</p><h2>「技を選ぶ」と「効果を起こす」の間に、順番を作る。</h2><p class="lesson-lead">技は名前だけではなく、威力power、命中accuracy、残り回数uses、先に動きやすいpriorityを持つデータです。両者の選択を<strong>actionキュー</strong>へ入れ、並べてから一つずつ取り出すと、表示とHP変化が混ざりません。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>技をデータで比べる</h3><p>REEF BURSTは威力42でも命中70%、JET PINCHは威力18で必ず命中。回数も違うため、いつ使うかが選択になります。</p><code>moveData{power:42, accuracy:70, maxUses:3}</code></article><article><span class="concept-number">2</span><h3>2行動を順番へ並べる</h3><p>priorityが大きい技を先へ。同じなら素早さ12と10を比べます。SHELL GUARDはpriority 3なので攻撃前に守れます。</p><code>sort.SliceStable(actions, byPriorityThenSpeed)</code></article><article><span class="concept-number">3</span><h3>命中してから効果を出す</h3><p>0〜99の乱数がaccuracy未満なら命中。攻撃はHPを減らし、ガードは次のダメージを半分、回復はHPを戻します。</p><code>hit := rng.Intn(100) &lt; move.accuracy</code></article></div><div class="motion-lab" data-lab="turn" data-states="技選択,順番作成,1番目の行動,2番目の行動,勝敗確認" aria-labelledby="move-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / ACTION QUEUE</p><h3 id="move-lab-title">ターンを一段階ずつ進めよう</h3><p>技を選んだ直後にHPを変えません。順番を作り、1番目、2番目、勝敗の順に進めます。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="next act">次の段階</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board role="img" aria-label="技選択から勝敗確認までの順番"></div><div class="lab-values"><div><span>現在</span><strong data-lab-state>技選択</strong></div><div><span>データ</span><strong>action queue</strong></div><div><span>進め方</span><strong>1つずつ</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -40,7 +44,7 @@ func resolveNext() {
     if rng.Intn(100) &lt; current.move.accuracy {
         apply(current.move)
     }
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY USES?</p><h3>強い技を考えて使う</h3><p>何度でも使えると一番強い技だけでよくなります。残り回数が、今使うか残すかの作戦を生みます。</p></article><article><p class="eyebrow">WHY A QUEUE?</p><h3>同時に見せない</h3><p>行動を保存して順番に解決すると、メッセージ、アニメーション、HP変化を一つずつ見せられます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>すばやさを変える技</h3><p>3ターンspeedを5上げる効果を追加し、次のターンの並び替え結果が変わるようにしよう。</p></article></div></section><nav class="lesson-pager"><a href="../species-data/">← STEP 01<strong>1体をデータで作る</strong></a><a href="../type-matchup/">STEP 03 →<strong>タイプ相性研究所</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY USES?</p><h3>強い技を考えて使う</h3><p>何度でも使えると一番強い技だけでよくなります。残り回数が、今使うか残すかの作戦を生みます。</p></article><article><p class="eyebrow">WHY A QUEUE?</p><h3>同時に見せない</h3><p>行動を保存して順番に解決すると、メッセージ、アニメーション、HP変化を一つずつ見せられます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>すばやさを変える技</h3><p>3ターンspeedを5上げる効果を追加し、次のターンの並び替え結果が変わるようにしよう。</p></article></div></section><nav class="lesson-pager"><a href="../species-data/" rel="prev">← STEP 01<strong>1体をデータで作る</strong></a><a href="../type-matchup/" rel="next">STEP 03 →<strong>タイプ相性研究所</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -56,7 +60,7 @@ func resolveNext() {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -64,6 +68,19 @@ func resolveNext() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

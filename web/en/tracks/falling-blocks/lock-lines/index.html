@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+  <meta name="description" content="Merge the falling shape into the board, remove full rows, and compact above. Play the demo, read a short Go example, change a value, and apply the idea to your">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Lock and Clear Lines | Ebi Showcase</title>
+<title>Ebi Showcase – Lock and Clear Lines</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Lock and Clear Lines | Ebi Showcase">
-    <meta property="og:description" content="Merge the falling shape into the board, remove full rows, and compact above.">
+    <meta property="og:title" content="Ebi Showcase – Lock and Clear Lines">
+    <meta property="og:description" content="Merge the falling shape into the board, remove full rows, and compact above. Play the demo, read a short Go example, change a value, and apply the idea to your">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/falling-blocks/lock-lines/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--falling-blocks--lock-lines.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Lock and Clear Lines | Ebi Showcase">
-    <meta name="twitter:description" content="Merge the falling shape into the board, remove full rows, and compact above.">
+    <meta name="twitter:title" content="Ebi Showcase – Lock and Clear Lines">
+    <meta name="twitter:description" content="Merge the falling shape into the board, remove full rows, and compact above. Play the demo, read a short Go example, change a value, and apply the idea to your">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--falling-blocks--lock-lines.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Lock and Clear Lines">
     <!-- ogp:end -->
@@ -53,6 +54,10 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>lockPiece(); copy(board[1:y+1],board[0:y])</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_falling-blocks.svg" alt="One move of falling blocks" loading="lazy" decoding="async"><figcaption>A visual map of One move of falling blocks. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Complete four rows with two-cell pieces.</h2></div><p>Move with ← → or the screen buttons. Drop with ↓ or Space. Filling each two-cell gap clears its row.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Lock and Clear Lines" src="../../../../play/lock-lines/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / LOCK AND COMPACT</p><h2>Copy the moving piece into the board, then remove every full row.</h2><p class="lesson-lead">The instant a piece lands, its two cells are <strong>locked into board</strong>. Then inspect every row, skip full rows, and copy every row worth keeping downward.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Detect landing</h3><p>If the next cell is the floor or occupied, the piece cannot descend. Write it into the board array, not only onto the screen.</p><code>board[y][x] = true</code></article><article><span class="concept-number">2</span><h3>Find full rows</h3><p>Keep a row if even one cell is empty. Only a row with all eight cells set to true counts as cleared.</p><code>full = full &amp;&amp; board[y][x]</code></article><article><span class="concept-number">3</span><h3>Compact kept rows</h3><p>Use read for the inspected row and write for its destination. Skip full rows and copy only the others downward.</p><code>board[write] = board[read]</code></article></div>
@@ -83,9 +88,9 @@ for read := rows - 1; read &gt;= 0; read-- {
 for write &gt;= 0 { board[write] = emptyRow; write-- }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY LOCK FIRST?</p><h3>Count the completed row</h3><p>If you scan first, the falling piece's final two cells are still missing.</p></article><article><p class="eyebrow">WHY BOTTOM-UP?</p><h3>Avoid overwriting rows</h3><p>Writing from the bottom never destroys an upper row that has not been read yet.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Score simultaneous clears</h3><p>Award 100 for one row but 300 for two cleared together.</p></article></div></section>
 <nav class="lesson-pager">
-<a href="../rotation-kicks/">← STEP 03<strong>Rotation and Wall Kicks</strong>
+<a href="../rotation-kicks/" rel="prev">← STEP 03<strong>Rotation and Wall Kicks</strong>
 </a>
-<a href="../bag-hold-ghost/">STEP 05 →<strong>Bag, Hold, and Ghost</strong>
+<a href="../bag-hold-ghost/" rel="next">STEP 05 →<strong>Bag, Hold, and Ghost</strong>
 </a>
 </nav>
 
@@ -103,7 +108,7 @@ for write &gt;= 0 { board[write] = emptyRow; write-- }</code></pre></div>
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -111,6 +116,19 @@ for write &gt;= 0 { board[write] = emptyRow; write-- }</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

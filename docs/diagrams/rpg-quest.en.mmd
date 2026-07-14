@@ -1,0 +1,9 @@
+flowchart LR
+  event["event<br/>talk / defeat"]
+  condition["condition<br/>flag / item"]
+  flag["progress flag<br/>state"]
+  reward["reward<br/>next goal"]
+  event --> condition
+  condition --> flag
+  flag --> reward
+  reward --> event

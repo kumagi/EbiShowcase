@@ -1,0 +1,9 @@
+flowchart LR
+  swap["swap<br/>two cells"]
+  find["three or more?<br/>match"]
+  clear["clear<br/>score++"]
+  fall["fall<br/>fill gaps"]
+  swap --> find
+  find --> clear
+  clear --> fall
+  fall --> find

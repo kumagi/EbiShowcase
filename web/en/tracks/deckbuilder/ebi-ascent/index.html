@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Ascent | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="The path finale combines card battles, rewards, and routes into one three-floor run. Play the demo, read a short Go example, change a value, and apply the idea"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ebi Ascent</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Ascent | Ebi Showcase">
-    <meta property="og:description" content="The path finale combines card battles, rewards, and routes into one three-floor run.">
+    <meta property="og:title" content="Ebi Showcase – Ebi Ascent">
+    <meta property="og:description" content="The path finale combines card battles, rewards, and routes into one three-floor run. Play the demo, read a short Go example, change a value, and apply the idea">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/deckbuilder/ebi-ascent/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--ebi-ascent.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Ascent | Ebi Showcase">
-    <meta name="twitter:description" content="The path finale combines card battles, rewards, and routes into one three-floor run.">
+    <meta name="twitter:title" content="Ebi Showcase – Ebi Ascent">
+    <meta name="twitter:description" content="The path finale combines card battles, rewards, and routes into one three-floor run. Play the demo, read a short Go example, change a value, and apply the idea">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--ebi-ascent.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Ascent">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>switch phase { case Battle: updateBattle() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Grow your deck and defeat the king of the deep.</h2></div><p>Battle with 1–5 and E; choose rewards and routes by number or tap. Defeat all three enemies to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>FINAL STEP</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Ascent" src="../../../../play/ebi-ascent/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GAME COMPOSITION</p><h2>A large game is still a chain of small screens.</h2><p class="lesson-lead">Switch battle, reward, and route selection with a <strong>phase that names the current scene</strong>. Deck, HP, and floor remain in one game struct across scenes, turning them into one journey.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Separate scenes</h3><p>Battle reads card input, Reward reads three choices, and Route reads two. The phase gives the same tap one clear meaning.</p><code>switch phase { case Battle: ... }</code></article><article><span class="concept-number">2</span><h3>Choose shared data</h3><p>HP, deck, and floor belong to the whole run. Energy and block reset for each battle.</p><code>type game struct { deck []card; floor int }</code></article><article><span class="concept-number">3</span><h3>Join exits to entrances</h3><p>Winning opens Reward, choosing a reward opens Route, and choosing a route starts the next Battle.</p><code>phase = phaseReward</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="map,battle,reward,rest" data-loop="next floor" aria-labelledby="lab-title-ebi-ascent">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / RUN LOOP</p>
@@ -49,7 +53,7 @@ case phaseReward:
     chooseReward()
 case phaseRoute:
     chooseRoute()
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ONE GAME?</p><h3>Choices persist</h3><p>Cards you chose and HP you lost continue into battle, creating a story for each run.</p></article><article><p class="eyebrow">WHY DATA TABLES?</p><h3>Add enemies and cards</h3><p>Extend encounters and rewards without changing the game systems.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Save a run</h3><p>Design JSON containing phase, floor, HP, and deck so a run can resume later.</p></article></div></section><nav class="lesson-pager"><a href="../branching-map/">← STEP 06<strong>Journey Through a Branching Map</strong></a><a href="../">BACK TO PATH →<strong>Deckbuilding Card Game</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ONE GAME?</p><h3>Choices persist</h3><p>Cards you chose and HP you lost continue into battle, creating a story for each run.</p></article><article><p class="eyebrow">WHY DATA TABLES?</p><h3>Add enemies and cards</h3><p>Extend encounters and rewards without changing the game systems.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Save a run</h3><p>Design JSON containing phase, floor, HP, and deck so a run can resume later.</p></article></div></section><nav class="lesson-pager"><a href="../branching-map/" rel="prev">← STEP 06<strong>Journey Through a Branching Map</strong></a><a href="../" rel="next">BACK TO PATH →<strong>Deckbuilding Card Game</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -65,7 +69,7 @@ case phaseRoute:
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -73,6 +77,19 @@ case phaseRoute:
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

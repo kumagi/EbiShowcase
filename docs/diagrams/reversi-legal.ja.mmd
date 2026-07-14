@@ -1,0 +1,8 @@
+flowchart LR
+  candidate["空きマス<br/>置いてみる"]
+  ray["8方向へ<br/>隣を調べる"]
+  bracket["相手の列<br/>自分で閉じる"]
+  flip["合法手<br/>石を反転"]
+  candidate --> ray
+  ray --> bracket
+  bracket --> flip

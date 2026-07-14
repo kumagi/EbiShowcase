@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Stop a moving meter and learn frame updates plus game state in Ebitengine.">
-  <title>LEVEL 02 — Stop the Meter | Ebi Showcase</title>
+  <meta name="description" content="Stop a moving meter and learn frame updates plus game state in Ebitengine. Play the demo, read a short Go example, change a value, and apply the idea to your ow">
+  <title>Ebi Showcase – LEVEL 02 — Stop the Meter</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="LEVEL 02 — Stop the Meter | Ebi Showcase">
-    <meta property="og:description" content="Stop a moving meter and learn frame updates plus game state in Ebitengine.">
+    <meta property="og:title" content="Ebi Showcase – LEVEL 02 — Stop the Meter">
+    <meta property="og:description" content="Stop a moving meter and learn frame updates plus game state in Ebitengine. Play the demo, read a short Go example, change a value, and apply the idea to your ow">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/games/timing-meter/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--timing-meter.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="LEVEL 02 — Stop the Meter | Ebi Showcase">
-    <meta name="twitter:description" content="Stop a moving meter and learn frame updates plus game state in Ebitengine.">
+    <meta name="twitter:title" content="Ebi Showcase – LEVEL 02 — Stop the Meter">
+    <meta name="twitter:description" content="Stop a moving meter and learn frame updates plus game state in Ebitengine. Play the demo, read a short Go example, change a value, and apply the idea to your ow">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--timing-meter.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Stop the Meter">
     <!-- ogp:end -->
@@ -39,8 +39,16 @@
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>phase := frame % 120</code></pre></div></section>
+<!-- feedback-note:games/timing-meter:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-timing-meter"><div><p class="eyebrow">60 FPS and state</p><h2 id="feedback-note-games-timing-meter">The same button can mean different things</h2><p>Ebitengine calls Update about 60 times each second, so small moves look smooth. A state machine keeps a label such as moving, stopped, or result. Alternating the starting side prevents a memorized timing trick.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="state transitions"><span>moving</span><b>→ button →</b><strong>stopped</strong><b>→ next round →</b><span>moving</span><code>round % 2</code></div></div></section>
+<!-- feedback-note:games/timing-meter:end -->
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_bpm-timing.svg" alt="BPM and frames" loading="lazy" decoding="async"><figcaption>A visual map of BPM and frames. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_timing-window.svg" alt="Timing judgement window" loading="lazy" decoding="async"><figcaption>A visual map of Timing judgement window. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Stop it on the sweet spot.</h2></div><p>Use space, click, or tap. Closer to the center means a higher score.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Stop the Meter" src="../../../play/timing-meter/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -271,7 +279,7 @@ func main() {
       </div>
     </section>
 
-    <nav class="lesson-pager"><a href="../tap-target/">← LEVEL 01<strong>Tap the Target</strong></a><a href="../catch-stars/">LEVEL 03 →<strong>Catch the Stars</strong></a></nav>
+    <nav class="lesson-pager"><a href="../tap-target/" rel="prev">← LEVEL 01<strong>Tap the Target</strong></a><a href="../catch-stars/" rel="next">LEVEL 03 →<strong>Catch the Stars</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -287,7 +295,7 @@ func main() {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -295,6 +303,19 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

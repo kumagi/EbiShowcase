@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>安定する物理世界 | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="衝突を何度も解き、動かない円を眠らせ、近い円だけを調べます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 安定する物理世界</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="安定する物理世界 | Ebi Showcase">
-    <meta property="og:description" content="衝突を何度も解き、動かない円を眠らせ、近い円だけを調べます。">
+    <meta property="og:title" content="Ebi Showcase – 安定する物理世界">
+    <meta property="og:description" content="衝突を何度も解き、動かない円を眠らせ、近い円だけを調べます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/merge-physics/stable-simulation/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--merge-physics--stable-simulation.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="安定する物理世界 | Ebi Showcase">
-    <meta name="twitter:description" content="衝突を何度も解き、動かない円を眠らせ、近い円だけを調べます。">
+    <meta name="twitter:title" content="Ebi Showcase – 安定する物理世界">
+    <meta name="twitter:description" content="衝突を何度も解き、動かない円を眠らせ、近い円だけを調べます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--merge-physics--stable-simulation.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="安定する物理世界">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>反復解法は小さなめり込み修正を7回など複数回繰り返す方法、休眠はほぼ止まった円の計算を休む印、空間分割は近い円だけ調べる区画分け。回数は速さと安定を比べて決めます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>for pass:=0; pass&lt;7; pass++ { solveContacts() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>30個を静かに積もう。</h2></div><p>タップして円を投入。青い輪は休眠中です。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="安定する物理世界" src="../../../../play/stable-simulation/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / STABILITY</p><h2>どうして積んだ円は、ずっと震えないの？</h2><p class="lesson-lead">1フレームで衝突を<strong>7回</strong>解き、十分静かな円を休眠させます。画面をマス分けし、近所だけを比べます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>反復解法</h3><p>押し戻しを7周して誤差を小さくします。</p><code>for pass := 0; pass &lt; 7; pass++</code></article><article><span class="concept-number">2</span><h3>休眠</h3><p>90フレーム静かなら更新を止めます。</p><code>if quiet &gt; 90 { sleep = true }</code></article><article><span class="concept-number">3</span><h3>空間分割</h3><p>80pxのマスへ円番号をまとめます。</p><code>buckets[cell] = append(...)</code></article></div><div class="motion-lab" data-lab="bounce" data-wall="壁" data-paddle="床"><div class="lab-copy"><p class="eyebrow">TRY IT / SETTLE</p><h3>反発する速度を追おう</h3><p>速度の向きが変わり、減衰すれば最後は休眠できます。</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="位置を進める">1フレーム進める</button><button class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div></div><div class="lab-visual"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-ball style="position:absolute;border-radius:50%"></div></div><div class="lab-values"><div><span>vx</span><strong data-lab-vx>6.0</strong></div><div><span>vy</span><strong data-lab-vy>4.0</strong></div><div><span>接触</span><strong data-lab-note>—</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -31,7 +35,7 @@
 <span data-go-line="paddle">if hitPaddle { vy = -vy }</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>近所だけを7回解く</h3><p>全30体の総当たりを避け、同じマスと隣の8マスだけを確認します。</p></div><pre><code>for pass := 0; pass &lt; 7; pass++ { buckets := buildGrid(balls); solveNeighborCells(buckets) } / if speed &lt; .12 { quiet++ }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ITERATE?</p><h3>連鎖する重なりを直す</h3><p>1個を動かすと隣へ影響するので何周か必要です。</p></article><article><p class="eyebrow">WHY SLEEP?</p><h3>小さな震えを止める</h3><p>静止物の計算を省き、山を落ち着かせます。</p></article><article class="challenge"><p class="eyebrow">WHY GRID?</p><h3>遠い円を無視する</h3><p>マスの大きさを変えて比較回数を観察しよう。</p></article></div></section><nav class="lesson-pager"><a href="../stacking-bounce/">← STEP 03<strong>積み上げと反発</strong></a><a href="../merge-rule/">STEP 05 →<strong>同じ実の合体</strong></a></nav>
+</div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>近所だけを7回解く</h3><p>全30体の総当たりを避け、同じマスと隣の8マスだけを確認します。</p></div><pre><code>for pass := 0; pass &lt; 7; pass++ { buckets := buildGrid(balls); solveNeighborCells(buckets) } / if speed &lt; .12 { quiet++ }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ITERATE?</p><h3>連鎖する重なりを直す</h3><p>1個を動かすと隣へ影響するので何周か必要です。</p></article><article><p class="eyebrow">WHY SLEEP?</p><h3>小さな震えを止める</h3><p>静止物の計算を省き、山を落ち着かせます。</p></article><article class="challenge"><p class="eyebrow">WHY GRID?</p><h3>遠い円を無視する</h3><p>マスの大きさを変えて比較回数を観察しよう。</p></article></div></section><nav class="lesson-pager"><a href="../stacking-bounce/" rel="prev">← STEP 03<strong>積み上げと反発</strong></a><a href="../merge-rule/" rel="next">STEP 05 →<strong>同じ実の合体</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -47,7 +51,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -55,6 +59,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

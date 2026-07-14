@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Step-by-step: install Go and Ebitengine on a fresh Windows or macOS machine, then run a do-nothing empty window.">
-  <title>Getting Started — Open an Empty Window | Ebi Showcase</title>
+  <meta name="description" content="Step-by-step: install Go and Ebitengine on a fresh Windows or macOS machine, then run a do-nothing empty window. Play the demo, read a short Go example, change ">
+  <title>Ebi Showcase – Getting Started — Open an Empty Window</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/setup/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Getting Started — Open an Empty Window | Ebi Showcase">
-    <meta property="og:description" content="Step-by-step: install Go and Ebitengine on a fresh Windows or macOS machine, then run a do-nothing empty window.">
+    <meta property="og:title" content="Ebi Showcase – Getting Started — Open an Empty Window">
+    <meta property="og:description" content="Step-by-step: install Go and Ebitengine on a fresh Windows or macOS machine, then run a do-nothing empty window. Play the demo, read a short Go example, change ">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/setup/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--setup.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="From a blank computer to an empty window.">
+    <meta property="og:image:alt" content="From a blank computer to an empty game window.">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Getting Started — Open an Empty Window | Ebi Showcase">
-    <meta name="twitter:description" content="Step-by-step: install Go and Ebitengine on a fresh Windows or macOS machine, then run a do-nothing empty window.">
+    <meta name="twitter:title" content="Ebi Showcase – Getting Started — Open an Empty Window">
+    <meta name="twitter:description" content="Step-by-step: install Go and Ebitengine on a fresh Windows or macOS machine, then run a do-nothing empty window. Play the demo, read a short Go example, change ">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--setup.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="From a blank computer to an empty window.">
+    <meta name="twitter:image:alt" content="From a blank computer to an empty game window.">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../style.css">
 </head>
@@ -40,11 +40,14 @@
 
   <section class="data-hero setup-hero">
     <p class="eyebrow">START HERE / ENVIRONMENT</p>
-    <h1>From a blank computer<br>to an <em>empty window</em>.</h1>
+    <h1>From a blank computer<br>to an <em>empty game window</em>.</h1>
     <p>You can play every lesson in the browser. To run code on your own PC, you need Go and Ebitengine first. This guide covers Windows and Mac. Success looks like a dark-blue window that does nothing—that’s the foundation.</p>
   </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
+<!-- feedback-note:guides/setup:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-guides-setup"><div><p class="eyebrow">A first map</p><h2 id="feedback-note-guides-setup">The command window and the game window are different</h2><p>PowerShell and Terminal may look different, but both accept typed commands. go.mod is the table of contents with your module name and borrowed parts. Running the program opens a separate Ebitengine game window.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="from command window to game window"><span>PowerShell / Terminal</span><b>→ go run . →</b><strong>empty game window</strong></div></div></section>
+<!-- feedback-note:guides/setup:end -->
 <!-- END BEGINNER BRIDGE -->
 
 
@@ -114,7 +117,7 @@
     <h2>Make a project folder</h2>
     <p class="setup-lead">Desktop or Documents is fine. Here we create ebi-empty under your home folder.</p>
     <ol class="setup-cmd-list"><li><code>mkdir ebi-empty</code><span>Create the folder</span></li><li><code>cd ebi-empty</code><span>Enter it</span></li><li><code>go mod init example.com/ebi-empty</code><span>Create the go.mod table of contents</span></li></ol>
-    <p class="setup-ok">go.mod is the project’s table-of-contents note: it records this game’s name and lets Go manage borrowed parts such as Ebitengine. With it, Go can prepare the same external packages again. Seeing the small go.mod file means success; you can rename the module later.</p>
+    <p class="setup-ok">go.mod is the project’s table-of-contents note. It records the module name—the address used to name your code—and lets Go manage borrowed parts such as Ebitengine. With it, Go can prepare the same external packages again. Seeing the small go.mod file means success; you can rename the module later.</p>
   </section>
 
   <section class="setup-step" id="code">
@@ -199,7 +202,7 @@ func main() {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>地形を生み出す | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="seedからなめらかな高さ、土と石の層、地下の空洞を作り、同じ数字なら同じ世界を再現します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 地形を生み出す</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="地形を生み出す | Ebi Showcase">
-    <meta property="og:description" content="seedからなめらかな高さ、土と石の層、地下の空洞を作り、同じ数字なら同じ世界を再現します。">
+    <meta property="og:title" content="Ebi Showcase – 地形を生み出す">
+    <meta property="og:description" content="seedからなめらかな高さ、土と石の層、地下の空洞を作り、同じ数字なら同じ世界を再現します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/sandbox/terrain-generation/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--sandbox--terrain-generation.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="地形を生み出す | Ebi Showcase">
-    <meta name="twitter:description" content="seedからなめらかな高さ、土と石の層、地下の空洞を作り、同じ数字なら同じ世界を再現します。">
+    <meta name="twitter:title" content="Ebi Showcase – 地形を生み出す">
+    <meta name="twitter:description" content="seedからなめらかな高さ、土と石の層、地下の空洞を作り、同じ数字なら同じ世界を再現します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--sandbox--terrain-generation.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="地形を生み出す">
     <!-- ogp:end -->
@@ -25,6 +26,10 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>0=草、1=砂、2=水の対応表を先に決めます。同じseedなら同じ教材世界を再現できます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>tile := rng.Intn(3)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_sandbox-seed.svg" alt="シードから世界を作る" loading="lazy" decoding="async"><figcaption>シードから世界を作るの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>生成された世界を歩き、3本の観測ビーコンを探そう。</h2></div><p>左右ボタンを長押し。PCでは←→またはA/D。38秒以内に3本へ触れればクリア。NEXT SEEDまたはNで別世界、Rで同じ世界を作り直せます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="seedから地形を生み出す探索" src="../../../../play/terrain-generation/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SEEDED VALUE NOISE</p><h2>大きな世界を保存せず、数字と座標から作り直す。</h2><p class="lesson-lead">マスごとに完全にばらばらな高さを選ぶと、針のような地面になります。このゲームはseedと座標から同じ乱数を作り、となりの値との間をなめらかにつなぐ<strong>値ノイズ</strong>を使います。高さが決まったら、深さで草・土・石へ分けます。</p></div>
@@ -56,7 +61,7 @@ for y := surfaceY; y &lt; worldH; y++ {
     }
 }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY A SEED?</p><h3>世界の合言葉になる</h3><p>何千マスを渡さなくても、一つの数字から同じ元の世界を共有できます。</p></article><article><p class="eyebrow">WHY LAYERS?</p><h3>意味のある深さになる</h3><p>地面の下へ進むほど素材が変わり、探索する理由を作れます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>雪の高さを決める</h3><p>表面がy=4より上なら草を雪へ変え、山だけ白くしてみよう。</p></article></div>
-</section><nav class="lesson-pager"><a href="../place-break/">← STEP 01<strong>置く・壊す</strong></a><a href="../chunk-world/">STEP 03 →<strong>チャンクで広い世界</strong></a></nav>
+</section><nav class="lesson-pager"><a href="../place-break/" rel="prev">← STEP 01<strong>置く・壊す</strong></a><a href="../chunk-world/" rel="next">STEP 03 →<strong>チャンクで広い世界</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -72,7 +77,7 @@ for y := surfaceY; y &lt; worldH; y++ {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -80,6 +85,19 @@ for y := surfaceY; y &lt; worldH; y++ {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

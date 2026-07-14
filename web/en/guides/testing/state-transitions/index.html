@@ -1,9 +1,9 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="An active-battle RPG adds speed to a gauge every tick. Test the exact transition that becomes READY at 1000, one step at a time."><title>Compare the state one tick later | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="An active-battle RPG adds speed to a gauge every tick. Test the exact transition that becomes READY at 1000, one step at a time."><title>Ebi Showcase – Compare the state one tick later</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/state-transitions/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Compare the state one tick later | Ebi Showcase">
+    <meta property="og:title" content="Ebi Showcase – Compare the state one tick later">
     <meta property="og:description" content="An active-battle RPG adds speed to a gauge every tick. Test the exact transition that becomes READY at 1000, one step at a time.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/state-transitions/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--state-transitions.png?v=20260713-font1">
@@ -13,11 +13,11 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Compare the state one tick later | Ebi Showcase">
+    <meta name="twitter:title" content="Ebi Showcase – Compare the state one tick later">
     <meta name="twitter:description" content="An active-battle RPG adds speed to a gauge every tick. Test the exact transition that becomes READY at 1000, one step at a time.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--state-transitions.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Compare the state one tick later">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/state-transitions/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">STEP 03 / 04</p><h1>Compare the state one tick later</h1><p>An active-battle RPG adds speed to a gauge every tick. Test the exact transition that becomes READY at 1000, one step at a time.</p></section><section class="test-rule-strip"><span>input + state</span><i>→</i><strong>pure function</strong><i>→</i><span>next state + answer</span></section><section class="test-explain"><div><p class="eyebrow">Why does this build confidence?</p><h2>Instead of replaying a whole battle, construct only the important frames: 987→999 and 988→READY.</h2></div><div class="test-case-table"><p class="eyebrow">List the cases first</p><table><tbody><tr><th>charging</th><td><code>400 + 12</code></td><td><code>412 / false</code></td></tr><tr><th>one short</th><td><code>987 + 12</code></td><td><code>999 / false</code></td></tr><tr><th>exact</th><td><code>988 + 12</code></td><td><code>0 / true</code></td></tr><tr><th>passes limit</th><td><code>995 + 12</code></td><td><code>0 / true</code></td></tr></tbody></table></div></section><section class="test-code-compare"><article><p>BEFORE / Everything lives in Update</p><pre><code>func (g *game) Update() error {
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/state-transitions/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">STEP 03 / 05</p><h1>Compare the state one tick later</h1><p>An active-battle RPG adds speed to a gauge every tick. Test the exact transition that becomes READY at 1000, one step at a time.</p></section><section class="test-rule-strip"><span>input + state</span><i>→</i><strong>pure function</strong><i>→</i><span>next state + answer</span></section><section class="test-explain"><div><p class="eyebrow">Why does this build confidence?</p><h2>Instead of replaying a whole battle, construct only the important frames: 987→999 and 988→READY.</h2></div><div class="test-case-table"><p class="eyebrow">List the cases first</p><table><tbody><tr><th>charging</th><td><code>400 + 12</code></td><td><code>412 / false</code></td></tr><tr><th>one short</th><td><code>987 + 12</code></td><td><code>999 / false</code></td></tr><tr><th>exact</th><td><code>988 + 12</code></td><td><code>0 / true</code></td></tr><tr><th>passes limit</th><td><code>995 + 12</code></td><td><code>0 / true</code></td></tr></tbody></table></div></section><section class="test-code-compare"><article><p>BEFORE / Everything lives in Update</p><pre><code>func (g *game) Update() error {
   for i := range g.runners {
     r := &amp;g.runners[i]
     r.gauge += r.speed
@@ -40,7 +40,7 @@ r.gauge, ready = lessonlogic.AdvanceGauge(r.gauge, r.speed, 1000)</code></pre></
 if gauge != 0 || !ready {
   t.Fatalf("got (%d, %v), want (0, true)",
     gauge, ready)
-}</code></pre></section><section class="test-run"><p>Run it in this repository</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS — checked without opening the game</strong></section><section class="test-challenge"><p class="eyebrow">YOUR TURN</p><h2>If overflow should carry into the next gauge, how would you change the return value and its test?</h2></section><nav class="test-pager"><a href="../table-tests/">← PREVIOUS</a><span>3 / 4</span><a href="../regression-tests/">NEXT →</a></nav>
+}</code></pre></section><section class="test-run"><p>Run it in this repository</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS — checked without opening the game</strong></section><section class="test-challenge"><p class="eyebrow">YOUR TURN</p><h2>If overflow should carry into the next gauge, how would you change the return value and its test?</h2></section><nav class="test-pager"><a href="../table-tests/">← PREVIOUS</a><span>3 / 5</span><a href="../regression-tests/">NEXT →</a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -54,7 +54,7 @@ if gauge != 0 || !ready {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

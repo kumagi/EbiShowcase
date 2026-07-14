@@ -2,13 +2,14 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
+  <meta name="description" content="敵は交差点で進める方向を調べ、引き返す方向を外し、ターゲットまでの距離が短い道を選びます。ねらう場所を変えるだけで追い方も変わります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>交差点AI | Ebi Showcase</title>
+  <title>Ebi Showcase – 交差点AI</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="交差点AI | Ebi Showcase">
-    <meta property="og:description" content="敵は交差点で進める方向を調べ、引き返す方向を外し、ターゲットまでの距離が短い道を選びます。ねらう場所を変えるだけで追い方も変わります。">
+    <meta property="og:title" content="Ebi Showcase – 交差点AI">
+    <meta property="og:description" content="敵は交差点で進める方向を調べ、引き返す方向を外し、ターゲットまでの距離が短い道を選びます。ねらう場所を変えるだけで追い方も変わります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/maze-chase/junction-ai/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--maze-chase--junction-ai.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="交差点AI | Ebi Showcase">
-    <meta name="twitter:description" content="敵は交差点で進める方向を調べ、引き返す方向を外し、ターゲットまでの距離が短い道を選びます。ねらう場所を変えるだけで追い方も変わります。">
+    <meta name="twitter:title" content="Ebi Showcase – 交差点AI">
+    <meta name="twitter:description" content="敵は交差点で進める方向を調べ、引き返す方向を外し、ターゲットまでの距離が短い道を選びます。ねらう場所を変えるだけで追い方も変わります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--maze-chase--junction-ai.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="交差点AI">
     <!-- ogp:end -->
@@ -43,7 +44,10 @@
 
 <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>2つの予測をかわしてチップを8個集めよう</h2></div><p>矢印／WASD、クリック、タッチで移動します。赤いHUNTERは今いるマス、水色のAMBUSHERは進行方向の3マス先をねらいます。色の輪が敵のターゲット、黄色い線が選んだ方向です。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="交差点AIを遊ぶ" src="../../../../play/junction-ai/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -101,7 +105,7 @@ for _, dir := range legal[1:] {
       <div class="why-grid"><article><h3>なぜ逆走を禁止する？</h3><p>毎回いちばん近い方向だけを選ぶと、敵が2マスを往復しやすくなります。交差点で前へ進ませると追跡に意志があるように見えます。</p></article><article><h3>攻略にどう使う？</h3><p>HUNTERには曲がって距離を作り、AMBUSHERには直進を読ませてから早めに別の通路へ入ります。性格を読むことがプレイになります。</p></article><article><h3>チャレンジ</h3><p>遠くではプレイヤーを追い、近くでは自分の担当する角へ逃げるSCATTER型を追加してみよう。</p></article></div>
     </section>
 
-    <nav class="lesson-pager"><a href="../patrol-chase/">← STEP 04<strong>巡回と追跡</strong></a><a href="../ebi-maze/">STEP 06 →<strong>Ebi Maze</strong></a></nav>
+    <nav class="lesson-pager"><a href="../patrol-chase/" rel="prev">← STEP 04<strong>巡回と追跡</strong></a><a href="../ebi-maze/" rel="next">STEP 06 →<strong>Ebi Maze</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -117,7 +121,7 @@ for _, dir := range legal[1:] {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -125,6 +129,19 @@ for _, dir := range legal[1:] {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

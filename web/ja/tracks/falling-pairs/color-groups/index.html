@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>同じ色の仲間探し | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="落下ペアを置いた盤面から、上下左右につながる同色をキューで集め、4個以上を見つけます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 同じ色の仲間探し</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="同じ色の仲間探し | Ebi Showcase">
-    <meta property="og:description" content="落下ペアを置いた盤面から、上下左右につながる同色をキューで集め、4個以上を見つけます。">
+    <meta property="og:title" content="Ebi Showcase – 同じ色の仲間探し">
+    <meta property="og:description" content="落下ペアを置いた盤面から、上下左右につながる同色をキューで集め、4個以上を見つけます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/falling-pairs/color-groups/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--falling-pairs--color-groups.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="同じ色の仲間探し | Ebi Showcase">
-    <meta name="twitter:description" content="落下ペアを置いた盤面から、上下左右につながる同色をキューで集め、4個以上を見つけます。">
+    <meta name="twitter:title" content="Ebi Showcase – 同じ色の仲間探し">
+    <meta name="twitter:description" content="落下ペアを置いた盤面から、上下左右につながる同色をキューで集め、4個以上を見つけます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--falling-pairs--color-groups.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="同じ色の仲間探し">
     <!-- ogp:end -->
@@ -25,6 +26,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>flood fillは一マスから上下左右の同色へ広がる探索。訪問済み印で同じマスを二度数えません。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>visit(x,y); visit(x+1,y); visit(x,y+1)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>ペアを置き、3つの4連結グループを完成させよう。</h2></div><p>LEFT/TURN/RIGHT/DROPをタップ。PCでは←・↑・→とSpace、A/W/Dも使えます。固定後は黄色い番号がBFSの探索順、白枠が4個以上です。3回外すと失敗。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="落下ペアで同色4連結を作るゲーム" src="../../../../play/color-groups/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / BREADTH-FIRST FLOOD FILL</p><h2>1個から始め、同じ色の道だけを上下左右へ広げる。</h2><p class="lesson-lead">盤面へペアを固定した直後、まだ調べていない色マスを入口にします。入口をキューへ入れ、取り出したマスの上下左右に同色があれば追加します。行った場所を<strong>visited</strong>へ記録すれば、隣同士が互いを何度も追加する無限往復を防げます。</p></div>
@@ -61,7 +65,7 @@
     }
 }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY MARK ON ADD?</p><h3>同じマスを二重予約しない</h3><p>キューへ入れた時点で予約済みにすると、待っている間も別の道から追加されません。</p></article><article><p class="eyebrow">WHY VISUALIZE?</p><h3>探索の順番を確かめられる</h3><p>黄色い番号を出すと、斜めへ飛ばず、同色だけをたどることを盤面で確認できます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>DFSへ交換</h3><p>queueの先頭ではなく最後から取り出し、見つかる順番がどう変わるか比べよう。</p></article></div>
-</section><nav class="lesson-pager"><a href="../pair-rotation/">← STEP 02<strong>ペアを回転する</strong></a><a href="../clear-gravity/">STEP 04 →<strong>消去とちぎれ落ち</strong></a></nav>
+</section><nav class="lesson-pager"><a href="../pair-rotation/" rel="prev">← STEP 02<strong>ペアを回転する</strong></a><a href="../clear-gravity/" rel="next">STEP 04 →<strong>消去とちぎれ落ち</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -77,7 +81,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -85,6 +89,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

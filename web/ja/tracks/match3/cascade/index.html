@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>連鎖リアクション | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="落下と補充のあとにもう一度探索し、マッチが0個になるまで解決を繰り返します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbi"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 連鎖リアクション</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="連鎖リアクション | Ebi Showcase">
-    <meta property="og:description" content="落下と補充のあとにもう一度探索し、マッチが0個になるまで解決を繰り返します。">
+    <meta property="og:title" content="Ebi Showcase – 連鎖リアクション">
+    <meta property="og:description" content="落下と補充のあとにもう一度探索し、マッチが0個になるまで解決を繰り返します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbi">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/match3/cascade/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--match3--cascade.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="連鎖リアクション | Ebi Showcase">
-    <meta name="twitter:description" content="落下と補充のあとにもう一度探索し、マッチが0個になるまで解決を繰り返します。">
+    <meta name="twitter:title" content="Ebi Showcase – 連鎖リアクション">
+    <meta name="twitter:description" content="落下と補充のあとにもう一度探索し、マッチが0個になるまで解決を繰り返します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbi">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--match3--cascade.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="連鎖リアクション">
     <!-- ogp:end -->
@@ -23,6 +24,10 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>消す→落とす→もう一度探すをphaseで分け、揃いがなくなるまで往復すると連鎖になります。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>phase = Find; if matched { phase = Clear }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_match3-cascade.svg" alt="マッチ3の連鎖" loading="lazy" decoding="async"><figcaption>マッチ3の連鎖の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>白い並びを解決し、次の連鎖を見つけよう。</h2></div><p>下ボタンをタップまたはSpace。盤面が止まるまで進め、3手を解決するとクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="連鎖リアクション" src="../../../../play/cascade/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RESOLUTION LOOP</p><h2>「もう一度調べる」が連鎖を生む。</h2><p class="lesson-lead">消去、落下、補充のあとでscanを呼びます。結果が空でなければ同じ処理へ戻り、空なら操作を返します。<strong>盤面が止まる条件</strong>がループの出口です。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>一つの連鎖を解決</h3><p>現在のmarkedを消し、列を詰め、空きを補充します。途中でプレイヤーの交換入力は読みません。</p><code>clear(); fall(); refill()</code></article><article><span class="concept-number">2</span><h3>新しい盤面を再検査</h3><p>落ちた結果は前と違う盤面です。そこでscanを再実行し、新しい3個並びをmarkedへ入れます。</p><code>marked = scan(board)</code></article><article><span class="concept-number">3</span><h3>連鎖数を得点へ</h3><p>1連鎖目は×1、2連鎖目は×2と増やします。偶然続いた大連鎖ほど大きなごほうびになります。</p><code>score += cells * 10 * combo</code></article></div><div class="motion-lab" data-lab="match-scan" data-found="連鎖の芽！" data-none="そろいなし（連鎖終了）" data-cleared="落下 — もう一度スキャン" aria-labelledby="lab-title-cascade">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / CASCADE</p>
@@ -50,7 +55,7 @@ if len(matches) &gt; 0 {
     phase = ClearPhase
 } else {
     phase = PlayerPhase
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY RECHECK?</p><h3>落下後は別の問題</h3><p>動く前になかった並びが生まれるため、古い検査結果は使えません。</p></article><article><p class="eyebrow">WHY SETTLE?</p><h3>入力を混ぜない</h3><p>連鎖中に交換させないことで、盤面データと見た目がずれません。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>速度を上げる</h3><p>連鎖数が増えるほど落下アニメーション時間を短くして勢いを出そう。</p></article></div></section><nav class="lesson-pager"><a href="../clear-and-fall/">← STEP 03<strong>消して落とす</strong></a><a href="../special-pieces/">STEP 05 →<strong>特殊ピース工房</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY RECHECK?</p><h3>落下後は別の問題</h3><p>動く前になかった並びが生まれるため、古い検査結果は使えません。</p></article><article><p class="eyebrow">WHY SETTLE?</p><h3>入力を混ぜない</h3><p>連鎖中に交換させないことで、盤面データと見た目がずれません。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>速度を上げる</h3><p>連鎖数が増えるほど落下アニメーション時間を短くして勢いを出そう。</p></article></div></section><nav class="lesson-pager"><a href="../clear-and-fall/" rel="prev">← STEP 03<strong>消して落とす</strong></a><a href="../special-pieces/" rel="next">STEP 05 →<strong>特殊ピース工房</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -66,7 +71,7 @@ if len(matches) &gt; 0 {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -74,6 +79,19 @@ if len(matches) &gt; 0 {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

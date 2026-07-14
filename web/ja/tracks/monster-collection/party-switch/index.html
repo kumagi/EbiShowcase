@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>パーティと交代 | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="3体のうち1体を前衛、残りを控えにし、相性とHPを見て戦闘中に入れ替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbi"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – パーティと交代</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="パーティと交代 | Ebi Showcase">
-    <meta property="og:description" content="3体のうち1体を前衛、残りを控えにし、相性とHPを見て戦闘中に入れ替えます。">
+    <meta property="og:title" content="Ebi Showcase – パーティと交代">
+    <meta property="og:description" content="3体のうち1体を前衛、残りを控えにし、相性とHPを見て戦闘中に入れ替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbi">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/monster-collection/party-switch/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--monster-collection--party-switch.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="パーティと交代 | Ebi Showcase">
-    <meta name="twitter:description" content="3体のうち1体を前衛、残りを控えにし、相性とHPを見て戦闘中に入れ替えます。">
+    <meta name="twitter:title" content="Ebi Showcase – パーティと交代">
+    <meta name="twitter:description" content="3体のうち1体を前衛、残りを控えにし、相性とHPを見て戦闘中に入れ替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbi">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--monster-collection--party-switch.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="パーティと交代">
     <!-- ogp:end -->
@@ -25,6 +26,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>選んだ番号selectedと先頭0番を同時交換します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>party[0], party[selected] = party[selected], party[0]</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>相性のよい前衛へ交代し、12ターン以内に3戦勝とう。</h2></div><p>仲間カードをタップするか1・2・3で交代、ATTACKまたはA/Spaceで攻撃。予定した交代は1ターン使い、倒れた時は生きている控えを必ず選びます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="前衛と控えを交代するパーティ戦" src="../../../../play/party-switch/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ACTIVE INDEX</p><h2>パーティ全員を消さず、「今戦う番号」だけを変える。</h2><p class="lesson-lead">3体はずっとsliceの中に残り、それぞれのHPを持ち続けます。前衛は別のコピーではなく<code>active</code>という番号です。交代はこの番号を控えの番号へ変える状態遷移で、<strong>自分から交代する時</strong>と<strong>倒れて選び直す時</strong>ではターンの扱いが違います。</p></div>
@@ -58,7 +62,7 @@
     enemyAttack()
 }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY KEEP RESERVES?</p><h3>受けた傷を忘れない</h3><p>控えも同じparty配列に残すので、再び出した時に正しいHPを使えます。</p></article><article><p class="eyebrow">WHY SPEND A TURN?</p><h3>交代が作戦になる</h3><p>いつでも無料だと毎回相性だけを選べます。反撃の危険があるから今替えるかを考えます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>交代時能力を追加</h3><p>前衛になった瞬間だけHPを2回復する能力を、強制・予定どちらの交代にも発動させよう。</p></article></div>
-</section><nav class="lesson-pager"><a href="../type-matchup/">← STEP 03<strong>タイプ相性研究所</strong></a><a href="../capture/">STEP 05 →<strong>捕獲チャレンジ</strong></a></nav>
+</section><nav class="lesson-pager"><a href="../type-matchup/" rel="prev">← STEP 03<strong>タイプ相性研究所</strong></a><a href="../capture/" rel="next">STEP 05 →<strong>捕獲チャレンジ</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -74,7 +78,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -82,6 +86,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,11 @@
+flowchart LR
+  timer["spawnTimer<br/>毎フレーム減る"]
+  gap["すき間を決める<br/>乱数 + clamp"]
+  spawn["上下のパイプ<br/>同時に追加"]
+  scroll["左へ流す<br/>x -= speed"]
+  score["通過したら<br/>score++"]
+  timer --> gap
+  gap --> spawn
+  spawn --> scroll
+  scroll --> score
+  score --> timer

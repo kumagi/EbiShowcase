@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>敵の予告と状態効果 | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="敵の次の行動を先に見せ、毒と弱体を決まったタイミングで更新します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengi"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 敵の予告と状態効果</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="敵の予告と状態効果 | Ebi Showcase">
-    <meta property="og:description" content="敵の次の行動を先に見せ、毒と弱体を決まったタイミングで更新します。">
+    <meta property="og:title" content="Ebi Showcase – 敵の予告と状態効果">
+    <meta property="og:description" content="敵の次の行動を先に見せ、毒と弱体を決まったタイミングで更新します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengi">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/deckbuilder/intent-status/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder--intent-status.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="敵の予告と状態効果 | Ebi Showcase">
-    <meta name="twitter:description" content="敵の次の行動を先に見せ、毒と弱体を決まったタイミングで更新します。">
+    <meta name="twitter:title" content="Ebi Showcase – 敵の予告と状態効果">
+    <meta name="twitter:description" content="敵の次の行動を先に見せ、毒と弱体を決まったタイミングで更新します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengi">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder--intent-status.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="敵の予告と状態効果">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>予告行動は敵が次に何をするかの表示、持続期間は毒や弱体があと何ターン残るか。Updateで残りターンを減らし、Drawで予告の絵と数字を見せます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>status.turns--; drawIntent(enemy.intent)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>予告を読んで、攻めるか守るか決めよう。</h2></div><p>1〜3またはカードをタップ。Eか下ボタンでターン終了。毒と弱体を使って敵を倒します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="敵の予告と状態効果" src="../../../../play/intent-status/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / INTENT &amp; STATUS</p><h2>「次に18ダメージ」と見えたら、作戦を変えられる。</h2><p class="lesson-lead">敵が行動する前に<strong>予告データをDrawで表示</strong>します。毒や弱体は残り回数を整数で覚え、ターン終了時に効果を使ってから1減らします。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>行動をデータにする</h3><p>名前、攻撃力、防御力をひとまとめにします。同じデータを表示と実行の両方で使えば、予告と本当の行動がずれません。</p><code>type intent struct { damage, block int }</code></article><article><span class="concept-number">2</span><h3>状態を数で覚える</h3><p>毒4なら毎ターン傷つけたあと3へ。弱体2なら2ターンの間だけ敵の攻撃を小さくします。</p><code>enemyHP -= poison; poison--</code></article><article><span class="concept-number">3</span><h3>更新順を固定する</h3><p>毒、敵の攻撃、残り時間を減らす、次の予告、という順番を関数にまとめます。</p><code>resolveEnemyTurn()</code></article></div><div class="motion-lab" data-lab="status-ticks" data-status="POISON" data-added="付与" data-ticked="ターン経過" data-none="状態なし" aria-labelledby="lab-title-intent-status">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / STATUS TURNS</p>
@@ -49,7 +53,7 @@ if weak &gt; 0 {
     weak--
 }
 hp -= max(0, damage-block)
-intentIndex = (intentIndex+1) % len(intents)</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY INTENT?</p><h3>考えて選べる</h3><p>危険が見えるから、防御、攻撃、状態効果のどれが今必要か判断できます。</p></article><article><p class="eyebrow">WHY DURATION?</p><h3>効果が終わる</h3><p>残り回数が0になる規則があれば、いつまでも毒や弱体が続きません。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>筋力を追加</h3><p>敵の攻撃すべてへ足すstrengthを作り、予告の数値にも反映しよう。</p></article></div></section><nav class="lesson-pager"><a href="../deck-cycle/">← STEP 03<strong>山札・手札・捨て札</strong></a><a href="../card-rewards/">STEP 05 →<strong>カード報酬と強化</strong></a></nav>
+intentIndex = (intentIndex+1) % len(intents)</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY INTENT?</p><h3>考えて選べる</h3><p>危険が見えるから、防御、攻撃、状態効果のどれが今必要か判断できます。</p></article><article><p class="eyebrow">WHY DURATION?</p><h3>効果が終わる</h3><p>残り回数が0になる規則があれば、いつまでも毒や弱体が続きません。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>筋力を追加</h3><p>敵の攻撃すべてへ足すstrengthを作り、予告の数値にも反映しよう。</p></article></div></section><nav class="lesson-pager"><a href="../deck-cycle/" rel="prev">← STEP 03<strong>山札・手札・捨て札</strong></a><a href="../card-rewards/" rel="next">STEP 05 →<strong>カード報酬と強化</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -65,7 +69,7 @@ intentIndex = (intentIndex+1) % len(intents)</code></pre></div><div class="why-g
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -73,6 +77,19 @@ intentIndex = (intentIndex+1) % len(intents)</code></pre></div><div class="why-g
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

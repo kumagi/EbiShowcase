@@ -1,10 +1,11 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>コンピュータと対戦できるリバーシを作ろう | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="8×8の盤面をデータで持ち、合法手・石の反転・パス・勝敗を順番に実装します。最後は角を高く評価するCPUと対戦します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – コンピュータと対戦できるリバーシを作ろう</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/reversi/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="コンピュータと対戦できるリバーシを作ろう | Ebi Showcase">
-    <meta property="og:description" content="8×8の盤面をデータで持ち、合法手・石の反転・パス・勝敗を順番に実装します。最後は角を高く評価するCPUと対戦します。">
+    <meta property="og:title" content="Ebi Showcase – コンピュータと対戦できるリバーシを作ろう">
+    <meta property="og:description" content="8×8の盤面をデータで持ち、合法手・石の反転・パス・勝敗を順番に実装します。最後は角を高く評価するCPUと対戦します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/reversi/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--reversi.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -13,8 +14,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="コンピュータと対戦できるリバーシを作ろう | Ebi Showcase">
-    <meta name="twitter:description" content="8×8の盤面をデータで持ち、合法手・石の反転・パス・勝敗を順番に実装します。最後は角を高く評価するCPUと対戦します。">
+    <meta name="twitter:title" content="Ebi Showcase – コンピュータと対戦できるリバーシを作ろう">
+    <meta name="twitter:description" content="8×8の盤面をデータで持ち、合法手・石の反転・パス・勝敗を順番に実装します。最後は角を高く評価するCPUと対戦します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--reversi.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="コンピュータと対戦できるリバーシを作ろう">
     <!-- ogp:end --><link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">全コース</a><a class="lang" href="../../../en/tracks/reversi/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>5 PLAYABLE STEPS</span></div><section class="track-hero track-reversi"><span class="track-letter">U</span><div><p class="eyebrow">盤面を読む、石を返す、CPUに勝つ</p><h1>コンピュータと対戦できるリバーシを作ろう</h1><p>8×8の盤面をデータで持ち、合法手・石の反転・パス・勝敗を順番に実装します。最後は角を高く評価するCPUと対戦します。</p></div></section><p class="curriculum-bridge">戦略SLGで学んだ盤面の読み取りを、8方向の探索と位置評価へ広げます。</p><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>石を置くところから、CPUの考え方まで。</h2><p>8×8の盤面をデータで持ち、合法手・石の反転・パス・勝敗を順番に実装します。最後は角を高く評価するCPUと対戦します。</p></div><a class="path-step" href="board-grid/"><span>01</span><div><h3>8×8の盤面をデータで描く</h3><p>64個のマスを二次元配列で持ち、クリックした場所を黒い石として表示します。</p><strong>盤面と座標</strong></div><b>→</b></a><a class="path-step" href="legal-moves/"><span>02</span><div><h3>置ける場所を探す</h3><p>8方向を調べ、相手の石を1つ以上はさんで自分の石につながる場所だけを合法手にします。</p><strong>8方向の合法手判定</strong></div><b>→</b></a><a class="path-step" href="flip-stones/"><span>03</span><div><h3>はさんだ石を反転する</h3><p>置いた石から8方向へ進み、はさんだ相手の列を自分の色へ変えます。</p><strong>合法手と反転処理を分ける</strong></div><b>→</b></a><a class="path-step" href="pass-and-score/"><span>04</span><div><h3>パスと勝敗を実装する</h3><p>置ける場所がないときはパスし、両者が続けてパスするか盤面が埋まったら石の数を比べます。</p><strong>ターン・パス・スコア</strong></div><b>→</b></a><a class="path-step" href="ebi-reversi/"><span>05</span><div><h3>評価関数でCPUと対戦する</h3><p>角に高い点、角の隣に低い点を置いた8×8スコアマップで、いちばん良い手を選ぶCPUと対戦します。</p><strong>位置スコアとCPUの一手</strong></div><b>→</b></a></section>
@@ -31,7 +32,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

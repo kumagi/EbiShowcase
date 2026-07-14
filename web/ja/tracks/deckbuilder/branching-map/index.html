@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>分岐マップの旅 | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="つながった次の地点を選び、戦闘・休憩・店を通ってボスを目指します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengi"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 分岐マップの旅</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="分岐マップの旅 | Ebi Showcase">
-    <meta property="og:description" content="つながった次の地点を選び、戦闘・休憩・店を通ってボスを目指します。">
+    <meta property="og:title" content="Ebi Showcase – 分岐マップの旅">
+    <meta property="og:description" content="つながった次の地点を選び、戦闘・休憩・店を通ってボスを目指します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengi">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/deckbuilder/branching-map/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder--branching-map.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="分岐マップの旅 | Ebi Showcase">
-    <meta name="twitter:description" content="つながった次の地点を選び、戦闘・休憩・店を通ってボスを目指します。">
+    <meta name="twitter:title" content="Ebi Showcase – 分岐マップの旅">
+    <meta name="twitter:description" content="つながった次の地点を選び、戦闘・休憩・店を通ってボスを目指します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengi">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder--branching-map.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="分岐マップの旅">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>グラフは場所（ノード）と道（つながり）の組。nextは今いる場所から次に選べる場所番号のリストです。番号を選ぶとcurrentをその番号へ変えます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>current = nodes[current].next[choice]</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>安全な道か、強くなれる危険な道か。</h2></div><p>黄色い地点をタップ、または1・2で選択。HPを残して一番上のボスへ到達します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="分岐マップの旅" src="../../../../play/branching-map/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GRAPH MAP</p><h2>マップは絵ではなく「地点」と「つながり」のデータ。</h2><p class="lesson-lead">各地点をnodeとして作り、<strong>nextに次へ進める番号</strong>を保存します。現在地のnextだけ入力を受け付ければ、線がない場所へ飛ぶことはありません。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>地点を作る</h3><p>座標、種類、危険度、報酬を1つの構造体へ入れます。Drawは座標を、イベント処理は種類を読みます。</p><code>type node struct { x, y float32; kind string }</code></article><article><span class="concept-number">2</span><h3>つながりを番号で持つ</h3><p>nextが[3,4]なら次は3番か4番です。このつながり全体をグラフと呼びます。</p><code>next []int</code></article><article><span class="concept-number">3</span><h3>訪問済みを覚える</h3><p>選んだ地点をvisitedに記録し、通った道を色で見せます。セーブデータにも現在地と訪問履歴を保存できます。</p><code>visited[current] = true</code></article></div><div class="motion-lab" data-lab="map-nodes"  aria-labelledby="lab-title-branching-map">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / GRAPH PATH</p>
@@ -47,7 +51,7 @@ for _, id := range options {
         current = id
         resolve(nodes[id].kind)
     }
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY BRANCH?</p><h3>作戦が旅になる</h3><p>今すぐ休むか、危険なエリートで大きな報酬を狙うかを自分で決められます。</p></article><article><p class="eyebrow">WHY DATA?</p><h3>形を作り替えやすい</h3><p>nodeとnextを変えるだけで、Drawや移動処理を直さず別のマップを作れます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>自動生成</h3><p>階ごとに3地点を作り、必ず上の階へ1本以上つながる生成ルールを考えよう。</p></article></div></section><nav class="lesson-pager"><a href="../card-rewards/">← STEP 05<strong>カード報酬と強化</strong></a><a href="../ebi-ascent/">STEP 07 →<strong>Ebi Ascent</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY BRANCH?</p><h3>作戦が旅になる</h3><p>今すぐ休むか、危険なエリートで大きな報酬を狙うかを自分で決められます。</p></article><article><p class="eyebrow">WHY DATA?</p><h3>形を作り替えやすい</h3><p>nodeとnextを変えるだけで、Drawや移動処理を直さず別のマップを作れます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>自動生成</h3><p>階ごとに3地点を作り、必ず上の階へ1本以上つながる生成ルールを考えよう。</p></article></div></section><nav class="lesson-pager"><a href="../card-rewards/" rel="prev">← STEP 05<strong>カード報酬と強化</strong></a><a href="../ebi-ascent/" rel="next">STEP 07 →<strong>Ebi Ascent</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -63,7 +67,7 @@ for _, id := range options {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -71,6 +75,19 @@ for _, id := range options {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

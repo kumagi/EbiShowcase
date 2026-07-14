@@ -2,13 +2,14 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
+  <meta name="description" content="爆弾の中心から上下左右へ進み、次のマスが爆風に入るかを順番に決めます。射程まで進むか、固い壁に出会った方向はそこで止まります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>十字に伸びる爆風 | Ebi Showcase</title>
+  <title>Ebi Showcase – 十字に伸びる爆風</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="十字に伸びる爆風 | Ebi Showcase">
-    <meta property="og:description" content="爆弾の中心から上下左右へ進み、次のマスが爆風に入るかを順番に決めます。射程まで進むか、固い壁に出会った方向はそこで止まります。">
+    <meta property="og:title" content="Ebi Showcase – 十字に伸びる爆風">
+    <meta property="og:description" content="爆弾の中心から上下左右へ進み、次のマスが爆風に入るかを順番に決めます。射程まで進むか、固い壁に出会った方向はそこで止まります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/bomb-maze/cross-blast/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--bomb-maze--cross-blast.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="十字に伸びる爆風 | Ebi Showcase">
-    <meta name="twitter:description" content="爆弾の中心から上下左右へ進み、次のマスが爆風に入るかを順番に決めます。射程まで進むか、固い壁に出会った方向はそこで止まります。">
+    <meta name="twitter:title" content="Ebi Showcase – 十字に伸びる爆風">
+    <meta name="twitter:description" content="爆弾の中心から上下左右へ進み、次のマスが爆風に入るかを順番に決めます。射程まで進むか、固い壁に出会った方向はそこで止まります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--bomb-maze--cross-blast.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="十字に伸びる爆風">
     <!-- ogp:end -->
@@ -43,7 +44,10 @@
 
 <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>爆風をねらってビーコンを6個消そう</h2></div><p>矢印／WASDで移動、SpaceまたはXで爆弾を置きます。クリックとタッチは画面下のボタンを使います。細い枠が爆風予定セルです。置いたら爆風の外へ逃げましょう。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="十字に伸びる爆風ゲーム" src="../../../../play/cross-blast/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -98,7 +102,7 @@ for _, direction := range rays {
       <div class="why-grid"><article><h3>なぜセルの配列にする？</h3><p>描画、プレイヤーの自爆判定、ビーコンの命中判定が、すべて同じ<code>blast</code>配列を使えるからです。</p></article><article><h3>壁の向こうへ届かない理由</h3><p>壁を見つけた瞬間に追加前で止めます。「壁も爆風に含めるか」は順番を変えるだけで設計できます。</p></article><article><h3>チャレンジ</h3><p>射程を2や4に変え、予定セルの数と逃げる難しさがどう変わるか比べてみよう。</p></article></div>
     </section>
 
-    <nav class="lesson-pager"><a href="../timed-bomb/">← STEP 01<strong>時限爆弾を置く</strong></a><a href="../breakable-walls/">STEP 03 →<strong>壊れる壁とアイテム</strong></a></nav>
+    <nav class="lesson-pager"><a href="../timed-bomb/" rel="prev">← STEP 01<strong>時限爆弾を置く</strong></a><a href="../breakable-walls/" rel="next">STEP 03 →<strong>壊れる壁とアイテム</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -114,7 +118,7 @@ for _, direction := range rays {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -122,6 +126,19 @@ for _, direction := range rays {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

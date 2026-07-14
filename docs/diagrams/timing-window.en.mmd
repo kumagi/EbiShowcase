@@ -1,0 +1,8 @@
+flowchart LR
+  marker["marker position<br/>marker"]
+  center["distance to center<br/>abs(marker-center)"]
+  window["judgement windows<br/>±4 / ±12"]
+  feedback["feedback<br/>color / sound / sparks"]
+  marker --> center
+  center --> window
+  window --> feedback

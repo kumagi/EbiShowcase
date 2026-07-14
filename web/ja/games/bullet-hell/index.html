@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="GoとEbitengineで作った弾幕ゲームから、円形弾・狙い撃ち弾の計算方法と大量オブジェクトの最適化を学ぶレッスンです。">
-  <title>LEVEL 12 — Bullet Hell | Ebi Showcase</title>
+  <meta name="description" content="GoとEbitengineで作った弾幕ゲームから、円形弾・狙い撃ち弾の計算方法と大量オブジェクトの最適化を学ぶレッスンです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+  <title>Ebi Showcase – LEVEL 12 — Bullet Hell</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="LEVEL 12 — Bullet Hell | Ebi Showcase">
-    <meta property="og:description" content="GoとEbitengineで作った弾幕ゲームから、円形弾・狙い撃ち弾の計算方法と大量オブジェクトの最適化を学ぶレッスンです。">
+    <meta property="og:title" content="Ebi Showcase – LEVEL 12 — Bullet Hell">
+    <meta property="og:description" content="GoとEbitengineで作った弾幕ゲームから、円形弾・狙い撃ち弾の計算方法と大量オブジェクトの最適化を学ぶレッスンです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/games/bullet-hell/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--bullet-hell.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="LEVEL 12 — Bullet Hell | Ebi Showcase">
-    <meta name="twitter:description" content="GoとEbitengineで作った弾幕ゲームから、円形弾・狙い撃ち弾の計算方法と大量オブジェクトの最適化を学ぶレッスンです。">
+    <meta name="twitter:title" content="Ebi Showcase – LEVEL 12 — Bullet Hell">
+    <meta name="twitter:description" content="GoとEbitengineで作った弾幕ゲームから、円形弾・狙い撃ち弾の計算方法と大量オブジェクトの最適化を学ぶレッスンです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--bullet-hell.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Bullet Hell">
     <!-- ogp:end -->
@@ -42,8 +42,19 @@
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>cos/sinは角度から円周上の横・縦位置を得る道具。ラジアンは角度単位で2πが一周、frame%周期は一定フレームごとに同じ模様を繰り返します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>angle := 2*math.Pi*float64(i)/count</code></pre></div></section>
+<!-- feedback-note:games/bullet-hell:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-bullet-hell"><div><p class="eyebrow">まず1発、次に大量</p><h2 id="feedback-note-games-bullet-hell">弾幕も、1発ずつの円をforで描く</h2><p>最初は弾1個の位置と速度をUpdateし、Drawで円を1つ描きます。動くことを確認してから、forで同じ処理を何十個にも増やし、最後に画面外を削除します。</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="弾を一発ずつ更新して描く">for i := range bullets {
+    bullets[i].X += bullets[i].VX
+    drawCircle(bullets[i].X, bullets[i].Y)
+}</pre></div></section>
+<!-- feedback-note:games/bullet-hell:end -->
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_bullet-spawn.svg" alt="弾幕を時間で組み立てる" loading="lazy" decoding="async"><figcaption>弾幕を時間で組み立てるの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_layer-stack.svg" alt="描画レイヤーの順番" loading="lazy" decoding="async"><figcaption>描画レイヤーの順番の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>ボスを倒せ。弾を避けて。</h2></div><p>WASD・矢印キー・ドラッグで自機を動かします。弾は自動発射です。ボスのHPゲージを0にすれば勝利。ライフが0になるとゲームオーバーです。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 12</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Bullet Hell" src="../../../play/bullet-hell/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -417,7 +428,7 @@ func main() {
       </div>
     </section>
 
-    <nav class="lesson-pager"><a href="../dungeon/">← LEVEL 11<strong>Dungeon</strong></a><span></span></nav>
+    <nav class="lesson-pager"><a href="../dungeon/" rel="prev">← LEVEL 11<strong>Dungeon</strong></a><span></span></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -433,7 +444,7 @@ func main() {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -441,6 +452,19 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

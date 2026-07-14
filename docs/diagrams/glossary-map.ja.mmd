@@ -1,0 +1,10 @@
+flowchart LR
+  update["Update<br/>数字を進める"]
+  state["状態<br/>position / score"]
+  draw["Draw<br/>絵を描く"]
+  geom["GeoM<br/>場所・回転"]
+  data["JSON<br/>面を増やす"]
+  update --> state
+  state --> draw
+  draw --> geom
+  state --> data

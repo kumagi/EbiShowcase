@@ -1,10 +1,11 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>8×8の盤面をデータで描く | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 8×8の盤面をデータで描く</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/reversi/board-grid/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="8×8の盤面をデータで描く | Ebi Showcase">
-    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta property="og:title" content="Ebi Showcase – 8×8の盤面をデータで描く">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/reversi/board-grid/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--reversi--board-grid.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -13,13 +14,16 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="8×8の盤面をデータで描く | Ebi Showcase">
-    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta name="twitter:title" content="Ebi Showcase – 8×8の盤面をデータで描く">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--reversi--board-grid.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="8×8の盤面をデータで描く">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/reversi/board-grid/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← コンピュータと対戦できるリバーシを作ろう</a><span>STEP 01 / 05</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>8×8の盤面をデータで描く</h1><p>64個のマスを二次元配列で持ち、クリックした場所を黒い石として表示します。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>8×8の盤面をデータで描く</h2><p>クリック・タッチで盤面を操作できます。表示される座標、合法手、石数にも注目してください。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/board-grid/" title="8×8の盤面をデータで描く" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>盤面と座標</h2><p>画面に見えているマスを、board[y][x]というデータに置き換えます。Drawはデータを読むだけ、クリックは座標を書き込むだけです。</p><div class="concept-row"><article><b>01</b><h3>SEE</h3><p>64個のマスを二次元配列で持ち、クリックした場所を黒い石として表示します。</p></article><article><b>02</b><h3>STATE</h3><p>画面に見えているマスを、board[y][x]というデータに置き換えます。Drawはデータを読むだけ、クリックは座標を書き込むだけです。</p></article><article><b>03</b><h3>DECIDE</h3><p>見えている盤面から、次の一手の理由を言葉にします。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="BOARD,SCAN,FLIP,SCORE"><div><p class="eyebrow">SYSTEM LAB</p><h2>盤面と座標</h2><p>ボタンを押して、データが次の処理へ渡る順番を確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>盤面と座標</h2><p>実ゲームで使っている中心ルールを小さく抜き出します。</p></div><pre><code>const Size = 8
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/reversi/board-grid/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← コンピュータと対戦できるリバーシを作ろう</a><span>STEP 01 / 05</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>8×8の盤面をデータで描く</h1><p>64個のマスを二次元配列で持ち、クリックした場所を黒い石として表示します。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>8×8の盤面をデータで描く</h2><p>クリック・タッチで盤面を操作できます。表示される座標、合法手、石数にも注目してください。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/board-grid/" title="8×8の盤面をデータで描く" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>盤面と座標</h2><p>画面に見えているマスを、board[y][x]というデータに置き換えます。Drawはデータを読むだけ、クリックは座標を書き込むだけです。</p><div class="concept-row"><article><b>01</b><h3>SEE</h3><p>64個のマスを二次元配列で持ち、クリックした場所を黒い石として表示します。</p></article><article><b>02</b><h3>STATE</h3><p>画面に見えているマスを、board[y][x]というデータに置き換えます。Drawはデータを読むだけ、クリックは座標を書き込むだけです。</p></article><article><b>03</b><h3>DECIDE</h3><p>見えている盤面から、次の一手の理由を言葉にします。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="BOARD,SCAN,FLIP,SCORE"><div><p class="eyebrow">SYSTEM LAB</p><h2>盤面と座標</h2><p>ボタンを押して、データが次の処理へ渡る順番を確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>盤面と座標</h2><p>実ゲームで使っている中心ルールを小さく抜き出します。</p></div><pre><code>const Size = 8
 type Board [Size][Size]Player
-board[y][x] = Black</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>画面に見えているマスを、board[y][x]というデータに置き換えます。Drawはデータを読むだけ、クリックは座標を書き込むだけです。</p></article><article><h3>CHANGE</h3><p>スコアマップや盤面の初期配置を変えて、結果を比べてみよう。</p></article><article class="challenge"><h3>CHALLENGE</h3><p>角を取るだけでなく、次の手を見越すCPUへ改良しよう。</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>コンピュータと対戦できるリバーシを作ろう</strong></a><a href="../legal-moves/">NEXT →<strong>置ける場所を探す</strong></a></nav>
+board[y][x] = Black</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>画面に見えているマスを、board[y][x]というデータに置き換えます。Drawはデータを読むだけ、クリックは座標を書き込むだけです。</p></article><article><h3>CHANGE</h3><p>スコアマップや盤面の初期配置を変えて、結果を比べてみよう。</p></article><article class="challenge"><h3>CHALLENGE</h3><p>角を取るだけでなく、次の手を見越すCPUへ改良しよう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>コンピュータと対戦できるリバーシを作ろう</strong></a><a href="../legal-moves/" rel="next">NEXT →<strong>置ける場所を探す</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -33,7 +37,7 @@ board[y][x] = Black</code></pre></section><section class="why-grid"><article><h3
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

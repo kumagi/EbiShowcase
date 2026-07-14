@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Energy Turns | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Advance turn start, card play, turn end, and enemy action with a state machine. Play the demo, read a short Go example, change a value, and apply the idea to yo"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Energy Turns</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Energy Turns | Ebi Showcase">
-    <meta property="og:description" content="Advance turn start, card play, turn end, and enemy action with a state machine.">
+    <meta property="og:title" content="Ebi Showcase – Energy Turns">
+    <meta property="og:description" content="Advance turn start, card play, turn end, and enemy action with a state machine. Play the demo, read a short Go example, change a value, and apply the idea to yo">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/deckbuilder/turn-energy/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--turn-energy.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Energy Turns | Ebi Showcase">
-    <meta name="twitter:description" content="Advance turn start, card play, turn end, and enemy action with a state machine.">
+    <meta name="twitter:title" content="Ebi Showcase – Energy Turns">
+    <meta name="twitter:description" content="Advance turn start, card play, turn end, and enemy action with a state machine. Play the demo, read a short Go example, change a value, and apply the idea to yo">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--turn-energy.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Energy Turns">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if phase == PlayerTurn { updatePlayerTurn() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Combine three energy to win.</h2></div><p>Play cards with 1–3 and end with E or the bottom button.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Energy Turns" src="../../../../play/turn-energy/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / TURN PHASE</p><h2>Why does the enemy wait while you choose cards?</h2><p class="lesson-lead">Remember one current phase and run <strong>only that phase's Update</strong>. Ending the player turn passes control to the enemy.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Turn start</h3><p>Restore energy to three and prepare block.</p><code>energy = 3</code></article><article><span class="concept-number">2</span><h3>Card play</h3><p>Subtract cost and play several while energy remains.</p><code>energy -= card.Cost</code></article><article><span class="concept-number">3</span><h3>Enemy action</h3><p>The end button changes phase to Enemy.</p><code>phase = EnemyPhase</code></article></div><div class="motion-lab" data-lab="energy-turn" data-max="3" data-empty="empty" data-spend="spent 1" data-refill="refilled" aria-labelledby="lab-title-turn-energy">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / REFILL</p>
@@ -41,7 +45,7 @@
 <span data-go-line="end">drawHand(); enemyTurn()</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</div><div class="formula"><p class="eyebrow">THE TURN BUDGET</p><div class="formula-lines"><code>each play: energy--</code><span>then</span><code>end turn: energy = max</code></div><p>Cards set power; energy caps how often. Split those jobs to tune easily.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Branch Update by phase</h3><p>Ignore card input during Enemy phase, then restore energy when it finishes.</p></div><pre><code>switch phase { case PlayerPhase: playCardsOrEnd(); case EnemyPhase: enemyAct(); energy = 3; phase = PlayerPhase }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ENERGY?</p><h3>Choose combinations</h3><p>Compare several small cards with one large move.</p></article><article><p class="eyebrow">WHY PHASE?</p><h3>Keep order clear</h3><p>Input and enemy action cannot happen together.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Carry energy</h3><p>Design a rule that saves one unused energy.</p></article></div></section><nav class="lesson-pager"><a href="../play-a-card/">← STEP 01<strong>Play a Card</strong></a><a href="../deck-cycle/">STEP 03 →<strong>Draw, Hand, Discard</strong></a></nav>
+</div><div class="formula"><p class="eyebrow">THE TURN BUDGET</p><div class="formula-lines"><code>each play: energy--</code><span>then</span><code>end turn: energy = max</code></div><p>Cards set power; energy caps how often. Split those jobs to tune easily.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Branch Update by phase</h3><p>Ignore card input during Enemy phase, then restore energy when it finishes.</p></div><pre><code>switch phase { case PlayerPhase: playCardsOrEnd(); case EnemyPhase: enemyAct(); energy = 3; phase = PlayerPhase }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ENERGY?</p><h3>Choose combinations</h3><p>Compare several small cards with one large move.</p></article><article><p class="eyebrow">WHY PHASE?</p><h3>Keep order clear</h3><p>Input and enemy action cannot happen together.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Carry energy</h3><p>Design a rule that saves one unused energy.</p></article></div></section><nav class="lesson-pager"><a href="../play-a-card/" rel="prev">← STEP 01<strong>Play a Card</strong></a><a href="../deck-cycle/" rel="next">STEP 03 →<strong>Draw, Hand, Discard</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -57,7 +61,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -65,6 +69,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="セーブ・ロード・オフライン進行を学ぶ、Ebitengine版クリッカー完結レッスン。">
-  <title>STEP 05 — オフラインベーカリー | Ebi Showcase</title>
+  <meta name="description" content="セーブ・ロード・オフライン進行を学ぶ、Ebitengine版クリッカー完結レッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+  <title>Ebi Showcase – STEP 05 — オフラインベーカリー</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="STEP 05 — オフラインベーカリー | Ebi Showcase">
-    <meta property="og:description" content="セーブ・ロード・オフライン進行を学ぶ、Ebitengine版クリッカー完結レッスン。">
+    <meta property="og:title" content="Ebi Showcase – STEP 05 — オフラインベーカリー">
+    <meta property="og:description" content="セーブ・ロード・オフライン進行を学ぶ、Ebitengine版クリッカー完結レッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/clicker/offline-bakery/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--clicker--offline-bakery.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="STEP 05 — オフラインベーカリー | Ebi Showcase">
-    <meta name="twitter:description" content="セーブ・ロード・オフライン進行を学ぶ、Ebitengine版クリッカー完結レッスン。">
+    <meta name="twitter:title" content="Ebi Showcase – STEP 05 — オフラインベーカリー">
+    <meta name="twitter:description" content="セーブ・ロード・オフライン進行を学ぶ、Ebitengine版クリッカー完結レッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--clicker--offline-bakery.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="オフラインベーカリー">
     <!-- ogp:end -->
@@ -44,7 +44,10 @@
 <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。</p>
 
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>5000個のお菓子を目指そう。</h2></div><p>一度プレイしてページを閉じ、後で戻ると留守中の生産分が加算されます。Rキーでセーブを消去できます。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="オフラインベーカリー" src="../../../../play/offline-bakery/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -128,7 +131,7 @@
       </div>
     </section>
 
-    <nav class="lesson-pager"><a href="../growth-curves/">← STEP 04<strong>成長曲線ラボ</strong></a><span></span></nav>
+    <nav class="lesson-pager"><a href="../growth-curves/" rel="prev">← STEP 04<strong>成長曲線ラボ</strong></a><span></span></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -144,7 +147,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -152,6 +155,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

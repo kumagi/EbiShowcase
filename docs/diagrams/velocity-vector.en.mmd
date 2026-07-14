@@ -1,0 +1,8 @@
+flowchart LR
+  gravity["Gravity<br/>vy += 0.42"]
+  velocity["Velocity<br/>vx / vy"]
+  position["Position<br/>x += vx"]
+  draw["Draw<br/>smooth arc"]
+  gravity --> velocity
+  velocity --> position
+  position --> draw

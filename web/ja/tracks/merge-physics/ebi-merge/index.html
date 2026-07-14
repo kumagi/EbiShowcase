@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Merge | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="次の実、投入、物理、合体、得点、危険ラインを統合した完成ゲームです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbiteng"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ebi Merge</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Merge | Ebi Showcase">
-    <meta property="og:description" content="次の実、投入、物理、合体、得点、危険ラインを統合した完成ゲームです。">
+    <meta property="og:title" content="Ebi Showcase – Ebi Merge">
+    <meta property="og:description" content="次の実、投入、物理、合体、得点、危険ラインを統合した完成ゲームです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbiteng">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/merge-physics/ebi-merge/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--merge-physics--ebi-merge.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Merge | Ebi Showcase">
-    <meta name="twitter:description" content="次の実、投入、物理、合体、得点、危険ラインを統合した完成ゲームです。">
+    <meta name="twitter:title" content="Ebi Showcase – Ebi Merge">
+    <meta name="twitter:description" content="次の実、投入、物理、合体、得点、危険ラインを統合した完成ゲームです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbiteng">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--merge-physics--ebi-merge.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Merge">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>予告は次に落とす実、得点は合体の成果、ゲームオーバーは置き場所がなくなった状態。落下中は左右を考える時間を残し、同じtierの実が触れた時だけ合体します。合体済みへremoved印を付けて二重処理を防ぎます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if a.tier==b.tier { merge(a,b); score+=value }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>TIER 7の実を作ろう。</h2></div><p>ポインターを動かし、タップして実を落とします。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Merge" src="../../../../play/ebi-merge/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GAME LOOP</p><h2>物理の実験を、どうやってゲームにする？</h2><p class="lesson-lead">次の実を見せて<strong>考える時間</strong>を作り、合体へ得点を付け、高さへ失敗条件を付けます。物理へ目標と選択を加えるとゲームになります。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>予告</h3><p>nextとafterを表示し、置き場所を考えられるようにします。</p><code>next, after</code></article><article><span class="concept-number">2</span><h3>得点</h3><p>大きなtierほど2乗で高得点にします。</p><code>score += tier*tier*10</code></article><article><span class="concept-number">3</span><h3>危険ライン</h3><p>静かな実が180フレーム上に残ると終了です。</p><code>danger &gt;= 180</code></article></div><div class="motion-lab" data-lab="preview-next" data-enqueued="予告追加" data-dropped="落下 T{n}" data-empty="空" aria-labelledby="lab-title-ebi-merge">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / NEXT QUEUE</p>
@@ -42,7 +46,7 @@
 <span data-go-line="enq">queue = append(queue, randomTier())</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</div><div class="formula"><p class="eyebrow">PREVIEW ≠ BOARD</p><div class="formula-lines"><code>queue.front → spawn</code><span>つぎに</span><code>queue は盤面と別</code></div><p>予告を盤面配列へ混ぜないこと。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>同じUpdateへ全部を順序よく置く</h3><p>入力、物理、合体、危険判定の順なら、結果が毎回同じになります。</p></div><pre><code>readDropInput() / simulatePhysics() / replaceMergedPairs() / updateScoreAndDanger() / decideClearOrGameOver()</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY PREVIEW?</p><h3>運だけにしない</h3><p>次を知れば置き場所を計画できます。</p></article><article><p class="eyebrow">WHY DELAY DANGER?</p><h3>跳ねた瞬間を許す</h3><p>一瞬ラインを越えただけでは終了しません。</p></article><article class="challenge"><p class="eyebrow">TUNE IT</p><h3>得点曲線</h3><p>2乗を3乗へ変えると大合体の価値がさらに上がります。</p></article></div></section><nav class="lesson-pager"><a href="../merge-rule/">← STEP 05<strong>同じ実の合体</strong></a><a href="../">PATH COMPLETE →<strong>合体物理パズル</strong></a></nav>
+</div><div class="formula"><p class="eyebrow">PREVIEW ≠ BOARD</p><div class="formula-lines"><code>queue.front → spawn</code><span>つぎに</span><code>queue は盤面と別</code></div><p>予告を盤面配列へ混ぜないこと。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>同じUpdateへ全部を順序よく置く</h3><p>入力、物理、合体、危険判定の順なら、結果が毎回同じになります。</p></div><pre><code>readDropInput() / simulatePhysics() / replaceMergedPairs() / updateScoreAndDanger() / decideClearOrGameOver()</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY PREVIEW?</p><h3>運だけにしない</h3><p>次を知れば置き場所を計画できます。</p></article><article><p class="eyebrow">WHY DELAY DANGER?</p><h3>跳ねた瞬間を許す</h3><p>一瞬ラインを越えただけでは終了しません。</p></article><article class="challenge"><p class="eyebrow">TUNE IT</p><h3>得点曲線</h3><p>2乗を3乗へ変えると大合体の価値がさらに上がります。</p></article></div></section><nav class="lesson-pager"><a href="../merge-rule/" rel="prev">← STEP 05<strong>同じ実の合体</strong></a><a href="../" rel="next">PATH COMPLETE →<strong>合体物理パズル</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -58,7 +62,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -66,6 +70,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

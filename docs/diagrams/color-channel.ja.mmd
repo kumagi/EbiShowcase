@@ -1,0 +1,8 @@
+flowchart LR
+  base["元の色<br/>R G B A"]
+  scale["倍率<br/>0〜2"]
+  mode["状態<br/>通常・毒・回復"]
+  draw["Draw<br/>色が変わる"]
+  base --> scale
+  scale --> mode
+  mode --> draw

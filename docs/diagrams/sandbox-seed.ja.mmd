@@ -1,0 +1,8 @@
+flowchart LR
+  seed["seed<br/>乱数の出発点"]
+  chunk["chunk<br/>必要な範囲だけ"]
+  noise["地形ルール<br/>高さ・資源"]
+  world["配置<br/>遊べる世界"]
+  seed --> chunk
+  chunk --> noise
+  noise --> world

@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="GoとEbitengineで作ったSpace Shooterから、種類ごとのリストで敵・弾・星をまとめて動かす方法を学ぶレッスンです。">
-  <title>LEVEL 08 — Space Shooter | Ebi Showcase</title>
+  <meta name="description" content="GoとEbitengineで作ったSpace Shooterから、種類ごとのリストで敵・弾・星をまとめて動かす方法を学ぶレッスンです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+  <title>Ebi Showcase – LEVEL 08 — Space Shooter</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="LEVEL 08 — Space Shooter | Ebi Showcase">
-    <meta property="og:description" content="GoとEbitengineで作ったSpace Shooterから、種類ごとのリストで敵・弾・星をまとめて動かす方法を学ぶレッスンです。">
+    <meta property="og:title" content="Ebi Showcase – LEVEL 08 — Space Shooter">
+    <meta property="og:description" content="GoとEbitengineで作ったSpace Shooterから、種類ごとのリストで敵・弾・星をまとめて動かす方法を学ぶレッスンです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/games/space-shooter/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--space-shooter.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="LEVEL 08 — Space Shooter | Ebi Showcase">
-    <meta name="twitter:description" content="GoとEbitengineで作ったSpace Shooterから、種類ごとのリストで敵・弾・星をまとめて動かす方法を学ぶレッスンです。">
+    <meta name="twitter:title" content="Ebi Showcase – LEVEL 08 — Space Shooter">
+    <meta name="twitter:description" content="GoとEbitengineで作ったSpace Shooterから、種類ごとのリストで敵・弾・星をまとめて動かす方法を学ぶレッスンです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--space-shooter.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Space Shooter">
     <!-- ogp:end -->
@@ -42,8 +42,23 @@
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>自機・弾・敵を別リストにすると、それぞれ同じUpdateを繰り返せます。全弾×全敵を調べる総当たりは、教材の小さな数なら十分です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>for _, b := range bullets { for _, e := range enemies { check(b,e) } }</code></pre></div></section>
+<!-- feedback-note:games/space-shooter:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-space-shooter"><div><p class="eyebrow">種類ごとのリスト</p><h2 id="feedback-note-games-space-shooter">Enemyの形を先に決めると、i番目の意味が見える</h2><p>敵だけ動かす、弾だけ消す、という処理を分けるためにスライスを種類ごとに持ちます。<code>i</code>はそのリストの何番目かを表す番号です。</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="Enemy構造体とi番目の敵">type Enemy struct {
+    X, Y float64
+    HP   int
+}
+for i := range enemies {
+    enemies[i].X -= 2
+}</pre></div></section>
+<!-- feedback-note:games/space-shooter:end -->
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_input-map.svg" alt="入力マッピング" loading="lazy" decoding="async"><figcaption>入力マッピングの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_aim-vector.svg" alt="ねらいをベクトルへ" loading="lazy" decoding="async"><figcaption>ねらいをベクトルへの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_bullet-pool.svg" alt="弾の再利用" loading="lazy" decoding="async"><figcaption>弾の再利用の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>全ウェーブを生き残れ。</h2></div><p>矢印キーまたはドラッグで自機を動かし、スペース／タッチで弾を発射します。敵は「ウェーブ」というグループ単位で時間差で降ってきます。今のウェーブをすべて倒すと次のウェーブが来ます。ライフが0になるとゲームオーバーです。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Space Shooter" src="../../../play/space-shooter/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -475,7 +490,7 @@ func main() {
       </div>
     </section>
 
-    <nav class="lesson-pager"><a href="../snake/">← LEVEL 07<strong>Snake</strong></a><a href="../sokoban/">LEVEL 09 →<strong>Sokoban</strong></a></nav>
+    <nav class="lesson-pager"><a href="../snake/" rel="prev">← LEVEL 07<strong>Snake</strong></a><a href="../sokoban/" rel="next">LEVEL 09 →<strong>Sokoban</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -491,7 +506,7 @@ func main() {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -499,6 +514,19 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

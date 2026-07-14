@@ -1,0 +1,9 @@
+flowchart LR
+  head["次の頭<br/>方向を足す"]
+  append["append<br/>先頭へ"]
+  tail["尾を削る<br/>通常移動"]
+  grow["食べた？<br/>尾を残す"]
+  head --> append
+  append --> tail
+  tail --> grow
+  grow --> head

@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Play One Card | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Store cost, name, and effect as data, then execute the selected card's instruction. Play the demo, read a short Go example, change a value, and apply the idea t"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Play One Card</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Play One Card | Ebi Showcase">
-    <meta property="og:description" content="Store cost, name, and effect as data, then execute the selected card's instruction.">
+    <meta property="og:title" content="Ebi Showcase – Play One Card">
+    <meta property="og:description" content="Store cost, name, and effect as data, then execute the selected card's instruction. Play the demo, read a short Go example, change a value, and apply the idea t">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/deckbuilder/play-a-card/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--play-a-card.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Play One Card | Ebi Showcase">
-    <meta name="twitter:description" content="Store cost, name, and effect as data, then execute the selected card's instruction.">
+    <meta name="twitter:title" content="Ebi Showcase – Play One Card">
+    <meta name="twitter:description" content="Store cost, name, and effect as data, then execute the selected card's instruction. Play the demo, read a short Go example, change a value, and apply the idea t">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--play-a-card.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Play One Card">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>resolve(card)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Use three cards to defeat the slime.</h2></div><p>Tap a card or use keys 1–3.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Play One Card" src="../../../../play/play-a-card/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CARD DATA</p><h2>A card is a tiny instruction sheet, not just a picture</h2><p class="lesson-lead">Group name, cost, effect kind, and value. Different-looking cards can use the <strong>same resolve function</strong>.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Card data</h3><p>Group name, cost, kind, and value.</p><code>Card{Name, Cost, Kind, Value}</code></article><article><span class="concept-number">2</span><h3>Payment</h3><p>Play only with enough energy.</p><code>energy &gt;= card.Cost</code></article><article><span class="concept-number">3</span><h3>Resolution</h3><p>Kind selects damage, block, or healing.</p><code>switch card.Kind</code></article></div><div class="motion-lab" data-lab="card-play" data-poor="not enough energy" data-enemy="enemy attack" aria-labelledby="lab-title-play-a-card">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / RESOLVE</p>
@@ -42,7 +46,7 @@
 <span data-go-line="fx">apply(card)</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</div><div class="formula"><p class="eyebrow">THE PAY → BRANCH RULE</p><div class="formula-lines"><code>energy -= cost</code><span>then</span><code>switch kind { damage / block / heal }</code></div><p>New cards are new data rows—the resolver stays the same.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Turn data into instructions</h3><p>Read Kind and Value instead of writing a separate function per card.</p></div><pre><code>if energy &gt;= card.Cost { energy -= card.Cost; switch card.Kind { case "damage": enemyHP -= card.Value; case "block": block += card.Value; case "heal": hp += card.Value } }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY DATA?</p><h3>Add cards easily</h3><p>A new row creates another set of numbers.</p></article><article><p class="eyebrow">WHY COST?</p><h3>Create decisions</h3><p>Choose when a strong card is worth playing.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>A new Kind</h3><p>Design a card that attacks twice.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../turn-energy/">STEP 02 →<strong>Energy Turns</strong></a></nav>
+</div><div class="formula"><p class="eyebrow">THE PAY → BRANCH RULE</p><div class="formula-lines"><code>energy -= cost</code><span>then</span><code>switch kind { damage / block / heal }</code></div><p>New cards are new data rows—the resolver stays the same.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Turn data into instructions</h3><p>Read Kind and Value instead of writing a separate function per card.</p></div><pre><code>if energy &gt;= card.Cost { energy -= card.Cost; switch card.Kind { case "damage": enemyHP -= card.Value; case "block": block += card.Value; case "heal": hp += card.Value } }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY DATA?</p><h3>Add cards easily</h3><p>A new row creates another set of numbers.</p></article><article><p class="eyebrow">WHY COST?</p><h3>Create decisions</h3><p>Choose when a strong card is worth playing.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>A new Kind</h3><p>Design a card that attacks twice.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../turn-energy/" rel="next">STEP 02 →<strong>Energy Turns</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -58,7 +62,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -66,6 +70,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

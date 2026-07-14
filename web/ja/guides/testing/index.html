@@ -1,10 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="EbitengineのUpdateから純粋なゲームルールを取り出し、Goのユニットテストで画面を開かずに挙動を確かめる4ステップ教材。"><title>ゲームをテストできる形にする | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="EbitengineのUpdateから純粋なゲームルールを取り出し、Goのユニットテストで画面を開かずに挙動を確かめる5ステップ教材。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。"><title>Ebi Showcase – ゲームをテストできる形にする</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/testing/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="ゲームをテストできる形にする | Ebi Showcase">
-    <meta property="og:description" content="EbitengineのUpdateから純粋なゲームルールを取り出し、Goのユニットテストで画面を開かずに挙動を確かめる4ステップ教材。">
+    <meta property="og:title" content="Ebi Showcase – ゲームをテストできる形にする">
+    <meta property="og:description" content="EbitengineのUpdateから純粋なゲームルールを取り出し、Goのユニットテストで画面を開かずに挙動を確かめる5ステップ教材。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/guides/testing/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -13,11 +13,11 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ゲームをテストできる形にする | Ebi Showcase">
-    <meta name="twitter:description" content="EbitengineのUpdateから純粋なゲームルールを取り出し、Goのユニットテストで画面を開かずに挙動を確かめる4ステップ教材。">
+    <meta name="twitter:title" content="Ebi Showcase – ゲームをテストできる形にする">
+    <meta name="twitter:description" content="EbitengineのUpdateから純粋なゲームルールを取り出し、Goのユニットテストで画面を開かずに挙動を確かめる5ステップ教材。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="遊んで確かめる前に、 コードで確かめる。">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="./">TESTING</a><a class="lang" href="../../../en/guides/testing/" lang="en">EN</a></nav></header><main><section class="test-hero"><p class="eyebrow">SPECIAL GUIDE / UNIT TESTING</p><h1>遊んで確かめる前に、<br><em>コードで確かめる。</em></h1><p>ゲームは最後に人が遊んで確かめます。でも、当たり判定や得点、ゲージの境目まで毎回目で試す必要はありません。Updateの奥にある『数字を受け取り、次の数字を返すルール』を取り出して、Goに何度でも確認してもらいましょう。</p></section><section class="test-boundary" aria-label="logic boundary"><div><small>Ebitengineの仕事</small><b>入力を読む</b></div><i>→</i><div class="is-pure"><small>純粋なルール</small><b>数字から答えを出す</b><em>窓・GPU・タッチ操作なし</em></div><i>→</i><div><small>またゲームへ</small><b>状態を更新する</b></div></section><section class="test-terminal"><code>$ go test ./...</code><strong>✓ ok  internal/lessonlogic</strong></section><section class="test-course"><p class="eyebrow">COURSE MAP</p><h2>4つの小さな改造</h2><p>過去の教材を、テストしやすいコードへ本当にリファクタリングします。デモはありません。コードとケース表が、このコースのビジュアルです。</p><div class="test-course-grid"><a class="test-course-card" href="pure-functions/"><span>01</span><h3>画面からルールを取り出す</h3><p>クリック位置と丸の当たり判定を、Ebitengineを知らない小さな関数へ移します。入力と描画はゲーム側、答えを出す計算は純粋ロジック側です。</p><strong>読む →</strong></a><a class="test-course-card" href="table-tests/"><span>02</span><h3>境目をテストの表にする</h3><p>タイミングメーターの PERFECT / GREAT / GOOD / MISS は、境目でバグが起きやすいルールです。似た確認をコピーせず、入力と期待する答えを表にします。</p><strong>読む →</strong></a><a class="test-course-card" href="state-transitions/"><span>03</span><h3>1フレーム後の状態を比べる</h3><p>アクティブ戦闘RPGでは、毎フレーム『ゲージ + 素早さ』を計算します。1000に届いた瞬間だけREADYになる状態遷移を、1歩ずつテストします。</p><strong>読む →</strong></a><a class="test-course-card" href="regression-tests/"><span>04</span><h3>直したバグを二度と戻さない</h3><p>3マッチの特殊ピースは、十字消しや連鎖のように手動確認が難しい仕組みです。バグが起きた盤面を小さなデータで再現し、修正前に失敗するテストとして残します。</p><strong>読む →</strong></a></div></section>
+    <!-- ogp:end --><link rel="stylesheet" href="../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="./">TESTING</a><a class="lang" href="../../../en/guides/testing/" lang="en">EN</a></nav></header><main><section class="test-hero"><p class="eyebrow">SPECIAL GUIDE / UNIT TESTING</p><h1>遊んで確かめる前に、<br><em>コードで確かめる。</em></h1><p>ゲームは最後に人が遊んで確かめます。でも、当たり判定や得点、ゲージの境目まで毎回目で試す必要はありません。Updateの奥にある『数字を受け取り、次の数字を返すルール』を取り出して、Goに何度でも確認してもらいましょう。</p></section><section class="test-boundary" aria-label="logic boundary"><div><small>Ebitengineの仕事</small><b>入力を読む</b></div><i>→</i><div class="is-pure"><small>純粋なルール</small><b>数字から答えを出す</b><em>窓・GPU・タッチ操作なし</em></div><i>→</i><div><small>またゲームへ</small><b>状態を更新する</b></div></section><section class="test-terminal"><code>$ go test ./...</code><strong>✓ ok  internal/lessonlogic</strong></section><section class="test-course"><p class="eyebrow">COURSE MAP</p><h2>5つの小さな改造</h2><p>過去の教材を、テストしやすいコードへ本当にリファクタリングします。デモはありません。コードとケース表が、このコースのビジュアルです。</p><div class="test-course-grid"><a class="test-course-card" href="pure-functions/"><span>01</span><h3>画面からルールを取り出す</h3><p>クリック位置と丸の当たり判定を、Ebitengineを知らない小さな関数へ移します。入力と描画はゲーム側、答えを出す計算は純粋ロジック側です。</p><strong>読む →</strong></a><a class="test-course-card" href="table-tests/"><span>02</span><h3>境目をテストの表にする</h3><p>タイミングメーターの PERFECT / GREAT / GOOD / MISS は、境目でバグが起きやすいルールです。似た確認をコピーせず、入力と期待する答えを表にします。</p><strong>読む →</strong></a><a class="test-course-card" href="state-transitions/"><span>03</span><h3>1フレーム後の状態を比べる</h3><p>アクティブ戦闘RPGでは、毎フレーム『ゲージ + 素早さ』を計算します。1000に届いた瞬間だけREADYになる状態遷移を、1歩ずつテストします。</p><strong>読む →</strong></a><a class="test-course-card" href="regression-tests/"><span>04</span><h3>直したバグを二度と戻さない</h3><p>3マッチの特殊ピースは、十字消しや連鎖のように手動確認が難しい仕組みです。バグが起きた盤面を小さなデータで再現し、修正前に失敗するテストとして残します。</p><strong>読む →</strong></a><a class="test-course-card" href="readable-tests/"><span>05</span><h3>テストはコードを読みやすくする</h3><p>テスト名とAAA（準備・実行・確認）をそろえると、実装を読まなくても関数への期待が分かります。</p><strong>読む →</strong></a></div></section>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -31,7 +31,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

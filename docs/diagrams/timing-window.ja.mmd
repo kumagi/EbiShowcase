@@ -1,0 +1,8 @@
+flowchart LR
+  marker["針の位置<br/>marker"]
+  center["中心との差<br/>abs(marker-center)"]
+  window["判定の窓<br/>±4 / ±12"]
+  feedback["演出<br/>色・音・粒"]
+  marker --> center
+  center --> window
+  window --> feedback

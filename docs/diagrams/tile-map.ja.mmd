@@ -1,0 +1,8 @@
+flowchart LR
+  data["map.json<br/>0=床 1=壁"]
+  grid["2次元slice<br/>map[y][x]"]
+  rule["移動できる？<br/>壁なら止める"]
+  draw["タイルを描く<br/>同じマスへ"]
+  data --> grid
+  grid --> rule
+  grid --> draw

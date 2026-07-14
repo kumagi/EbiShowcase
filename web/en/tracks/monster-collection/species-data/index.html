@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Define One Creature | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Share species name, maximum HP, and attack while each individual changes its own HP and experience. Play the demo, read a short Go example, change a value, and"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Define One Creature</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Define One Creature | Ebi Showcase">
-    <meta property="og:description" content="Share species name, maximum HP, and attack while each individual changes its own HP and experience.">
+    <meta property="og:title" content="Ebi Showcase – Define One Creature">
+    <meta property="og:description" content="Share species name, maximum HP, and attack while each individual changes its own HP and experience. Play the demo, read a short Go example, change a value, and">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/monster-collection/species-data/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--monster-collection--species-data.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Define One Creature | Ebi Showcase">
-    <meta name="twitter:description" content="Share species name, maximum HP, and attack while each individual changes its own HP and experience.">
+    <meta name="twitter:title" content="Ebi Showcase – Define One Creature">
+    <meta name="twitter:description" content="Share species name, maximum HP, and attack while each individual changes its own HP and experience. Play the demo, read a short Go example, change a value, and">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--monster-collection--species-data.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Define One Creature">
     <!-- ogp:end -->
@@ -25,6 +26,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>base := species[monster.species]</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Train same-species twins to 9 XP within eight actions.</h2></div><p>Tap a card or press 1/2 to select an individual, then tap TRAIN or REST. Keyboard uses T/Space and R/H. Low-HP BUBBLE will faint without rest.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Species and instance twin training" src="../../../../play/species-data/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DEFINITION VS STATE</p><h2>Separate what the guidebook says once from what each creature remembers.</h2><p class="lesson-lead">Just as <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> changed numbers and rendered them, Update changes instance HP and XP here. But the REEFLET species name and maximum HP match for every member. Separate shared <strong>definitions</strong> from changing <strong>state</strong>.</p></div>
@@ -54,7 +58,7 @@ definition := speciesTable[c.speciesID]
 c.hp = min(definition.maxHP, c.hp+3)
 c.xp += 3</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY SHARE?</p><h3>Do not copy identical facts</h3><p>Change one species row instead of fixing the same name and base stats on 100 creatures.</p></article><article><p class="eyebrow">WHY INSTANCES?</p><h3>Remember different journeys</h3><p>Members of one species can separately keep damage, experience, and nicknames.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Add individual personality</h3><p>Add a per-instance <code>mood</code> that changes rest recovery even within one species.</p></article></div>
-</section><nav class="lesson-pager"><span></span><a href="../move-battle/">STEP 02 →<strong>Choose-a-move Battle</strong></a></nav>
+</section><nav class="lesson-pager"><span></span><a href="../move-battle/" rel="next">STEP 02 →<strong>Choose-a-move Battle</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -70,7 +74,7 @@ c.xp += 3</code></pre></div>
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -78,6 +82,19 @@ c.xp += 3</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

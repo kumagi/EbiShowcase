@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Monsters | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="3地域の遭遇表、研究スタンプ、捕獲と成長を、攻撃・捕獲アニメーション、粒子、画面揺れ、最速記録のある遠征へ統合します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ebi Monsters</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Monsters | Ebi Showcase">
-    <meta property="og:description" content="3地域の遭遇表、研究スタンプ、捕獲と成長を、攻撃・捕獲アニメーション、粒子、画面揺れ、最速記録のある遠征へ統合します。">
+    <meta property="og:title" content="Ebi Showcase – Ebi Monsters">
+    <meta property="og:description" content="3地域の遭遇表、研究スタンプ、捕獲と成長を、攻撃・捕獲アニメーション、粒子、画面揺れ、最速記録のある遠征へ統合します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/monster-collection/ebi-monsters/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--monster-collection--ebi-monsters.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Monsters | Ebi Showcase">
-    <meta name="twitter:description" content="3地域の遭遇表、研究スタンプ、捕獲と成長を、攻撃・捕獲アニメーション、粒子、画面揺れ、最速記録のある遠征へ統合します。">
+    <meta name="twitter:title" content="Ebi Showcase – Ebi Monsters">
+    <meta name="twitter:description" content="3地域の遭遇表、研究スタンプ、捕獲と成長を、攻撃・捕獲アニメーション、粒子、画面揺れ、最速記録のある遠征へ統合します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--monster-collection--ebi-monsters.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Monsters">
     <!-- ogp:end -->
@@ -25,6 +26,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>完成形はSpecies・Stats・Moves・Partyの四箱から読みます。まず一匹のspeciesを選び、能力、技、仲間順にたどります。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>monster := Monster{Species: speciesID, Stats: baseStats[speciesID]} </code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>4種を図鑑へ登録し、REEFLETを進化させて保存しよう。</h2></div><p>マップでは地域をタップまたは1〜3。戦闘は技・捕獲・交代をタップまたは1〜4。おすすめはEMBER COVEから。条件達成後、SAVEまたはSでクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 09</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Monsters 地域探索・戦闘・捕獲・保存" src="../../../../play/ebi-monsters/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / INTEGRATED GAME STATE</p><h2>6個の仕組みを、1本の「冒険の流れ」にする。</h2><p class="lesson-lead">完成ゲームは機能を横に並べただけではありません。地域選択が遭遇データを選び、戦闘結果が捕獲確率を変え、捕獲成功が図鑑・経験値・パーティ・箱をまとめて更新します。各画面を<code>modeMap</code>と<code>modeBattle</code>で分け、結果を次の状態へ渡す<strong>状態遷移</strong>が背骨です。</p></div>
@@ -61,7 +65,7 @@ if err == nil {
     saveSlot = append(saveSlot[:0], encoded...)
 }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY MODES?</p><h3>入力の意味を混ぜない</h3><p>1キーはマップでは地域、戦闘では技です。modeを先に見れば、同じ入力を安全に別処理へ渡せます。</p></article><article><p class="eyebrow">WHY ONE CAPTURE TRANSACTION?</p><h3>データの食い違いを防ぐ</h3><p>図鑑だけ登録して個体を入れ忘れる、といった半端な成功を防げます。</p></article><article class="challenge"><p class="eyebrow">SHIP IT</p><h3>保存先を交換する</h3><p>JSONを作る部分はそのままに、メモリのsaveSlotをブラウザ保存やサーバーへ渡すアダプターを考えよう。</p></article></div>
-</section><nav class="lesson-pager"><a href="../growth-evolution/">← STEP 06<strong>経験値と進化</strong></a><a href="../">コース全体へ →<strong>モンスター収集RPG</strong></a></nav>
+</section><nav class="lesson-pager"><a href="../growth-evolution/" rel="prev">← STEP 06<strong>経験値と進化</strong></a><a href="../" rel="next">コース全体へ →<strong>モンスター収集RPG</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -77,7 +81,7 @@ if err == nil {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -85,6 +89,19 @@ if err == nil {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

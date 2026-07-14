@@ -1,0 +1,8 @@
+flowchart LR
+  start["start<br/>t=0"]
+  ease["easeInOut<br/>slow start"]
+  peak["middle<br/>fast"]
+  settle["settle<br/>t=1"]
+  start --> ease
+  ease --> peak
+  peak --> settle

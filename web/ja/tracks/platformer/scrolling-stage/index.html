@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="カメラスクロールとカリングのしくみを学ぶEbitengineレッスン。ワールド座標からカメラ値を引くだけで大きなステージを表示できます。">
-  <title>STEP 04 — 横スクロールの丘 | Ebi Showcase</title>
+  <meta name="description" content="カメラスクロールとカリングのしくみを学ぶEbitengineレッスン。ワールド座標からカメラ値を引くだけで大きなステージを表示できます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+  <title>Ebi Showcase – STEP 04 — 横スクロールの丘</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="STEP 04 — 横スクロールの丘 | Ebi Showcase">
-    <meta property="og:description" content="カメラスクロールとカリングのしくみを学ぶEbitengineレッスン。ワールド座標からカメラ値を引くだけで大きなステージを表示できます。">
+    <meta property="og:title" content="Ebi Showcase – STEP 04 — 横スクロールの丘">
+    <meta property="og:description" content="カメラスクロールとカリングのしくみを学ぶEbitengineレッスン。ワールド座標からカメラ値を引くだけで大きなステージを表示できます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/platformer/scrolling-stage/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--platformer--scrolling-stage.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="STEP 04 — 横スクロールの丘 | Ebi Showcase">
-    <meta name="twitter:description" content="カメラスクロールとカリングのしくみを学ぶEbitengineレッスン。ワールド座標からカメラ値を引くだけで大きなステージを表示できます。">
+    <meta name="twitter:title" content="Ebi Showcase – STEP 04 — 横スクロールの丘">
+    <meta name="twitter:description" content="カメラスクロールとカリングのしくみを学ぶEbitengineレッスン。ワールド座標からカメラ値を引くだけで大きなステージを表示できます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--platformer--scrolling-stage.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="横スクロールの丘">
     <!-- ogp:end -->
@@ -51,7 +51,11 @@
 <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。</p>
 
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_camera-offset.svg" alt="カメラのオフセット" loading="lazy" decoding="async"><figcaption>カメラのオフセットの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>丘を走り抜けてゴールへ。</h2></div>
         <p>A・D または画面下タッチで移動。スペースまたは画面上タッチでジャンプ。緑の旗を通過するとそこからやり直せます。</p>
@@ -171,8 +175,8 @@ g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
     </section>
 
     <nav class="lesson-pager">
-      <a href="../patrol-enemies/">← STEP 03<strong>踏める敵の庭</strong></a>
-      <a href="../powerup-adventure/">STEP 05 →<strong>エビアドベンチャー</strong></a>
+      <a href="../patrol-enemies/" rel="prev">← STEP 03<strong>踏める敵の庭</strong></a>
+      <a href="../powerup-adventure/" rel="next">STEP 05 →<strong>エビアドベンチャー</strong></a>
     </nav>
 
 
@@ -189,7 +193,7 @@ g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -197,6 +201,19 @@ g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -28,8 +28,9 @@ python3 scripts/ai_feedback_crawler.py --once --max-pages 1
 python3 scripts/ai_feedback_crawler.py --once --max-pages 5 --submit
 ```
 
-`--submit` はGoogle Formsの `formResponse` 以外へは送信しません。送信先はページ内の
-フィードバックフォームから読み取り、提案は200文字未満に切り詰めます。
+`--submit` はGoogle Formsの `formResponse` 以外へは送信しません。送信先と、Google Formsが
+必須にしている「対象ページ」フィールドはページ内のフォームから読み取ります。提案は200文字未満に
+切り詰め、ページのフォームと同じ隠し項目も送信します。
 
 全ページに共通するレビュー方針は `--instruction` で自由に追加できます。
 

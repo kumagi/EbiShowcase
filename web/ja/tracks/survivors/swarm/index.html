@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="固定サイズの配列で100体の敵をメモリ効率よく管理するEbitengine版サバイバルゲームの第3ステップ。">
-  <title>STEP 03 — 100体の群れ | Ebi Showcase</title>
+  <meta name="description" content="固定サイズの配列で100体の敵をメモリ効率よく管理するEbitengine版サバイバルゲームの第3ステップ。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+  <title>Ebi Showcase – STEP 03 — 100体の群れ</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="STEP 03 — 100体の群れ | Ebi Showcase">
-    <meta property="og:description" content="固定サイズの配列で100体の敵をメモリ効率よく管理するEbitengine版サバイバルゲームの第3ステップ。">
+    <meta property="og:title" content="Ebi Showcase – STEP 03 — 100体の群れ">
+    <meta property="og:description" content="固定サイズの配列で100体の敵をメモリ効率よく管理するEbitengine版サバイバルゲームの第3ステップ。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/survivors/swarm/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--survivors--swarm.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="STEP 03 — 100体の群れ | Ebi Showcase">
-    <meta name="twitter:description" content="固定サイズの配列で100体の敵をメモリ効率よく管理するEbitengine版サバイバルゲームの第3ステップ。">
+    <meta name="twitter:title" content="Ebi Showcase – STEP 03 — 100体の群れ">
+    <meta name="twitter:description" content="固定サイズの配列で100体の敵をメモリ効率よく管理するEbitengine版サバイバルゲームの第3ステップ。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--survivors--swarm.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="100体の群れ">
     <!-- ogp:end -->
@@ -42,6 +42,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>全敵を一度ずつUpdateするので敵数に比例して仕事が増えます。画面外描画を省き、上限を決めて60fpsを守ります。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>for i := range enemies { enemies[i].Update() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>100体の敵を100体倒すまで生き残れ！</h2></div><p>WASD・方向キー・ドラッグで移動。金色のオーラに敵が入ると倒せます。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="100体の群れ" src="../../../../play/swarm/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -124,7 +127,7 @@
       </div>
     </section>
 
-    <nav class="lesson-pager"><a href="../auto-turret/">← STEP 02<strong>自動砲台サバイバル</strong></a><a href="../experience-draft/">STEP 04 →<strong>経験値ドラフト</strong></a></nav>
+    <nav class="lesson-pager"><a href="../auto-turret/" rel="prev">← STEP 02<strong>自動砲台サバイバル</strong></a><a href="../experience-draft/" rel="next">STEP 04 →<strong>経験値ドラフト</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -140,7 +143,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -148,6 +151,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

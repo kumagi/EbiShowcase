@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Rising edge wasOnGround to onGround triggers land FX. Grounded flag is play; dust is fx.">
-  <title>Jump & Land Dust | Ebi Showcase</title>
+  <meta name="description" content="Rising edge wasOnGround to onGround triggers land FX. Grounded flag is play; dust is fx. Play the demo, read a short Go example, change a value, and apply the i">
+  <title>Ebi Showcase – Jump &amp; Land Dust</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-platform/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Jump &amp; Land Dust | Ebi Showcase">
-    <meta property="og:description" content="Rising edge wasOnGround to onGround triggers land FX. Grounded flag is play; dust is fx.">
+    <meta property="og:title" content="Ebi Showcase – Jump &amp; Land Dust">
+    <meta property="og:description" content="Rising edge wasOnGround to onGround triggers land FX. Grounded flag is play; dust is fx. Play the demo, read a short Go example, change a value, and apply the i">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-platform/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-platform.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,8 +19,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Jump &amp; Land Dust | Ebi Showcase">
-    <meta name="twitter:description" content="Rising edge wasOnGround to onGround triggers land FX. Grounded flag is play; dust is fx.">
+    <meta name="twitter:title" content="Ebi Showcase – Jump &amp; Land Dust">
+    <meta name="twitter:description" content="Rising edge wasOnGround to onGround triggers land FX. Grounded flag is play; dust is fx. Play the demo, read a short Go example, change a value, and apply the i">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-platform.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Jump &amp; Land Dust">
     <!-- ogp:end -->
@@ -51,7 +51,10 @@
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Jump and land</h2></div>
         <p>Jump/land dust is fx; grounded tests are play.</p>
@@ -139,8 +142,8 @@ if landed { g.fx.Burst(g.x, g.y+h, 20, 2.5, dust, true) }</code></pre>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-sokoban/">← STEP A09<strong>Sokoban Dust & Goal Glow</strong></a>
-      <a href="../vfx-fx-dungeon/">STEP A11 →<strong>Dungeon Hit Flashes</strong></a>
+      <a href="../vfx-fx-sokoban/" rel="prev">← STEP A09<strong>Sokoban Dust & Goal Glow</strong></a>
+      <a href="../vfx-fx-dungeon/" rel="next">STEP A11 →<strong>Dungeon Hit Flashes</strong></a>
     </nav>
 
 
@@ -157,7 +160,7 @@ if landed { g.fx.Burst(g.x, g.y+h, 20, 2.5, dust, true) }</code></pre>
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

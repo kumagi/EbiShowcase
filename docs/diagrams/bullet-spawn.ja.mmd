@@ -1,0 +1,10 @@
+flowchart LR
+  clock["frame<br/>時間"]
+  pattern["円形・螺旋<br/>角度を計算"]
+  bullets["弾リスト<br/>[]Bullet"]
+  hit["当たり判定<br/>敵・自機"]
+  burst["爆発FX<br/>粒を生む"]
+  clock --> pattern
+  pattern --> bullets
+  bullets --> hit
+  hit --> burst

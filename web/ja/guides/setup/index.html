@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。">
-  <title>はじめての環境づくり — 空の窓を開くまで | Ebi Showcase</title>
+  <meta name="description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+  <title>Ebi Showcase – はじめての環境づくり — 空の窓を開くまで</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/setup/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="はじめての環境づくり — 空の窓を開くまで | Ebi Showcase">
-    <meta property="og:description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。">
+    <meta property="og:title" content="Ebi Showcase – はじめての環境づくり — 空の窓を開くまで">
+    <meta property="og:description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/guides/setup/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--setup.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="まっさらなパソコンから、 空の窓を開くまで。">
+    <meta property="og:image:alt" content="まっさらなパソコンから、 中身のないゲーム画面ウィンドウを開くまで。">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="はじめての環境づくり — 空の窓を開くまで | Ebi Showcase">
-    <meta name="twitter:description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。">
+    <meta name="twitter:title" content="Ebi Showcase – はじめての環境づくり — 空の窓を開くまで">
+    <meta name="twitter:description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--setup.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="まっさらなパソコンから、 空の窓を開くまで。">
+    <meta name="twitter:image:alt" content="まっさらなパソコンから、 中身のないゲーム画面ウィンドウを開くまで。">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../style.css">
 </head>
@@ -40,11 +40,14 @@
 
   <section class="data-hero setup-hero">
     <p class="eyebrow">START HERE / ENVIRONMENT</p>
-    <h1>まっさらなパソコンから、<br><em>空の窓</em>を開くまで。</h1>
+    <h1>まっさらなパソコンから、<br><em>中身のないゲーム画面ウィンドウ</em>を開くまで。</h1>
     <p>このサイトのレッスンはブラウザでも遊べます。でも自分の PC でコードを動かしたいときは、まず Go と Ebitengine の準備が必要です。Windows と Mac、どちらの手順も書きます。最後に「何もしない」暗い青い窓が開けば成功です。</p>
   </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>go.modは『このゲームの名前と使う部品』を書いた目次ファイル。PowerShell/ターミナルは文字で命令する同じ役目の窓です。天次郎の最初の一コマを出すところまで進みます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
+<!-- feedback-note:guides/setup:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-guides-setup"><div><p class="eyebrow">はじめての見取り図</p><h2 id="feedback-note-guides-setup">文字を入力する窓と、ゲームの窓は別もの</h2><p>PowerShellとターミナルは名前や色が違っても、文字で命令を出す同じ役割です。go.modはゲームの名前（モジュール名）と借りる部品を書いた目次。実行すると、今度はEbitengineのゲーム画面が開きます。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="命令を入力する窓からゲーム画面へ"><span>PowerShell / ターミナル</span><b>→ go run . →</b><strong>中身のないゲーム画面</strong></div></div></section>
+<!-- feedback-note:guides/setup:end -->
 <!-- END BEGINNER BRIDGE -->
 
 
@@ -70,7 +73,7 @@
       <article class="setup-os"><h3>Windows</h3><ol class="setup-ol"><li>キーボードの Windows キーを押す</li><li>「powershell」と入力する</li><li>「Windows PowerShell」または「ターミナル」を開く</li></ol></article>
       <article class="setup-os"><h3>macOS</h3><ol class="setup-ol"><li>Command + Space キーを同時に押す</li><li>「ターミナル」と入力する</li><li>「ターミナル」アプリを開く</li></ol></article>
     </div>
-    <p class="setup-tip">白い画面に文字が点滅していれば OK。これからここにコマンドをコピーして貼り付けます。</p>
+    <p class="setup-tip">文字を入力する画面が開き、カーソルが点滅していれば OK。Windows は黒いことが多く、Mac は白いこともありますが、役割は同じです。これからここにコマンドをコピーして貼り付けます。</p>
     <p class="setup-note">用語メモ：Windows では「PowerShell」、Mac では「ターミナル」と呼ぶことが多いです。どちらも<strong>同じ役割</strong>——キーボードでパソコンに命令を出す黒い（または白い）窓です。「ターミナル＝Mac専用」ではありません。Windows 11 の「ターミナル」アプリでも PowerShell が使えます。このガイドでは Windows 欄を PowerShell、Mac 欄をターミナルと書きます。</p>
   </section>
 
@@ -114,7 +117,7 @@
     <h2>ゲーム用のフォルダを作る</h2>
     <p class="setup-lead">デスクトップでもドキュメントでも構いません。ここでは例として home の直下に ebi-empty を作ります。</p>
     <ol class="setup-cmd-list"><li><code>mkdir ebi-empty</code><span>フォルダを作る</span></li><li><code>cd ebi-empty</code><span>その中へ入る</span></li><li><code>go mod init example.com/ebi-empty</code><span>このフォルダの目次 go.mod を作る</span></li></ol>
-    <p class="setup-ok">go.mod は、このゲームの名前と、外から借りる部品（Ebitengine など）を Go が管理するための『プロジェクトの目次ノート』です。これがあることで、Go は必要な外部パッケージを同じ組み合わせで用意できます。小さな go.mod ができていれば OK。モジュール名は後から変えられます。</p>
+    <p class="setup-ok">go.mod は、このゲームの名前（モジュール名）と、外から借りる部品（Ebitengine など）を Go が管理するための『プロジェクトの目次ノート』です。モジュール名は、コードの部品をどの名前で呼ぶかを決める住所のようなもの。これがあることで、Go は必要な外部パッケージを同じ組み合わせで用意できます。小さな go.mod ができていれば OK。名前は後から変えられます。</p>
   </section>
 
   <section class="setup-step" id="code">
@@ -199,7 +202,7 @@ func main() {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>エナジー制ターン | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="ターン開始、カード使用、ターン終了、敵行動を状態機械で進めます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – エナジー制ターン</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="エナジー制ターン | Ebi Showcase">
-    <meta property="og:description" content="ターン開始、カード使用、ターン終了、敵行動を状態機械で進めます。">
+    <meta property="og:title" content="Ebi Showcase – エナジー制ターン">
+    <meta property="og:description" content="ターン開始、カード使用、ターン終了、敵行動を状態機械で進めます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/deckbuilder/turn-energy/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder--turn-energy.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="エナジー制ターン | Ebi Showcase">
-    <meta name="twitter:description" content="ターン開始、カード使用、ターン終了、敵行動を状態機械で進めます。">
+    <meta name="twitter:title" content="Ebi Showcase – エナジー制ターン">
+    <meta name="twitter:description" content="ターン開始、カード使用、ターン終了、敵行動を状態機械で進めます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder--turn-energy.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="エナジー制ターン">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ターンフェーズは『自分が選ぶ・敵が動く・次の手札を配る』という場面分け。行動資源は一ターンに使えるエナジーで、カードを使うたび減ります。その場面のUpdateだけ動かします。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if phase == PlayerTurn { updatePlayerTurn() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3エナジーを組み合わせて勝とう。</h2></div><p>カードを1〜3で使用し、Eまたは下ボタンでターン終了。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="エナジー制ターン" src="../../../../play/turn-energy/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / TURN PHASE</p><h2>どうして敵は、カードを選んでいる途中に攻撃しないの？</h2><p class="lesson-lead">今のフェーズを1つだけ覚え、<strong>そのフェーズのUpdateだけ</strong>を動かすからです。プレイヤー終了後に敵へ順番を渡します。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>ターン開始</h3><p>エナジーを3へ戻し、ブロックを準備します。</p><code>energy = 3</code></article><article><span class="concept-number">2</span><h3>カード使用</h3><p>コストを引き、残り範囲で何枚も使えます。</p><code>energy -= card.Cost</code></article><article><span class="concept-number">3</span><h3>敵行動</h3><p>終了ボタンでphaseをEnemyへ変えます。</p><code>phase = EnemyPhase</code></article></div><div class="motion-lab" data-lab="energy-turn" data-max="3" data-empty="もう0" data-spend="1コスト消費" data-refill="満タンに回復" aria-labelledby="lab-title-turn-energy">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / REFILL</p>
@@ -41,7 +45,7 @@
 <span data-go-line="end">drawHand(); enemyTurn()</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</div><div class="formula"><p class="eyebrow">THE TURN BUDGET</p><div class="formula-lines"><code>使うたびに energy--</code><span>つぎに</span><code>ターン終了で energy = max</code></div><p>行動の強さはカード、回数の上限はエナジー。役割を分けると調整しやすいです。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>フェーズでUpdateを分岐する</h3><p>敵フェーズ中はカード入力を読まず、敵行動の完了後にエナジーを戻します。</p></div><pre><code>switch phase { case PlayerPhase: playCardsOrEnd(); case EnemyPhase: enemyAct(); energy = 3; phase = PlayerPhase }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ENERGY?</p><h3>組み合わせを選べる</h3><p>小さいカード複数か大技かを考えます。</p></article><article><p class="eyebrow">WHY PHASE?</p><h3>順番が混ざらない</h3><p>入力と敵行動が同時に起きません。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>エナジーを残す</h3><p>残りを次ターンへ1だけ持ち越すルールを考えよう。</p></article></div></section><nav class="lesson-pager"><a href="../play-a-card/">← STEP 01<strong>1枚のカード</strong></a><a href="../deck-cycle/">STEP 03 →<strong>山札・手札・捨て札</strong></a></nav>
+</div><div class="formula"><p class="eyebrow">THE TURN BUDGET</p><div class="formula-lines"><code>使うたびに energy--</code><span>つぎに</span><code>ターン終了で energy = max</code></div><p>行動の強さはカード、回数の上限はエナジー。役割を分けると調整しやすいです。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>フェーズでUpdateを分岐する</h3><p>敵フェーズ中はカード入力を読まず、敵行動の完了後にエナジーを戻します。</p></div><pre><code>switch phase { case PlayerPhase: playCardsOrEnd(); case EnemyPhase: enemyAct(); energy = 3; phase = PlayerPhase }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ENERGY?</p><h3>組み合わせを選べる</h3><p>小さいカード複数か大技かを考えます。</p></article><article><p class="eyebrow">WHY PHASE?</p><h3>順番が混ざらない</h3><p>入力と敵行動が同時に起きません。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>エナジーを残す</h3><p>残りを次ターンへ1だけ持ち越すルールを考えよう。</p></article></div></section><nav class="lesson-pager"><a href="../play-a-card/" rel="prev">← STEP 01<strong>1枚のカード</strong></a><a href="../deck-cycle/" rel="next">STEP 03 →<strong>山札・手札・捨て札</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -57,7 +61,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -65,6 +69,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="GoとEbitengineで作った倉庫番から、タイルマップ（文字列でステージを定義しタイル座標で管理する方法）を学ぶレッスンです。">
-  <title>LEVEL 09 — Sokoban | Ebi Showcase</title>
+  <meta name="description" content="GoとEbitengineで作った倉庫番から、タイルマップ（文字列でステージを定義しタイル座標で管理する方法）を学ぶレッスンです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+  <title>Ebi Showcase – LEVEL 09 — Sokoban</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="LEVEL 09 — Sokoban | Ebi Showcase">
-    <meta property="og:description" content="GoとEbitengineで作った倉庫番から、タイルマップ（文字列でステージを定義しタイル座標で管理する方法）を学ぶレッスンです。">
+    <meta property="og:title" content="Ebi Showcase – LEVEL 09 — Sokoban">
+    <meta property="og:description" content="GoとEbitengineで作った倉庫番から、タイルマップ（文字列でステージを定義しタイル座標で管理する方法）を学ぶレッスンです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/games/sokoban/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--sokoban.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="LEVEL 09 — Sokoban | Ebi Showcase">
-    <meta name="twitter:description" content="GoとEbitengineで作った倉庫番から、タイルマップ（文字列でステージを定義しタイル座標で管理する方法）を学ぶレッスンです。">
+    <meta name="twitter:title" content="Ebi Showcase – LEVEL 09 — Sokoban">
+    <meta name="twitter:description" content="GoとEbitengineで作った倉庫番から、タイルマップ（文字列でステージを定義しタイル座標で管理する方法）を学ぶレッスンです。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--sokoban.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Sokoban">
     <!-- ogp:end -->
@@ -42,8 +42,20 @@
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>論理座標は『何列・何行』、描画座標は画面のピクセル。天次郎が1マス動く間はmoving=trueにして入力を待たせ、Drawだけ途中位置を描きます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if moving { progress++; return nil }</code></pre></div></section>
+<!-- feedback-note:games/sokoban:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-sokoban"><div><p class="eyebrow">記号の地図</p><h2 id="feedback-note-games-sokoban">文字列は、ステージの設計図を読みやすくする</h2><p>1行を1行分のマスとして並べると、空白や数字の表より壁と箱の形を目で確認できます。起動時に各文字を読み、ゲームのタイルデータへ変換します。</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="倉庫番の記号マップ"># 壁   @ プレイヤー
+$ 箱  . ゴール
+########
+#@ $.  #
+########</pre></div></section>
+<!-- feedback-note:games/sokoban:end -->
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_push-rule.svg" alt="箱を押せるか決める" loading="lazy" decoding="async"><figcaption>箱を押せるか決めるの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_tile-map.svg" alt="タイルマップを再生する" loading="lazy" decoding="async"><figcaption>タイルマップを再生するの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>箱をすべてゴールへ押せ。</h2></div><p>矢印キーまたはWASDで移動します。箱に向かって進むと押せます。Z/BackspaceでUndo、Rでリセットです。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 09</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Sokoban" src="../../../play/sokoban/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -496,7 +508,7 @@ func main() {
       </div>
     </section>
 
-    <nav class="lesson-pager"><a href="../space-shooter/">← LEVEL 08<strong>Space Shooter</strong></a><a href="../platformer/">LEVEL 10 →<strong>Platformer</strong></a></nav>
+    <nav class="lesson-pager"><a href="../space-shooter/" rel="prev">← LEVEL 08<strong>Space Shooter</strong></a><a href="../platformer/" rel="next">LEVEL 10 →<strong>Platformer</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -512,7 +524,7 @@ func main() {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -520,6 +532,19 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Wall-bouncing Ball | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Reverse only the velocity aimed into a wall, then reach each pearl after the requested number of bounces. Play the demo, read a short Go example, change a value"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Wall-bouncing Ball</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Wall-bouncing Ball | Ebi Showcase">
-    <meta property="og:description" content="Reverse only the velocity aimed into a wall, then reach each pearl after the requested number of bounces.">
+    <meta property="og:title" content="Ebi Showcase – Wall-bouncing Ball">
+    <meta property="og:description" content="Reverse only the velocity aimed into a wall, then reach each pearl after the requested number of bounces. Play the demo, read a short Go example, change a value">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/slingshot/wall-bounce/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--slingshot--wall-bounce.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Wall-bouncing Ball | Ebi Showcase">
-    <meta name="twitter:description" content="Reverse only the velocity aimed into a wall, then reach each pearl after the requested number of bounces.">
+    <meta name="twitter:title" content="Ebi Showcase – Wall-bouncing Ball">
+    <meta name="twitter:description" content="Reverse only the velocity aimed into a wall, then reach each pearl after the requested number of bounces. Play the demo, read a short Go example, change a value">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--slingshot--wall-bounce.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Wall-bouncing Ball">
     <!-- ogp:end -->
@@ -25,6 +26,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>vx = -vx; x = wallX-radius</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Bounce the exact number of times and collect three pearls.</h2></div><p>Tap −5° or +5° to aim, then LAUNCH. On keyboard use Left/Right or A/D and Space. Hit after 1, 2, then 3 bounces before six misses.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Wall-bouncing Ball" src="../../../../play/wall-bounce/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / WALL NORMAL</p><h2>Reverse only the speed pointing into the wall.</h2><p class="lesson-lead">Velocity has a horizontal <code>vx</code> and vertical <code>vy</code>. A vertical wall changes only horizontal motion; a floor or ceiling changes only vertical motion. The arrow pointing straight out of a wall is its <strong>normal</strong>, and reflection flips the velocity along that normal.</p></div>
@@ -49,7 +53,7 @@ if y-radius &lt; topWall {
     bounces++
 }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY CLAMP?</p><h3>Leave nothing in the wall</h3><p>Returning to the boundary lets one collision count exactly once.</p></article><article><p class="eyebrow">WHY TWO PARTS?</p><h3>Preserve the angle</h3><p>Motion parallel to the wall stays unchanged, making a mirror-like path.</p></article><article class="challenge"><p class="eyebrow">TUNE IT</p><h3>Change restitution</h3><p>Try 0.5 and 1.0, then compare the distance traveled after bounce three.</p></article></div>
-</section><nav class="lesson-pager"><a href="../drag-launch/">← STEP 01<strong>Drag and Launch</strong></a><a href="../circle-battle/">STEP 03 →<strong>Circle Character Collisions</strong></a></nav>
+</section><nav class="lesson-pager"><a href="../drag-launch/" rel="prev">← STEP 01<strong>Drag and Launch</strong></a><a href="../circle-battle/" rel="next">STEP 03 →<strong>Circle Character Collisions</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -65,7 +69,7 @@ if y-radius &lt; topWall {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -73,6 +77,19 @@ if y-radius &lt; topWall {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

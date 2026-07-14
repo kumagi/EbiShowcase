@@ -1,0 +1,8 @@
+flowchart LR
+  pointer["指・マウス<br/>clientX / clientY"]
+  scale["表示倍率<br/>幅・高さ"]
+  canvas["ゲーム座標<br/>x / y"]
+  target["的を判定<br/>Updateへ"]
+  pointer --> scale
+  scale --> canvas
+  canvas --> target

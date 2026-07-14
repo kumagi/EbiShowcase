@@ -46,7 +46,7 @@ function block(lang, pagePath) {
             <input class="feedback-message" name="entry.${feedbackEntry}" aria-label="${japanese ? "フィードバック" : "Feedback"}" maxlength="200" required data-sending="${japanese ? "送信中…" : "Sending…"}" data-sent="${japanese ? "送信しました。ありがとうございます！" : "Sent — thank you!"}" data-failed="${japanese ? "送信できませんでした。時間をおいて再試行してください。" : "Could not send. Please try again later."}" placeholder="${japanese ? "ひとこと入力…" : "Write one short note…"}">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">${japanese ? "送信する" : "Send feedback"}<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">${japanese ? "送信する" : "Send feedback"}<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

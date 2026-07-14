@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Party and Switching | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Keep one of three partners in front, store the others in reserve, and switch using type matchups and HP. Play the demo, read a short Go example, change a value,"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Party and Switching</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Party and Switching | Ebi Showcase">
-    <meta property="og:description" content="Keep one of three partners in front, store the others in reserve, and switch using type matchups and HP.">
+    <meta property="og:title" content="Ebi Showcase – Party and Switching">
+    <meta property="og:description" content="Keep one of three partners in front, store the others in reserve, and switch using type matchups and HP. Play the demo, read a short Go example, change a value,">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/monster-collection/party-switch/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--monster-collection--party-switch.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Party and Switching | Ebi Showcase">
-    <meta name="twitter:description" content="Keep one of three partners in front, store the others in reserve, and switch using type matchups and HP.">
+    <meta name="twitter:title" content="Ebi Showcase – Party and Switching">
+    <meta name="twitter:description" content="Keep one of three partners in front, store the others in reserve, and switch using type matchups and HP. Play the demo, read a short Go example, change a value,">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--monster-collection--party-switch.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Party and Switching">
     <!-- ogp:end -->
@@ -25,6 +26,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>party[0], party[selected] = party[selected], party[0]</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Switch to favorable fronts and win three waves in 12 turns.</h2></div><p>Tap a party card or press 1, 2, or 3 to switch. Tap ATTACK or use A/Space. A planned switch spends a turn; after a faint, you must select a living reserve.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Front and reserve party battle" src="../../../../play/party-switch/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ACTIVE INDEX</p><h2>Keep every party member and change only “who fights now.”</h2><p class="lesson-lead">All three remain in the party slice and keep their own HP. The front is not a second copy; it is an <code>active</code> index. Switching changes that index to a reserve, but a <strong>planned switch</strong> and a <strong>replacement after fainting</strong> spend turns differently.</p></div>
@@ -58,7 +62,7 @@
     enemyAttack()
 }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY KEEP RESERVES?</p><h3>Remember their damage</h3><p>Reserves stay in the party array, so they return with the correct remaining HP.</p></article><article><p class="eyebrow">WHY SPEND A TURN?</p><h3>Make switching strategic</h3><p>If switching were always free, every turn would simply choose the strongest type. A counter makes timing matter.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Add an entry ability</h3><p>Create a partner that heals two HP whenever it becomes front, for both planned and forced switches.</p></article></div>
-</section><nav class="lesson-pager"><a href="../type-matchup/">← STEP 03<strong>Affinity Matchup Lab</strong></a><a href="../capture/">STEP 05 →<strong>Capture Challenge</strong></a></nav>
+</section><nav class="lesson-pager"><a href="../type-matchup/" rel="prev">← STEP 03<strong>Affinity Matchup Lab</strong></a><a href="../capture/" rel="next">STEP 05 →<strong>Capture Challenge</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -74,7 +78,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -82,6 +86,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

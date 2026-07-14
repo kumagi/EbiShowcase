@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="description" content="The blue scout predicts which cells every bomb will burn and how many frames remain. Breadth-first search then finds a route that reaches a safe cell in time.">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Blast-escape AI | Ebi Showcase</title>
+  <title>Ebi Showcase – Blast-escape AI</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Blast-escape AI | Ebi Showcase">
+    <meta property="og:title" content="Ebi Showcase – Blast-escape AI">
     <meta property="og:description" content="The blue scout predicts which cells every bomb will burn and how many frames remain. Breadth-first search then finds a route that reaches a safe cell in time.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/maze-chase/escape-ai/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--maze-chase--escape-ai.png?v=20260713-font1">
@@ -17,7 +18,7 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Blast-escape AI | Ebi Showcase">
+    <meta name="twitter:title" content="Ebi Showcase – Blast-escape AI">
     <meta name="twitter:description" content="The blue scout predicts which cells every bomb will burn and how many frames remain. Breadth-first search then finds a route that reaches a safe cell in time.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--maze-chase--escape-ai.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Blast-escape AI">
@@ -43,7 +44,10 @@
 
 <p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Watch the AI's escape route</h2></div><p>Move the red player with arrows / WASD and place bombs with Space / X. The bottom buttons work with mouse and touch. Help the blue AI survive six explosions. Red numbers show frames until danger; cyan dots show its planned route.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Play the blast-escape AI game" src="../../../../play/escape-ai/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -93,7 +97,7 @@ if safe {
       <div class="why-grid"><article><p class="eyebrow">WHY IT WORKS</p><h2>A route in time beats nearest distance</h2><p>An AI that only seeks a nearby cell can wait in a blast at a corner. Adding future time lets it choose a longer route that clears danger before detonation.</p></article><article><p class="eyebrow">CHALLENGE</p><h2>Change its caution</h2><p>Increase the 8 in <code>arrival+8</code> so the AI avoids danger sooner. Then explain why a margin that is too large can leave it with no route.</p></article></div>
     </section>
 
-    <nav class="lesson-pager"><a href="../chain-explosion/">← STEP 04<strong>Bomb Chain Reactions</strong></a><a href="../ebi-bomber/">STEP 06 →<strong>Ebi Bomber</strong></a></nav>
+    <nav class="lesson-pager"><a href="../chain-explosion/" rel="prev">← STEP 04<strong>Bomb Chain Reactions</strong></a><a href="../ebi-bomber/" rel="next">STEP 06 →<strong>Ebi Bomber</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -109,7 +113,7 @@ if safe {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -117,6 +121,19 @@ if safe {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

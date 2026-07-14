@@ -59,6 +59,8 @@ class Page:
     form_action: str | None
     form_field: str | None
     language: str
+    form_page_field: str | None = None
+    form_page_value: str | None = None
 
     @property
     def content_hash(self) -> str:
@@ -94,11 +96,27 @@ class PageParser(HTMLParser):
         if tag == "a" and attrs_dict.get("href"):
             self.links.append(urljoin(self.page_url, attrs_dict["href"] or ""))
         if tag == "form":
-            self.form = {"action": urljoin(self.page_url, attrs_dict.get("action") or self.page_url), "field": None}
+            self.form = {
+                "action": urljoin(self.page_url, attrs_dict.get("action") or self.page_url),
+                "field": None,
+                "page_field": None,
+                "page_value": None,
+            }
         if tag in {"input", "textarea"} and self.form is not None:
             classes = set((attrs_dict.get("class") or "").split())
             if "feedback-message" in classes:
                 self.form["field"] = attrs_dict.get("name")
+            elif (
+                tag == "input"
+                and (attrs_dict.get("type") or "text").lower() == "hidden"
+                and (name := attrs_dict.get("name"))
+                and name.startswith("entry.")
+            ):
+                # Google Forms requires the hidden page question as well as
+                # the feedback question. Its entry id is discovered from
+                # the page so the crawler does not hard-code the form schema.
+                self.form["page_field"] = name
+                self.form["page_value"] = attrs_dict.get("value") or self.page_url
 
     def handle_endtag(self, tag: str) -> None:
         tag = tag.lower()
@@ -140,6 +158,8 @@ class PageParser(HTMLParser):
             form_action=form.get("action") if form else None,
             form_field=form.get("field") if form else None,
             language=language,
+            form_page_field=form.get("page_field") if form else None,
+            form_page_value=form.get("page_value") if form else None,
         )
 
 
@@ -374,21 +394,38 @@ def normalize_suggestion(raw: str) -> str:
 def submit_feedback(page: Page, suggestion: str, timeout: float) -> None:
     if not page.form_action or not page.form_field:
         raise ValueError(f"No feedback form found: {page.url}")
+    if not page.form_page_field or not page.form_page_value:
+        raise ValueError(f"Feedback form is missing its required page field: {page.url}")
     parsed = urlparse(page.form_action)
     if parsed.scheme != "https" or parsed.netloc != "docs.google.com" or not parsed.path.endswith("/formResponse"):
         raise ValueError(f"Refusing unexpected form destination: {page.form_action}")
     from urllib.parse import urlencode
 
-    body = urlencode({page.form_field: suggestion}).encode("utf-8")
+    body = urlencode(
+        {
+            page.form_page_field: page.form_page_value,
+            page.form_field: suggestion,
+            # These are the hidden fields sent by the native page form. They
+            # are harmless for Google Forms and keep direct POSTs equivalent
+            # to a user pressing the site's Send button.
+            "fvv": "1",
+            "pageHistory": "0",
+        }
+    ).encode("utf-8")
     request = Request(
         page.form_action,
         data=body,
         headers={"User-Agent": USER_AGENT, "Content-Type": "application/x-www-form-urlencoded", "Referer": page.url},
         method="POST",
     )
-    with urlopen(request, timeout=timeout) as response:
-        if response.status not in {200, 201, 202, 204}:
-            raise RuntimeError(f"Feedback form returned HTTP {response.status}")
+    try:
+        with urlopen(request, timeout=timeout) as response:
+            if response.status not in {200, 201, 202, 204}:
+                raise RuntimeError(f"Feedback form returned HTTP {response.status}")
+    except HTTPError as exc:
+        detail = clean_text(exc.read(400).decode("utf-8", errors="replace"))
+        suffix = f": {detail[:240]}" if detail else ""
+        raise RuntimeError(f"Feedback form returned HTTP {exc.code}{suffix}") from exc
 
 
 def parse_args() -> argparse.Namespace:

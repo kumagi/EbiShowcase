@@ -1,10 +1,11 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Active Battle | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ebi Active Battle</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/active-rpg/ebi-active-battle/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Active Battle | Ebi Showcase">
-    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta property="og:title" content="Ebi Showcase – Ebi Active Battle">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/active-rpg/ebi-active-battle/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--active-rpg--ebi-active-battle.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -13,16 +14,19 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Active Battle | Ebi Showcase">
-    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta name="twitter:title" content="Ebi Showcase – Ebi Active Battle">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--active-rpg--ebi-active-battle.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Active Battle">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/active-rpg/ebi-active-battle/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← ゲージ式アクティブRPG</a><span>STEP 06 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">素早さが行動順を作るバトル</p><h1>Ebi Active Battle</h1><p>役割の違う敵編成と3連戦し、ゲージ、コマンド、行動アニメーション、成績を一つにまとめます。</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Active Battle</h2><p>READYになったら1〜3か画面ボタンで行動します。3戦を勝ち抜き、時間と残りHPから計算するBESTを更新しよう。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-active-battle/" title="Ebi Active Battle" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ゲージ・役割・3連戦の進行</h2><p>READYの待ち行列、3種類のコマンド、命中フレーム、敵編成を順に解決します。戦闘後は仲間を少し回復し、次の編成へ状態を引き継ぎます。</p><div class="concept-row"><article><b>01</b><h3>毎フレーム加算</h3><p>gauge += speedで待ち時間を進めます。</p></article><article><b>02</b><h3>満タンでREADY</h3><p>上限に届いた役だけ行動できます。</p></article><article><b>03</b><h3>行動後に戻す</h3><p>使った役のゲージを0へ戻します。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="GAUGE,READY,COMMAND,RESOLVE"><div><p class="eyebrow">SYSTEM LAB</p><h2>素早さ・行動ゲージ・待ち時間</h2><p>ゲーム内の処理を一段ずつ進め、データが次の処理へ渡る順番を確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>素早さ・行動ゲージ・待ち時間</h2><p>実ゲームで使っている中心ルールを小さく抜き出します。</p></div><pre><code>actor.gauge += actor.speed
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/active-rpg/ebi-active-battle/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← ゲージ式アクティブRPG</a><span>STEP 06 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">素早さが行動順を作るバトル</p><h1>Ebi Active Battle</h1><p>役割の違う敵編成と3連戦し、ゲージ、コマンド、行動アニメーション、成績を一つにまとめます。</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Active Battle</h2><p>READYになったら1〜3か画面ボタンで行動します。3戦を勝ち抜き、時間と残りHPから計算するBESTを更新しよう。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-active-battle/" title="Ebi Active Battle" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ゲージ・役割・3連戦の進行</h2><p>READYの待ち行列、3種類のコマンド、命中フレーム、敵編成を順に解決します。戦闘後は仲間を少し回復し、次の編成へ状態を引き継ぎます。</p><div class="concept-row"><article><b>01</b><h3>毎フレーム加算</h3><p>gauge += speedで待ち時間を進めます。</p></article><article><b>02</b><h3>満タンでREADY</h3><p>上限に届いた役だけ行動できます。</p></article><article><b>03</b><h3>行動後に戻す</h3><p>使った役のゲージを0へ戻します。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="GAUGE,READY,COMMAND,RESOLVE"><div><p class="eyebrow">SYSTEM LAB</p><h2>素早さ・行動ゲージ・待ち時間</h2><p>ゲーム内の処理を一段ずつ進め、データが次の処理へ渡る順番を確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>素早さ・行動ゲージ・待ち時間</h2><p>実ゲームで使っている中心ルールを小さく抜き出します。</p></div><pre><code>actor.gauge += actor.speed
 if actor.gauge &gt;= maxGauge {
     actor.ready = true
 }
 // command resolved
-actor.gauge = 0</code></pre></section><section class="why-grid"><article><h3>なぜこの分け方？</h3><p>全員が順番を待つのではなく、速いキャラクターほど早く、何度も行動できます。ゲージは時間を数値として保存する時計です。</p></article><article><h3>データを見る</h3><p>上限に届いた役だけ行動できます。</p></article><article><h3>CHALLENGE</h3><p>数値やデータを1つ変え、遊び方がどう変化するか比べてみよう。</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>ゲージ式アクティブRPG</strong></a><a href="../">COMPLETE →<strong>Ebi Active Battle</strong></a></nav>
+actor.gauge = 0</code></pre></section><section class="why-grid"><article><h3>なぜこの分け方？</h3><p>全員が順番を待つのではなく、速いキャラクターほど早く、何度も行動できます。ゲージは時間を数値として保存する時計です。</p></article><article><h3>データを見る</h3><p>上限に届いた役だけ行動できます。</p></article><article><h3>CHALLENGE</h3><p>数値やデータを1つ変え、遊び方がどう変化するか比べてみよう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>ゲージ式アクティブRPG</strong></a><a href="../" rel="next">COMPLETE →<strong>Ebi Active Battle</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -36,7 +40,7 @@ actor.gauge = 0</code></pre></section><section class="why-grid"><article><h3>な
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

@@ -1,0 +1,9 @@
+flowchart LR
+  time["経過時間<br/>seconds"]
+  wave["ウェーブ<br/>難度UP"]
+  spawn["敵を出す<br/>間隔を短く"]
+  draft["報酬選択<br/>武器を強化"]
+  time --> wave
+  wave --> spawn
+  spawn --> draft
+  draft --> time

@@ -1,10 +1,11 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>手応えのあるタイムアタック | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 手応えのあるタイムアタック</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/platformer/game-feel/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="手応えのあるタイムアタック | Ebi Showcase">
-    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta property="og:title" content="Ebi Showcase – 手応えのあるタイムアタック">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/platformer/game-feel/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--platformer--game-feel.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -13,17 +14,20 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="手応えのあるタイムアタック | Ebi Showcase">
-    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta name="twitter:title" content="Ebi Showcase – 手応えのあるタイムアタック">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--platformer--game-feel.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="手応えのあるタイムアタック">
     <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/platformer/game-feel/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 横スクロールアクション</a><span>POLISH 3 / 3</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>手応えのあるタイムアタック</h1><p>粒子、画面揺れ、タイムと自己ベストを加え、8枚のコインを集め直したくなる短いゲームにします。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>PLAYABLEはその場で遊べる教材という印。game feelは、同じルールでも揺れ・粒・停止のタイミングで操作を気持ちよく伝える工夫。Ebi Adventureは完成ゲーム名です。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>hitStop=4; cameraShake=6</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">まず遊ぶ</p><h2>手応えのあるタイムアタック</h2><p>粒子、画面揺れ、タイムと自己ベストを加え、8枚のコインを集め直したくなる短いゲームにします。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/game-feel/" title="手応えのあるタイムアタック" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>反応と記録がもう一度を作る</h2><p>当たり判定が正しくても、何が起きたか伝わらなければ気持ちよくありません。取得した瞬間へ粒子と小さな揺れを足し、結果を自己ベストとして残します。</p><div class="concept-row"><article><b>01</b><h3>その場で反応</h3><p>コイン位置から短命な粒を飛ばします。</p></article><article><b>02</b><h3>全体へ伝える</h3><p>数フレームだけ画面座標をずらします。</p></article><article><b>03</b><h3>次の目標を残す</h3><p>今回のタイムと自己ベストを並べます。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>反応と記録がもう一度を作る</h2><p>当たり判定が正しくても、何が起きたか伝わらなければ気持ちよくありません。取得した瞬間へ粒子と小さな揺れを足し、結果を自己ベストとして残します。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>反応と記録がもう一度を作る</h2><p>遊べるゲームから中心部分だけを抜き出します。</p></div><pre><code>spawnParticles(coinX, coinY)
 shakeFrames = 5
-if best == 0 || time &lt; best { best = time }</code></pre></section><section class="why-grid"><article><h3>試してみよう</h3><p>数値を1つ変えて、見え方や難しさを比べよう。</p></article><article><h3>観察しよう</h3><p>数フレームだけ画面座標をずらします。</p></article><article><h3>CHALLENGE</h3><p>今回のタイムと自己ベストを並べます。</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>横スクロールアクション</strong></a><a href="../powerup-adventure/">FINAL →<strong>Ebi Adventure</strong></a></nav>
+if best == 0 || time &lt; best { best = time }</code></pre></section><section class="why-grid"><article><h3>試してみよう</h3><p>数値を1つ変えて、見え方や難しさを比べよう。</p></article><article><h3>観察しよう</h3><p>数フレームだけ画面座標をずらします。</p></article><article><h3>CHALLENGE</h3><p>今回のタイムと自己ベストを並べます。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>横スクロールアクション</strong></a><a href="../powerup-adventure/" rel="next">FINAL →<strong>Ebi Adventure</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -37,7 +41,7 @@ if best == 0 || time &lt; best { best = time }</code></pre></section><section cl
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

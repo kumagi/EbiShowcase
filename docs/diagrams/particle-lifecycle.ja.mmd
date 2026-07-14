@@ -1,0 +1,8 @@
+flowchart LR
+  emit["生まれる<br/>位置・速度"]
+  move["動く<br/>x += vx"]
+  fade["薄くなる<br/>alpha--"]
+  remove["life=0<br/>リストから除く"]
+  emit --> move
+  move --> fade
+  fade --> remove

@@ -1,0 +1,9 @@
+flowchart LR
+  waypoint["waypoints<br/>A → B → C"]
+  delta["target delta<br/>dx / dy"]
+  move["normalize and move<br/>apply speed"]
+  turn["when close<br/>choose next"]
+  waypoint --> delta
+  delta --> move
+  move --> turn
+  turn --> waypoint

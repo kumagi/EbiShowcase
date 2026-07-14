@@ -1,0 +1,49 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 向きを持って迷路を歩く</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/raycaster/facing-move/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – 向きを持って迷路を歩く">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/raycaster/facing-move/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--raycaster--facing-move.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="向きを持って迷路を歩く">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – 向きを持って迷路を歩く">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--raycaster--facing-move.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="向きを持って迷路を歩く">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/raycaster/facing-move/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 2Dから擬似3Dへ：レイキャスト迷路FPS</a><span>EXPERIMENT 01 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>向きを持って迷路を歩く</h1><p>2Dマップの中で左右に向きを変え、向いている方向へ進みます。</p><div class="lesson-meta"><span>GO + EBITENGINE / PSEUDO 3D</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play-panel raycaster-play" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>向きを持って迷路を歩く</h2><p>矢印キー/WASD、または画面下のボタンで移動・旋回します。最終章ではSPACEかRAYボタンで射撃します。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/facing-move/" title="向きを持って迷路を歩く" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>角度から進む量を作る</h2><p>プレイヤーはx・yだけでなくangleも持ちます。cos(angle)が横、sin(angle)が縦の進む量です。まず上から見た地図で、数字が動きに変わる様子を確かめます。</p><figure class="raycast-diagram" aria-labelledby="ray-diagram-0"><div><span class="ray-map">▦<i>➤</i></span><b>→</b><span class="ray-beam">／│＼</span><b>→</b><span class="ray-distance">距離</span><b>→</b><span class="ray-strips">▂▅█▆▃</span></div><figcaption id="ray-diagram-0">2D地図 → 光線 → 距離 → 縦帯 → 擬似3D画面</figcaption></figure><div class="concept-row"><article><b>01</b><h3>2Dの数字</h3><p>2Dマップの中で左右に向きを変え、向いている方向へ進みます。</p></article><article><b>02</b><h3>投影</h3><p>プレイヤーはx・yだけでなくangleも持ちます。cos(angle)が横、sin(angle)が縦の進む量です。まず上から見た地図で、数字が動きに変わる様子を確かめます。</p></article><article><b>03</b><h3>見比べる</h3><p>ミニマップとFPS画面を同時に見て、同じ情報の別の描き方だと確かめます。</p></article></div></section><section class="motion-lab" data-lab="pipeline" data-steps="map,ray,distance,strip,view" data-loop="next frame"><div><p class="eyebrow">PROJECTION LAB</p><h2>同じデータが画面になる順番</h2><p>NEXTを押して、2D地図から擬似3D画面まで情報が渡る順番を追います。</p></div><div class="lab-stage"><div class="lab-entities" data-count="5"></div><p class="lab-readout" aria-live="polite">MAP</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">TESTABLE GO</p><h2>角度から進む量を作る</h2><p>光線・距離・投影はEbitengineから分けた純粋な関数なので、画面を開かずgo testで確かめられます。</p></div><pre><code>dx := math.Cos(player.Angle) * speed
+dy := math.Sin(player.Angle) * speed
+player.X += dx
+player.Y += dy</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>プレイヤーはx・yだけでなくangleも持ちます。cos(angle)が横、sin(angle)が縦の進む量です。まず上から見た地図で、数字が動きに変わる様子を確かめます。</p></article><article><h3>CHANGE</h3><p>視野角や光線の本数を変え、見え方と速さを比べよう。</p></article><article class="challenge"><h3>CHALLENGE</h3><p>扉、別の壁模様、敵の巡回のうち一つを足そう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>2Dから擬似3Dへ：レイキャスト迷路FPS</strong></a><a href="../single-ray/" rel="next">NEXT →<strong>一本の光線を壁まで飛ばす</strong></a></nav>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/tracks/raycaster/facing-move/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

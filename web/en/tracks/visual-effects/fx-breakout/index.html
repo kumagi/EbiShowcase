@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits.">
-  <title>Break Bricks in Two Steps | Ebi Showcase</title>
+  <meta name="description" content="Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits. Play the demo, read a short Go example, change a value, a">
+  <title>Ebi Showcase – Break Bricks in Two Steps</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-breakout/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Break Bricks in Two Steps | Ebi Showcase">
-    <meta property="og:description" content="Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits.">
+    <meta property="og:title" content="Ebi Showcase – Break Bricks in Two Steps">
+    <meta property="og:description" content="Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits. Play the demo, read a short Go example, change a value, a">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-breakout/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-breakout.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,8 +19,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Break Bricks in Two Steps | Ebi Showcase">
-    <meta name="twitter:description" content="Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits.">
+    <meta name="twitter:title" content="Ebi Showcase – Break Bricks in Two Steps">
+    <meta name="twitter:description" content="Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits. Play the demo, read a short Go example, change a value, a">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-breakout.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Break Bricks in Two Steps">
     <!-- ogp:end -->
@@ -51,7 +51,10 @@
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Smash bricks</h2></div>
         <p>Break blocks with the ball. Shards are fx—compare bricks vs fx.parts.</p>
@@ -140,8 +143,8 @@ g.fx.FlameBurst(x, y, 12)      // fx only</code></pre>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-pong/">← STEP A05<strong>Pong Sparks & Trails</strong></a>
-      <a href="../vfx-fx-snake/">STEP A07 →<strong>Snake Eat FX</strong></a>
+      <a href="../vfx-fx-pong/" rel="prev">← STEP A05<strong>Pong Sparks & Trails</strong></a>
+      <a href="../vfx-fx-snake/" rel="next">STEP A07 →<strong>Snake Eat FX</strong></a>
     </nav>
 
 
@@ -158,7 +161,7 @@ g.fx.FlameBurst(x, y, 12)      // fx only</code></pre>
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

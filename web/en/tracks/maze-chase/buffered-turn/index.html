@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="description" content="When the game remembers a direction pressed slightly early, the runner can take it cleanly at the next tile center. Play the demo, read a short Go example, chan">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Buffered Corner Turns | Ebi Showcase</title>
+  <title>Ebi Showcase – Buffered Corner Turns</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Buffered Corner Turns | Ebi Showcase">
-    <meta property="og:description" content="When the game remembers a direction pressed slightly early, the runner can take it cleanly at the next tile center.">
+    <meta property="og:title" content="Ebi Showcase – Buffered Corner Turns">
+    <meta property="og:description" content="When the game remembers a direction pressed slightly early, the runner can take it cleanly at the next tile center. Play the demo, read a short Go example, chan">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/maze-chase/buffered-turn/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--maze-chase--buffered-turn.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Buffered Corner Turns | Ebi Showcase">
-    <meta name="twitter:description" content="When the game remembers a direction pressed slightly early, the runner can take it cleanly at the next tile center.">
+    <meta name="twitter:title" content="Ebi Showcase – Buffered Corner Turns">
+    <meta name="twitter:description" content="When the game remembers a direction pressed slightly early, the runner can take it cleanly at the next tile center. Play the demo, read a short Go example, chan">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--maze-chase--buffered-turn.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Buffered Corner Turns">
     <!-- ogp:end -->
@@ -43,7 +44,10 @@
 
 <p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Cross ten glowing gates</h2></div><p>Queue the next direction early with arrows/WASD, click, or touch. Compare the CURRENT and QUEUED readouts.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Play Buffered Corner Turns" src="../../../../play/buffered-turn/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -96,7 +100,7 @@ if reachedTileCenter {
       <div class="why-grid"><article><p class="eyebrow">WHY BUFFER?</p><h3>Why does this feel better?</h3><p>The player need not hit one exact frame; the game waits briefly for their intention to become legal. <code>add(tile, queued)</code> adds a direction (e.g. right = +1 on x) to the tile to get the next cell.</p></article><article><p class="eyebrow">WHEN TO CLEAR?</p><h3>When does the queue expire?</h3><p>This game keeps it until success. Other games use a short timer to tune the feel.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Challenge</h3><p>Expire the queue after ten frames and compare it with the persistent version.</p></article></div>
     </section>
 
-    <nav class="lesson-pager"><a href="../tile-runner/">← STEP 01<strong>Run the Maze</strong></a><a href="../pellet-map/">STEP 03 →<strong>Pellet Maze</strong></a></nav>
+    <nav class="lesson-pager"><a href="../tile-runner/" rel="prev">← STEP 01<strong>Run the Maze</strong></a><a href="../pellet-map/" rel="next">STEP 03 →<strong>Pellet Maze</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -112,7 +116,7 @@ if reachedTileCenter {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -120,6 +124,19 @@ if reachedTileCenter {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

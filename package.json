@@ -1,0 +1,9 @@
+{
+  "name": "ebi-showcase",
+  "private": true,
+  "license": "Apache-2.0",
+  "scripts": {
+    "gen-diagrams": "node scripts/gen-diagrams.mjs",
+    "build": "bash scripts/build.sh"
+  }
+}

@@ -1,0 +1,9 @@
+flowchart LR
+  event["イベント<br/>話す・倒す"]
+  condition["条件<br/>flag / item"]
+  flag["進行フラグ<br/>state"]
+  reward["報酬<br/>次の目的"]
+  event --> condition
+  condition --> flag
+  flag --> reward
+  reward --> event

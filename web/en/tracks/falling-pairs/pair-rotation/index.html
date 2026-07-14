@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+  <meta name="description" content="Rotate through four orientations and adjust near walls and occupied cells. Play the demo, read a short Go example, change a value, and apply the idea to your ow">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Rotate the Pair | Ebi Showcase</title>
+<title>Ebi Showcase – Rotate the Pair</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Rotate the Pair | Ebi Showcase">
-    <meta property="og:description" content="Rotate through four orientations and adjust near walls and occupied cells.">
+    <meta property="og:title" content="Ebi Showcase – Rotate the Pair">
+    <meta property="og:description" content="Rotate through four orientations and adjust near walls and occupied cells. Play the demo, read a short Go example, change a value, and apply the idea to your ow">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/falling-pairs/pair-rotation/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--falling-pairs--pair-rotation.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Rotate the Pair | Ebi Showcase">
-    <meta name="twitter:description" content="Rotate through four orientations and adjust near walls and occupied cells.">
+    <meta name="twitter:title" content="Ebi Showcase – Rotate the Pair">
+    <meta name="twitter:description" content="Rotate through four orientations and adjust near walls and occupied cells. Play the demo, read a short Go example, change a value, and apply the idea to your ow">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--falling-pairs--pair-rotation.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Rotate the Pair">
     <!-- ogp:end -->
@@ -74,6 +75,9 @@
 </article>
 </div>
 </section>
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Rotate and lock eight pairs.</h2></div><p>Move with ←→, rotate with Space, drop with ↓, or use touch buttons.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Rotate the Pair" src="../../../../play/pair-rotation/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / PIVOT ROTATION</p><h2>Keep the pivot; change only partner direction.</h2><p class="lesson-lead">Store the partner as one of <strong>four offsets</strong>. If rotation hits a wall, test small pivot corrections.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Direction table</h3><p>Store up, right, down, left offsets.</p><code>dirs={{0,-1},{1,0},{0,1},{-1,0}}</code></article><article><span class="concept-number">2</span><h3>Next direction</h3><p>Modulo four wraps around.</p><code>next=(dir+1)%4</code></article><article><span class="concept-number">3</span><h3>Wall correction</h3><p>Try normal, left, right, then up.</p><code>kicks := []point{{0,0},{-1,0},{1,0},{0,-1}}</code></article></div><div class="motion-lab" data-lab="kick-try" data-kicks="0,0;1,0;-1,0;0,1" data-ok="kick ({dx},{dy}) OK" data-blocked="({dx},{dy}) blocked" data-fail="cancel rotate" aria-labelledby="lab-title-pair-rotation">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / PAIR KICKS</p>
@@ -100,9 +104,9 @@ for _, k := range kicks {
  }
 }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY PIVOT?</p><h3>Manage two as one</h3><p>Pivot and offset determine both cells.</p></article><article><p class="eyebrow">WHY KICK?</p><h3>Rotate near walls</h3><p>A small shift rescues a valid rotation.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Counter-clockwise</h3><p>Find the formula that steps dir backward.</p></article></div></section>
 <nav class="lesson-pager">
-<a href="../falling-pair/">← STEP 01<strong>Drop a Pair</strong>
+<a href="../falling-pair/" rel="prev">← STEP 01<strong>Drop a Pair</strong>
 </a>
-<a href="../color-groups/">STEP 03 →<strong>Find Color Groups</strong>
+<a href="../color-groups/" rel="next">STEP 03 →<strong>Find Color Groups</strong>
 </a>
 </nav>
 
@@ -120,7 +124,7 @@ for _, k := range kicks {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -128,6 +132,19 @@ for _, k := range kicks {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

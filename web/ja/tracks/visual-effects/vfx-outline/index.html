@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="同じ画像を黒く染め、少しずつ方向を変えて先に描きます。最後に本体を重ねるだけで、明るい背景でもキャラクターがくっきり読めます。">
-  <title>多重描画で輪郭を作る | Ebi Showcase</title>
+  <meta name="description" content="同じ画像を黒く染め、少しずつ方向を変えて先に描きます。最後に本体を重ねるだけで、明るい背景でもキャラクターがくっきり読めます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+  <title>Ebi Showcase – 多重描画で輪郭を作る</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-outline/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="多重描画で輪郭を作る | Ebi Showcase">
-    <meta property="og:description" content="同じ画像を黒く染め、少しずつ方向を変えて先に描きます。最後に本体を重ねるだけで、明るい背景でもキャラクターがくっきり読めます。">
+    <meta property="og:title" content="Ebi Showcase – 多重描画で輪郭を作る">
+    <meta property="og:description" content="同じ画像を黒く染め、少しずつ方向を変えて先に描きます。最後に本体を重ねるだけで、明るい背景でもキャラクターがくっきり読めます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-outline/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-outline.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,8 +19,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="多重描画で輪郭を作る | Ebi Showcase">
-    <meta name="twitter:description" content="同じ画像を黒く染め、少しずつ方向を変えて先に描きます。最後に本体を重ねるだけで、明るい背景でもキャラクターがくっきり読めます。">
+    <meta name="twitter:title" content="Ebi Showcase – 多重描画で輪郭を作る">
+    <meta name="twitter:description" content="同じ画像を黒く染め、少しずつ方向を変えて先に描きます。最後に本体を重ねるだけで、明るい背景でもキャラクターがくっきり読めます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-outline.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="多重描画で輪郭を作る">
     <!-- ogp:end -->
@@ -47,7 +47,10 @@
 
     <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>太さと色を変えよう</h2></div>
         <p>輪郭の太さと暗色・明色を切り替え、背景からの読みやすさを比べます。</p>
@@ -132,8 +135,8 @@ drawSprite(0, 0) // 本体は最後</code></pre>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-squash/">← STEP 14<strong>スクワッシュ＆ストレッチ</strong></a>
-      <a href="../vfx-impact-lines/">STEP 16 →<strong>衝撃波リングと集中線</strong></a>
+      <a href="../vfx-squash/" rel="prev">← STEP 14<strong>スクワッシュ＆ストレッチ</strong></a>
+      <a href="../vfx-impact-lines/" rel="next">STEP 16 →<strong>衝撃波リングと集中線</strong></a>
     </nav>
 
 
@@ -150,7 +153,7 @@ drawSprite(0, 0) // 本体は最後</code></pre>
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

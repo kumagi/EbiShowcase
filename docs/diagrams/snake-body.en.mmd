@@ -1,0 +1,9 @@
+flowchart LR
+  head["next head<br/>add direction"]
+  append["append<br/>at the front"]
+  tail["trim the tail<br/>normal move"]
+  grow["ate food?<br/>keep the tail"]
+  head --> append
+  append --> tail
+  tail --> grow
+  grow --> head

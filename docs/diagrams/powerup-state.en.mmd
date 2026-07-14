@@ -1,0 +1,9 @@
+flowchart LR
+  normal["NORMAL<br/>ordinary"]
+  pickup["PICKUP<br/>collect item"]
+  powered["POWERED<br/>effect timer"]
+  timeout["TIMEOUT<br/>return"]
+  normal --> pickup
+  pickup --> powered
+  powered --> timeout
+  timeout --> normal

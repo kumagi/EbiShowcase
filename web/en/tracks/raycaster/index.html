@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Use only Ebitengine's 2D drawing to build a Doom-like maze view. The world remains a 2D map: turn ray distances into wall-strip heights, then grow it into an es"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – From 2D to Pseudo-3D: Ray-cast Maze FPS</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/raycaster/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – From 2D to Pseudo-3D: Ray-cast Maze FPS">
+    <meta property="og:description" content="Use only Ebitengine's 2D drawing to build a Doom-like maze view. The world remains a 2D map: turn ray distances into wall-strip heights, then grow it into an es">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/raycaster/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--raycaster.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="From 2D to Pseudo-3D: Ray-cast Maze FPS">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – From 2D to Pseudo-3D: Ray-cast Maze FPS">
+    <meta name="twitter:description" content="Use only Ebitengine's 2D drawing to build a Doom-like maze view. The world remains a 2D map: turn ray distances into wall-strip heights, then grow it into an es">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--raycaster.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="From 2D to Pseudo-3D: Ray-cast Maze FPS">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">ALL COURSES</a><a class="lang" href="../../../ja/tracks/raycaster/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL COURSES</a><span>6 PLAYABLE EXPERIMENTS</span></div><section class="track-hero track-raycaster"><span class="track-letter">V</span><div><p class="eyebrow">Draw depth with 2D mathematics</p><h1>From 2D to Pseudo-3D: Ray-cast Maze FPS</h1><p>Use only Ebitengine's 2D drawing to build a Doom-like maze view. The world remains a 2D map: turn ray distances into wall-strip heights, then grow it into an escape game with a key and enemies.</p></div></section><p class="curriculum-bridge">An experimental advanced path integrating maps, angles, collision, and camera ideas.</p><section class="path-list"><div class="path-intro"><p class="eyebrow">EXPERIMENTAL LEARNING PATH</p><h2>From one ray to a playable maze FPS.</h2><p>Use only Ebitengine's 2D drawing to build a Doom-like maze view. The world remains a 2D map: turn ray distances into wall-strip heights, then grow it into an escape game with a key and enemies.</p></div><a class="path-step" href="facing-move/"><span>01</span><div><h3>Walk a Maze with a Facing Direction</h3><p>Turn left or right on a 2D map, then move in the direction you face.</p><strong>Turn an angle into movement</strong></div><b>→</b></a><a class="path-step" href="single-ray/"><span>02</span><div><h3>Cast One Ray to a Wall</h3><p>Extend one ray in front of the player and find the first wall and its distance.</p><strong>Cross the grid with DDA</strong></div><b>→</b></a><a class="path-step" href="distance-strip/"><span>03</span><div><h3>Turn Distance into Wall Height</h3><p>Draw a nearby wall as a tall strip and a distant wall as a short strip.</p><strong>Create perspective with division</strong></div><b>→</b></a><a class="path-step" href="column-view/"><span>04</span><div><h3>Cast One Ray per Screen Column</h3><p>Split the field of view like a fan and line up many wall strips to make a pseudo-3D maze.</p><strong>Project 2D distances into a 3D-looking view</strong></div><b>→</b></a><a class="path-step" href="textured-view/"><span>05</span><div><h3>Add Wall Texture and Fisheye Correction</h3><p>Choose a pattern from the wall-hit position and fix the curved fisheye distortion.</p><strong>Hit position and corrected distance</strong></div><b>→</b></a><a class="path-step" href="ebi-raycaster/"><span>06</span><div><h3>Complete Ebi Raycaster</h3><p>Combine depth-sorted enemies, ray shooting, a key, and an exit into an escapable maze FPS.</p><strong>Connect billboards and depth to game rules</strong></div><b>→</b></a></section>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/raycaster/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../learn.js"></script></body></html>

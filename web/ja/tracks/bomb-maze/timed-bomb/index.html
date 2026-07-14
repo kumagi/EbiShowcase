@@ -2,13 +2,14 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
+  <meta name="description" content="爆弾は「場所」と「残り時間」を持つゲームデータです。毎フレーム数を減らし、0になったら爆発状態へ切り替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>時限爆弾を置く | Ebi Showcase</title>
+  <title>Ebi Showcase – 時限爆弾を置く</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="時限爆弾を置く | Ebi Showcase">
-    <meta property="og:description" content="爆弾は「場所」と「残り時間」を持つゲームデータです。毎フレーム数を減らし、0になったら爆発状態へ切り替えます。">
+    <meta property="og:title" content="Ebi Showcase – 時限爆弾を置く">
+    <meta property="og:description" content="爆弾は「場所」と「残り時間」を持つゲームデータです。毎フレーム数を減らし、0になったら爆発状態へ切り替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/bomb-maze/timed-bomb/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--bomb-maze--timed-bomb.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="時限爆弾を置く | Ebi Showcase">
-    <meta name="twitter:description" content="爆弾は「場所」と「残り時間」を持つゲームデータです。毎フレーム数を減らし、0になったら爆発状態へ切り替えます。">
+    <meta name="twitter:title" content="Ebi Showcase – 時限爆弾を置く">
+    <meta name="twitter:description" content="爆弾は「場所」と「残り時間」を持つゲームデータです。毎フレーム数を減らし、0になったら爆発状態へ切り替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--bomb-maze--timed-bomb.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="時限爆弾を置く">
     <!-- ogp:end -->
@@ -43,7 +44,11 @@
 
 <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_bomb-chain.svg" alt="爆弾の連鎖" loading="lazy" decoding="async"><figcaption>爆弾の連鎖の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>印のマスを5つ爆破しよう</h2></div><p>矢印／WASDで移動、Spaceで設置。クリックとタッチは画面下のボタンを使います。置いたら同じマスから逃げましょう。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="時限爆弾を置くゲーム" src="../../../../play/timed-bomb/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -93,7 +98,7 @@
       <div class="why-grid"><article><p class="eyebrow">WITHOUT A SLICE</p><h3>1個だけだと足りない</h3><p>複数の爆弾が別々の場所と時間を持てるよう、配列（スライス）にします。</p></article><article><p class="eyebrow">WITH A FUSE</p><h3>設置制限が必要な理由</h3><p>同じマスの重複を防ぎ、描画と当たり判定を分かりやすくします。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>同時に2個置けるように</h3><p>同時に置ける数を2個に増やし、起爆時刻の違いを観察しよう。</p></article></div>
     </section>
 
-    <nav class="lesson-pager"><span></span><a href="../cross-blast/">STEP 02 →<strong>十字に伸びる爆風</strong></a></nav>
+    <nav class="lesson-pager"><span></span><a href="../cross-blast/" rel="next">STEP 02 →<strong>十字に伸びる爆風</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -109,7 +114,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -117,6 +122,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="経験値を集めてレベルアップし、ドラフトカードで能力を選ぶEbitengine版サバイバルゲームの第4ステップ。">
-  <title>STEP 04 — 経験値ドラフト | Ebi Showcase</title>
+  <meta name="description" content="経験値を集めてレベルアップし、ドラフトカードで能力を選ぶEbitengine版サバイバルゲームの第4ステップ。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+  <title>Ebi Showcase – STEP 04 — 経験値ドラフト</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="STEP 04 — 経験値ドラフト | Ebi Showcase">
-    <meta property="og:description" content="経験値を集めてレベルアップし、ドラフトカードで能力を選ぶEbitengine版サバイバルゲームの第4ステップ。">
+    <meta property="og:title" content="Ebi Showcase – STEP 04 — 経験値ドラフト">
+    <meta property="og:description" content="経験値を集めてレベルアップし、ドラフトカードで能力を選ぶEbitengine版サバイバルゲームの第4ステップ。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/survivors/experience-draft/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--survivors--experience-draft.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="STEP 04 — 経験値ドラフト | Ebi Showcase">
-    <meta name="twitter:description" content="経験値を集めてレベルアップし、ドラフトカードで能力を選ぶEbitengine版サバイバルゲームの第4ステップ。">
+    <meta name="twitter:title" content="Ebi Showcase – STEP 04 — 経験値ドラフト">
+    <meta name="twitter:description" content="経験値を集めてレベルアップし、ドラフトカードで能力を選ぶEbitengine版サバイバルゲームの第4ステップ。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--survivors--experience-draft.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="経験値ドラフト">
     <!-- ogp:end -->
@@ -42,6 +42,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>XPは敵を倒した経験値、レベルアップはXPが境目を越えること、ドラフト選択はランダム候補から一つ強化を選ぶことです。条件を満たしたら時間を止めて3択状態へ移ります。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if xp>=nextXP { state=ChooseUpgrade }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>経験値を集めてレベル5まで育てよう！</h2></div><p>WASD・方向キー・ドラッグで移動。青いジェムに近づいて経験値を集め、レベルアップ時に1〜3を選択。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="経験値ドラフト" src="../../../../play/experience-draft/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -127,7 +130,7 @@
       </div>
     </section>
 
-    <nav class="lesson-pager"><a href="../swarm/">← STEP 03<strong>100体の群れ</strong></a><a href="../weapon-evolution/">STEP 05 →<strong>武器進化ラボ</strong></a></nav>
+    <nav class="lesson-pager"><a href="../swarm/" rel="prev">← STEP 03<strong>100体の群れ</strong></a><a href="../weapon-evolution/" rel="next">STEP 05 →<strong>武器進化ラボ</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -143,7 +146,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -151,6 +154,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

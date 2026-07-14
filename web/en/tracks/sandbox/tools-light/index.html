@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Tools and Light | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Save durability by matching tools to materials, then light the day-night cycle with tile-based torch sources. Play the demo, read a short Go example, change a v"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Tools and Light</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Tools and Light | Ebi Showcase">
-    <meta property="og:description" content="Save durability by matching tools to materials, then light the day-night cycle with tile-based torch sources.">
+    <meta property="og:title" content="Ebi Showcase – Tools and Light">
+    <meta property="og:description" content="Save durability by matching tools to materials, then light the day-night cycle with tile-based torch sources. Play the demo, read a short Go example, change a v">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/sandbox/tools-light/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--sandbox--tools-light.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Tools and Light | Ebi Showcase">
-    <meta name="twitter:description" content="Save durability by matching tools to materials, then light the day-night cycle with tile-based torch sources.">
+    <meta name="twitter:title" content="Ebi Showcase – Tools and Light">
+    <meta name="twitter:description" content="Save durability by matching tools to materials, then light the day-night cycle with tile-based torch sources. Play the demo, read a short Go example, change a v">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--sandbox--tools-light.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Tools and Light">
     <!-- ogp:end -->
@@ -25,6 +26,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if tool.Hardness >= block.Required { breakBlock() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Mine four wood and four stone, then light camp with two torches.</h2></div><p>Tap Axe, Pick, or Torch, then a board tile. On PC select with 1, 2, or 3/T and mine with the mouse. At night, place a torch near tiles that are too dark.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Tools and tile lighting mining game" src="../../../../play/tools-light/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / TOOL DATA AND TILE LIGHT</p><h2>Check “what mines it?” and “can I see it?” before changing a tile.</h2><p class="lesson-lead">The tools crafted in the previous step now store preferred material, power, and durability. Before mining, compare tool with material and inspect that tile's light. A torch is not one big bright picture: every tile calculates brightness from its <strong>distance to the source</strong>.</p></div>
@@ -56,7 +60,7 @@
     return max(0, min(9, light))
 }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY TOOL DATA?</p><h3>Grow to new materials</h3><p>Add preferred material and power data instead of adding another separate tool conditional everywhere.</p></article><article><p class="eyebrow">WHY MAX LIGHT?</p><h3>Handle overlapping sources</h3><p>Day and torches do not add forever into white; the strongest source reaching that place wins.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Block light with walls</h3><p>Remove extra light each time it crosses stone, leaving cave corners darker.</p></article></div>
-</section><nav class="lesson-pager"><a href="../inventory-crafting/">← STEP 04<strong>Inventory and Crafting</strong></a><a href="../creature-world/">STEP 06 →<strong>A Living World</strong></a></nav>
+</section><nav class="lesson-pager"><a href="../inventory-crafting/" rel="prev">← STEP 04<strong>Inventory and Crafting</strong></a><a href="../creature-world/" rel="next">STEP 06 →<strong>A Living World</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -72,7 +76,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -80,6 +84,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

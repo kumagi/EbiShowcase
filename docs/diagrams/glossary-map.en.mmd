@@ -1,0 +1,10 @@
+flowchart LR
+  update["Update<br/>advance numbers"]
+  state["State<br/>position / score"]
+  draw["Draw<br/>paint the picture"]
+  geom["GeoM<br/>place / rotate"]
+  data["JSON<br/>add stages"]
+  update --> state
+  state --> draw
+  draw --> geom
+  state --> data

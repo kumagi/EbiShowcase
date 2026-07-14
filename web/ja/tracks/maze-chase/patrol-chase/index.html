@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>巡回と追跡 | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="敵をPATROL・CHASE・SEARCHへ分け、距離とまっすぐな視界から目標タイルを切り替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 巡回と追跡</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="巡回と追跡 | Ebi Showcase">
-    <meta property="og:description" content="敵をPATROL・CHASE・SEARCHへ分け、距離とまっすぐな視界から目標タイルを切り替えます。">
+    <meta property="og:title" content="Ebi Showcase – 巡回と追跡">
+    <meta property="og:description" content="敵をPATROL・CHASE・SEARCHへ分け、距離とまっすぐな視界から目標タイルを切り替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/maze-chase/patrol-chase/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--maze-chase--patrol-chase.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="巡回と追跡 | Ebi Showcase">
-    <meta name="twitter:description" content="敵をPATROL・CHASE・SEARCHへ分け、距離とまっすぐな視界から目標タイルを切り替えます。">
+    <meta name="twitter:title" content="Ebi Showcase – 巡回と追跡">
+    <meta name="twitter:description" content="敵をPATROL・CHASE・SEARCHへ分け、距離とまっすぐな視界から目標タイルを切り替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--maze-chase--patrol-chase.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="巡回と追跡">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>patrolは見回り、chaseは追跡。距離100未満で追い、見失って時間が過ぎたら見回りへ戻ります。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if distance &lt; 100 { state=Chase }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>見つかったら角へ逃げ、研究バッジを8個集めよう。</h2></div><p>黄色は巡回、赤は追跡、紫は最後に見た場所の捜索。同じ直線通路で7マス以内だと発見されます。矢印/WASD、マウス・タッチ長押し。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="巡回と追跡" src="../../../../play/patrol-chase/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ENEMY MODE MACHINE</p><h2>敵の「行き先」を変えると、同じ移動でも性格が変わる。</h2><p class="lesson-lead">敵はmodeとtargetを持ちます。PATROLは巡回表の次のタイル、CHASEは現在のプレイヤー、SEARCHは最後に見たタイルを目標にします。距離と<strong>視界</strong>がmodeを切り替えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>PATROLは決めた道を巡る</h3><p>patrolRouteに角のタイルを順番で保存します。目標へ着いたらindexを1進め、最後なら0へ戻します。</p><code>target = patrolRoute[patrolIndex]</code></article><article><span class="concept-number">2</span><h3>直線の視界でCHASEへ</h3><p>xかyが同じで、その間に#がなく、距離7以内なら見えています。見えた瞬間にplayerを目標へします。</p><code>if lineOfSight &amp;&amp; distance &lt;= 7 { mode = chase }</code></article><article><span class="concept-number">3</span><h3>見失ったらSEARCH</h3><p>発見中はlastSeenを更新します。角で視界が切れたらそこへ向かい、着くか時間切れで巡回へ戻ります。</p><code>target = lastSeen</code></article></div><section class="motion-lab" data-lab="junction-pick" data-chase="プレイヤー方向へ" data-scatter="隅へ" aria-labelledby="lab-title-patrol-chase">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / AI MODE</p>
@@ -54,7 +58,7 @@ switch mode {
 case patrol: target = patrolRoute[index]
 case chase:  target = player
 case search: target = lastSeen
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY LAST SEEN?</p><h3>壁越しに正解を知らない</h3><p>視界が切れた敵が現在位置を追い続けないため、角へ逃げる攻略が生まれます。</p></article><article><p class="eyebrow">WHY COLORS AND LABELS?</p><h3>状態を確かめられる</h3><p>色だけでなくPATROLなどの文字も出し、どの条件で変わったか遊びながら観察できます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>音を聞く状態</h3><p>近くでバッジを取るとINVESTIGATEへ変わり、そのバッジのタイルを目標にしてみよう。</p></article></div></section><nav class="lesson-pager"><a href="../pellet-map/">← STEP 03<strong>ドットを食べる迷路</strong></a><a href="../junction-ai/">STEP 05 →<strong>交差点AI</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY LAST SEEN?</p><h3>壁越しに正解を知らない</h3><p>視界が切れた敵が現在位置を追い続けないため、角へ逃げる攻略が生まれます。</p></article><article><p class="eyebrow">WHY COLORS AND LABELS?</p><h3>状態を確かめられる</h3><p>色だけでなくPATROLなどの文字も出し、どの条件で変わったか遊びながら観察できます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>音を聞く状態</h3><p>近くでバッジを取るとINVESTIGATEへ変わり、そのバッジのタイルを目標にしてみよう。</p></article></div></section><nav class="lesson-pager"><a href="../pellet-map/" rel="prev">← STEP 03<strong>ドットを食べる迷路</strong></a><a href="../junction-ai/" rel="next">STEP 05 →<strong>交差点AI</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -70,7 +74,7 @@ case search: target = lastSeen
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -78,6 +82,19 @@ case search: target = lastSeen
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

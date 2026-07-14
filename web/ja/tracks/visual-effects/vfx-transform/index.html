@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="同じ GeoM に Rotate と Scale を足すと、絵が回って伸び縮みします。大事なのは順番。中心を原点へ寄せてから回すと、真ん中を軸にきれいに回ります。">
-  <title>回転と拡大縮小、そして中心 | Ebi Showcase</title>
+  <meta name="description" content="同じ GeoM に Rotate と Scale を足すと、絵が回って伸び縮みします。大事なのは順番。中心を原点へ寄せてから回すと、真ん中を軸にきれいに回ります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+  <title>Ebi Showcase – 回転と拡大縮小、そして中心</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-transform/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="回転と拡大縮小、そして中心 | Ebi Showcase">
-    <meta property="og:description" content="同じ GeoM に Rotate と Scale を足すと、絵が回って伸び縮みします。大事なのは順番。中心を原点へ寄せてから回すと、真ん中を軸にきれいに回ります。">
+    <meta property="og:title" content="Ebi Showcase – 回転と拡大縮小、そして中心">
+    <meta property="og:description" content="同じ GeoM に Rotate と Scale を足すと、絵が回って伸び縮みします。大事なのは順番。中心を原点へ寄せてから回すと、真ん中を軸にきれいに回ります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-transform/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-transform.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,8 +19,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="回転と拡大縮小、そして中心 | Ebi Showcase">
-    <meta name="twitter:description" content="同じ GeoM に Rotate と Scale を足すと、絵が回って伸び縮みします。大事なのは順番。中心を原点へ寄せてから回すと、真ん中を軸にきれいに回ります。">
+    <meta name="twitter:title" content="Ebi Showcase – 回転と拡大縮小、そして中心">
+    <meta name="twitter:description" content="同じ GeoM に Rotate と Scale を足すと、絵が回って伸び縮みします。大事なのは順番。中心を原点へ寄せてから回すと、真ん中を軸にきれいに回ります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-transform.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="回転と拡大縮小、そして中心">
     <!-- ogp:end -->
@@ -46,12 +46,19 @@
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>GeoM.Rotateは絵を回す設定、GeoM.Scaleは横・縦の大きさを何倍にするかの設定。w/hはwidth（横幅）/height（高さ）です。-w/2,-h/2で絵の中心を座標(0,0)へ合わせてから回します。スタンプと移動で使ったTranslateへ、回転と拡大縮小を足す段階です。 Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>op.GeoM.Rotate(angle); op.GeoM.Scale(sx, sy)</code></pre></div></section>
+<!-- feedback-note:tracks/visual-effects/vfx-transform:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-transform"><div><p class="eyebrow">pivotをたとえる</p><h2 id="feedback-note-tracks-visual-effects-vfx-transform">pivotは、タイヤを回すネジ頭のようなもの</h2><p>左上を軸に回すと絵が遠くへ飛びます。絵の中心を原点へ寄せ、RotateとScaleを使い、最後に置きたい場所へ戻す順番を守ります。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="pivotを中心に変換する順番"><span>中心を原点</span><b>→ Rotate / Scale</b><strong>→ 置く場所へTranslate</strong></div></div></section>
+<!-- feedback-note:tracks/visual-effects/vfx-transform:end -->
 <!-- END BEGINNER BRIDGE -->
 
 
     <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_geom-chain.svg" alt="GeoMの変換チェーン" loading="lazy" decoding="async"><figcaption>GeoMの変換チェーンの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>軸を切り替えて回そう</h2></div>
         <p>回転と拡大をボタンで操作し、軸を「中心」と「角」で切り替えます。角を軸にすると、絵が大きく振り回されるのが分かります。</p>
@@ -137,8 +144,8 @@ screen.DrawImage(sprite, op)</code></pre>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-stamp/">← STEP 01<strong>スタンプと移動</strong></a>
-      <a href="../vfx-tint/">STEP 03 →<strong>色を変える・色を抜く</strong></a>
+      <a href="../vfx-stamp/" rel="prev">← STEP 01<strong>スタンプと移動</strong></a>
+      <a href="../vfx-tint/" rel="next">STEP 03 →<strong>色を変える・色を抜く</strong></a>
     </nav>
 
 
@@ -155,7 +162,7 @@ screen.DrawImage(sprite, op)</code></pre>
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

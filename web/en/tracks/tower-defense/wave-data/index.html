@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Read count, interval, HP, and speed from the wave number to create three attacks. Play the demo, read a short Go example, change a value, and apply the idea to "><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Direct Waves with Data</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/tower-defense/wave-data/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Direct Waves with Data">
+    <meta property="og:description" content="Read count, interval, HP, and speed from the wave number to create three attacks. Play the demo, read a short Go example, change a value, and apply the idea to ">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/tower-defense/wave-data/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--tower-defense--wave-data.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Direct Waves with Data">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Direct Waves with Data">
+    <meta name="twitter:description" content="Read count, interval, HP, and speed from the wave number to create three attacks. Play the demo, read a short Go example, change a value, and apply the idea to ">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--tower-defense--wave-data.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Direct Waves with Data">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/tower-defense/wave-data/">JA</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Tower Defense</a><span>STEP 06 / 08</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Direct Waves with Data</h1><p>Read count, interval, HP, and speed from the wave number to create three attacks.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>A wave director that spaces spawns</strong></div></section><!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Direct Waves with Data</h2></div><p>Tap open ground to build. Start with Space or START. Later steps use Q/W/E or touch buttons to select towers.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Direct Waves with Data" src="../../../../play/wave-data/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE</p><h2>A wave director that spaces spawns</h2><p class="lesson-lead">Do not create everyone at once. Add one enemy whenever spawnTimer reaches zero, and finish only when both pending and field enemies are zero.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>DATA</h3><p>Read count, interval, HP, and speed from the wave number to create three attacks.</p></article><article><span class="concept-number">2</span><h3>UPDATE</h3><p>Do not create everyone at once. Add one enemy whenever spawnTimer reaches zero, and finish only when both pending and field enemies are zero.</p></article><article><span class="concept-number">3</span><h3>CHECK</h3><p>Check that circles, route, HP, and coins agree with the rule values.</p></article></div><div class="motion-lab" data-lab="turn"><div class="lab-copy"><p class="eyebrow">SYSTEM LAB</p><h3>A wave director that spaces spawns</h3><p>Do not create everyone at once. Add one enemy whenever spawnTimer reaches zero, and finish only when both pending and field enemies are zero.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></div><div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>A wave director that spaces spawns</h3><p>Read count, interval, HP, and speed from the wave number to create three attacks.</p></div><pre><code>if spawnTimer == 0 { spawn(wave.Enemy); spawnLeft-- }
+clear := spawnLeft == 0 &amp;&amp; len(enemies) == 0</code></pre></div><div class="why-grid"><article><p class="eyebrow">OBSERVE</p><h3>A wave director that spaces spawns</h3><p>Do not create everyone at once. Add one enemy whenever spawnTimer reaches zero, and finish only when both pending and field enemies are zero.</p></article><article><p class="eyebrow">RULE / FX</p><h3>Separate rules and feedback</h3><p>Path, target, and damage are pure values; sparks and shake are a separate result layer.</p></article><article class="challenge"><p class="eyebrow">CHALLENGE</p><h3>Change one value</h3><p>Change range, speed, or cost and compare difficulty.</p></article></div></section><nav class="lesson-pager"><a href="../tower-economy/" rel="prev">← PREV<strong>Place Towers with Currency</strong></a><a href="../tower-upgrades/" rel="next">NEXT →<strong>Upgrade, Slow, and Splash</strong></a></nav>
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/tracks/tower-defense/wave-data/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

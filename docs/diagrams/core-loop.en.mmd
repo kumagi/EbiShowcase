@@ -1,0 +1,9 @@
+flowchart LR
+  input["Input<br/>tap"]
+  update["Update<br/>calculate position"]
+  draw["Draw<br/>current picture"]
+  repeat["about 60/sec<br/>repeat"]
+  input --> update
+  update --> draw
+  draw --> repeat
+  repeat --> update

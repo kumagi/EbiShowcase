@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>ドットを食べる迷路 | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="文字マップから固定の壁と変化するドットを別配列へ作り、取得のたびに状態と残数を更新します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – ドットを食べる迷路</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="ドットを食べる迷路 | Ebi Showcase">
-    <meta property="og:description" content="文字マップから固定の壁と変化するドットを別配列へ作り、取得のたびに状態と残数を更新します。">
+    <meta property="og:title" content="Ebi Showcase – ドットを食べる迷路">
+    <meta property="og:description" content="文字マップから固定の壁と変化するドットを別配列へ作り、取得のたびに状態と残数を更新します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/maze-chase/pellet-map/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--maze-chase--pellet-map.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ドットを食べる迷路 | Ebi Showcase">
-    <meta name="twitter:description" content="文字マップから固定の壁と変化するドットを別配列へ作り、取得のたびに状態と残数を更新します。">
+    <meta name="twitter:title" content="Ebi Showcase – ドットを食べる迷路">
+    <meta name="twitter:description" content="文字マップから固定の壁と変化するドットを別配列へ作り、取得のたびに状態と残数を更新します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--maze-chase--pellet-map.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="ドットを食べる迷路">
     <!-- ogp:end -->
@@ -25,6 +26,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>tile値0=壁、1=通路、2=えさと決め、天次郎のマスが2なら1へ変えて得点します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if maze[y][x] == Pellet { maze[y][x]=Floor; score++ }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>赤い追跡役を避け、60秒以内に全ドットを集めよう。</h2></div><p>LEFT/UP/DOWN/RIGHTを長押し。PCでは矢印またはWASD、マウスでもボタンを長押しできます。残数0でクリア、敵と同じマスまたは時間切れで失敗です。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="壁とドットを別レイヤーで持つ迷路ゲーム" src="../../../../play/pellet-map/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / STATIC AND MUTABLE LAYERS</p><h2>同じマスにある「通れるか」と「まだあるか」を分ける。</h2><p class="lesson-lead">迷路の壁はプレイ中に変わりませんが、ドットは取るたびに消えます。両方を一つの文字へ押し込む代わりに、<code>walls</code>と<code>pellets</code>という2枚の同じ大きさの表を重ねます。位置は同じ<code>[y][x]</code>でも、固定データと<strong>可変状態</strong>の役目が違います。</p></div>
@@ -57,7 +61,7 @@
 removePellet(player)
 if remaining == 0 { clear = true }</code></pre></div>
 <div class="why-grid"><article><p class="eyebrow">WHY TWO LAYERS?</p><h3>壁を壊さず収集できる</h3><p>ドットをfalseにしてもwallsはそのままなので、通路判定が収集状態に影響されません。</p></article><article><p class="eyebrow">WHY A COUNTER?</p><h3>クリア判定が一定時間</h3><p>マップが大きくなっても、remainingが0かを見るだけなら1回の比較です。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>大ドットを追加</h3><p>boolを小・大・空の数値へ変え、取得した種類で得点を変えてみよう。</p></article></div>
-</section><nav class="lesson-pager"><a href="../buffered-turn/">← STEP 02<strong>曲がり角の先行入力</strong></a><a href="../patrol-chase/">STEP 04 →<strong>巡回と追跡</strong></a></nav>
+</section><nav class="lesson-pager"><a href="../buffered-turn/" rel="prev">← STEP 02<strong>曲がり角の先行入力</strong></a><a href="../patrol-chase/" rel="next">STEP 04 →<strong>巡回と追跡</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -73,7 +77,7 @@ if remaining == 0 { clear = true }</code></pre></div>
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -81,6 +85,19 @@ if remaining == 0 { clear = true }</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

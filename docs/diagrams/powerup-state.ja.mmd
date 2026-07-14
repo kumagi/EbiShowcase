@@ -1,0 +1,9 @@
+flowchart LR
+  normal["NORMAL<br/>通常"]
+  pickup["PICKUP<br/>アイテム取得"]
+  powered["POWERED<br/>効果タイマー"]
+  timeout["TIMEOUT<br/>元へ戻る"]
+  normal --> pickup
+  pickup --> powered
+  powered --> timeout
+  timeout --> normal

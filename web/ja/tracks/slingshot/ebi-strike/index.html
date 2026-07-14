@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Strike | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="引っ張り、反射、摩擦、円の衝突、直接攻撃、味方の波、手番交代を一つのレスキューゲームへ統合します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ebi Strike</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Strike | Ebi Showcase">
-    <meta property="og:description" content="引っ張り、反射、摩擦、円の衝突、直接攻撃、味方の波、手番交代を一つのレスキューゲームへ統合します。">
+    <meta property="og:title" content="Ebi Showcase – Ebi Strike">
+    <meta property="og:description" content="引っ張り、反射、摩擦、円の衝突、直接攻撃、味方の波、手番交代を一つのレスキューゲームへ統合します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/slingshot/ebi-strike/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--slingshot--ebi-strike.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Strike | Ebi Showcase">
-    <meta name="twitter:description" content="引っ張り、反射、摩擦、円の衝突、直接攻撃、味方の波、手番交代を一つのレスキューゲームへ統合します。">
+    <meta name="twitter:title" content="Ebi Showcase – Ebi Strike">
+    <meta name="twitter:description" content="引っ張り、反射、摩擦、円の衝突、直接攻撃、味方の波、手番交代を一つのレスキューゲームへ統合します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--slingshot--ebi-strike.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Strike">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>完成形はaim→launch→move→collide→fxの五関数。どのSTEPの部品かが呼び出し順で分かります。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>aim(); launch(); move(); collide(); updateFX()</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>8手以内にリーフガードを全て倒そう。</h2></div><p>光る味方から後ろへ引っぱり、離して発射。敵へ直接当てるか、もう一人の味方へ当てて周囲165pxの波を起こします。マウスとタッチに対応します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Strike" src="../../../../play/ebi-strike/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT PIPELINE</p><h2>同じ「ぶつかった」を、相手ごとのイベントへ変える。</h2><p class="lesson-lead">動いている味方は毎フレーム、壁・岩・敵・味方の順に接触を調べます。円を押し戻して反射したあと、相手が敵なら直接ダメージ、味方なら範囲波という<strong>別の結果</strong>を起こします。止まるまで同じ手番です。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>移動して接触を解決</h3><p>速度で位置を進め、重なった円を接する場所まで戻します。速度の法線方向を反転すれば、斜めにも跳ね返ります。</p><code>move(); bounceWalls(); reflectCircle()</code></article><article><span class="concept-number">2</span><h3>相手から効果を選ぶ</h3><p>敵ならその1体のHPを1減らします。味方ならその味方を中心に165px以内の敵へ波のダメージを送ります。</p><code>contactEnemy() / contactAlly()</code></article><article><span class="concept-number">3</span><h3>摩擦で止まり手番交代</h3><p>接触処理のあと速度へ0.982を掛けます。速さが0.11未満なら0へそろえ、activeをもう一人へ切り替えます。</p><code>if stopped { active = 1 - active }</code></article></div><div class="motion-lab" data-lab="shot-event-queue" data-events="HIT A,HIT B,HIT C,TURN END" data-launched="弾が軌道を進んでいます" data-contact="接触 → {e} をpush" data-finished="停止 → TURN ENDをpush" data-resolved="{e} をpop → 敵{target} HP -1" data-turn="TURN ENDをpop → 次の手番へ" data-empty="キューは空です" aria-labelledby="lab-title-ebi-strike">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / SHOT EVENTS</p>
@@ -53,7 +57,7 @@ if active.velocity.length() &lt; stopSpeed {
     active.velocity = vec{}
     moving = false
     activeIndex = 1 - activeIndex
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY COOLDOWN?</p><h3>1回の接触を1回だけ数える</h3><p>円が数フレーム触れ続けても、敵ごとの短い待ち時間によりHPが一気に0になりません。</p></article><article><p class="eyebrow">WHY ONE ALLY WAVE?</p><h3>一手の選択をはっきりさせる</h3><p>味方効果は1ショットに1回。何度も同じ二人の間で跳ねて無限攻撃になるのを防ぎます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>味方ごとに効果を変えよう</h3><p>青は直線ビーム、緑は円の波にして、contactAllyが味方のkindから効果を選ぶようにしよう。</p></article></div></section><nav class="lesson-pager"><a href="../ally-effects/">← STEP 05<strong>味方に当てる友情効果</strong></a><a href="../">コース全体へ →<strong>ひっぱり反射アクション</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY COOLDOWN?</p><h3>1回の接触を1回だけ数える</h3><p>円が数フレーム触れ続けても、敵ごとの短い待ち時間によりHPが一気に0になりません。</p></article><article><p class="eyebrow">WHY ONE ALLY WAVE?</p><h3>一手の選択をはっきりさせる</h3><p>味方効果は1ショットに1回。何度も同じ二人の間で跳ねて無限攻撃になるのを防ぎます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>味方ごとに効果を変えよう</h3><p>青は直線ビーム、緑は円の波にして、contactAllyが味方のkindから効果を選ぶようにしよう。</p></article></div></section><nav class="lesson-pager"><a href="../ally-effects/" rel="prev">← STEP 05<strong>味方に当てる友情効果</strong></a><a href="../" rel="next">コース全体へ →<strong>ひっぱり反射アクション</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -69,7 +73,7 @@ if active.velocity.length() &lt; stopSpeed {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -77,6 +81,19 @@ if active.velocity.length() &lt; stopSpeed {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

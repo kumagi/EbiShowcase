@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Blocks | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Combine seven shapes and the core rules with three rule seas, animated line clears, particles, shake, and a best score. Play the demo, read a short Go example,"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ebi Blocks</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Blocks | Ebi Showcase">
-    <meta property="og:description" content="Combine seven shapes and the core rules with three rule seas, animated line clears, particles, shake, and a best score.">
+    <meta property="og:title" content="Ebi Showcase – Ebi Blocks">
+    <meta property="og:description" content="Combine seven shapes and the core rules with three rule seas, animated line clears, particles, shake, and a best score. Play the demo, read a short Go example,">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/falling-blocks/ebi-blocks/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--falling-blocks--ebi-blocks.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Blocks | Ebi Showcase">
-    <meta name="twitter:description" content="Combine seven shapes and the core rules with three rule seas, animated line clears, particles, shake, and a best score.">
+    <meta name="twitter:title" content="Ebi Showcase – Ebi Blocks">
+    <meta name="twitter:description" content="Combine seven shapes and the core rules with three rule seas, animated line clears, particles, shake, and a best score. Play the demo, read a short Go example,">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--falling-blocks--ebi-blocks.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Blocks">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>switch phase { case Fall: updateFall(); case Clear: clearLines() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Clear the changing row target in all three stages before the stack reaches the top.</h2></div><p>Touch the six bottom buttons. On a keyboard use ←→, ↑/X to turn, ↓, Space to hard drop, and C to HOLD.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Blocks" src="../../../../play/ebi-blocks/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SYSTEM PIPELINE</p><h2>Connect many systems in “what happens now” order.</h2><p class="lesson-lead">A complete game is not one giant rule. It is a line of small jobs: input, movement, collision, locking, line checks, scoring, and the next shape. Pass one piece and board through this <strong>pipeline</strong> so added features do not get lost.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Control the falling piece</h3><p>active stores a kind, rotation, and position. Update those values only when the candidate does not overlap the board.</p><code>if !collides(next) { active = next }</code></article><article><span class="concept-number">2</span><h3>Lock when movement ends</h3><p>Write the four cells into board, clear complete rows, then update score and level. This order matters.</p><code>lock(); clearLines(); addScore()</code></article><article><span class="concept-number">3</span><h3>Prepare the next piece</h3><p>Refill queue from a seven-piece bag. HOLD works once per falling piece, while the ghost tests positions down to the final safe row.</p><code>spawn(takeNext())</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="input,fall,lock,clear,spawn" data-loop="next frame" aria-labelledby="lab-title-ebi-blocks">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / FRAME JOBS</p>
@@ -51,7 +55,7 @@
         return
     }
     g.spawn(g.takeNext())
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ONE BOARD?</p><h3>Keep one collision answer</h3><p>Store only locked cells in board. Calculate active and ghost when needed so three copies cannot drift apart.</p></article><article><p class="eyebrow">WHY A BAG?</p><h3>Every kind gets a turn</h3><p>Shuffle all seven and use them before opening the next bag, avoiding very long waits for one shape.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Make scoring data</h3><p>Move line counts, combo bonuses, and level multipliers into stage data and create another rules mode.</p></article></div></section><nav class="lesson-pager"><a href="../bag-hold-ghost/">← STEP 05<strong>Bag, Hold, and Ghost</strong></a><a href="../">BACK TO PATH →<strong>Falling-block Puzzle</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ONE BOARD?</p><h3>Keep one collision answer</h3><p>Store only locked cells in board. Calculate active and ghost when needed so three copies cannot drift apart.</p></article><article><p class="eyebrow">WHY A BAG?</p><h3>Every kind gets a turn</h3><p>Shuffle all seven and use them before opening the next bag, avoiding very long waits for one shape.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Make scoring data</h3><p>Move line counts, combo bonuses, and level multipliers into stage data and create another rules mode.</p></article></div></section><nav class="lesson-pager"><a href="../bag-hold-ghost/" rel="prev">← STEP 05<strong>Bag, Hold, and Ghost</strong></a><a href="../" rel="next">BACK TO PATH →<strong>Falling-block Puzzle</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -67,7 +71,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -75,6 +79,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

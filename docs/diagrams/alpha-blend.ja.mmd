@@ -1,0 +1,8 @@
+flowchart LR
+  source["元の絵<br/>RGBA"]
+  alpha["透明度<br/>0〜1"]
+  blend["Blend<br/>通常・加算"]
+  result["残像・光<br/>見た目だけ"]
+  source --> alpha
+  alpha --> blend
+  blend --> result

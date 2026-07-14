@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>生きもののいる世界 | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="時間帯と地形から生きものを出し、距離やプレイヤーの行動で状態を切り替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbi"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 生きもののいる世界</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="生きもののいる世界 | Ebi Showcase">
-    <meta property="og:description" content="時間帯と地形から生きものを出し、距離やプレイヤーの行動で状態を切り替えます。">
+    <meta property="og:title" content="Ebi Showcase – 生きもののいる世界">
+    <meta property="og:description" content="時間帯と地形から生きものを出し、距離やプレイヤーの行動で状態を切り替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbi">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/sandbox/creature-world/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--sandbox--creature-world.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="生きもののいる世界 | Ebi Showcase">
-    <meta name="twitter:description" content="時間帯と地形から生きものを出し、距離やプレイヤーの行動で状態を切り替えます。">
+    <meta name="twitter:title" content="Ebi Showcase – 生きもののいる世界">
+    <meta name="twitter:description" content="時間帯と地形から生きものを出し、距離やプレイヤーの行動で状態を切り替えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbi">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--sandbox--creature-world.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="生きもののいる世界">
     <!-- ogp:end -->
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>noiseは近い場所ほど近い値を返す乱数風の関数。値の範囲を草・砂・森へ割り当て、seedで同じ世界を再現します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>biome := biomeAt(seed, x, y)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>昼夜を観察し、草食生物を4匹ともだちにしよう。</h2></div><p>ベリーへ歩いて回収し、近づいてCURIOUSになった黄色い生物へFEED。夜の紫の追跡者はTORCHで遠ざけます。矢印/WASD、E、Space、マウス、タッチ対応。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="生きもののいる世界" src="../../../../play/creature-world/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CREATURE STATE MACHINE</p><h2>「いつ・どこ・どうする」を別々の条件にする。</h2><p class="lesson-lead">スポーンは生まれる条件、状態機械は生まれた後の行動です。昼の草地なら草食生物、夜の岩場なら追跡者を出します。その後は各creatureが持つ<strong>state</strong>を、距離やえさ、松明から切り替えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>時間と地形でスポーン</h3><p>一定時間ごとに昼夜を調べます。昼は左の草地、夜は右の岩場という条件を通った場所へだけ追加します。</p><code>if isDay() { spawnGrazer(meadow) }</code></article><article><span class="concept-number">2</span><h3>状態ごとに行動を選ぶ</h3><p>WANDERはランダム歩行。近づいた草食生物はCURIOUS、夜の生物はCHASE。松明を受けるとFLEEになります。</p><code>switch creature.state { ... }</code></article><article><span class="concept-number">3</span><h3>行動から次の状態へ</h3><p>CURIOUSへベリーを渡すとFRIENDになって追従します。CHASEに触られるとHPが減り、その生物はいったんFLEEします。</p><code>curious + feed → friend</code></article></div><div class="motion-lab" data-lab="ai" data-patrol="WANDER" data-chase="CURIOUS" aria-labelledby="creature-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / DISTANCE TRANSITION</p><h3 id="creature-lab-title">距離でWANDERとCURIOUSを切り替えよう</h3><p>プレイヤーとの距離が120より小さければ興味を持ちます。離れればまた自由に歩きます。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-closer data-go-focus="dist chase">近づける</button><button type="button" class="lab-button" data-lab-farther data-go-focus="dist chase">離す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board role="img" aria-label="距離で変わる生物の状態"></div><div class="lab-values"><div><span>状態</span><strong data-lab-state>WANDER</strong></div><div><span>距離</span><strong data-lab-dist>180</strong></div><div><span>しきい値</span><strong>120</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -42,7 +46,7 @@ case curious:
     if distance &gt; 170 {
         creature.state = wander
     }
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY TWO DISTANCES?</p><h3>境目でガタガタさせない</h3><p>115で近づき、170で離れるようにすると、境目を少し動いただけで状態が毎コマ往復しません。</p></article><article><p class="eyebrow">WHY STATE PER CREATURE?</p><h3>同じ種類でも別行動</h3><p>1匹はFRIEND、もう1匹はWANDERのように、各個体が自分の記憶を持てます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>空腹を追加しよう</h3><p>hungerを毎秒増やし、高いときだけえさを探すSEEK_FOOD状態を加えてみよう。</p></article></div></section><nav class="lesson-pager"><a href="../tools-light/">← STEP 05<strong>道具と明かり</strong></a><a href="../ebi-craft/">STEP 07 →<strong>Ebi Craft</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY TWO DISTANCES?</p><h3>境目でガタガタさせない</h3><p>115で近づき、170で離れるようにすると、境目を少し動いただけで状態が毎コマ往復しません。</p></article><article><p class="eyebrow">WHY STATE PER CREATURE?</p><h3>同じ種類でも別行動</h3><p>1匹はFRIEND、もう1匹はWANDERのように、各個体が自分の記憶を持てます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>空腹を追加しよう</h3><p>hungerを毎秒増やし、高いときだけえさを探すSEEK_FOOD状態を加えてみよう。</p></article></div></section><nav class="lesson-pager"><a href="../tools-light/" rel="prev">← STEP 05<strong>道具と明かり</strong></a><a href="../ebi-craft/" rel="next">STEP 07 →<strong>Ebi Craft</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -58,7 +62,7 @@ case curious:
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -66,6 +70,19 @@ case curious:
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,8 @@
+flowchart LR
+  pointer["マウス位置<br/>目標"]
+  delta["dx / dy<br/>差分"]
+  normalize["長さ1へ<br/>正規化"]
+  shot["弾の速度<br/>角度"]
+  pointer --> delta
+  delta --> normalize
+  normalize --> shot

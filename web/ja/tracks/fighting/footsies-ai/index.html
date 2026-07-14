@@ -1,10 +1,11 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>間合いを読むライバルAI | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 間合いを読むライバルAI</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/fighting/footsies-ai/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="間合いを読むライバルAI | Ebi Showcase">
-    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta property="og:title" content="Ebi Showcase – 間合いを読むライバルAI">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/fighting/footsies-ai/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--fighting--footsies-ai.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -13,16 +14,19 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="間合いを読むライバルAI | Ebi Showcase">
-    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。">
+    <meta name="twitter:title" content="Ebi Showcase – 間合いを読むライバルAI">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--fighting--footsies-ai.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="間合いを読むライバルAI">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/fighting/footsies-ai/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 2D格闘ゲーム</a><span>POLISH 1/2</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>間合いを読むライバルAI</h1><p>遠ければ近づき、近すぎれば下がり、攻撃できる距離で技を出す対戦相手を作ります。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>間合いを読むライバルAI</h2><p>遠ければ近づき、近すぎれば下がり、攻撃できる距離で技を出す対戦相手を作ります。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/footsies-ai/" title="間合いを読むライバルAI" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>距離から接近・後退・攻撃を選ぶ</h2><p>AIはプレイヤーの入力を読むのではなく、2人の距離を見ます。遠い、近い、攻撃できる、という3つの帯へ分ければ、間合いを取り合う相手になります。</p><div class="concept-row"><article><b>01</b><h3>遠距離</h3><p>攻撃が届くまで近づきます。</p></article><article><b>02</b><h3>近距離</h3><p>反撃を避けるため少し下がります。</p></article><article><b>03</b><h3>適正距離</h3><p>予告動作のあとで技を出します。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>距離から接近・後退・攻撃を選ぶ</h2><p>AIはプレイヤーの入力を読むのではなく、2人の距離を見ます。遠い、近い、攻撃できる、という3つの帯へ分ければ、間合いを取り合う相手になります。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>距離から接近・後退・攻撃を選ぶ</h2><p>中心ルールだけを短く読みます。</p></div><pre><code>distance := rival.x - player.x
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/fighting/footsies-ai/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 2D格闘ゲーム</a><span>POLISH 1/2</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>間合いを読むライバルAI</h1><p>遠ければ近づき、近すぎれば下がり、攻撃できる距離で技を出す対戦相手を作ります。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>間合いを読むライバルAI</h2><p>遠ければ近づき、近すぎれば下がり、攻撃できる距離で技を出す対戦相手を作ります。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/footsies-ai/" title="間合いを読むライバルAI" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>距離から接近・後退・攻撃を選ぶ</h2><p>AIはプレイヤーの入力を読むのではなく、2人の距離を見ます。遠い、近い、攻撃できる、という3つの帯へ分ければ、間合いを取り合う相手になります。</p><div class="concept-row"><article><b>01</b><h3>遠距離</h3><p>攻撃が届くまで近づきます。</p></article><article><b>02</b><h3>近距離</h3><p>反撃を避けるため少し下がります。</p></article><article><b>03</b><h3>適正距離</h3><p>予告動作のあとで技を出します。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>距離から接近・後退・攻撃を選ぶ</h2><p>AIはプレイヤーの入力を読むのではなく、2人の距離を見ます。遠い、近い、攻撃できる、という3つの帯へ分ければ、間合いを取り合う相手になります。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>距離から接近・後退・攻撃を選ぶ</h2><p>中心ルールだけを短く読みます。</p></div><pre><code>distance := rival.x - player.x
 switch {
 case distance &gt; attackRange: approach()
 case distance &lt; safeRange: retreat()
 default: attack()
-}</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>攻撃が届くまで近づきます。</p></article><article><h3>CHANGE</h3><p>反撃を避けるため少し下がります。</p></article><article><h3>CHALLENGE</h3><p>予告動作のあとで技を出します。</p></article></section><nav class="lesson-pager"><a href="../">← PATH<strong>2D格闘ゲーム</strong></a><a href="../ebi-fighters/">FINAL →<strong>Ebi Fighters</strong></a></nav>
+}</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>攻撃が届くまで近づきます。</p></article><article><h3>CHANGE</h3><p>反撃を避けるため少し下がります。</p></article><article><h3>CHALLENGE</h3><p>予告動作のあとで技を出します。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>2D格闘ゲーム</strong></a><a href="../ebi-fighters/" rel="next">FINAL →<strong>Ebi Fighters</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -36,7 +40,7 @@ default: attack()
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

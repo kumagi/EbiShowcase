@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="Learn tile maps in Go and Ebitengine: define Sokoban stages as strings, manage walls in a map, and implement undo with a history stack.">
-  <title>LEVEL 09 — Sokoban | Ebi Showcase</title>
+  <title>Ebi Showcase – LEVEL 09 — Sokoban</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="LEVEL 09 — Sokoban | Ebi Showcase">
+    <meta property="og:title" content="Ebi Showcase – LEVEL 09 — Sokoban">
     <meta property="og:description" content="Learn tile maps in Go and Ebitengine: define Sokoban stages as strings, manage walls in a map, and implement undo with a history stack.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/games/sokoban/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--sokoban.png?v=20260713-font1">
@@ -18,7 +18,7 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="LEVEL 09 — Sokoban | Ebi Showcase">
+    <meta name="twitter:title" content="Ebi Showcase – LEVEL 09 — Sokoban">
     <meta name="twitter:description" content="Learn tile maps in Go and Ebitengine: define Sokoban stages as strings, manage walls in a map, and implement undo with a history stack.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--sokoban.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Sokoban">
@@ -42,8 +42,20 @@
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if moving { progress++; return nil }</code></pre></div></section>
+<!-- feedback-note:games/sokoban:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-sokoban"><div><p class="eyebrow">A map made of symbols</p><h2 id="feedback-note-games-sokoban">Strings make a stage blueprint easy to read</h2><p>Put one row of cells in each string. You can see walls and boxes at a glance, then convert each character into tile data when the game starts.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="Sokoban symbol map"># wall  @ player
+$ box   . goal
+########
+#@ $.  #
+########</pre></div></section>
+<!-- feedback-note:games/sokoban:end -->
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_push-rule.svg" alt="Decide whether a box can be pushed" loading="lazy" decoding="async"><figcaption>A visual map of Decide whether a box can be pushed. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_tile-map.svg" alt="Play a tile map" loading="lazy" decoding="async"><figcaption>A visual map of Play a tile map. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Push every box onto a goal.</h2></div><p>Arrow keys or WASD to move. Walk into a box to push it. Z or Backspace to undo, R to reset.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 09</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Sokoban" src="../../../play/sokoban/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -497,7 +509,7 @@ func main() {
       </div>
     </section>
 
-    <nav class="lesson-pager"><a href="../space-shooter/">← LEVEL 08<strong>Space Shooter</strong></a><a href="../platformer/">LEVEL 10 →<strong>Platformer</strong></a></nav>
+    <nav class="lesson-pager"><a href="../space-shooter/" rel="prev">← LEVEL 08<strong>Space Shooter</strong></a><a href="../platformer/" rel="next">LEVEL 10 →<strong>Platformer</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -513,7 +525,7 @@ func main() {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -521,6 +533,19 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

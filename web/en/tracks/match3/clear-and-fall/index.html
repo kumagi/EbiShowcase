@@ -1,8 +1,9 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Clear and Fall | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Empty matched cells, compact columns, then animate the fall: the array settles immediately; Draw lerps y over a few frames."><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Clear and Fall</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Clear and Fall | Ebi Showcase">
+    <meta property="og:title" content="Ebi Showcase – Clear and Fall">
     <meta property="og:description" content="Empty matched cells, compact columns, then animate the fall: the array settles immediately; Draw lerps y over a few frames.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/match3/clear-and-fall/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--match3--clear-and-fall.png?v=20260713-font1">
@@ -12,7 +13,7 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Clear and Fall | Ebi Showcase">
+    <meta name="twitter:title" content="Ebi Showcase – Clear and Fall">
     <meta name="twitter:description" content="Empty matched cells, compact columns, then animate the fall: the array settles immediately; Draw lerps y over a few frames.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--match3--clear-and-fall.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Clear and Fall">
@@ -23,6 +24,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>drawY := oldY + (newY-oldY)*progress</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Watch clear, fall, and refill one step at a time.</h2></div><p>Tap the bottom button or press Space. Complete three cycles to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Clear and Fall" src="../../../../play/clear-and-fall/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FALL TWEEN</p><h2>Settle the array now. Let Draw chase with progress.</h2><p class="lesson-lead">The key to match-3 falls is splitting <strong>logical board</strong> from <strong>drawn y</strong>. Update compacts columns to final cells and stores <code>fromY→toY</code> plus <code>progress</code> (0→1). While falling, ignore input; only Draw paints the in-between height. No physics engine needed.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Commit logic first</h3><p>Mark empties and compact each column. That final board is what cascade checks will read next.</p><code>compactColumns()</code></article><article><span class="concept-number">2</span><h3>Advance progress only</h3><p>While falling, do not read Space—just <code>progress += 0.07</code>. At 1.0, unlock the refill step.</p><code>if falling { progress += …; return }</code></article><article><span class="concept-number">3</span><h3>Draw interpolates</h3><p>Paint each gem at <code>fromY+(toY-fromY)*progress</code>. Keep logical coords still during the tween.</p><code>y = lerp(fromY, toY, progress)</code></article></div>
 <div class="motion-lab" data-lab="match-scan" data-found="ready to clear" data-none="no match yet" data-cleared="collapsed" aria-labelledby="lab-title-clear-and-fall">
 <div class="lab-copy">
@@ -57,7 +61,7 @@ for y := rows-1; y &gt;= 0; y-- {
     if board[y][x] != empty { board[write][x] = board[y][x]; write-- }
 }
 for write &gt;= 0 { board[write][x] = empty; write-- }
-// Draw: py = fromY + (toY-fromY)*progress</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY SEPARATE?</p><h3>Cascade stays simple</h3><p>Even mid-fall, the logical board is already the final shape.</p></article><article><p class="eyebrow">WHY IGNORE INPUT?</p><h3>No double moves</h3><p>Starting another clear mid-fall makes “how far did it drop?” ambiguous.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Slide refills from above</h3><p>Reuse the same lerp with fromY above the board for new gems.</p></article></div></section><nav class="lesson-pager"><a href="../find-matches/">← STEP 02<strong>Find Three in a Row</strong></a><a href="../cascade/">STEP 04 →<strong>Cascade Reactions</strong></a></nav>
+// Draw: py = fromY + (toY-fromY)*progress</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY SEPARATE?</p><h3>Cascade stays simple</h3><p>Even mid-fall, the logical board is already the final shape.</p></article><article><p class="eyebrow">WHY IGNORE INPUT?</p><h3>No double moves</h3><p>Starting another clear mid-fall makes “how far did it drop?” ambiguous.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Slide refills from above</h3><p>Reuse the same lerp with fromY above the board for new gems.</p></article></div></section><nav class="lesson-pager"><a href="../find-matches/" rel="prev">← STEP 02<strong>Find Three in a Row</strong></a><a href="../cascade/" rel="next">STEP 04 →<strong>Cascade Reactions</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -73,7 +77,7 @@ for write &gt;= 0 { board[write][x] = empty; write-- }
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -81,6 +85,19 @@ for write &gt;= 0 { board[write][x] = empty; write-- }
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

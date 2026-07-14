@@ -1,9 +1,10 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Run the Maze | Ebi Showcase</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Represent a maze with wall and corridor tiles, moving straight to the center of each legal next tile. Play the demo, read a short Go example, change a value, an"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Run the Maze</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Run the Maze | Ebi Showcase">
-    <meta property="og:description" content="Represent a maze with wall and corridor tiles, moving straight to the center of each legal next tile.">
+    <meta property="og:title" content="Ebi Showcase – Run the Maze">
+    <meta property="og:description" content="Represent a maze with wall and corridor tiles, moving straight to the center of each legal next tile. Play the demo, read a short Go example, change a value, an">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/maze-chase/tile-runner/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--maze-chase--tile-runner.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Run the Maze | Ebi Showcase">
-    <meta name="twitter:description" content="Represent a maze with wall and corridor tiles, moving straight to the center of each legal next tile.">
+    <meta name="twitter:title" content="Ebi Showcase – Run the Maze">
+    <meta name="twitter:description" content="Represent a maze with wall and corridor tiles, moving straight to the center of each legal next tile. Play the demo, read a short Go example, change a value, an">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--maze-chase--tile-runner.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Run the Maze">
     <!-- ogp:end -->
@@ -23,7 +24,10 @@
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if map[ny][nx] != Wall { x,y = nx,ny }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
-<p class="curriculum-bridge">This continues the shared foundation. If the frame loop is new, begin with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>. Here Update changes the current tile and travel progress; Draw places the runner at the in-between position.</p><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Collect twelve maze pearls within 45 seconds.</h2></div><p>Hold a direction while on a center. A wall direction never starts. Use arrows/WASD or hold the bottom buttons with mouse or touch.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Run the Maze" src="../../../../play/tile-runner/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CENTER TO CENTER</p><h2>Connect free-moving screen coordinates to maze cells.</h2><p class="lesson-lead">Maze data is a maze[y][x] table of characters: # means wall and . means corridor. The runner remembers its tile, adds a direction to make a <strong>candidate tile</strong>, and begins moving only when that tile is open.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Turn a tile into its center</h3><p>Multiply column x by tile width, then add the maze left and half a tile. The same equation for y gives every corridor a center.</p><code>centerX = mazeX + tileX*tileSize + tileSize/2</code></article><article><span class="concept-number">2</span><h3>Check whether the next tile is legal</h3><p>Add a direction such as (-1,0). Movement is legal when the candidate is inside and maze[nextY][nextX] is not #.</p><code>passable := maze[next.y][next.x] != '#'</code></article><article><span class="concept-number">3</span><h3>Interpolate center to center</h3><p>Increase progress from zero to one and draw between from and to. At one, set the current tile to target.</p><code>screenX = fromX + (toX-fromX)*progress</code></article></div><div class="motion-lab" data-lab="tile" data-blocked="wall that way" aria-labelledby="lab-title-tile-runner">
+<p class="curriculum-bridge">This continues the shared foundation. If the frame loop is new, begin with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>. Here Update changes the current tile and travel progress; Draw places the runner at the in-between position.</p><!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Collect twelve maze pearls within 45 seconds.</h2></div><p>Hold a direction while on a center. A wall direction never starts. Use arrows/WASD or hold the bottom buttons with mouse or touch.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Run the Maze" src="../../../../play/tile-runner/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CENTER TO CENTER</p><h2>Connect free-moving screen coordinates to maze cells.</h2><p class="lesson-lead">Maze data is a maze[y][x] table of characters: # means wall and . means corridor. The runner remembers its tile, adds a direction to make a <strong>candidate tile</strong>, and begins moving only when that tile is open.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Turn a tile into its center</h3><p>Multiply column x by tile width, then add the maze left and half a tile. The same equation for y gives every corridor a center.</p><code>centerX = mazeX + tileX*tileSize + tileSize/2</code></article><article><span class="concept-number">2</span><h3>Check whether the next tile is legal</h3><p>Add a direction such as (-1,0). Movement is legal when the candidate is inside and maze[nextY][nextX] is not #.</p><code>passable := maze[next.y][next.x] != '#'</code></article><article><span class="concept-number">3</span><h3>Interpolate center to center</h3><p>Increase progress from zero to one and draw between from and to. At one, set the current tile to target.</p><code>screenX = fromX + (toX-fromX)*progress</code></article></div><div class="motion-lab" data-lab="tile" data-blocked="wall that way" aria-labelledby="lab-title-tile-runner">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / LEGAL TILE</p>
 <h3 id="lab-title-tile-runner">Walls reject the step</h3>
@@ -55,7 +59,7 @@ next := tile.add(direction)
 if passable(next) {
     target = next
     moving = true
-}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY TILE DATA?</p><h3>Wall tests become one character</h3><p>Instead of comparing many wall rectangles, use row and column to ask whether one character is #.</p></article><article><p class="eyebrow">WHY CENTERS?</p><h3>Never drift out of corridors</h3><p>Every step finishes at an exact center, preventing small errors from accumulating toward a wall.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Remember an early press</h3><p>Save a direction pressed during movement as wantedDir, then test it at the next center for STEP 02 buffering.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../buffered-turn/">STEP 02 →<strong>Buffered Corner Turns</strong></a></nav>
+}</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY TILE DATA?</p><h3>Wall tests become one character</h3><p>Instead of comparing many wall rectangles, use row and column to ask whether one character is #.</p></article><article><p class="eyebrow">WHY CENTERS?</p><h3>Never drift out of corridors</h3><p>Every step finishes at an exact center, preventing small errors from accumulating toward a wall.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Remember an early press</h3><p>Save a direction pressed during movement as wantedDir, then test it at the next center for STEP 02 buffering.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../buffered-turn/" rel="next">STEP 02 →<strong>Buffered Corner Turns</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -71,7 +75,7 @@ if passable(next) {
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -79,6 +83,19 @@ if passable(next) {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

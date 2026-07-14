@@ -1,0 +1,9 @@
+flowchart LR
+  swap["入れ替え<br/>2マス"]
+  find["3つ以上？<br/>match"]
+  clear["消す<br/>score++"]
+  fall["落とす<br/>空きを埋める"]
+  swap --> find
+  find --> clear
+  clear --> fall
+  fall --> find

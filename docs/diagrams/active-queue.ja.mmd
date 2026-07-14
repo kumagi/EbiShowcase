@@ -1,0 +1,9 @@
+flowchart LR
+  speed["素早さ<br/>毎tick加算"]
+  gauge["行動ゲージ<br/>0 → 100"]
+  ready["READY<br/>キューへ"]
+  resolve["行動解決<br/>ゲージを戻す"]
+  speed --> gauge
+  gauge --> ready
+  ready --> resolve
+  resolve --> speed

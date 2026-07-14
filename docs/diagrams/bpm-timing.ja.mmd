@@ -1,0 +1,8 @@
+flowchart LR
+  bpm["BPM<br/>120拍/分"]
+  seconds["60 ÷ BPM<br/>0.5秒/拍"]
+  frames["0.5 × 60<br/>30フレーム"]
+  meter["メーター<br/>同期して動く"]
+  bpm --> seconds
+  seconds --> frames
+  frames --> meter

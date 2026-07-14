@@ -2,13 +2,14 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
+  <meta name="description" content="爆風に別の爆弾が入ったら、その爆弾のタイマーを待たずに起爆します。起爆する爆弾を待ち行列へ追加し、処理済みの印で同じ爆弾を二度爆発させません。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>爆弾の連鎖爆発 | Ebi Showcase</title>
+  <title>Ebi Showcase – 爆弾の連鎖爆発</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="爆弾の連鎖爆発 | Ebi Showcase">
-    <meta property="og:description" content="爆風に別の爆弾が入ったら、その爆弾のタイマーを待たずに起爆します。起爆する爆弾を待ち行列へ追加し、処理済みの印で同じ爆弾を二度爆発させません。">
+    <meta property="og:title" content="Ebi Showcase – 爆弾の連鎖爆発">
+    <meta property="og:description" content="爆風に別の爆弾が入ったら、その爆弾のタイマーを待たずに起爆します。起爆する爆弾を待ち行列へ追加し、処理済みの印で同じ爆弾を二度爆発させません。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/bomb-maze/chain-explosion/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--bomb-maze--chain-explosion.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="爆弾の連鎖爆発 | Ebi Showcase">
-    <meta name="twitter:description" content="爆風に別の爆弾が入ったら、その爆弾のタイマーを待たずに起爆します。起爆する爆弾を待ち行列へ追加し、処理済みの印で同じ爆弾を二度爆発させません。">
+    <meta name="twitter:title" content="Ebi Showcase – 爆弾の連鎖爆発">
+    <meta name="twitter:description" content="爆風に別の爆弾が入ったら、その爆弾のタイマーを待たずに起爆します。起爆する爆弾を待ち行列へ追加し、処理済みの印で同じ爆弾を二度爆発させません。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--bomb-maze--chain-explosion.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="爆弾の連鎖爆発">
     <!-- ogp:end -->
@@ -43,7 +44,11 @@
 
 <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_bomb-chain.svg" alt="爆弾の連鎖" loading="lazy" decoding="async"><figcaption>爆弾の連鎖の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3個以上を連鎖させ、リレーを5個消そう</h2></div><p>矢印／WASDで移動、SpaceまたはXで爆弾を置きます。クリックとタッチは下のボタンを使います。爆弾を射程3以内の同じ通路へ並べ、最初の爆発前に遠くへ逃げましょう。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="爆弾の連鎖爆発ゲーム" src="../../../../play/chain-explosion/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -101,7 +106,7 @@ for len(queue) &gt; 0 {
       <div class="why-grid"><article><h3>なぜその場で再帰しない？</h3><p>キューなら「これから何個処理するか」が見え、途中で見つけたイベントも同じ順番で扱えます。長い連鎖でも処理の流れを追いやすくなります。</p></article><article><h3>二重処理で何が困る？</h3><p>AとCの両方がBへ届くと、Bの爆風や得点が二度発生するかもしれません。処理済みの印がゲームの結果を安定させます。</p></article><article><h3>チャレンジ</h3><p>1連鎖の起爆順<code>#1, #2, #3</code>に応じて得点倍率を増やしてみよう。</p></article></div>
     </section>
 
-    <nav class="lesson-pager"><a href="../breakable-walls/">← STEP 03<strong>壊れる壁とアイテム</strong></a><a href="../escape-ai/">STEP 05 →<strong>爆風から逃げる敵</strong></a></nav>
+    <nav class="lesson-pager"><a href="../breakable-walls/" rel="prev">← STEP 03<strong>壊れる壁とアイテム</strong></a><a href="../escape-ai/" rel="next">STEP 05 →<strong>爆風から逃げる敵</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -117,7 +122,7 @@ for len(queue) &gt; 0 {
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -125,6 +130,19 @@ for len(queue) &gt; 0 {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

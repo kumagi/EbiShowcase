@@ -1,9 +1,10 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>同じ実の合体 | Ebi Showcase</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="同じ段階の円が触れたら2個を消し、中点へ次の大きさを1個生成します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbiteng"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 同じ実の合体</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="同じ実の合体 | Ebi Showcase">
-    <meta property="og:description" content="同じ段階の円が触れたら2個を消し、中点へ次の大きさを1個生成します。">
+    <meta property="og:title" content="Ebi Showcase – 同じ実の合体">
+    <meta property="og:description" content="同じ段階の円が触れたら2個を消し、中点へ次の大きさを1個生成します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbiteng">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/merge-physics/merge-rule/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--merge-physics--merge-rule.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -12,8 +13,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="同じ実の合体 | Ebi Showcase">
-    <meta name="twitter:description" content="同じ段階の円が触れたら2個を消し、中点へ次の大きさを1個生成します。">
+    <meta name="twitter:title" content="Ebi Showcase – 同じ実の合体">
+    <meta name="twitter:description" content="同じ段階の円が触れたら2個を消し、中点へ次の大きさを1個生成します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbiteng">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--merge-physics--merge-rule.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="同じ実の合体">
     <!-- ogp:end -->
@@ -23,6 +24,10 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>同じtierの円が触れたら二つを消し、中心へtier+1を一つ作ります。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if a.tier == b.tier { merge(a, b) }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_merge-step.svg" alt="同じ物を合体させる" loading="lazy" decoding="async"><figcaption>同じ物を合体させるの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>同じ数字を重ねてTIER 6を作ろう。</h2></div><p>横位置をタップして次の実を投入します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="同じ実の合体" src="../../../../play/merge-rule/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / REPLACE</p><h2>2個が1個になる時、配列では何が起きる？</h2><p class="lesson-lead">衝突中にすぐ配列を切ると番号がずれます。まず2個へ<strong>削除予定</strong>の印を付け、新しい1個を予約し、最後にまとめて置き換えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>同種判定</h3><p>触れた2個のtierが同じか調べます。</p><code>a.tier == b.tier</code></article><article><span class="concept-number">2</span><h3>中点</h3><p>2つの位置を足して2で割ります。</p><code>(a.position+b.position)/2</code></article><article><span class="concept-number">3</span><h3>置き換え</h3><p>古い2個を除き、tier+1を追加します。</p><code>spawn(tier + 1)</code></article></div><div class="motion-lab" data-lab="merge-same" data-mismatch="段が違うので合体しない" data-merge="合体して T{n} に！" aria-labelledby="lab-title-merge-rule">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / SAME TIER</p>
@@ -41,7 +46,7 @@
 <span data-go-line="merge">{ spawn(tier+1); remove(a, b) }</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</div><div class="formula"><p class="eyebrow">THE ONE-LINE RULE</p><div class="formula-lines"><code>同じ段なら</code><span>つぎに</span><code>次の段の1個にする</code></div><p>接触していても段が違えば無視。条件を1か所にまとめると、バランス調整が楽です。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>走査中は印だけ付ける</h3><p>同じフレームで同じ実が2回合体しないようdeadを使います。</p></div><pre><code>if a.tier == b.tier { a.dead, b.dead = true, true; spawned = append(spawned, nextFruit(a, b)) } / fruits = append(removeDead(fruits), spawned...)</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY MARK?</p><h3>番号ずれを防ぐ</h3><p>ループ中に要素を消す危険を避けます。</p></article><article><p class="eyebrow">WHY MIDPOINT?</p><h3>合体位置が自然</h3><p>2個のちょうど間から次の実が生まれます。</p></article><article class="challenge"><p class="eyebrow">EVENT RULE</p><h3>得点も同時に作る</h3><p>新しいtierに応じて加点を変えてみよう。</p></article></div></section><nav class="lesson-pager"><a href="../stable-simulation/">← STEP 04<strong>安定する物理世界</strong></a><a href="../ebi-merge/">STEP 06 →<strong>Ebi Merge</strong></a></nav>
+</div><div class="formula"><p class="eyebrow">THE ONE-LINE RULE</p><div class="formula-lines"><code>同じ段なら</code><span>つぎに</span><code>次の段の1個にする</code></div><p>接触していても段が違えば無視。条件を1か所にまとめると、バランス調整が楽です。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>走査中は印だけ付ける</h3><p>同じフレームで同じ実が2回合体しないようdeadを使います。</p></div><pre><code>if a.tier == b.tier { a.dead, b.dead = true, true; spawned = append(spawned, nextFruit(a, b)) } / fruits = append(removeDead(fruits), spawned...)</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY MARK?</p><h3>番号ずれを防ぐ</h3><p>ループ中に要素を消す危険を避けます。</p></article><article><p class="eyebrow">WHY MIDPOINT?</p><h3>合体位置が自然</h3><p>2個のちょうど間から次の実が生まれます。</p></article><article class="challenge"><p class="eyebrow">EVENT RULE</p><h3>得点も同時に作る</h3><p>新しいtierに応じて加点を変えてみよう。</p></article></div></section><nav class="lesson-pager"><a href="../stable-simulation/" rel="prev">← STEP 04<strong>安定する物理世界</strong></a><a href="../ebi-merge/" rel="next">STEP 06 →<strong>Ebi Merge</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -57,7 +62,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -65,6 +70,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

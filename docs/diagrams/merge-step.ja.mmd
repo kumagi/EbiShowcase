@@ -1,0 +1,10 @@
+flowchart LR
+  drop["落とす<br/>重力"]
+  touch["接触<br/>円の距離"]
+  same["同じ種類？<br/>id一致"]
+  merge["合体<br/>半径UP"]
+  score["演出と得点<br/>次の物を出す"]
+  drop --> touch
+  touch --> same
+  same --> merge
+  merge --> score

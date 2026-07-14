@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="From images laid out in one sheet, cut a single frame with SubImage and draw it. Advance the cut position with a timer and the character app">
-  <title>Sprite Walk (Frame by Frame) | Ebi Showcase</title>
+  <title>Ebi Showcase – Sprite Walk (Frame by Frame)</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-walk/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Sprite Walk (Frame by Frame) | Ebi Showcase">
+    <meta property="og:title" content="Ebi Showcase – Sprite Walk (Frame by Frame)">
     <meta property="og:description" content="From images laid out in one sheet, cut a single frame with SubImage and draw it. Advance the cut position with a timer and the character app">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-walk/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-walk.png?v=20260713-font1">
@@ -19,7 +19,7 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Sprite Walk (Frame by Frame) | Ebi Showcase">
+    <meta name="twitter:title" content="Ebi Showcase – Sprite Walk (Frame by Frame)">
     <meta name="twitter:description" content="From images laid out in one sheet, cut a single frame with SubImage and draw it. Advance the cut position with a timer and the character app">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-walk.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Sprite Walk (Frame by Frame)">
@@ -46,12 +46,19 @@
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>frame := sheet.SubImage(frameRect).(*ebiten.Image)</code></pre></div></section>
+<!-- feedback-note:tracks/visual-effects/vfx-walk:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-walk"><div><p class="eyebrow">Sprite frames</p><h2 id="feedback-note-tracks-visual-effects-vfx-walk">Use frame to choose one picture from a row</h2><p>A sprite sheet places walk pictures side by side. frame++ advances the picture number; a remainder sends it back to the first frame.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="four walk animation frames"><span>0</span><span>1</span><span>2</span><span>3</span><b>frame++ → next picture</b></div></div></section>
+<!-- feedback-note:tracks/visual-effects/vfx-walk:end -->
 <!-- END BEGINNER BRIDGE -->
 
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_spritesheet-frames.svg" alt="Sprite-sheet frames" loading="lazy" decoding="async"><figcaption>A visual map of Sprite-sheet frames. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Step and play frames</h2></div>
         <p>Step frames or play/pause. The glowing cell is the frame SubImage is cutting right now.</p>
@@ -152,8 +159,8 @@ screen.DrawImage(frame, op)</code></pre>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-additive/">← STEP 05<strong>Additive Blending Glow</strong></a>
-      <a href="../vfx-particles/">STEP 07 →<strong>Scatter Particles</strong></a>
+      <a href="../vfx-additive/" rel="prev">← STEP 05<strong>Additive Blending Glow</strong></a>
+      <a href="../vfx-particles/" rel="next">STEP 07 →<strong>Scatter Particles</strong></a>
     </nav>
 
 
@@ -170,7 +177,7 @@ screen.DrawImage(frame, op)</code></pre>
             <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">Send feedback<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">

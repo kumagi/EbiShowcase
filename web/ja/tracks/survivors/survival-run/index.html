@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="ウェーブ・ボス・難易度曲線を組み合わせたEbitengine版サバイバルゲームの最終ステップ。">
-  <title>STEP 06 — サバイバルラン（最終） | Ebi Showcase</title>
+  <meta name="description" content="ウェーブ・ボス・難易度曲線を組み合わせたEbitengine版サバイバルゲームの最終ステップ。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+  <title>Ebi Showcase – STEP 06 — サバイバルラン（最終）</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="STEP 06 — サバイバルラン（最終） | Ebi Showcase">
-    <meta property="og:description" content="ウェーブ・ボス・難易度曲線を組み合わせたEbitengine版サバイバルゲームの最終ステップ。">
+    <meta property="og:title" content="Ebi Showcase – STEP 06 — サバイバルラン（最終）">
+    <meta property="og:description" content="ウェーブ・ボス・難易度曲線を組み合わせたEbitengine版サバイバルゲームの最終ステップ。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/survivors/survival-run/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--survivors--survival-run.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -18,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="STEP 06 — サバイバルラン（最終） | Ebi Showcase">
-    <meta name="twitter:description" content="ウェーブ・ボス・難易度曲線を組み合わせたEbitengine版サバイバルゲームの最終ステップ。">
+    <meta name="twitter:title" content="Ebi Showcase – STEP 06 — サバイバルラン（最終）">
+    <meta name="twitter:description" content="ウェーブ・ボス・難易度曲線を組み合わせたEbitengine版サバイバルゲームの最終ステップ。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--survivors--survival-run.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="サバイバルラン（最終）">
     <!-- ogp:end -->
@@ -42,6 +42,9 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ウェーブは時間で区切った敵の波、ボスは区切りの最後に出る強敵、難易度曲線は時間とともに数・速さ・HPを少しずつ増やす設計です。目標時間まで生き残ればクリアです。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>wave := elapsed / waveSeconds</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3ウェーブを乗り越えてボスを倒せ！</h2></div><p>WASD・方向キー・ドラッグで移動。立ち止まると接触ダメージを受けます。ジェムを集めてレベルアップ（オーラ／速さ／ライフ）を選び、45秒以内にボスを倒そう。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="サバイバルラン" src="../../../../play/survival-run/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -126,7 +129,7 @@ speed := .85 + float64(sec)*.018
       </div>
     </section>
 
-    <nav class="lesson-pager"><a href="../weapon-evolution/">← STEP 05<strong>武器進化ラボ</strong></a><span></span></nav>
+    <nav class="lesson-pager"><a href="../weapon-evolution/" rel="prev">← STEP 05<strong>武器進化ラボ</strong></a><span></span></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -142,7 +145,7 @@ speed := .85 + float64(sec)*.018
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -150,6 +153,19 @@ speed := .85 + float64(sec)*.018
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -2,13 +2,14 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
+  <meta name="description" content="爆風が木の壁に当たると、そのマスのデータを「壁」から「床」へ書き換えます。ときどき現れるアイテムを拾い、10枚の壁を壊そう。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>壊れる壁とアイテム | Ebi Showcase</title>
+  <title>Ebi Showcase – 壊れる壁とアイテム</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="壊れる壁とアイテム | Ebi Showcase">
-    <meta property="og:description" content="爆風が木の壁に当たると、そのマスのデータを「壁」から「床」へ書き換えます。ときどき現れるアイテムを拾い、10枚の壁を壊そう。">
+    <meta property="og:title" content="Ebi Showcase – 壊れる壁とアイテム">
+    <meta property="og:description" content="爆風が木の壁に当たると、そのマスのデータを「壁」から「床」へ書き換えます。ときどき現れるアイテムを拾い、10枚の壁を壊そう。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/bomb-maze/breakable-walls/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--bomb-maze--breakable-walls.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -17,8 +18,8 @@
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="壊れる壁とアイテム | Ebi Showcase">
-    <meta name="twitter:description" content="爆風が木の壁に当たると、そのマスのデータを「壁」から「床」へ書き換えます。ときどき現れるアイテムを拾い、10枚の壁を壊そう。">
+    <meta name="twitter:title" content="Ebi Showcase – 壊れる壁とアイテム">
+    <meta name="twitter:description" content="爆風が木の壁に当たると、そのマスのデータを「壁」から「床」へ書き換えます。ときどき現れるアイテムを拾い、10枚の壁を壊そう。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--bomb-maze--breakable-walls.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="壊れる壁とアイテム">
     <!-- ogp:end -->
@@ -43,7 +44,10 @@
 
 <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
 
-    <section class="play lesson-play" id="play">
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>壁の中身を確かめよう</h2></div><p>矢印キー / WASDで移動、Space / Xで爆弾。スマホやタブレットでは画面下のボタンをタップします。爆風に触れるか75秒たつと失敗です。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="壊れる壁とアイテムを遊ぶ" src="../../../../play/breakable-walls/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
@@ -100,7 +104,7 @@
       <div class="why-grid"><article><p class="eyebrow">WHY IT WORKS</p><h2>判定と見た目がずれない</h2><p><code>Update</code> の移動判定と <code>Draw</code> が同じ配列を読むため、消えたように見えるのに通れない、という食い違いを防げます。</p></article><article><p class="eyebrow">CHALLENGE</p><h2>落ちる割合を変えよう</h2><p><code>deterministicDrop</code> の余りを変え、アイテムが少ない難しい版を作ってみよう。どの種類が何マス出るか先に予想してから試そう。</p></article></div>
     </section>
 
-    <nav class="lesson-pager"><a href="../cross-blast/">← STEP 02<strong>十字に伸びる爆風</strong></a><a href="../chain-explosion/">STEP 04 →<strong>爆弾の連鎖爆発</strong></a></nav>
+    <nav class="lesson-pager"><a href="../cross-blast/" rel="prev">← STEP 02<strong>十字に伸びる爆風</strong></a><a href="../chain-explosion/" rel="next">STEP 04 →<strong>爆弾の連鎖爆発</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -116,7 +120,7 @@
             <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
           </label>
           <div class="feedback-actions">
-            <button type="submit" class="feedback-submit">送信する<span>→</span></button>
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
             <p class="feedback-status" aria-live="polite"></p>
           </div>
           <input type="hidden" name="fvv" value="1">
@@ -124,6 +128,19 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

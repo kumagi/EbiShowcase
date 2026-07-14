@@ -1,0 +1,8 @@
+flowchart LR
+  pointer["finger / mouse<br/>clientX / clientY"]
+  scale["display scale<br/>width / height"]
+  canvas["game coordinates<br/>x / y"]
+  target["check the target<br/>into Update"]
+  pointer --> scale
+  scale --> canvas
+  canvas --> target

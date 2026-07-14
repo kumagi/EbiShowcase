@@ -1,0 +1,9 @@
+flowchart LR
+  pool["free slot<br/>[]Bullet"]
+  fire["fire<br/>active=true"]
+  move["Update<br/>move"]
+  reuse["off-screen<br/>return"]
+  pool --> fire
+  fire --> move
+  move --> reuse
+  reuse --> pool

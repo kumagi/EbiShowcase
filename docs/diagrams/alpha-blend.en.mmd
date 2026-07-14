@@ -1,0 +1,8 @@
+flowchart LR
+  source["source picture<br/>RGBA"]
+  alpha["alpha<br/>0 to 1"]
+  blend["Blend<br/>normal / lighter"]
+  result["trail / glow<br/>visual only"]
+  source --> alpha
+  alpha --> blend
+  blend --> result
