@@ -40,7 +40,7 @@
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Grids and history</strong></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>body = append([]Cell{head}, body[:len(body)-1]...)</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>body = append([]Cell{head}, body[:len(body)-1]...)</code></pre></div></section>
 <!-- feedback-note:games/snake:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-snake"><div><p class="eyebrow">Think in squares</p><h2 id="feedback-note-games-snake">480 px divided by 32 px makes a 15×15 grid</h2><p>A grid divides the screen into equal cells. Add the new head at the front of the history, then remove one tail cell when no food was eaten.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="15 by 15 grid and snake history">480 ÷ 32 = 15
 new head → [●][●][●] → drop tail
@@ -454,6 +454,11 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
 
 
 

@@ -38,7 +38,7 @@
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Many objects</strong></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if remaining == 0 { state = Win }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if remaining == 0 { state = Win }</code></pre></div></section>
 <!-- feedback-note:games/breakout:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-breakout"><div><p class="eyebrow">Draw every index</p><h2 id="feedback-note-games-breakout">A for loop draws each item in the slice</h2><p><code>i</code> means which block we are visiting. A loop walks from the first block to the last and reuses one drawing rule for all of them.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="for loop drawing every block">for i := range blocks {
     if blocks[i].Alive {
@@ -373,6 +373,11 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
 
 
 

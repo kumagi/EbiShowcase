@@ -41,7 +41,7 @@
       <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>for _, b := range bullets { for _, e := range enemies { check(b,e) } }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>for _, b := range bullets { for _, e := range enemies { check(b,e) } }</code></pre></div></section>
 <!-- feedback-note:games/space-shooter:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-space-shooter"><div><p class="eyebrow">Lists by kind</p><h2 id="feedback-note-games-space-shooter">Define Enemy so the meaning of i is clear</h2><p>Keep enemies and bullets in separate slices so each group can be updated or removed independently. <code>i</code> is the index: which item in that list we are reading.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="Enemy struct and index i">type Enemy struct {
     X, Y float64
@@ -515,6 +515,11 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
 
 
 

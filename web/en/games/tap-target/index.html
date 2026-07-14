@@ -39,7 +39,7 @@
       <p class="curriculum-bridge" style="margin-top:22px">Want to run code on your own PC first? See <a href="../../guides/setup/">Getting started setup</a> (install Go → empty window). This page’s demo also works in the browser alone.</p>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *game) Update() error { g.score++; return nil }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *game) Update() error { g.score++; return nil }</code></pre></div></section>
 <!-- feedback-note:games/tap-target:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-tap-target"><div><p class="eyebrow">Numbers → picture</p><h2 id="feedback-note-games-tap-target">An animation chooses numbers before it draws</h2><p>Each frame, Update changes the position a little. Draw then paints the circle at that position. The top-left is (0,0), and a file using math.Hypot starts with <code>import "math"</code>.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="top-left origin and Update Draw order">UPDATE x=0 → 1 → 2
           ↓
@@ -60,7 +60,7 @@ import \"math\"</pre></div></section>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_input-coordinate.svg" alt="Input to canvas coordinates" loading="lazy" decoding="async"><figcaption>A visual map of Input to canvas coordinates. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>First, tap the circle.</h2></div><p>Score with click, tap, or touch. How many hits can you land in 30 seconds?</p></div>
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>First, tap the circle.</h2></div><p>Score with click, tap, or touch. How many hits can you land in 30 seconds? Keep touch targets at least 48dp (about 48 CSS pixels) and show a color or ring immediately when a hit lands.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Tap the Target" src="../../../play/tap-target/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 
@@ -394,6 +394,11 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
 
 
 

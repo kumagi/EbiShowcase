@@ -21,7 +21,7 @@
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/monster-collection/capture/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/monster-collection/capture/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Creature Collection RPG</a><span>STEP 05 / 07</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Capture Challenge</h1><p>Calculate capture chance from remaining HP, SLEEP, and tools, then save successful creatures into open storage slots.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Conditional probability, failure risk, and storage</strong></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>chance := 25 + (maxHP-hp)*60/maxHP</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>chance := 25 + (maxHP-hp)*60/maxHP</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
@@ -78,6 +78,11 @@ if rng.Intn(100) &lt; captureChance() {
         </form>
       </div>
     </section>
+
+
+
+
+
 
 
 

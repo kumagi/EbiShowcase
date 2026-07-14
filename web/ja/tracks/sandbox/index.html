@@ -21,7 +21,7 @@
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/sandbox/">
 <link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/sandbox/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>9 STEPS</span></div><section class="track-hero track-sandbox"><span class="track-letter">K</span><div><p class="eyebrow">掘って作れる世界を作る</p><h1>2Dブロックサンドボックス</h1><p>マインクラフトのような、ブロックを置いたり壊したりして世界を作るゲームを作ります。1個のブロックを置くところから、世界を区切る「チャンク」、クラフト、生き物、ワールド保存へ広げます。</p></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>座標変換→壊す/置く→持ち物→生成→区画の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>座標変換→壊す/置く→持ち物→生成→区画の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。 このページの1本はコース全体で共通するUpdate→Drawの骨格です。下の01から順に、その中へ各仕組みを実装していきます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="コースの学習順"><span>01 座標変換</span><b aria-hidden="true">→</b><span>02 壊す/置く</span><b aria-hidden="true">→</b><span>03 持ち物</span><b aria-hidden="true">→</b><span>04 生成</span><b aria-hidden="true">→</b><span>05 区画</span></div></section>
 <!-- END BEGINNER BRIDGE -->
 
 <p class="curriculum-bridge">共通基礎の続きです。<a href="../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> の上に、このジャンルの部品を1ステップずつ足します。主人公が登場するステップではオリジナルの 海老・天次郎（えび・てんじろう） を使います。</p>
@@ -59,6 +59,11 @@
         </form>
       </div>
     </section>
+
+
+
+
+
 
 
 

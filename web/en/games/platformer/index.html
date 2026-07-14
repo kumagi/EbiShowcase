@@ -41,7 +41,7 @@
       <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>cameraX += (playerX-cameraX) * .09</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>cameraX += (playerX-cameraX) * .09</code></pre></div></section>
 <!-- feedback-note:games/platformer:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-platformer"><div><p class="eyebrow">See overlap first</p><h2 id="feedback-note-games-platformer">Resolve X first, then resolve Y</h2><p>First check whether the two boxes overlap. Move out on X only, then on Y only, so a corner does not break landing. A decimal gravity value makes the fall smooth.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="resolve X and Y separately"><span>overlap?</span><b>→ separate X</b><b>→ separate Y</b><strong>land</strong></div></div></section>
 <!-- feedback-note:games/platformer:end -->
@@ -461,6 +461,11 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
 
 
 

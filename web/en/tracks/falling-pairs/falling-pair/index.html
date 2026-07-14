@@ -21,7 +21,7 @@
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/falling-pairs/falling-pair/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/falling-pairs/falling-pair/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Falling-pair Chain Puzzle</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Drop a Pair</h1><p>Move a pivot P and child C one cell above it as a pair, then lock both cells when they land.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Pivot, relative position, and landing</strong></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>pair.y += fallSpeed</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>pair.y += fallSpeed</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
 <p class="curriculum-bridge">This continues the shared foundation. If the frame loop is new, begin with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>. Here Update changes pivot coordinates and a fall timer, while Draw places the pivot and child in their current cells.</p><!-- diagram-lesson:start -->
@@ -70,6 +70,11 @@ if !g.move(0, 1) {
         </form>
       </div>
     </section>
+
+
+
+
+
 
 
 

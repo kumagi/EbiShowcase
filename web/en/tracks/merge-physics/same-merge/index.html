@@ -21,7 +21,7 @@
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/merge-physics/same-merge/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/merge-physics/merge-rule/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Merge Physics Puzzle</a><span>STEP 05 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Matching Fruit Merge</h1><p>When equal tiers touch, remove both and create one larger circle at their midpoint.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Collision events and replacement</strong></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if a.tier == b.tier { merge(a, b) }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if a.tier == b.tier { merge(a, b) }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
@@ -69,6 +69,11 @@
         </form>
       </div>
     </section>
+
+
+
+
+
 
 
 

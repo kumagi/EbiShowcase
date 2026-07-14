@@ -174,6 +174,13 @@ for(const path of walk(root).filter(p=>p.endsWith(".html"))){
   const isHub=bits[1]==="tracks"&&bits.length===3;
   let pair=notes[lookupSlug]?["ここを先に見よう",...notes[lookupSlug].split("|")]:undefined;
   if(isHub&&trackParts[slug]) pair=[`このコースの組み立て図`,`${trackParts[slug]}の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。`,`func (g *Game) Update() error { return nil }`];
+  if(isHub&&trackParts[slug]){
+    // “このページの1本” is the shared skeleton, not the finished game.
+    pair[1] += ` このページの1本はコース全体で共通するUpdate→Drawの骨格です。下の01から順に、その中へ各仕組みを実装していきます。`;
+    if(slug === "active-rpg") pair[1] += ` ゲージだけを足すと、同じフレームに満タンになった役を一つの変数で上書きしてしまいます。READYキューなら、満タンになった順を全員ぶん保存してから一人ずつ解決できます。`;
+    if(slug === "racing") pair[1] += ` 各ステップは前の状態を引き継ぎ、加速→旋回→ゲート→ライバルの順で同じ車へ重ねます。`;
+    if(slug === "metroidvania") pair[1] += ` 下の01〜05もこの順番です。カメラで見る範囲を作ってから、部屋・地図・能力ゲート・戻り道を足します。`;
+  }
   // A bridge is useful only when it can explain this lesson's own rule.  A
   // generic Update/Draw card repeated on every page hides the actual lesson.
   if(!pair)continue;
@@ -183,10 +190,13 @@ for(const path of walk(root).filter(p=>p.endsWith(".html"))){
   if(lang==="ja"&&route.includes("/tracks/")&&!route.includes("/tracks/visual-effects/")&&!isHub){
     pair[1]+=" PLAYABLEは『このページで実際に操作できる』という印です。";
   }
-  if(lang==="en")pair=["Trace one rule first","Find where this one line is used, then follow how its value changes on screen.",pair[2] || "func (g *Game) Update() error { return nil }"];
+  if(lang==="en")pair=["Trace one rule first","Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.",pair[2] || "func (g *Game) Update() error { return nil }"];
   pair[2] ||= "func (g *Game) Update() error { return nil }";
   const esc=s=>s.replaceAll("&","&amp;").replaceAll("<","&lt;");
-  const block=`<!-- BEGIN BEGINNER BRIDGE -->\n<section class="beginner-bridge"><div><p class="eyebrow">${lang==="ja"?"はじめて読む人へ":"FIRST-TIME READER"}</p><h2>${pair[0]}</h2><p>${pair[1]}</p></div><div class="beginner-code"><p><strong>${lang==="ja"?"このページの1本":"ONE RULE TO TRACE"}</strong><br>${lang==="ja"?"説明と次のコードを対応させてから、ゲームで変化を確かめよう。":"Match the explanation to this line, then test the change in the game."}</p><pre><code>${esc(pair[2])}</code></pre></div></section>\n<!-- END BEGINNER BRIDGE -->\n`;
+  const flowVisual = isHub && trackParts[slug]
+    ? `<div class="course-mini-flow" role="img" aria-label="${lang === "ja" ? "コースの学習順" : "Course learning order"}">${trackParts[slug].split("→").map((step, i) => `<span>${String(i + 1).padStart(2, "0")} ${step}</span>`).join('<b aria-hidden="true">→</b>')}</div>`
+    : "";
+  const block=`<!-- BEGIN BEGINNER BRIDGE -->\n<section class="beginner-bridge"><div><p class="eyebrow">${lang==="ja"?"はじめて読む人へ":"FIRST-TIME READER"}</p><h2>${pair[0]}</h2><p>${pair[1]}</p></div><div class="beginner-code"><p><strong>${lang==="ja"?"このページの1本":"ONE RULE TO TRACE"}</strong><br>${lang==="ja"?"説明と次のコードを対応させてから、ゲームで変化を確かめよう。":"Match the explanation to this line, then test the change in the game."}</p><pre><code>${esc(pair[2])}</code></pre></div>${flowVisual}</section>\n<!-- END BEGINNER BRIDGE -->\n`;
 
   // Put the orientation card directly after the page hero.  Falling back to
   // </main> used to leave it below the feedback form, long after it was useful.

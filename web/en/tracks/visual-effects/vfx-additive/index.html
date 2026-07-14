@@ -45,7 +45,7 @@
       <div class="overview-concept"><small>What you learn here</small><strong>ebiten.BlendLighter</strong></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>op.Blend = ebiten.BlendLighter</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>op.Blend = ebiten.BlendLighter</code></pre></div></section>
 <!-- feedback-note:tracks/visual-effects/vfx-additive:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-additive"><div><p class="eyebrow">Calculate additive color</p><h2 id="feedback-note-tracks-visual-effects-vfx-additive">Red plus green makes yellow; all three make white</h2><p>Additive blending adds light colors. Red (1,0,0) plus green (0,1,0) becomes (1,1,0), yellow. Add blue too and the result is white.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="additive blending example">red + green = (1,0,0) + (0,1,0)
           = (1,1,0) = yellow

@@ -38,7 +38,7 @@
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Reflection and vectors</strong></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>vx = -vx</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>vx = -vx</code></pre></div></section>
 <!-- feedback-note:games/pong:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-pong"><div><p class="eyebrow">Practice alone</p><h2 id="feedback-note-games-pong">The CPU is your practice opponent</h2><p>The CPU paddle follows the ball, so you can practice reflections without another player. vx is horizontal speed and vy is vertical speed. Flip the matching sign when the ball hits a wall.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="velocity components and reflection"><code>vx = horizontal</code><code>vy = vertical</code><b>wall → vy = -vy</b><strong>bounce</strong></div></div></section>
 <!-- feedback-note:games/pong:end -->
@@ -328,6 +328,11 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
 
 
 

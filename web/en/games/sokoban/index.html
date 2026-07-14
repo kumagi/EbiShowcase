@@ -41,7 +41,7 @@
       <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if moving { progress++; return nil }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if moving { progress++; return nil }</code></pre></div></section>
 <!-- feedback-note:games/sokoban:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-sokoban"><div><p class="eyebrow">A map made of symbols</p><h2 id="feedback-note-games-sokoban">Strings make a stage blueprint easy to read</h2><p>Put one row of cells in each string. You can see walls and boxes at a glance, then convert each character into tile data when the game starts.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="Sokoban symbol map"># wall  @ player
 $ box   . goal
@@ -533,6 +533,11 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
 
 
 

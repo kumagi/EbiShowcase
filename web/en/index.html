@@ -34,7 +34,7 @@
   <main>
     <section class="catalog-hero"><p class="eyebrow">12 core games + 25 specializations in your browser</p><h1>Play more.<br><em>Build more.</em></h1><p>This site is a <strong>practice ground for making games yourself</strong>. Play tiny games in the browser and learn Go plus the game library <strong>Ebitengine</strong>, one idea at a time. The hero is original character <strong>Ebi Tenjiroh (海老・天次郎 / ebi-tenjiroh)</strong>—a shrimp-themed adventurer. Start at LEVEL 01 with the simple loop: advance numbers, then draw the picture.</p><p class="catalog-start-note"><strong>New here? Start with LEVEL 01, “Tap the Target.”</strong> Play first, then trace the explanation and Go code one small step at a time.</p><a class="cta" href="#curriculum">SEE THE PATH <b>↓</b></a></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { g.x++; return nil }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { g.x++; return nil }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
 <!-- curriculum-map:start -->
@@ -148,6 +148,11 @@
         </form>
       </div>
     </section>
+
+
+
+
+
 
 
 
