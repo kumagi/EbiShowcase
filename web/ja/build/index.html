@@ -1,0 +1,51 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="空のGo環境からEbitengineの最初のルールまで書くBuild Track。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ"><title>Ebi Showcase – Build Track</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Build Track">
+    <meta property="og:description" content="空のGo環境からEbitengineの最初のルールまで書くBuild Track。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/build/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--build.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="空の窓から、 自分のルールへ。">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Build Track">
+    <meta name="twitter:description" content="空のGo環境からEbitengineの最初のルールまで書くBuild Track。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--build.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="空の窓から、 自分のルールへ。">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/build/">
+<link rel="stylesheet" href="../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../"><span>EBI</span> SHOWCASE</a><nav><a href="../">目次</a><a class="lang" href="../../en/build/" lang="en">EN</a></nav></header><main class="overview-main"><section class="overview-hero"><p class="eyebrow">BUILD TRACK / WRITE FIRST</p><h1>空の窓から、<br>自分のルールへ。</h1><p>ブラウザのデモを遊びながら、各 STEP の <code>main.go</code> をダウンロードし、まっさらな Go フォルダで1行ずつ書きます。clone は必要ありません。</p></section><section class="learn"><p class="eyebrow">THE THREE PROMISES</p><h2>ゲームループの3つの約束</h2><div class="concept-row"><article><span class="concept-number">1</span><h3>UPDATE</h3><p>入力と、スコア・位置などの状態変更は Update が担当します。</p></article><article><span class="concept-number">2</span><h3>DRAW</h3><p>Draw は今の <code>game</code> を画面へ写すだけ。入力も状態変更もしません。</p></article><article><span class="concept-number">3</span><h3>SAME STATE</h3><p>同じ <code>game</code> なら同じ絵。ルールは先に Update で決めます。</p></article></div><div class="steps"><article><b>01</b><h3>空のループ</h3><p>Update と Draw の形を作る。</p><a href="empty-loop/">STEP 01 →</a></article><article><b>02</b><h3>状態を描く</h3><p>座標を game に置き、Draw で写す。</p><a href="state-picture/">STEP 02 →</a></article><article><b>03</b><h3>入力と得点</h3><p>Update で最初の RULE を足す。</p><a href="tap-score/">STEP 03 →</a></article><article><b>04</b><h3>当たり判定</h3><p>Hypot で命中を決め、次へ移す。</p><a href="hit-reset/">STEP 04 →</a></article></div><div class="next-lines"><p class="eyebrow">THEN</p><h3>完成形と比べよう</h3><p>4 STEP が終わったら、同じ型が少し大きくなった LEVEL 01 を開きます。</p><p><a href="../games/tap-target/">LEVEL 01 — 光る丸をタッチ →</a></p></div></section>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/build/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+
+
+</main><script src="../../learn.js"></script></body></html>

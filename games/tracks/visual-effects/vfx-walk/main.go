@@ -73,6 +73,9 @@ func (g *game) Update() error {
 			g.frame = (g.frame + 1) % len(frames)
 		}
 	}
+	if len(frames) == 0 || g.frame >= len(frames) {
+		g.frame = 0
+	}
 	if actions[int(g.shell.Get("action")+0.5)] == "walk" || actions[int(g.shell.Get("action")+0.5)] == "run" {
 		sp := 1.2 * g.shell.Get("speed")
 		if actions[int(g.shell.Get("action")+0.5)] == "run" {
@@ -83,6 +86,11 @@ func (g *game) Update() error {
 			g.x = 60
 		}
 	}
+	g.shell.SetToken("anim", name)
+	g.shell.SetToken("fps", fmt.Sprintf("%d", int(float64(heroatlas.FPS(name))*g.shell.Get("speed"))))
+	g.shell.SetToken("frame", fmt.Sprintf("%d", g.frame))
+	g.shell.SetToken("flip", "1")
+	g.shell.Hint = "action 0-4 · facing 0-2 · toggle playing"
 	return nil
 }
 
@@ -94,20 +102,11 @@ func (g *game) Draw(s *ebiten.Image) {
 
 	name := g.animName()
 	frames := heroatlas.Anim(name)
-	if g.frame >= len(frames) {
-		g.frame = 0
-	}
-	fps := heroatlas.FPS(name)
 	flip := 1.0
 	if int(g.shell.Get("facing")+0.5) == 2 {
 		// demonstrate flip token; learner can imagine left vs right
 		flip = 1
 	}
-	g.shell.SetToken("anim", name)
-	g.shell.SetToken("fps", fmt.Sprintf("%d", int(float64(fps)*g.shell.Get("speed"))))
-	g.shell.SetToken("frame", fmt.Sprintf("%d", g.frame))
-	g.shell.SetToken("flip", fmt.Sprintf("%.0f", flip))
-
 	if len(frames) > 0 {
 		fr := frames[g.frame]
 		b := fr.Bounds()
@@ -120,7 +119,6 @@ func (g *game) Draw(s *ebiten.Image) {
 		s.DrawImage(fr, op)
 	}
 
-	g.shell.Hint = "action 0-4 · facing 0-2 · toggle playing"
 	g.shell.Draw(s)
 }
 

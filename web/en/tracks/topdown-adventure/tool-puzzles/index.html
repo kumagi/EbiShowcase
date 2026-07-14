@@ -1,11 +1,11 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
-  <meta name="description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Solve Puzzles with Three Tools</title>
+  <meta name="description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step."><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Solve Puzzles with Three Tools</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/topdown-adventure/tool-puzzles/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – Solve Puzzles with Three Tools">
-    <meta property="og:description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/topdown-adventure/tool-puzzles/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--topdown-adventure--tool-puzzles.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -15,16 +15,61 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – Solve Puzzles with Three Tools">
-    <meta name="twitter:description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--topdown-adventure--tool-puzzles.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Solve Puzzles with Three Tools">
     <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/topdown-adventure/tool-puzzles/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Top-down Action Adventure</a><span>STEP 06 / 08</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Solve Puzzles with Three Tools</h1><p>Switch sword, gust, and lamp to solve vine, wind, and shadow seals with the matching tool.</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play-panel"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Solve Puzzles with Three Tools</h2><p>Move with arrows/WASD or screen buttons. Attack with X/Space/ATTACK and change tools with Q/TOOL.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/tool-puzzles/?lang=en" title="Solve Puzzles with Three Tools" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Solve Puzzles with Three Tools</h2><p>Each puzzle stores its required tool kind. It turns on only when the selected kind matches and the action is in range, avoiding a new branch for every prop.</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>Cycle tool index with Q or TOOL</p></article><article><b>02</b><h3>UPDATE</h3><p>Store required kind on every puzzle</p></article><article><b>03</b><h3>GOAL</h3><p>Clear when all seals are on</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM DIAGRAM / TRY IT</p><h2>Store required kind on every puzzle</h2><p>Each puzzle stores its required tool kind. It turns on only when the selected kind matches and the action is in range, avoiding a new branch for every prop.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">INPUT</p><button type="button" class="lab-action">NEXT</button></div></section><section class="formula"><p class="eyebrow">STATE FLOW</p><div class="formula-lines"><code>input</code><span>→</span><code>update state</code><span>→</span><code>resolve result</code><span>→</span><code>draw feedback</code></div><p>Clear when all seals are on</p></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Store required kind on every puzzle</h2><p>Switch sword, gust, and lamp to solve vine, wind, and shadow seals with the matching tool.</p></div><pre><code>if node.Kind == selectedTool &amp;&amp; inRange {
-    node.On = true
-}
-clear = allNodesOn(nodes)</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>Each puzzle stores its required tool kind. It turns on only when the selected kind matches and the action is in range, avoiding a new branch for every prop.</p></article><article><h3>CHANGE</h3><p>Clear when all seals are on</p></article><article><h3>CHALLENGE</h3><p>Change one value or data record to create a new room.</p></article></section><nav class="lesson-pager"><a href="../key-treasure/" rel="prev">← PREV<strong>Connect Key, Door, and Chest</strong></a><a href="../guardian-phases/" rel="next">NEXT →<strong>Build a Three-phase Guardian</strong></a></nav>
+<section class="play-panel"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Solve Puzzles with Three Tools</h2><p>Move with arrows/WASD or screen buttons. Attack with X/Space/ATTACK and change tools with Q/TOOL.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/tool-puzzles/?lang=en" title="Solve Puzzles with Three Tools" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Solve Puzzles with Three Tools</h2><p>Each puzzle stores its required tool kind. It turns on only when the selected kind matches and the action is in range, avoiding a new branch for every prop.</p><div class="concept-row"><article><span class="concept-number">1</span><h3>DATA</h3><p>This step entry passes only its lesson number. The shared game selects room data and rules.</p><code>Run(6)</code></article><article><span class="concept-number">2</span><h3>UPDATE</h3><p>Update resolves input, movement, attacks, and room rules in order.</p><code>Update → resolve room</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>Draw turns the current room and state into a picture; it does not change state.</p><code>Draw(state)</code></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM DIAGRAM / TRY IT</p><h2>Store required kind on every puzzle</h2><p>Each puzzle stores its required tool kind. It turns on only when the selected kind matches and the action is in range, avoiding a new branch for every prop.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">INPUT</p><button type="button" class="lab-action">NEXT</button></div></section><section class="formula"><p class="eyebrow">STATE FLOW</p><div class="formula-lines"><code>input</code><span>→</span><code>update state</code><span>→</span><code>resolve result</code><span>→</span><code>draw feedback</code></div><p>Clear when all seals are on</p></section><section class="code-lesson">
+  <div><p class="eyebrow">EDIT THIS ENTRY</p><h3>games/tracks/topdown-adventure/tool-puzzles/main.go</h3><p>This short entry is the real Go file the learner opens and changes.</p></div>
+  <pre><code>package main
+
+import "github.com/kumagi/EbiShowcase/internal/topdownadventuregame"
+
+func main() { topdownadventuregame.Run(6) }</code></pre>
+</section>
+<section class="code-lesson">
+  <div><p class="eyebrow">HOW IT WORKS</p><h3>internal/topdownadventuregame/game.go</h3><p>This is the real mechanism the entry calls. The two labelled layers keep source and explanation traceable.</p></div>
+  <pre><code>func (g *game) Update() error {
+	if g.clear || g.over {
+		if retryPressed() {
+			*g = *newGame(g.lesson)
+		}
+		return nil
+	}
+	g.frames++
+	g.readMovement()
+	if attackPressed() &amp;&amp; g.attack == 0 {
+		g.attack = 18
+	}
+	if toolPressed() {
+		g.tool = (g.tool + 1) % 3
+		g.message = g.tr("Tool selected: ", "どうぐを えらんだ: ") + g.toolName()
+	}
+	if g.attack &gt; 0 {
+		g.attack--
+		if g.attack == 10 {
+			g.resolveAction()
+		}
+	}
+	g.player.Tick()
+	g.player.Pos.X = max(48, min(432, g.player.Pos.X))
+	g.player.Pos.Y = max(108, min(520, g.player.Pos.Y))
+	g.collect()
+	g.updateEnemies()
+	g.updateLesson()
+	g.updateParticles()
+	if g.shake &gt; 0 {
+		g.shake--
+	}
+	if g.flash &gt; 0 {
+		g.flash--
+	}
+	return nil
+}</code></pre>
+</section>
+<section class="why-grid"><article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>Write one rule, then verify it</h3><p>In games/tracks/topdown-adventure/tool-puzzles/main.go, at main.go, add one goal or room setting for this step. Run go test ./... after the change, then check the changed goal in the browser.</p></article></section><nav class="lesson-pager"><a href="../key-treasure/" rel="prev">← PREV<strong>Connect Key, Door, and Chest</strong></a><a href="../guardian-phases/" rel="next">NEXT →<strong>Build a Three-phase Guardian</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">

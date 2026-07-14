@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="空のEbitengineゲームループを自分のGo環境で動かすBuild Trackの最初の一歩。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+  <title>Ebi Showcase – BUILD 01 — 空のゲームループ</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – BUILD 01 — 空のゲームループ">
+    <meta property="og:description" content="空のEbitengineゲームループを自分のGo環境で動かすBuild Trackの最初の一歩。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/build/empty-loop/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--build--empty-loop.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="空のゲームループを動かそう">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – BUILD 01 — 空のゲームループ">
+    <meta name="twitter:description" content="空のEbitengineゲームループを自分のGo環境で動かすBuild Trackの最初の一歩。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--build--empty-loop.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="空のゲームループを動かそう">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/build/empty-loop/">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a href="../../guides/setup/">SETUP</a><a class="lang" href="../../../en/build/empty-loop/" lang="en">EN</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← 目次</a><span>BUILD TRACK / STEP 01</span></div>
+    <section class="overview-hero"><p class="eyebrow">BUILD TRACK / WRITE FIRST</p><h1>空のゲームループを動かそう</h1><p>完成ゲームを読む前に、自分の Go 環境で「毎フレーム動く窓」を作ります。リポジトリを clone する必要はありません。</p><div class="overview-concept"><small>このステップで書くこと</small><strong>Update と Draw の空の形</strong></div></section>
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>まず、空の窓を見てみよう。</h2></div><p>この濃い青の画面もゲームです。まだルールがないだけで、裏では Update と Draw がくり返されています。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="空のゲームループ" src="../../../play/empty-loop/" allow="autoplay; fullscreen"></iframe></div></div></section>
+    <section class="learn"><p class="eyebrow">MAKE IT LOCAL</p><h2>1ファイルを保存して、<br>自分の窓を開く。</h2><p class="lesson-lead">下の <code>main.go</code> をブラウザから保存します。空のフォルダで <code>go mod init</code> と <code>go get</code> を1回ずつ実行すれば、clone なしで始められます。</p><div class="steps"><article><b>01</b><h3>SAVE</h3><p><a href="https://github.com/kumagi/EbiShowcase/raw/refs/heads/main/games/build-track/empty-loop/main.go">main.go をダウンロード</a>し、新しいフォルダに保存します。</p></article><article><b>02</b><h3>INSTALL</h3><p><code>go mod init example.com/ebi-build</code> の後に <code>go get github.com/hajimehoshi/ebiten/v2</code>。</p></article><article><b>03</b><h3>RUN</h3><p><code>go run .</code>。濃い青の窓が出たら成功です。</p></article></div><div class="code-lesson"><div><p class="eyebrow">THE AXIOM</p><h3>仕事を<br>分けておく。</h3><p><code>Update</code> はこれから入力と数字の変化を受け持ちます。<code>Draw</code> は今ある数字を絵にする場所です。最初から混ぜない約束を作ります。</p></div><pre><code>func (g *game) Update() error { return nil }
+func (g *game) Draw(screen *ebiten.Image) { screen.Fill(navy) }</code></pre></div><div class="next-lines"><p class="eyebrow">NEXT LINES / 次に足す行</p><h3>次は「数字の箱」を作る</h3><p>まだ書かなくて大丈夫。STEP 02 で <code>game</code> に座標を入れ、Draw がその座標を読むようにします。</p><pre><code>type game struct { x, y int }</code></pre><p><a href="../state-picture/">STEP 02 へ進む →</a></p></div><div class="why-grid"><article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>背景色を決める場所を探そう</h3><p><code>main.go</code> の <code>Draw</code> にある <code>screen.Fill</code> を別の色へ変え、<code>go run .</code> で窓の色が変わることを確認します。次のステップから Update 側に本物の RULE を足します。</p></article></div><p class="full-code-intro">この1ファイルが、いま動いているコードの全部です。</p><div class="full-code" data-embed-source="games/build-track/empty-loop/main.go"><div class="full-code-head"><span>main.go · ぜんぶのコード</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーした！">コピー</button></div><pre><code data-embed-slot>// Build Track STEP 01: an empty Ebitengine game loop.
+package main
+
+import (
+	"image/color"
+
+	"github.com/hajimehoshi/ebiten/v2"
+)
+
+const (
+	screenWidth  = 480
+	screenHeight = 720
+)
+
+// game will hold the game's numbers in the next steps.
+type game struct{}
+
+// Update is where input and game-state changes will belong.
+func (g *game) Update() error {
+	return nil
+}
+
+// Draw only paints the current game state. There is no state to paint yet.
+func (g *game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{12, 19, 48, 255})
+}
+
+func (g *game) Layout(_, _ int) (int, int) {
+	return screenWidth, screenHeight
+}
+
+func main() {
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Build Track 01 — Empty Loop")
+	if err := ebiten.RunGame(&amp;game{}); err != nil {
+		panic(err)
+	}
+}
+</code></pre></div></section>
+    <nav class="lesson-pager" aria-label="レッスン移動"><a href="../../guides/setup/" rel="prev">← SETUP</a><a href="../state-picture/" rel="next">STEP 02 →</a><a href="../../games/tap-target/" rel="next">LEVEL 01（完成形） →</a></nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/build/empty-loop/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</main>
+  <script src="../../../learn.js"></script>
+</body>
+</html>

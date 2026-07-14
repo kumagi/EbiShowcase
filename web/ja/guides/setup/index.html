@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+  <meta name="description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
   <title>Ebi Showcase – はじめての環境づくり — 空の窓を開くまで</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/setup/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – はじめての環境づくり — 空の窓を開くまで">
-    <meta property="og:description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta property="og:description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/guides/setup/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--setup.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – はじめての環境づくり — 空の窓を開くまで">
-    <meta name="twitter:description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta name="twitter:description" content="まっさらな Windows / macOS から Go と Ebitengine を入れ、何もしない空の窓を起動するまでの手順。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--setup.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="まっさらなパソコンから、 中身のないゲーム画面ウィンドウを開くまで。">
     <!-- ogp:end -->
@@ -141,12 +141,12 @@ import (
 // Game は Ebitengine が求める3つのメソッドを持つ箱です。
 type Game struct{}
 
-// Update は数字を進める場所。今は何もしません。
+// Update は入力と数字を進める場所。状態を書き換えるならここです。
 func (g *Game) Update() error {
 	return nil
 }
 
-// Draw は画面を塗る場所。いまは暗い青一色だけ。
+// Draw は今の状態を画面へ写すだけ。状態は書き換えません。
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{20, 28, 48, 255})
 }
@@ -165,7 +165,7 @@ func main() {
 }</code></pre>
 </div>
     <div class="setup-explain">
-      <div><code>Update</code><span>毎フレームの「数字」担当。今は空。</span></div><div><code>Draw</code><span>毎フレームの「絵」担当。色を一塗り。</span></div><div><code>Layout</code><span>ゲーム内部の幅と高さ。</span></div><div><code>RunGame</code><span>このくり返しを起動するスイッチ。</span></div>
+      <div><code>Update</code><span>毎フレームの入力・数字・状態更新担当。今は空。</span></div><div><code>Draw</code><span>毎フレームの投影担当。色を一塗りし、状態は変えない。</span></div><div><code>Layout</code><span>ゲーム内部の幅と高さ。</span></div><div><code>RunGame</code><span>このくり返しを起動するスイッチ。</span></div>
     </div>
   </section>
 
@@ -175,8 +175,8 @@ func main() {
     <p class="setup-lead">ターミナルのカレントディレクトリが ebi-empty のまま、次を順番に打ちます。</p>
     <ol class="setup-cmd-list"><li><code>go mod tidy</code><span>Ebitengine などを自動で取ってくる</span></li><li><code>go run .</code><span>プログラムを動かす</span></li></ol>
     <p class="setup-success">タイトルが Empty Window の、暗い青い長方形の窓が開けば成功です。閉じるボタンで終了できます。中身はまだ何も動きません——それでも「ゲームの土台」はもう動いています。</p>
-    <p class="setup-lead">次は、この土台の上に Update / Draw の意味を載せる LEVEL 01 へどうぞ。ブラウザ上のデモでも学べます。</p>
-    <a class="cta setup-cta" href="../../games/tap-target/">LEVEL 01 を開く →</a>
+    <p class="setup-lead">次は、この土台の上で Update と Draw を1行ずつ書き、最初の RULE まで進む Build Track へどうぞ。clone は必要ありません。</p>
+    <a class="cta setup-cta" href="../../build/">Build Track を始める →</a>
   </section>
 
   <section class="setup-step setup-trouble" id="troubleshoot">

@@ -12,7 +12,7 @@ const notes = {
   "setup":"go.modは『このゲームの名前と使う部品』を書いた目次ファイル。PowerShell/ターミナルは文字で命令する同じ役目の窓です。天次郎の最初の一コマを出すところまで進みます。|func (g *Game) Update() error { return nil }",
   "game-data":"データ駆動とは、村・台詞・敵をコードへ直接書かず、交換できるデータとして読む作り方。asset loaderはそのファイルをゲームへ渡す係、IDは部品同士を結ぶ名前札です。|village := loadMap(\"village.json\")",
   "ebi-depths":"巨大な世界は、世界座標・カメラ・訪問済み部屋・能力フラグを別々に覚えます。Updateで主人公と能力を進め、Drawではカメラの窓に入る部分だけを描きます。|screenX := worldX - cameraX",
-  "tap-target":"メソッドはGameという箱に結び付いた関数。Updateは1秒に約60回、スコアや位置を1コマ進めます。Drawはその数字を絵にし、Layoutは描画を管理するのではなく、ゲーム内部の基準サイズを返します。|func (g *game) Update() error { g.score++; return nil }",
+  "tap-target":"メソッドはGameという箱に結び付いた関数。Updateは1秒に約60回、入力を読みスコアや位置を1コマ進めます。Drawはその数字を絵にするだけで、入力を読んだり状態を書き換えたりしません。Layoutはゲーム内部の基準サイズを返します。|func (g *game) Update() error { g.score++; return nil }",
   "timing-meter":"状態は『狙っている・判定を見ている・再挑戦待ち』のような今の場面。switchは状態ごとの処理をif/elseより読みやすく並べます。%は割り算の余りです。|phase := frame % 120",
   "catch-stars":"スライスは星を何個でも入れられる順番付きリスト。天次郎が星を受け止め、3個落とすとゲームオーバーです。|stars = append(stars, newStar())",
   "flappy":"画面は上がY=0で、下へ行くほどYが増えます。加速度は『速さが毎フレームどれだけ変わるか』。羽ばたき時の-7.4px/frameは上向きの初速度、重力+0.42px/frame²が約16.7msごとに下向きへ戻します。|vy = -7.4; vy += gravity; y += vy",

@@ -1,10 +1,10 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
-  <meta name="description" content="Store cost, name, and effect as data, then execute the selected card's instruction. Play the demo, read a short Go example, change a value, and apply the idea t"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Play One Card</title>
+  <meta name="description" content="Store cost, name, and effect as data, then execute the selected card's instruction. Play the demo, add one Go rule, verify it, and apply the idea to your own Eb"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Play One Card</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – Play One Card">
-    <meta property="og:description" content="Store cost, name, and effect as data, then execute the selected card's instruction. Play the demo, read a short Go example, change a value, and apply the idea t">
+    <meta property="og:description" content="Store cost, name, and effect as data, then execute the selected card's instruction. Play the demo, add one Go rule, verify it, and apply the idea to your own Eb">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/deckbuilder/play-a-card/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--play-a-card.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -14,7 +14,7 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – Play One Card">
-    <meta name="twitter:description" content="Store cost, name, and effect as data, then execute the selected card's instruction. Play the demo, read a short Go example, change a value, and apply the idea t">
+    <meta name="twitter:description" content="Store cost, name, and effect as data, then execute the selected card's instruction. Play the demo, add one Go rule, verify it, and apply the idea to your own Eb">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--play-a-card.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Play One Card">
     <!-- ogp:end -->
@@ -32,19 +32,12 @@
 <p class="eyebrow">TRY IT / RESOLVE</p>
 <h3 id="lab-title-play-a-card">Play cards to change numbers</h3>
 <p>Attack, block, and heal look different but share one path: pay cost, branch on Kind. Not enough energy? The card won’t play. End turn: foe hits, energy refills.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-card="damage" data-go-focus="cost pay fx">Strike 2⚡</button><button type="button" class="lab-button" data-lab-card="block" data-go-focus="cost pay fx">Guard 1⚡</button><button type="button" class="lab-button" data-lab-card="heal" data-go-focus="cost pay fx">Heal 2⚡</button><button type="button" class="lab-button" data-lab-end>End turn</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-card="damage">Strike 2⚡</button><button type="button" class="lab-button" data-lab-card="block">Guard 1⚡</button><button type="button" class="lab-button" data-lab-card="heal">Heal 2⚡</button><button type="button" class="lab-button" data-lab-end>End turn</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
 <p class="lab-hint">The WASM game resolves with the same switch on card.Kind.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>energy</span><strong data-lab-energy>0</strong></div><div><span>your HP</span><strong data-lab-hp>0</strong></div><div><span>foe HP</span><strong data-lab-enemy>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
-</div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="cost">if energy &lt; card.cost { return }</span>
-<span data-go-line="pay">energy -= card.cost</span>
-<span data-go-line="fx">apply(card)</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE PAY → BRANCH RULE</p><div class="formula-lines"><code>energy -= cost</code><span>then</span><code>switch kind { damage / block / heal }</code></div><p>New cards are new data rows—the resolver stays the same.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Turn data into instructions</h3><p>Read Kind and Value instead of writing a separate function per card.</p></div><pre><code>if energy &gt;= card.Cost { energy -= card.Cost; switch card.Kind { case "damage": enemyHP -= card.Value; case "block": block += card.Value; case "heal": hp += card.Value } }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY DATA?</p><h3>Add cards easily</h3><p>A new row creates another set of numbers.</p></article><article><p class="eyebrow">WHY COST?</p><h3>Create decisions</h3><p>Choose when a strong card is worth playing.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>A new Kind</h3><p>Design a card that attacks twice.</p></article></div></section><nav class="lesson-pager"><span></span><a href="../turn-energy/" rel="next">STEP 02 →<strong>Energy Turns</strong></a></nav>
 
@@ -70,6 +63,22 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

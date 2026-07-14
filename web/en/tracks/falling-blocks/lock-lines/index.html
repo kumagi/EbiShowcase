@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-  <meta name="description" content="Merge the falling shape into the board, remove full rows, and compact above. Play the demo, read a short Go example, change a value, and apply the idea to your">
+  <meta name="description" content="Merge the falling shape into the board, remove full rows, and compact above. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Ebi Showcase – Lock and Clear Lines</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – Lock and Clear Lines">
-    <meta property="og:description" content="Merge the falling shape into the board, remove full rows, and compact above. Play the demo, read a short Go example, change a value, and apply the idea to your">
+    <meta property="og:description" content="Merge the falling shape into the board, remove full rows, and compact above. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengin">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/falling-blocks/lock-lines/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--falling-blocks--lock-lines.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – Lock and Clear Lines">
-    <meta name="twitter:description" content="Merge the falling shape into the board, remove full rows, and compact above. Play the demo, read a short Go example, change a value, and apply the idea to your">
+    <meta name="twitter:description" content="Merge the falling shape into the board, remove full rows, and compact above. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengin">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--falling-blocks--lock-lines.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Lock and Clear Lines">
     <!-- ogp:end -->
@@ -66,18 +66,12 @@
 <p class="eyebrow">TRY IT / FULL ROW</p>
 <h3 id="lab-title-lock-lines">Clear only full rows</h3>
 <p>Gold rows are completely filled. Clear Rows removes them and drops everything above. Scoring in falling-block games starts from this “is the row full?” test.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-clear data-go-focus="full pack">Clear rows</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-clear>Clear rows</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
 <p class="lab-hint">Several full rows clear together in one pass.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>cleared</span><strong data-lab-cleared>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
-</div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="full">if rowAllFilled { cleared++ }</span>
-<span data-go-line="pack">write surviving rows from bottom</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE FULL-ROW RULE</p><div class="formula-lines"><code>if every cell is filled → clear</code><span>then</span><code>pack remaining rows down</code></div><p>Feed the cleared count into a score table for singles through Tetrises.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Read upward and write upward</h3><p>Copy only non-full rows to write, then fill every unused row at the top with an empty row.</p></div><pre><code>write := rows - 1
 for read := rows - 1; read &gt;= 0; read-- {
@@ -116,6 +110,22 @@ for write &gt;= 0 { board[write] = emptyRow; write-- }</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

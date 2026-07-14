@@ -67,10 +67,17 @@ function normalizeTitle(raw) {
 }
 
 function enrichDescription(description, lang) {
-  const source = String(description || "").replace(/\s+/g, " ").trim();
+  // Old builds appended a tuning-only teaching promise. Strip it before using
+  // existing metadata as the next build's source so a stale page cannot keep
+  // reintroducing the obsolete copy (including truncated duplicates).
+  let source = String(description || "");
+  source = lang === "ja"
+    ? source.replace(/遊べるデモを動かし、短いGoコードを読み、値を変えて[\s\S]*$/, "")
+    : source.replace(/Play the demo, read a short Go example, change a value, and apply[\s\S]*$/, "");
+  source = source.replace(/\s+/g, " ").trim();
   const tail = lang === "ja"
-    ? "遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。"
-    : "Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by step.";
+    ? "遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。"
+    : "Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.";
   const extra = lang === "ja"
     ? "キーボードとタッチの両方で試せます。"
     : "The demo works with keyboard and touch.";

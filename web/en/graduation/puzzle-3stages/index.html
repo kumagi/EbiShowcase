@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step."><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Build a Three-stage Puzzle with Tests</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Build a Three-stage Puzzle with Tests">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/graduation/puzzle-3stages/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--graduation--puzzle-3stages.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Add data to add puzzles.">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Build a Three-stage Puzzle with Tests">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--graduation--puzzle-3stages.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Add data to add puzzles.">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/graduation/puzzle-3stages/">
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">GRADUATION</a><a class="lang" href="../../../ja/graduation/puzzle-3stages/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Graduation projects</a><span>MAKE / DATA</span></div><section class="lesson-hero"><div><p class="eyebrow">GRADUATION 03</p><h1>Add data to add puzzles.</h1><p>This three-stage puzzle adds names and targets to an array instead of copying the rule.</p></div></section><section class="lesson-section"><p class="eyebrow">0. DOWNLOAD</p><h2>Start in an empty Go folder</h2><p>Save the <a href="https://github.com/kumagi/EbiShowcase/tree/main/graduation/puzzle-3stages/starter">three starter files</a> from their Raw browser view. Run <code>go mod init example.com/three-puzzles</code>, <code>go get github.com/hajimehoshi/ebiten/v2</code>, then <code>go test</code>. No clone is required.</p></section><section class="lesson-section"><p class="eyebrow">1. START</p><h2>Select the first data record</h2><p><code>TestFreshProgressStartsAtFirstDataStage</code> maps to <strong>TODO 1</strong>. Make empty Progress point Stage 0 at <code>Stages[0]</code>.</p></section><section class="lesson-section"><p class="eyebrow">2. ADVANCE</p><h2>Read the target from data</h2><p><code>TestPuzzleTargetAdvancesOneStage</code> and <code>TestLastDataStageClearsInsteadOfOverflowing</code> map to <strong>TODO 3</strong>. Count Presses, compare the current <code>Stages[p.Stage].Target</code>, advance one stage, and Clear instead of overflowing at the last record.</p></section><section class="lesson-section"><p class="eyebrow">3. RESET</p><h2>Return progress to the start</h2><p><code>TestRestartMakesFreshProgress</code> maps to <strong>TODO 2</strong>. Use <code>NewProgress()</code> so old stage, presses, and Clear do not remain.</p><pre><code>go test; go run .</code></pre></section><section class="why-grid"><article><h3>ADD DATA, NOT BRANCHES</h3><p>A fourth puzzle is another StageData record using the same Step rule.</p></article><article><h3>TEST THE RULE</h3><p>Write the test before adding a special rule.</p></article><article><h3>COMPARE LAST</h3><p>Compare reference only after green tests.</p></article></section>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/graduation/puzzle-3stages/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer></body></html>

@@ -44,12 +44,45 @@ function phaseOf(id) {
 }
 
 function requirements(id) {
-  if (/^P2-G\d+$/.test(id)) return ["Shader", "Audio", "Text/UI", "Camera", "Desktop", "Tablet", "Phone", "Japanese", "English", "Tests"];
-  if (/^P1-[U-Y]-PASS$/.test(id)) return ["Stages", "Animation", "Feedback", "Replay", "Keyboard", "Pointer", "Touch", "Japanese", "English", "Tests"];
-  if (/^P1-[U-Y]-AUDIT$/.test(id)) return ["Current behavior", "Gap list", "Desktop", "Tablet", "Phone", "Japanese", "English"];
-  if (/^P2-(SH|AU|UI|CA)-06$/.test(id)) return ["Playable steps", "Desktop", "Tablet", "Phone", "Japanese", "English", "Tests", "License"];
-  if (/^P3-GRAD-0[1-4]$/.test(id)) return ["Article", "Starter", "Tests", "Reference game", "Japanese", "English", "Mobile"];
-  if (id === "P4-RELEASE") return ["Full build", "All tests", "All evidence", "Pages artifact"];
+  // Authoring Pass (see docs/ROADMAP_RALPH_LOOP.md)
+  if (/^P0-0[1-8]$/.test(id) || /^P0-LOOP-0[1-4]$/.test(id)) return ["Implementation", "Automated checks", "Manual review"];
+  if (id === "P1-BT-SPEC" || id === "P2-HELP" || id === "P2-HAND-PATTERN") {
+    return ["Implementation", "Automated checks", "Manual review"];
+  }
+  if (/^P1-BT-0[1-4]$/.test(id) || id === "P1-BT-HUB" || id === "P1-BT-VERIFY") {
+    return ["Edit target", "Next lines", "RULE challenge", "Desktop", "Phone", "Japanese", "English", "Tests"];
+  }
+  if (/^P1-CORE-0[1-5]$/.test(id) || id === "P1-CORE-LINK") {
+    return ["Edit target", "RULE challenge", "Japanese", "English", "Automated checks"];
+  }
+  if (/^P2-(RHY|RAY|TD|REV|TOP)-AUDIT$/.test(id)) {
+    return ["Mismatch inventory", "Edit targets", "Japanese", "English"];
+  }
+  if (/^P2-(RHY|RAY|TD|REV|TOP)-GEN$/.test(id)) {
+    return ["Dual panel", "Unique concept-row", "RULE challenge", "Japanese", "English", "Automated checks"];
+  }
+  if (/^P2-(RHY|RAY|TD|REV|TOP)-VERIFY$/.test(id)) {
+    return ["Edit target", "RULE challenge", "Desktop", "Phone", "Japanese", "English", "Tests"];
+  }
+  if (/^P3-(ARC|EXP|PUZ)-STARTER$/.test(id)) {
+    return ["Holey starter", "Failing tests", "TODO mapping", "Automated checks"];
+  }
+  if (/^P3-(ARC|EXP|PUZ)-ARTICLE$/.test(id)) {
+    return ["Article", "TODO mapping", "Japanese", "English", "Manual review"];
+  }
+  if (/^P3-(ARC|EXP|PUZ)-VERIFY$/.test(id) || id === "P3-HUB" || id === "P3-F30" || id === "P3-NAV" || id === "P3-TRACK-CTA") {
+    return ["Article", "Starter", "Tests", "Reference game", "Japanese", "English", "Mobile"];
+  }
+  if (id === "P4-CORE-LATE" || id === "P4-HAND-01" || id === "P4-HAND-02") {
+    return ["Edit target", "RULE challenge", "Japanese", "English", "Automated checks"];
+  }
+  if (id === "P4-METRIC" || id === "P4-CHECKLIST" || id === "P4-COPY-REGRESS") {
+    return ["Implementation", "Automated checks", "Manual review"];
+  }
+  if (id === "P4-SAMPLE") {
+    return ["Sample audit", "Edit target", "RULE challenge", "Japanese", "English", "Manual review"];
+  }
+  if (id === "P4-RELEASE") return ["Full build", "All tests", "All evidence", "Authoring metrics", "Pages artifact"];
   return ["Implementation", "Automated checks", "Manual review"];
 }
 
@@ -95,6 +128,11 @@ function replaceCheckbox(markdown, id, checked) {
 function run(name, args) {
   console.log(`$ ${name} ${args.join(" ")}`);
   execFileSync(name, args, { cwd: root, stdio: "inherit" });
+}
+
+function runGreenGoTests() {
+  run("bash", ["-lc", "go test $(go list ./... | grep -v '/graduation/.*/starter$')"]);
+  run("node", ["scripts/check-graduation-starters.mjs"]);
 }
 
 function verifyStructure(tasks) {
@@ -153,7 +191,7 @@ try {
     verifyStructure(tasks);
     run("git", ["diff", "--check"]);
     if (full) {
-      run("go", ["test", "./..."]);
+      runGreenGoTests();
       run("bash", ["scripts/ralph-loop.sh", "verify"]);
     }
     console.log(`Roadmap evidence verified (${tasks.filter((task) => task.done).length}/${tasks.length})${full ? " with full build" : ""}.`);
@@ -162,11 +200,11 @@ try {
     const next = firstUnchecked(tasks);
     if (next) throw new Error(`ロードマップは未完了です。次: ${next.id}`);
     run("git", ["diff", "--check"]);
-    run("go", ["test", "./..."]);
+    runGreenGoTests();
     run("bash", ["scripts/ralph-loop.sh", "verify"]);
     console.log(`ROADMAP COMPLETE: ${tasks.length}/${tasks.length}`);
   } else {
-    throw new Error("usage: roadmap-ralph-loop.mjs {next|status|list [P0-P4]|evidence ID|verify-task ID|check ID|uncheck ID|verify [--full]|complete}");
+    throw new Error("usage: roadmap-ralph-loop.mjs {next|status|list [P0-P4]|evidence ID|verify-task ID|check ID|uncheck ID|verify [--full]|complete}  # Authoring Pass");
   }
 } catch (error) {
   console.error(error.message);

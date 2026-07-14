@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Build an empty Ebitengine game loop in your own Go workspace — the first step of Build Track. Play the demo, add one Go rule, verify it, and apply the idea to y">
+  <title>Ebi Showcase – BUILD 01 — Empty Game Loop</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – BUILD 01 — Empty Game Loop">
+    <meta property="og:description" content="Build an empty Ebitengine game loop in your own Go workspace — the first step of Build Track. Play the demo, add one Go rule, verify it, and apply the idea to y">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/build/empty-loop/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--build--empty-loop.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Run an empty game loop">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – BUILD 01 — Empty Game Loop">
+    <meta name="twitter:description" content="Build an empty Ebitengine game loop in your own Go workspace — the first step of Build Track. Play the demo, add one Go rule, verify it, and apply the idea to y">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--build--empty-loop.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Run an empty game loop">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/build/empty-loop/">
+  <link rel="stylesheet" href="../../../style.css">
+</head>
+<body class="overview-page">
+  <header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">INDEX</a><a href="../../guides/setup/">SETUP</a><a class="lang" href="../../../ja/build/empty-loop/" lang="ja">JA</a></nav></header>
+  <main class="overview-main">
+    <div class="lesson-breadcrumb"><a href="../../">← Index</a><span>BUILD TRACK / STEP 01</span></div>
+    <section class="overview-hero"><p class="eyebrow">BUILD TRACK / WRITE FIRST</p><h1>Run an empty game loop</h1><p>Before reading a finished game, make a window that runs in your own Go workspace. You do not need to clone this repository.</p><div class="overview-concept"><small>What you write here</small><strong>The empty shapes of Update and Draw</strong></div></section>
+    <!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>See an empty window first.</h2></div><p>This dark-blue screen is already a game. It has no rule yet, but Update and Draw are repeating behind it.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Empty game loop" src="../../../play/empty-loop/" allow="autoplay; fullscreen"></iframe></div></div></section>
+    <section class="learn"><p class="eyebrow">MAKE IT LOCAL</p><h2>Save one file,<br>then open your own window.</h2><p class="lesson-lead">Download the <code>main.go</code> below. In an empty folder, run <code>go mod init</code> and <code>go get</code> once. That is enough to start — no clone required.</p><div class="steps"><article><b>01</b><h3>SAVE</h3><p><a href="https://github.com/kumagi/EbiShowcase/raw/refs/heads/main/games/build-track/empty-loop/main.go">Download main.go</a> and save it in a new folder.</p></article><article><b>02</b><h3>INSTALL</h3><p>Run <code>go mod init example.com/ebi-build</code>, then <code>go get github.com/hajimehoshi/ebiten/v2</code>.</p></article><article><b>03</b><h3>RUN</h3><p>Run <code>go run .</code>. A dark-blue window means success.</p></article></div><div class="code-lesson"><div><p class="eyebrow">THE AXIOM</p><h3>Keep the jobs<br>separate.</h3><p><code>Update</code> will own input and number changes. <code>Draw</code> will paint the numbers that already exist. Make that promise first.</p></div><pre><code>func (g *game) Update() error { return nil }
+func (g *game) Draw(screen *ebiten.Image) { screen.Fill(navy) }</code></pre></div><div class="next-lines"><p class="eyebrow">NEXT LINES</p><h3>Next, make a box for numbers</h3><p>Do not write this yet. In STEP 02, we put a position in <code>game</code>, then let Draw read it.</p><pre><code>type game struct { x, y int }</code></pre><p><a href="../state-picture/">Go to STEP 02 →</a></p></div><div class="why-grid"><article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Find where the background colour belongs</h3><p>In <code>main.go</code>, change the <code>screen.Fill</code> colour in <code>Draw</code>, then use <code>go run .</code> to verify the window changes. The next step adds a real RULE on the Update side.</p></article></div><p class="full-code-intro">This one file is all of the code that is running now.</p><div class="full-code" data-embed-source="games/build-track/empty-loop/main.go"><div class="full-code-head"><span>main.go · complete code</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy</button></div><pre><code data-embed-slot>// Build Track STEP 01: an empty Ebitengine game loop.
+package main
+
+import (
+	"image/color"
+
+	"github.com/hajimehoshi/ebiten/v2"
+)
+
+const (
+	screenWidth  = 480
+	screenHeight = 720
+)
+
+// game will hold the game's numbers in the next steps.
+type game struct{}
+
+// Update is where input and game-state changes will belong.
+func (g *game) Update() error {
+	return nil
+}
+
+// Draw only paints the current game state. There is no state to paint yet.
+func (g *game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{12, 19, 48, 255})
+}
+
+func (g *game) Layout(_, _ int) (int, int) {
+	return screenWidth, screenHeight
+}
+
+func main() {
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Build Track 01 — Empty Loop")
+	if err := ebiten.RunGame(&amp;game{}); err != nil {
+		panic(err)
+	}
+}
+</code></pre></div></section>
+    <nav class="lesson-pager" aria-label="Lesson navigation"><a href="../../guides/setup/" rel="prev">← SETUP</a><a href="../state-picture/" rel="next">STEP 02 →</a><a href="../../games/tap-target/" rel="next">LEVEL 01 (finished game) →</a></nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/build/empty-loop/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</main>
+  <script src="../../../learn.js"></script>
+</body>
+</html>

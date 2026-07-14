@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="math.Hypotによる当たり判定をUpdateに書くBuild Track STEP 04。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><title>Ebi Showcase – BUILD 04 — 当たったら移す</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – BUILD 04 — 当たったら移す">
+    <meta property="og:description" content="math.Hypotによる当たり判定をUpdateに書くBuild Track STEP 04。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/build/hit-reset/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--build--hit-reset.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="当たったら、次の場所へ移そう">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – BUILD 04 — 当たったら移す">
+    <meta name="twitter:description" content="math.Hypotによる当たり判定をUpdateに書くBuild Track STEP 04。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--build--hit-reset.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="当たったら、次の場所へ移そう">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/build/hit-reset/">
+<link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a href="../tap-score/">BUILD 03</a><a class="lang" href="../../../en/build/hit-reset/" lang="en">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../tap-score/">← BUILD 03</a><span>BUILD TRACK / STEP 04</span></div><section class="overview-hero"><p class="eyebrow">BUILD TRACK / COLLISION RULE</p><h1>当たったら、次の場所へ移そう</h1><p>押した点と丸の中心の距離が半径以内なら命中です。判定、得点、再配置はすべて Update が決めます。</p><div class="overview-concept"><small>このステップで書く RULE</small><strong>math.Hypot → hit → score + move</strong></div></section><!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>丸に当てると、<br>次の丸が出る。</h2></div><p>丸の中をクリック／タップすると得点が増え、決まった順番の次の場所へ移ります。外したら何も変わりません。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="当たったら移す" src="../../../play/hit-reset/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="learn"><p class="eyebrow">COLLISION IN UPDATE</p><h2>距離を比べてから、<br>状態を変える。</h2><div class="concept-row"><article><span class="concept-number">1</span><h3>MEASURE</h3><p>横と縦の差から、点どうしの距離を出します。</p><code>math.Hypot(px-cx, py-cy)</code></article><article><span class="concept-number">2</span><h3>DECIDE</h3><p>距離が半径以下なら hit。純粋関数ならテストできます。</p><code>dist &lt;= radius</code></article><article><span class="concept-number">3</span><h3>UPDATE</h3><p>命中時だけ得点と次の位置を変えます。</p><code>score++; moveTarget()</code></article></div><div class="code-lesson"><div><p class="eyebrow">YOUR HYPOT LINE</p><h3>この距離判定は<br>Draw に書かない。</h3><p>同じゲーム状態なら同じ絵にするため、押した座標を読むことも、当たった答えを決めることも Update の中で終えます。</p></div><pre><code>func (g *game) Update() error {
+    px, py, pressed := justPressedPosition()
+    if pressed &amp;&amp; hit(float64(px), float64(py), g.targetX, g.targetY, radius) {
+        g.score++
+        g.moveTarget()
+    }
+    return nil
+}</code></pre></div><div class="next-lines"><p class="eyebrow">NEXT / 完成形と比べよう</p><h3>LEVEL 01 へつながる</h3><p>ここまでの「入力 → Update の RULE → Draw」の型が、完成版のタップターゲットにもそのままあります。</p><pre><code>dist := math.Hypot(touchX-circleX, touchY-circleY)</code></pre><p><a href="../../games/tap-target/">LEVEL 01 の完成ゲームを見る →</a></p></div><div class="why-grid"><article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>命中したら2点にしよう</h3><p><code>games/build-track/hit-reset/main.go</code> の <code>Update</code> にある命中ブロックで <code>g.score += 2</code> にします。<code>go test ./...</code> を通し、<code>go run .</code> で丸を1回当てて SCORE 02 を確認します。<code>math.Hypot</code> の行は Update 側に残します。</p></article></div><p class="full-code-intro">この1ファイルには、テストできる hit ルールと、それを呼ぶ Update があります。</p><div class="full-code" data-embed-source="games/build-track/hit-reset/main.go"><div class="full-code-head"><span>main.go · ぜんぶのコード</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーした！">コピー</button></div><pre><code data-embed-slot>// Build Track STEP 04: hit testing and relocation belong in Update.
+package main
+
+import (
+	"fmt"
+	"image/color"
+	"math"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+)
+
+const (
+	screenWidth  = 480
+	screenHeight = 720
+	radius       = 58.0
+)
+
+var targets = [][2]float64{{240, 330}, {120, 510}, {360, 480}, {240, 210}}
+
+type game struct {
+	targetX, targetY float64
+	next             int
+	score            int
+}
+
+func newGame() *game {
+	return &amp;game{targetX: targets[0][0], targetY: targets[0][1], next: 1}
+}
+
+func justPressedPosition() (x, y int, pressed bool) {
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+		x, y = ebiten.CursorPosition()
+		return x, y, true
+	}
+	ids := inpututil.AppendJustPressedTouchIDs(nil)
+	if len(ids) &gt; 0 {
+		x, y = ebiten.TouchPosition(ids[0])
+		return x, y, true
+	}
+	return 0, 0, false
+}
+
+// hit is pure, so a test can prove the collision rule without opening a game.
+func hit(px, py, cx, cy, r float64) bool {
+	return math.Hypot(px-cx, py-cy) &lt;= r
+}
+
+func (g *game) moveTarget() {
+	p := targets[g.next%len(targets)]
+	g.targetX, g.targetY = p[0], p[1]
+	g.next++
+}
+
+// Update reads input, decides the collision, then mutates score and position.
+func (g *game) Update() error {
+	px, py, pressed := justPressedPosition()
+	if pressed &amp;&amp; hit(float64(px), float64(py), g.targetX, g.targetY, radius) {
+		g.score++
+		g.moveTarget()
+	}
+	return nil
+}
+
+// Draw only projects the state Update has already decided.
+func (g *game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{12, 19, 48, 255})
+	vector.DrawFilledCircle(screen, float32(g.targetX), float32(g.targetY), radius+10, color.RGBA{46, 230, 200, 45}, false)
+	vector.DrawFilledCircle(screen, float32(g.targetX), float32(g.targetY), radius, color.RGBA{46, 230, 200, 255}, false)
+	ebitenutil.DebugPrintAt(screen, "TAP THE CIRCLE", 165, 64)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %02d", g.score), 180, 650)
+}
+
+func (g *game) Layout(_, _ int) (int, int) { return screenWidth, screenHeight }
+
+func main() {
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Build Track 04 — Hit and Reset")
+	if err := ebiten.RunGame(newGame()); err != nil {
+		panic(err)
+	}
+}
+</code></pre></div></section><nav class="lesson-pager" aria-label="レッスン移動"><a href="../tap-score/" rel="prev">← STEP 03</a><a href="../../games/tap-target/" rel="next">LEVEL 01（完成形） →</a></nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/build/hit-reset/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+
+
+
+
+</main><script src="../../../learn.js"></script></body></html>

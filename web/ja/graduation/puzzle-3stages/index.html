@@ -1,0 +1,49 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 3ステージパズルをテストで作る</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – 3ステージパズルをテストで作る">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/graduation/puzzle-3stages/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--graduation--puzzle-3stages.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="データを増やして、パズルを増やす。">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – 3ステージパズルをテストで作る">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--graduation--puzzle-3stages.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="データを増やして、パズルを増やす。">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/graduation/puzzle-3stages/">
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">GRADUATION</a><a class="lang" href="../../../en/graduation/puzzle-3stages/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 卒業制作</a><span>MAKE / DATA</span></div><section class="lesson-hero"><div><p class="eyebrow">GRADUATION 03</p><h1>データを増やして、パズルを増やす。</h1><p>ルールをコピーせず、ステージ名と目標回数を配列へ追加する3ステージパズルです。</p></div></section><section class="lesson-section"><p class="eyebrow">0. DOWNLOAD</p><h2>空の Go フォルダで始める</h2><p><a href="https://github.com/kumagi/EbiShowcase/tree/main/graduation/puzzle-3stages/starter">starter の3ファイル</a>を Raw 表示から保存します。<code>go mod init example.com/three-puzzles</code>、<code>go get github.com/hajimehoshi/ebiten/v2</code>、<code>go test</code> の順で実行します。clone は必要ありません。</p></section><section class="lesson-section"><p class="eyebrow">1. START</p><h2>最初のデータを選ぶ</h2><p><code>TestFreshProgressStartsAtFirstDataStage</code> は <strong>TODO 1</strong>。Stage 0 が <code>Stages[0]</code> を指すように、空の Progress を作ります。</p></section><section class="lesson-section"><p class="eyebrow">2. ADVANCE</p><h2>目標回数をデータから読む</h2><p><code>TestPuzzleTargetAdvancesOneStage</code> と <code>TestLastDataStageClearsInsteadOfOverflowing</code> は <strong>TODO 3</strong>。Presses を数え、現在の <code>Stages[p.Stage].Target</code> に届いたら一段だけ進めます。最後は配列を越えず Clear にします。</p></section><section class="lesson-section"><p class="eyebrow">3. RESET</p><h2>進行を最初へ戻す</h2><p><code>TestRestartMakesFreshProgress</code> は <strong>TODO 2</strong>。古いステージ、入力回数、Clear を残さず <code>NewProgress()</code> を使います。</p><pre><code>go test; go run .</code></pre></section><section class="why-grid"><article><h3>ADD DATA, NOT BRANCHES</h3><p>4面目は StageData を追加し、同じ Step で再生します。</p></article><article><h3>TEST THE RULE</h3><p>新しい特殊条件には先にテストを書きます。</p></article><article><h3>COMPARE LAST</h3><p>緑の後だけ reference を比較します。</p></article></section>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/graduation/puzzle-3stages/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer></body></html>

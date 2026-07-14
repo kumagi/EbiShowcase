@@ -3,9 +3,22 @@
 // Generate the bilingual Reversi learning path and its home-page card.
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { dualLayerCodeLesson, authoringConceptRow } from "./authoring-lesson-helpers.mjs";
 
 const root = new URL("..", import.meta.url).pathname;
 const esc = (value) => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+function authoring(step, lang, index) {
+  const ja = lang === "ja";
+  const entryPath = `games/tracks/reversi/${step.slug}/main.go`;
+  const entryCode = readFileSync(join(root, entryPath), "utf8").trim();
+  const actions = ja
+    ? ["盤面の初期配置データを1つ追加する", "合法手を検査する局面データを1つ追加する", "反転する石の局面を1つ追加する", "パスになる局面データを1つ追加する", "評価マップの1マスを変えず別の評価項を1つ足す"]
+    : ["add one board setup datum", "add one position that checks a legal move", "add one flip-position case", "add one pass-position case", "add one evaluation term without changing a ScoreMap cell"];
+  const cards = ja
+    ? [{title:"DATA",body:"盤面、手、CPU設定が局面の真実を持つ。",code:"Board / Move / CPU"},{title:"UPDATE",body:"合法手、反転、パス、ターンを順に決める。",code:"legal → apply → turn"},{title:"DRAW",body:"盤面と評価を石、印、文字へ写す。",code:"board → pixels"}]
+    : [{title:"DATA",body:"Board, move, and CPU configuration hold position truth.",code:"Board / Move / CPU"},{title:"UPDATE",body:"Legality, flips, passes, and turn are decided in order.",code:"legal → apply → turn"},{title:"DRAW",body:"Board and evaluation project into stones, marks, and text.",code:"board → pixels"}];
+  return authoringConceptRow(cards) + dualLayerCodeLesson({lang,entryPath,entryCode,implementationPath:"internal/reversi (shared rules)",implementationCode:"// shared pure rules: legal move → captures → apply\ncaptures := Captures(board, player, move)",rule:{path:entryPath,location:"board / CPU configuration",action:actions[index],verify:ja?"`go test ./...` を実行し、ローカルで局面を確認する":"Run `go test ./...`, then verify the position locally"}});
+}
 
 const steps = [
   { slug: "board-grid", ja: { title: "8×8の盤面をデータで描く", lead: "64個のマスを二次元配列で持ち、クリックした場所を黒い石として表示します。", concept: "盤面と座標", deep: "画面に見えているマスを、board[y][x]というデータに置き換えます。Drawはデータを読むだけ、クリックは座標を書き込むだけです。", code: `const Size = 8\ntype Board [Size][Size]Player\nboard[y][x] = Black` }, en: { title: "Draw an 8×8 Board from Data", lead: "Store 64 cells in a two-dimensional array and show a black stone where you click.", concept: "Board data and coordinates", deep: "Turn visible cells into board[y][x] data. Draw only reads the data; a click only writes a coordinate.", code: `const Size = 8\ntype Board [Size][Size]Player\nboard[y][x] = Black` } },
@@ -46,7 +59,15 @@ for (const lang of ["ja", "en"]) {
   for (let i = 0; i < steps.length; i++) {
     const dir = join(base, steps[i].slug);
     mkdirSync(dir, { recursive: true });
-    writeFileSync(join(dir, "index.html"), page(steps[i], lang, i));
+    let html = page(steps[i], lang, i);
+    const authored = authoring(steps[i], lang, i);
+    const split = authored.indexOf('<section class="code-lesson">');
+    const concept = authored.slice(0, split);
+    const panels = authored.slice(split);
+    html = html
+      .replace(/<div class="concept-row">[\s\S]*?<\/div><\/section>/, `${concept}</section>`)
+      .replace(/<section class="code-lesson">[\s\S]*?<\/section><section class="why-grid">[\s\S]*?<\/section>/, panels);
+    writeFileSync(join(dir, "index.html"), html);
   }
   const file = join(root, "web", lang, "index.html");
   let html = readFileSync(file, "utf8");

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Build Track STEP 04: write math.Hypot hit testing in Update. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by s"><title>Ebi Showcase – BUILD 04 — Hit and Move</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – BUILD 04 — Hit and Move">
+    <meta property="og:description" content="Build Track STEP 04: write math.Hypot hit testing in Update. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by s">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/build/hit-reset/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--build--hit-reset.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Hit it, then move it">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – BUILD 04 — Hit and Move">
+    <meta name="twitter:description" content="Build Track STEP 04: write math.Hypot hit testing in Update. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by s">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--build--hit-reset.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Hit it, then move it">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/build/hit-reset/">
+<link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">INDEX</a><a href="../tap-score/">BUILD 03</a><a class="lang" href="../../../ja/build/hit-reset/" lang="ja">JA</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../tap-score/">← BUILD 03</a><span>BUILD TRACK / STEP 04</span></div><section class="overview-hero"><p class="eyebrow">BUILD TRACK / COLLISION RULE</p><h1>Hit it, then move it</h1><p>A hit happens when the press is within the circle radius. Update decides collision, score, and relocation.</p><div class="overview-concept"><small>The RULE you write here</small><strong>math.Hypot → hit → score + move</strong></div></section><!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>Hit the circle,<br>then find the next one.</h2></div><p>Click/tap inside the circle for a point and the next fixed target position. A miss changes nothing.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Hit and move" src="../../../play/hit-reset/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="learn"><p class="eyebrow">COLLISION IN UPDATE</p><h2>Measure distance first,<br>then change state.</h2><div class="concept-row"><article><span class="concept-number">1</span><h3>MEASURE</h3><p>Use the horizontal and vertical differences to measure distance.</p><code>math.Hypot(px-cx, py-cy)</code></article><article><span class="concept-number">2</span><h3>DECIDE</h3><p>Distance within radius means hit; a pure function can test it.</p><code>dist &lt;= radius</code></article><article><span class="concept-number">3</span><h3>UPDATE</h3><p>Only a hit changes score and the next position.</p><code>score++; moveTarget()</code></article></div><div class="code-lesson"><div><p class="eyebrow">YOUR HYPOT LINE</p><h3>Never put this distance<br>decision in Draw.</h3><p>Input and the hit answer finish in Update, so equal game state always makes an equal picture.</p></div><pre><code>func (g *game) Update() error {
+    px, py, pressed := justPressedPosition()
+    if pressed &amp;&amp; hit(float64(px), float64(py), g.targetX, g.targetY, radius) {
+        g.score++
+        g.moveTarget()
+    }
+    return nil
+}</code></pre></div><div class="next-lines"><p class="eyebrow">NEXT / COMPARE THE FINISHED GAME</p><h3>Connect to LEVEL 01</h3><p>This input → Update RULE → Draw pattern is exactly the shape of the finished tap-target game.</p><pre><code>dist := math.Hypot(touchX-circleX, touchY-circleY)</code></pre><p><a href="../../games/tap-target/">See the LEVEL 01 finished game →</a></p></div><div class="why-grid"><article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>Make hits worth two points</h3><p>In <code>games/build-track/hit-reset/main.go</code>, change the hit block in <code>Update</code> to <code>g.score += 2</code>. Run <code>go test ./...</code>, then <code>go run .</code> and hit one circle to verify SCORE 02. Keep the <code>math.Hypot</code> decision on the Update side.</p></article></div><p class="full-code-intro">This one file contains a testable hit rule and the Update that calls it.</p><div class="full-code" data-embed-source="games/build-track/hit-reset/main.go"><div class="full-code-head"><span>main.go · complete code</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy</button></div><pre><code data-embed-slot>// Build Track STEP 04: hit testing and relocation belong in Update.
+package main
+
+import (
+	"fmt"
+	"image/color"
+	"math"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+)
+
+const (
+	screenWidth  = 480
+	screenHeight = 720
+	radius       = 58.0
+)
+
+var targets = [][2]float64{{240, 330}, {120, 510}, {360, 480}, {240, 210}}
+
+type game struct {
+	targetX, targetY float64
+	next             int
+	score            int
+}
+
+func newGame() *game {
+	return &amp;game{targetX: targets[0][0], targetY: targets[0][1], next: 1}
+}
+
+func justPressedPosition() (x, y int, pressed bool) {
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+		x, y = ebiten.CursorPosition()
+		return x, y, true
+	}
+	ids := inpututil.AppendJustPressedTouchIDs(nil)
+	if len(ids) &gt; 0 {
+		x, y = ebiten.TouchPosition(ids[0])
+		return x, y, true
+	}
+	return 0, 0, false
+}
+
+// hit is pure, so a test can prove the collision rule without opening a game.
+func hit(px, py, cx, cy, r float64) bool {
+	return math.Hypot(px-cx, py-cy) &lt;= r
+}
+
+func (g *game) moveTarget() {
+	p := targets[g.next%len(targets)]
+	g.targetX, g.targetY = p[0], p[1]
+	g.next++
+}
+
+// Update reads input, decides the collision, then mutates score and position.
+func (g *game) Update() error {
+	px, py, pressed := justPressedPosition()
+	if pressed &amp;&amp; hit(float64(px), float64(py), g.targetX, g.targetY, radius) {
+		g.score++
+		g.moveTarget()
+	}
+	return nil
+}
+
+// Draw only projects the state Update has already decided.
+func (g *game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.RGBA{12, 19, 48, 255})
+	vector.DrawFilledCircle(screen, float32(g.targetX), float32(g.targetY), radius+10, color.RGBA{46, 230, 200, 45}, false)
+	vector.DrawFilledCircle(screen, float32(g.targetX), float32(g.targetY), radius, color.RGBA{46, 230, 200, 255}, false)
+	ebitenutil.DebugPrintAt(screen, "TAP THE CIRCLE", 165, 64)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %02d", g.score), 180, 650)
+}
+
+func (g *game) Layout(_, _ int) (int, int) { return screenWidth, screenHeight }
+
+func main() {
+	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowTitle("Build Track 04 — Hit and Reset")
+	if err := ebiten.RunGame(newGame()); err != nil {
+		panic(err)
+	}
+}
+</code></pre></div></section><nav class="lesson-pager" aria-label="Lesson navigation"><a href="../tap-score/" rel="prev">← STEP 03</a><a href="../../games/tap-target/" rel="next">LEVEL 01 (finished game) →</a></nav>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/build/hit-reset/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+
+
+
+
+</main><script src="../../../learn.js"></script></body></html>

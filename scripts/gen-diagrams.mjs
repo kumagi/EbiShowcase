@@ -49,15 +49,16 @@ const diagrams = [
   {
     id: "glossary-map",
     title: { ja: "用語のつながり", en: "How the terms connect" },
-    description: { ja: "Updateから絵やデータへつながる用語の地図", en: "A map from Update to pictures and data" },
+    description: { ja: "入力をUpdateでgameへ入れ、Drawが画面へ投影する地図", en: "A map where Update turns input into game state and Draw projects it" },
     nodes: [
-      { id: "update", ja: "Update\n数字を進める", en: "Update\nadvance numbers" },
-      { id: "state", ja: "状態\nposition / score", en: "State\nposition / score" },
-      { id: "draw", ja: "Draw\n絵を描く", en: "Draw\npaint the picture" },
-      { id: "geom", ja: "GeoM\n場所・回転", en: "GeoM\nplace / rotate" },
+      { id: "input", ja: "入力\nキー・タッチ", en: "Input\nkeys / touch" },
+      { id: "update", ja: "Update\n状態を書き換える", en: "Update\nmutate state" },
+      { id: "state", ja: "game\nposition / score", en: "game\nposition / score" },
+      { id: "draw", ja: "Draw\n投影するだけ", en: "Draw\nproject only" },
+      { id: "pixels", ja: "画面\n同じ state → 同じ絵", en: "Pixels\nsame state → same frame" },
       { id: "data", ja: "JSON\n面を増やす", en: "JSON\nadd stages" },
     ],
-    edges: [["update", "state"], ["state", "draw"], ["draw", "geom"], ["state", "data"]],
+    edges: [["input", "update"], ["update", "state"], ["state", "draw"], ["draw", "pixels"], ["state", "data"]],
   },
   {
     id: "core-loop",

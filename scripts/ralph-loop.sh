@@ -9,6 +9,7 @@ case "${1:-next}" in
     ;;
   status)
     node scripts/curriculum.mjs summary
+    node scripts/report-authoring-metrics.mjs
     ;;
   verify)
     bash scripts/build.sh

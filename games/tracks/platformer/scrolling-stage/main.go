@@ -91,17 +91,22 @@ func (g *game) Update() error {
 	}
 	target := g.p.x - width*.4
 	g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
+	g.visible = 0
+	for _, b := range g.grounds {
+		x := b.x - g.camera
+		if x+b.w >= 0 && x <= width {
+			g.visible++
+		}
+	}
 	return nil
 }
 func (g *game) Draw(s *ebiten.Image) {
 	s.Fill(color.RGBA{100, 188, 230, 255})
-	g.visible = 0
 	for _, b := range g.grounds {
 		x := b.x - g.camera
 		if x+b.w < 0 || x > width {
 			continue
 		}
-		g.visible++
 		vector.DrawFilledRect(s, float32(x), float32(b.y), float32(b.w), float32(b.h), color.RGBA{55, 101, 66, 255}, false)
 		vector.DrawFilledRect(s, float32(x), float32(b.y), float32(b.w), 8, color.RGBA{108, 214, 87, 255}, false)
 	}

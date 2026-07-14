@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="EbitengineのUpdate・Draw・Layoutと、入力座標の当たり判定を学ぶ最初のレッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+  <meta name="description" content="EbitengineのUpdate・Draw・Layoutと、入力座標の当たり判定を学ぶ最初のレッスン。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
   <title>Ebi Showcase – LEVEL 01 — 光る丸をタッチ</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – LEVEL 01 — 光る丸をタッチ">
-    <meta property="og:description" content="EbitengineのUpdate・Draw・Layoutと、入力座標の当たり判定を学ぶ最初のレッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:description" content="EbitengineのUpdate・Draw・Layoutと、入力座標の当たり判定を学ぶ最初のレッスン。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/games/tap-target/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--tap-target.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – LEVEL 01 — 光る丸をタッチ">
-    <meta name="twitter:description" content="EbitengineのUpdate・Draw・Layoutと、入力座標の当たり判定を学ぶ最初のレッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:description" content="EbitengineのUpdate・Draw・Layoutと、入力座標の当たり判定を学ぶ最初のレッスン。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--tap-target.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="光る丸をタッチ">
     <!-- ogp:end -->
@@ -39,7 +39,7 @@
       <p class="curriculum-bridge" style="margin-top:22px">自分の PC でコードを動かしたい人は、先に <a href="../../guides/setup/">はじめての環境づくり</a>（Go の入れ方〜空の窓）をどうぞ。このページのデモはブラウザだけで遊べます。</p>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>メソッドはGameという箱に結び付いた関数。Updateは1秒に約60回、スコアや位置を1コマ進めます。Drawはその数字を絵にし、Layoutは描画を管理するのではなく、ゲーム内部の基準サイズを返します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *game) Update() error { g.score++; return nil }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>メソッドはGameという箱に結び付いた関数。Updateは1秒に約60回、入力を読みスコアや位置を1コマ進めます。Drawはその数字を絵にするだけで、入力を読んだり状態を書き換えたりしません。Layoutはゲーム内部の基準サイズを返します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *game) Update() error { g.score++; return nil }</code></pre></div></section>
 <!-- feedback-note:games/tap-target:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-tap-target"><div><p class="eyebrow">数字 → 絵</p><h2 id="feedback-note-games-tap-target">アニメは、先に数字を決めてから描く</h2><p>毎フレームUpdateが位置を少し変え、その直後のDrawがその位置へ丸を描きます。画面の左上が(0,0)で、math.Hypotを使うファイルには先に<code>import "math"</code>を書きます。</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="左上原点とUpdate Drawの順番">UPDATE x=0 → 1 → 2
           ↓
@@ -68,9 +68,10 @@ import \"math\"</pre></div></section>
       <p class="eyebrow">WHAT'S INSIDE / BEFORE ANYTHING ELSE</p>
       <h2>ゲームの心臓部は、<br>たった3つのメソッド。</h2>
       <p class="lesson-lead"><strong>メソッドは、Gameという箱に結び付いた関数（ひとまとまりの仕事）</strong>です。Ebitengineのゲームはパラパラ漫画と同じで、毎フレーム「数字を変える」→「画面に描く」をくり返します。このリズムがわかると、あとから出てくる重力も敵も、同じ枠の中に書けます。</p>
-      <div class="steps" style="grid-template-columns:1fr 1fr">
+      <div class="steps" style="grid-template-columns:repeat(3,1fr)">
         <article><b>01</b><h3>UPDATE</h3><p>入力を読み、スコアや位置などの<strong>数字</strong>を進めます。ここには絵を描きません。</p><code>func (g *Game) Update() error</code></article>
-        <article><b>02</b><h3>DRAW</h3><p>いまの数字どおりに、丸や文字を<strong>画面へ描きます</strong>。計算はしません。</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
+        <article><b>02</b><h3>DRAW</h3><p>いまの数字どおりに、丸や文字を<strong>画面へ描きます</strong>。入力も計算も状態変更もしません。</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
+        <article><b>03</b><h3>SAME STATE</h3><p>同じ <code>game</code> なら同じ絵です。ルールは Update 側で決め、Draw は答えを写します。</p><code>Update → game → Draw</code></article>
       </div>
 
       <div class="motion-lab" data-lab="loop" data-update="UPDATE" data-draw="DRAW" data-update-note="数字を変える（スコア・位置・タイマー）" data-draw-note="いまの数字どおりに画面を描く" aria-labelledby="loop-lab-title">
@@ -82,7 +83,7 @@ import \"math\"</pre></div></section>
             <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="update draw" data-go-caption="Update で数字を変える → 1枚引く">次のフェーズ</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
-          <p class="lab-hint">1フレーム = Update 1回 + Draw 1回。計算と描画を分けると、あとから直しやすくなります。</p>
+          <p class="lab-hint">1フレーム = Update 1回 + Draw 1回。Update が答えを決め、Draw は数字を変えずに写します。</p>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-loop-board" data-lab-board data-phase="update" role="img" aria-label="UpdateとDrawの切り替え">
@@ -366,7 +367,7 @@ func main() {
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT THE LOOP</p><h3>どこに書けばいいか迷う</h3><p>Update / Draw の役割が決まっていると、「入力はここ」「絵はここ」と迷わず足せます。</p></article>
         <article><p class="eyebrow">WITH COORDINATES</p><h3>丸もタッチも同じものさし</h3><p>見た目が丸でも、判定は中心と半径の計算です。どの画面サイズでも同じルールになります。</p></article>
-        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>数字を変えて実験しよう</h3><p><code>radius</code> を小さくするとむずかしく、<code>framesLeft</code> を伸ばすとゆっくり遊べます。ゲーム作りは「ちょうどいい」を探す作業です。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>コンボを Update に足そう</h3><p><code>games/core/tap-target/main.go</code> の <code>game</code> に <code>combo int</code> を足し、<code>Update</code> の命中ブロックで <code>g.score++</code> の直後に <code>g.combo++</code> を書きます。時間切れ・リトライ時は <code>g.combo = 0</code>。Draw は <code>g.combo</code> を表示するだけにします。<code>go test ./...</code> を通し、ローカルで連続命中の数を確かめましょう。<code>radius</code> の調整はこの RULE のあとにできる補助 TUNING です。</p></article>
       </div>
     </section>
 
@@ -544,6 +545,25 @@ func main() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- core-authoring-links:start -->
+<section class="next-lines core-authoring-links"><p class="eyebrow">WRITE NEXT</p><h3>遊んだら、1ルールを書いて確かめよう</h3><p>空の Go フォルダから書くなら Build Track、ルールをテストするならユニットテスト入門、30分で自分の1本を始めるなら first-30-minutes へ進みます。</p><p><a href="../../build/">Build Track →</a> · <a href="../../guides/testing/">ユニットテスト入門 →</a> · <a href="../../guides/first-30-minutes/">first-30-minutes →</a></p></section>
+<!-- core-authoring-links:end -->
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../learn.js"></script>

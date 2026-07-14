@@ -52,10 +52,15 @@ node "$ROOT/scripts/gen-legacy-aliases.mjs"
 node "$ROOT/scripts/embed-lesson-sources.mjs"
 node "$ROOT/scripts/insert-feedback-form.mjs"
 node "$ROOT/scripts/inject-beginner-bridges.mjs"
+node "$ROOT/scripts/inject-core-authoring-links.mjs"
+node "$ROOT/scripts/inject-graduation-ctas.mjs"
+node "$ROOT/scripts/inject-platformer-authoring.mjs"
+node "$ROOT/scripts/inject-match3-authoring.mjs"
 node "$ROOT/scripts/gen-feedback-teaching-notes.mjs"
 node "$ROOT/scripts/gen-diagrams.mjs"
 node "$ROOT/scripts/home-thumbnails.mjs" inject
 node "$ROOT/scripts/inject-ogp.mjs"
+node "$ROOT/scripts/check-authoring-copy-regression.mjs"
 OGP_STATE="$ROOT/.cache/ebi-showcase/ogp-inputs.sha256"
 OGP_FINGERPRINT="$(node "$ROOT/scripts/ogp-cache.mjs" fingerprint)"
 if [[ "$FAST_BUILD" == "1" ]] && [[ -f "$OGP_STATE" ]] && [[ "$(<"$OGP_STATE")" == "$OGP_FINGERPRINT" ]] && node "$ROOT/scripts/ogp-cache.mjs" verify; then
@@ -88,6 +93,14 @@ while IFS= read -r main; do
   id="${package#"$ROOT/games/core/"}"
   build_game "$id" "$package"
 done < <(find "$ROOT/games/core" -mindepth 2 -maxdepth 2 -name main.go -print | sort)
+
+# Build Track lessons are intentionally outside the 208 playable curriculum
+# gate, but their browser demos are built alongside the published games.
+while IFS= read -r main; do
+  package="$(dirname "$main")"
+  id="$(basename "$package")"
+  build_game "$id" "$package"
+done < <(find "$ROOT/games/build-track" -mindepth 2 -maxdepth 2 -name main.go -print 2>/dev/null | sort)
 
 while IFS= read -r main; do
   package="$(dirname "$main")"

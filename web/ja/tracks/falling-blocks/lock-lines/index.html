@@ -2,14 +2,14 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-  <meta name="description" content="落下中の形を盤面へ書き込み、埋まった行を消して上の行を下げます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin">
+  <meta name="description" content="落下中の形を盤面へ書き込み、埋まった行を消して上の行を下げます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Ebi Showcase – 固定とライン消去</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – 固定とライン消去">
-    <meta property="og:description" content="落下中の形を盤面へ書き込み、埋まった行を消して上の行を下げます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin">
+    <meta property="og:description" content="落下中の形を盤面へ書き込み、埋まった行を消して上の行を下げます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/falling-blocks/lock-lines/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--falling-blocks--lock-lines.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – 固定とライン消去">
-    <meta name="twitter:description" content="落下中の形を盤面へ書き込み、埋まった行を消して上の行を下げます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengin">
+    <meta name="twitter:description" content="落下中の形を盤面へ書き込み、埋まった行を消して上の行を下げます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--falling-blocks--lock-lines.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="固定とライン消去">
     <!-- ogp:end -->
@@ -66,18 +66,12 @@
 <p class="eyebrow">TRY IT / FULL ROW</p>
 <h3 id="lab-title-lock-lines">埋まった行だけ消そう</h3>
 <p>黄色い行はマスが全部埋まっています。「行を消す」とその行だけ消えて、上の行が落ちてきます。テトリス型の得点は、この「埋まっているか」判定から始まります。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-clear data-go-focus="full pack">行を消す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-clear>行を消す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
 <p class="lab-hint">複数行が同時に埋まっていれば、まとめて消えます。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>消した行</span><strong data-lab-cleared>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
-</div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="full">if rowAllFilled { cleared++ }</span>
-<span data-go-line="pack">write surviving rows from bottom</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE FULL-ROW RULE</p><div class="formula-lines"><code>行の全マスが true なら消す</code><span>つぎに</span><code>残った行を下へ詰める</code></div><p>消す行の数を得点表に渡すと、シングル〜テトリスの点が作れます。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>下から上へ読み、下から書く</h3><p>満員でない行だけwrite位置へコピーし、最後に余った上側を空の行で埋めます。</p></div><pre><code>write := rows - 1
 for read := rows - 1; read &gt;= 0; read-- {
@@ -116,6 +110,22 @@ for write &gt;= 0 { board[write] = emptyRow; write-- }</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

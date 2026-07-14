@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="動くメーターを止めて、フレーム更新とゲーム状態を学ぶEbitengineレッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+  <meta name="description" content="動くメーターを止めて、フレーム更新とゲーム状態を学ぶEbitengineレッスン。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ">
   <title>Ebi Showcase – LEVEL 02 — ストップ・ザ・メーター</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – LEVEL 02 — ストップ・ザ・メーター">
-    <meta property="og:description" content="動くメーターを止めて、フレーム更新とゲーム状態を学ぶEbitengineレッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:description" content="動くメーターを止めて、フレーム更新とゲーム状態を学ぶEbitengineレッスン。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/games/timing-meter/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--timing-meter.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – LEVEL 02 — ストップ・ザ・メーター">
-    <meta name="twitter:description" content="動くメーターを止めて、フレーム更新とゲーム状態を学ぶEbitengineレッスン。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:description" content="動くメーターを止めて、フレーム更新とゲーム状態を学ぶEbitengineレッスン。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--timing-meter.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="ストップ・ザ・メーター">
     <!-- ogp:end -->
@@ -275,7 +275,7 @@ func main() {
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT STATE</p><h3>いつも同じ反応</h3><p>ボタンを押すたびに同じ処理だけだと、「止める」と「再開する」を分けられません。</p></article>
         <article><p class="eyebrow">WITH STATE</p><h3>今のモードで意味が変わる</h3><p><code>stopped</code> ひとつで、入力の意味と更新の有無を切り替えられます。</p></article>
-        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>速さと帯の幅を変えよう</h3><p><code>speed</code> を大きくするとむずかしく、中央帯を広くするとやさしくなります。ラウンドごとに速くするのも定番です。</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>Perfect 連続ボーナスを Update に足そう</h3><p><code>games/core/timing-meter/main.go</code> の <code>game</code> に <code>perfectStreak int</code> を足します。<code>Update</code> の <code>points, _ := pointsForDistance(distance)</code> の直後で、中心ぴったりの <code>points == 100</code> なら streak を増やし、2回連続なら <code>g.score += 50</code>。それ以外は streak を0にします。Draw は表示するだけ。<code>go test ./...</code> とローカル実行で確認します。</p></article>
       </div>
     </section>
 
@@ -453,6 +453,25 @@ func main() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- core-authoring-links:start -->
+<section class="next-lines core-authoring-links"><p class="eyebrow">WRITE NEXT</p><h3>遊んだら、1ルールを書いて確かめよう</h3><p>空の Go フォルダから書くなら Build Track、ルールをテストするならユニットテスト入門、30分で自分の1本を始めるなら first-30-minutes へ進みます。</p><p><a href="../../build/">Build Track →</a> · <a href="../../guides/testing/">ユニットテスト入門 →</a> · <a href="../../guides/first-30-minutes/">first-30-minutes →</a></p></section>
+<!-- core-authoring-links:end -->
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../learn.js"></script>

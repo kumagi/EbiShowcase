@@ -1,11 +1,11 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
-  <meta name="description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ebi Rhythm Tour</title>
+  <meta name="description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step."><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Ebi Rhythm Tour</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/rhythm/ebi-rhythm/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – Ebi Rhythm Tour">
-    <meta property="og:description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/rhythm/ebi-rhythm/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--rhythm--ebi-rhythm.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -15,16 +15,39 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – Ebi Rhythm Tour">
-    <meta name="twitter:description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--rhythm--ebi-rhythm.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Rhythm Tour">
     <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/rhythm/ebi-rhythm/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Rhythm Games</a><span>STEP 07 / 07</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Rhythm Tour</h1><p>Choose among three original charts and chase scores through EASY/HARD taps, holds, and rolls.</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Rhythm Tour</h2><p>Use D/F/J/K or the four touch lanes. After START, Go code plays a synthesized beat.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-rhythm/?lang=en" title="Ebi Rhythm Tour" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section" id="learn"><p class="eyebrow">DEEP DIVE</p><h2>Unite charts, judgment, input, and feedback</h2><p>Pure-Go chart data enters the shared judge; result events trigger particles and shake. No borrowed audio is used: Go code synthesizes the beat and bass.</p><div class="concept-row"><article><b>01</b><h3>SEE</h3><p>Choose among three original charts and chase scores through EASY/HARD taps, holds, and rolls.</p></article><article><b>02</b><h3>STATE</h3><p>Pure-Go chart data enters the shared judge; result events trigger particles and shake. No borrowed audio is used: Go code synthesizes the beat and bass.</p></article><article><b>03</b><h3>RESULT</h3><p>A judgment event updates score, combo, and particles.</p></article></div></section><section class="motion-lab" data-lab="pipeline" data-steps="chart,time,input,judge,feedback" data-loop="next note"><div class="lab-copy"><p class="eyebrow">SYSTEM LAB</p><h3>Unite charts, judgment, input, and feedback</h3><p>Pure-Go chart data enters the shared judge; result events trigger particles and shake. No borrowed audio is used: Go code synthesizes the beat and bass.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>NEXT</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>RESET</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board></div><div class="lab-values"><div><span>step</span><strong data-lab-stepn>0/5</strong></div><div><span>note</span><strong data-lab-note>—</strong></div></div></div></section><section class="code-lesson"><div><p class="eyebrow">REAL GO</p><h2>Unite charts, judgment, input, and feedback</h2><p>This is the implementation core. Judgment lives in tested internal/rhythmcore.</p></div><pre><code>results := session.Step(inputs)
-for _, r := range results {
-    spawnFeedback(r.Grade)
-}</code></pre></section><section class="why-grid"><article><h3>WHY SPLIT?</h3><p>Pure-Go chart data enters the shared judge; result events trigger particles and shake. No borrowed audio is used: Go code synthesizes the beat and bass.</p></article><article><h3>VERIFY</h3><p>The same input sequence produces the same grades on every device.</p></article><article class="challenge"><h3>CHALLENGE</h3><p>Add four notes and build your own measure.</p></article></section><nav class="lesson-pager"><a href="../chart-difficulty/" rel="prev">← STEP 06<strong>Change Difficulty with Chart Data</strong></a><a href="../" rel="next">PATH →<strong>Rhythm Games</strong></a></nav>
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Rhythm Tour</h2><p>Use D/F/J/K or the four touch lanes. After START, Go code plays a synthesized beat.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-rhythm/?lang=en" title="Ebi Rhythm Tour" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section" id="learn"><p class="eyebrow">DEEP DIVE</p><h2>Unite charts, judgment, input, and feedback</h2><p>Pure-Go chart data enters the shared judge; result events trigger particles and shake. No borrowed audio is used: Go code synthesizes the beat and bass.</p><div class="concept-row"><article><b>01</b><h3>SEE</h3><p>Choose among three original charts and chase scores through EASY/HARD taps, holds, and rolls.</p></article><article><b>02</b><h3>STATE</h3><p>Pure-Go chart data enters the shared judge; result events trigger particles and shake. No borrowed audio is used: Go code synthesizes the beat and bass.</p></article><article><b>03</b><h3>RESULT</h3><p>A judgment event updates score, combo, and particles.</p></article></div></section><section class="motion-lab" data-lab="pipeline" data-steps="chart,time,input,judge,feedback" data-loop="next note"><div class="lab-copy"><p class="eyebrow">SYSTEM LAB</p><h3>Unite charts, judgment, input, and feedback</h3><p>Pure-Go chart data enters the shared judge; result events trigger particles and shake. No borrowed audio is used: Go code synthesizes the beat and bass.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>NEXT</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>RESET</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board></div><div class="lab-values"><div><span>step</span><strong data-lab-stepn>0/5</strong></div><div><span>note</span><strong data-lab-note>—</strong></div></div></div></section><div class="concept-row"><article><span class="concept-number">1</span><h3>DATA</h3><p>Chart arrays and Cues hold when and which lane to press.</p><code>Chart / Cue / Taps</code></article><article><span class="concept-number">2</span><h3>UPDATE</h3><p>The shared judge compares input and current time in order.</p><code>session.Step(inputs)</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>Remaining time and results become notes and text.</p><code>time → y / grade → pixels</code></article></div><section class="code-lesson">
+  <div><p class="eyebrow">EDIT THIS ENTRY</p><h3>games/tracks/rhythm/ebi-rhythm/main.go</h3><p>This short entry is the real Go file the learner opens and changes.</p></div>
+  <pre><code>package main
+
+import (
+	"github.com/kumagi/EbiShowcase/internal/rhythmcore"
+	"github.com/kumagi/EbiShowcase/internal/rhythmplay"
+)
+
+func chart(name string, bpm int, pattern []int, hard bool) rhythmcore.Chart {
+	cues := rhythmplay.Taps(pattern, map[bool]float64{false: 1, true: .5}[hard])
+	if hard {
+		cues = append(cues, rhythmplay.Cue{Beat: 4, Lane: 0, Kind: rhythmcore.Hold, Length: 2}, rhythmplay.Cue{Beat: 8, Lane: 3, Kind: rhythmcore.Roll, Length: 2, Need: 7})
+	}
+	return rhythmplay.MakeChart(name, bpm, 4, cues...)
+}
+func main() {
+	songs := []rhythmplay.Song{{Name: "SUNRISE HARBOR", Tone: 220, Easy: chart("SUNRISE EASY", 100, []int{0, 1, 2, 3, 0, 2, 1, 3, 0, 1, 2, 3}, false), Hard: chart("SUNRISE HARD", 132, []int{0, 1, 2, 3, 0, 2, 1, 3, 0, 3, 2, 1, 0, 2, 3, 1, 0, 1, 3, 2}, true)}, {Name: "NEON REEF", Tone: 294, Easy: chart("NEON EASY", 116, []int{0, 2, 1, 3, 0, 1, 2, 3, 1, 2, 0, 3}, false), Hard: chart("NEON HARD", 148, []int{0, 2, 1, 3, 0, 1, 3, 2, 0, 3, 1, 2, 0, 2, 3, 1, 0, 1, 2, 3}, true)}, {Name: "TEMPEST PARADE", Tone: 370, Easy: chart("TEMPEST EASY", 126, []int{0, 1, 3, 2, 0, 2, 1, 3, 0, 3, 2, 1}, false), Hard: chart("TEMPEST HARD", 160, []int{0, 1, 3, 2, 0, 2, 1, 3, 0, 3, 1, 2, 0, 1, 2, 3, 0, 2, 3, 1, 0, 3, 2, 1}, true)}}
+	rhythmplay.Run(rhythmplay.Config{Title: "EBI RHYTHM TOUR", Subtitle: "Three visual songs, two charts, taps, holds, and rolls.", Difficulty: true, Songs: songs})
+}</code></pre>
+</section>
+<section class="code-lesson">
+  <div><p class="eyebrow">HOW IT WORKS</p><h3>internal/rhythmplay</h3><p>This is the real mechanism the entry calls. The two labelled layers keep source and explanation traceable.</p></div>
+  <pre><code>// internal/rhythmplay: chart data enters the shared runner
+session := NewSession(chart)</code></pre>
+</section>
+<section class="why-grid"><article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>Write one rule, then verify it</h3><p>In games/tracks/rhythm/ebi-rhythm/main.go, at main chart data, add one lane value to chart pattern. run `go test ./...` and play the changed chart</p></article></section><nav class="lesson-pager"><a href="../chart-difficulty/" rel="prev">← STEP 06<strong>Change Difficulty with Chart Data</strong></a><a href="../" rel="next">PATH →<strong>Rhythm Games</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">

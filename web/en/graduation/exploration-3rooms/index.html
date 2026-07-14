@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step."><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Build Three-room Exploration with Tests</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Build Three-room Exploration with Tests">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/graduation/exploration-3rooms/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--graduation--exploration-3rooms.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Carry a key through three rooms.">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Build Three-room Exploration with Tests">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--graduation--exploration-3rooms.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Carry a key through three rooms.">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/graduation/exploration-3rooms/">
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">GRADUATION</a><a class="lang" href="../../../ja/graduation/exploration-3rooms/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Graduation projects</a><span>MAKE / STATE MACHINE</span></div><section class="lesson-hero"><div><p class="eyebrow">GRADUATION 02</p><h1>Carry a key through three rooms.</h1><p>Put room number, key, and escape in one State, then turn each red test green in order.</p></div></section><section class="lesson-section"><p class="eyebrow">0. DOWNLOAD</p><h2>From an empty Go folder</h2><p>Save the <a href="https://github.com/kumagi/EbiShowcase/tree/main/graduation/exploration-3rooms/starter">three starter files</a> from their Raw browser view. Run <code>go mod init example.com/three-rooms</code>, <code>go get github.com/hajimehoshi/ebiten/v2</code>, then <code>go test</code>. No clone is needed.</p></section><section class="lesson-section"><p class="eyebrow">1. KEY</p><h2>Collect a key only in room 1</h2><p><code>TestKeyCanBeCollectedOnlyInFirstRoom</code> maps to <strong>TODO 3</strong>. Change <code>HasKey</code> only when <code>PickUpKey</code> and <code>Room == 1</code> are both true.</p></section><section class="lesson-section"><p class="eyebrow">2. ROOMS</p><h2>Never walk beyond room 3</h2><p><code>TestPathMovesThroughExactlyThreeRooms</code> maps to <strong>TODO 4</strong>. Move 1→2→3 for NextRoom, and stop there.</p></section><section class="lesson-section"><p class="eyebrow">3. EXIT + RESTART</p><h2>Make a key-gated exit</h2><p><code>TestExitNeedsKeyInThirdRoom</code> maps to <strong>TODO 5</strong>: only Room 3 plus HasKey sets Escaped. Then satisfy <code>TestRestartMakesNewAdventure</code> with <strong>TODO 2</strong> and return to NewAdventure.</p><pre><code>go test; go run .</code></pre></section><section class="why-grid"><article><h3>STATE FIRST</h3><p>Protect state transitions with tests before drawing rooms.</p></article><article><h3>ADD A ROOM RULE</h3><p>Pick an enemy, chest, or one-way door, and write its test first.</p></article><article><h3>REFERENCE LAST</h3><p>Compare reference only after green tests; learn its structure without copying it.</p></article></section>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/graduation/exploration-3rooms/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer></body></html>

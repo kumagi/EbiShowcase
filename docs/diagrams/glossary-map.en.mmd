@@ -1,10 +1,12 @@
 flowchart LR
-  update["Update<br/>advance numbers"]
-  state["State<br/>position / score"]
-  draw["Draw<br/>paint the picture"]
-  geom["GeoM<br/>place / rotate"]
+  input["Input<br/>keys / touch"]
+  update["Update<br/>mutate state"]
+  state["game<br/>position / score"]
+  draw["Draw<br/>project only"]
+  pixels["Pixels<br/>same state → same frame"]
   data["JSON<br/>add stages"]
+  input --> update
   update --> state
   state --> draw
-  draw --> geom
+  draw --> pixels
   state --> data

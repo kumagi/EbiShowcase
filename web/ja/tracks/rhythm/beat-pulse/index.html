@@ -1,11 +1,11 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8">
-  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 拍を見てタップする</title>
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 拍を見てタップする</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/rhythm/beat-pulse/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – 拍を見てタップする">
-    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/rhythm/beat-pulse/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--rhythm--beat-pulse.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -15,14 +15,29 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – 拍を見てタップする">
-    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--rhythm--beat-pulse.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="拍を見てタップする">
     <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/rhythm/beat-pulse/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← リズムゲーム</a><span>STEP 01 / 07</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>拍を見てタップする</h1><p>光の脈が判定線へ届く瞬間にタップし、時間のずれを数えます。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>拍を見てタップする</h2><p>Spaceまたは画面をタップ。 START後はGoコードで合成した拍音が鳴ります。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/beat-pulse/?lang=ja" title="拍を見てタップする" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section" id="learn"><p class="eyebrow">DEEP DIVE</p><h2>フレーム差からタイミングを判定</h2><p>譜面の予定フレームと、押したフレームの差を取ります。差が小さいほどPERFECT、少しずれたらGOOD、大きく外れたらMISSです。</p><div class="concept-row"><article><b>01</b><h3>見る</h3><p>光の脈が判定線へ届く瞬間にタップし、時間のずれを数えます。</p></article><article><b>02</b><h3>状態</h3><p>譜面の予定フレームと、押したフレームの差を取ります。差が小さいほどPERFECT、少しずれたらGOOD、大きく外れたらMISSです。</p></article><article><b>03</b><h3>結果</h3><p>判定イベントから点数、コンボ、粒子を更新します。</p></article></div></section><section class="motion-lab" data-lab="pipeline" data-steps="chart,time,input,judge,feedback" data-loop="next note"><div class="lab-copy"><p class="eyebrow">SYSTEM LAB</p><h3>フレーム差からタイミングを判定</h3><p>譜面の予定フレームと、押したフレームの差を取ります。差が小さいほどPERFECT、少しずれたらGOOD、大きく外れたらMISSです。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>NEXT</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>RESET</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board></div><div class="lab-values"><div><span>step</span><strong data-lab-stepn>0/5</strong></div><div><span>note</span><strong data-lab-note>—</strong></div></div></div></section><section class="code-lesson"><div><p class="eyebrow">REAL GO</p><h2>フレーム差からタイミングを判定</h2><p>実装の中心だけを抜き出します。判定本体はinternal/rhythmcoreにあり、テストできます。</p></div><pre><code>delta := pressedFrame - note.At
-grade := GradeDelta(delta)</code></pre></section><section class="why-grid"><article><h3>なぜ分ける？</h3><p>譜面の予定フレームと、押したフレームの差を取ります。差が小さいほどPERFECT、少しずれたらGOOD、大きく外れたらMISSです。</p></article><article><h3>確かめる</h3><p>同じ入力列なら、描画や端末が違っても同じ判定になります。</p></article><article class="challenge"><h3>CHALLENGE</h3><p>ノートを4つ足し、自分だけの小節を作ろう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>リズムゲーム</strong></a><a href="../falling-notes/" rel="next">STEP 02 →<strong>ノートを先読みする</strong></a></nav>
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>拍を見てタップする</h2><p>Spaceまたは画面をタップ。 START後はGoコードで合成した拍音が鳴ります。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/beat-pulse/?lang=ja" title="拍を見てタップする" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section" id="learn"><p class="eyebrow">DEEP DIVE</p><h2>フレーム差からタイミングを判定</h2><p>譜面の予定フレームと、押したフレームの差を取ります。差が小さいほどPERFECT、少しずれたらGOOD、大きく外れたらMISSです。</p><div class="concept-row"><article><b>01</b><h3>見る</h3><p>光の脈が判定線へ届く瞬間にタップし、時間のずれを数えます。</p></article><article><b>02</b><h3>状態</h3><p>譜面の予定フレームと、押したフレームの差を取ります。差が小さいほどPERFECT、少しずれたらGOOD、大きく外れたらMISSです。</p></article><article><b>03</b><h3>結果</h3><p>判定イベントから点数、コンボ、粒子を更新します。</p></article></div></section><section class="motion-lab" data-lab="pipeline" data-steps="chart,time,input,judge,feedback" data-loop="next note"><div class="lab-copy"><p class="eyebrow">SYSTEM LAB</p><h3>フレーム差からタイミングを判定</h3><p>譜面の予定フレームと、押したフレームの差を取ります。差が小さいほどPERFECT、少しずれたらGOOD、大きく外れたらMISSです。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>NEXT</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>RESET</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board></div><div class="lab-values"><div><span>step</span><strong data-lab-stepn>0/5</strong></div><div><span>note</span><strong data-lab-note>—</strong></div></div></div></section><div class="concept-row"><article><span class="concept-number">1</span><h3>DATA</h3><p>譜面の配列・Cueが、いつどのlaneを押すかを持つ。</p><code>Chart / Cue / Taps</code></article><article><span class="concept-number">2</span><h3>UPDATE</h3><p>共有判定器が入力と現在時刻を順に照合する。</p><code>session.Step(inputs)</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>残り時間と判定結果をノートと文字へ写す。</p><code>time → y / grade → pixels</code></article></div><section class="code-lesson">
+  <div><p class="eyebrow">編集する入口</p><h3>games/tracks/rhythm/beat-pulse/main.go</h3><p>この短い入口が、実際に学習者が開いて変更する Go ファイルです。</p></div>
+  <pre><code>package main
+
+import "github.com/kumagi/EbiShowcase/internal/rhythmplay"
+
+func main() {
+	c := rhythmplay.MakeChart("FIRST PULSE", 90, 1, rhythmplay.Taps([]int{0, 0, 0, 0, 0, 0, 0, 0}, 1)...)
+	rhythmplay.Run(rhythmplay.Config{Title: "BEAT PULSE", Subtitle: "Tap SPACE or the lane when the pulse reaches the line.", Songs: []rhythmplay.Song{{Name: "FIRST PULSE", Tone: 220, Easy: c}}})
+}</code></pre>
+</section>
+<section class="code-lesson">
+  <div><p class="eyebrow">仕組みの抜粋</p><h3>internal/rhythmplay</h3><p>入口が呼ぶ本物の仕組みです。入口と内部を混同せず、両方の場所をたどれます。</p></div>
+  <pre><code>// internal/rhythmplay: chart data enters the shared runner
+session := NewSession(chart)</code></pre>
+</section>
+<section class="why-grid"><article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>1つルールを書いて確かめよう</h3><p>games/tracks/rhythm/beat-pulse/main.go の main chart data に Taps の配列へ lane 0 の値を4つ足す。run `go test ./...` and play one added measure</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>リズムゲーム</strong></a><a href="../falling-notes/" rel="next">STEP 02 →<strong>ノートを先読みする</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">

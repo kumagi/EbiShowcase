@@ -1,10 +1,10 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
-  <meta name="description" content="Move cards among three piles, and reshuffle the discard pile only when the draw pile is empty. Play the demo, read a short Go example, change a value, and apply"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Draw, Hand, Discard</title>
+  <meta name="description" content="Move cards among three piles, and reshuffle the discard pile only when the draw pile is empty. Play the demo, add one Go rule, verify it, and apply the idea to"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Draw, Hand, Discard</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – Draw, Hand, Discard">
-    <meta property="og:description" content="Move cards among three piles, and reshuffle the discard pile only when the draw pile is empty. Play the demo, read a short Go example, change a value, and apply">
+    <meta property="og:description" content="Move cards among three piles, and reshuffle the discard pile only when the draw pile is empty. Play the demo, add one Go rule, verify it, and apply the idea to">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/deckbuilder/deck-cycle/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--deck-cycle.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -14,7 +14,7 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – Draw, Hand, Discard">
-    <meta name="twitter:description" content="Move cards among three piles, and reshuffle the discard pile only when the draw pile is empty. Play the demo, read a short Go example, change a value, and apply">
+    <meta name="twitter:description" content="Move cards among three piles, and reshuffle the discard pile only when the draw pile is empty. Play the demo, add one Go rule, verify it, and apply the idea to">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--deck-cycle.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Draw, Hand, Discard">
     <!-- ogp:end -->
@@ -28,25 +28,17 @@
 <figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_deck-cycle.svg" alt="Cycle a deck" loading="lazy" decoding="async"><figcaption>A visual map of Cycle a deck. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Cycle twelve cards until you win.</h2></div><p>Press 1–5 or tap a card to play it. Press E or the bottom button to end the turn. Defeat the enemy to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Draw, Hand, Discard" src="../../../../play/deck-cycle/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK CYCLE</p><h2>How does a played card return to your hand later?</h2><p class="lesson-lead">Do not delete it. Change only its home: <strong>draw pile → hand → discard pile</strong>. When draw is empty, move discard back, shuffle, and keep drawing.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Draw one</h3><p>Move the last card of draw into hand. Remove it from draw so one card can never be in two places at once.</p><code>hand = append(hand, draw[last])</code></article><article><span class="concept-number">2</span><h3>Discard after play</h3><p>After calculating attack or block, remove the card from hand and append it to discard. Discard means waiting, not erased.</p><code>discard = append(discard, played)</code></article><article><span class="concept-number">3</span><h3>Shuffle when empty</h3><p>Only when draw reaches zero, return every discarded card and randomize their order. Do not reshuffle early.</p><code>if len(draw) == 0 { reshuffle() }</code></article></div><div class="motion-lab" data-lab="deck-cycle" data-max="5" data-empty="hand empty" data-spend="played 1" data-refill="drew back to full" aria-labelledby="lab-title-deck-cycle">
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Cycle twelve cards until you win.</h2></div><p>Press 1–5 or tap a card to play it. Press E or the bottom button to end the turn. Defeat the enemy to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Draw, Hand, Discard" src="../../../../play/deck-cycle/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK CYCLE</p><h2>How does a played card return to your hand later?</h2><p class="lesson-lead">Do not delete it. Change only its home: <strong>draw pile → hand → discard pile</strong>. When draw is empty, move discard back, shuffle, and keep drawing.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Draw one</h3><p>Move the last card of draw into hand. Remove it from draw so one card can never be in two places at once.</p><code>hand = append(hand, draw[last])</code></article><article><span class="concept-number">2</span><h3>Discard after play</h3><p>After calculating attack or block, remove the card from hand and append it to discard. Discard means waiting, not erased.</p><code>discard = append(discard, played)</code></article><article><span class="concept-number">3</span><h3>Shuffle when empty</h3><p>Only when draw reaches zero, return every discarded card and randomize their order. Do not reshuffle early.</p><code>if len(draw) == 0 { reshuffle() }</code></article></div><div class="motion-lab" data-lab="energy-turn" data-max="5" data-empty="hand empty" data-spend="played 1" data-refill="drew back to full" aria-labelledby="lab-title-deck-cycle">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / DRAW CYCLE</p>
 <h3 id="lab-title-deck-cycle">Spend the hand, refill on the turn edge</h3>
 <p>Play cards (spend) → end turn refills. Deck/discard cycling belongs on that same turn boundary so state stays easy to find.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spend data-go-focus="play" data-go-caption="Hand → discard">Play 1</button><button type="button" class="lab-button" data-lab-end data-go-focus="empty shuffle draw" data-go-caption="If draw empty, take discard → Shuffle draw → Draw paints the frame">End turn (cycle)</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spend>Play 1</button><button type="button" class="lab-button" data-lab-end>End turn (cycle)</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
 <p class="lab-hint">Empty draw pile? Shuffle discard into draw—also on the turn edge.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>hand slots</span><strong data-lab-energy>0</strong></div><div><span>turn</span><strong data-lab-turn>0</strong></div><div><span>played</span><strong data-lab-spent>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
-</div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="play">discard = append(discard, hand[i]); hand = remove(hand, i)</span>
-<span data-go-line="empty">if len(draw) == 0 { draw = discard; discard = discard[:0] }</span>
-<span data-go-line="shuffle">rng.Shuffle(len(draw), func(i, j int) { draw[i], draw[j] = draw[j], draw[i] })</span>
-<span data-go-line="draw">hand = append(hand, draw[last]); draw = draw[:last]</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE CYCLE EDGE</p><div class="formula-lines"><code>play: hand → discard</code><span>then</span><code>turn end: draw / reshuffle</code></div><p>Keep cycling on the turn edge and mid-combat bugs drop.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Check draw before taking a card</h3><p>Draw until the hand has five. If draw is empty, move discard back and shuffle. <code>rng.Shuffle(n, swap)</code> needs a swap function: That callback is Fisher–Yates: Go picks pairs (i, j) and your function swaps <code>draw[i]</code> with <code>draw[j]</code>.</p></div><pre><code>for len(hand) &lt; 5 {
     if len(draw) == 0 {
@@ -81,6 +73,22 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

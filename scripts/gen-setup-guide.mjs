@@ -20,12 +20,12 @@ import (
 // Game は Ebitengine が求める3つのメソッドを持つ箱です。
 type Game struct{}
 
-// Update は数字を進める場所。今は何もしません。
+// Update は入力と数字を進める場所。状態を書き換えるならここです。
 func (g *Game) Update() error {
 \treturn nil
 }
 
-// Draw は画面を塗る場所。いまは暗い青一色だけ。
+// Draw は今の状態を画面へ写すだけ。状態は書き換えません。
 func (g *Game) Draw(screen *ebiten.Image) {
 \tscreen.Fill(color.RGBA{20, 28, 48, 255})
 }
@@ -55,12 +55,12 @@ import (
 // Game holds the three methods Ebitengine expects.
 type Game struct{}
 
-// Update advances numbers. For now it does nothing.
+// Update reads input and advances numbers. State changes belong here.
 func (g *Game) Update() error {
 \treturn nil
 }
 
-// Draw paints the screen. Just a solid dark blue.
+// Draw only projects current state. It never mutates state.
 func (g *Game) Draw(screen *ebiten.Image) {
 \tscreen.Fill(color.RGBA{20, 28, 48, 255})
 }
@@ -218,8 +218,8 @@ function page(lang) {
           h: "main.go を書く（何もしない窓）",
           p: "テキストエディタ（メモ帳、メモ帳++、VS Code、Cursor など）で、いまのフォルダに main.go という名前のファイルを作り、次をそのままコピーします。",
           explain: [
-            ["Update", "毎フレームの「数字」担当。今は空。"],
-            ["Draw", "毎フレームの「絵」担当。色を一塗り。"],
+            ["Update", "毎フレームの入力・数字・状態更新担当。今は空。"],
+            ["Draw", "毎フレームの投影担当。色を一塗りし、状態は変えない。"],
             ["Layout", "ゲーム内部の幅と高さ。"],
             ["RunGame", "このくり返しを起動するスイッチ。"],
           ],
@@ -234,9 +234,9 @@ function page(lang) {
             ["go run .", "プログラムを動かす"],
           ],
           success: "タイトルが Empty Window の、暗い青い長方形の窓が開けば成功です。閉じるボタンで終了できます。中身はまだ何も動きません——それでも「ゲームの土台」はもう動いています。",
-          next: "次は、この土台の上に Update / Draw の意味を載せる LEVEL 01 へどうぞ。ブラウザ上のデモでも学べます。",
-          nextHref: "../../games/tap-target/",
-          nextLabel: "LEVEL 01 を開く →",
+          next: "次は、この土台の上で Update と Draw を1行ずつ書き、最初の RULE まで進む Build Track へどうぞ。clone は必要ありません。",
+          nextHref: "../../build/",
+          nextLabel: "Build Track を始める →",
         },
         trouble: {
           id: "troubleshoot",
@@ -383,8 +383,8 @@ function page(lang) {
           h: "Write main.go (do-nothing window)",
           p: "In a text editor (Notepad, VS Code, Cursor…), create main.go in that folder and paste this exactly:",
           explain: [
-            ["Update", "Per-tick numbers. Empty for now."],
-            ["Draw", "Per-frame painting. One solid fill."],
+            ["Update", "Per-tick input and state changes. Empty for now."],
+            ["Draw", "Per-frame projection. One solid fill; no state changes."],
             ["Layout", "Internal width and height."],
             ["RunGame", "Starts the loop."],
           ],
@@ -399,9 +399,9 @@ function page(lang) {
             ["go run .", "Run the program"],
           ],
           success: "A dark-blue window titled Empty Window means success. Close it with the window button. Nothing moves yet—but the game foundation is alive.",
-          next: "Next, put meaning into Update / Draw with LEVEL 01. You can also learn from the browser demo.",
-          nextHref: "../../games/tap-target/",
-          nextLabel: "Open LEVEL 01 →",
+          next: "Next, write Update and Draw one line at a time in Build Track, all the way to your first RULE. No clone is needed.",
+          nextHref: "../../build/",
+          nextLabel: "Start Build Track →",
         },
         trouble: {
           id: "troubleshoot",

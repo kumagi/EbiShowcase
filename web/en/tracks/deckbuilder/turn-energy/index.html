@@ -1,10 +1,10 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
-  <meta name="description" content="Advance turn start, card play, turn end, and enemy action with a state machine. Play the demo, read a short Go example, change a value, and apply the idea to yo"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Energy Turns</title>
+  <meta name="description" content="Advance turn start, card play, turn end, and enemy action with a state machine. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebiten"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Energy Turns</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – Energy Turns">
-    <meta property="og:description" content="Advance turn start, card play, turn end, and enemy action with a state machine. Play the demo, read a short Go example, change a value, and apply the idea to yo">
+    <meta property="og:description" content="Advance turn start, card play, turn end, and enemy action with a state machine. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebiten">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/deckbuilder/turn-energy/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--turn-energy.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -14,7 +14,7 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – Energy Turns">
-    <meta name="twitter:description" content="Advance turn start, card play, turn end, and enemy action with a state machine. Play the demo, read a short Go example, change a value, and apply the idea to yo">
+    <meta name="twitter:description" content="Advance turn start, card play, turn end, and enemy action with a state machine. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebiten">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--deckbuilder--turn-energy.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Energy Turns">
     <!-- ogp:end -->
@@ -32,18 +32,12 @@
 <p class="eyebrow">TRY IT / REFILL</p>
 <h3 id="lab-title-turn-energy">Spend, then refill on end turn</h3>
 <p>Energy is your turn budget. Spend lowers it; End turn snaps it back to max. Strong cards still can’t outrun the budget.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spend>Spend 1</button><button type="button" class="lab-button" data-lab-end data-go-focus="end">End turn</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
-<p class="lab-hint">Tuning max energy alone changes difficulty.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spend>Spend 1</button><button type="button" class="lab-button" data-lab-end>End turn</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+<p class="lab-hint">Before tuning max energy, add a rule that refills 1 energy on end turn.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>energy</span><strong data-lab-energy>0</strong></div><div><span>turn</span><strong data-lab-turn>0</strong></div><div><span>spent</span><strong data-lab-spent>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
-</div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="refill">energy = maxEnergy // start of turn</span>
-<span data-go-line="end">drawHand(); enemyTurn()</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE TURN BUDGET</p><div class="formula-lines"><code>each play: energy--</code><span>then</span><code>end turn: energy = max</code></div><p>Cards set power; energy caps how often. Split those jobs to tune easily.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Branch Update by phase</h3><p>Ignore card input during Enemy phase, then restore energy when it finishes.</p></div><pre><code>switch phase { case PlayerPhase: playCardsOrEnd(); case EnemyPhase: enemyAct(); energy = 3; phase = PlayerPhase }</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY ENERGY?</p><h3>Choose combinations</h3><p>Compare several small cards with one large move.</p></article><article><p class="eyebrow">WHY PHASE?</p><h3>Keep order clear</h3><p>Input and enemy action cannot happen together.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Carry energy</h3><p>Design a rule that saves one unused energy.</p></article></div></section><nav class="lesson-pager"><a href="../play-a-card/" rel="prev">← STEP 01<strong>Play a Card</strong></a><a href="../deck-cycle/" rel="next">STEP 03 →<strong>Draw, Hand, Discard</strong></a></nav>
 
@@ -69,6 +63,22 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

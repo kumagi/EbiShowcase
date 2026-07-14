@@ -1,10 +1,12 @@
 flowchart LR
-  update["Update<br/>数字を進める"]
-  state["状態<br/>position / score"]
-  draw["Draw<br/>絵を描く"]
-  geom["GeoM<br/>場所・回転"]
+  input["入力<br/>キー・タッチ"]
+  update["Update<br/>状態を書き換える"]
+  state["game<br/>position / score"]
+  draw["Draw<br/>投影するだけ"]
+  pixels["画面<br/>同じ state → 同じ絵"]
   data["JSON<br/>面を増やす"]
+  input --> update
   update --> state
   state --> draw
-  draw --> geom
+  draw --> pixels
   state --> data

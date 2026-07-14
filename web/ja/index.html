@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="ブラウザでミニゲームを遊びながら、自分でゲームを作る練習をするサイト。Go と Ebitengine を中学生でも追える言葉で教えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+  <meta name="description" content="ブラウザでミニゲームを遊びながら、自分でゲームを作る練習をするサイト。Go と Ebitengine を中学生でも追える言葉で教えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
   <title>Ebi Showcase – 遊んで学ぶ・自分で作るゲーム教室</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – 遊んで学ぶ・自分で作るゲーム教室">
-    <meta property="og:description" content="ブラウザでミニゲームを遊びながら、自分でゲームを作る練習をするサイト。Go と Ebitengine を中学生でも追える言葉で教えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta property="og:description" content="ブラウザでミニゲームを遊びながら、自分でゲームを作る練習をするサイト。Go と Ebitengine を中学生でも追える言葉で教えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – 遊んで学ぶ・自分で作るゲーム教室">
-    <meta name="twitter:description" content="ブラウザでミニゲームを遊びながら、自分でゲームを作る練習をするサイト。Go と Ebitengine を中学生でも追える言葉で教えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta name="twitter:description" content="ブラウザでミニゲームを遊びながら、自分でゲームを作る練習をするサイト。Go と Ebitengine を中学生でも追える言葉で教えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="遊ぶたび、 作れることが増える。">
     <!-- ogp:end -->
@@ -40,10 +40,10 @@
 <!-- curriculum-map:start -->
 <section class="curriculum-map" aria-labelledby="curriculum-map-title"><div><p class="eyebrow">CURRICULUM MAP / 学びの地図</p><h2 id="curriculum-map-title">小さなルールから、大きなゲームへ。</h2><p>LEVEL 01でゲームループを覚え、部品を足し、見た目を磨いてから専門トラックへ進みます。</p></div><figure class="diagram-figure curriculum-map-figure"><img src="../assets/diagrams/ja_curriculum-flow.svg" alt="LEVEL 01から専門トラックまでの学習の流れ" loading="lazy" decoding="async"><figcaption>矢印はおすすめの順番。気になる場所へ直接ジャンプできます。</figcaption></figure><nav class="curriculum-map-links" aria-label="カリキュラムへのリンク"><a href="games/tap-target/"><span>LEVEL 01 · タッチ</span><b>→</b></a><a href="games/timing-meter/"><span>LEVEL 02 · 時間</span><b>→</b></a><a href="games/catch-stars/"><span>LEVEL 03 · 衝突</span><b>→</b></a><a href="games/flappy/"><span>LEVEL 04 · 加速度</span><b>→</b></a><a href="games/pong/"><span>LEVEL 05 · 反射</span><b>→</b></a><a href="games/breakout/"><span>LEVEL 06 · 配列</span><b>→</b></a><a href="games/snake/"><span>LEVEL 07 · 履歴</span><b>→</b></a><a href="games/space-shooter/"><span>LEVEL 08 · エンティティ</span><b>→</b></a><a href="games/sokoban/"><span>LEVEL 09 · マップ</span><b>→</b></a><a href="games/platformer/"><span>LEVEL 10 · カメラ</span><b>→</b></a><a href="games/dungeon/"><span>LEVEL 11 · AI</span><b>→</b></a><a href="games/bullet-hell/"><span>LEVEL 12 · 弾幕</span><b>→</b></a><a href="tracks/visual-effects/"><span>VISUAL EFFECTS LAB · 見た目</span><b>→</b></a><a href="#specializations"><span>25専門トラック · 大きなゲーム</span><b>→</b></a></nav></section>
 <!-- curriculum-map:end -->
-<section class="architecture-promo setup-promo" id="setup"><div><p class="eyebrow">START HERE / ENVIRONMENT</p><h2>まっさらなPCから、<br>空の窓を開くまで。</h2><p>Windows と Mac それぞれで、Go の入れ方から「何もしない」Ebitengine 画面を起動するまでを順番に書きます。自分のパソコンでコードを動かす第一歩です。</p></div><a href="guides/setup/"><span>READ THE GUIDE</span><strong>はじめての環境づくり</strong><b>→</b></a></section>
+<section class="architecture-promo setup-promo" id="setup"><div><p class="eyebrow">START HERE / ENVIRONMENT</p><h2>まっさらなPCから、<br>空の窓を開くまで。</h2><p>Windows と Mac それぞれで、Go の入れ方から「何もしない」Ebitengine 画面を起動するまでを順番に書きます。自分のパソコンでコードを動かす第一歩です。</p></div><a href="guides/setup/"><span>READ THE GUIDE</span><strong>はじめての環境づくり</strong><b>→</b></a></section><section class="architecture-promo setup-promo"><div><p class="eyebrow">MAKE / BUILD TRACK</p><h2>空の窓から、<br>自分の RULE を書く。</h2><p>clone なしの Go フォルダで、Update と Draw から当たり判定までを4 STEPで書き進めます。</p></div><a href="build/"><span>WRITE FIRST</span><strong>Build Track を始める</strong><b>→</b></a></section>
     <section class="curriculum" id="curriculum">
       <div class="curriculum-head"><div><p class="eyebrow">BASIC / 基礎編</p><h2>簡単な一歩から、<br>本格的なゲームへ。</h2></div><p>最初にゲームループを覚え、あとは1レベルにつき新しい考え方を1〜2個だけ足します。前のゲームの部品が、次でもそのまま使えます。</p></div>
-      <div class="home-foundation-note"><article><b>01 / 60 FRAMES</b><h3>ゲームは、1秒に約60枚のパラパラ漫画。</h3><p>1コマごとに <code>Update</code> が位置や点数の数字を進め、続けて <code>Draw</code> がその数字どおりの絵を描きます。テレビやアニメが短い時間に何枚もの絵を切り替えるのと同じです。</p></article><article><b>02 / COLLISION</b><h3>当たり判定は「2つが重なった？」の質問。</h3><p>丸と指、カゴと星、主人公と壁。2つの形が重なったかを数字で調べ、重なっていれば得点や停止などのルールを動かします。</p></article></div>
+      <div class="home-foundation-note"><article><b>01 / 60 FRAMES</b><h3>ゲームは、1秒に約60枚のパラパラ漫画。</h3><p>1コマごとに <code>Update</code> が位置や点数の数字を進め、続けて <code>Draw</code> がその数字どおりの絵を描きます。テレビやアニメが短い時間に何枚もの絵を切り替えるのと同じです。</p></article><article><b>02 / STATE FIRST</b><h3>ルールは Update、Draw は写すだけ。</h3><p>入力、得点、衝突、乱数は <code>Update</code> で決めます。<code>Draw</code> はその結果を画面へ写し、数字や状態を変えません。</p></article><article><b>03 / COLLISION</b><h3>当たり判定は「2つが重なった？」の質問。</h3><p>丸と指、カゴと星、主人公と壁。2つの形が重なったかを数字で調べ、重なっていれば得点や停止などのルールを動かします。</p></article></div>
       <div class="course-grid"><a class="course-card is-ready" href="games/tap-target/" aria-label="光る丸をタッチの学習パネル"><span class="home-card-shot"><img src="../assets/home-thumbnails/games--tap-target.webp" width="480" height="720" loading="lazy" decoding="async" alt="光る丸をタッチのデモ画面"><span class="home-card-shot-label"><small>このゲームを作る</small><strong>光る丸をタッチ</strong></span></span><div class="course-meta"><span>LEVEL 01</span><span>★☆☆☆☆</span></div><h3>光る丸をタッチ</h3><p>Update / Draw のゲームループと、タッチ座標の当たり判定を学びます。</p><div class="course-concept"><small>今回の学び</small><strong>ゲームループと入力</strong></div><span class="course-status">PLAY & LEARN →</span></a>
 <a class="course-card is-ready" href="games/timing-meter/" aria-label="ストップ・ザ・メーターの学習パネル"><span class="home-card-shot"><img src="../assets/home-thumbnails/games--timing-meter.webp" width="480" height="720" loading="lazy" decoding="async" alt="ストップ・ザ・メーターのデモ画面"><span class="home-card-shot-label"><small>このゲームを作る</small><strong>ストップ・ザ・メーター</strong></span></span><div class="course-meta"><span>LEVEL 02</span><span>★☆☆☆☆</span></div><h3>ストップ・ザ・メーター</h3><p>動くバーを狙った場所で止め、フレームと状態を理解します。</p><div class="course-concept"><small>今回の学び</small><strong>時間とゲーム状態</strong></div><span class="course-status">PLAY & LEARN →</span></a>
 <a class="course-card is-ready" href="games/catch-stars/" aria-label="落ちものキャッチの学習パネル"><span class="home-card-shot"><img src="../assets/home-thumbnails/games--catch-stars.webp" width="480" height="720" loading="lazy" decoding="async" alt="落ちものキャッチのデモ画面"><span class="home-card-shot-label"><small>このゲームを作る</small><strong>落ちものキャッチ</strong></span></span><div class="course-meta"><span>LEVEL 03</span><span>★★☆☆☆</span></div><h3>落ちものキャッチ</h3><p>海老・天次郎 のカゴで星を集め、矩形の当たり判定を作ります。</p><div class="course-concept"><small>今回の学び</small><strong>移動と当たり判定</strong></div><span class="course-status">PLAY & LEARN →</span></a>
@@ -148,6 +148,22 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

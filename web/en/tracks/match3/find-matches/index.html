@@ -1,10 +1,10 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
-  <meta name="description" content="Read every row and column to collect all cells in runs of three or more. Play the demo, read a short Go example, change a value, and apply the idea to your own"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Find Three in a Row</title>
+  <meta name="description" content="Read every row and column to collect all cells in runs of three or more. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine ga"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Find Three in a Row</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – Find Three in a Row">
-    <meta property="og:description" content="Read every row and column to collect all cells in runs of three or more. Play the demo, read a short Go example, change a value, and apply the idea to your own">
+    <meta property="og:description" content="Read every row and column to collect all cells in runs of three or more. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine ga">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/match3/find-matches/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--match3--find-matches.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -14,7 +14,7 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – Find Three in a Row">
-    <meta name="twitter:description" content="Read every row and column to collect all cells in runs of three or more. Play the demo, read a short Go example, change a value, and apply the idea to your own">
+    <meta name="twitter:description" content="Read every row and column to collect all cells in runs of three or more. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine ga">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--match3--find-matches.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Find Three in a Row">
     <!-- ogp:end -->
@@ -33,19 +33,12 @@
 <p class="eyebrow">TRY IT / SCAN</p>
 <h3 id="lab-title-find-matches">Highlight runs of 3+</h3>
 <p>Scan walks rows and columns for equal runs of length ≥ 3. Lit cells are clear candidates. Clear+fall drops gems into holes and refills.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan data-go-focus="scan">Scan</button><button type="button" class="lab-button" data-lab-clear data-go-focus="clear">Clear + fall</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan>Scan</button><button type="button" class="lab-button" data-lab-clear>Clear + fall</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
 <p class="lab-hint">After every swap, run scan → clear → gravity in that order.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>lit cells</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
-</div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="scan">for each cell { if run &gt;= 3 { mark } }</span>
-<span data-go-line="clear">removeMarked()</span>
-<span data-go-line="fall">compactColumns()</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE SCAN RULE</p><div class="formula-lines"><code>run length ≥ 3</code><span>then</span><code>mark those cells</code></div><p>Don’t start with fancy shapes—count runs first and bugs shrink.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Scan rows, then columns</h3><p>Keep directions separate: first all rows, then all columns, using two simple loops.</p></div><pre><code>for y := 0; y &lt; rows; y++ {
     scanRow(y, marked)
@@ -226,4 +219,23 @@ for x := 0; x &lt; cols; x++ {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- match3-authoring:start -->
+<section class="next-lines core-authoring-links"><p class="eyebrow">YOUR FIRST RULE</p><h3>Add one real board rule</h3><p>Open <code>games/tracks/match3/find-matches/main.go</code> and change one color, clear count, or cascade condition. Run <code>go test ./games/tracks/match3/find-matches</code>, then check the board result.</p></section>
+<!-- match3-authoring:end -->
 </main><script src="../../../../learn.js"></script></body></html>

@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Catch falling stars and learn movement plus rectangle collision in Ebitengine. Play the demo, read a short Go example, change a value, and apply the idea to you">
+  <meta name="description" content="Catch falling stars and learn movement plus rectangle collision in Ebitengine. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebiteng">
   <title>Ebi Showcase – LEVEL 03 — Catch the Stars</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – LEVEL 03 — Catch the Stars">
-    <meta property="og:description" content="Catch falling stars and learn movement plus rectangle collision in Ebitengine. Play the demo, read a short Go example, change a value, and apply the idea to you">
+    <meta property="og:description" content="Catch falling stars and learn movement plus rectangle collision in Ebitengine. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebiteng">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/games/catch-stars/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--catch-stars.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – LEVEL 03 — Catch the Stars">
-    <meta name="twitter:description" content="Catch falling stars and learn movement plus rectangle collision in Ebitengine. Play the demo, read a short Go example, change a value, and apply the idea to you">
+    <meta name="twitter:description" content="Catch falling stars and learn movement plus rectangle collision in Ebitengine. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebiteng">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--catch-stars.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Catch the Stars">
     <!-- ogp:end -->
@@ -328,7 +328,7 @@ func main() {
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT LISTS</p><h3>Only one star</h3><p>One variable per star hits a wall fast. A list lets every star follow the same rule.</p></article>
         <article><p class="eyebrow">WITH BOX HITS</p><h3>Boxes before polish</h3><p>Even with simple art, correct rectangle overlap already feels like a real catch.</p></article>
-        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Change speed and spawn rate</h3><p>Star <code>speed</code> and spawn timing <code>frame%45</code> set difficulty. A wider basket is an easy kindness.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>Add a missed-star streak state</h3><p>In <code>games/core/catch-stars/main.go</code>, add <code>missStreak int</code> to <code>game</code>. In Update's <code>s.y &gt; screenHeight</code> miss branch add <code>g.missStreak++</code>; reset it to zero immediately after <code>g.caught(s)</code>. When it reaches three, add an Update-side branch that makes the next star slightly slower. Draw only displays the streak. Verify with <code>go test ./...</code> and a local run.</p></article>
       </div>
     </section>
 
@@ -508,6 +508,25 @@ func main() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- core-authoring-links:start -->
+<section class="next-lines core-authoring-links"><p class="eyebrow">WRITE NEXT</p><h3>After playing, write and verify one rule</h3><p>Use Build Track to write from an empty Go folder, Testing to prove a rule, or first-30-minutes to begin your own game in half an hour.</p><p><a href="../../build/">Build Track →</a> · <a href="../../guides/testing/">Testing guide →</a> · <a href="../../guides/first-30-minutes/">first-30-minutes →</a></p></section>
+<!-- core-authoring-links:end -->
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../learn.js"></script>

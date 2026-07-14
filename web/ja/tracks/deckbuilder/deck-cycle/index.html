@@ -1,10 +1,10 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8">
-  <meta name="description" content="カードを3つの置き場で動かし、山札が空になったときだけ捨て札を混ぜ直します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbi"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 山札・手札・捨て札</title>
+  <meta name="description" content="カードを3つの置き場で動かし、山札が空になったときだけ捨て札を混ぜ直します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用し"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 山札・手札・捨て札</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – 山札・手札・捨て札">
-    <meta property="og:description" content="カードを3つの置き場で動かし、山札が空になったときだけ捨て札を混ぜ直します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbi">
+    <meta property="og:description" content="カードを3つの置き場で動かし、山札が空になったときだけ捨て札を混ぜ直します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用し">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/deckbuilder/deck-cycle/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder--deck-cycle.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -14,7 +14,7 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – 山札・手札・捨て札">
-    <meta name="twitter:description" content="カードを3つの置き場で動かし、山札が空になったときだけ捨て札を混ぜ直します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbi">
+    <meta name="twitter:description" content="カードを3つの置き場で動かし、山札が空になったときだけ捨て札を混ぜ直します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用し">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--deckbuilder--deck-cycle.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="山札・手札・捨て札">
     <!-- ogp:end -->
@@ -28,25 +28,17 @@
 <figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_deck-cycle.svg" alt="デッキを一周させる" loading="lazy" decoding="async"><figcaption>デッキを一周させるの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>12枚のカードを何周も使って勝とう。</h2></div><p>1〜5かカードをタップして使用。Eか下ボタンでターン終了。敵を倒したらクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="山札・手札・捨て札" src="../../../../play/deck-cycle/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK CYCLE</p><h2>使ったカードは、どうやってもう一度手札に戻るの？</h2><p class="lesson-lead">カードを消さずに、<strong>山札 → 手札 → 捨て札</strong>と居場所だけ変えます。山札が空なら捨て札を山札へ移し、順番を混ぜてから続きを引きます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>山札から引く</h3><p>山札の最後の1枚を手札へ移します。1枚のカードが同時に2か所へ入らないよう、元の山札からは取り除きます。</p><code>hand = append(hand, draw[last])</code></article><article><span class="concept-number">2</span><h3>使ったら捨て札へ</h3><p>攻撃や防御を計算したあと、そのカードを手札から抜いて捨て札へ入れます。「捨てる」は削除ではなく次の出番待ちです。</p><code>discard = append(discard, played)</code></article><article><span class="concept-number">3</span><h3>空なら混ぜ直す</h3><p>山札が0枚になった瞬間だけ、捨て札を全部戻してシャッフルします。まだ山札がある間は混ぜません。</p><code>if len(draw) == 0 { reshuffle() }</code></article></div><div class="motion-lab" data-lab="deck-cycle" data-max="5" data-empty="手札がない" data-spend="1枚プレイ" data-refill="ドローして手札回復" aria-labelledby="lab-title-deck-cycle">
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>12枚のカードを何周も使って勝とう。</h2></div><p>1〜5かカードをタップして使用。Eか下ボタンでターン終了。敵を倒したらクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="山札・手札・捨て札" src="../../../../play/deck-cycle/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK CYCLE</p><h2>使ったカードは、どうやってもう一度手札に戻るの？</h2><p class="lesson-lead">カードを消さずに、<strong>山札 → 手札 → 捨て札</strong>と居場所だけ変えます。山札が空なら捨て札を山札へ移し、順番を混ぜてから続きを引きます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>山札から引く</h3><p>山札の最後の1枚を手札へ移します。1枚のカードが同時に2か所へ入らないよう、元の山札からは取り除きます。</p><code>hand = append(hand, draw[last])</code></article><article><span class="concept-number">2</span><h3>使ったら捨て札へ</h3><p>攻撃や防御を計算したあと、そのカードを手札から抜いて捨て札へ入れます。「捨てる」は削除ではなく次の出番待ちです。</p><code>discard = append(discard, played)</code></article><article><span class="concept-number">3</span><h3>空なら混ぜ直す</h3><p>山札が0枚になった瞬間だけ、捨て札を全部戻してシャッフルします。まだ山札がある間は混ぜません。</p><code>if len(draw) == 0 { reshuffle() }</code></article></div><div class="motion-lab" data-lab="energy-turn" data-max="5" data-empty="手札がない" data-spend="1枚プレイ" data-refill="ドローして手札回復" aria-labelledby="lab-title-deck-cycle">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / DRAW CYCLE</p>
 <h3 id="lab-title-deck-cycle">手札コストを回して山を循環させる</h3>
 <p>カードを使う（コスト消費）→ ターン終了でリソース回復。山札・捨て札の循環も、同じ「ターンの区切り」でまとめて処理すると迷子になりません。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spend data-go-focus="play" data-go-caption="手札→捨て札">1枚使う</button><button type="button" class="lab-button" data-lab-end data-go-focus="empty shuffle draw" data-go-caption="山が空なら捨て札を戻す → 混ぜ直す → 1枚引く">ターン終了（山を循環）</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-spend>1枚使う</button><button type="button" class="lab-button" data-lab-end>ターン終了（山を循環）</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
 <p class="lab-hint">山が空なら捨て札をシャッフルして山に戻す、もターン区切りで行います。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>手札枠</span><strong data-lab-energy>0</strong></div><div><span>ターン</span><strong data-lab-turn>0</strong></div><div><span>使った枚数</span><strong data-lab-spent>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
-</div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="play">discard = append(discard, hand[i]); hand = remove(hand, i)</span>
-<span data-go-line="empty">if len(draw) == 0 { draw = discard; discard = discard[:0] }</span>
-<span data-go-line="shuffle">rng.Shuffle(len(draw), func(i, j int) { draw[i], draw[j] = draw[j], draw[i] })</span>
-<span data-go-line="draw">hand = append(hand, draw[last]); draw = draw[:last]</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">THE CYCLE EDGE</p><div class="formula-lines"><code>play: hand → discard</code><span>つぎに</span><code>turn end: draw / reshuffle</code></div><p>循環の処理をターンの境目に集めると、戦闘中のバグが減ります。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>引く前に山札を確かめる</h3><p>手札が5枚になるまで1枚ずつ引きます。山札が空なら捨て札を移し、混ぜます。<code>rng.Shuffle(n, swap)</code> の2つ目の引数は「i番とj番を入れ替える関数」です。これは Fisher–Yates シャッフルです。Goが乱数で i,j を何度も渡し、そのたびに <code>draw[i], draw[j] = draw[j], draw[i]</code> で入れ替えます。</p></div><pre><code>for len(hand) &lt; 5 {
     if len(draw) == 0 {
@@ -81,6 +73,22 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

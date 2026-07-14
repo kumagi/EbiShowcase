@@ -2,14 +2,14 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="description" content="4個、5個、L字の形を見つけ、それぞれ違う範囲を消す特殊ピースへ変身させます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEb">
+  <meta name="description" content="4個、5個、L字の形を見つけ、それぞれ違う範囲を消す特殊ピースへ変身させます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Ebi Showcase – 特殊ピース工房</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – 特殊ピース工房">
-    <meta property="og:description" content="4個、5個、L字の形を見つけ、それぞれ違う範囲を消す特殊ピースへ変身させます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEb">
+    <meta property="og:description" content="4個、5個、L字の形を見つけ、それぞれ違う範囲を消す特殊ピースへ変身させます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/match3/special-pieces/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--match3--special-pieces.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – 特殊ピース工房">
-    <meta name="twitter:description" content="4個、5個、L字の形を見つけ、それぞれ違う範囲を消す特殊ピースへ変身させます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEb">
+    <meta name="twitter:description" content="4個、5個、L字の形を見つけ、それぞれ違う範囲を消す特殊ピースへ変身させます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--match3--special-pieces.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="特殊ピース工房">
     <!-- ogp:end -->
@@ -58,20 +58,13 @@
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / MARK SPECIALS</p>
 <h3 id="lab-title-special-pieces">消すマスの集合を先に作る</h3>
-<p>まず「4連／5連／L字」のどれかを選び、効果範囲の集合を集めます。爆弾もラインも、最後は同じ clear(Set) に渡せます。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan data-go-focus="scan">効果範囲を集める</button><button type="button" class="lab-button" data-lab-clear data-go-focus="clear">まとめて消す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
+<p>特殊ピースも、まず「どのマスを消すか」の集合を作ります。スキャンで集合を見てから消去。爆弾もラインも、最後は同じクリア処理に渡せます。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan>効果範囲を集める</button><button type="button" class="lab-button" data-lab-clear>まとめて消す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>戻す</button></div>
 <p class="lab-hint">効果ごとに描画を分けても、消去パイプは1本にまとめると安全です。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>対象マス</span><strong data-lab-count>0</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
-</div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="scan">for each cell { if run &gt;= 3 { mark } }</span>
-<span data-go-line="clear">removeMarked()</span>
-<span data-go-line="fall">compactColumns()</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">DETECT THEN BLAST</p><div class="formula-lines"><code>kind := detectShape(run)</code><span>つぎに</span><code>clear(effectCells(kind))</code></div><p>形の判定と範囲計算を1つの巨大ifにしないのが、特殊ピースを増やすコツです。</p></div>
 <div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>detectSpecial と effectCells を分ける</h3><p>デモはレシピ（4 / 5 / L）を選んでから FORGE→発動します。本番でも「作る瞬間」と「消す瞬間」を分けて書くと、連鎖で特殊が巻き込まれたときに同じ effectCells を再利用できます。</p></div><pre><code>kind, at, ok := detectSpecial(board)
@@ -244,6 +237,25 @@ for p := range effectCells(kind, at, board) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- match3-authoring:start -->
+<section class="next-lines core-authoring-links"><p class="eyebrow">YOUR FIRST RULE</p><h3>本物の盤面ルールを1つ足す</h3><p><code>games/tracks/match3/special-pieces/main.go</code> を開き、色・消去数・連鎖条件のどれかを1つ変える。<code>go test ./games/tracks/match3/special-pieces</code> を実行し、盤面で結果を確かめよう。</p></section>
+<!-- match3-authoring:end -->
 </main>
 <script src="../../../../learn.js"></script>
 </body>

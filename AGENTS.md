@@ -75,9 +75,9 @@ Continue from the entry returned by `next`; do not skip ahead merely because a l
 
 The build creates a separate game at `dist/play/<slug>/` for every implementation. Slugs must therefore remain unique across tracks.
 
-### Phase 0–4 roadmap loop
+### Authoring Pass roadmap loop
 
-The completed 208-entry curriculum gate and the post-gate quality roadmap are separate loops. For roadmap work, [`docs/ROADMAP_RALPH_LOOP.md`](docs/ROADMAP_RALPH_LOOP.md) is the source of truth. Its user-approved decisions are fixed: Go 1.25, compatible third-party licenses with notices, all four technical pillars applied to all 25 final genre games, three graduation projects with article/starter/reference implementations, and completion at the end of Phase 4. Phase 5 is an admission review, not part of completion.
+The completed 208-entry curriculum gate (and the earlier playground/lab/graduation *shell* work) is separate from the current roadmap. For roadmap work, [`docs/ROADMAP_RALPH_LOOP.md`](docs/ROADMAP_RALPH_LOOP.md) is the source of truth: the **Authoring Pass** that turns “play and tweak numbers” into “open a file, add one rule, and verify.” Fixed decisions live at the top of that file: keep the 208 gate stable, treat Playable and Authoring as separate meters, require dual-panel REAL GO on generated thin-wrapper tracks, RULE challenges with edit paths, holey graduation starters, and no new genres until this pass completes.
 
 ```sh
 node scripts/roadmap-ralph-loop.mjs status
@@ -86,10 +86,52 @@ node scripts/roadmap-ralph-loop.mjs evidence TASK-ID
 node scripts/roadmap-ralph-loop.mjs check TASK-ID
 node scripts/roadmap-ralph-loop.mjs verify
 node scripts/roadmap-ralph-loop.mjs verify --full  # phase boundary
-node scripts/roadmap-ralph-loop.mjs complete       # only after 88/88
+node scripts/roadmap-ralph-loop.mjs complete       # only after all Authoring Pass tasks
 ```
 
-Always implement the single item returned by `next`. Create its evidence file, fill every required checkbox with concrete command/manual results, set `Status: PASS`, and only then run `check`. The script rejects out-of-order completion and incomplete evidence. Use `uncheck` if later work invalidates a completed task. Do not interpret a file count or a successful compile as proof of playground quality.
+Always implement the single item returned by `next`. Create its evidence file, fill every required checkbox with concrete command/manual results, set `Status: PASS`, and only then run `check`. The script rejects out-of-order completion and incomplete evidence. Use `uncheck` if later work invalidates a completed task. Do not treat “PLAYABLE exists” or a successful compile as proof that a learner can **author** the mechanic.
+
+### Authoring Definition of Done
+
+Playable and Authoring are separate promises. A lesson has met the Authoring
+promise only when its Japanese and English page let a learner do all three:
+
+1. identify the exact file to open (a repository-relative path, or a named file
+   they create in their own Go workspace);
+2. add one named **RULE** in a named function or data table — a branch,
+   counter, state transition, or data row, rather than merely changing a number;
+3. verify that rule with one concrete method: a focused `go test`, a stated
+   local run, or a visible before/after browser check.
+
+For track lessons, the primary challenge is therefore **YOUR FIRST RULE**. It
+must say both the edit path and the function/table to change. The RULE must live
+in `Update` (or a pure helper `Update` calls), never as a mutation inside
+`Draw`. A separate **TUNING** prompt may invite experimentation with values, but
+it is optional and must never be the only authoring exercise. A REAL GO panel
+shows the actual entry file the learner edits; when the mechanism lives in
+`internal/`, show the entry and a short, path-labelled implementation excerpt as
+two layers.
+
+Do not make readers clone this repository as a prerequisite. Build Track and
+graduation instructions start from a local Go workspace; they may link to
+individual source or asset downloads when needed. Repository-relative paths are
+still required as a map for learners who browse the public source.
+
+### Game-loop axioms for authoring
+
+Keep these three statements consistent from Build Track through graduation:
+
+1. **`Update` owns input and every state update.** Scores, positions, timers,
+   AI, collisions, and scene changes all write the `game` state here.
+2. **`Draw` only projects the current `game` state into pixels.** It does not
+   decide a result, read input, or change a counter.
+3. **The screen follows `game` exactly.** The same state draws the same frame;
+   `Draw` must not mutate state, consume randomness, or append to slices.
+
+A learner RULE belongs in `Update` or in a pure function called by `Update`.
+Draw may map that result to color, position, text, or effects, but never owns the
+rule itself. The flipbook metaphor is literal: decide the numbers for a frame,
+then draw that frame without changing its numbers.
 
 ## Visual Effects Lab (between core and tracks)
 
@@ -147,10 +189,22 @@ Always implement the single item returned by `next`. Create its evidence file, f
 
 The first pages are the style reference, especially `web/{ja,en}/games/tap-target/index.html` and the generated VFX STEP 01 page.
 
+### Update / Draw axiom (repeat early and often)
+
+This is the shared vocabulary for every playable lesson. LEVEL 01 owns the first full explanation; later lessons may finger-point back to it but must not re-teach the engine from zero, and must not contradict it.
+
+1. **`Update` owns all mutation and all input.** Scores, positions, timers, AI, collisions, scene changes, and reading keys/pointers/touches belong here. Do not put input or rules in `Draw`.
+2. **`Draw` only projects the current `game` struct onto the screen.** Genre-specific look rules decide how fields become pixels. `Draw` does not decide outcomes.
+3. **The screen follows `game` bit-for-bit.** The same `game` must produce the same picture. **`Draw` must not write `game`** (no `++`, no RNG, no input reads, no slice edits inside `Draw`).
+
+Flipbook metaphor: decide the frame’s numbers first, then paint that frame—never change the numbers while painting. If a lesson must break this, document in one sentence why the work cannot live in `Update`. Default: no exceptions. Authoring RULE challenges add logic on the `Update` side (or a pure function `Update` calls); never ask learners to put rules in `Draw`.
+
+### General pedagogy
+
 - Lead with a concrete thing the learner can see or do, then name the abstraction. Japanese copy should be understandable to an upper-primary-school learner without talking down to them.
 - Teach one main idea and at most one closely related supporting idea per step. State what came from the previous lesson and what the new piece adds.
 - Use the pattern **play → observe/predict → manipulate a small lab → inspect representative Go → explain why → offer one challenge**.
-- Use concrete metaphors only when they map accurately to the code. LEVEL 01's flipbook explanation is the canonical model: `Update` changes numbers/state; `Draw` renders the current state. Do not later claim Draw runs rules or Update paints the screen.
+- Use concrete metaphors only when they map accurately to the code. LEVEL 01's flipbook explanation must match the axiom above: `Update` changes numbers/state; `Draw` renders the current state. Do not later claim Draw runs rules or Update paints the screen.
 - Progressive disclosure is intentional. LEVEL 01 foregrounds Update and Draw while putting Layout and build details in an optional section. Keep advanced implementation details out of the learner's first conceptual step unless needed to understand the mechanic.
 - A `DEEP DIVE` must explain the named mechanic, not merely describe controls. The three `concept-row` cards should form an ordered explanation. The motion lab must let the learner change or step through the same concept. The code snippet must correspond to the real Go implementation.
 - Explain data and state transitions, not just visible results: where values live, when they change, and why update order matters.

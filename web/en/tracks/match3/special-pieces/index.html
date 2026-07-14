@@ -50,20 +50,13 @@
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / MARK SPECIALS</p>
 <h3 id="lab-title-special-pieces">Build the clear-set first</h3>
-<p>Pick a recipe (4 / 5 / L), gather the affected set, then clear. Bombs and lines share the same clear(Set) pipe.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan data-go-focus="scan">Collect affected cells</button><button type="button" class="lab-button" data-lab-clear data-go-focus="clear">Clear the set</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
+<p>Specials still start as a set of cells to clear. Scan marks the set; then one clear pass handles bombs and lines alike.</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan>Collect affected cells</button><button type="button" class="lab-button" data-lab-clear>Clear the set</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
 <p class="lab-hint">Different FX, one clear pipeline keeps edge cases tame.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>targets</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
-</div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="scan">for each cell { if run &gt;= 3 { mark } }</span>
-<span data-go-line="clear">removeMarked()</span>
-<span data-go-line="fall">compactColumns()</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">DETECT THEN BLAST</p><div class="formula-lines"><code>kind := detectShape(run)</code><span>then</span><code>clear(effectCells(kind))</code></div><p>Keep shape detection and range math out of one giant if — that is how you grow the special roster.</p></div>
 <div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Split detectSpecial and effectCells</h3><p>The demo picks a recipe, forges, then activates. Separating “create” from “clear” lets cascades reuse the same effectCells when another special is caught in the blast.</p></div><pre><code>kind, at, ok := detectSpecial(board)
@@ -236,6 +229,25 @@ for p := range effectCells(kind, at, board) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- match3-authoring:start -->
+<section class="next-lines core-authoring-links"><p class="eyebrow">YOUR FIRST RULE</p><h3>Add one real board rule</h3><p>Open <code>games/tracks/match3/special-pieces/main.go</code> and change one color, clear count, or cascade condition. Run <code>go test ./games/tracks/match3/special-pieces</code>, then check the board result.</p></section>
+<!-- match3-authoring:end -->
 </main>
 <script src="../../../../learn.js"></script>
 </body>

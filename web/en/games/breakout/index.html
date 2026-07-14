@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Manage many bricks in a slice and learn Breakout object lists in Ebitengine. Play the demo, read a short Go example, change a value, and apply the idea to your">
+  <meta name="description" content="Manage many bricks in a slice and learn Breakout object lists in Ebitengine. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengin">
   <title>Ebi Showcase – LEVEL 06 — Breakout</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – LEVEL 06 — Breakout">
-    <meta property="og:description" content="Manage many bricks in a slice and learn Breakout object lists in Ebitengine. Play the demo, read a short Go example, change a value, and apply the idea to your">
+    <meta property="og:description" content="Manage many bricks in a slice and learn Breakout object lists in Ebitengine. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengin">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/games/breakout/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--breakout.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – LEVEL 06 — Breakout">
-    <meta name="twitter:description" content="Manage many bricks in a slice and learn Breakout object lists in Ebitengine. Play the demo, read a short Go example, change a value, and apply the idea to your">
+    <meta name="twitter:description" content="Manage many bricks in a slice and learn Breakout object lists in Ebitengine. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengin">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--breakout.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Breakout">
     <!-- ogp:end -->
@@ -345,7 +345,7 @@ func main() {
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT A SLICE</p><h3>brick1, brick2, brick3…</h3><p>Named variables run out fast. Changing the count means rewriting code.</p></article>
         <article><p class="eyebrow">WITH A SLICE</p><h3>Count is data; the rule is one</h3><p>Ten bricks or a hundred bricks still share the same update and draw loops.</p></article>
-        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Change rows, columns, and lives</h3><p>More rows densify the wall. Ball speed and paddle width change the feel immediately.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>Add a last-life rescue rule in Update</h3><p>In <code>games/core/breakout/main.go</code>, immediately before the Update branch where <code>g.ballY &gt; screenHeight+15</code>, set a Update-side <code>lastChance bool</code> when <code>g.lives == 1</code> and widen the paddle once. Draw only displays the flag. Verify with <code>go test ./...</code> and a local run on the last life.</p></article>
       </div>
     </section>
 
@@ -523,6 +523,25 @@ func main() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- core-authoring-links:start -->
+<section class="next-lines core-authoring-links"><p class="eyebrow">WRITE NEXT</p><h3>After playing, write and verify one rule</h3><p>Use Build Track to write from an empty Go folder, Testing to prove a rule, or first-30-minutes to begin your own game in half an hour.</p><p><a href="../../build/">Build Track →</a> · <a href="../../guides/testing/">Testing guide →</a> · <a href="../../guides/first-30-minutes/">first-30-minutes →</a></p></section>
+<!-- core-authoring-links:end -->
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../learn.js"></script>

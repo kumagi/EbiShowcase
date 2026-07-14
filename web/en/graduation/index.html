@@ -1,10 +1,10 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
-  <meta name="description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ebi Showcase – Graduation projects</title>
+  <meta name="description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step."><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Graduation Projects</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Graduation projects">
-    <meta property="og:description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste">
+    <meta property="og:title" content="Ebi Showcase – Graduation Projects">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/graduation/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--graduation.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -13,13 +13,13 @@
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Graduation projects">
-    <meta name="twitter:description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste">
+    <meta name="twitter:title" content="Ebi Showcase – Graduation Projects">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--graduation.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Turn learned parts into your game.">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/graduation/">
-<link rel="stylesheet" href="../../style.css"></head><body><header class="nav"><a class="brand" href="../../en/"><span>EBI</span> SHOWCASE</a><nav><a class="lang" href="../../ja/graduation/">JA</a></nav></header><main><section class="test-hero"><p class="eyebrow">GRADUATION PROJECTS</p><h1>Turn learned parts<br><em>into your game.</em></h1><p>Copy a starter, make tests pass, compare the reference, and finish with the release checklist.</p></section><section class="test-course"><div class="test-course-grid"><article class="test-course-card"><span>01</span><h3>60-second arcade</h3><p>Prerequisites: input, score, timer.<br>starter / reference: `graduation/arcade-60/`</p></article><article class="test-course-card"><span>02</span><h3>Three-room exploration</h3><p>Prerequisites: state, keys, scene transitions.<br>starter / reference: `graduation/exploration-3rooms/`</p></article><article class="test-course-card"><span>03</span><h3>Three-stage puzzle</h3><p>Prerequisites: data, progression, tests.<br>starter / reference: `graduation/puzzle-3stages/`</p></article></div></section><section class="test-terminal"><code>go test ./graduation/...<br>GOOS=js GOARCH=wasm go build ./graduation/...</code><strong>build → test → play → release</strong></section><p class="test-course">Use the <a href="../guides/release/">release checklist</a> to publish and the <a href="../guides/project-structure/">project structure guide</a> when it grows.</p>
+<link rel="stylesheet" href="../../style.css"></head><body><header class="nav"><a class="brand" href="../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../../en/">PATH</a><a class="lang" href="../../ja/graduation/">JA</a></nav></header><main><section class="test-hero"><p class="eyebrow">MAKE / GRADUATION PROJECTS</p><h1>Turn learned parts <em>into your game.</em></h1><p>Build three small finished games from red tests. Graduation means you can change a rule and prove it, not only play a demo.</p></section><section class="lesson-section"><p class="eyebrow">BEFORE YOU START</p><h2>What you need</h2><p>Only Go and a browser. Do not clone this repository. Each brief links to three starter files; save them from their Raw browser view into an empty folder.</p><pre><code>mkdir my-ebi-game &amp;&amp; cd my-ebi-game; go mod init example.com/my-ebi-game; go get github.com/hajimehoshi/ebiten/v2; go test</code></pre><p>The first red <code>go test</code> is success: read the test name, complete its TODO, turn it green, then play with <code>go run .</code>.</p></section><section class="path-list"><div class="path-intro"><p class="eyebrow">CHOOSE A BRIEF</p><h2>Pick one and finish it.</h2></div><a class="path-step" href="arcade-60/"><span>01</span><div><h3>60-second arcade</h3><p>Input, score, a one-minute timer, and restart: finish a compact game loop with tests.</p><strong>score / timer / restart</strong></div><b>→</b></a><a class="path-step" href="exploration-3rooms/"><span>02</span><div><h3>Three-room exploration</h3><p>Collect a key, travel rooms, and open an exit through testable state transitions.</p><strong>state / key / transition</strong></div><b>→</b></a><a class="path-step" href="puzzle-3stages/"><span>03</span><div><h3>Three-stage puzzle</h3><p>Add puzzle data and replay it through one shared progression rule.</p><strong>data / progress / tests</strong></div><b>→</b></a></section><section class="why-grid"><article><h3>1. RED</h3><p>Read a failing test to learn which rule is missing.</p></article><article><h3>2. GREEN</h3><p>Complete one TODO and use go test to prove the rule.</p></article><article><h3>3. PLAY</h3><p>Run the game, then add your own rule and its test.</p></article></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -46,5 +46,4 @@
 
 
 
-
-</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer></body></html>
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer></body></html>

@@ -128,7 +128,7 @@ const specs = {
       eye: "TRY IT / REFILL",
       title: "使って、ターン終了で満タンに戻す",
       body: "1ターンの予算がエナジーです。「使う」で1つ減らし、「ターン終了」で最大まで戻します。カードが強くても、予算を超えて連打はできません。",
-      hint: "最大値を変えるだけで難易度が変わります。",
+      hint: "最大値を変える前に、ターン終了で1だけ回復するルールを足してみましょう。",
       controls: [
         ["data-lab-spend", "1コスト使う", "lab-button-primary"],
         ["data-lab-end", "ターン終了"],
@@ -147,7 +147,7 @@ const specs = {
       eye: "TRY IT / REFILL",
       title: "Spend, then refill on end turn",
       body: "Energy is your turn budget. Spend lowers it; End turn snaps it back to max. Strong cards still can’t outrun the budget.",
-      hint: "Tuning max energy alone changes difficulty.",
+      hint: "Before tuning max energy, add a rule that refills 1 energy on end turn.",
       controls: [
         ["data-lab-spend", "Spend 1", "lab-button-primary"],
         ["data-lab-end", "End turn"],

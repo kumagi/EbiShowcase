@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="カメラスクロールとカリングのしくみを学ぶEbitengineレッスン。ワールド座標からカメラ値を引くだけで大きなステージを表示できます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+  <meta name="description" content="カメラスクロールとカリングのしくみを学ぶEbitengineレッスン。ワールド座標からカメラ値を引くだけで大きなステージを表示できます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
   <title>Ebi Showcase – STEP 04 — 横スクロールの丘</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – STEP 04 — 横スクロールの丘">
-    <meta property="og:description" content="カメラスクロールとカリングのしくみを学ぶEbitengineレッスン。ワールド座標からカメラ値を引くだけで大きなステージを表示できます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta property="og:description" content="カメラスクロールとカリングのしくみを学ぶEbitengineレッスン。ワールド座標からカメラ値を引くだけで大きなステージを表示できます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/platformer/scrolling-stage/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--platformer--scrolling-stage.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – STEP 04 — 横スクロールの丘">
-    <meta name="twitter:description" content="カメラスクロールとカリングのしくみを学ぶEbitengineレッスン。ワールド座標からカメラ値を引くだけで大きなステージを表示できます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta name="twitter:description" content="カメラスクロールとカリングのしくみを学ぶEbitengineレッスン。ワールド座標からカメラ値を引くだけで大きなステージを表示できます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--platformer--scrolling-stage.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="横スクロールの丘">
     <!-- ogp:end -->
@@ -351,6 +351,25 @@ g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- platformer-authoring:start -->
+<section class="next-lines core-authoring-links"><p class="eyebrow">YOUR FIRST RULE</p><h3>実在する入口から、1ルールを書く</h3><p><code>games/tracks/platformer/scrolling-stage/main.go</code> を開き、ルールを1つ追加し、動きが変わることを確かめる。<code>go test ./games/tracks/platformer/scrolling-stage</code> を実行してから遊び直そう。</p></section>
+<!-- platformer-authoring:end -->
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>

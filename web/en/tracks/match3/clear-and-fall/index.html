@@ -33,19 +33,12 @@
 <p class="eyebrow">TRY IT / GRAVITY</p>
 <h3 id="lab-title-clear-and-fall">Clear, then collapse</h3>
 <p>Scan lights candidates; Clear+fall packs colors downward. Keeping clear and gravity as separate steps keeps match-3 stable.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan data-go-focus="scan">Scan</button><button type="button" class="lab-button" data-lab-clear data-go-focus="clear">Clear + fall</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-scan>Scan</button><button type="button" class="lab-button" data-lab-clear>Clear + fall</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
 <p class="lab-hint">Scan again after a fall to unlock cascades.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>lit cells</span><strong data-lab-count>0</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
-</div>
-<div class="lab-go-block">
-<p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="scan">for each cell { if run &gt;= 3 { mark } }</span>
-<span data-go-line="clear">removeMarked()</span>
-<span data-go-line="fall">compactColumns()</span></pre>
-<p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">LOGIC THEN LERP</p><div class="formula-lines"><code>compact now</code><span>then</span><code>Draw: lerp(fromY,toY,progress)</code></div><p>Mixing compact and animation in one loop breaks cascade timing. Keep them apart.</p><p><strong>lerp on a number line:</strong> fromY=2, toY=5, progress 0→0.5→1 draws at 2→3.5→5. Update stores the fraction; Draw places the sprite.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>While falling, discard input — only progress</h3><p>After a clear, the demo auto-plays the fall tween. Buttons do nothing until landing, then refill unlocks.</p></div><pre><code>if g.falling {
     g.progress += 0.07
@@ -235,4 +228,23 @@ for write &gt;= 0 { board[write][x] = empty; write-- }
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- match3-authoring:start -->
+<section class="next-lines core-authoring-links"><p class="eyebrow">YOUR FIRST RULE</p><h3>Add one real board rule</h3><p>Open <code>games/tracks/match3/clear-and-fall/main.go</code> and change one color, clear count, or cascade condition. Run <code>go test ./games/tracks/match3/clear-and-fall</code>, then check the board result.</p></section>
+<!-- match3-authoring:end -->
 </main><script src="../../../../learn.js"></script></body></html>

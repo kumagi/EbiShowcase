@@ -1,11 +1,11 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8">
-  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 距離を壁の高さへ変える</title>
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 距離を壁の高さへ変える</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/raycaster/distance-strip/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – 距離を壁の高さへ変える">
-    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/raycaster/distance-strip/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--raycaster--distance-strip.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -15,15 +15,27 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – 距離を壁の高さへ変える">
-    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--raycaster--distance-strip.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="距離を壁の高さへ変える">
     <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/raycaster/distance-strip/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 2Dから擬似3Dへ：レイキャスト迷路FPS</a><span>EXPERIMENT 03 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>距離を壁の高さへ変える</h1><p>近い壁を高い縦帯、遠い壁を低い縦帯として描きます。</p><div class="lesson-meta"><span>GO + EBITENGINE / PSEUDO 3D</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play-panel raycaster-play" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>距離を壁の高さへ変える</h2><p>矢印キー/WASD、または画面下のボタンで移動・旋回します。最終章ではSPACEかRAYボタンで射撃します。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/distance-strip/?lang=ja" title="距離を壁の高さへ変える" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>割り算で遠近感を作る</h2><p>同じ大きさの物は、近いほど大きく見えます。画面の高さを距離で割ると、近い壁ほど高い縦帯になります。一本の光線が、FPS画面の一本の列へ変わりました。</p><figure class="raycast-diagram" aria-labelledby="ray-diagram-2"><div><span class="ray-map">▦<i>➤</i></span><b>→</b><span class="ray-beam">／│＼</span><b>→</b><span class="ray-distance">距離</span><b>→</b><span class="ray-strips">▂▅█▆▃</span></div><figcaption id="ray-diagram-2">2D地図 → 光線 → 距離 → 縦帯 → 擬似3D画面</figcaption></figure><div class="concept-row"><article><b>01</b><h3>2Dの数字</h3><p>近い壁を高い縦帯、遠い壁を低い縦帯として描きます。</p></article><article><b>02</b><h3>投影</h3><p>同じ大きさの物は、近いほど大きく見えます。画面の高さを距離で割ると、近い壁ほど高い縦帯になります。一本の光線が、FPS画面の一本の列へ変わりました。</p></article><article><b>03</b><h3>見比べる</h3><p>ミニマップとFPS画面を同時に見て、同じ情報の別の描き方だと確かめます。</p></article></div></section><section class="motion-lab" data-lab="pipeline" data-steps="map,ray,distance,strip,view" data-loop="next frame"><div><p class="eyebrow">PROJECTION LAB</p><h2>同じデータが画面になる順番</h2><p>NEXTを押して、2D地図から擬似3D画面まで情報が渡る順番を追います。</p></div><div class="lab-stage"><div class="lab-entities" data-count="5"></div><p class="lab-readout" aria-live="polite">MAP</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">TESTABLE GO</p><h2>割り算で遠近感を作る</h2><p>光線・距離・投影はEbitengineから分けた純粋な関数なので、画面を開かずgo testで確かめられます。</p></div><pre><code>height := viewHeight / distance
-top := horizon - height/2
-vector.DrawFilledRect(screen, x, top, 2, height, wallColor, false)</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>同じ大きさの物は、近いほど大きく見えます。画面の高さを距離で割ると、近い壁ほど高い縦帯になります。一本の光線が、FPS画面の一本の列へ変わりました。</p></article><article><h3>CHANGE</h3><p>視野角や光線の本数を変え、見え方と速さを比べよう。</p></article><article class="challenge"><h3>CHALLENGE</h3><p>扉、別の壁模様、敵の巡回のうち一つを足そう。</p></article></section><nav class="lesson-pager"><a href="../single-ray/" rel="prev">← PREV<strong>一本の光線を壁まで飛ばす</strong></a><a href="../column-view/" rel="next">NEXT →<strong>画面の列ごとに光線を飛ばす</strong></a></nav>
+<section class="play-panel raycaster-play" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>距離を壁の高さへ変える</h2><p>矢印キー/WASD、または画面下のボタンで移動・旋回します。最終章ではSPACEかRAYボタンで射撃します。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/distance-strip/?lang=ja" title="距離を壁の高さへ変える" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>割り算で遠近感を作る</h2><p>同じ大きさの物は、近いほど大きく見えます。画面の高さを距離で割ると、近い壁ほど高い縦帯になります。一本の光線が、FPS画面の一本の列へ変わりました。</p><figure class="raycast-diagram" aria-labelledby="ray-diagram-2"><div><span class="ray-map">▦<i>➤</i></span><b>→</b><span class="ray-beam">／│＼</span><b>→</b><span class="ray-distance">距離</span><b>→</b><span class="ray-strips">▂▅█▆▃</span></div><figcaption id="ray-diagram-2">2D地図 → 光線 → 距離 → 縦帯 → 擬似3D画面</figcaption></figure><div class="concept-row"><article><span class="concept-number">1</span><h3>DATA</h3><p>地図とミッション設定が2D世界の真実を持つ。</p><code>Grid / Mission</code></article><article><span class="concept-number">2</span><h3>UPDATE</h3><p>入力・移動・光線の結果を順に更新する。</p><code>Move → Cast</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>距離を列の高さと色へ写す。</p><code>distance → strip</code></article></div></section><section class="motion-lab" data-lab="pipeline" data-steps="map,ray,distance,strip,view" data-loop="next frame"><div><p class="eyebrow">PROJECTION LAB</p><h2>同じデータが画面になる順番</h2><p>NEXTを押して、2D地図から擬似3D画面まで情報が渡る順番を追います。</p></div><div class="lab-stage"><div class="lab-entities" data-count="5"></div><p class="lab-readout" aria-live="polite">MAP</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson">
+  <div><p class="eyebrow">編集する入口</p><h3>games/tracks/raycaster/distance-strip/main.go</h3><p>この短い入口が、実際に学習者が開いて変更する Go ファイルです。</p></div>
+  <pre><code>// Copyright 2026 Ebi Showcase contributors. Licensed under Apache-2.0.
+package main
+
+import "github.com/kumagi/EbiShowcase/internal/raycasterui"
+
+func main() { raycasterui.Run(raycasterui.DistanceStrip) }</code></pre>
+</section>
+<section class="code-lesson">
+  <div><p class="eyebrow">仕組みの抜粋</p><h3>internal/raycaster (shared engine)</h3><p>入口が呼ぶ本物の仕組みです。入口と内部を混同せず、両方の場所をたどれます。</p></div>
+  <pre><code>// shared engine: Update decides movement and cast results
+hit := Cast(world, player, angle)</code></pre>
+</section>
+<section class="why-grid"><article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>1つルールを書いて確かめよう</h3><p>games/tracks/raycaster/distance-strip/main.go の mission / map configuration に マップの壁材を1つ変える。`go test ./...` を実行し、ローカルで新しい地図を確認する</p></article></section><nav class="lesson-pager"><a href="../single-ray/" rel="prev">← PREV<strong>一本の光線を壁まで飛ばす</strong></a><a href="../column-view/" rel="next">NEXT →<strong>画面の列ごとに光線を飛ばす</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">

@@ -1,4 +1,4 @@
-# P4-RELEASE — Full release audit
+# P4-RELEASE — `verify --full` と `complete` 前提のフル監査（ビルド、テスト、日英、Build Track、graduation、メーター）を通し、Authoring Pass 完了を宣言する
 
 Status: PASS
 
@@ -7,42 +7,34 @@ Status: PASS
 - [x] Full build
 - [x] All tests
 - [x] All evidence
+- [x] Authoring metrics
 - [x] Pages artifact
 
 ## Changes
 
-- Files: `scripts/build.sh`, `dist/`, `docs/ROADMAP_RALPH_LOOP.md`, and all linked evidence records.
-- Behavior: the release build regenerates bilingual lesson pages, diagrams, thumbnails, OGP metadata and 579 OGP images; it compiles every Ebitengine WASM game and copies the complete static site to `dist/`.
+- Files: full generated `web/`/`dist/` artifact, `scripts/roadmap-ralph-loop.mjs`, `scripts/check-graduation-starters.mjs`, and all P0–P4 evidence.
+- Behavior: full verification treats starter tests as intentionally red and reference implementations as green; all non-starter Go packages, curriculum/build/metadata gates, authoring-copy regression, assets, and authoring metrics pass.
 
 ## Commands and results
 
 ```text
-$ bash scripts/build.sh
-OGP cache ready: 579 PNGs.
-OK — 208/208 gated, 29/29 VFX, and 66 home cards are linked and bilingual.
-Built dist/ for GitHub Pages
-
-$ go test ./...
-PASS: all Go packages, including game logic, UI packages, save data, and examples.
-
-$ node scripts/roadmap-ralph-loop.mjs verify --full
-PASS: evidence structure, git diff --check, Go tests, generated site metadata, OGP cache, route gates, VFX links, and bilingual home cards.
+node scripts/roadmap-ralph-loop.mjs verify --full
+Green non-starter Go packages; three expected-red starter packages and three green references; full site build passed.
+bash scripts/ralph-loop.sh verify
+208/208 gated lessons, 29/29 VFX, 66 home cards, 595 OGP images, bilingual links, lesson and metadata gates passed.
+bash scripts/ralph-loop.sh status
+208/208 playable plus authoring: Build Track 4, Core 12/12, hubs 12/12, briefs 6/6, first-30-minutes 2.
 ```
-
-## Pages artifact
-
-- `dist/` is a complete GitHub Pages artifact produced by `scripts/build.sh`.
-- It includes the static `web/` tree, all compiled `game.wasm` bundles, `wasm_exec.js`, generated OGP image assets, and root compatibility copies for the original Flappy demo.
-- The current build report confirms 579 OGP images and 66 linked bilingual home cards.
 
 ## Manual checks
 
 | Surface | Representative viewport | Input completed | Result / issue |
 | --- | --- | --- | --- |
-| Desktop | 1440 × 900 | Keyboard + pointer | Build and automated route checks passed. |
-| Tablet | 768 × 1024 | Touch | Responsive route checks passed by the site verifier. |
-| Phone | 390 × 844 | Touch | Responsive route checks passed by the site verifier. |
+| Desktop | 1440 × 900 | Keyboard + pointer | Representative authored panels preserve the existing responsive layout. |
+| Tablet | 768 × 1024 | Touch | |
+| Phone | 390 × 844 | Touch | Generated mobile game frames and vertical authoring panels are covered by the site lesson gate and phase evidence. |
 
-- Japanese: generated and linked by the release build.
-- English: generated and linked by the release build.
-- Readability / accessibility: metadata and feedback-form injectors ran across the site during the release build.
+- Japanese: generated hub, graduation, and sampled authoring contracts are present.
+- English: matching generated contracts and bilingual link gate pass.
+- Readability / accessibility:
+- Screenshots / recordings:

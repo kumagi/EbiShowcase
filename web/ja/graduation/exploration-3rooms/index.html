@@ -1,0 +1,49 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 3部屋探索をテストで作る</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – 3部屋探索をテストで作る">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/graduation/exploration-3rooms/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--graduation--exploration-3rooms.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="鍵を持って、3つの部屋を抜けよう。">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – 3部屋探索をテストで作る">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--graduation--exploration-3rooms.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="鍵を持って、3つの部屋を抜けよう。">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/graduation/exploration-3rooms/">
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">GRADUATION</a><a class="lang" href="../../../en/graduation/exploration-3rooms/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 卒業制作</a><span>MAKE / STATE MACHINE</span></div><section class="lesson-hero"><div><p class="eyebrow">GRADUATION 02</p><h1>鍵を持って、3つの部屋を抜けよう。</h1><p>部屋番号・鍵・脱出を一つの State に持たせ、赤いテストを順番に緑へ変えます。</p></div></section><section class="lesson-section"><p class="eyebrow">0. DOWNLOAD</p><h2>空の Go フォルダから</h2><p><a href="https://github.com/kumagi/EbiShowcase/tree/main/graduation/exploration-3rooms/starter">starter の3ファイル</a>を Raw 表示から保存します。<code>go mod init example.com/three-rooms</code> と <code>go get github.com/hajimehoshi/ebiten/v2</code> を実行してから <code>go test</code>。clone は不要です。</p></section><section class="lesson-section"><p class="eyebrow">1. KEY</p><h2>部屋1でだけ鍵を持つ</h2><p><code>TestKeyCanBeCollectedOnlyInFirstRoom</code> は <strong>TODO 3</strong>。<code>PickUpKey</code> と <code>Room == 1</code> がそろった時だけ <code>HasKey</code> を変えます。</p></section><section class="lesson-section"><p class="eyebrow">2. ROOMS</p><h2>部屋は3より先へ行かない</h2><p><code>TestPathMovesThroughExactlyThreeRooms</code> は <strong>TODO 4</strong>。NextRoom のたびに 1→2→3 と進め、3より大きくしません。</p></section><section class="lesson-section"><p class="eyebrow">3. EXIT + RESTART</p><h2>鍵付きの出口を作る</h2><p><code>TestExitNeedsKeyInThirdRoom</code> は <strong>TODO 5</strong>。Room 3 と HasKey がそろう時だけ Escaped を true にします。最後に <code>TestRestartMakesNewAdventure</code> の <strong>TODO 2</strong> で NewAdventure へ戻します。</p><pre><code>go test; go run .</code></pre></section><section class="why-grid"><article><h3>STATE FIRST</h3><p>画面の絵より先に、状態遷移をテストで守ります。</p></article><article><h3>ADD A ROOM RULE</h3><p>敵、宝箱、または一方通行の扉を一つ選び、まずテストを書きます。</p></article><article><h3>REFERENCE LAST</h3><p>緑になってから参照実装を比べ、写さずに構造を学びます。</p></article></section>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/graduation/exploration-3rooms/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+</main><footer><p>© Ebi Showcase · Apache-2.0</p></footer></body></html>

@@ -1,11 +1,11 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8">
-  <meta name="description" content="8方向移動と剣の一振りから始め、部屋・鍵・道具の仕掛け・多段階ボスを足して、4部屋のEbiオリジナルダンジョンへ進みます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 見下ろし型アクションアドベンチャー</title>
+  <meta name="description" content="8方向移動と剣の一振りから始め、部屋・鍵・道具の仕掛け・多段階ボスを足して、4部屋のEbiオリジナルダンジョンへ進みます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 見下ろし型アクションアドベンチャー</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/topdown-adventure/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – 見下ろし型アクションアドベンチャー">
-    <meta property="og:description" content="8方向移動と剣の一振りから始め、部屋・鍵・道具の仕掛け・多段階ボスを足して、4部屋のEbiオリジナルダンジョンへ進みます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta property="og:description" content="8方向移動と剣の一振りから始め、部屋・鍵・道具の仕掛け・多段階ボスを足して、4部屋のEbiオリジナルダンジョンへ進みます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/topdown-adventure/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--topdown-adventure.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -15,7 +15,7 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – 見下ろし型アクションアドベンチャー">
-    <meta name="twitter:description" content="8方向移動と剣の一振りから始め、部屋・鍵・道具の仕掛け・多段階ボスを足して、4部屋のEbiオリジナルダンジョンへ進みます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta name="twitter:description" content="8方向移動と剣の一振りから始め、部屋・鍵・道具の仕掛け・多段階ボスを足して、4部屋のEbiオリジナルダンジョンへ進みます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--topdown-adventure.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="見下ろし型アクションアドベンチャー">
     <!-- ogp:end --><link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">PATH</a><a class="lang" href="../../../en/tracks/topdown-adventure/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>8 PLAYABLE STEPS</span></div><section class="track-hero"><span class="track-letter">Y</span><div><p class="eyebrow">剣と道具で遺跡を進む</p><h1>見下ろし型アクションアドベンチャー</h1><p>8方向移動と剣の一振りから始め、部屋・鍵・道具の仕掛け・多段階ボスを足して、4部屋のEbiオリジナルダンジョンへ進みます。</p></div></section><p class="curriculum-bridge">LEVEL 01のUpdate / Drawを土台に、1ステップ1ルールで完成ダンジョンまで進みます。</p><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>一歩ずつ、冒険を組み立てる。</h2><p>8方向移動と剣の一振りから始め、部屋・鍵・道具の仕掛け・多段階ボスを足して、4部屋のEbiオリジナルダンジョンへ進みます。</p></div><a class="path-step" href="eight-way/"><span>01</span><div><h3>8方向に同じ速さで歩く</h3><p>上下左右を組み合わせ、斜めだけ速くならないように方向ベクトルの長さを1へそろえます。</p><strong>斜めの長さをNormalizeで1にする</strong></div><b>→</b></a>
@@ -47,4 +47,8 @@
         </form>
       </div>
     </section>
+<!-- graduation-cta:start -->
+<section class="architecture-promo setup-promo graduation-cta"><div><p class="eyebrow">MAKE / YOUR OWN GAME</p><h2>この型で、
+自分の1本を作ろう。</h2><p>遊んだ仕組みを一つ選び、ルールとテストを自分で足す卒業制作へ進みます。</p></div><a href="../../graduation/"><span>MAKE NEXT</span><strong>卒業制作を選ぶ</strong><b>→</b></a></section>
+<!-- graduation-cta:end -->
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../learn.js"></script></body></html>

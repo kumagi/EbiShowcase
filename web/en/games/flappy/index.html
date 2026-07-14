@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="A playable showcase for learning game development with Go and Ebitengine in your browser. Play the demo, read a short Go example, change a value, and apply the">
+  <meta name="description" content="A playable showcase for learning game development with Go and Ebitengine in your browser. Play the demo, add one Go rule, verify it, and apply the idea to your">
   <title>Ebi Showcase – LEVEL 04 — Ebi Flight</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – LEVEL 04 — Ebi Flight">
-    <meta property="og:description" content="A playable showcase for learning game development with Go and Ebitengine in your browser. Play the demo, read a short Go example, change a value, and apply the">
+    <meta property="og:description" content="A playable showcase for learning game development with Go and Ebitengine in your browser. Play the demo, add one Go rule, verify it, and apply the idea to your">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/games/flappy/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--flappy.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – LEVEL 04 — Ebi Flight">
-    <meta name="twitter:description" content="A playable showcase for learning game development with Go and Ebitengine in your browser. Play the demo, read a short Go example, change a value, and apply the">
+    <meta name="twitter:description" content="A playable showcase for learning game development with Go and Ebitengine in your browser. Play the demo, add one Go rule, verify it, and apply the idea to your">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--flappy.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Make the hero fall for real.">
     <!-- ogp:end -->
@@ -356,7 +356,7 @@ func main() {
 </code></pre>
       </div>
 
-    <div class="why-grid"><article><p class="eyebrow">WITHOUT ACCELERATION</p><h3>One constant speed</h3><p>The hero travels up and down in straight lines, so movement feels mechanical.</p></article><article><p class="eyebrow">WITH ACCELERATION</p><h3>A smooth arc</h3><p>Upward velocity weakens, nears zero at the top, then grows downward.</p></article><article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Experiment with numbers</h3><p>Larger <code>gravity</code> makes a heavier hero. A more negative <code>flapSpeed</code> makes a stronger flap. Game design is finding values that feel right.</p></article></div>
+    <div class="why-grid"><article><p class="eyebrow">WITHOUT ACCELERATION</p><h3>One constant speed</h3><p>The hero travels up and down in straight lines, so movement feels mechanical.</p></article><article><p class="eyebrow">WITH ACCELERATION</p><h3>A smooth arc</h3><p>Upward velocity weakens, nears zero at the top, then grows downward.</p></article><article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>Add a five-point speed flag in Update</h3><p>In <code>game/main.go</code>, add <code>fastMode bool</code> to <code>game</code>. Immediately after <code>g.score++</code> in Update, write <code>if g.score &gt;= 5 { g.fastMode = true }</code>. Make only the Update-side pipe movement slightly faster when the flag is true. Draw may read the flag for colour or text only. Run <code>go test ./...</code> and verify after five points locally.</p></article></div>
     </section>
 
 
@@ -540,6 +540,25 @@ func main() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- core-authoring-links:start -->
+<section class="next-lines core-authoring-links"><p class="eyebrow">WRITE NEXT</p><h3>After playing, write and verify one rule</h3><p>Use Build Track to write from an empty Go folder, Testing to prove a rule, or first-30-minutes to begin your own game in half an hour.</p><p><a href="../../build/">Build Track →</a> · <a href="../../guides/testing/">Testing guide →</a> · <a href="../../guides/first-30-minutes/">first-30-minutes →</a></p></section>
+<!-- core-authoring-links:end -->
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine. No game framework JavaScript.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../learn.js"></script>

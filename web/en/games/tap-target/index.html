@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Learn Ebitengine Update, Draw, and Layout, plus input coordinates and circle hit tests. Play the demo, read a short Go example, change a value, and apply the id">
+  <meta name="description" content="Learn Ebitengine Update, Draw, and Layout, plus input coordinates and circle hit tests. Play the demo, add one Go rule, verify it, and apply the idea to your ow">
   <title>Ebi Showcase – LEVEL 01 — Tap the Target</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – LEVEL 01 — Tap the Target">
-    <meta property="og:description" content="Learn Ebitengine Update, Draw, and Layout, plus input coordinates and circle hit tests. Play the demo, read a short Go example, change a value, and apply the id">
+    <meta property="og:description" content="Learn Ebitengine Update, Draw, and Layout, plus input coordinates and circle hit tests. Play the demo, add one Go rule, verify it, and apply the idea to your ow">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/games/tap-target/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--tap-target.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – LEVEL 01 — Tap the Target">
-    <meta name="twitter:description" content="Learn Ebitengine Update, Draw, and Layout, plus input coordinates and circle hit tests. Play the demo, read a short Go example, change a value, and apply the id">
+    <meta name="twitter:description" content="Learn Ebitengine Update, Draw, and Layout, plus input coordinates and circle hit tests. Play the demo, add one Go rule, verify it, and apply the idea to your ow">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--games--tap-target.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Tap the Target">
     <!-- ogp:end -->
@@ -68,9 +68,10 @@ import \"math\"</pre></div></section>
       <p class="eyebrow">WHAT'S INSIDE / BEFORE ANYTHING ELSE</p>
       <h2>The heart of a game<br>is just three methods.</h2>
       <p class="lesson-lead">A <strong>method is a function—a named piece of work—attached to the Game box</strong>. An Ebitengine game is a flipbook. Every frame you change the numbers, then paint the screen. Once that rhythm clicks, gravity, enemies, and everything later fits in the same frame.</p>
-      <div class="steps" style="grid-template-columns:1fr 1fr">
+      <div class="steps" style="grid-template-columns:repeat(3,1fr)">
         <article><b>01</b><h3>UPDATE</h3><p>Read input and advance the <strong>numbers</strong>—score, positions, timers. Do not draw here.</p><code>func (g *Game) Update() error</code></article>
-        <article><b>02</b><h3>DRAW</h3><p>Paint circles and text from the current numbers. Do not run game math here.</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
+        <article><b>02</b><h3>DRAW</h3><p>Paint circles and text from the current numbers. Do not read input, run game math, or mutate state here.</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
+        <article><b>03</b><h3>SAME STATE</h3><p>The same <code>game</code> draws the same frame. Update decides rules; Draw projects the answer.</p><code>Update → game → Draw</code></article>
       </div>
 
       <div class="motion-lab" data-lab="loop" data-update="UPDATE" data-draw="DRAW" data-update-note="Change numbers (score, positions, timers)" data-draw-note="Paint the current numbers on screen" aria-labelledby="loop-lab-title">
@@ -82,7 +83,7 @@ import \"math\"</pre></div></section>
             <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="update draw" data-go-caption="Update changes numbers → Draw paints the frame">Next phase</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
-          <p class="lab-hint">One frame = one Update + one Draw. Separating math from drawing makes later changes easier.</p>
+          <p class="lab-hint">One frame = one Update + one Draw. Update decides the answer; Draw projects it without changing the numbers.</p>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-loop-board" data-lab-board data-phase="update" role="img" aria-label="Update and Draw phases">
@@ -366,7 +367,7 @@ func main() {
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT THE LOOP</p><h3>Nowhere obvious to put code</h3><p>With Update / Draw roles fixed, you know where input goes and where painting goes. The <code>error</code> return is an Ebitengine rule: return a problem to stop, or <code>nil</code> for “all fine”. Draw does not return error.</p></article>
         <article><p class="eyebrow">WITH COORDINATES</p><h3>One ruler for circle and tap</h3><p>Even when it looks round, the check is center plus radius. The rule stays the same on any screen size.</p></article>
-        <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Experiment with numbers</h3><p>Smaller <code>radius</code> makes it harder. Larger <code>framesLeft</code> makes a calmer round. Game design is hunting for values that feel right.</p></article>
+        <article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>Add a combo in Update</h3><p>In <code>games/core/tap-target/main.go</code>, add <code>combo int</code> to <code>game</code>, then write <code>g.combo++</code> immediately after <code>g.score++</code> inside Update's hit branch. Reset it with <code>g.combo = 0</code> on time-up/retry. Draw only displays <code>g.combo</code>. Run <code>go test ./...</code>, then confirm consecutive hits locally. Tuning <code>radius</code> is an optional extra after this RULE.</p></article>
       </div>
     </section>
 
@@ -544,6 +545,25 @@ func main() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- core-authoring-links:start -->
+<section class="next-lines core-authoring-links"><p class="eyebrow">WRITE NEXT</p><h3>After playing, write and verify one rule</h3><p>Use Build Track to write from an empty Go folder, Testing to prove a rule, or first-30-minutes to begin your own game in half an hour.</p><p><a href="../../build/">Build Track →</a> · <a href="../../guides/testing/">Testing guide →</a> · <a href="../../guides/first-30-minutes/">first-30-minutes →</a></p></section>
+<!-- core-authoring-links:end -->
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../learn.js"></script>
