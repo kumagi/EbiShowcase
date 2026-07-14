@@ -1,33 +1,33 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8">
-  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 評価関数でCPUと対戦する</title>
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 3種類のCPUと対戦する</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/reversi/ebi-reversi/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – 評価関数でCPUと対戦する">
+    <meta property="og:title" content="Ebi Showcase – 3種類のCPUと対戦する">
     <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/reversi/ebi-reversi/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--reversi--ebi-reversi.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="評価関数でCPUと対戦する">
+    <meta property="og:image:alt" content="3種類のCPUと対戦する">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – 評価関数でCPUと対戦する">
+    <meta name="twitter:title" content="Ebi Showcase – 3種類のCPUと対戦する">
     <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--reversi--ebi-reversi.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="評価関数でCPUと対戦する">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/reversi/ebi-reversi/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← コンピュータと対戦できるリバーシを作ろう</a><span>STEP 05 / 05</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>評価関数でCPUと対戦する</h1><p>角に高い点、角の隣に低い点を置いた8×8スコアマップで、いちばん良い手を選ぶCPUと対戦します。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
+    <meta name="twitter:image:alt" content="3種類のCPUと対戦する">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/reversi/ebi-reversi/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← コンピュータと対戦できるリバーシを作ろう</a><span>STEP 05 / 05</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>3種類のCPUと対戦する</h1><p>おだやか・位置重視・先読みの3種類のCPUを選び、角が高く角の隣が低い8×8スコアマップで対戦します。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_reversi-legal.svg" alt="リバーシの合法手" loading="lazy" decoding="async"><figcaption>リバーシの合法手の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>評価関数でCPUと対戦する</h2><p>クリック・タッチで盤面を操作できます。表示される座標、合法手、石数にも注目してください。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-reversi/" title="評価関数でCPUと対戦する" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>位置スコアとCPUの一手</h2><p>各マスに重みを置き、自分の石なら加点、相手の石なら減点します。候補手を全部試し、反転後の評価が最大になる手をCPUが選びます。</p><div class="concept-row"><article><b>01</b><h3>SEE</h3><p>角に高い点、角の隣に低い点を置いた8×8スコアマップで、いちばん良い手を選ぶCPUと対戦します。</p></article><article><b>02</b><h3>STATE</h3><p>各マスに重みを置き、自分の石なら加点、相手の石なら減点します。候補手を全部試し、反転後の評価が最大になる手をCPUが選びます。</p></article><article><b>03</b><h3>DECIDE</h3><p>見えている盤面から、次の一手の理由を言葉にします。</p></article></div></section><section class="motion-lab reversi-eval-lab" data-lab="reversi-eval" data-lang="ja"><div><p class="eyebrow">EVALUATION LAB</p><h2>8×8 Score Map</h2><p>石を置いて、位置の重みが評価値をどう変えるか見てみましょう。角は高く、角の隣は低く設定されています。</p></div><div class="reversi-eval-controls"><div class="reversi-eval-map" data-reversi-map aria-label="8 by 8 evaluation map"></div><p class="reversi-eval-score" data-reversi-score aria-live="polite"></p><div><button type="button" data-reversi-place="corner">CORNER</button><button type="button" data-reversi-place="risky">RISKY</button><button type="button" data-reversi-place="center">CENTER</button><button type="button" data-reversi-place="reset">RESET</button></div></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>位置スコアとCPUの一手</h2><p>実ゲームで使っている中心ルールを小さく抜き出します。</p></div><pre><code>score += int(stone) * ScoreMap[y][x]
-for _, move := range ValidMoves(board, White) {
-    candidate := board
-    Apply(&amp;candidate, White, move)
-    best = max(best, Evaluate(candidate, White))
-}</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>各マスに重みを置き、自分の石なら加点、相手の石なら減点します。候補手を全部試し、反転後の評価が最大になる手をCPUが選びます。</p></article><article><h3>CHANGE</h3><p>スコアマップや盤面の初期配置を変えて、結果を比べてみよう。</p></article><article class="challenge"><h3>CHALLENGE</h3><p>角を取るだけでなく、次の手を見越すCPUへ改良しよう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>コンピュータと対戦できるリバーシを作ろう</strong></a><a href="../" rel="next">COMPLETE →<strong>コンピュータと対戦できるリバーシを作ろう</strong></a></nav>
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>3種類のCPUと対戦する</h2><p>タップ／クリックに加え、矢印キーまたはWASDで黄色いカーソルを動かし、EnterかSpaceで置けます。1・2・3でCPUを選び、RまたはREPLAYで新しい対局を始めます。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-reversi/?lang=ja" title="3種類のCPUと対戦する" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>位置スコアと先読みCPU</h2><p>各マスに重みを置き、自分の石なら加点、相手の石なら減点します。先読みCPUは、自分の一手のあとに相手が選べる一番よい返し手まで調べます。</p><div class="concept-row"><article><b>01</b><h3>SEE</h3><p>おだやか・位置重視・先読みの3種類のCPUを選び、角が高く角の隣が低い8×8スコアマップで対戦します。</p></article><article><b>02</b><h3>STATE</h3><p>各マスに重みを置き、自分の石なら加点、相手の石なら減点します。先読みCPUは、自分の一手のあとに相手が選べる一番よい返し手まで調べます。</p></article><article><b>03</b><h3>DECIDE</h3><p>見えている盤面から、次の一手の理由を言葉にします。</p></article></div></section><section class="motion-lab reversi-eval-lab" data-lab="reversi-eval" data-lang="ja"><div><p class="eyebrow">EVALUATION LAB</p><h2>8×8 Score Map</h2><p>石を置いて、位置の重みが評価値をどう変えるか見てみましょう。角は高く、角の隣は低く設定されています。</p></div><div class="reversi-eval-controls"><div class="reversi-eval-map" data-reversi-map aria-label="8 by 8 evaluation map"></div><p class="reversi-eval-score" data-reversi-score aria-live="polite"></p><div><button type="button" data-reversi-place="corner">CORNER</button><button type="button" data-reversi-place="risky">RISKY</button><button type="button" data-reversi-place="center">CENTER</button><button type="button" data-reversi-place="reset">RESET</button></div></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>位置スコアと先読みCPU</h2><p>実ゲームで使っている中心ルールを小さく抜き出します。</p></div><pre><code>move, ok, score := ChooseLookahead(board, White)
+if ok {
+    Apply(&amp;board, White, move)
+}
+// score is the worst reply the opponent can force
+_ = score</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>各マスに重みを置き、自分の石なら加点、相手の石なら減点します。先読みCPUは、自分の一手のあとに相手が選べる一番よい返し手まで調べます。</p></article><article><h3>CHANGE</h3><p>CPUを1・2・3で切り替え、同じ局面でどの手を選ぶか比べよう。</p></article><article class="challenge"><h3>CHALLENGE</h3><p>ScoreMapや先読みの深さを変え、どんなCPUが強く・楽しくなるか試そう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>コンピュータと対戦できるリバーシを作ろう</strong></a><a href="../" rel="next">COMPLETE →<strong>コンピュータと対戦できるリバーシを作ろう</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">

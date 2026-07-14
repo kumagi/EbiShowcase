@@ -7,13 +7,22 @@ import (
 	"image/color"
 	"math"
 	"math/rand"
+	"sync"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/ogfont"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/topdownadventurelogic"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"golang.org/x/image/font"
+	"golang.org/x/image/font/opentype"
 )
 
 const (
@@ -45,12 +54,50 @@ type game struct {
 	nodes                                                                                  []node
 	chest, clear, over                                                                     bool
 	message                                                                                string
+	lang                                                                                   string
 	particles                                                                              []particle
 	rng                                                                                    *rand.Rand
+	audio                                                                                  *audio.Context
+	gate                                                                                   audiolab.Gate
+	pulse                                                                                  *shaderlab.Pulse
+	cam                                                                                    cameralab.State
+	badge                                                                                  *ebiten.Image
 }
 
 var sessionBest [9]int
 var titles = [9]string{"", "EIGHT-WAY RELIC RUN", "SWORD REACH TRIAL", "HURT & RECOVERY", "THREE SEALED ROOMS", "KEY AND TREASURE", "RELIC TOOL PUZZLES", "THREE-PHASE GUARDIAN", "EBI RELIC DUNGEON"}
+var dungeonRooms = []topdownadventurelogic.RoomSpec{
+	{Name: "KEY GATE", Goal: "Find the key and open the blue gate.", NeedsKey: true},
+	{Name: "CRAWLER SEAL", Goal: "Defeat every crawler to unseal the exit.", Enemies: 4},
+	{Name: "RELIC SEALS", Goal: "Match SWORD, GUST, and LAMP to seals.", NeedsTools: true},
+	{Name: "GUARDIAN", Goal: "Read the three phases and defeat the boss.", Enemies: 1, Boss: true},
+}
+
+var (
+	advFontOnce sync.Once
+	advFontBase *opentype.Font
+	advFontErr  error
+	advFaces    = map[float64]font.Face{}
+)
+
+func advFace(size float64) font.Face {
+	advFontOnce.Do(func() { advFontBase, advFontErr = opentype.Parse(ogfont.NotoSansJP) })
+	if advFontErr != nil {
+		panic(advFontErr)
+	}
+	if f := advFaces[size]; f != nil {
+		return f
+	}
+	f, err := opentype.NewFace(advFontBase, &opentype.FaceOptions{Size: size, DPI: 72, Hinting: font.HintingFull})
+	if err != nil {
+		panic(err)
+	}
+	advFaces[size] = f
+	return f
+}
+func advLabel(s *ebiten.Image, v string, x, y int, c color.Color, size float64) {
+	text.Draw(s, v, advFace(size), x, y, c)
+}
 
 func Run(lesson int) {
 	ebiten.SetWindowSize(W, H)
@@ -60,9 +107,24 @@ func Run(lesson int) {
 	}
 }
 func newGame(lesson int) *game {
-	g := &game{lesson: lesson, face: topdownadventurelogic.Vec{X: 1}, player: topdownadventurelogic.Fighter{Pos: topdownadventurelogic.Vec{X: 75, Y: 320}, HP: 5}, best: sessionBest[lesson], rng: rand.New(rand.NewSource(int64(100 + lesson)))}
+	g := &game{lesson: lesson, face: topdownadventurelogic.Vec{X: 1}, player: topdownadventurelogic.Fighter{Pos: topdownadventurelogic.Vec{X: 75, Y: 320}, HP: 5}, best: max(sessionBest[lesson], storedBest(gBestKey(lesson))), lang: browserLanguage(), rng: rand.New(rand.NewSource(int64(100 + lesson)))}
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.pulse = shaderlab.NewPulse()
+	g.cam = cameralab.State{ViewW: W, ViewH: H}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{255, 211, 112, 255})
 	g.setup()
 	return g
+}
+func gBestKey(lesson int) string { return fmt.Sprintf("ebiShowcase.adventure.best.%d", lesson) }
+func (g *game) tr(en, ja string) string {
+	if g.lang == "ja" {
+		return ja
+	}
+	return en
+}
+func (g *game) toolName() string {
+	return g.tr([]string{"SWORD", "GUST", "LAMP"}[g.tool], []string{"けん", "かぜ", "ランプ"}[g.tool])
 }
 func (g *game) setup() {
 	g.player.Pos = topdownadventurelogic.Vec{X: 75, Y: 320}
@@ -92,9 +154,16 @@ func (g *game) setup() {
 		g.spawnBoss()
 		g.message = "Read GUARD, DASH, and STORM phases; strike after moving."
 	case 8:
-		g.message = "ROOM 1: find the key and open the treasure gate."
+		g.message = g.roomMessage(0)
 		g.gems = []topdownadventurelogic.Vec{{145, 185}}
 	}
+}
+func (g *game) roomMessage(index int) string {
+	r := dungeonRooms[index]
+	if g.lang == "ja" {
+		return fmt.Sprintf("ROOM %d: %s", index+1, []string{"カギを見つけ、青い門を開こう。", "全ての敵を倒して出口を開こう。", "道具と色つきの封印を組み合わせよう。", "3つの行動を見て守護者を倒そう。"}[index])
+	}
+	return fmt.Sprintf("ROOM %d: %s", index+1, r.Goal)
 }
 func (g *game) spawnEnemies(n int, boss bool) {
 	for i := 0; i < n; i++ {
@@ -128,7 +197,7 @@ func (g *game) Update() error {
 	}
 	if toolPressed() {
 		g.tool = (g.tool + 1) % 3
-		g.message = "Tool selected: " + []string{"SWORD", "GUST", "LAMP"}[g.tool]
+		g.message = g.tr("Tool selected: ", "どうぐを えらんだ: ") + g.toolName()
 	}
 	if g.attack > 0 {
 		g.attack--
@@ -234,15 +303,20 @@ func (g *game) resolveAction() {
 			hit = true
 			g.score += 180
 			g.burst(n.pos, color.RGBA{80, 230, 203, 255}, 18)
-			g.message = []string{"Sword cut the vine seal!", "Gust spun the wind seal!", "Lamp revealed the shadow seal!"}[n.kind]
+			g.message = g.tr([]string{"Sword cut the vine seal!", "Gust spun the wind seal!", "Lamp revealed the shadow seal!"}[n.kind], []string{"けんで つるの封印を切った！", "かぜで 風の封印を回した！", "ランプで 影の封印を見つけた！"}[n.kind])
 		}
 	}
 	if hit {
+		g.play(680)
 		g.shake = 5
 		g.flash = 3
 	} else {
-		g.message = "The action missed. Face the target and check the reach."
+		g.message = g.tr("The action missed. Face the target and check the reach.", "とどかなかった。向きと けんの長さを見よう。")
 	}
+}
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, freq, .05)).Play()
 }
 func (g *game) collect() {
 	for i := len(g.gems) - 1; i >= 0; i-- {
@@ -281,7 +355,7 @@ func (g *game) updateEnemies() {
 				if g.player.Hurt(1, e.pos, 75) {
 					g.shake, g.flash = 14, 12
 					g.burst(g.player.Pos, color.RGBA{147, 112, 255, 255}, 22)
-					g.message = "STORM ring hit! Move outside its warning circle."
+					g.message = g.tr("STORM ring hit! Move outside its warning circle.", "STORMに当たった！ 輪の外へ逃げよう。")
 				}
 			}
 		}
@@ -293,7 +367,7 @@ func (g *game) updateEnemies() {
 				g.shake = 12
 				g.flash = 12
 				g.burst(g.player.Pos, color.RGBA{255, 70, 96, 255}, 18)
-				g.message = "Hit! Flashing means invulnerable—move to safety."
+				g.message = g.tr("Hit! Flashing means invulnerable—move to safety.", "ダメージ！光っている間は無敵。安全な場所へ。")
 			}
 		}
 	}
@@ -336,7 +410,7 @@ func (g *game) updateLesson() {
 	}
 	if g.player.HP <= 0 {
 		g.over = true
-		g.message = "The expedition ended. Tap or Enter to retry."
+		g.message = g.tr("The expedition ended. Tap or Enter to retry.", "ぼうけんはここまで。タップかEnterで もう一度。")
 	}
 }
 func (g *game) updateKeyDoor(dungeon bool) {
@@ -391,13 +465,13 @@ func (g *game) advanceDungeon() {
 	switch g.stage {
 	case 1:
 		g.spawnEnemies(4, false)
-		g.message = "ROOM 2: defeat every crawler to open the seal."
+		g.message = g.roomMessage(1)
 	case 2:
 		g.nodes = []node{{topdownadventurelogic.Vec{120, 180}, 0, false}, {topdownadventurelogic.Vec{360, 190}, 1, false}, {topdownadventurelogic.Vec{240, 430}, 2, false}}
-		g.message = "ROOM 3: match each tool to its colored seal."
+		g.message = g.roomMessage(2)
 	case 3:
 		g.spawnBoss()
-		g.message = "FINAL ROOM: read all three guardian phases."
+		g.message = g.roomMessage(3)
 	}
 }
 func (g *game) win(message string) {
@@ -406,6 +480,7 @@ func (g *game) win(message string) {
 	g.score += g.player.HP*100 + max(0, 1800-g.frames/3)
 	if g.score > sessionBest[g.lesson] {
 		sessionBest[g.lesson] = g.score
+		storeBest(gBestKey(g.lesson), g.score)
 	}
 	g.best = sessionBest[g.lesson]
 }
@@ -439,6 +514,8 @@ func (g *game) updateParticles() {
 	}
 }
 func (g *game) Draw(screen *ebiten.Image) {
+	g.cam.ViewW, g.cam.ViewH = float64(screen.Bounds().Dx()), float64(screen.Bounds().Dy())
+	g.drawEffectBadge(screen)
 	palette := []color.RGBA{{}, {18, 55, 65, 255}, {46, 42, 71, 255}, {70, 38, 53, 255}, {33, 56, 78, 255}, {52, 54, 43, 255}, {35, 48, 75, 255}, {65, 31, 52, 255}, {23, 48, 62, 255}}
 	screen.Fill(palette[g.lesson])
 	dx, dy := 0, 0
@@ -462,11 +539,23 @@ func (g *game) Draw(screen *ebiten.Image) {
 		if g.over {
 			title = "EXPEDITION LOST"
 		}
-		ebitenutil.DebugPrintAt(screen, title, 165, 270)
-		ebitenutil.DebugPrintAt(screen, g.message, 65, 315)
-		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %05d  BEST %05d", g.score, g.best), 145, 355)
-		ebitenutil.DebugPrintAt(screen, "TAP / ENTER TO PLAY AGAIN", 135, 415)
+		advLabel(screen, g.tr(title, map[bool]string{true: "ぼうけん クリア！", false: "ぼうけん しっぱい"}[g.over]), 118, 275, color.White, 22)
+		advLabel(screen, g.message, 54, 318, color.White, 14)
+		advLabel(screen, fmt.Sprintf("SCORE %05d  BEST %05d  %s", g.score, g.best, topdownadventurelogic.RunGrade(g.score, g.player.HP, g.frames)), 90, 360, color.White, 16)
+		advLabel(screen, g.tr("TAP / ENTER TO PLAY AGAIN", "タップ / ENTER で もう一ど"), 115, 416, color.White, 14)
 	}
+}
+func (g *game) drawEffectBadge(screen *ebiten.Image) {
+	if g.lesson != 8 || g.pulse == nil || !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.pulse.Draw(fx, g.badge, float32(g.frames)*.08) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(W-34, 10)
+	screen.DrawImage(fx, op)
 }
 func (g *game) drawArena(s *ebiten.Image) {
 	vector.DrawFilledRect(s, 30, 90, 420, 450, color.RGBA{12, 25, 40, 210}, false)
@@ -524,23 +613,31 @@ func (g *game) drawActors(s *ebiten.Image) {
 		ebitenutil.DebugPrintAt(s, fmt.Sprintf("HP%d", e.hp), int(e.pos.X)-12, int(e.pos.Y)-35)
 		if e.boss {
 			phase := topdownadventurelogic.PhaseForHP(e.hp, 12)
+			if phase == topdownadventurelogic.BossDash && g.frames%110 < 26 {
+				r := float32(38 + (g.frames%26)*2)
+				vector.StrokeCircle(s, float32(e.pos.X), float32(e.pos.Y), r, 4, color.RGBA{255, 118, 102, 230}, false)
+				advLabel(s, g.tr("DASH IN!", "突進くる！"), int(e.pos.X)-35, int(e.pos.Y)-70, color.RGBA{255, 208, 104, 255}, 13)
+			}
 			if phase == topdownadventurelogic.BossStorm {
 				radius := float32(70 + (g.frames%90)*85/90)
 				vector.StrokeCircle(s, float32(e.pos.X), float32(e.pos.Y), radius, 4, color.RGBA{170, 125, 255, 170}, false)
 			}
-			ebitenutil.DebugPrintAt(s, []string{"GUARD", "DASH", "STORM", "DOWN"}[phase], int(e.pos.X)-24, int(e.pos.Y)-52)
+			advLabel(s, g.tr([]string{"GUARD", "DASH", "STORM", "DOWN"}[phase], []string{"ガード", "突進", "あらし", "たおれた"}[phase]), int(e.pos.X)-26, int(e.pos.Y)-48, color.White, 12)
 		}
 	}
 }
 func (g *game) drawUI(s *ebiten.Image) {
-	ebitenutil.DebugPrintAt(s, titles[g.lesson], 130, 16)
+	advLabel(s, g.tr(titles[g.lesson], []string{"", "8ほうこう レリックラン", "けんの とどくばしょ", "ダメージと かいふく", "3つの封印の部屋", "カギと たからばこ", "レリック道具パズル", "3だんかいの守護者", "エビ レリック ダンジョン"}[g.lesson]), 72, 27, color.White, 17)
 	room := g.stage + 1
 	if g.lesson < 4 {
 		room = 1
 	}
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("HP %d  SCORE %05d  ROOM %d  TOOL %s", g.player.HP, g.score, room, []string{"SWORD", "GUST", "LAMP"}[g.tool]), 95, 44)
-	ebitenutil.DebugPrintAt(s, g.message, 36, 68)
+	advLabel(s, fmt.Sprintf("HP %d  SCORE %05d  %s %d  %s %s", g.player.HP, g.score, g.tr("ROOM", "へや"), room, g.tr("TOOL", "どうぐ"), g.toolName()), 48, 54, color.White, 14)
+	advLabel(s, g.message, 34, 78, color.RGBA{222, 235, 255, 255}, 13)
 	labels := []string{"LEFT", "UP", "DOWN", "RIGHT", "ATTACK", "TOOL"}
+	if g.lang == "ja" {
+		labels = []string{"ひだり", "うえ", "した", "みぎ", "こうげき", "どうぐ"}
+	}
 	for i, l := range labels {
 		c := color.RGBA{48, 82, 120, 255}
 		if i == 4 {
@@ -549,9 +646,9 @@ func (g *game) drawUI(s *ebiten.Image) {
 			c = color.RGBA{178, 137, 50, 255}
 		}
 		vector.DrawFilledRect(s, float32(i*80+3), 590, 74, 70, c, false)
-		ebitenutil.DebugPrintAt(s, l, i*80+14, 621)
+		advLabel(s, l, i*80+12, 631, color.White, 13)
 	}
-	ebitenutil.DebugPrintAt(s, "WASD/arrows move · X/Space attack · Q changes tool", 70, 685)
+	advLabel(s, g.tr("WASD/arrows move · X/Space attack · Q changes tool", "WASD/矢印で移動 · X/Spaceで攻撃 · Qで道具"), 35, 690, color.RGBA{220, 230, 255, 255}, 12)
 }
 func attackPressed() bool {
 	if inpututil.IsKeyJustPressed(ebiten.KeyX) || inpututil.IsKeyJustPressed(ebiten.KeySpace) {

@@ -3,10 +3,16 @@ package main
 import (
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	text "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 	"image/color"
 	"math"
 )
@@ -34,9 +40,20 @@ type game struct {
 	grounded, big, powerTaken, clear bool
 	tick, finishTimer                int
 	sparks                           []spark
+	audio                            *audio.Context
+	gate                             audiolab.Gate
+	pulse                            *shaderlab.Pulse
+	camState                         cameralab.State
+	shaderBadge                      *ebiten.Image
 }
 
-func newGame() *game { g := &game{stage: 1, life: 3}; g.load(); return g }
+func newGame() *game {
+	badge := ebiten.NewImage(32, 32)
+	badge.Fill(color.RGBA{255, 220, 72, 255})
+	g := &game{stage: 1, life: 3, audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), camState: cameralab.State{ViewW: width, ViewH: height}, shaderBadge: badge}
+	g.load()
+	return g
+}
 func (g *game) load() {
 	g.p = rect{35, 580, 28, 38}
 	g.vx, g.vy, g.camera = 0, 0, 0
@@ -113,6 +130,7 @@ func (g *game) Update() error {
 	if j && g.grounded {
 		g.vy = -12.5
 		g.burst(g.p.x+g.p.w/2, g.p.y+g.p.h, color.RGBA{235, 224, 170, 255}, 5)
+		g.playSE(audiolab.Sine, 520)
 	}
 	g.vy = math.Min(g.vy+.65, 14)
 	g.p.x = clamp(g.p.x+g.vx, 0, 1670)
@@ -131,6 +149,7 @@ func (g *game) Update() error {
 			g.burst(g.coins[i].x+7, g.coins[i].y+7, color.RGBA{255, 220, 62, 255}, 8)
 			g.coins = append(g.coins[:i], g.coins[i+1:]...)
 			g.score += 100
+			g.playSE(audiolab.Sine, 760)
 		}
 	}
 	if !g.powerTaken && overlap(g.p, g.power) {
@@ -190,6 +209,7 @@ func (g *game) Update() error {
 	}
 	target := g.p.x - width*.4
 	g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 1220)
+	g.camState.Pos.X = g.camera + width*.4
 	return nil
 }
 func (g *game) burst(x, y float64, c color.RGBA, n int) {
@@ -202,6 +222,14 @@ func (g *game) Draw(s *ebiten.Image) {
 	skies := []color.RGBA{{102, 189, 231, 255}, {99, 91, 173, 255}, {241, 151, 98, 255}, {28, 40, 88, 255}}
 	sky := skies[g.stage-1]
 	s.Fill(sky)
+	if g.pulse.Available() {
+		fx := ebiten.NewImage(32, 32)
+		if g.pulse.Draw(fx, g.shaderBadge, float32(g.tick)*.08) {
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(430, 12)
+			s.DrawImage(fx, op)
+		}
+	}
 	for _, b := range g.grounds {
 		x := b.x - g.camera
 		if x+b.w < 0 || x > width {
@@ -237,13 +265,25 @@ func (g *game) Draw(s *ebiten.Image) {
 	trackatlas.DrawCentered(s, "hero", g.p.x-g.camera+g.p.w/2, g.p.y+g.p.h-heroSize/2, heroSize)
 	flag := 1650 - g.camera
 	trackatlas.Draw(s, "flag", flag, 480, 140)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("STAGE %d/4   LIFE %d   SCORE %05d   COINS %d", g.stage, g.life, g.score, len(g.coins)), 45, 22)
+	if face, err := uilab.Face("en", 16); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(45, 22)
+		text.Draw(s, fmt.Sprintf("STAGE %d/4   LIFE %d   SCORE %05d   COINS %d", g.stage, g.life, g.score, len(g.coins)), face, op)
+	} else {
+		ebitenutil.DebugPrintAt(s, fmt.Sprintf("STAGE %d/4   LIFE %d   SCORE %05d   COINS %d", g.stage, g.life, g.score, len(g.coins)), 45, 22)
+	}
 	ebitenutil.DebugPrintAt(s, "GREEN ORB MAKES EBI BIG", 150, 48)
 	ebitenutil.DebugPrintAt(s, "MOVE: A/D OR LOWER TOUCH    JUMP: SPACE OR UPPER TOUCH", 50, 685)
 	if g.clear {
 		vector.DrawFilledRect(s, 55, 280, 370, 150, color.RGBA{6, 18, 37, 235}, false)
 		ebitenutil.DebugPrintAt(s, "EBI ADVENTURE COMPLETE!\n\nTAP / SPACE TO PLAY AGAIN", 125, 330)
 	}
+}
+func (g *game) playSE(w audiolab.Wave, hz float64) {
+	if !g.gate.Arm(true) {
+		return
+	}
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(w, hz, .12)).Play()
 }
 func overlap(a, b rect) bool        { return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y }
 func clamp(v, l, h float64) float64 { return math.Max(l, math.Min(h, v)) }

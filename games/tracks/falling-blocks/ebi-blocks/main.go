@@ -7,10 +7,16 @@ import (
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const (
@@ -83,10 +89,20 @@ type game struct {
 	scene                     *ebiten.Image
 	message                   string
 	won, lost                 bool
+	audio                     *audio.Context
+	gate                      audiolab.Gate
+	pulse                     *shaderlab.Pulse
+	cam                       cameralab.State
+	badge                     *ebiten.Image
 }
 
 func newGame() *game {
 	g := &game{rng: rand.New(rand.NewSource(6606)), hold: noPiece, level: 1, combo: -1, scene: ebiten.NewImage(screenW, screenH)}
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.pulse = shaderlab.NewPulse()
+	g.cam = cameralab.State{Pos: cameralab.Vec{X: screenW / 2, Y: screenH / 2}, ViewW: screenW, ViewH: screenH}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{239, 190, 62, 255})
 	for y := range g.board {
 		for x := range g.board[y] {
 			g.board[y][x] = noPiece
@@ -313,6 +329,7 @@ func (g *game) lock() {
 	cleared := g.clearLines()
 	g.pieces++
 	if cleared > 0 {
+		g.play(440 + float64(cleared)*120)
 		g.combo++
 		points := [...]int{0, 100, 300, 500, 800}
 		g.score += points[cleared]*g.level + g.combo*50
@@ -324,6 +341,7 @@ func (g *game) lock() {
 		g.burst(cleared)
 		g.message = fmt.Sprintf("%d line(s)! Combo %d, level %d.", cleared, g.combo+1, g.level)
 	} else {
+		g.play(180)
 		g.combo = -1
 		g.message = "Piece locked. Build a full row."
 	}
@@ -349,6 +367,11 @@ func (g *game) lock() {
 		g.clearFlash = 45
 	}
 	g.spawn(g.takeNext())
+}
+
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Square, freq, .055)).Play()
 }
 
 func (g *game) burst(lines int) {
@@ -398,7 +421,8 @@ func (g *game) Draw(screen *ebiten.Image) {
 
 func (g *game) drawScene(screen *ebiten.Image) {
 	screen.Fill(stages[g.stage].background)
-	ebitenutil.DebugPrintAt(screen, "EBI BLOCKS", 202, 18)
+	g.drawTitle(screen)
+	g.drawEffectBadge(screen)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("STAGE %d/3 %-11s  LINES %d/%d", g.stage+1, stages[g.stage].name, g.stageLines, stages[g.stage].goal), 98, 42)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %05d  BEST %05d  LEVEL %d", g.score, g.best, g.level), 120, 58)
 	ebitenutil.DebugPrintAt(screen, g.message, 76, 76)
@@ -464,6 +488,29 @@ func (g *game) drawScene(screen *ebiten.Image) {
 	if g.lost {
 		overlay(screen, "STACK REACHED THE TOP\n\nTAP / ENTER TO RETRY")
 	}
+}
+
+func (g *game) drawTitle(screen *ebiten.Image) {
+	if face, err := uilab.Face("en", 16); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(202, 6)
+		text.Draw(screen, "EBI BLOCKS", face, op)
+		return
+	}
+	ebitenutil.DebugPrintAt(screen, "EBI BLOCKS", 202, 18)
+}
+
+func (g *game) drawEffectBadge(screen *ebiten.Image) {
+	if g.pulse == nil || !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.pulse.Draw(fx, g.badge, float32(g.frame)*.08) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(screenW-30, 12)
+	screen.DrawImage(fx, op)
 }
 
 func drawCell(screen *ebiten.Image, x, y int, c color.RGBA, alpha uint8) {

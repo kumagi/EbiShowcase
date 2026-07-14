@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ebi Showcase – Measure game performance</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Measure game performance">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/performance/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--performance.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Before making it fast, choose what to measure.">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Measure game performance">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--performance.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Before making it fast, choose what to measure.">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/performance/">
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../en/"><span>EBI</span> SHOWCASE</a><nav><a class="lang" href="../../../ja/guides/performance/">JA</a></nav></header><main><section class="test-hero"><p class="eyebrow">SYSTEM GUIDE / PERFORMANCE</p><h1>Before making it fast,<br><em>choose what to measure.</em></h1><p>“Slow” is not one problem. Measure per-frame allocation, drawing things off screen, and every-object collision checks separately.</p></section><section class="test-course"><h2>Three small tools</h2><div class="test-course-grid"><article class="test-course-card"><span>01</span><h3>Reuse a slice</h3><p>Pack visible objects into `dst[:0]`. Our Cull benchmark measured <b>0 allocs/op</b>.</p></article><article class="test-course-card"><span>02</span><h3>Pool</h3><p>Return short-lived bullets and sparks instead of allocating them every time.</p></article><article class="test-course-card"><span>03</span><h3>Spatial grid</h3><p>Inspect candidates in nine nearby cells, not every object against every other object.</p></article></div></section><section class="test-terminal"><code>$ go test -bench . -benchmem ./internal/perflab<br>BenchmarkCullReuse  5527 ns/op  0 allocs/op<br>BenchmarkGridNearby 1707 ns/op  2 allocs/op</code><strong>measure first, then improve</strong></section>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/guides/performance/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer></body></html>

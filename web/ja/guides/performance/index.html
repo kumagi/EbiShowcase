@@ -1,0 +1,50 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+  <meta name="description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ebi Showcase – ゲームの速さを測る</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – ゲームの速さを測る">
+    <meta property="og:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/guides/performance/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--performance.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="速くする前に、 何を測るか決めよう。">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – ゲームの速さを測る">
+    <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--performance.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="速くする前に、 何を測るか決めよう。">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/performance/">
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a class="lang" href="../../../en/guides/performance/">EN</a></nav></header><main><section class="test-hero"><p class="eyebrow">SYSTEM GUIDE / PERFORMANCE</p><h1>速くする前に、<br><em>何を測るか決めよう。</em></h1><p>ゲームの「重い」は一つではありません。毎フレームの確保、見えないものの描画、全員どうしの当たり判定を分けて測ります。</p></section><section class="test-course"><h2>3つの小さな道具</h2><div class="test-course-grid"><article class="test-course-card"><span>01</span><h3>再利用する slice</h3><p>画面内のものを `dst[:0]` に詰め直します。今回のCullベンチは <b>0 allocs/op</b> でした。</p></article><article class="test-course-card"><span>02</span><h3>プール</h3><p>弾や火花を毎回newせず、消えたものを戻します。数が多く、寿命が短いものに向いています。</p></article><article class="test-course-card"><span>03</span><h3>空間グリッド</h3><p>近くの9マスだけを候補にします。全員対全員より、詳しい判定をずっと少なくできます。</p></article></div></section><section class="test-terminal"><code>$ go test -bench . -benchmem ./internal/perflab<br>BenchmarkCullReuse  5527 ns/op  0 allocs/op<br>BenchmarkGridNearby 1707 ns/op  2 allocs/op</code><strong>先に数字、次に改善</strong></section>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/guides/performance/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer></body></html>

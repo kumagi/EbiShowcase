@@ -58,19 +58,26 @@ type Session struct {
 	Frame                   int
 	Score, Combo, Best      int
 	Perfects, Goods, Misses int
-	held                    []bool
-	states                  []noteState
-	events                  []Result
+	// Offset shifts input timing in frames. Positive values compensate for an
+	// input path that arrives late; it is deliberately part of pure state.
+	Offset int
+	held   []bool
+	states []noteState
+	events []Result
 }
 
 const PerfectWindow = 4
 const GoodWindow = 9
 
 func NewSession(chart Chart) *Session {
+	return NewSessionWithOffset(chart, 0)
+}
+
+func NewSessionWithOffset(chart Chart, offset int) *Session {
 	c := chart
 	c.Notes = slices.Clone(chart.Notes)
 	slices.SortFunc(c.Notes, func(a, b Note) int { return a.At - b.At })
-	return &Session{Chart: c, held: make([]bool, max(1, c.Lanes)), states: make([]noteState, len(c.Notes))}
+	return &Session{Chart: c, Offset: offset, held: make([]bool, max(1, c.Lanes)), states: make([]noteState, len(c.Notes))}
 }
 
 func GradeDelta(delta int) Grade {
@@ -85,6 +92,8 @@ func GradeDelta(delta int) Grade {
 	}
 	return Miss
 }
+
+func (s *Session) timingFrame() int { return s.Frame + s.Offset }
 
 func (s *Session) Step(inputs []Input) []Result {
 	s.events = s.events[:0]
@@ -106,14 +115,14 @@ func (s *Session) Step(inputs []Input) []Result {
 		}
 		switch n.Kind {
 		case Tap:
-			if s.Frame > n.At+GoodWindow {
-				s.resolve(i, Miss, s.Frame-n.At)
+			if s.timingFrame() > n.At+GoodWindow {
+				s.resolve(i, Miss, s.timingFrame()-n.At)
 			}
 		case Hold:
-			if !st.started && s.Frame > n.At+GoodWindow {
-				s.resolve(i, Miss, s.Frame-n.At)
+			if !st.started && s.timingFrame() > n.At+GoodWindow {
+				s.resolve(i, Miss, s.timingFrame()-n.At)
 			}
-			if st.started && s.Frame >= n.At+n.Duration {
+			if st.started && s.timingFrame() >= n.At+n.Duration {
 				if s.held[n.Lane] {
 					s.resolve(i, st.startGrade, st.delta)
 				} else {
@@ -121,7 +130,7 @@ func (s *Session) Step(inputs []Input) []Result {
 				}
 			}
 		case Roll:
-			if s.Frame > n.At+n.Duration {
+			if s.timingFrame() > n.At+n.Duration {
 				grade := Miss
 				if st.hits >= max(1, n.Need) {
 					grade = Perfect
@@ -143,14 +152,14 @@ func (s *Session) press(lane int) {
 		if st.resolved || n.Lane != lane {
 			continue
 		}
-		if n.Kind == Roll && s.Frame >= n.At-GoodWindow && s.Frame <= n.At+n.Duration {
+		if n.Kind == Roll && s.timingFrame() >= n.At-GoodWindow && s.timingFrame() <= n.At+n.Duration {
 			st.hits++
 			return
 		}
 		if st.started {
 			continue
 		}
-		d := s.Frame - n.At
+		d := s.Frame + s.Offset - n.At
 		ad := d
 		if ad < 0 {
 			ad = -ad
@@ -163,7 +172,7 @@ func (s *Session) press(lane int) {
 		return
 	}
 	n, st := s.Chart.Notes[best], &s.states[best]
-	delta := s.Frame - n.At
+	delta := s.timingFrame() - n.At
 	if n.Kind == Hold {
 		st.started, st.startGrade, st.delta = true, GradeDelta(delta), delta
 		return

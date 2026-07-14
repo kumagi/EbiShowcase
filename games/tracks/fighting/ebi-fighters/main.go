@@ -3,10 +3,16 @@ package main
 import (
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	text "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 	"image/color"
 	"math"
 	"math/rand"
@@ -28,10 +34,17 @@ type game struct {
 	message                                  string
 	matchOver                                bool
 	rng                                      *rand.Rand
+	audio                                    *audio.Context
+	gate                                     audiolab.Gate
+	pulse                                    *shaderlab.Pulse
+	cam                                      cameralab.State
+	badge                                    *ebiten.Image
 }
 
 func newGame() *game {
-	g := &game{round: 1, rng: rand.New(rand.NewSource(4207))}
+	b := ebiten.NewImage(20, 20)
+	b.Fill(color.RGBA{255, 100, 80, 255})
+	g := &game{round: 1, rng: rand.New(rand.NewSource(4207)), audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: b}
 	g.resetRound()
 	return g
 }
@@ -55,6 +68,7 @@ func (g *game) Update() error {
 		return nil
 	}
 	g.frame++
+	g.cam.Pos = cameralab.Vec{X: (g.p.x + g.ai.x) / 2, Y: 360}
 	if g.shake > 0 {
 		g.shake--
 	}
@@ -177,6 +191,8 @@ func (g *game) updateAttack(a, b *fighter, inv *int, player bool) {
 			g.message = "CLEAN HIT!"
 		}
 		b.hp -= d
+		g.gate.Arm(true)
+		g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Noise, 190, .08)).Play()
 		g.hitstop = 5
 		if a.attackKind == 2 {
 			g.hitstop = 9
@@ -194,6 +210,14 @@ func (g *game) burst(x, y float64, n int) {
 	}
 }
 func (g *game) Draw(s *ebiten.Image) {
+	if g.pulse.Available() {
+		fx := ebiten.NewImage(20, 20)
+		if g.pulse.Draw(fx, g.badge, float32(g.frame)*.1) {
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(440, 12)
+			s.DrawImage(fx, op)
+		}
+	}
 	bg := []color.RGBA{{22, 31, 48, 255}, {45, 27, 54, 255}, {25, 52, 57, 255}}
 	s.Fill(bg[(g.round-1)%3])
 	ox := 0.0
@@ -214,7 +238,13 @@ func (g *game) Draw(s *ebiten.Image) {
 	vector.DrawFilledRect(s, 30, 45, float32(190*max(g.p.hp, 0)/100), 18, color.RGBA{45, 225, 194, 255}, false)
 	vector.DrawFilledRect(s, 450-float32(190*max(g.ai.hp, 0)/100), 45, float32(190*max(g.ai.hp, 0)/100), 18, color.RGBA{240, 75, 91, 255}, false)
 	sec := max(0, 45-g.frame/60)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("EBI %d  HP %03d      %02d      HP %03d  RIVAL %d", g.pWins, max(0, g.p.hp), sec, max(0, g.ai.hp), g.aiWins), 55, 75)
+	if f, e := uilab.Face("en", 16); e == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(55, 75)
+		text.Draw(s, fmt.Sprintf("EBI %d  HP %03d      %02d      HP %03d  RIVAL %d", g.pWins, max(0, g.p.hp), sec, max(0, g.ai.hp), g.aiWins), f, op)
+	} else {
+		ebitenutil.DebugPrintAt(s, fmt.Sprintf("EBI %d  HP %03d      %02d      HP %03d  RIVAL %d", g.pWins, max(0, g.p.hp), sec, max(0, g.ai.hp), g.aiWins), 55, 75)
+	}
 	ebitenutil.DebugPrintAt(s, g.message, 155, 115)
 	labels := []string{"LEFT", "RIGHT", "JAB", "HEAVY", "GUARD"}
 	for i, l := range labels {

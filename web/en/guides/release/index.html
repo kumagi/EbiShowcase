@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+  <meta name="description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ebi Showcase – Release checklist</title>
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Release checklist">
+    <meta property="og:description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/release/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--release.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Playable, shareable, and explainable.">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Release checklist">
+    <meta name="twitter:description" content="Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--release.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Playable, shareable, and explainable.">
+    <!-- ogp:end -->
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/release/">
+<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../en/"><span>EBI</span> SHOWCASE</a><nav><a class="lang" href="../../../ja/guides/release/">JA</a></nav></header><main><section class="test-hero"><p class="eyebrow">SYSTEM GUIDE / RELEASE</p><h1>Playable, shareable,<br><em>and explainable.</em></h1><p>Before publishing, check more than behavior: WASM, GitHub Pages, asset rights, and the steps needed to build it again.</p></section><section class="test-course"><h2>Five checks before release</h2><div class="test-course-grid"><article class="test-course-card"><span>01</span><h3>Local</h3><p>Run `go test ./...`. Try desktop and phone widths, keyboard, pointer, and touch once each.</p></article><article class="test-course-card"><span>02</span><h3>WASM</h3><p>Run `GOOS=js GOARCH=wasm go build`. HTML hosts; the game itself is Go/Ebitengine WASM.</p></article><article class="test-course-card"><span>03</span><h3>Pages</h3><p>Check the Actions artifact and Settings → Pages. Open both `/ja/` and `/en/` after deployment.</p></article><article class="test-course-card"><span>04</span><h3>License</h3><p>Your code is Apache-2.0. Record original rights for fonts, dependencies, and assets in `THIRD_PARTY_NOTICES.md`.</p></article><article class="test-course-card"><span>05</span><h3>Release</h3><p>Review title, description, OGP, language links, feedback form, and README instructions.</p></article></div></section><section class="test-terminal"><code>go test ./...<br>bash scripts/build.sh --fast<br>node scripts/check-metadata.mjs</code><strong>test → build → metadata → deploy</strong></section>
+
+
+    <section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/guides/release/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+
+
+
+
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer></body></html>

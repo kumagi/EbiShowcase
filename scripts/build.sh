@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+FAST_BUILD=0
+if [[ "${1:-}" == "--fast" ]]; then
+  FAST_BUILD=1
+  shift
+fi
+if [[ "$#" -ne 0 ]]; then
+  echo "usage: $0 [--fast]" >&2
+  exit 2
+fi
+# A deployment must always refresh OGP metadata and images. --fast is only a
+# local convenience; CI deliberately ignores it.
+if [[ -n "${CI:-}" ]]; then
+  FAST_BUILD=0
+fi
 node "$ROOT/scripts/gen-setup-guide.mjs"
 node "$ROOT/scripts/gen-testing-guide.mjs"
 node "$ROOT/scripts/gen-visual-effects.mjs"
@@ -11,6 +25,9 @@ node "$ROOT/scripts/gen-raycaster-track.mjs"
 node "$ROOT/scripts/gen-rhythm-track.mjs"
 node "$ROOT/scripts/gen-tower-defense-track.mjs"
 node "$ROOT/scripts/gen-topdown-adventure-track.mjs"
+node "$ROOT/scripts/gen-shader-lab.mjs"
+node "$ROOT/scripts/gen-audio-lab.mjs"
+node "$ROOT/scripts/gen-camera-lab.mjs"
 node "$ROOT/scripts/gen-active-rpg-polish.mjs"
 node "$ROOT/scripts/gen-visual-novel-polish.mjs"
 node "$ROOT/scripts/gen-racing-track.mjs"
@@ -39,7 +56,17 @@ node "$ROOT/scripts/gen-feedback-teaching-notes.mjs"
 node "$ROOT/scripts/gen-diagrams.mjs"
 node "$ROOT/scripts/home-thumbnails.mjs" inject
 node "$ROOT/scripts/inject-ogp.mjs"
-go run ./cmd/gen-og-images "$ROOT"
+OGP_STATE="$ROOT/.cache/ebi-showcase/ogp-inputs.sha256"
+OGP_FINGERPRINT="$(node "$ROOT/scripts/ogp-cache.mjs" fingerprint)"
+if [[ "$FAST_BUILD" == "1" ]] && [[ -f "$OGP_STATE" ]] && [[ "$(<"$OGP_STATE")" == "$OGP_FINGERPRINT" ]] && node "$ROOT/scripts/ogp-cache.mjs" verify; then
+  echo "OGP images unchanged — skipped PNG regeneration (--fast)."
+else
+  go run ./cmd/gen-og-images "$ROOT"
+  mkdir -p "$(dirname "$OGP_STATE")"
+  node "$ROOT/scripts/ogp-cache.mjs" fingerprint > "$OGP_STATE"
+  node "$ROOT/scripts/ogp-cache.mjs" verify
+fi
+node "$ROOT/scripts/check-site-metadata.mjs"
 rm -rf "$ROOT/dist"
 mkdir -p "$ROOT/dist"
 cp -R "$ROOT/web/." "$ROOT/dist/"

@@ -32,3 +32,20 @@ func TestProjectSpriteCenterAndBehind(t *testing.T) {
 		t.Fatalf("behind projection = %+v", behind)
 	}
 }
+
+func TestMissionValidationAndGrade(t *testing.T) {
+	m := Mission{Name: "test", Grid: [][]int{{1, 1, 1}, {1, 0, 1}, {1, 1, 1}}, StartX: 1.5, StartY: 1.5, KeyX: 1.5, KeyY: 1.5, ExitX: 1.5, ExitY: 1.5, GoalTime: 60}
+	if !ValidateMission(m) {
+		t.Fatal("valid mission was rejected")
+	}
+	m.Grid[1] = []int{1, 1}
+	if ValidateMission(m) {
+		t.Fatal("ragged mission was accepted")
+	}
+	if got := Grade(40, 0, 3, 2); got != "S" {
+		t.Fatalf("Grade() = %q, want S", got)
+	}
+	if got := Grade(90, 4, 10, 2); got != "C" {
+		t.Fatalf("Grade() = %q, want C", got)
+	}
+}

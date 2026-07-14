@@ -58,3 +58,34 @@ func TestBossPhases(t *testing.T) {
 		}
 	}
 }
+
+func TestDungeonRouteNeedsDataKeyAndBoss(t *testing.T) {
+	rooms := []RoomSpec{
+		{Name: "Key", Goal: "Open the door", NeedsKey: true},
+		{Name: "Fight", Goal: "Clear crawlers", Enemies: 4},
+		{Name: "Tools", Goal: "Light seals", NeedsTools: true},
+		{Name: "Guardian", Goal: "Defeat boss", Enemies: 1, Boss: true},
+	}
+	if !ValidDungeonRoute(rooms) {
+		t.Fatal("complete four-room route rejected")
+	}
+	rooms[0].NeedsKey = false
+	if ValidDungeonRoute(rooms) {
+		t.Fatal("route without a key room accepted")
+	}
+}
+
+func TestRunGradeRewardsHealthScoreAndTime(t *testing.T) {
+	if got := RunGrade(1900, 5, 1200); got != "S" {
+		t.Fatalf("S run = %q", got)
+	}
+	if got := RunGrade(1400, 3, 2200); got != "A" {
+		t.Fatalf("A run = %q", got)
+	}
+	if got := RunGrade(700, 1, 4000); got != "B" {
+		t.Fatalf("survival run = %q", got)
+	}
+	if got := RunGrade(0, 0, 4000); got != "C" {
+		t.Fatalf("empty run = %q", got)
+	}
+}

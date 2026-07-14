@@ -2,12 +2,19 @@ package main
 
 import (
 	"fmt"
-	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image/color"
 	"math"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const (
@@ -26,11 +33,22 @@ type game struct {
 	message                             string
 	flash, shake, bestFrames            int
 	sparks                              []spark
+	audio                               *audio.Context
+	gate                                audiolab.Gate
+	pulse                               *shaderlab.Pulse
+	camState                            cameralab.State
+	badge                               *ebiten.Image
 }
 type spark struct{ x, y, vx, vy, life float64 }
 
 func newGame() *game {
-	return &game{x: 80, y: ground - 36, revealed: map[int]bool{}, relics: map[int]bool{720: true, 1450: true, 2350: true, 2980: true}, message: "Explore the huge world. The map reveals one room at a time."}
+	g := &game{x: 80, y: ground - 36, revealed: map[int]bool{}, relics: map[int]bool{720: true, 1450: true, 2350: true, 2980: true}, message: "Explore the huge world. The map reveals one room at a time."}
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.pulse = shaderlab.NewPulse()
+	g.camState = cameralab.State{Pos: cameralab.Vec{X: W / 2, Y: H / 2}, ViewW: W, ViewH: H}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{245, 190, 68, 255})
+	return g
 }
 func floorAt(x float64) float64 {
 	if x > 980 && x < 1250 {
@@ -120,6 +138,7 @@ func (g *game) Update() error {
 	g.revealed[room] = true
 	for rx := range g.relics {
 		if math.Abs(g.x-float64(rx)) < 35 {
+			g.play(760)
 			delete(g.relics, rx)
 			if rx == 1450 {
 				g.dash = true
@@ -153,6 +172,10 @@ func (g *game) Update() error {
 		g.lost = true
 	}
 	return nil
+}
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, freq, .06)).Play()
 }
 func (g *game) burst(x, y float64, n int) {
 	for i := 0; i < n; i++ {
@@ -201,7 +224,8 @@ func (g *game) Draw(s *ebiten.Image) {
 	}
 	vector.DrawFilledRect(s, px-12, py+bob, 24, 36-bob, pc, false)
 	vector.DrawFilledRect(s, 0, 0, W, 80, color.RGBA{5, 11, 24, 235}, false)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("REGION %d/3 WORLD %04d ROOMS %d/8 RELICS %d DASH %v WINGS %v BEST %.1f", region+1, int(g.x), len(g.revealed), len(g.relics), g.dash, g.highJump, float64(g.bestFrames)/60), 10, 18)
+	g.drawHUD(s, region)
+	g.drawEffectBadge(s)
 	ebitenutil.DebugPrintAt(s, g.message, 25, 46)
 	for i := 0; i < 8; i++ {
 		c := color.RGBA{39, 48, 64, 255}
@@ -221,6 +245,28 @@ func (g *game) Draw(s *ebiten.Image) {
 	if g.lost {
 		overlay(s, "EXPLORATION FAILED\n\nTAP / ENTER TO RETRY")
 	}
+}
+func (g *game) drawHUD(s *ebiten.Image, region int) {
+	label := fmt.Sprintf("REGION %d/3 WORLD %04d ROOMS %d/8 RELICS %d DASH %v WINGS %v BEST %.1f", region+1, int(g.x), len(g.revealed), len(g.relics), g.dash, g.highJump, float64(g.bestFrames)/60)
+	if face, err := uilab.Face("en", 13); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(10, 6)
+		text.Draw(s, label, face, op)
+		return
+	}
+	ebitenutil.DebugPrintAt(s, label, 10, 18)
+}
+func (g *game) drawEffectBadge(s *ebiten.Image) {
+	if g.pulse == nil || !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.pulse.Draw(fx, g.badge, float32(g.frames)*.08) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(W-34, 52)
+	s.DrawImage(fx, op)
 }
 func controls() (bool, bool, bool, bool) {
 	left := ebiten.IsKeyPressed(ebiten.KeyLeft) || ebiten.IsKeyPressed(ebiten.KeyA)

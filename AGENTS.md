@@ -49,7 +49,7 @@ Use stable curriculum IDs such as `tracks/falling-blocks/falling-cell`, not reme
 ## Non-negotiable principles
 
 - Game logic, input, simulation, collision, and rendering belong in Go + Ebitengine. HTML, CSS, and JavaScript are only for the static showcase and shared WASM loader.
-- Everything in the repository is Apache License 2.0 compatible. Do not add assets, fonts, code, or copied game names/artwork with incompatible or unclear licensing.
+- Ebi Showcase's own code, prose, and original assets are Apache License 2.0. Compatible third-party dependencies and assets (including OFL/BSD fonts) may retain their original license only when copyright, source, and license are recorded in `THIRD_PARTY_NOTICES.md`; never relabel them as Apache-2.0. Do not add material with incompatible or unclear licensing.
 - Prefer original simple shapes; the shared protagonist 海老・天次郎 (Ebi Tenjiroh) sprite is allowed as the curriculum hero. Ebi-themed presentation otherwise. Famous games are references for mechanics, not permission to copy their art, text, characters, music, maps, or branding.
 - Every game must work with keyboard/mouse on PC and touch input on phones and tablets.
 - GitHub Pages project URLs must work. Use relative links; do not assume the site is hosted at `/`.
@@ -74,6 +74,22 @@ Continue from the entry returned by `next`; do not skip ahead merely because a l
 - track lessons: `games/tracks/<track>/<slug>/main.go`
 
 The build creates a separate game at `dist/play/<slug>/` for every implementation. Slugs must therefore remain unique across tracks.
+
+### Phase 0–4 roadmap loop
+
+The completed 208-entry curriculum gate and the post-gate quality roadmap are separate loops. For roadmap work, [`docs/ROADMAP_RALPH_LOOP.md`](docs/ROADMAP_RALPH_LOOP.md) is the source of truth. Its user-approved decisions are fixed: Go 1.25, compatible third-party licenses with notices, all four technical pillars applied to all 25 final genre games, three graduation projects with article/starter/reference implementations, and completion at the end of Phase 4. Phase 5 is an admission review, not part of completion.
+
+```sh
+node scripts/roadmap-ralph-loop.mjs status
+node scripts/roadmap-ralph-loop.mjs next
+node scripts/roadmap-ralph-loop.mjs evidence TASK-ID
+node scripts/roadmap-ralph-loop.mjs check TASK-ID
+node scripts/roadmap-ralph-loop.mjs verify
+node scripts/roadmap-ralph-loop.mjs verify --full  # phase boundary
+node scripts/roadmap-ralph-loop.mjs complete       # only after 88/88
+```
+
+Always implement the single item returned by `next`. Create its evidence file, fill every required checkbox with concrete command/manual results, set `Status: PASS`, and only then run `check`. The script rejects out-of-order completion and incomplete evidence. Use `uncheck` if later work invalidates a completed task. Do not interpret a file count or a successful compile as proof of playground quality.
 
 ## Visual Effects Lab (between core and tracks)
 
@@ -102,7 +118,7 @@ The build creates a separate game at `dist/play/<slug>/` for every implementatio
 ## Open Graph / social previews
 
 - Every content HTML page must carry page-specific OGP + Twitter Card tags (`og:title`, `og:description`, `og:url`, `og:image`, `og:locale`, `twitter:card=summary_large_image`, etc.).
-- Source of truth scripts: `node scripts/inject-ogp.mjs` (meta + `web/assets/og/manifest.json`) then `go run ./cmd/gen-og-images` (1200×630 PNGs under `web/assets/og/`). Both run from `scripts/build.sh`.
+- Source of truth scripts: `node scripts/inject-ogp.mjs` (meta + `web/assets/og/manifest.json`) then `go run ./cmd/gen-og-images` (1200×630 PNGs under `web/assets/og/`). The normal build and CI always run both. `bash scripts/build.sh --fast` always reinjects metadata but may skip the expensive PNG pass locally when `scripts/ogp-cache.mjs` proves every HTML/generator/font/origin input and every generated PNG is unchanged; its cache is intentionally ignored.
 - Absolute URLs use `SITE_ORIGIN` (default `https://kumagi.github.io/EbiShowcase`). Override with the `SITE_ORIGIN` env var for a custom domain.
 - OG images are regenerated, not hand-painted. Prefer a system CJK font when available so Japanese titles render on the card; meta tags always carry the full localized title/description even if the bitmap falls back.
 
@@ -182,7 +198,7 @@ All URLs must remain relative to the current page depth. Test project-site hosti
 
 ## Useful commands
 
-The project currently requires Go 1.24 or later.
+The project currently requires Go 1.25 or later.
 
 ```sh
 go mod download

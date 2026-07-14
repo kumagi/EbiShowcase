@@ -80,7 +80,7 @@
   <section class="setup-step" id="install-go">
     <p class="setup-n">STEP 01</p>
     <h2>Go をインストールする</h2>
-    <p class="setup-lead">Ebitengine は Go で書かれたゲームエンジンです。先に Go 本体が必要です。いまの公式要件は Go 1.22 以降（このリポジトリは 1.24 向け）。</p>
+    <p class="setup-lead">Ebitengine は Go で書かれたゲームエンジンです。先に Go 本体が必要です。このリポジトリは Go 1.25 以降を使います。</p>
     <div class="setup-os-grid">
       <article class="setup-os"><h3>Windows</h3><ol class="setup-ol"><li>ブラウザで <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a> を開く</li><li>「Microsoft Windows」の <strong>.msi</strong> を選ぶ（だいたい一番上の安定版）</li><li>ダウンロードしたファイルを開き、画面の指示どおり「次へ」で進む</li><li>終わったら PowerShell（さっき開いた命令の窓）を<strong>いったん閉じて、もう一度開き直す</strong>（パスを読み直すため）</li></ol></article>
       <article class="setup-os"><h3>macOS</h3><ol class="setup-ol"><li>ブラウザで <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a> を開く</li><li>自分の Mac に合うパッケージを選ぶ。<strong>Apple Silicon（M1/M2/M3…）</strong>なら ARM64、<strong>Intel</strong> なら x86-64 の <strong>.pkg</strong></li><li>ダウンロードした .pkg を開き、画面の指示どおりインストールする</li><li>終わったらターミナルを<strong>いったん閉じて、もう一度開き直す</strong></li></ol></article>
@@ -102,7 +102,7 @@
     <h2>本当に入ったか確かめる</h2>
     <p class="setup-lead">ターミナルに次を打ち、Enter を押します。</p>
     <pre class="setup-code"><code>go version</code></pre>
-    <p class="setup-ok">例: go version go1.24.4 windows/amd64 のように、go1.22 以上の数字が出れば成功です。</p>
+    <p class="setup-ok">例: go version go1.25.0 windows/amd64 のように、go1.25 以上の数字が出れば成功です。</p>
     <p class="setup-fail">「コマンドが見つかりません」「go は認識されていません」と出たら：インストール後にターミナルを開き直したか確認し、それでもだめなら PC を再起動してからもう一度。</p>
     <div class="setup-bonus">
       <h3>さらに安心したい人へ（任意）</h3>

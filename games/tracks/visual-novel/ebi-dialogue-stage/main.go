@@ -7,9 +7,15 @@ import (
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const (
@@ -54,12 +60,23 @@ type game struct {
 	ended                                                        bool
 	particles                                                    []particle
 	rng                                                          *rand.Rand
+	audio                                                        *audio.Context
+	gate                                                         audiolab.Gate
+	pulse                                                        *shaderlab.Pulse
+	cam                                                          cameralab.State
+	badge                                                        *ebiten.Image
 }
 
 var collectedEndings int
 
 func newGame() *game {
-	return &game{endingMask: collectedEndings, enter: 0, rng: rand.New(rand.NewSource(81))}
+	g := &game{endingMask: collectedEndings, enter: 0, rng: rand.New(rand.NewSource(81))}
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.pulse = shaderlab.NewPulse()
+	g.cam = cameralab.State{Pos: cameralab.Vec{X: W / 2, Y: H / 2}, ViewW: W, ViewH: H}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{255, 198, 78, 255})
+	return g
 }
 func (g *game) Update() error {
 	if g.ended {
@@ -113,6 +130,7 @@ func (g *game) Update() error {
 	return nil
 }
 func (g *game) selectChoice(c choice) {
+	g.play(620)
 	g.flags |= c.flag
 	g.flash = 5
 	for i := 0; i < 18; i++ {
@@ -130,6 +148,10 @@ func (g *game) selectChoice(c choice) {
 	if story[g.node].entrance == "shake" {
 		g.shake = 18
 	}
+}
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, freq, .055)).Play()
 }
 func (g *game) finish() {
 	switch {
@@ -168,6 +190,8 @@ func (g *game) Draw(screen *ebiten.Image) {
 		dy = g.rng.Intn(9) - 4
 	}
 	stage := ebiten.NewImage(W, H)
+	g.drawTitle(stage)
+	g.drawEffectBadge(stage)
 	drawPortrait(stage, s, g.enter, g.frames)
 	for _, p := range g.particles {
 		vector.DrawFilledCircle(stage, float32(p.x), float32(p.y), 3, p.c, false)
@@ -196,6 +220,27 @@ func (g *game) Draw(screen *ebiten.Image) {
 	if g.ended {
 		g.drawEnding(screen)
 	}
+}
+func (g *game) drawTitle(s *ebiten.Image) {
+	if face, err := uilab.Face("en", 14); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(16, 14)
+		text.Draw(s, "EBI DIALOGUE STAGE", face, op)
+		return
+	}
+	ebitenutil.DebugPrintAt(s, "EBI DIALOGUE STAGE", 16, 26)
+}
+func (g *game) drawEffectBadge(s *ebiten.Image) {
+	if g.pulse == nil || !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.pulse.Draw(fx, g.badge, float32(g.frames)*.08) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(W-34, 10)
+	s.DrawImage(fx, op)
 }
 func background(s *ebiten.Image, chapter, frames int) {
 	colors := []color.RGBA{{32, 39, 78, 255}, {42, 29, 68, 255}, {18, 31, 61, 255}}

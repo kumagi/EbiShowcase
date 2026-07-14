@@ -1,0 +1,21 @@
+// Copyright 2026 Ebi Showcase contributors. Licensed under Apache-2.0.
+package main
+
+var Time float
+var Mode float
+var Impact float
+
+func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
+	uv := texCoord
+	if Mode < 0.5 { // water: slow horizontal ripples
+		uv.x += sin(uv.y*18.0+Time*2.0) * 3.0
+	} else if Mode < 1.5 { // heat: small fast rising wobble
+		uv.x += sin(uv.y*34.0-Time*5.0) * 2.2
+	} else { // impact: a ring bends pixels away from its centre
+		p := uv - vec2(120.0, 120.0)
+		d := length(p)
+		ring := exp(-abs(d-(Impact*170.0))/12.0)
+		uv += normalize(p) * ring * 7.0
+	}
+	return imageSrc0At(uv) * color
+}

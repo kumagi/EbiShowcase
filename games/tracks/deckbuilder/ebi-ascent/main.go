@@ -6,10 +6,16 @@ import (
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const width, height = 480, 720
@@ -39,11 +45,21 @@ type game struct {
 	clear, over                                     bool
 	turn, tick, flash, shake, fx, score, best       int
 	sparks                                          []spark
+	audio                                           *audio.Context
+	gate                                            audiolab.Gate
+	pulse                                           *shaderlab.Pulse
+	cam                                             cameralab.State
+	badge                                           *ebiten.Image
 }
 type spark struct{ x, y, vx, vy, life float64 }
 
 func newGame() *game {
 	g := &game{hp: 46, phase: phaseBattle, message: "Play cards, then end the turn."}
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.pulse = shaderlab.NewPulse()
+	g.cam = cameralab.State{Pos: cameralab.Vec{X: width / 2, Y: height / 2}, ViewW: width, ViewH: height}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{253, 200, 70, 255})
 	g.deck = []card{{"JAB", 7, 0, color.RGBA{215, 92, 77, 255}}, {"SHELL", 0, 8, color.RGBA{71, 147, 224, 255}}, {"JAB", 7, 0, color.RGBA{215, 92, 77, 255}}}
 	g.startBattle()
 	return g
@@ -149,6 +165,7 @@ func (g *game) Update() error {
 }
 func (g *game) updateBattle(choice int, end bool) {
 	if choice >= 0 && choice < len(g.hand) && g.energy > 0 {
+		g.play(660)
 		c := g.hand[choice]
 		g.energy--
 		g.enemyHP -= c.damage
@@ -170,6 +187,7 @@ func (g *game) updateBattle(choice int, end bool) {
 		}
 	}
 	if end {
+		g.play(220)
 		e := encounters[g.floor]
 		intent := e.attack + []int{0, 4, -2}[g.turn%3]
 		taken := max(0, intent-g.block)
@@ -185,6 +203,11 @@ func (g *game) updateBattle(choice int, end bool) {
 		}
 	}
 }
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	p := g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, freq, .07))
+	p.Play()
+}
 func (g *game) burst(x, y float64, n int) {
 	for i := 0; i < n; i++ {
 		a := float64(i) * 6.283 / float64(n)
@@ -194,7 +217,8 @@ func (g *game) burst(x, y float64, n int) {
 func (g *game) Draw(s *ebiten.Image) {
 	bgs := []color.RGBA{{18, 27, 45, 255}, {30, 43, 58, 255}, {45, 31, 55, 255}, {54, 39, 31, 255}, {45, 20, 32, 255}}
 	s.Fill(bgs[min(g.floor, 4)])
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("EBI ASCENT FLOOR %d/5 HP %02d/46 DECK %d BEST %04d", g.floor+1, max(0, g.hp), len(g.deck), g.best), 55, 35)
+	g.drawHUD(s)
+	g.drawEffectBadge(s)
 	switch g.phase {
 	case phaseBattle:
 		g.drawBattle(s)
@@ -208,6 +232,28 @@ func (g *game) Draw(s *ebiten.Image) {
 	} else if g.over {
 		overlay(s, "THE RUN ENDED!\n\nTAP / SPACE TO RETRY")
 	}
+}
+func (g *game) drawHUD(s *ebiten.Image) {
+	label := fmt.Sprintf("EBI ASCENT  FLOOR %d/5  HP %02d/46  DECK %d  BEST %04d", g.floor+1, max(0, g.hp), len(g.deck), g.best)
+	if face, err := uilab.Face("en", 16); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(38, 24)
+		text.Draw(s, label, face, op)
+		return
+	}
+	ebitenutil.DebugPrintAt(s, label, 28, 35)
+}
+func (g *game) drawEffectBadge(s *ebiten.Image) {
+	if g.pulse == nil || !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.pulse.Draw(fx, g.badge, float32(g.tick)*.08) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(width-38, 16)
+	s.DrawImage(fx, op)
 }
 func cardSprite(c card) string {
 	switch {

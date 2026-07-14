@@ -7,11 +7,17 @@ import (
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	text "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
 	"github.com/kumagi/EbiShowcase/internal/hero"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const width, height = 480, 720
@@ -41,14 +47,21 @@ type game struct {
 	pickA, pickB, pickC                string
 	sparks                             []spark
 	shake, bestKills, area             int
+	audio                              *audio.Context
+	gate                               audiolab.Gate
+	pulse                              *shaderlab.Pulse
+	cam                                cameralab.State
+	badge                              *ebiten.Image
 }
 
 func newGame() *game {
+	badge := ebiten.NewImage(24, 24)
+	badge.Fill(color.RGBA{255, 211, 62, 255})
 	return &game{
 		px: 240, py: 360,
 		rng:  rand.New(rand.NewSource(2306)),
 		life: 4, speed: 3.6, aura: 46, auraTick: 18,
-		level: 1, need: 4,
+		level: 1, need: 4, audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: badge,
 	}
 }
 
@@ -69,6 +82,7 @@ func (g *game) Update() error {
 		g.inv--
 	}
 	g.movePlayer()
+	g.cam.Pos = cameralab.Vec{X: g.px, Y: g.py}
 	sec := g.frame / 60
 	interval := max(10, 34-sec/2)
 	if g.frame%interval == 0 && sec < 40 {
@@ -161,6 +175,7 @@ func (g *game) Update() error {
 		}
 		if d < 22 {
 			g.xp++
+			g.play(700)
 			g.burst(gem.x, gem.y, color.RGBA{128, 255, 210, 255}, 5)
 			g.gems = append(g.gems[:i], g.gems[i+1:]...)
 			if g.xp >= g.need {
@@ -279,6 +294,14 @@ func (g *game) updateDraft() error {
 func (g *game) Draw(s *ebiten.Image) {
 	backgrounds := []color.RGBA{{10, 24, 39, 255}, {38, 22, 58, 255}, {58, 26, 24, 255}}
 	s.Fill(backgrounds[g.area])
+	if g.pulse.Available() {
+		fx := ebiten.NewImage(24, 24)
+		if g.pulse.Draw(fx, g.badge, float32(g.frame)*.09) {
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(438, 12)
+			s.DrawImage(fx, op)
+		}
+	}
 	offsetX := 0.0
 	if g.shake > 0 {
 		offsetX = math.Sin(float64(g.frame)*2.4) * 4
@@ -329,7 +352,13 @@ func (g *game) Draw(s *ebiten.Image) {
 	}
 	sec := g.frame / 60
 	wave := min(3, sec/15+1)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("TIME %02d/55  LV%d  XP %d/%d  LIFE %d  KILLS %03d", sec, g.level, g.xp, g.need, g.life, g.kills), 28, 24)
+	if face, err := uilab.Face("en", 16); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(28, 24)
+		text.Draw(s, fmt.Sprintf("TIME %02d/55  LV%d  XP %d/%d  LIFE %d  KILLS %03d", sec, g.level, g.xp, g.need, g.life, g.kills), face, op)
+	} else {
+		ebitenutil.DebugPrintAt(s, fmt.Sprintf("TIME %02d/55  LV%d  XP %d/%d  LIFE %d  KILLS %03d", sec, g.level, g.xp, g.need, g.life, g.kills), 28, 24)
+	}
 	msg := "WAVE 1 — KEEP MOVING"
 	if wave == 2 {
 		msg = "WAVE 2 — ENEMIES SPEED UP"
@@ -352,6 +381,10 @@ func (g *game) Draw(s *ebiten.Image) {
 	} else if g.over {
 		overlay(s, "RUN ENDED!\n\nTAP / SPACE TO RETRY")
 	}
+}
+func (g *game) play(hz float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, hz, .08)).Play()
 }
 
 func drawPick(s *ebiten.Image, x, y float64, label string) {

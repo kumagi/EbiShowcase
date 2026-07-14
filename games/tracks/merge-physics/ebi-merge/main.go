@@ -7,10 +7,16 @@ import (
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	text "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const width, height = 480, 720
@@ -34,10 +40,17 @@ type game struct {
 	clear, over                           bool
 	level, combo, comboTimer, shake, best int
 	sparks                                []spark
+	audio                                 *audio.Context
+	gate                                  audiolab.Gate
+	pulse                                 *shaderlab.Pulse
+	cam                                   cameralab.State
+	badge                                 *ebiten.Image
 }
 
 func newGame() *game {
-	g := &game{rng: rand.New(rand.NewSource(4806)), cursor: 240, level: 1}
+	b := ebiten.NewImage(20, 20)
+	b.Fill(color.RGBA{255, 130, 80, 255})
+	g := &game{rng: rand.New(rand.NewSource(4806)), cursor: 240, level: 1, audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), cam: cameralab.State{Pos: cameralab.Vec{240, 360}, ViewW: width, ViewH: height}, badge: b}
 	g.next = g.rng.Intn(3)
 	g.after = g.rng.Intn(3)
 	return g
@@ -136,6 +149,8 @@ func (g *game) Update() error {
 					a.dead, b.dead = true, true
 					spawn = append(spawn, fruit{x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, vx: (a.vx + b.vx) / 2, vy: -2.5, tier: tier})
 					g.score += (tier + 1) * (tier + 1) * 10
+					g.gate.Arm(true)
+					g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, 420+float64(tier)*80, .09)).Play()
 					g.combo++
 					g.comboTimer = 100
 					g.score += g.combo * 15
@@ -197,6 +212,14 @@ func (g *game) burst(x, y float64, n int) {
 	}
 }
 func (g *game) Draw(s *ebiten.Image) {
+	if g.pulse.Available() {
+		fx := ebiten.NewImage(20, 20)
+		if g.pulse.Draw(fx, g.badge, float32(g.score)*.01) {
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(440, 12)
+			s.DrawImage(fx, op)
+		}
+	}
 	bgs := []color.RGBA{{18, 28, 44, 255}, {39, 28, 55, 255}, {52, 29, 31, 255}}
 	s.Fill(bgs[g.level-1])
 	ox := 0.0
@@ -224,7 +247,13 @@ func (g *game) Draw(s *ebiten.Image) {
 	vector.StrokeLine(s, float32(g.cursor), 75, float32(g.cursor), 135, 2, color.RGBA{255, 255, 255, 130}, false)
 	trackatlas.DrawCentered(s, trackatlas.Merge(g.next+1), g.cursor, 92, radii[g.next]*2)
 	target := []int{5, 6, 7}[g.level-1]
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("STAGE %d/3 SCORE %05d BEST %05d COMBO x%d", g.level, g.score, g.best, g.combo), 55, 25)
+	if f, e := uilab.Face("en", 16); e == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(55, 25)
+		text.Draw(s, fmt.Sprintf("STAGE %d/3 SCORE %05d BEST %05d COMBO x%d", g.level, g.score, g.best, g.combo), f, op)
+	} else {
+		ebitenutil.DebugPrintAt(s, fmt.Sprintf("STAGE %d/3 SCORE %05d BEST %05d COMBO x%d", g.level, g.score, g.best, g.combo), 55, 25)
+	}
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("NEXT %d AFTER %d DANGER %03d/180 TARGET TIER %d", g.next+1, g.after+1, g.danger, target), 65, 48)
 	ebitenutil.DebugPrintAt(s, "MOVE POINTER, TAP TO DROP — BUILD THE TARGET", 65, 700)
 	if g.clear {

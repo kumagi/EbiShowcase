@@ -2,13 +2,20 @@ package main
 
 import (
 	"fmt"
-	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"github.com/hajimehoshi/ebiten/v2/vector"
-	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"image/color"
 	"math"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
+	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const (
@@ -48,10 +55,20 @@ type game struct {
 	message                                              string
 	stage, totalFrames, bestFrames, requiredBreak, shake int
 	sparks                                               []spark
+	audio                                                *audio.Context
+	gate                                                 audiolab.Gate
+	pulse                                                *shaderlab.Pulse
+	cam                                                  cameralab.State
+	badge                                                *ebiten.Image
 }
 
 func newGame() *game {
 	g := &game{stage: 1}
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.pulse = shaderlab.NewPulse()
+	g.cam = cameralab.State{Pos: cameralab.Vec{X: screenW / 2, Y: screenH / 2}, ViewW: screenW, ViewH: screenH}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{255, 180, 70, 255})
 	g.loadStage()
 	return g
 }
@@ -131,6 +148,7 @@ func (g *game) Update() error {
 		}
 	}
 	if placePressed() && len(g.bombs) < g.capacity && !g.bombAt(g.player) {
+		g.play(300)
 		g.bombs = append(g.bombs, bomb{g.player, fuse})
 		g.message = "Bomb armed. Move to a safe corridor."
 	}
@@ -156,6 +174,7 @@ func (g *game) updateBombs() {
 	for _, b := range g.bombs {
 		b.timer--
 		if b.timer <= 0 {
+			g.play(110)
 			g.shake = 6
 			g.burst(tileCX(b.at), tileCY(b.at), 18)
 			for _, p := range g.blast(b.at) {
@@ -253,6 +272,7 @@ func (g *game) collect() {
 	out := g.items[:0]
 	for _, it := range g.items {
 		if it.at == g.player {
+			g.play(720)
 			switch it.kind {
 			case 0:
 				g.power = min(4, g.power+1)
@@ -267,6 +287,10 @@ func (g *game) collect() {
 		}
 	}
 	g.items = out
+}
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Square, freq, .06)).Play()
 }
 func (g *game) bombAt(p point) bool {
 	for _, b := range g.bombs {
@@ -283,7 +307,8 @@ func (g *game) Draw(s *ebiten.Image) {
 	if g.shake > 0 {
 		ox = math.Sin(float64(g.frames)*2) * 5
 	}
-	ebitenutil.DebugPrintAt(s, "EBI BOMBER", 203, 17)
+	g.drawTitle(s)
+	g.drawEffectBadge(s)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("STAGE %d/3 WALLS %d/%d POWER %d BOMBS %d TIME %02d BEST %02d", g.stage, g.broken, g.requiredBreak, g.power, g.capacity, max(0, 90-g.frames/60), g.bestFrames/60), 35, 43)
 	ebitenutil.DebugPrintAt(s, g.message, 28, 72)
 	for y := 0; y < rows; y++ {
@@ -340,6 +365,27 @@ func (g *game) Draw(s *ebiten.Image) {
 	if g.lost {
 		overlay(s, "MISSION FAILED\n\nTAP / ENTER TO RETRY")
 	}
+}
+func (g *game) drawTitle(s *ebiten.Image) {
+	if face, err := uilab.Face("en", 16); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(203, 5)
+		text.Draw(s, "EBI BOMBER", face, op)
+		return
+	}
+	ebitenutil.DebugPrintAt(s, "EBI BOMBER", 203, 17)
+}
+func (g *game) drawEffectBadge(s *ebiten.Image) {
+	if g.pulse == nil || !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.pulse.Draw(fx, g.badge, float32(g.frames)*.08) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(screenW-34, 10)
+	s.DrawImage(fx, op)
 }
 func tileCX(p point) float64 { return float64(boardX + p.x*cell + cell/2) }
 func tileCY(p point) float64 { return float64(boardY + p.y*cell + cell/2) }

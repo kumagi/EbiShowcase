@@ -7,10 +7,16 @@ import (
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const (
@@ -62,10 +68,20 @@ type game struct {
 	clear, over                                  bool
 	message                                      string
 	rng                                          *rand.Rand
+	audio                                        *audio.Context
+	gate                                         audiolab.Gate
+	pulse                                        *shaderlab.Pulse
+	cam                                          cameralab.State
+	badge                                        *ebiten.Image
 }
 
 func newGame() *game {
 	g := &game{hp: 5, rng: rand.New(rand.NewSource(44)), best: sessionBest}
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.pulse = shaderlab.NewPulse()
+	g.cam = cameralab.State{Pos: cameralab.Vec{X: width / 2, Y: height / 2}, ViewW: width, ViewH: height}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{255, 210, 74, 255})
 	g.loadIsland(0)
 	return g
 }
@@ -119,6 +135,7 @@ func (g *game) resolveHarvest() {
 		return
 	}
 	g.tiles[g.targetY][g.targetX] = ground
+	g.play(580)
 	g.bag[k-1]++
 	g.combo++
 	g.score += 60 + g.combo*10
@@ -140,6 +157,7 @@ func (g *game) craft() {
 		g.bag[0]--
 		g.bag[1]--
 		g.pickaxe = true
+		g.play(430)
 		g.score += 100
 		g.message = "Pickaxe crafted! Now crystal can break."
 		return
@@ -156,6 +174,7 @@ func (g *game) craft() {
 	g.bag[1]--
 	g.bag[2]--
 	g.tiles[g.py][g.px] = lantern
+	g.play(750)
 	g.placed++
 	g.score += 300
 	g.shake = 5
@@ -168,6 +187,10 @@ func (g *game) craft() {
 	} else {
 		g.message = "One light burns. Build the final lantern!"
 	}
+}
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, freq, .06)).Play()
 }
 
 func (g *game) finishIsland() {
@@ -309,7 +332,8 @@ func (g *game) Draw(screen *ebiten.Image) {
 	}
 	world := ebiten.NewImage(width, height)
 	world.Fill(color.RGBA{0, 0, 0, 0})
-	ebitenutil.DebugPrintAt(world, fmt.Sprintf("EBI CRAFT  ISLAND %d/3  %s", g.stage+1, d.name), 105, 16)
+	g.drawTitle(world, d.name)
+	g.drawEffectBadge(world)
 	ebitenutil.DebugPrintAt(world, fmt.Sprintf("HP %d  SCORE %05d  LIGHT %d/%d", g.hp, g.score, g.placed, g.goalLanterns), 112, 43)
 	ebitenutil.DebugPrintAt(world, fmt.Sprintf("BAG W%d S%d C%d  TOOL:%v", g.bag[0], g.bag[1], g.bag[2], map[bool]string{false: "HAND", true: "PICK"}[g.pickaxe]), 108, 68)
 	for y := 0; y < rows; y++ {
@@ -362,6 +386,28 @@ func (g *game) Draw(screen *ebiten.Image) {
 		ebitenutil.DebugPrintAt(screen, g.message, 47, 353)
 		ebitenutil.DebugPrintAt(screen, "TAP / ENTER TO EXPLORE AGAIN", 125, 409)
 	}
+}
+func (g *game) drawTitle(screen *ebiten.Image, island string) {
+	label := fmt.Sprintf("EBI CRAFT  ISLAND %d/3  %s", g.stage+1, island)
+	if face, err := uilab.Face("en", 16); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(105, 4)
+		text.Draw(screen, label, face, op)
+		return
+	}
+	ebitenutil.DebugPrintAt(screen, label, 105, 16)
+}
+func (g *game) drawEffectBadge(screen *ebiten.Image) {
+	if g.pulse == nil || !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.pulse.Draw(fx, g.badge, float32(g.frames)*.08) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(width-32, 10)
+	screen.DrawImage(fx, op)
 }
 
 func tileSprite(k int) string {

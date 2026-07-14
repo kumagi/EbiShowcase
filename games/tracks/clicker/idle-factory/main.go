@@ -3,9 +3,15 @@ package main
 import (
 	"fmt"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	text "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 	"image/color"
 	"time"
 )
@@ -18,9 +24,18 @@ type game struct {
 	cost     float64
 	last     time.Time
 	clear    bool
+	audio    *audio.Context
+	gate     audiolab.Gate
+	pulse    *shaderlab.Pulse
+	cam      cameralab.State
+	badge    *ebiten.Image
 }
 
-func newGame() *game { return &game{cost: 15, last: time.Now()} }
+func newGame() *game {
+	b := ebiten.NewImage(24, 24)
+	b.Fill(color.RGBA{255, 210, 90, 255})
+	return &game{cost: 15, last: time.Now(), audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), cam: cameralab.State{Pos: cameralab.Vec{240, 360}, ViewW: width, ViewH: height}, badge: b}
+}
 func (g *game) Update() error {
 	now := time.Now()
 	dt := now.Sub(g.last).Seconds()
@@ -49,10 +64,12 @@ func (g *game) Update() error {
 	if ok {
 		if y < 470 {
 			g.sweets++
+			g.play(600)
 		} else if g.sweets >= g.cost {
 			g.sweets -= g.cost
 			g.machines++
 			g.cost += 10
+			g.play(360)
 		}
 	}
 	if g.sweets >= 200 {
@@ -62,7 +79,21 @@ func (g *game) Update() error {
 }
 func (g *game) Draw(s *ebiten.Image) {
 	s.Fill(color.RGBA{26, 30, 48, 255})
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("SWEETS %06.1f / 200", g.sweets), 150, 55)
+	if g.pulse.Available() {
+		fx := ebiten.NewImage(24, 24)
+		if g.pulse.Draw(fx, g.badge, float32(g.sweets)*.06) {
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(430, 16)
+			s.DrawImage(fx, op)
+		}
+	}
+	if f, e := uilab.Face("en", 18); e == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(150, 55)
+		text.Draw(s, fmt.Sprintf("SWEETS %06.1f / 200", g.sweets), f, op)
+	} else {
+		ebitenutil.DebugPrintAt(s, fmt.Sprintf("SWEETS %06.1f / 200", g.sweets), 150, 55)
+	}
 	vector.DrawFilledCircle(s, 240, 275, 100, color.RGBA{222, 143, 76, 255}, false)
 	ebitenutil.DebugPrintAt(s, "TAP / SPACE: BAKE +1", 155, 405)
 	vector.DrawFilledRect(s, 60, 480, 360, 145, color.RGBA{45, 196, 174, 255}, false)
@@ -70,6 +101,10 @@ func (g *game) Draw(s *ebiten.Image) {
 	if g.clear {
 		overlay(s, "200 SWEETS PRODUCED!\n\nTAP / SPACE TO RESTART")
 	}
+}
+func (g *game) play(hz float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, hz, .08)).Play()
 }
 func press() (int, int, bool) {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {

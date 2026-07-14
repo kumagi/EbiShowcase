@@ -6,10 +6,16 @@ import (
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const (
@@ -50,10 +56,20 @@ type game struct {
 	stage, totalTurns, bestTurns, shake int
 	pillars                             []vec
 	sparks                              []spark
+	audio                               *audio.Context
+	gate                                audiolab.Gate
+	shader                              *shaderlab.Pulse
+	cam                                 cameralab.State
+	badge                               *ebiten.Image
 }
 
 func newGame() *game {
 	g := &game{stage: 1}
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.shader = shaderlab.NewPulse()
+	g.cam = cameralab.State{Pos: cameralab.Vec{X: screenW / 2, Y: screenH / 2}, ViewW: screenW, ViewH: screenH}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{250, 210, 72, 255})
 	g.loadStage()
 	return g
 }
@@ -168,6 +184,7 @@ func (g *game) updateAim() {
 			pull.y *= 145 / length
 		}
 		a.velocity = vec{pull.x * 0.105, pull.y * 0.105}
+		g.play(380)
 		g.turns++
 		g.moving = true
 		g.allyEffectUsed = false
@@ -230,6 +247,7 @@ func (g *game) hitEnemies(a *ally) {
 		impact := g.reflectCircle(a, e.pos, enemyRadius)
 		if impact >= 1.2 && e.cooldown == 0 {
 			e.hp--
+			g.play(760)
 			e.cooldown = 22
 			g.shake = 4
 			g.burst(e.pos.x, e.pos.y, 10)
@@ -265,7 +283,12 @@ func (g *game) hitAlly(a *ally) {
 		}
 	}
 	g.message = fmt.Sprintf("ALLY WAVE! %d enemy hit(s).", hits)
+	g.play(560)
 	g.checkWin()
+}
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, freq, .07)).Play()
 }
 
 func (g *game) checkWin() {
@@ -299,7 +322,8 @@ func (g *game) Draw(screen *ebiten.Image) {
 	if g.shake > 0 {
 		ox = math.Sin(float64(g.pulseFrames+g.turns)*2) * 5
 	}
-	ebitenutil.DebugPrintAt(screen, "EBI STRIKE / REEF RESCUE", 149, 21)
+	g.drawTitle(screen)
+	g.drawEffectBadge(screen)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("STAGE %d/3 TURN %d/%d ALLY %d ENEMIES %d BEST %d", g.stage, g.turns, maxTurns, g.active+1, g.alive(), g.bestTurns), 55, 49)
 	ebitenutil.DebugPrintAt(screen, g.message, 78, 74)
 	vector.DrawFilledRect(screen, 18, 88, 444, 505, color.RGBA{25, 55, 72, 255}, false)
@@ -356,6 +380,30 @@ func (g *game) Draw(screen *ebiten.Image) {
 	if g.lost {
 		overlay(screen, "OUT OF TURNS\n\nTAP / ENTER TO RETRY")
 	}
+}
+
+func (g *game) drawTitle(screen *ebiten.Image) {
+	const label = "EBI STRIKE / REEF RESCUE"
+	if face, err := uilab.Face("en", 16); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(149, 9)
+		text.Draw(screen, label, face, op)
+		return
+	}
+	ebitenutil.DebugPrintAt(screen, label, 149, 21)
+}
+
+func (g *game) drawEffectBadge(screen *ebiten.Image) {
+	if g.shader == nil || !g.shader.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.shader.Draw(fx, g.badge, float32(g.turns)*.2) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(screenW-34, 12)
+	screen.DrawImage(fx, op)
 }
 
 func (g *game) alive() int {

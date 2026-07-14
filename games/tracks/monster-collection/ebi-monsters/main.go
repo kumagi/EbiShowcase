@@ -8,10 +8,16 @@ import (
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const (
@@ -108,6 +114,11 @@ type game struct {
 	bestFrames          int
 	sparkles            []sparkle
 	scene               *ebiten.Image
+	audio               *audio.Context
+	gate                audiolab.Gate
+	pulse               *shaderlab.Pulse
+	cam                 cameralab.State
+	badge               *ebiten.Image
 }
 
 func newGame() *game {
@@ -119,6 +130,11 @@ func newGame() *game {
 		scene:   ebiten.NewImage(width, height),
 	}
 	g.dex[0] = true
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.pulse = shaderlab.NewPulse()
+	g.cam = cameralab.State{Pos: cameralab.Vec{X: width / 2, Y: height / 2}, ViewW: width, ViewH: height}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{255, 222, 92, 255})
 	if len(saveSlot) > 0 {
 		g.savePreview = fmt.Sprintf("SAVE SLOT FOUND: %d bytes", len(saveSlot))
 	}
@@ -244,6 +260,7 @@ func (g *game) useMove(index int) {
 		multiplier := matchup[attackerType][defenderType]
 		damage := int(float64(data.power) * multiplier)
 		g.wildHP = max(1, g.wildHP-damage)
+		g.play(720)
 		front.exp += 3
 		g.message = fmt.Sprintf("%s x%.1f dealt %d. Wild HP %d/40.", data.name, multiplier, damage, g.wildHP)
 		g.hitFlash = 12
@@ -261,6 +278,7 @@ func (g *game) throwOrb() {
 		return
 	}
 	g.orbs--
+	g.play(440)
 	g.turns++
 	chance := min(95, 25+(40-g.wildHP)*2)
 	roll := g.rng.Intn(100)
@@ -281,6 +299,7 @@ func (g *game) throwOrb() {
 
 func (g *game) finishCapture() {
 	g.pendingCapture = false
+	g.play(900)
 	captured := monster{speciesID: g.wildSpecies, hp: speciesBook[g.wildSpecies].maxHP}
 	if len(g.party) < partyLimit {
 		g.party = append(g.party, captured)
@@ -313,6 +332,11 @@ func (g *game) finishCapture() {
 		g.over = true
 		g.message = "Every orb was used before all four species were registered."
 	}
+}
+
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, freq, .065)).Play()
 }
 
 func (g *game) burst(x, y float64, c color.RGBA, amount int) {
@@ -456,7 +480,8 @@ func (g *game) Draw(screen *ebiten.Image) {
 
 func (g *game) drawScene(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{9, 20, 39, 255})
-	ebitenutil.DebugPrintAt(screen, "EBI MONSTERS EXPEDITION", 160, 18)
+	g.drawTitle(screen)
+	g.drawEffectBadge(screen)
 	best := "--"
 	if g.bestFrames > 0 {
 		best = fmt.Sprintf("%02d", g.bestFrames/60)
@@ -483,6 +508,30 @@ func (g *game) drawScene(screen *ebiten.Image) {
 		alpha := uint8(min(255, p.life*10))
 		vector.DrawFilledCircle(screen, float32(p.x), float32(p.y), 3, color.RGBA{p.c.R, p.c.G, p.c.B, alpha}, false)
 	}
+}
+
+func (g *game) drawTitle(screen *ebiten.Image) {
+	const label = "EBI MONSTERS EXPEDITION"
+	if face, err := uilab.Face("en", 16); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(160, 6)
+		text.Draw(screen, label, face, op)
+		return
+	}
+	ebitenutil.DebugPrintAt(screen, label, 160, 18)
+}
+
+func (g *game) drawEffectBadge(screen *ebiten.Image) {
+	if g.pulse == nil || !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.pulse.Draw(fx, g.badge, float32(g.frames)*.08) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(width-34, 10)
+	screen.DrawImage(fx, op)
 }
 
 func (g *game) drawRoster(screen *ebiten.Image) {

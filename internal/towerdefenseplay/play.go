@@ -4,13 +4,23 @@ import (
 	"fmt"
 	"image/color"
 	"math"
+	"strings"
+	"sync"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/ogfont"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/towerdefense"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"golang.org/x/image/font"
+	"golang.org/x/image/font/opentype"
 )
 
 const W, H = 480, 720
@@ -45,8 +55,41 @@ type game struct {
 	shots                                                                                 []projectile
 	particles                                                                             []particle
 	nextID, wave, spawnLeft, spawnTimer, lives, coins, score, best, selected, tick, shake int
+	scenario                                                                              int
 	running, won, lost                                                                    bool
 	message                                                                               string
+	lang                                                                                  string
+	audio                                                                                 *audio.Context
+	gate                                                                                  audiolab.Gate
+	pulse                                                                                 *shaderlab.Pulse
+	cam                                                                                   cameralab.State
+	badge                                                                                 *ebiten.Image
+}
+
+var (
+	tdFontOnce sync.Once
+	tdFontBase *opentype.Font
+	tdFontErr  error
+	tdFaces    = map[float64]font.Face{}
+)
+
+func tdFace(size float64) font.Face {
+	tdFontOnce.Do(func() { tdFontBase, tdFontErr = opentype.Parse(ogfont.NotoSansJP) })
+	if tdFontErr != nil {
+		panic(tdFontErr)
+	}
+	if f := tdFaces[size]; f != nil {
+		return f
+	}
+	f, err := opentype.NewFace(tdFontBase, &opentype.FaceOptions{Size: size, DPI: 72, Hinting: font.HintingFull})
+	if err != nil {
+		panic(err)
+	}
+	tdFaces[size] = f
+	return f
+}
+func tdLabel(s *ebiten.Image, v string, x, y int, c color.Color, size float64) {
+	text.Draw(s, v, tdFace(size), x, y, c)
 }
 
 var maps = [][]towerdefense.Vec{
@@ -54,9 +97,23 @@ var maps = [][]towerdefense.Vec{
 	{{-20, 450}, {105, 450}, {105, 220}, {275, 220}, {275, 390}, {500, 390}},
 }
 
+var scenarios = []towerdefense.Scenario{
+	{Name: "COAST WATCH", Goal: "Three quick tide waves", Route: maps[0], Waves: 3, Coins: 180, Lives: 10, SpeedScale: .9},
+	{Name: "REEF CAVE", Goal: "Slow the armored cave swarm", Route: maps[1], Waves: 4, Coins: 220, Lives: 8, SpeedScale: 1.15},
+	{Name: "PEARL GATE", Goal: "Survive the final boss gate", Route: maps[0], Waves: 6, Coins: 260, Lives: 10, SpeedScale: 1, Boss: true},
+}
+
 func newGame(cfg Config) *game {
-	g := &game{cfg: cfg, lives: 10, coins: 160, selected: 0, message: "Press SPACE or START to launch the wave."}
-	g.path = towerdefense.NewPath(maps[0])
+	s := scenarios[0]
+	g := &game{cfg: cfg, lives: s.Lives, coins: s.Coins, selected: 0, lang: browserLanguage()}
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.pulse = shaderlab.NewPulse()
+	g.cam = cameralab.State{ViewW: W, ViewH: H}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{46, 230, 200, 255})
+	g.message = g.tr("Press SPACE or START to launch the wave.", "SPACEかSTARTでウェーブを始めよう。")
+	g.path = towerdefense.NewPath(s.Route)
+	g.best = storedBest(g.bestKey())
 	if cfg.Step >= 2 && cfg.Step <= 4 {
 		g.towers = []tower{{towerdefense.Vec{240, 375}, 0, 1, 0}}
 	}
@@ -65,6 +122,22 @@ func newGame(cfg Config) *game {
 		g.beginWave()
 	}
 	return g
+}
+func (g *game) tr(en, ja string) string {
+	if g.lang == "ja" {
+		return ja
+	}
+	return en
+}
+func (g *game) currentScenario() towerdefense.Scenario { return scenarios[g.scenario] }
+func (g *game) bestKey() string                        { return fmt.Sprintf("ebiShowcase.defense.best.%d", g.scenario) }
+func (g *game) resetScenario(index int) {
+	index = min(len(scenarios)-1, max(0, index))
+	*g = *newGame(g.cfg)
+	g.scenario = index
+	s := g.currentScenario()
+	g.path = towerdefense.NewPath(s.Route)
+	g.lives, g.coins, g.best = s.Lives, s.Coins, storedBest(g.bestKey())
 }
 func (g *game) beginWave() {
 	if g.running && g.spawnLeft > 0 {
@@ -79,13 +152,16 @@ func (g *game) beginWave() {
 	if g.cfg.Step == 4 {
 		g.spawnLeft = 5
 	}
-	if g.cfg.Step == 8 && g.wave == 6 {
+	if g.cfg.Step == 8 && g.currentScenario().Boss && g.wave == g.maxWaves() {
 		g.spawnLeft = 1
 	}
 	g.spawnTimer = 1
-	g.message = fmt.Sprintf("WAVE %d: protect the pearl!", g.wave)
+	g.message = fmt.Sprintf(g.tr("WAVE %d: protect the pearl!", "第%d波：真珠を守ろう！"), g.wave)
 }
 func (g *game) maxWaves() int {
+	if g.cfg.Step == 8 {
+		return g.currentScenario().Waves
+	}
 	switch {
 	case g.cfg.Step <= 4:
 		return 1
@@ -111,8 +187,19 @@ func (g *game) Update() error {
 		}
 		return nil
 	}
+	if g.cfg.Step == 8 {
+		for i, key := range []ebiten.Key{ebiten.Key1, ebiten.Key2, ebiten.Key3} {
+			if inpututil.IsKeyJustPressed(key) {
+				g.resetScenario(i)
+				return nil
+			}
+		}
+	}
 	if x, y, ok := press(); ok {
-		if y >= 640 {
+		if g.cfg.Step == 8 && y >= 86 && y < 128 {
+			g.resetScenario(min(2, x/160))
+			return nil
+		} else if y >= 640 {
 			if !g.running {
 				g.beginWave()
 			}
@@ -157,9 +244,9 @@ func (g *game) updateSpawn() {
 	if g.spawnTimer > 0 {
 		return
 	}
-	boss := g.cfg.Step == 8 && g.wave == 6
+	boss := g.cfg.Step == 8 && g.currentScenario().Boss && g.wave == g.maxWaves()
 	hp := 28 + float64(g.wave*8)
-	speed := .75 + float64(g.wave)*.08
+	speed := (.75 + float64(g.wave)*.08) * g.currentScenario().SpeedScale
 	if boss {
 		hp = 320
 		speed = .55
@@ -188,7 +275,7 @@ func (g *game) updateEnemies() {
 			g.shake = 8
 			if g.lives <= 0 {
 				g.lost = true
-				g.message = "The pearl gate fell."
+				g.message = g.tr("The pearl gate fell.", "真珠の門が破られた。")
 			}
 		}
 	}
@@ -210,7 +297,7 @@ func (g *game) updateTowers() {
 			continue
 		}
 		if g.cfg.Step == 3 {
-			g.message = "The outlined runner is furthest along inside range."
+			g.message = g.tr("The outlined runner is furthest along inside range.", "黄色い輪の敵が射程内で最も先へ進んでいます。")
 			continue
 		}
 		kind := t.kind
@@ -294,22 +381,28 @@ func (g *game) placeOrUpgrade(pos towerdefense.Vec) {
 			cost := 45 + g.towers[i].level*25
 			if g.cfg.Step >= 7 && g.coins >= cost && g.towers[i].level < 3 {
 				g.coins -= cost
+				g.play(680)
 				g.towers[i].level++
 				g.burst(pos, color.RGBA{100, 230, 180, 255})
-				g.message = "Tower upgraded!"
+				g.message = g.tr("Tower upgraded!", "塔を強化した！")
 			}
 			return
 		}
 	}
 	cost := 60 + g.selected*20
 	if g.coins < cost || g.nearPath(pos) {
-		g.message = "Need coins and open ground."
+		g.message = g.tr("Need coins and open ground.", "コインと空いた地面が必要です。")
 		return
 	}
 	g.coins -= cost
+	g.play(520)
 	g.towers = append(g.towers, tower{pos, g.selected, 1, 0})
 	g.burst(pos, color.RGBA{95, 205, 255, 255})
-	g.message = "Tower placed. Tap it later to upgrade."
+	g.message = g.tr("Tower placed. Tap it later to upgrade.", "塔を置いた。あとでタップすると強化できます。")
+}
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, freq, .05)).Play()
 }
 func (g *game) nearPath(pos towerdefense.Vec) bool {
 	for d := 0.0; d <= g.path.Total; d += 12 {
@@ -326,7 +419,7 @@ func (g *game) checkWave() {
 	g.running = false
 	if g.cfg.Step <= 3 {
 		g.won = true
-		g.message = "Path and targeting observation complete!"
+		g.message = g.tr("Path and targeting observation complete!", "経路と標的の観察完了！")
 		return
 	}
 	if g.wave >= g.maxWaves() {
@@ -334,19 +427,13 @@ func (g *game) checkWave() {
 		grade := g.score + g.lives*100 + g.coins
 		if grade > g.best {
 			g.best = grade
+			storeBest(g.bestKey(), g.best)
 		}
-		g.message = "Every wave cleared!"
+		g.message = g.tr("Every wave cleared!", "すべてのウェーブを守り切った！")
 		return
 	}
-	if g.cfg.Step == 8 && g.wave == 3 {
-		g.path = towerdefense.NewPath(maps[1])
-		g.towers = nil
-		g.coins += 140
-		g.message = "MAP 2 OPEN! Build for the new route."
-	} else {
-		g.coins += 40
-		g.message = "Wave clear! Build, upgrade, then START."
-	}
+	g.coins += 40
+	g.message = g.tr("Wave clear! Build, upgrade, then START.", "ウェーブ完了！ 建設・強化してSTART。")
 }
 func (g *game) updateParticles() {
 	for i := len(g.particles) - 1; i >= 0; i-- {
@@ -367,6 +454,8 @@ func (g *game) burst(pos towerdefense.Vec, c color.RGBA) {
 	}
 }
 func (g *game) Draw(s *ebiten.Image) {
+	g.cam.ViewW, g.cam.ViewH = float64(s.Bounds().Dx()), float64(s.Bounds().Dy())
+	g.drawEffectBadge(s)
 	bg := color.RGBA{12, 29, 44, 255}
 	if g.cfg.Step == 8 && g.wave >= 3 {
 		bg = color.RGBA{31, 22, 49, 255}
@@ -377,9 +466,27 @@ func (g *game) Draw(s *ebiten.Image) {
 		ox = math.Sin(float64(g.tick)*2.2) * float64(g.shake)
 	}
 	g.drawPath(s, ox)
-	ebitenutil.DebugPrintAt(s, g.cfg.Title, 150, 18)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("WAVE %d/%d  LIVES %d  COINS %d  SCORE %d", g.wave, g.maxWaves(), g.lives, g.coins, g.score), 70, 46)
-	ebitenutil.DebugPrintAt(s, g.message, 55, 72)
+	tdLabel(s, g.cfg.Title, 138, 26, color.RGBA{46, 230, 200, 255}, 16)
+	tdLabel(s, fmt.Sprintf("%s %d/%d  %s %d  %s %d  %s %d", g.tr("WAVE", "波"), g.wave, g.maxWaves(), g.tr("LIVES", "ライフ"), g.lives, g.tr("COINS", "コイン"), g.coins, g.tr("SCORE", "得点"), g.score), 40, 53, color.White, 13)
+	tdLabel(s, g.message, 38, 79, color.RGBA{255, 211, 112, 255}, 13)
+	if g.cfg.Step == 8 {
+		for i := range scenarios {
+			c := color.RGBA{38, 62, 92, 255}
+			if i == g.scenario {
+				c = color.RGBA{45, 144, 151, 255}
+			}
+			vector.DrawFilledRect(s, float32(i*160+3), 88, 154, 36, c, false)
+			ebitenutil.DebugPrintAt(s, fmt.Sprintf("[%d] %s", i+1, []string{"COAST", "CAVE", "GATE"}[i]), i*160+14, 101)
+		}
+		trait := "RUSH"
+		if g.currentScenario().SpeedScale > 1 {
+			trait = "FAST"
+		}
+		if g.currentScenario().Boss {
+			trait = "BOSS AT FINAL WAVE"
+		}
+		ebitenutil.DebugPrintAt(s, fmt.Sprintf("INTENT: %s · NEXT %d · %s", trait, g.spawnLeft, g.currentScenario().Goal), 48, 140)
+	}
 	for i, t := range g.towers {
 		r := 105 + float64(t.level*8)
 		if g.cfg.Step == 2 || g.cfg.Step == 3 || i == len(g.towers)-1 {
@@ -417,7 +524,7 @@ func (g *game) Draw(s *ebiten.Image) {
 		vector.DrawFilledCircle(s, float32(p.x+ox), float32(p.y), float32(2+p.life/10), p.c, true)
 	}
 	if g.cfg.Step >= 7 {
-		labels := []string{"[Q] BOLT $60", "[W] SLOW $80", "[E] SPLASH $100"}
+		labels := []string{g.tr("[Q] BOLT $60", "[Q] 弾 $60"), g.tr("[W] SLOW $80", "[W] 鈍足 $80"), g.tr("[E] SPLASH $100", "[E] 範囲 $100")}
 		for i, l := range labels {
 			c := color.RGBA{44, 68, 92, 255}
 			if i == g.selected {
@@ -428,17 +535,29 @@ func (g *game) Draw(s *ebiten.Image) {
 		}
 	}
 	vector.DrawFilledRect(s, 40, 640, 400, 55, color.RGBA{180, 98, 48, 255}, false)
-	label := "START NEXT WAVE / SPACE"
+	label := g.tr("START NEXT WAVE / SPACE", "次の波をSTART / SPACE")
 	if g.running {
-		label = "WAVE IN PROGRESS"
+		label = g.tr("WAVE IN PROGRESS", "ウェーブ進行中")
 	}
 	ebitenutil.DebugPrintAt(s, label, 145, 663)
 	if g.won {
-		overlay(s, fmt.Sprintf("DEFENSE COMPLETE! BEST %d\n\nTAP / R: PLAY AGAIN", g.best))
+		g.overlay(s, fmt.Sprintf(g.tr("DEFENSE COMPLETE! GRADE %s\nBEST %d\n\nTAP / R: PLAY AGAIN", "防衛成功！ 評価 %s\nBEST %d\n\nタップ / R：もう一度"), towerdefense.ResultGrade(g.score, g.lives, g.coins), g.best))
 	}
 	if g.lost {
-		overlay(s, "THE PEARL WAS TAKEN\n\nTAP / R: RETRY")
+		g.overlay(s, g.tr("THE PEARL WAS TAKEN\n\nTAP / R: RETRY", "真珠が奪われた\n\nタップ / R：再挑戦"))
 	}
+}
+func (g *game) drawEffectBadge(s *ebiten.Image) {
+	if g.cfg.Step != 8 || g.pulse == nil || !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.pulse.Draw(fx, g.badge, float32(g.tick)*.08) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(W-34, 10)
+	s.DrawImage(fx, op)
 }
 func (g *game) drawPath(s *ebiten.Image, ox float64) {
 	for i := 1; i < len(g.path.Points); i++ {
@@ -463,10 +582,12 @@ func press() (int, int, bool) {
 func retryPressed() bool {
 	return inpututil.IsKeyJustPressed(ebiten.KeyR) || inpututil.IsKeyJustPressed(ebiten.KeyEnter) || inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || len(inpututil.AppendJustPressedTouchIDs(nil)) > 0
 }
-func overlay(s *ebiten.Image, text string) {
+func (g *game) overlay(s *ebiten.Image, text string) {
 	vector.DrawFilledRect(s, 35, 260, 410, 165, color.RGBA{4, 12, 24, 244}, false)
 	vector.StrokeRect(s, 35, 260, 410, 165, 4, color.RGBA{245, 190, 65, 255}, false)
-	ebitenutil.DebugPrintAt(s, text, 90, 320)
+	for i, line := range strings.Split(text, "\n") {
+		tdLabel(s, line, 90, 320+i*30, color.White, 18)
+	}
 }
 func (g *game) Layout(int, int) (int, int) { return W, H }
 func Run(cfg Config) {

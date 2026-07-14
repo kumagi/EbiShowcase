@@ -37,3 +37,15 @@ func TestChooseBestPrefersAHighValueCorner(t *testing.T) {
 		t.Fatalf("best move = %#v, ok=%v; want corner", move, ok)
 	}
 }
+
+func TestChooseLookaheadIsLegalAndDeterministic(t *testing.T) {
+	board := NewBoard()
+	first, ok, score := ChooseLookahead(board, Black)
+	if !ok || len(Captures(board, Black, first)) == 0 {
+		t.Fatalf("lookahead returned illegal move %#v, ok=%v", first, ok)
+	}
+	second, ok2, score2 := ChooseLookahead(board, Black)
+	if !ok2 || second != first || score2 != score {
+		t.Fatalf("lookahead must be deterministic: first=%#v/%d second=%#v/%d", first, score, second, score2)
+	}
+}

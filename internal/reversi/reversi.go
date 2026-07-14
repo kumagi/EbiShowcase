@@ -170,3 +170,34 @@ func ChooseBest(board Board, player Player) (Move, bool, int) {
 	}
 	return best, true, bestScore
 }
+
+// ChooseLookahead is a small, deterministic two-ply CPU. It tries each of
+// its moves, assumes the opponent will make the reply that is worst for this
+// player, and keeps the move with the safest resulting position score. It is
+// deliberately small enough to show learners the next step after ChooseBest.
+func ChooseLookahead(board Board, player Player) (Move, bool, int) {
+	moves := ValidMoves(board, player)
+	if len(moves) == 0 {
+		return Move{}, false, 0
+	}
+	best := moves[0]
+	bestScore := -1 << 30
+	for _, move := range moves {
+		candidate := board
+		Apply(&candidate, player, move)
+		replies := ValidMoves(candidate, Opponent(player))
+		worstScore := Evaluate(candidate, player)
+		for _, reply := range replies {
+			afterReply := candidate
+			Apply(&afterReply, Opponent(player), reply)
+			score := Evaluate(afterReply, player)
+			if score < worstScore {
+				worstScore = score
+			}
+		}
+		if worstScore > bestScore {
+			best, bestScore = move, worstScore
+		}
+	}
+	return best, true, bestScore
+}

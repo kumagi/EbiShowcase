@@ -80,7 +80,7 @@
   <section class="setup-step" id="install-go">
     <p class="setup-n">STEP 01</p>
     <h2>Install Go</h2>
-    <p class="setup-lead">Ebitengine is a Go game engine, so install Go first. Official requirement: Go 1.22+. This repository targets 1.24.</p>
+    <p class="setup-lead">Ebitengine is a Go game engine, so install Go first. This repository uses Go 1.25 or later.</p>
     <div class="setup-os-grid">
       <article class="setup-os"><h3>Windows</h3><ol class="setup-ol"><li>Open <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a></li><li>Download the Microsoft Windows <strong>.msi</strong> (usually the latest stable at the top)</li><li>Run the installer and click through Next</li><li>When it finishes, <strong>close the PowerShell window and open it again</strong> so PATH refreshes</li></ol></article>
       <article class="setup-os"><h3>macOS</h3><ol class="setup-ol"><li>Open <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a></li><li>Pick the right <strong>.pkg</strong>: <strong>ARM64</strong> for Apple Silicon (M1/M2/M3…), <strong>x86-64</strong> for Intel</li><li>Run the package and follow the prompts</li><li>When it finishes, <strong>quit Terminal and open it again</strong></li></ol></article>
@@ -102,7 +102,7 @@
     <h2>Check that Go works</h2>
     <p class="setup-lead">Type this in the terminal and press Enter:</p>
     <pre class="setup-code"><code>go version</code></pre>
-    <p class="setup-ok">Success looks like go version go1.24.4 windows/amd64 — any go1.22+ is fine.</p>
+    <p class="setup-ok">Success looks like go version go1.25.0 windows/amd64 — any go1.25+ is fine.</p>
     <p class="setup-fail">If you see “command not found” or “not recognized”: reopen the terminal after install; if it still fails, reboot once.</p>
     <div class="setup-bonus">
       <h3>Optional extra check</h3>

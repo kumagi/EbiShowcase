@@ -7,11 +7,17 @@ import (
 	"strconv"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	text "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
 	"github.com/kumagi/EbiShowcase/internal/hero"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const width, height, tile = 480, 720, 48
@@ -23,10 +29,17 @@ type game struct {
 	companion, clear                                 bool
 	defend                                           bool
 	message                                          string
+	audio                                            *audio.Context
+	gate                                             audiolab.Gate
+	pulse                                            *shaderlab.Pulse
+	cam                                              cameralab.State
+	badge                                            *ebiten.Image
 }
 
 func newGame() *game {
-	g := &game{x: 1, y: 10, hp: 60, message: "Meet Momo in the southwest village."}
+	b := ebiten.NewImage(20, 20)
+	b.Fill(color.RGBA{255, 210, 80, 255})
+	g := &game{x: 1, y: 10, hp: 60, message: "Meet Momo in the southwest village.", audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: b}
 	g.load()
 	return g
 }
@@ -53,6 +66,7 @@ func (g *game) save() {
 }
 func (g *game) Update() error {
 	g.tick++
+	g.cam.Pos = cameralab.Vec{X: float64(g.x * tile), Y: float64(g.y * tile)}
 	if g.shake > 0 {
 		g.shake--
 	}
@@ -167,6 +181,7 @@ func (g *game) battle() error {
 			d /= 2
 		}
 		g.enemyHP -= d
+		g.play(720)
 		g.flash = 7
 		g.shake = 4
 		g.message = fmt.Sprintf("Ebi and Momo deal %d damage!", d)
@@ -206,6 +221,7 @@ func (g *game) battle() error {
 		g.defend = false
 	}
 	g.hp -= damage
+	g.play(180)
 	g.turn++
 	g.shake = 7
 	if intent == 1 {
@@ -224,6 +240,10 @@ func (g *game) battle() error {
 	g.save()
 	return nil
 }
+func (g *game) play(hz float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, hz, .10)).Play()
+}
 func (g *game) setMessage() {
 	switch g.quest {
 	case 0:
@@ -241,6 +261,14 @@ func (g *game) setMessage() {
 	}
 }
 func (g *game) Draw(s *ebiten.Image) {
+	if g.pulse.Available() {
+		fx := ebiten.NewImage(20, 20)
+		if g.pulse.Draw(fx, g.badge, float32(g.tick)*.08) {
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(440, 12)
+			s.DrawImage(fx, op)
+		}
+	}
 	if g.scene == 1 {
 		g.drawBattle(s)
 		return
@@ -268,7 +296,13 @@ func (g *game) Draw(s *ebiten.Image) {
 	if g.companion {
 		trackatlas.DrawCentered(s, "ally", float64(g.x*tile+10), float64(oy+g.y*tile+38), 22)
 	}
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("EBI QUEST  HP %02d/60  QUEST %d/5", g.hp, g.quest), 120, 25)
+	if f, e := uilab.Face("en", 16); e == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(120, 25)
+		text.Draw(s, fmt.Sprintf("EBI QUEST  HP %02d/60  QUEST %d/5", g.hp, g.quest), f, op)
+	} else {
+		ebitenutil.DebugPrintAt(s, fmt.Sprintf("EBI QUEST  HP %02d/60  QUEST %d/5", g.hp, g.quest), 120, 25)
+	}
 	ebitenutil.DebugPrintAt(s, g.message, 60, 50)
 	ebitenutil.DebugPrintAt(s, "AUTOSAVED IN THIS BROWSER   R: DELETE SAVE", 85, 690)
 	if g.clear {

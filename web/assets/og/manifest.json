@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-07-14T01:14:18.385Z",
+  "generatedAt": "2026-07-14T05:12:47.593Z",
   "pages": [
     {
       "file": "web/en/games/breakout/index.html",
@@ -159,6 +159,42 @@
       "image": "assets/og/en--games--timing-meter.png"
     },
     {
+      "file": "web/en/graduation/index.html",
+      "path": "en/graduation",
+      "key": "en--graduation",
+      "lang": "en",
+      "kind": "site",
+      "title": "Ebi Showcase – Graduation projects",
+      "h1": "Turn learned parts into your game.",
+      "eyebrow": "GRADUATION PROJECTS",
+      "description": "Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste",
+      "image": "assets/og/en--graduation.png"
+    },
+    {
+      "file": "web/en/guides/choose-your-path/index.html",
+      "path": "en/guides/choose-your-path",
+      "key": "en--guides--choose-your-path",
+      "lang": "en",
+      "kind": "guide",
+      "title": "Ebi Showcase – Choose your path",
+      "h1": "Start from a game you love, then learn how it works.",
+      "eyebrow": "CHOOSE YOUR PATH",
+      "description": "Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste",
+      "image": "assets/og/en--guides--choose-your-path.png"
+    },
+    {
+      "file": "web/en/guides/first-30-minutes/index.html",
+      "path": "en/guides/first-30-minutes",
+      "key": "en--guides--first-30-minutes",
+      "lang": "en",
+      "kind": "guide",
+      "title": "Ebi Showcase – First 30 minutes",
+      "h1": "Your first complete game in 30 minutes.",
+      "eyebrow": "FIRST 30 MINUTES",
+      "description": "Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste",
+      "image": "assets/og/en--guides--first-30-minutes.png"
+    },
+    {
       "file": "web/en/guides/game-data/index.html",
       "path": "en/guides/game-data",
       "key": "en--guides--game-data",
@@ -169,6 +205,66 @@
       "eyebrow": "How a game’s insides are split",
       "description": "How to compose an Ebitengine game by loading scenario, map, event, and presentation assets. Play the demo, read a short Go example, change a value, and apply th",
       "image": "assets/og/en--guides--game-data.png"
+    },
+    {
+      "file": "web/en/guides/performance/index.html",
+      "path": "en/guides/performance",
+      "key": "en--guides--performance",
+      "lang": "en",
+      "kind": "guide",
+      "title": "Ebi Showcase – Measure game performance",
+      "h1": "Before making it fast, choose what to measure.",
+      "eyebrow": "SYSTEM GUIDE / PERFORMANCE",
+      "description": "Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste",
+      "image": "assets/og/en--guides--performance.png"
+    },
+    {
+      "file": "web/en/guides/progress/index.html",
+      "path": "en/guides/progress",
+      "key": "en--guides--progress",
+      "lang": "en",
+      "kind": "guide",
+      "title": "Ebi Showcase – Learning progress",
+      "h1": "Play → deepen → make",
+      "eyebrow": "PROGRESS MAP",
+      "description": "Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste",
+      "image": "assets/og/en--guides--progress.png"
+    },
+    {
+      "file": "web/en/guides/project-structure/index.html",
+      "path": "en/guides/project-structure",
+      "key": "en--guides--project-structure",
+      "lang": "en",
+      "kind": "guide",
+      "title": "Ebi Showcase – Game project structure",
+      "h1": "When a game grows, give each job its own room.",
+      "eyebrow": "SYSTEM GUIDE / PROJECT STRUCTURE",
+      "description": "Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste",
+      "image": "assets/og/en--guides--project-structure.png"
+    },
+    {
+      "file": "web/en/guides/release/index.html",
+      "path": "en/guides/release",
+      "key": "en--guides--release",
+      "lang": "en",
+      "kind": "guide",
+      "title": "Ebi Showcase – Release checklist",
+      "h1": "Playable, shareable, and explainable.",
+      "eyebrow": "SYSTEM GUIDE / RELEASE",
+      "description": "Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste",
+      "image": "assets/og/en--guides--release.png"
+    },
+    {
+      "file": "web/en/guides/save/index.html",
+      "path": "en/guides/save",
+      "key": "en--guides--save",
+      "lang": "en",
+      "kind": "guide",
+      "title": "Ebi Showcase – Save and autosave",
+      "h1": "Make a game that resumes, without becoming fragile.",
+      "eyebrow": "SYSTEM GUIDE / SAVE",
+      "description": "Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste",
+      "image": "assets/og/en--guides--save.png"
     },
     {
       "file": "web/en/guides/setup/index.html",
@@ -265,6 +361,42 @@
       "eyebrow": "12 core games + 25 specializations in your browser",
       "description": "A practice site for making games yourself: play mini games in the browser and learn Go with Ebitengine, explained for beginners.",
       "image": "assets/og/en.png"
+    },
+    {
+      "file": "web/en/labs/audio/index.html",
+      "path": "en/labs/audio",
+      "key": "en--labs--audio",
+      "lang": "en",
+      "kind": "site",
+      "title": "Ebi Showcase – Audio Lab",
+      "h1": "Audio Lab",
+      "eyebrow": "ORIGINAL SOUND / SAFE START",
+      "description": "Play original sound safely after the player's first action. Audio communicates game response and stays separate from rules and judgment.",
+      "image": "assets/og/en--labs--audio.png"
+    },
+    {
+      "file": "web/en/labs/camera/index.html",
+      "path": "en/labs/camera",
+      "key": "en--labs--camera",
+      "lang": "en",
+      "kind": "site",
+      "title": "Ebi Showcase – Camera Lab",
+      "h1": "Camera Lab",
+      "eyebrow": "CAMERA / COMPOSITION",
+      "description": "Separate world and screen coordinates, then build follow, shake, and room movement independently from game rules. Play the demo, read a short Go example, change",
+      "image": "assets/og/en--labs--camera.png"
+    },
+    {
+      "file": "web/en/labs/shader/index.html",
+      "path": "en/labs/shader",
+      "key": "en--labs--shader",
+      "lang": "en",
+      "kind": "site",
+      "title": "Ebi Showcase – Shader Lab",
+      "h1": "Shader Lab",
+      "eyebrow": "KAGE / SAFE EFFECTS",
+      "description": "Use Kage, Ebitengine's shader language, to add light, distortion, and state color without changing game rules. Unsupported devices always keep the normal drawin",
+      "image": "assets/og/en--labs--shader.png"
     },
     {
       "file": "web/en/tracks/active-rpg/action-motion/index.html",
@@ -1796,8 +1928,8 @@
       "key": "en--tracks--raycaster--ebi-raycaster",
       "lang": "en",
       "kind": "track",
-      "title": "Ebi Showcase – Complete Ebi Raycaster",
-      "h1": "Complete Ebi Raycaster",
+      "title": "Ebi Showcase – Complete Three Ebi Raycaster Missions",
+      "h1": "Complete Three Ebi Raycaster Missions",
       "eyebrow": "★★★★★ / PLAYABLE",
       "description": "Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste",
       "image": "assets/og/en--tracks--raycaster--ebi-raycaster.png"
@@ -1868,8 +2000,8 @@
       "key": "en--tracks--reversi--ebi-reversi",
       "lang": "en",
       "kind": "track",
-      "title": "Ebi Showcase – Play a CPU Using an Evaluation Function",
-      "h1": "Play a CPU Using an Evaluation Function",
+      "title": "Ebi Showcase – Play Three CPU Personalities",
+      "h1": "Play Three CPU Personalities",
       "eyebrow": "★★★★★ / PLAYABLE",
       "description": "Learn Ebitengine through playable mini games. Play the demo, read a short Go example, change a value, and apply the idea to your own Ebitengine game step by ste",
       "image": "assets/og/en--tracks--reversi--ebi-reversi.png"
@@ -1895,7 +2027,7 @@
       "title": "Ebi Showcase – Build Reversi with a Computer",
       "h1": "Build Reversi with a Computer",
       "eyebrow": "Read the board, flip stones, beat the CPU",
-      "description": "Represent an 8×8 board, then add legal moves, flips, passes, and scores. Finish by playing a CPU that values corners. Play the demo, read a short Go example, ch",
+      "description": "Represent an 8×8 board, then add legal moves, flips, passes, and scores. Finish by choosing and playing friendly, positional, and look-ahead CPUs.",
       "image": "assets/og/en--tracks--reversi.png"
     },
     {
@@ -3507,6 +3639,42 @@
       "image": "assets/og/ja--games--timing-meter.png"
     },
     {
+      "file": "web/ja/graduation/index.html",
+      "path": "ja/graduation",
+      "key": "ja--graduation",
+      "lang": "ja",
+      "kind": "site",
+      "title": "Ebi Showcase – 卒業制作",
+      "h1": "学んだ部品を、 自分のゲームにする。",
+      "eyebrow": "GRADUATION PROJECTS",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ",
+      "image": "assets/og/ja--graduation.png"
+    },
+    {
+      "file": "web/ja/guides/choose-your-path/index.html",
+      "path": "ja/guides/choose-your-path",
+      "key": "ja--guides--choose-your-path",
+      "lang": "ja",
+      "kind": "guide",
+      "title": "Ebi Showcase – 好きなゲームから始める",
+      "h1": "好きなゲームから、 作り方へ。",
+      "eyebrow": "CHOOSE YOUR PATH",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ",
+      "image": "assets/og/ja--guides--choose-your-path.png"
+    },
+    {
+      "file": "web/ja/guides/first-30-minutes/index.html",
+      "path": "ja/guides/first-30-minutes",
+      "key": "ja--guides--first-30-minutes",
+      "lang": "ja",
+      "kind": "guide",
+      "title": "Ebi Showcase – 最初の30分",
+      "h1": "30分で、最初の 完成ゲームまで。",
+      "eyebrow": "FIRST 30 MINUTES",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ",
+      "image": "assets/og/ja--guides--first-30-minutes.png"
+    },
+    {
       "file": "web/ja/guides/game-data/index.html",
       "path": "ja/guides/game-data",
       "key": "ja--guides--game-data",
@@ -3517,6 +3685,66 @@
       "eyebrow": "ゲームの中身を分ける考え方",
       "description": "Ebitengineでシナリオ、マップ、イベントなどのアセットデータを読み込み、ゲームを構成する方法。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
       "image": "assets/og/ja--guides--game-data.png"
+    },
+    {
+      "file": "web/ja/guides/performance/index.html",
+      "path": "ja/guides/performance",
+      "key": "ja--guides--performance",
+      "lang": "ja",
+      "kind": "guide",
+      "title": "Ebi Showcase – ゲームの速さを測る",
+      "h1": "速くする前に、 何を測るか決めよう。",
+      "eyebrow": "SYSTEM GUIDE / PERFORMANCE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ",
+      "image": "assets/og/ja--guides--performance.png"
+    },
+    {
+      "file": "web/ja/guides/progress/index.html",
+      "path": "ja/guides/progress",
+      "key": "ja--guides--progress",
+      "lang": "ja",
+      "kind": "guide",
+      "title": "Ebi Showcase – 学びの進捗",
+      "h1": "遊ぶ → 深める → 作る",
+      "eyebrow": "PROGRESS MAP",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ",
+      "image": "assets/og/ja--guides--progress.png"
+    },
+    {
+      "file": "web/ja/guides/project-structure/index.html",
+      "path": "ja/guides/project-structure",
+      "key": "ja--guides--project-structure",
+      "lang": "ja",
+      "kind": "guide",
+      "title": "Ebi Showcase – ゲームのプロジェクト構成",
+      "h1": "ゲームが大きくなったら、 役割ごとに部屋を分けよう。",
+      "eyebrow": "SYSTEM GUIDE / PROJECT STRUCTURE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ",
+      "image": "assets/og/ja--guides--project-structure.png"
+    },
+    {
+      "file": "web/ja/guides/release/index.html",
+      "path": "ja/guides/release",
+      "key": "ja--guides--release",
+      "lang": "ja",
+      "kind": "guide",
+      "title": "Ebi Showcase – 公開前チェックリスト",
+      "h1": "遊べる、配れる、 説明できる。",
+      "eyebrow": "SYSTEM GUIDE / RELEASE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ",
+      "image": "assets/og/ja--guides--release.png"
+    },
+    {
+      "file": "web/ja/guides/save/index.html",
+      "path": "ja/guides/save",
+      "key": "ja--guides--save",
+      "lang": "ja",
+      "kind": "guide",
+      "title": "Ebi Showcase – セーブと自動保存",
+      "h1": "続きから遊べるゲームを、 こわれにくく作る。",
+      "eyebrow": "SYSTEM GUIDE / SAVE",
+      "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲ",
+      "image": "assets/og/ja--guides--save.png"
     },
     {
       "file": "web/ja/guides/setup/index.html",
@@ -3613,6 +3841,42 @@
       "eyebrow": "ブラウザで遊べる・12の基礎ゲーム＋25の専門トラック",
       "description": "ブラウザでミニゲームを遊びながら、自分でゲームを作る練習をするサイト。Go と Ebitengine を中学生でも追える言葉で教えます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja.png"
+    },
+    {
+      "file": "web/ja/labs/audio/index.html",
+      "path": "ja/labs/audio",
+      "key": "ja--labs--audio",
+      "lang": "ja",
+      "kind": "site",
+      "title": "Ebi Showcase – サウンド工房",
+      "h1": "サウンド工房",
+      "eyebrow": "ORIGINAL SOUND / SAFE START",
+      "description": "自作の音を、遊ぶ人の最初の操作から安全に鳴らします。音はゲームの反応を伝える層で、ルールや判定とは分けます。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "image": "assets/og/ja--labs--audio.png"
+    },
+    {
+      "file": "web/ja/labs/camera/index.html",
+      "path": "ja/labs/camera",
+      "key": "ja--labs--camera",
+      "lang": "ja",
+      "kind": "site",
+      "title": "Ebi Showcase – カメラ工房",
+      "h1": "カメラ工房",
+      "eyebrow": "CAMERA / COMPOSITION",
+      "description": "世界の座標と画面の座標を分け、追従・揺れ・部屋移動をゲームルールから独立して作ります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "image": "assets/og/ja--labs--camera.png"
+    },
+    {
+      "file": "web/ja/labs/shader/index.html",
+      "path": "ja/labs/shader",
+      "key": "ja--labs--shader",
+      "lang": "ja",
+      "kind": "site",
+      "title": "Ebi Showcase – シェーダー工房",
+      "h1": "シェーダー工房",
+      "eyebrow": "KAGE / SAFE EFFECTS",
+      "description": "Kage（Ebitengineのシェーダー言語）で、ゲームのルールを変えずに光・ゆがみ・状態色を足します。対応しない端末では必ず普通の描画へ戻ります。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。",
+      "image": "assets/og/ja--labs--shader.png"
     },
     {
       "file": "web/ja/tracks/active-rpg/action-motion/index.html",
@@ -5144,8 +5408,8 @@
       "key": "ja--tracks--raycaster--ebi-raycaster",
       "lang": "ja",
       "kind": "track",
-      "title": "Ebi Showcase – Ebi Raycasterを完成させる",
-      "h1": "Ebi Raycasterを完成させる",
+      "title": "Ebi Showcase – 3ミッションのEbi Raycasterを完成させる",
+      "h1": "3ミッションのEbi Raycasterを完成させる",
       "eyebrow": "★★★★★ / PLAYABLE",
       "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
       "image": "assets/og/ja--tracks--raycaster--ebi-raycaster.png"
@@ -5216,8 +5480,8 @@
       "key": "ja--tracks--reversi--ebi-reversi",
       "lang": "ja",
       "kind": "track",
-      "title": "Ebi Showcase – 評価関数でCPUと対戦する",
-      "h1": "評価関数でCPUと対戦する",
+      "title": "Ebi Showcase – 3種類のCPUと対戦する",
+      "h1": "3種類のCPUと対戦する",
       "eyebrow": "★★★★★ / PLAYABLE",
       "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
       "image": "assets/og/ja--tracks--reversi--ebi-reversi.png"
@@ -5243,7 +5507,7 @@
       "title": "Ebi Showcase – コンピュータと対戦できるリバーシを作ろう",
       "h1": "コンピュータと対戦できるリバーシを作ろう",
       "eyebrow": "盤面を読む、石を返す、CPUに勝つ",
-      "description": "8×8の盤面をデータで持ち、合法手・石の反転・パス・勝敗を順番に実装します。最後は角を高く評価するCPUと対戦します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "8×8の盤面をデータで持ち、合法手・石の反転・パス・勝敗を順番に実装します。最後は、おだやか・位置重視・先読みのCPUを選んで対戦します。 遊べるデモを動かし、短いGoコードを読み、値を変えて結果を確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja--tracks--reversi.png"
     },
     {

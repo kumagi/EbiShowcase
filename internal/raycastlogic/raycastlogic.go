@@ -6,6 +6,57 @@ package raycastlogic
 
 import "math"
 
+// Mission is data for one replayable ray-cast encounter. Keeping it here
+// makes map validity, grading, and future editors testable without Ebitengine.
+type Mission struct {
+	Name       string
+	Grid       [][]int
+	StartX     float64
+	StartY     float64
+	StartAngle float64
+	KeyX       float64
+	KeyY       float64
+	ExitX      float64
+	ExitY      float64
+	Enemies    []Point
+	GoalTime   int
+}
+
+type Point struct{ X, Y float64 }
+
+// ValidateMission rejects data that would trap a player in an invalid grid.
+func ValidateMission(m Mission) bool {
+	if len(m.Grid) < 3 || len(m.Grid[0]) < 3 || m.GoalTime <= 0 {
+		return false
+	}
+	w := len(m.Grid[0])
+	for _, row := range m.Grid {
+		if len(row) != w {
+			return false
+		}
+	}
+	inside := func(x, y float64) bool {
+		ix, iy := int(x), int(y)
+		return iy >= 0 && iy < len(m.Grid) && ix >= 0 && ix < w && m.Grid[iy][ix] == 0
+	}
+	return inside(m.StartX, m.StartY) && inside(m.KeyX, m.KeyY) && inside(m.ExitX, m.ExitY)
+}
+
+// Grade rewards a quick, careful clear. It intentionally has no presentation
+// dependencies so it can be unit-tested and shown as a tiny Go rule.
+func Grade(seconds, damage, shots, enemyCount int) string {
+	if damage == 0 && seconds <= 45 && shots <= enemyCount+2 {
+		return "S"
+	}
+	if damage <= 1 && seconds <= 75 {
+		return "A"
+	}
+	if damage <= 3 {
+		return "B"
+	}
+	return "C"
+}
+
 type Hit struct {
 	Distance float64
 	MapX     int

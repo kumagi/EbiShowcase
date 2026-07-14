@@ -69,3 +69,15 @@ func TestRollCountsRepeatedPresses(t *testing.T) {
 		t.Fatalf("roll perfects=%d hits=%d", s.Perfects, s.RollHits(0))
 	}
 }
+
+func TestOffsetCompensatesTiming(t *testing.T) {
+	chart := Chart{Lanes: 1, Notes: []Note{{Lane: 0, At: 10}}}
+	s := NewSessionWithOffset(chart, 4)
+	for s.Frame < 6 {
+		s.Step(nil)
+	}
+	r := s.Step([]Input{{Lane: 0, Down: true}})
+	if len(r) != 1 || r[0].Grade != Perfect || r[0].Delta != 0 {
+		t.Fatalf("offset hit = %#v, want perfect at delta 0", r)
+	}
+}

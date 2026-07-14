@@ -6,10 +6,16 @@ import (
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const (
@@ -60,10 +66,20 @@ type game struct {
 	duel, best, tick, shake      int
 	sparks                       []spark
 	message                      string
+	audio                        *audio.Context
+	gate                         audiolab.Gate
+	pulse                        *shaderlab.Pulse
+	cam                          cameralab.State
+	badge                        *ebiten.Image
 }
 
 func newGame() *game {
 	g := &game{}
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.pulse = shaderlab.NewPulse()
+	g.cam = cameralab.State{Pos: cameralab.Vec{X: width / 2, Y: height / 2}, ViewW: width, ViewH: height}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{243, 188, 69, 255})
 	g.seedPuzzle(0)
 	return g
 }
@@ -208,6 +224,7 @@ func (g *game) rotate() {
 }
 
 func (g *game) lockPair() {
+	g.play(280)
 	cells := g.pairCells(g.x, g.y, g.rotation)
 	g.board[cells[0].y][cells[0].x] = g.pivotKind
 	g.board[cells[1].y][cells[1].x] = g.childKind
@@ -242,6 +259,7 @@ func (g *game) updateResolution() {
 		burst := g.marked
 		cleared := g.clearMarkedAndAdjacentGarbage()
 		g.score += cleared * 10 * g.chain
+		g.play(420 + float64(min(g.chain, 4))*100)
 		g.shake = 4 + g.chain*2
 		for p := range burst {
 			for i := 0; i < 5; i++ {
@@ -264,6 +282,10 @@ func (g *game) updateResolution() {
 		}
 		g.finishResolution()
 	}
+}
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, freq, .06)).Play()
 }
 
 func findGroups(board [rows][cols]int) map[point]bool {
@@ -411,7 +433,8 @@ func (g *game) Draw(screen *ebiten.Image) {
 		ox = math.Sin(float64(g.tick)*2.1) * float64(g.shake)
 	}
 	vector.DrawFilledCircle(screen, float32(65+g.duel*160), 75, 85, color.RGBA{60, 120, 130, 35}, true)
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("EBI CHAIN / DUEL %d/3 %s", g.duel+1, rule.name), 130, 18)
+	g.drawTitle(screen, rule.name)
+	g.drawEffectBadge(screen)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %05d CHAIN %d SENT %d MISSES %d/%d BEST %d", g.score, g.chain, g.sent, g.misses, rule.missLimit, g.best), 55, 44)
 	ebitenutil.DebugPrintAt(screen, g.message, 48, 70)
 	vector.DrawFilledRect(screen, boardX-4, boardY-4, cols*cell+8, rows*cell+8, color.RGBA{32, 47, 69, 255}, false)
@@ -473,6 +496,29 @@ func (g *game) Draw(screen *ebiten.Image) {
 	} else if g.over {
 		overlay(screen, "YOUR REEF LOST THE DUEL\n\nTAP / ENTER TO RETRY")
 	}
+}
+
+func (g *game) drawTitle(screen *ebiten.Image, name string) {
+	label := fmt.Sprintf("EBI CHAIN / DUEL %d/3 %s", g.duel+1, name)
+	if face, err := uilab.Face("en", 16); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(130, 6)
+		text.Draw(screen, label, face, op)
+		return
+	}
+	ebitenutil.DebugPrintAt(screen, label, 130, 18)
+}
+func (g *game) drawEffectBadge(screen *ebiten.Image) {
+	if g.pulse == nil || !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.pulse.Draw(fx, g.badge, float32(g.tick)*.08) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(width-34, 10)
+	screen.DrawImage(fx, op)
 }
 
 func drawPiece(screen *ebiten.Image, x, y, kind int, label string) {

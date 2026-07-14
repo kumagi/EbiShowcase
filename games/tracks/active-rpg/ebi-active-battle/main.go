@@ -6,10 +6,16 @@ import (
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const W, H, maxGauge = 480, 720, 1000
@@ -46,6 +52,11 @@ type game struct {
 	won, lost, stageClear                                                   bool
 	motion                                                                  motion
 	sparks                                                                  []spark
+	audio                                                                   *audio.Context
+	gate                                                                    audiolab.Gate
+	pulse                                                                   *shaderlab.Pulse
+	cam                                                                     cameralab.State
+	badge                                                                   *ebiten.Image
 }
 
 func party() []actor {
@@ -53,6 +64,11 @@ func party() []actor {
 }
 func newGame() *game {
 	g := &game{ready: -1, best: 0, flashTarget: -1}
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.pulse = shaderlab.NewPulse()
+	g.cam = cameralab.State{Pos: cameralab.Vec{X: W / 2, Y: H / 2}, ViewW: W, ViewH: H}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{255, 198, 75, 255})
 	g.loadStage(0, party())
 	return g
 }
@@ -197,9 +213,11 @@ func (g *game) updateMotion() {
 	if m.timer == 16 {
 		t := &g.actors[m.target]
 		if m.damage < 0 {
+			g.play(440)
 			t.hp = min(t.maxHP, t.hp-m.damage)
 			g.message = g.actors[m.source].name + " restores " + t.name
 		} else {
+			g.play(700)
 			t.hp -= m.damage
 			g.message = fmt.Sprintf("%s hits %s for %d!", g.actors[m.source].name, t.name, m.damage)
 		}
@@ -220,6 +238,10 @@ func (g *game) updateMotion() {
 		g.pickReady()
 		g.check()
 	}
+}
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, freq, .065)).Play()
 }
 func (g *game) pickReady() {
 	g.ready = -1
@@ -308,7 +330,8 @@ func (g *game) Draw(s *ebiten.Image) {
 		ox = math.Sin(float64(g.totalFrames)*2.3) * float64(g.shake)
 	}
 	vector.DrawFilledCircle(s, float32(80+g.stage*150), 90, 90, color.RGBA{50, 120, 140, 35}, true)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("ACTIVE BATTLE %d/3 / %s", g.stage+1, encounters[g.stage].name), 125, 18)
+	g.drawTitle(s)
+	g.drawEffectBadge(s)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("TIME %02d  BEST %d", g.totalFrames/60, g.best), 170, 43)
 	ebitenutil.DebugPrintAt(s, g.message, 45, 68)
 	for i, a := range g.actors {
@@ -359,6 +382,28 @@ func (g *game) Draw(s *ebiten.Image) {
 	if g.lost {
 		overlay(s, "PARTY DEFEATED\n\nTAP / ENTER TO RETRY")
 	}
+}
+func (g *game) drawTitle(s *ebiten.Image) {
+	label := fmt.Sprintf("ACTIVE BATTLE %d/3 / %s", g.stage+1, encounters[g.stage].name)
+	if face, err := uilab.Face("en", 16); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(125, 6)
+		text.Draw(s, label, face, op)
+		return
+	}
+	ebitenutil.DebugPrintAt(s, label, 125, 18)
+}
+func (g *game) drawEffectBadge(s *ebiten.Image) {
+	if g.pulse == nil || !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.pulse.Draw(fx, g.badge, float32(g.totalFrames)*.08) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(W-34, 10)
+	s.DrawImage(fx, op)
 }
 func press() (int, int, bool) {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {

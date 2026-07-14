@@ -3,13 +3,20 @@ package main
 import (
 	"container/heap"
 	"fmt"
-	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image/color"
 	"math"
 	"math/rand"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const (
@@ -76,10 +83,20 @@ type game struct {
 	sparks                   []spark
 	rng                      *rand.Rand
 	scene                    *ebiten.Image
+	audio                    *audio.Context
+	gate                     audiolab.Gate
+	pulse                    *shaderlab.Pulse
+	cam                      cameralab.State
+	badge                    *ebiten.Image
 }
 
 func newGame() *game {
 	g := &game{selected: 0, cursor: pt{0, 7}, rng: rand.New(rand.NewSource(1601)), scene: ebiten.NewImage(W, H)}
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.pulse = shaderlab.NewPulse()
+	g.cam = cameralab.State{Pos: cameralab.Vec{X: W / 2, Y: H / 2}, ViewW: W, ViewH: H}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{255, 211, 83, 255})
 	g.loadMission(0)
 	g.recalc()
 	return g
@@ -233,6 +250,7 @@ func (g *game) attack(target int) {
 	d := abs(u.p.x-e.p.x) + abs(u.p.y-e.p.y)
 	if u.moved && !u.acted && d <= u.reach {
 		e.hp -= 3
+		g.play(680)
 		g.attackFrom, g.attackTo = u.p, e.p
 		g.attackAnim = 22
 		g.shake = 8
@@ -244,6 +262,10 @@ func (g *game) attack(target int) {
 		u.acted = true
 		g.enemyTurnIfDone()
 	}
+}
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Square, freq, .06)).Play()
 }
 
 func (g *game) waitUnit() {
@@ -348,7 +370,8 @@ func (g *game) Draw(s *ebiten.Image) {
 }
 func (g *game) drawScene(s *ebiten.Image) {
 	s.Fill([]color.RGBA{{14, 24, 35, 255}, {28, 20, 39, 255}, {10, 37, 43, 255}}[g.mission])
-	ebitenutil.DebugPrintAt(s, "EBI TACTICS", 194, 18)
+	g.drawTitle(s)
+	g.drawEffectBadge(s)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("MISSION %d/3 %-13s TURN %d/%d TOTAL %d BEST %d", g.mission+1, missions[g.mission].name, g.turn+1, missions[g.mission].turnLimit, g.totalTurns, g.bestTurns), 38, 42)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("SELECT %s  MOVE %d  RANGE %d", g.units[g.selected].name, g.units[g.selected].move, g.units[g.selected].reach), 135, 61)
 	ebitenutil.DebugPrintAt(s, g.message, 32, 82)
@@ -397,6 +420,27 @@ func (g *game) drawScene(s *ebiten.Image) {
 	if g.lost {
 		overlay(s, "MISSION FAILED\n\nTAP / ENTER TO RETRY")
 	}
+}
+func (g *game) drawTitle(s *ebiten.Image) {
+	if face, err := uilab.Face("en", 16); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(194, 6)
+		text.Draw(s, "EBI TACTICS", face, op)
+		return
+	}
+	ebitenutil.DebugPrintAt(s, "EBI TACTICS", 194, 18)
+}
+func (g *game) drawEffectBadge(s *ebiten.Image) {
+	if g.pulse == nil || !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.pulse.Draw(fx, g.badge, float32(g.frame)*.08) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(W-34, 10)
+	s.DrawImage(fx, op)
 }
 func press() (int, int, bool) {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {

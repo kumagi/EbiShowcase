@@ -7,10 +7,16 @@ import (
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const (
@@ -78,12 +84,22 @@ type game struct {
 	message                                                                                string
 	won, lost                                                                              bool
 	rng                                                                                    *rand.Rand
+	audio                                                                                  *audio.Context
+	gate                                                                                   audiolab.Gate
+	pulse                                                                                  *shaderlab.Pulse
+	cam                                                                                    cameralab.State
+	badge                                                                                  *ebiten.Image
 }
 
 var sessionBest int
 
 func newGame() *game {
 	g := &game{lives: 3, best: sessionBest, rng: rand.New(rand.NewSource(70))}
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.pulse = shaderlab.NewPulse()
+	g.cam = cameralab.State{Pos: cameralab.Vec{X: screenW / 2, Y: screenH / 2}, ViewW: screenW, ViewH: screenH}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{255, 220, 104, 255})
 	g.loadStage(0)
 	return g
 }
@@ -183,6 +199,7 @@ func (g *game) collect() {
 	g.collected++
 	g.combo++
 	g.score += 50 + g.combo*3
+	g.play(500)
 	x, y := tileCenter(g.player.tile)
 	for i := 0; i < 8; i++ {
 		a := float64(i) * math.Pi / 4
@@ -283,6 +300,7 @@ func (g *game) contacts() {
 	for _, e := range g.guards {
 		if e.tile == g.player.tile || (g.player.moving && e.tile == g.player.target) {
 			g.lives--
+			g.play(160)
 			g.combo = 0
 			g.shake = 14
 			g.flash = 10
@@ -300,6 +318,10 @@ func (g *game) contacts() {
 			return
 		}
 	}
+}
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, freq, .05)).Play()
 }
 func (g *game) resetActors() {
 	g.player = runner{tile: point{1, 11}, target: point{1, 11}, dir: 3, wanted: 3}
@@ -350,7 +372,8 @@ func (g *game) Draw(screen *ebiten.Image) {
 	}
 	world := ebiten.NewImage(screenW, screenH)
 	d := stages[g.stage]
-	ebitenutil.DebugPrintAt(world, fmt.Sprintf("EBI MAZE  %d/3  %s", g.stage+1, d.name), 125, 17)
+	g.drawTitle(world, d.name)
+	g.drawEffectBadge(world)
 	ebitenutil.DebugPrintAt(world, fmt.Sprintf("PEARLS %02d/%02d  LIFE %d  SCORE %05d  %s>%s", g.collected, g.total, g.lives, g.score, dirNames[g.player.dir], dirNames[g.player.wanted]), 35, 44)
 	ebitenutil.DebugPrintAt(world, g.message, 35, 69)
 	for y := 0; y < rows; y++ {
@@ -407,6 +430,28 @@ func (g *game) Draw(screen *ebiten.Image) {
 	if g.lost {
 		overlay(screen, fmt.Sprintf("MAZE RUN ENDED\n\nSCORE %05d  BEST %05d\n\nTAP / ENTER TO RETRY", g.score, sessionBest))
 	}
+}
+func (g *game) drawTitle(screen *ebiten.Image, name string) {
+	label := fmt.Sprintf("EBI MAZE  %d/3  %s", g.stage+1, name)
+	if face, err := uilab.Face("en", 16); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(125, 5)
+		text.Draw(screen, label, face, op)
+		return
+	}
+	ebitenutil.DebugPrintAt(screen, label, 125, 17)
+}
+func (g *game) drawEffectBadge(screen *ebiten.Image) {
+	if g.pulse == nil || !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.pulse.Draw(fx, g.badge, float32(g.frames)*.08) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(screenW-34, 10)
+	screen.DrawImage(fx, op)
 }
 func runnerPosition(r runner) (float32, float32) {
 	x, y := tileCenter(r.tile)

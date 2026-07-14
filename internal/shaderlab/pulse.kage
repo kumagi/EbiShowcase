@@ -1,0 +1,12 @@
+// Copyright 2026 Ebi Showcase contributors. Licensed under Apache-2.0.
+package main
+
+var Time float
+
+// Fragment is deliberately tiny: the lab can fall back to DrawImage when a
+// device does not expose shader support.
+func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
+	c := imageSrc0At(texCoord)
+	pulse := 0.84 + 0.16*sin(Time)
+	return vec4(c.rgb*pulse, c.a) * color
+}

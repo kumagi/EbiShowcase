@@ -27,3 +27,20 @@ func TestSelectFrontReturnsMinusOne(t *testing.T) {
 		t.Fatalf("got %d", got)
 	}
 }
+
+func TestScenarioValidationAndResultGrade(t *testing.T) {
+	s := Scenario{Name: "COAST", Goal: "Protect", Route: []Vec{{0, 0}, {10, 0}}, Waves: 3, Coins: 100, Lives: 10, SpeedScale: 1}
+	if !ValidScenario(s) {
+		t.Fatal("valid scenario rejected")
+	}
+	s.Route = []Vec{{0, 0}}
+	if ValidScenario(s) {
+		t.Fatal("one-point route accepted")
+	}
+	if got := ResultGrade(600, 9, 100); got != "S" {
+		t.Fatalf("grade=%s", got)
+	}
+	if got := ResultGrade(0, 1, 0); got != "C" {
+		t.Fatalf("grade=%s", got)
+	}
+}

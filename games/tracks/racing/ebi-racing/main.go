@@ -2,12 +2,19 @@ package main
 
 import (
 	"fmt"
-	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
-	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"github.com/hajimehoshi/ebiten/v2/vector"
 	"image/color"
 	"math"
+
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
+	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/shaderlab"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const (
@@ -42,10 +49,20 @@ type game struct {
 	stage, totalFrames, bestFrames, shake int
 	gates                                 [][2]float64
 	sparks                                []spark
+	audio                                 *audio.Context
+	gate                                  audiolab.Gate
+	pulse                                 *shaderlab.Pulse
+	cam                                   cameralab.State
+	badge                                 *ebiten.Image
 }
 
 func newGame() *game {
 	g := &game{stage: 1}
+	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.pulse = shaderlab.NewPulse()
+	g.cam = cameralab.State{Pos: cameralab.Vec{X: W / 2, Y: H / 2}, ViewW: W, ViewH: H}
+	g.badge = ebiten.NewImage(20, 20)
+	g.badge.Fill(color.RGBA{246, 198, 72, 255})
 	g.loadCourse()
 	return g
 }
@@ -159,8 +176,13 @@ func (g *game) checkGate(c *car) {
 		c.next = (c.next + 1) % len(g.gates)
 		if c.next == 0 {
 			c.lap++
+			g.play(760)
 		}
 	}
+}
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Square, freq, .045)).Play()
 }
 func (g *game) burst(x, y float64, n int) {
 	g.shake = 7
@@ -198,7 +220,8 @@ func (g *game) Draw(s *ebiten.Image) {
 		vector.DrawFilledCircle(s, float32(p.x+ox), float32(p.y), float32(2+p.life/14), color.RGBA{255, 211, 62, 255}, true)
 	}
 	vector.DrawFilledRect(s, 0, 0, W, 60, color.RGBA{8, 17, 31, 230}, false)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("COURSE %d/3 %s LAP %d/%d SPEED %.1f BEST %.2f", g.stage, course.name, g.cars[0].lap+1, course.laps, math.Abs(g.cars[0].speed), float64(g.bestFrames)/60), 25, 20)
+	g.drawHUD(s, course)
+	g.drawEffectBadge(s)
 	labels := []string{"LEFT", "GAS", "BRAKE", "RIGHT"}
 	for i, l := range labels {
 		vector.DrawFilledRect(s, float32(i*120+5), 650, 110, 55, color.RGBA{45, 78, 113, 255}, false)
@@ -214,6 +237,28 @@ func (g *game) Draw(s *ebiten.Image) {
 	if g.lost {
 		overlay(s, "RACE LOST\n\nTAP / ENTER TO RETRY")
 	}
+}
+func (g *game) drawHUD(s *ebiten.Image, c course) {
+	label := fmt.Sprintf("COURSE %d/3 %s LAP %d/%d SPEED %.1f BEST %.2f", g.stage, c.name, g.cars[0].lap+1, c.laps, math.Abs(g.cars[0].speed), float64(g.bestFrames)/60)
+	if face, err := uilab.Face("en", 14); err == nil {
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(25, 8)
+		text.Draw(s, label, face, op)
+		return
+	}
+	ebitenutil.DebugPrintAt(s, label, 25, 20)
+}
+func (g *game) drawEffectBadge(s *ebiten.Image) {
+	if g.pulse == nil || !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if !g.pulse.Draw(fx, g.badge, float32(g.frames)*.08) {
+		return
+	}
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(W-34, 32)
+	s.DrawImage(fx, op)
 }
 
 func drawEllipse(s *ebiten.Image, cx, cy, rx, ry, width float32, c color.RGBA) {

@@ -119,19 +119,21 @@ function inject(lang, items) {
   writeFileSync(file, html);
 }
 
-const command = process.argv[2] || "list";
-const items = collectHomeThumbnails();
-mkdirSync(assetsDir, { recursive: true });
-writeFileSync(join(assetsDir, "manifest.json"), `${JSON.stringify(items, null, 2)}\n`);
+if (process.argv[1] === new URL(import.meta.url).pathname) {
+  const command = process.argv[2] || "list";
+  const items = collectHomeThumbnails();
+  mkdirSync(assetsDir, { recursive: true });
+  writeFileSync(join(assetsDir, "manifest.json"), `${JSON.stringify(items, null, 2)}\n`);
 
-if (command === "list") {
-  process.stdout.write(`${JSON.stringify(items, null, 2)}\n`);
-} else if (command === "inject") {
-  const missing = items.filter((item) => !existsSync(join(assetsDir, item.file)));
-  if (missing.length) throw new Error(`Missing ${missing.length} home thumbnail(s). Capture them before injecting.\n${missing.map((item) => `${item.slug}\t${item.file}`).join("\n")}`);
-  inject("ja", items);
-  inject("en", items);
-  console.log(`Injected ${items.length} WebP previews into each home page.`);
-} else {
-  throw new Error(`Unknown command: ${command}`);
+  if (command === "list") {
+    process.stdout.write(`${JSON.stringify(items, null, 2)}\n`);
+  } else if (command === "inject") {
+    const missing = items.filter((item) => !existsSync(join(assetsDir, item.file)));
+    if (missing.length) throw new Error(`Missing ${missing.length} home thumbnail(s). Capture them before injecting.\n${missing.map((item) => `${item.slug}\t${item.file}`).join("\n")}`);
+    inject("ja", items);
+    inject("en", items);
+    console.log(`Injected ${items.length} WebP previews into each home page.`);
+  } else {
+    throw new Error(`Unknown command: ${command}`);
+  }
 }

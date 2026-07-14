@@ -1,0 +1,18 @@
+// Copyright 2026 Ebi Showcase contributors. Licensed under Apache-2.0.
+package main
+
+var Status float
+var Damage float
+
+func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
+	c := imageSrc0At(texCoord)
+	// RGB channels take tiny, different samples when damage is present.
+	if Damage > 0.01 {
+		r := imageSrc0At(texCoord+vec2(Damage*5.0, 0.0)).r
+		b := imageSrc0At(texCoord-vec2(Damage*5.0, 0.0)).b
+		c = vec4(r, c.g, b, c.a)
+	}
+	if Status < 0.5 { c.rgb = mix(c.rgb, vec3(1.0, 0.18, 0.12), 0.55) }
+	if Status > 1.5 { c.rgb = mix(c.rgb, vec3(0.28, 0.88, 1.0), 0.58) }
+	return c * color
+}

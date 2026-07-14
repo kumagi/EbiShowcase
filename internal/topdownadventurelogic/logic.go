@@ -4,6 +4,44 @@ package topdownadventurelogic
 
 import "math"
 
+// RoomSpec is the small, data-only contract for one dungeon room. The
+// presentation can draw it however it likes, while tests can still verify a
+// complete adventure route without opening a game window.
+type RoomSpec struct {
+	Name, Goal string
+	Enemies    int
+	NeedsKey   bool
+	NeedsTools bool
+	Boss       bool
+}
+
+// ValidDungeonRoute rejects incomplete room data before it becomes a stage.
+func ValidDungeonRoute(rooms []RoomSpec) bool {
+	if len(rooms) < 4 || !rooms[0].NeedsKey || !rooms[len(rooms)-1].Boss {
+		return false
+	}
+	for _, room := range rooms {
+		if room.Name == "" || room.Goal == "" || room.Enemies < 0 {
+			return false
+		}
+	}
+	return true
+}
+
+// RunGrade turns a completed run into an easy-to-explain replay goal.
+func RunGrade(score, hp, frames int) string {
+	if hp >= 4 && score >= 1800 && frames <= 1800 {
+		return "S"
+	}
+	if hp >= 3 && score >= 1300 {
+		return "A"
+	}
+	if hp >= 1 {
+		return "B"
+	}
+	return "C"
+}
+
 type Vec struct{ X, Y float64 }
 type Rect struct{ X, Y, W, H float64 }
 
