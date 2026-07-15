@@ -34,7 +34,8 @@
   <main>
     <section class="catalog-hero"><p class="eyebrow">ブラウザで遊べる・12の基礎ゲーム＋25の専門トラック</p><h1>遊ぶたび、<br><em>作れることが増える。</em></h1><p>ここは<strong>自分でゲームを作る練習サイト</strong>です。ブラウザでミニゲームを遊びながら、Go 言語とゲーム用ライブラリ <strong>Ebitengine（エビテンジン）</strong> の考え方を、1つずつ覚えます。画面の主人公はオリジナルキャラ <strong>海老・天次郎（えび・てんじろう）</strong>——海老をモチーフにした冒険屋さんです。まずは LEVEL 01 で「数字を進める → 絵を描く」のくり返し（ゲームループ）から始めましょう。</p><p class="catalog-start-note"><strong>はじめてなら LEVEL 01「光る丸をタッチ」から。</strong>遊んでから、説明とGoコードを少しずつ追いかけよう。</p><a class="cta" href="#curriculum">学びの階段を見る <b>↓</b></a></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ゲームループは『数字を進める→その数字で絵を描く』を1秒に約60回くり返す仕組み。海老・天次郎（えび・てんじろう）が的を追う最小例から始めます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { g.x++; return nil }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ゲームループは、Updateが約60回/秒の時計として数字を進め、Drawがその最新状態を絵にする仕組みです。Drawが遅くてもゲーム進行は止まりません。海老・天次郎（えび・てんじろう）が的を追う最小例から始めます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { g.x++; return nil }
+func (g *Game) Draw(screen *ebiten.Image) { drawTarget(screen, g.x) }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 
 <!-- curriculum-map:start -->
@@ -148,6 +149,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

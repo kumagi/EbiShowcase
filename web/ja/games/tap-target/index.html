@@ -67,7 +67,7 @@ import \"math\"</pre></div></section>
     <section class="learn" id="basics">
       <p class="eyebrow">WHAT'S INSIDE / BEFORE ANYTHING ELSE</p>
       <h2>Ebitengine が呼ぶ3つは、<br>Update・Draw・Layout。</h2>
-      <p class="lesson-lead"><strong>メソッドは、Gameという箱に結び付いた関数（ひとまとまりの仕事）</strong>です。3つの答えは <strong>Update、Draw、Layout</strong>。ゲームのルールを決める主役は Update と Draw で、Layout はゲーム内の基準サイズを返します。Ebitengineのゲームはパラパラ漫画と同じで、毎フレーム「数字を変える」→「画面に描く」をくり返します。</p>
+      <p class="lesson-lead"><strong>メソッドは、Gameという箱に結び付いた関数（ひとまとまりの仕事）</strong>です。3つの答えは <strong>Update、Draw、Layout</strong>。Updateは通常毎秒約60回のゲーム時計として、入力・ルール・状態を進めます。Drawはその時点の状態を画面へ投影するだけで、描画が遅くて毎秒1回しか呼ばれなくてもゲーム進行を止めません。UpdateとDrawが交互に同じ仕事をするのではなく、進行はUpdate、表示はDrawと分担するのが大切です。Layoutはゲーム内の基準サイズを返します。</p>
       <div class="steps" style="grid-template-columns:repeat(3,1fr)">
         <article><b>01</b><h3>UPDATE</h3><p>入力を読み、スコアや位置などの<strong>数字</strong>を進めます。ここには絵を描きません。</p><code>func (g *Game) Update() error</code></article>
         <article><b>02</b><h3>DRAW</h3><p>いまの数字どおりに、丸や文字を<strong>画面へ描きます</strong>。入力も計算も状態変更もしません。</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
@@ -78,12 +78,12 @@ import \"math\"</pre></div></section>
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / GAME LOOP</p>
           <h3 id="loop-lab-title">Update → Draw を1コマずつ</h3>
-          <p>ボタンを押すたび、フェーズが切り替わります。本物のゲームも、この2つをものすごい速さでくり返しています。</p>
+          <p>ボタンを押すたび、説明用のフェーズが切り替わります。本物のゲームではUpdateがゲーム時計を進め、Drawは最新の状態を表示します。描画が遅れてもUpdate側の操作や時間が止まらないようにするのが、この分離の理由です。</p>
           <div class="lab-controls">
             <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="update draw" data-go-caption="Update で数字を変える → 1枚引く">次のフェーズ</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
-          <p class="lab-hint">1フレーム = Update 1回 + Draw 1回。Update が答えを決め、Draw は数字を変えずに写します。</p>
+          <p class="lab-hint">Updateは約60回/秒のゲーム時計、Drawは最新状態の表示。Drawが遅くても、Updateが決めた操作とルールは変わりません。</p>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-loop-board" data-lab-board data-phase="update" role="img" aria-label="UpdateとDrawの切り替え">
@@ -100,7 +100,7 @@ import \"math\"</pre></div></section>
 <p class="eyebrow">TRY IT · GO</p>
 <pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="update">func (g *game) Update() error { /* numbers */ }</span>
 <span data-go-line="draw">func (g *game) Draw(screen *ebiten.Image) { /* paint */ }</span>
-<span data-go-line="run">ebiten.RunGame(g) // Update → Draw → repeat</span></pre>
+<span data-go-line="run">ebiten.RunGame(g) // Update ticks; Draw presents snapshots</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>
@@ -395,6 +395,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -67,7 +67,7 @@ import \"math\"</pre></div></section>
     <section class="learn" id="basics">
       <p class="eyebrow">WHAT'S INSIDE / BEFORE ANYTHING ELSE</p>
       <h2>Ebitengine calls three methods:<br>Update, Draw, and Layout.</h2>
-      <p class="lesson-lead">A <strong>method is a function—a named piece of work—attached to the Game box</strong>. The three answers are <strong>Update, Draw, and Layout</strong>. Update and Draw are the main game loop; Layout returns the game's logical size. An Ebitengine game is a flipbook: every frame it repeats “change numbers” → “draw the screen.”</p>
+      <p class="lesson-lead">A <strong>method is a function—a named piece of work—attached to the Game box</strong>. The three answers are <strong>Update, Draw, and Layout</strong>. Update is the game clock, normally ticking about 60 times per second, and owns input, rules, physics, and state. Draw only projects the latest snapshot; even if it runs once per second under load, the next Update must continue the same game. This is not two equal alternating jobs: progress lives in Update, pixels live in Draw. Layout returns the game's logical size.</p>
       <div class="steps" style="grid-template-columns:repeat(3,1fr)">
         <article><b>01</b><h3>UPDATE</h3><p>Read input and advance the <strong>numbers</strong>—score, positions, timers. Do not draw here.</p><code>func (g *Game) Update() error</code></article>
         <article><b>02</b><h3>DRAW</h3><p>Paint circles and text from the current numbers. Do not read input, run game math, or mutate state here.</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
@@ -78,12 +78,12 @@ import \"math\"</pre></div></section>
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / GAME LOOP</p>
           <h3 id="loop-lab-title">Step through Update → Draw</h3>
-          <p>Each click flips the phase. A real game repeats these two steps many times per second.</p>
+          <p>Each click flips this teaching phase. In a real game, Update advances the game clock and Draw presents the latest snapshot. If rendering slows down, Update-side input and rules continue unchanged.</p>
           <div class="lab-controls">
             <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="update draw" data-go-caption="Update changes numbers → Draw paints the frame">Next phase</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
-          <p class="lab-hint">One frame = one Update + one Draw. Update decides the answer; Draw projects it without changing the numbers.</p>
+          <p class="lab-hint">Update is the roughly 60 Hz game clock; Draw presents the latest state. Slow or skipped Draw calls must not change the rules or input result.</p>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-loop-board" data-lab-board data-phase="update" role="img" aria-label="Update and Draw phases">
@@ -100,7 +100,7 @@ import \"math\"</pre></div></section>
 <p class="eyebrow">TRY IT · GO</p>
 <pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="update">func (g *game) Update() error { /* numbers */ }</span>
 <span data-go-line="draw">func (g *game) Draw(screen *ebiten.Image) { /* paint */ }</span>
-<span data-go-line="run">ebiten.RunGame(g) // Update → Draw → repeat</span></pre>
+<span data-go-line="run">ebiten.RunGame(g) // Update ticks; Draw presents snapshots</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>
@@ -395,6 +395,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

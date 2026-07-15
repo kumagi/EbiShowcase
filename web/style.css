@@ -931,6 +931,12 @@ footer p{color:#67719c}
 
 /* ---------- Playable lesson embeds ---------- */
 .lesson-play{padding-top:80px}
+.lesson-play .section-head{width:min(100%,1050px);margin-inline:auto}
+.lesson-play .game-shell{width:min(100%,960px);margin-inline:auto}
+/* Advanced FX pages use a portrait WASM canvas. Keep it centered in the
+   shell and let desktop readers scroll rather than shrinking the demo to
+   the viewport height. Mobile overrides below restore the compact fit. */
+.lesson-play #game-wrap{width:min(100%,540px);max-height:none;margin-inline:auto}
 .lesson-game-frame,.game-frame>iframe{width:100%;height:100%;border:0;display:block;touch-action:none}
 .diagram-figure{width:min(calc(100% - 48px),1180px);margin:clamp(28px,5vw,58px) auto;padding:18px 20px 14px;background:rgba(255,255,255,.88);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-soft)}
 .diagram-figure img{display:block;width:100%;height:auto;border-radius:calc(var(--radius) - 8px)}
@@ -994,6 +1000,7 @@ main>.motion-lab,main>.code-lesson,main>.why-grid{width:min(calc(100% - 48px),11
   .play-copy{padding-inline:8px}
   .play-copy h2{font-size:38px}
   .game-frame{width:min(100%,480px,calc((100svh - 48px)*2/3));border-radius:16px}
+  .lesson-play #game-wrap{width:min(100%,480px,calc((100svh - 104px)*2/3));max-height:calc(100svh - 104px)}
   .lesson-section{padding:68px 18px}
   .lesson-section>h2{font-size:40px}
   .lesson-section>p:not(.eyebrow){font-size:16px}

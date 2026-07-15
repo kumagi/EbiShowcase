@@ -8,7 +8,7 @@ const marker = /<!-- BEGIN BEGINNER BRIDGE -->[\s\S]*?<!-- END BEGINNER BRIDGE -
 // Short, concrete bridges requested by classroom review.  These complement the
 // deep dive: first define the unfamiliar word, then show one rule to trace.
 const notes = {
-  "home":"ゲームループは『数字を進める→その数字で絵を描く』を1秒に約60回くり返す仕組み。海老・天次郎（えび・てんじろう）が的を追う最小例から始めます。|func (g *Game) Update() error { g.x++; return nil }",
+  "home":"ゲームループは、Updateが約60回/秒の時計として数字を進め、Drawがその最新状態を絵にする仕組みです。Drawが遅くてもゲーム進行は止まりません。海老・天次郎（えび・てんじろう）が的を追う最小例から始めます。|func (g *Game) Update() error { g.x++; return nil }\nfunc (g *Game) Draw(screen *ebiten.Image) { drawTarget(screen, g.x) }",
   "setup":"go.modは『このゲームの名前と使う部品』を書いた目次ファイル。PowerShell/ターミナルは文字で命令する同じ役目の窓です。天次郎の最初の一コマを出すところまで進みます。|func (g *Game) Update() error { return nil }",
   "game-data":"データ駆動とは、村・台詞・敵をコードへ直接書かず、交換できるデータとして読む作り方。asset loaderはそのファイルをゲームへ渡す係、IDは部品同士を結ぶ名前札です。|village := loadMap(\"village.json\")",
   "ebi-depths":"巨大な世界は、世界座標・カメラ・訪問済み部屋・能力フラグを別々に覚えます。Updateで主人公と能力を進め、Drawではカメラの窓に入る部分だけを描きます。|screenX := worldX - cameraX",
@@ -190,7 +190,7 @@ for(const path of walk(root).filter(p=>p.endsWith(".html"))){
   if(lang==="ja"&&route.includes("/tracks/")&&!route.includes("/tracks/visual-effects/")&&!isHub){
     pair[1]+=" PLAYABLEは『このページで実際に操作できる』という印です。";
   }
-  if(lang==="en")pair=["Trace one rule first","Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.",pair[2] || "func (g *Game) Update() error { return nil }"];
+  if(lang==="en")pair=route==="/en/"?["Trace one rule first","Update is the roughly 60 Hz game clock: it advances input and state. Draw only projects the latest numbers, so even a delayed Draw does not change gameplay. This is the shared boundary for the whole path.","func (g *Game) Update() error { g.x++; return nil }\nfunc (g *Game) Draw(screen *ebiten.Image) { drawTarget(screen, g.x) }"]:["Trace one rule first","Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.",pair[2] || "func (g *Game) Update() error { return nil }"];
   pair[2] ||= "func (g *Game) Update() error { return nil }";
   const esc=s=>s.replaceAll("&","&amp;").replaceAll("<","&lt;");
   const flowVisual = isHub && trackParts[slug]

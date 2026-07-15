@@ -49,6 +49,16 @@
       "sources": ["docs/ROADMAP_RALPH_LOOP.md", "docs/Glossary.md"]
     },
     {
+      "id": "loop.update-cadence-independent",
+      "family": "loop",
+      "severity": "fail",
+      "check": "llm",
+      "applies_to": ["core", "track", "build", "graduation", "vfx"],
+      "summary": "Gameplay advances in Update at the engine tick; it does not depend on Draw frequency.",
+      "prompt_hint": "Does the lesson clearly say that Update runs about 60 times per second and owns time/input/state, while Draw may be delayed or called less often without changing gameplay? Flag wording that teaches Update and Draw as merely alternating equal phases or puts progression in Draw.",
+      "sources": ["AGENTS.md#game-loop-axioms-for-authoring", "docs/Glossary.md", "docs/AUTHORING_CHECKLIST.md"]
+    },
+    {
       "id": "loop.axiom-visible-early",
       "family": "loop",
       "severity": "warn",

@@ -49,6 +49,14 @@ the current position) are fine; persistent changes belong in `Update` or in a
 pure helper called by `Update`. Rendering options may be configured locally in
 `Draw`, then discarded after the frame.
 
+Gameplay must not depend on Draw cadence. Ebitengine normally calls `Update`
+about 60 times per second; gameplay time, input, physics, timers, and rules
+advance there. `Draw` may be delayed, skipped, or observed only once per
+second under load, and the next `Update` must still produce the same result
+for the same input sequence. Do not teach the loop as two equal alternating
+steps whose progress can live in `Draw`; this separation keeps play stable
+when rendering is slow.
+
 The original playable gate is only the baseline. The ongoing advanced-track quality pass is tracked in `docs/ADVANCED_QUALITY_CHECKLIST.md`; do not mark a genre complete there until its final game, intermediate lessons, bilingual content, replay loop, and real desktop/mobile play checks all satisfy that sheet.
 
 ## Start here: repository mental model
@@ -170,6 +178,10 @@ Keep these three statements consistent from Build Track through graduation:
    change any hidden rendering/game environment. Treat it as a pure function
    of `(game, assets, viewport)` even though Ebitengine gives it a screen
    handle for output.
+4. **Draw frequency is not gameplay time.** `Update` advances one game tick
+   (normally about 60 per second); Draw only presents the latest snapshot. A
+   slow or skipped Draw must not pause, accelerate, or otherwise change rules,
+   timers, physics, input handling, or the outcome.
 
 A learner RULE belongs in `Update` or in a pure function called by `Update`.
 Draw may map that result to color, position, text, or effects, but never owns the

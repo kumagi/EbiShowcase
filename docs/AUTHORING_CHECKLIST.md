@@ -41,6 +41,11 @@ Every authoring-ready page must be consistent with:
 2. `Draw` only projects the current `game` onto the screen.
 3. The screen follows `game` bit-for-bit; `Draw` never writes `game`.
 
+`Update` is the gameplay clock (normally about 60 ticks per second). A page
+must make clear that slow, delayed, or once-per-second `Draw` calls only show a
+later snapshot; they must not pause or change input, timers, physics, rules, or
+the outcome.
+
 RULE challenges add logic on the Update side (or a pure function Update calls).
 Do not set a primary challenge that mutates state inside `Draw`.
 
@@ -65,6 +70,8 @@ Do not set a primary challenge that mutates state inside `Draw`.
   second; it never presents an invented loop as project source.
 - [ ] Preserves the three game-loop axioms: Update owns input/state changes,
   Draw maps state to pixels, and the same `game` state produces the same frame.
+- [ ] Explains that gameplay cadence belongs to Update, not Draw: rendering
+  frequency may fall without changing the same input sequence's result.
 - [ ] Keeps Japanese and English semantically aligned and uses relative links.
 
 ## A complete track

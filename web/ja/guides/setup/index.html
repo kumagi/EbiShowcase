@@ -146,8 +146,7 @@ func (g *Game) Update() error {
 	return nil
 }
 
-// Draw は今の状態を画面へ写すだけ。ゲーム状態は書き換えません。
-// 渡された screen へピクセルを書くことだけが、意図した出力です。
+// Draw は今の状態を画面へ写すだけ。状態は書き換えません。
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{20, 28, 48, 255})
 }

@@ -37,6 +37,9 @@ DEFAULT_MODEL = DEFAULT_LMSTUDIO_MODEL
 DEFAULT_LM_BASE_URL = "http://127.0.0.1:1234/v1"
 DEFAULT_OLLAMA_PORT = 11434
 USER_AGENT = "EbiShowcase-feedback-agent/1.0 (local educational review tool)"
+# The Google Form accepts 200 characters. Keep a little headroom for any
+# invisible separator the browser/form may add, but never cut a sentence in
+# the middle just because a model returned one character too many.
 MAX_SUGGESTION_CHARS = 190
 
 
@@ -522,6 +525,12 @@ END UNTRUSTED PAGE MATERIAL"""
             content = message.get("content") or ""
             if not content and isinstance(message.get("reasoning"), str):
                 content = message["reasoning"]
+            # A local server may stop at its output-token limit while still
+            # returning HTTP 200. Surface that fact in the log instead of
+            # silently treating a partial JSON answer as a complete review.
+            finish_reason = response.get("choices", [{}])[0].get("finish_reason")
+            if finish_reason == "length":
+                raise ValueError("model response stopped at max_tokens (partial output)")
         if not content:
             raise ValueError(f"{self.provider} returned no final content")
         return normalize_suggestion(content)
@@ -563,7 +572,34 @@ def normalize_suggestion(raw: str) -> str:
     raw = clean_text(raw).replace("\u0000", "")
     if not raw or re.search(r"(?i)^(here'?s a thinking process|analyze user input)", raw):
         raise ValueError("model returned an empty or non-final suggestion")
-    return raw[:MAX_SUGGESTION_CHARS]
+    return shorten_suggestion(raw)
+
+
+def shorten_suggestion(raw: str, limit: int = MAX_SUGGESTION_CHARS) -> str:
+    """Keep form submissions within the limit without cutting mid-sentence.
+
+    Models occasionally ignore the character budget. The old ``raw[:limit]``
+    made Japanese feedback appear to end halfway through a word or sentence.
+    Prefer the last sentence boundary before the limit; if there is no
+    boundary, use a word boundary or an explicit ellipsis so the truncation is
+    visible and grammatical.
+    """
+
+    raw = clean_text(raw)
+    if len(raw) <= limit:
+        return raw
+    head = raw[:limit]
+    boundaries = [m.end() for m in re.finditer(r"[。！？!?]", head)]
+    if boundaries:
+        return head[:boundaries[-1]].rstrip()
+    # English suggestions have spaces; Japanese usually does not, so retain
+    # the explicit ellipsis for the latter rather than splitting silently.
+    words = re.split(r"\s+", head.rstrip())
+    if len(words) > 1:
+        candidate = " ".join(words[:-1]).rstrip()
+        if candidate:
+            return candidate + "…"
+    return head[:-1].rstrip(" 、，,:：") + "…"
 
 
 def submit_feedback(page: Page, suggestion: str, timeout: float) -> None:
