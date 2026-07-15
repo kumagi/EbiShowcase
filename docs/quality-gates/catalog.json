@@ -1,0 +1,405 @@
+{
+  "version": 1,
+  "title": "Ebi Showcase quality gate catalog",
+  "description": "Single source of quality expectations for humans, Ralph, deterministic checkers, and LLM review lenses. AGENTS.md points here; detailed pedagogy stays in linked docs.",
+  "meters": {
+    "playable": "Demo launches and can be played (208/208 gated + VFX side count).",
+    "advanced_quality": "Finished genre game has replay, controls, feedback, mobile, bilingual polish.",
+    "authoring": "Learner can find a file, add one RULE, and verify it."
+  },
+  "gates": [
+    {
+      "id": "loop.update-owns-mutation",
+      "family": "loop",
+      "severity": "fail",
+      "check": "llm",
+      "applies_to": ["core", "track", "build", "graduation", "vfx"],
+      "summary": "Update owns all state mutation and all input reading.",
+      "prompt_hint": "Does the page claim or show input/score/collision updates outside Update (or a pure helper Update calls)? Flag Draw or passive prose that puts rules in Draw.",
+      "sources": ["AGENTS.md#update--draw-axiom", "docs/AUTHORING_CHECKLIST.md", "docs/Glossary.md"]
+    },
+    {
+      "id": "loop.draw-is-projection",
+      "family": "loop",
+      "severity": "fail",
+      "check": "llm",
+      "applies_to": ["core", "track", "build", "graduation", "vfx"],
+      "summary": "Draw only projects the current game struct to pixels.",
+      "prompt_hint": "Does Draw decide outcomes, read input, roll RNG, or mutate game fields? Quote the offending line or paragraph.",
+      "sources": ["AGENTS.md#update--draw-axiom", "docs/Glossary.md"]
+    },
+    {
+      "id": "loop.draw-referentially-transparent",
+      "family": "loop",
+      "severity": "fail",
+      "check": "llm",
+      "applies_to": ["core", "track", "build", "graduation", "vfx"],
+      "summary": "Draw is a referentially transparent projection of game, assets, and viewport.",
+      "prompt_hint": "Does Draw write hidden state, mutate caches or slices, advance time, consume randomness, read input, trigger FX/gameplay transitions, or otherwise change the environment? Local derived values and temporary DrawImageOptions are allowed; persistent changes belong in Update.",
+      "sources": ["AGENTS.md#update--draw-axiom", "docs/Glossary.md", "docs/AUTHORING_CHECKLIST.md"]
+    },
+    {
+      "id": "loop.screen-follows-game",
+      "family": "loop",
+      "severity": "fail",
+      "check": "llm",
+      "applies_to": ["core", "track", "build", "graduation"],
+      "summary": "The screen follows game bit-for-bit; same state means same picture.",
+      "prompt_hint": "Does the lesson imply Draw invents state, or that two Draws of the same game would differ without Update?",
+      "sources": ["docs/ROADMAP_RALPH_LOOP.md", "docs/Glossary.md"]
+    },
+    {
+      "id": "loop.axiom-visible-early",
+      "family": "loop",
+      "severity": "warn",
+      "check": "deterministic",
+      "applies_to": ["core", "build"],
+      "summary": "Early loop pages surface the Update/Draw axiom (contract block or clear 3-way wording).",
+      "prompt_hint": "Core LEVEL 01–03 and Build Track should restate Update owns mutation, Draw projects, Draw does not write.",
+      "sources": ["scripts/inject-update-draw-contract.mjs", "docs/BUILD_TRACK_SPEC.md"]
+    },
+    {
+      "id": "authoring.edit-path",
+      "family": "authoring",
+      "severity": "warn",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "build", "graduation"],
+      "summary": "Challenge names a repository-relative Go path (or local file to create).",
+      "prompt_hint": "Is there an exact path like games/.../main.go or graduation/... for the learner to open?",
+      "sources": ["docs/AUTHORING_CHECKLIST.md"]
+    },
+    {
+      "id": "authoring.rule-named",
+      "family": "authoring",
+      "severity": "warn",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "build", "graduation"],
+      "summary": "Primary challenge is YOUR FIRST RULE (or equivalent), not tuning alone.",
+      "prompt_hint": "Is the main challenge a branch/counter/state/data change rather than only changing a constant?",
+      "sources": ["docs/AUTHORING_CHECKLIST.md", "AGENTS.md"]
+    },
+    {
+      "id": "authoring.verify-hint",
+      "family": "authoring",
+      "severity": "warn",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "build", "graduation"],
+      "summary": "Challenge names how to verify (go test, go run, or visible browser check).",
+      "prompt_hint": "Does the RULE text say go test, go run, or an observable before/after check?",
+      "sources": ["docs/AUTHORING_CHECKLIST.md"]
+    },
+    {
+      "id": "authoring.rule-in-update",
+      "family": "authoring",
+      "severity": "fail",
+      "check": "llm",
+      "applies_to": ["core", "track", "build", "graduation"],
+      "summary": "RULE lives in Update or a pure helper Update calls—never as Draw mutation.",
+      "prompt_hint": "Does the challenge tell the learner to change Draw to implement the rule?",
+      "sources": ["docs/AUTHORING_CHECKLIST.md"]
+    },
+    {
+      "id": "authoring.dual-layer-code",
+      "family": "authoring",
+      "severity": "warn",
+      "check": "deterministic",
+      "applies_to": ["track"],
+      "summary": "Thin-wrapper tracks show editable entry + path-labelled internal excerpt.",
+      "prompt_hint": "For shared-engine tracks, is the short main.go shown before a labelled internal excerpt?",
+      "sources": ["docs/HAND_AUTHORED_AUTHORING_PATTERN.md", "scripts/authoring-lesson-helpers.mjs"]
+    },
+    {
+      "id": "authoring.no-clone-prerequisite",
+      "family": "authoring",
+      "severity": "warn",
+      "check": "llm",
+      "applies_to": ["build", "graduation", "guide"],
+      "summary": "Build Track and graduation do not require cloning this repo as a prerequisite.",
+      "prompt_hint": "Does the page say the learner must clone EbiShowcase before starting?",
+      "sources": ["AGENTS.md"]
+    },
+    {
+      "id": "authoring.copy-no-legacy-tuning-ogp",
+      "family": "authoring",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["site"],
+      "summary": "OGP/Twitter descriptions do not use the legacy「値を変えて」authoring promise.",
+      "prompt_hint": "OGP must promise adding a Go rule, not only changing a value.",
+      "sources": ["scripts/check-authoring-copy-regression.mjs"]
+    },
+    {
+      "id": "pedagogy.one-main-idea",
+      "family": "pedagogy",
+      "severity": "warn",
+      "check": "llm",
+      "applies_to": ["core", "track", "vfx", "build"],
+      "summary": "One main idea (plus at most one supporting idea) per step.",
+      "prompt_hint": "Does the page try to teach several unrelated systems at once without ordering them?",
+      "sources": ["AGENTS.md#teaching-and-writing-contract"]
+    },
+    {
+      "id": "pedagogy.play-then-explain",
+      "family": "pedagogy",
+      "severity": "warn",
+      "check": "llm",
+      "applies_to": ["core", "track", "vfx"],
+      "summary": "Lead with something the learner can see or do before naming abstractions.",
+      "prompt_hint": "Does jargon appear before a concrete on-screen action?",
+      "sources": ["AGENTS.md#teaching-and-writing-contract"]
+    },
+    {
+      "id": "pedagogy.deep-dive-mechanic",
+      "family": "pedagogy",
+      "severity": "warn",
+      "check": "llm",
+      "applies_to": ["core", "track", "vfx"],
+      "summary": "DEEP DIVE explains the named mechanic, not only controls.",
+      "prompt_hint": "Is DEEP DIVE mostly a control list without data/state explanation?",
+      "sources": ["AGENTS.md#teaching-and-writing-contract"]
+    },
+    {
+      "id": "pedagogy.concept-row-ordered",
+      "family": "pedagogy",
+      "severity": "warn",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "vfx", "build"],
+      "summary": "Three concept-row cards are distinct (not three copies of the same paragraph).",
+      "prompt_hint": "Are the three concept cards unique steps (often data → update → draw)?",
+      "sources": ["docs/AUTHORING_CHECKLIST.md", "AGENTS.md"]
+    },
+    {
+      "id": "pedagogy.code-matches-impl",
+      "family": "pedagogy",
+      "severity": "fail",
+      "check": "llm",
+      "applies_to": ["core", "track", "vfx", "build"],
+      "summary": "REAL GO / code-lesson matches the code learners can open.",
+      "prompt_hint": "Does the snippet invent a standalone loop while main.go only calls a shared Run(Config)?",
+      "sources": ["AGENTS.md", "docs/AUTHORING_CHECKLIST.md"]
+    },
+    {
+      "id": "pedagogy.child-readable-ja",
+      "family": "pedagogy",
+      "severity": "warn",
+      "check": "llm",
+      "applies_to": ["core", "track", "vfx", "build", "guide"],
+      "summary": "Japanese avoids unexplained jargon; uses concrete primary-school-friendly examples.",
+      "prompt_hint": "Are technical terms dumped without a pictureable example?",
+      "sources": ["AGENTS.md"]
+    },
+    {
+      "id": "pedagogy.no-second-beginner-track",
+      "family": "pedagogy",
+      "severity": "warn",
+      "check": "llm",
+      "applies_to": ["track"],
+      "summary": "Genre steps do not re-teach Update/Draw as if LEVEL 01 did not exist.",
+      "prompt_hint": "Does a mid-track page reintroduce the entire game loop from zero?",
+      "sources": ["AGENTS.md"]
+    },
+    {
+      "id": "structure.deep-dive",
+      "family": "structure",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "vfx"],
+      "summary": "Lesson page includes DEEP DIVE.",
+      "sources": ["scripts/check-lessons.mjs"]
+    },
+    {
+      "id": "structure.concept-row",
+      "family": "structure",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "vfx"],
+      "summary": "Lesson page includes concept-row.",
+      "sources": ["scripts/check-lessons.mjs"]
+    },
+    {
+      "id": "structure.motion-lab",
+      "family": "structure",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "vfx"],
+      "summary": "Lesson page includes motion-lab / data-lab.",
+      "sources": ["scripts/check-lessons.mjs"]
+    },
+    {
+      "id": "structure.code-lesson",
+      "family": "structure",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "vfx"],
+      "summary": "Lesson page includes code-lesson.",
+      "sources": ["scripts/check-lessons.mjs"]
+    },
+    {
+      "id": "structure.why-grid",
+      "family": "structure",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "vfx"],
+      "summary": "Lesson page includes why-grid.",
+      "sources": ["scripts/check-lessons.mjs"]
+    },
+    {
+      "id": "structure.play-iframe",
+      "family": "structure",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "vfx"],
+      "summary": "Lesson page embeds the play/<slug>/ iframe (or shared game.html).",
+      "sources": ["scripts/check-lessons.mjs"]
+    },
+    {
+      "id": "structure.learn-js",
+      "family": "structure",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "vfx"],
+      "summary": "Lesson page loads learn.js.",
+      "sources": ["scripts/check-lessons.mjs"]
+    },
+    {
+      "id": "structure.core-full-source",
+      "family": "structure",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["core"],
+      "summary": "Core LEVEL pages embed full main.go with map and copy button.",
+      "sources": ["scripts/check-lessons.mjs", "AGENTS.md"]
+    },
+    {
+      "id": "structure.go-exists",
+      "family": "structure",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "vfx", "build"],
+      "summary": "Expected main.go exists for the curriculum entry.",
+      "sources": ["scripts/curriculum.mjs"]
+    },
+    {
+      "id": "site.gated-count",
+      "family": "site",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["site"],
+      "summary": "Gated playable count remains 208; VFX counted separately.",
+      "sources": ["scripts/check-site-metadata.mjs"]
+    },
+    {
+      "id": "site.bilingual-pair",
+      "family": "site",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["site"],
+      "summary": "Every curriculum route has JA and EN pages.",
+      "sources": ["scripts/check-site-metadata.mjs"]
+    },
+    {
+      "id": "site.home-thumbnails",
+      "family": "site",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["site"],
+      "summary": "Home cards map to real WebP gameplay captures.",
+      "sources": ["scripts/check-site-metadata.mjs", "scripts/home-thumbnails.mjs"]
+    },
+    {
+      "id": "site.relative-urls",
+      "family": "site",
+      "severity": "warn",
+      "check": "llm",
+      "applies_to": ["core", "track", "vfx", "guide", "build", "graduation"],
+      "summary": "In-page links stay relative for GitHub Pages project hosting.",
+      "prompt_hint": "Are there absolute site-root paths that would break under /REPO/?",
+      "sources": ["AGENTS.md"]
+    },
+    {
+      "id": "site.ogp-present",
+      "family": "site",
+      "severity": "warn",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "vfx", "guide", "build", "graduation"],
+      "summary": "Content pages carry page-specific OGP + Twitter card tags.",
+      "sources": ["AGENTS.md", "scripts/inject-ogp.mjs"]
+    },
+    {
+      "id": "brand.hero-name",
+      "family": "brand",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["site"],
+      "summary": "Never write “Ebi Boy”; use 海老・天次郎 / Ebi Tenjiroh.",
+      "sources": ["AGENTS.md"]
+    },
+    {
+      "id": "brand.original-ip",
+      "family": "brand",
+      "severity": "fail",
+      "check": "llm",
+      "applies_to": ["core", "track", "vfx"],
+      "summary": "Famous titles are genre signposts only; no copied names, art, or scenarios.",
+      "prompt_hint": "Does the page present itself as a clone or reuse protected names as the product title?",
+      "sources": ["AGENTS.md"]
+    },
+    {
+      "id": "a11y.iframe-title",
+      "family": "a11y",
+      "severity": "warn",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "vfx", "build"],
+      "summary": "Playable iframes have a meaningful title attribute.",
+      "sources": ["AGENTS.md"]
+    },
+    {
+      "id": "a11y.not-color-only",
+      "family": "a11y",
+      "severity": "warn",
+      "check": "llm",
+      "applies_to": ["core", "track", "vfx"],
+      "summary": "Status is not conveyed by color alone.",
+      "prompt_hint": "Is success/failure only described as a color change with no text or shape?",
+      "sources": ["AGENTS.md"]
+    },
+    {
+      "id": "playable.keyboard-and-touch",
+      "family": "playable",
+      "severity": "warn",
+      "check": "human",
+      "applies_to": ["core", "track", "build"],
+      "summary": "Keyboard/pointer and touch complete the game loop.",
+      "prompt_hint": "Browser audit: both desktop and phone-size controls finish a run.",
+      "sources": ["docs/ADVANCED_QUALITY_CHECKLIST.md", "AGENTS.md"]
+    },
+    {
+      "id": "playable.replay-reason",
+      "family": "playable",
+      "severity": "warn",
+      "check": "human",
+      "applies_to": ["track"],
+      "summary": "Final games have score/time/grade/unlock or similar replay hook.",
+      "sources": ["docs/ADVANCED_QUALITY_CHECKLIST.md"]
+    },
+    {
+      "id": "vfx.play-vs-fx-split",
+      "family": "vfx",
+      "severity": "warn",
+      "check": "llm",
+      "applies_to": ["vfx"],
+      "summary": "Advanced FX remakes keep play entities separate from fx.System.",
+      "prompt_hint": "Does the lesson mix win/lose rules into the FX-only layer?",
+      "sources": ["AGENTS.md"]
+    },
+    {
+      "id": "vfx.drawing-toy-not-forced-game",
+      "family": "vfx",
+      "severity": "warn",
+      "check": "llm",
+      "applies_to": ["vfx"],
+      "summary": "Basic VFX steps stay drawing toys; no artificial win/lose only to look like genre lessons.",
+      "sources": ["AGENTS.md"]
+    }
+  ]
+}

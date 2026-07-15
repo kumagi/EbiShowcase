@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>HPと道具を守りながら3体を捕獲しよう。</h2></div><p>GENTLE HITでHPを下げ、SLEEPを付け、捕獲率を見てBASIC/REEF ORBを選びます。クリック/タップ、または1〜4。失敗は反撃と道具消費です。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="捕獲チャレンジ" src="../../../../play/capture/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / VISIBLE PROBABILITY</p><h2>運だけにせず、準備したぶん確率を上げる。</h2><p class="lesson-lead">捕獲率はいつも画面に見えます。基本15%へ、減ったHPから最大55%、SLEEPなら20%、REEF ORBなら15%を足します。最後に0〜99の<strong>roll</strong>が確率より小さいかを比べます。</p><p><strong>注意（整数の割り算）:</strong> <code>(maxHP-wildHP)*55/maxHP</code> のように<strong>先に掛け算してから割る</strong>必要があります。逆に <code>(maxHP-wildHP)/maxHP*55</code> と書くと、Goの整数どうしの割り算で途中が 0 になり、ボーナスがいつも 0 になります。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>今の条件から確率を作る</h3><p>HP100ならボーナス0。HP20なら44。SLEEPや道具も足し、強すぎないよう最大95%で止めます。</p><code>chance = min(95, 15+hpBonus+status+item)</code></article><article><span class="concept-number">2</span><h3>乱数を一度だけ引く</h3><p>rollがchance未満なら成功です。画面へ両方を出すと、「79 &lt; 84だから成功」のように結果を説明できます。</p><code>captured := rng.Intn(100) &lt; chance</code></article><article><span class="concept-number">3</span><h3>成功と失敗でデータを分ける</h3><p>成功はstorageへ名前を追加。失敗は道具だけ消え、SLEEPが解けて反撃を受けます。どちらも同じ状態にはしません。</p><code>storage = append(storage, wild.name)</code></article></div><div class="motion-lab" data-lab="capture-roll" data-caught="成功！ {r} &lt; {p}%" data-missed="失敗… {r} ≥ {p}%" data-weakened="HP {hp} → 率アップ" data-slept="SLEEP +20%" data-orbed="ORB +15%" data-rate="35" data-baited="エサ" data-caught="捕獲成功 ({r})" data-missed="逃げられた ({r})" aria-labelledby="lab-title-capture">
 <div class="lab-copy">
@@ -78,6 +78,9 @@ if rng.Intn(100) &lt; captureChance() {
         </form>
       </div>
     </section>
+
+
+
 
 
 

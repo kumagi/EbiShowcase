@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Stars fall; catches spawn sparks. One []any would force “is this a star or a spark?” every frame. You’ll want two boxes.">
+  <meta name="description" content="Stars participate in game rules; sparks are visual only. Their jobs and updates differ, so Game keeps stars and fx in separate boxes.">
   <title>Ebi Showcase – Catch Stars—Then Notice the Split</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-fx-catch/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – Catch Stars—Then Notice the Split">
-    <meta property="og:description" content="Stars fall; catches spawn sparks. One []any would force “is this a star or a spark?” every frame. You’ll want two boxes.">
+    <meta property="og:description" content="Stars participate in game rules; sparks are visual only. Their jobs and updates differ, so Game keeps stars and fx in separate boxes.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-fx-catch/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-fx-catch.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – Catch Stars—Then Notice the Split">
-    <meta name="twitter:description" content="Stars fall; catches spawn sparks. One []any would force “is this a star or a spark?” every frame. You’ll want two boxes.">
+    <meta name="twitter:description" content="Stars participate in game rules; sparks are visual only. Their jobs and updates differ, so Game keeps stars and fx in separate boxes.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-fx-catch.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Catch Stars—Then Notice the Split">
     <!-- ogp:end -->
@@ -41,7 +41,7 @@
     <section class="overview-hero">
       <p class="eyebrow">★★★★☆ / PLAYABLE</p>
       <h1>Catch Stars—Then Notice the Split</h1>
-      <p>Stars fall; catches spawn sparks. One []any would force “is this a star or a spark?” every frame. You’ll want two boxes.</p>
+      <p>Stars participate in game rules; sparks are visual only. Their jobs and updates differ, so Game keeps stars and fx in separate boxes.</p>
       <div class="overview-concept"><small>What you learn here</small><strong>Don’t mix entities & FX</strong></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -50,9 +50,9 @@
 
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
 
     <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_particle-lifecycle.svg" alt="A particle's life" loading="lazy" decoding="async"><figcaption>A visual map of A particle's life. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
@@ -97,8 +97,8 @@
       <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-catch">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / TWO BOXES</p>
-          <h3 id="lab-title-vfx-fx-catch">Mixing gets messy</h3>
-          <p>Left list = stars, right = sparks. Keep them apart.</p>
+          <h3 id="lab-title-vfx-fx-catch">One job, one box</h3>
+          <p>Left list = stars, right = sparks. Stars collide; sparks age, so keep them separate.</p>
           <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Tick FX 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
         </div>
         <div class="lab-visual">

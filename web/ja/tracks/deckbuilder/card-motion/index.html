@@ -23,10 +23,20 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>PLAYABLEはその場で遊べる教材という印。デッキ構築カードゲームは、戦いながらカードを選び自分の山札を育てるゲームです。このSTEPはカードの移動→命中→戻りを中間フレームで見せます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>phase = CardTravel</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_easing-curve.svg" alt="イージングで気持ちよく" loading="lazy" decoding="async"><figcaption>イージングで気持ちよくの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>カードが飛んで命中する</h2><p>選んだカードを手札から敵へ動かし、接触フレームで効果と演出を発生させます。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/card-motion/" title="カードが飛んで命中する" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>カード解決を3つの時間へ分ける</h2><p>カードを押した瞬間に数字だけ変えず、選択・移動・命中・戻りをphaseで進めます。命中フレームで初めてダメージ、点滅、粒子、揺れを開始します。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>選んだカードを手札から敵へ動かし、接触フレームで効果と演出を発生させます。</p></article><article><b>02</b><h3>RESOLVE</h3><p>カードを押した瞬間に数字だけ変えず、選択・移動・命中・戻りをphaseで進めます。命中フレームで初めてダメージ、点滅、粒子、揺れを開始します。</p></article><article><b>03</b><h3>REPLAY</h3><p>選択の違いを次のランへ持ち込みます。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>カード解決を3つの時間へ分ける</h2><p>カードを押した瞬間に数字だけ変えず、選択・移動・命中・戻りをphaseで進めます。命中フレームで初めてダメージ、点滅、粒子、揺れを開始します。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>カード解決を3つの時間へ分ける</h2><p>選んだカードを手札から敵へ動かし、接触フレームで効果と演出を発生させます。</p></div><pre><code>cardPhase = travel
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>カードが飛んで命中する</h2><p>選んだカードを手札から敵へ動かし、接触フレームで効果と演出を発生させます。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/card-motion/" title="カードが飛んで命中する" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>カード解決を3つの時間へ分ける</h2><p>カードを押した瞬間に数字だけ変えず、選択・移動・命中・戻りをphaseで進めます。命中フレームで初めてダメージ、点滅、粒子、揺れを開始します。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>選んだカードを手札から敵へ動かし、接触フレームで効果と演出を発生させます。</p></article><article><b>02</b><h3>RESOLVE</h3><p>カードを押した瞬間に数字だけ変えず、選択・移動・命中・戻りをphaseで進めます。命中フレームで初めてダメージ、点滅、粒子、揺れを開始します。</p></article><article><b>03</b><h3>REPLAY</h3><p>選択の違いを次のランへ持ち込みます。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>カード解決を3つの時間へ分ける</h2><p>カードを押した瞬間に数字だけ変えず、選択・移動・命中・戻りをphaseで進めます。命中フレームで初めてダメージ、点滅、粒子、揺れを開始します。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
+  <p class="eyebrow">UPDATE と DRAW の境界</p>
+  <h2>数字を決める場所と、絵にする場所を分けよう</h2>
+  <div class="concept-row">
+    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キー・タッチを読み、位置・HP・ゲージ・タイマー・盤面を変えます。判定やキュー操作もこちらです。</p><code>入力 → ルール → game を更新</code></article>
+    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>できあがった game の値を読んで、絵・文字・エフェクトを置きます。game の値は変えません。</p><code>game を読む → ピクセルへ投影</code></article>
+  </div>
+  <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
+</section>
+<!-- update-draw-contract:end -->
+<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>カード解決を3つの時間へ分ける</h2><p>選んだカードを手札から敵へ動かし、接触フレームで効果と演出を発生させます。</p></div><pre><code>cardPhase = travel
 if cardPhase == contact {
     resolve(card.effect)
     spawnParticles()

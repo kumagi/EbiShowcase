@@ -16,8 +16,10 @@ import hashlib
 import html
 import json
 import os
+import random
 import re
 import sqlite3
+import subprocess
 import sys
 import time
 from dataclasses import dataclass
@@ -52,6 +54,38 @@ def clean_text(value: str) -> str:
     value = html.unescape(value)
     value = re.sub(r"\s+", " ", value)
     return value.strip()
+
+
+def load_gate_lenses(families: str, random_count: int = 0) -> list[dict]:
+    """Load LLM review lenses from docs/quality-gates via the Node catalog tool."""
+
+    requested = families.strip() or "all"
+    root = Path(__file__).resolve().parents[1]
+    cmd = ["node", str(root / "scripts/check-quality-gates.mjs"), "--lenses", requested, "--json"]
+    raw = subprocess.check_output(cmd, cwd=root, text=True)
+    payload = json.loads(raw)
+    lenses = payload.get("gates") or []
+    if random_count and len(lenses) > random_count:
+        return random.SystemRandom().sample(lenses, random_count)
+    return lenses
+
+
+def format_lens_instruction(lenses: list[dict], extra: str = "") -> str:
+    if not lenses and not extra.strip():
+        return ""
+    lines = [
+        "Review ONLY against the following quality-gate lenses from docs/quality-gates/catalog.json.",
+        "Return JSON with keys: gate_id, verdict (fail|warn|pass), evidence, fix.",
+        "Pick the single most important failing lens; if all pass, verdict=pass and gate_id of the closest lens.",
+        "",
+    ]
+    for lens in lenses[:8]:
+        lines.append(f"- {lens['id']} ({lens.get('severity', 'warn')}): {lens.get('prompt_hint') or lens.get('summary')}")
+    if extra.strip():
+        lines.append("")
+        lines.append("Additional operator instruction:")
+        lines.append(extra.strip())
+    return "\n".join(lines)
 
 
 def detect_provider(base_url: str, explicit: str | None = None) -> str:
@@ -350,7 +384,13 @@ class StateStore:
     def get(self, url: str):
         return self.db.execute("SELECT content_hash, suggestion, submitted_at FROM pages WHERE url = ?", (url,)).fetchone()
 
-    def save(self, page: Page, suggestion: str, submitted_at: float | None = None) -> None:
+    def save(
+        self,
+        page: Page,
+        suggestion: str,
+        submitted_at: float | None = None,
+        content_hash: str | None = None,
+    ) -> None:
         suggestion_hash = hashlib.sha256(suggestion.encode("utf-8")).hexdigest()
         self.db.execute(
             """INSERT INTO pages(url, content_hash, suggestion, suggestion_hash, generated_at, submitted_at)
@@ -359,7 +399,7 @@ class StateStore:
                suggestion=excluded.suggestion, suggestion_hash=excluded.suggestion_hash,
                generated_at=excluded.generated_at,
                submitted_at=COALESCE(excluded.submitted_at, pages.submitted_at)""",
-            (page.url, page.content_hash, suggestion, suggestion_hash, time.time(), submitted_at),
+            (page.url, content_hash or page.content_hash, suggestion, suggestion_hash, time.time(), submitted_at),
         )
         self.db.commit()
 
@@ -502,7 +542,15 @@ def normalize_suggestion(raw: str) -> str:
     try:
         parsed = json.loads(raw)
         if isinstance(parsed, dict):
-            raw = str(parsed.get("suggestion", ""))
+            if "suggestion" in parsed:
+                raw = str(parsed.get("suggestion", ""))
+            elif "verdict" in parsed:
+                # Structured gate review from --lens mode.
+                gate = parsed.get("gate_id") or parsed.get("gate") or "?"
+                verdict = parsed.get("verdict") or "?"
+                evidence = parsed.get("evidence") or ""
+                fix = parsed.get("fix") or ""
+                raw = f"[{verdict}] {gate}: {evidence} {fix}".strip()
     except json.JSONDecodeError:
         match = re.search(r'"suggestion"\s*:\s*"((?:\\.|[^"\\])*)"', raw, re.DOTALL)
         if match:
@@ -567,6 +615,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--force", action="store_true", help="regenerate even when page content is unchanged")
     parser.add_argument("--instruction", default="", help="additional review instruction applied to every page")
     parser.add_argument(
+        "--lens",
+        default="",
+        help=(
+            "quality-gate families for LLM review (e.g. loop,authoring). "
+            "When omitted, two random LLM gates are selected for this run"
+        ),
+    )
+    parser.add_argument(
         "--model",
         default=DEFAULT_MODEL,
         help="chat model id (LM Studio default: %(default)s; for Ollama pass e.g. qwen3.6:latest)",
@@ -606,8 +662,11 @@ def run_batch(args: argparse.Namespace, store: StateStore, model: ChatClient) ->
     pages = crawler.crawl(seeds, store)
     generated = 0
     for page in pages:
+        review_hash = hashlib.sha256(
+            f"{page.content_hash}\n{args.lens_signature}".encode("utf-8")
+        ).hexdigest()
         previous = store.get(page.url)
-        cached = previous and previous[0] == page.content_hash and previous[1]
+        cached = previous and previous[0] == review_hash and previous[1]
         if cached and not args.force:
             if args.submit and previous[2] is None:
                 suggestion = previous[1]
@@ -620,7 +679,7 @@ def run_batch(args: argparse.Namespace, store: StateStore, model: ChatClient) ->
             except (HTTPError, URLError, TimeoutError, OSError, KeyError, ValueError, json.JSONDecodeError, RuntimeError) as exc:
                 print(f"[model skipped] {page.url}: {exc}", file=sys.stderr)
                 continue
-            store.save(page, suggestion)
+            store.save(page, suggestion, content_hash=review_hash)
             generated += 1
         print(f"\n[{page.language}] {page.title}\n{page.url}\n→ {suggestion}")
         if args.submit:
@@ -642,8 +701,16 @@ def main() -> int:
         print("Submission is enabled: suggestions will be POSTed to the Google Form.", file=sys.stderr)
     provider, base_url, model_name = resolve_endpoint(args)
     print(f"[endpoint] provider={provider} base_url={base_url} model={model_name or '(auto)'}", file=sys.stderr)
+    # An omitted --lens still performs focused review: choose two random LLM
+    # gates once per process. Explicit families remain stable and cacheable.
+    lenses = load_gate_lenses(args.lens, random_count=0 if args.lens else 2)
+    args.lens_signature = ",".join(sorted(g["id"] for g in lenses))
+    if lenses:
+        source = "explicit" if args.lens else "random"
+        print(f"[lenses:{source}] {', '.join(g['id'] for g in lenses)}", file=sys.stderr)
+    instruction = format_lens_instruction(lenses, args.instruction) if (lenses or args.instruction) else args.instruction
     store = StateStore(args.state_file)
-    model = ChatClient(base_url, model_name, args.timeout, instruction=args.instruction, provider=provider)
+    model = ChatClient(base_url, model_name, args.timeout, instruction=instruction, provider=provider)
     try:
         model.ensure_model()
     except (HTTPError, URLError, TimeoutError, OSError, KeyError, json.JSONDecodeError, RuntimeError) as exc:

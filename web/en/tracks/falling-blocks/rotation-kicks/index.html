@@ -25,7 +25,6 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_falling-blocks.svg" alt="One move of falling blocks" loading="lazy" decoding="async"><figcaption>A visual map of One move of falling blocks. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Rotate 8 times, including 3 wall kicks.</h2></div><p>Move beside a wall and press ROTATE. Finish before eight pieces lock. Keyboard controls are ←→, ↑/Z, and ↓.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Rotation and Wall Kicks" src="../../../../play/rotation-kicks/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ROTATE THEN TEST</p><h2>Rotate first, then ask, “Does it fit here?”</h2><p class="lesson-lead">Treat a piece's center as (0, 0). A cell at (x, y) moves to (-y, x) after a clockwise quarter turn. The rotated piece may poke through a wall, so test a list of small <strong>kick offsets</strong>.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Rotate all four cells</h3><p>T and L pieces are four offsets from a center. Apply the same transform to every offset.</p><code>rotated = point{-p.y, p.x}</code></article><article><span class="concept-number">2</span><h3>Test candidates in order</h3><p>Try no shift, left one, right one, left two, right two, then up one. Accept the first position without a collision.</p><code>kicks := []point{{0,0}, {-1,0}, {1,0}}</code></article><article><span class="concept-number">3</span><h3>Keep the old pose if blocked</h3><p>If every candidate overlaps a wall, floor, or locked cell, change neither position nor rotation.</p><code>if noCandidate { return }</code></article></div><div class="motion-lab" data-lab="kick-try" data-kicks="0,0;1,0;-1,0;0,-1" data-ok="kick ({dx},{dy}) OK" data-blocked="kick ({dx},{dy}) blocked" data-fail="all failed → cancel" aria-labelledby="lab-title-rotation-kicks">
@@ -79,6 +78,9 @@ for _, kick := range kickTests {
         </form>
       </div>
     </section>
+
+
+
 
 
 

@@ -34,7 +34,7 @@
   <main id="top"><div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>LEVEL 04</span></div>
     <div class="overview-concept" style="margin:18px max(24px,7vw)"><small>このゲームで学ぶこと</small><strong>速度と加速度</strong></div>
     <section class="hero">
-      <div class="hero-copy"><p class="eyebrow">LEVEL 04 / ACCELERATION IN MOTION</p><h1>Goで、<br><em>主人公が落ちる。</em></h1><p class="lead">Update の中で速度を少しずつ変えると、ジャンプが自然な弧になります。見た目はオリジナル主人公の 海老・天次郎。当たり判定は「円に見える箱」＝上下左右の範囲チェック（AABB）です。ゲームループは LEVEL 01 で学んだはず。ここでは加速度に集中します。</p><a class="cta" href="#play">今すぐプレイ <b>↓</b></a></div>
+      <div class="hero-copy"><p class="eyebrow">LEVEL 04 / ACCELERATION IN MOTION</p><h1>Goで、<br><em>主人公が落ちる。</em></h1><p class="lead">Update の中で速度を少しずつ変えると、ジャンプが自然な弧になります。見た目はオリジナル主人公の 海老・天次郎。衝突は鳥とパイプを囲む<strong>矩形同士の重なりチェック（AABB）</strong>です。<code>birdRadius</code> は円判定ではなく、鳥の箱の半分の大きさとして使います。ゲームループは LEVEL 01 で学んだはず。ここでは加速度に集中します。</p><a class="cta" href="#play">今すぐプレイ <b>↓</b></a></div>
       <div class="code-card" aria-hidden="true"><div class="dots">● ● ●</div><pre><span>func</span> (g *Game) Update() error {
   <i>// every frame, keep it simple.</i>
   g.bird.velocity += gravity
@@ -45,7 +45,6 @@
     </section>
 
     <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_velocity-vector.svg" alt="速度ベクトル" loading="lazy" decoding="async"><figcaption>速度ベクトルの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_flappy-pipes.svg" alt="パイプを一定間隔で出す" loading="lazy" decoding="async"><figcaption>パイプを一定間隔で出すの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
@@ -409,6 +408,9 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
 
 
 

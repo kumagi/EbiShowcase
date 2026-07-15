@@ -56,7 +56,7 @@
 
 <p class="curriculum-bridge">共通基礎の続きです。ゲームループが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。ここでは入力で盤面データを書き換えます。</p>
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>素材を回収し、6マスの設計図を完成させよう。</h2></div><p>黄色の枠が設計図。PLACE/BREAKとDIRT/STONEを選び、明るい操作範囲をタップ。PCはP/B、1/2とクリックも使えます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="置く・壊す" src="../../../../play/place-break/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / MUTABLE TILE MAP</p><h2>マスの番号を書き換えると、世界の形が変わる。</h2><p class="lesson-lead">盤面は <strong>board[y][x]</strong> という数字の表です。0は空気、1は土、2は石。置く時は在庫を1減らして番号を書き、壊す時は番号を0へ戻して素材を在庫へ返します。</p></div>
@@ -108,6 +108,9 @@ board[y][x] = empty</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
 
 
 

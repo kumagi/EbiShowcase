@@ -171,10 +171,10 @@ g.fx.Update()`,
     ja: {
       navConcept: "配列は分けろ",
       title: "落ちものに演出を足すと気づくこと",
-      lead: "星が増え、キャッチのたびに粒も増える。もし全部を一つの []any に入れたら、Update で「これは星？粒？」と毎回聞くことになります。ここで分けたくなるはずです。",
+      lead: "星はゲームのルールに参加し、粒は見た目だけを担当します。役割と更新のしかたが違うので、Gameの中でも stars と fx を別の箱として持ちます。",
       deepEyebrow: "DEEP DIVE / TWO SLICES",
       deepH: "なぜ星と粒を<br>同じスライスにしない？",
-      deepLead: "星はカゴ判定と床判定がある。粒は寿命だけ。型も更新も違う。デモは stars と fx.Parts を並べて見せ、「混ぜると地獄」を先に体感させます。",
+      deepLead: "星はカゴ判定と床判定があり、粒は寿命だけを持ちます。だから stars と fx.Parts を別に持ち、星のルールと粒の見た目をそれぞれ読みやすく更新します。",
       concepts: [
         { h: "星", p: "落ちて、当たって、消える遊び。", code: "stars []star" },
         { h: "粒", p: "出して、動いて、寿命で消える。", code: "fx.Parts" },
@@ -182,8 +182,8 @@ g.fx.Update()`,
       ],
       lab: {
         eyebrow: "TRY IT / TWO BOXES",
-        title: "混ぜたら迷子",
-        p: "左のリスト＝星、右＝粒。一本化しない。",
+        title: "役割ごとに、箱を分ける",
+        p: "左のリスト＝星、右＝粒。星は判定、粒は寿命、と仕事が違うので別々に持ちます。",
       },
       play: {
         title: "星を受け止めよう",
@@ -199,7 +199,7 @@ g.fx.Update()`,
     en: {
       navConcept: "Split the slices",
       title: "Catch Stars—Then Notice the Split",
-      lead: "Stars fall; catches spawn sparks. One []any would force “is this a star or a spark?” every frame. You’ll want two boxes.",
+      lead: "Stars participate in game rules; sparks are visual only. Their jobs and updates differ, so Game keeps stars and fx in separate boxes.",
       deepEyebrow: "DEEP DIVE / TWO SLICES",
       deepH: "Why not one slice<br>for stars and sparks?",
       deepLead: "Stars need basket/floor tests. Sparks only need life. Different types, different updates. The demo shows stars vs fx.Parts side by side.",
@@ -210,8 +210,8 @@ g.fx.Update()`,
       ],
       lab: {
         eyebrow: "TRY IT / TWO BOXES",
-        title: "Mixing gets messy",
-        p: "Left list = stars, right = sparks. Keep them apart.",
+        title: "One job, one box",
+        p: "Left list = stars, right = sparks. Stars collide; sparks age, so keep them separate.",
       },
       play: {
         title: "Catch the stars",
@@ -248,7 +248,7 @@ g.fx.Update()`,
       lead: "速度と重力はプレイの物理。羽ばたきで出る粒は演出。パイプ通過のリングも fx。ここまで来ると、Game 構造体に fx フィールドがあるのが自然に見えます。",
       deepEyebrow: "DEEP DIVE / PHYSICS ≠ FX",
       deepH: "落ちる力と、<br>見える風は別物",
-      deepLead: "vy += gravity は世界のルール。Burst は気持ちよさ。混ぜると「演出を切ったら物理も壊れる」事故が起きます。",
+      deepLead: "vy += gravity は世界のルールで、元の updatePlay() を変えません。羽ばたき粒とリングは Game.fx に足し、fx.Update() と Draw だけで育てます。演出を外しても、飛び方・関門・得点は同じです。",
       concepts: [
         { h: "物理", p: "位置・速度・重力・当たり。", code: "vy += gravity" },
         { h: "演出", p: "羽ばたき粒・通過リング。", code: "fx.Burst on flap" },
@@ -334,7 +334,7 @@ g.fx.Update()`,
       },
       codeHead: { eyebrow: "IN THE DEMO", h: "ball は薄く", p: "演出フィールドを ball に追加したくなったら fx へ。" },
       whys: [
-        { eyebrow: "WHY TRAIL IN FX?", h: "本体が太る", p: "履歴スライスを ball に持つと物理コードが読みにくい。" },
+        { eyebrow: "WHY TRAIL IN FX?", h: "履歴は fx に持つ", p: "残像の履歴スライスは fx.System に置きます。ball は位置と速度だけなので、物理コードを読みやすく保てます。" },
         { eyebrow: "WHY BURST ON HIT?", h: "イベント駆動", p: "毎フレーム火花を出すと散らかる。" },
         { eyebrow: "TRY NEXT", h: "ブロック崩しへ", p: "壊れるブロックと飛び散る破片の役割分担。" },
       ],
@@ -345,7 +345,7 @@ g.fx.Update()`,
       lead: "Burst only on paddle/wall hits. Soft trail sparks while moving—still fx. Ball vx,vy stay play.",
       deepEyebrow: "DEEP DIVE / IMPACT + TRAIL",
       deepH: "Instant sparks vs<br>ongoing trail",
-      deepLead: "Collisions are events; trails are ongoing spawns. Both belong in fx so ball stays thin.",
+      deepLead: "Collisions are game events; trails are ongoing visual spawns. Keep both FX records in fx so ball stays thin.",
       concepts: [
         { h: "Impact", p: "Burst on the hit frame.", code: "onBounce → Burst" },
         { h: "Trail", p: "Soft sparks while moving.", code: "each N frames" },
@@ -358,16 +358,23 @@ g.fx.Update()`,
       },
       codeHead: { eyebrow: "IN THE DEMO", h: "Keep ball thin", p: "If you want an FX field on ball—put it in fx instead." },
       whys: [
-        { eyebrow: "WHY TRAIL IN FX?", h: "Body bloat", p: "History slices on ball muddy physics code." },
+        { eyebrow: "WHY TRAIL IN FX?", h: "FX owns the history", p: "Keep the trail history slice in fx.System. Ball retains only position and velocity, so physics remains readable." },
         { eyebrow: "WHY BURST ON HIT?", h: "Event-driven", p: "Sparks every frame become noise." },
         { eyebrow: "TRY NEXT", h: "Breakout", p: "Bricks vs flying shards." },
       ],
     },
-    code: `if bounced {
+    code: `type trail struct { x, y float64; life int }
+type System struct { trails []trail } // history belongs to FX
+
+func (fx *System) Trail(x, y float64) {
+  fx.trails = append(fx.trails, trail{x: x, y: y, life: 12})
+}
+// Update decrements only trail life; Draw paints old entries faintly.
+if bounced {
   g.fx.Burst(ball.x, ball.y, …)
 }
 if frame%3 == 0 {
-  g.fx.Burst(ball.x, ball.y, 1, …) // trail crumb
+  g.fx.Trail(ball.x, ball.y)
 }`,
   },
   {
@@ -377,7 +384,7 @@ if frame%3 == 0 {
     core: "breakout",
     stars: "★★★★★",
     labKind: "fx-breakout",
-    concept: { ja: "破壊＝エンティティ削除＋FX", en: "Destroy = remove + FX" },
+    concept: { ja: "ゲーム用スプライトとFXを分ける", en: "Separate game sprites and FX" },
     hubDesc: {
       ja: "LEVEL 06 ブロック崩し。brick を消し、破片は fx へ。",
       en: "LEVEL 06 breakout—delete brick, shards go to fx.",
@@ -385,16 +392,16 @@ if frame%3 == 0 {
     ja: {
       navConcept: "消す／飛ばす",
       title: "ブロック破壊を二段にする",
-      lead: "壊れたブロックは配列から削除（プレイ）。飛び散る破片・炎は fx。『壊れたオブジェクトを破片として残す』のを play 側でやると、当たり判定が残骸に引っかかります。",
+      lead: "ブロックはゲームのルールに参加するスプライト、破片・炎は見た目だけのFXスプライトです。基礎編のブロック判定と更新はそのままに、壊れた場所へfx用の絵を足します。",
       deepEyebrow: "DEEP DIVE / DESTROY",
       deepH: "消えるものと、<br>飛び散るもの",
-      deepLead: "プレイ空間から消す＝もう当たない。演出空間に出す＝見た目だけ。この二段がアーケード感の正体です。",
+      deepLead: "ゲーム用の bricks は当たり判定・得点・残り数を持ちます。fx の破片は寿命と見た目だけを持ちます。Game構造体で二つを分け、基礎編のUpdateのルールを保ったまま、Drawで破片を重ねます。",
       concepts: [
         { h: "削除", p: "bricks から外す。", code: "bricks = alive" },
         { h: "破片", p: "同じ座標で Burst/Flame。", code: "fx.FlameBurst" },
-        { h: "分離", p: "残骸に当たり判定を残さない。", code: "FX ≠ collider" },
+        { h: "分離", p: "ゲーム用スプライトと演出用スプライトを別管理。", code: "bricks / fx.parts" },
       ],
-      lab: { eyebrow: "TRY IT / TWO BOXES", title: "当たり判定は残すな", p: "見た目の破片をクリックできない／当たらない。" },
+      lab: { eyebrow: "TRY IT / TWO BOXES", title: "ゲーム用と演出用を分ける", p: "左はゲームのブロック、右は見た目だけの破片。役割ごとに別の箱で持ちます。" },
       play: {
         title: "ブロックを砕こう",
         p: "ボールでブロックを壊す。破片は fx。bricks の数と fx.parts を見比べよう。",
@@ -402,23 +409,23 @@ if frame%3 == 0 {
       codeHead: { eyebrow: "IN THE DEMO", h: "delete してから spawn", p: "順序を逆にすると一瞬二重になる。" },
       whys: [
         { eyebrow: "WHY DELETE FIRST?", h: "ルールの真実", p: "もうブロックは無い、が先。花火は後。" },
-        { eyebrow: "WHY NOT DEBRIS COLLIDE?", h: "理不尽防止", p: "破片に当たって死ぬとプレイヤーは怒る。" },
+        { eyebrow: "WHY TWO SPRITES?", h: "役割が違う", p: "ブロックはルールに参加し、破片は見た目だけ。分けると両方のコードを読みやすく保てます。" },
         { eyebrow: "TRY NEXT", h: "Snakeへ", p: "体のセル配列とキラキラを分離。" },
       ],
     },
     en: {
       navConcept: "Remove / spray",
       title: "Break Bricks in Two Steps",
-      lead: "Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits.",
+      lead: "Bricks are game sprites that participate in rules; shards and flames are visual-only FX sprites. Keep the core brick update and collision rules, then add FX pictures at the broken spot.",
       deepEyebrow: "DEEP DIVE / DESTROY",
       deepH: "What vanishes vs<br>what sprays",
-      deepLead: "Leave play space = no more hits. Enter FX space = looks only. That two-step is arcade juice.",
+      deepLead: "Game bricks own collision, score, and remaining count. FX shards own only lifetime and appearance. Keep these boxes separate in Game, preserve the original Update rules, and layer shards in Draw.",
       concepts: [
         { h: "Delete", p: "Drop from bricks.", code: "bricks = alive" },
         { h: "Shards", p: "Burst/Flame at that spot.", code: "fx.FlameBurst" },
-        { h: "Split", p: "FX must not collide.", code: "FX ≠ collider" },
+        { h: "Split", p: "Manage game sprites and FX sprites separately.", code: "bricks / fx.parts" },
       ],
-      lab: { eyebrow: "TRY IT / TWO BOXES", title: "No hitbox on debris", p: "Pretty shards shouldn’t be clickable/collidable." },
+      lab: { eyebrow: "TRY IT / TWO BOXES", title: "Separate game and FX sprites", p: "Left is the game brick; right is the visual shard. Each job gets its own box." },
       play: {
         title: "Smash bricks",
         p: "Break blocks with the ball. Shards are fx—compare bricks vs fx.parts.",
@@ -426,7 +433,7 @@ if frame%3 == 0 {
       codeHead: { eyebrow: "IN THE DEMO", h: "Delete, then spawn", p: "Reverse the order and you double for a frame." },
       whys: [
         { eyebrow: "WHY DELETE FIRST?", h: "Truth of rules", p: "The brick is gone—then fireworks." },
-        { eyebrow: "WHY NOT DEBRIS COLLIDE?", h: "Fairness", p: "Dying to confetti angers players." },
+        { eyebrow: "WHY TWO SPRITES?", h: "Different jobs", p: "Bricks participate in rules; shards are visual only. The split keeps both kinds of code readable." },
         { eyebrow: "TRY NEXT", h: "Snake", p: "Body cells vs sparkles." },
       ],
     },

@@ -146,7 +146,8 @@ func (g *Game) Update() error {
 	return nil
 }
 
-// Draw only projects current state. It never mutates state.
+// Draw only projects current state. It never mutates game state.
+// Writing pixels to the provided screen is its one intended output.
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{20, 28, 48, 255})
 }

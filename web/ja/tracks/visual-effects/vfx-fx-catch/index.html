@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="星が増え、キャッチのたびに粒も増える。もし全部を一つの []any に入れたら、Update で「これは星？粒？」と毎回聞くことになります。ここで分けたくなるはずです。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
+  <meta name="description" content="星はゲームのルールに参加し、粒は見た目だけを担当します。役割と更新のしかたが違うので、Gameの中でも stars と fx を別の箱として持ちます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
   <title>Ebi Showcase – 落ちものに演出を足すと気づくこと</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-fx-catch/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – 落ちものに演出を足すと気づくこと">
-    <meta property="og:description" content="星が増え、キャッチのたびに粒も増える。もし全部を一つの []any に入れたら、Update で「これは星？粒？」と毎回聞くことになります。ここで分けたくなるはずです。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta property="og:description" content="星はゲームのルールに参加し、粒は見た目だけを担当します。役割と更新のしかたが違うので、Gameの中でも stars と fx を別の箱として持ちます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-fx-catch/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-fx-catch.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – 落ちものに演出を足すと気づくこと">
-    <meta name="twitter:description" content="星が増え、キャッチのたびに粒も増える。もし全部を一つの []any に入れたら、Update で「これは星？粒？」と毎回聞くことになります。ここで分けたくなるはずです。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta name="twitter:description" content="星はゲームのルールに参加し、粒は見た目だけを担当します。役割と更新のしかたが違うので、Gameの中でも stars と fx を別の箱として持ちます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-fx-catch.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="落ちものに演出を足すと気づくこと">
     <!-- ogp:end -->
@@ -41,7 +41,7 @@
     <section class="overview-hero">
       <p class="eyebrow">★★★★☆ / PLAYABLE</p>
       <h1>落ちものに演出を足すと気づくこと</h1>
-      <p>星が増え、キャッチのたびに粒も増える。もし全部を一つの []any に入れたら、Update で「これは星？粒？」と毎回聞くことになります。ここで分けたくなるはずです。</p>
+      <p>星はゲームのルールに参加し、粒は見た目だけを担当します。役割と更新のしかたが違うので、Gameの中でも stars と fx を別の箱として持ちます。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>エンティティとFXを混ぜない</strong></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -50,9 +50,9 @@
 
 
     <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED FX の約束</p><h2>ゲームのルールは、そのまま。<br>見た目だけを増やせる。</h2><p><code>updatePlay()</code> は点数・当たり・勝敗をこれまで通り決めます。<code>Game</code> に <code>fx</code> の箱を足し、<code>fx.Update()</code> は粒など<strong>見た目用の時間</strong>だけを進め、<code>Draw</code> で <code>fx.Draw()</code> を重ねます。つまり元のゲームルールを触らずに派手にできます。ただし粒が動く演出には、play を変えない独立した <code>fx.Update()</code> は必要です。</p></section>
 
     <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_particle-lifecycle.svg" alt="パーティクルの一生" loading="lazy" decoding="async"><figcaption>パーティクルの一生の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
@@ -70,7 +70,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / TWO SLICES</p>
         <h2>なぜ星と粒を<br>同じスライスにしない？</h2>
-        <p class="lesson-lead">星はカゴ判定と床判定がある。粒は寿命だけ。型も更新も違う。デモは stars と fx.Parts を並べて見せ、「混ぜると地獄」を先に体感させます。</p>
+        <p class="lesson-lead">星はカゴ判定と床判定があり、粒は寿命だけを持ちます。だから stars と fx.Parts を別に持ち、星のルールと粒の見た目をそれぞれ読みやすく更新します。</p>
       </div>
 
       <div class="concept-row">
@@ -97,8 +97,8 @@
       <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-catch">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / TWO BOXES</p>
-          <h3 id="lab-title-vfx-fx-catch">混ぜたら迷子</h3>
-          <p>左のリスト＝星、右＝粒。一本化しない。</p>
+          <h3 id="lab-title-vfx-fx-catch">役割ごとに、箱を分ける</h3>
+          <p>左のリスト＝星、右＝粒。星は判定、粒は寿命、と仕事が違うので別々に持ちます。</p>
           <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>命中！（play+fx）</button><button type="button" class="lab-button" data-lab-fx-tick>fx だけ 1F進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
         </div>
         <div class="lab-visual">

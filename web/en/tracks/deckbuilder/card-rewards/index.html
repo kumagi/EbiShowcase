@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Choose one strong card for the next goal.</h2></div><p>Tap TRAIN or press Space. Pick rewards with 1–3 or a tap. On PC, U upgrades and R removes the oldest card.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Card Rewards and Upgrades" src="../../../../play/card-rewards/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK EDITING</p><h2>A reward changes your next strategy, not just one number.</h2><p class="lesson-lead">Build candidates as a list of card data, then <strong>append exactly one chosen card</strong> to deck. Rarity is data for color and appearance chance; keep it separate from raw power.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Build candidates</h3><p>Display three cards from the reward table for this stage. Drawing and selection use the same data, so what you see is what you get.</p><code>rewards := rewardTable[stage]</code></article><article><span class="concept-number">2</span><h3>Add only one</h3><p>Append the selected card to the end of the deck. The other two disappear, making the choice meaningful.</p><code>deck = append(deck, rewards[choice])</code></article><article><span class="concept-number">3</span><h3>Edit source data</h3><p>Upgrade increases damage; removal cuts an element from the slice. The next battle reads this edited deck.</p><code>deck[i].damage += 3</code></article></div><div class="motion-lab" data-lab="deck-pick" data-cards="Strike,Guard,Rare Heal" data-picked="added {c}" aria-labelledby="lab-title-card-rewards">
 <div class="lab-copy">
@@ -74,6 +74,9 @@
         </form>
       </div>
     </section>
+
+
+
 
 
 

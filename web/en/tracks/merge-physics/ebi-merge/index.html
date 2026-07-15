@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Create a TIER 7 fruit.</h2></div><p>Move the pointer and tap to drop.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Merge" src="../../../../play/ebi-merge/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GAME LOOP</p><h2>How does a physics experiment become a game?</h2><p class="lesson-lead">Preview fruit creates <strong>planning time</strong>, merges gain score, and height creates failure. Goals and choices turn physics into play.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Preview</h3><p>Show next and after so placement can be planned.</p><code>next, after</code></article><article><span class="concept-number">2</span><h3>Score</h3><p>Higher tiers use a squared point curve.</p><code>score += tier*tier*10</code></article><article><span class="concept-number">3</span><h3>Danger line</h3><p>A quiet fruit above the line for 180 frames ends play.</p><code>danger &gt;= 180</code></article></div><div class="motion-lab" data-lab="preview-next" data-enqueued="queued" data-dropped="drop T{n}" data-empty="empty" aria-labelledby="lab-title-ebi-merge">
 <div class="lab-copy">
@@ -70,6 +70,9 @@
         </form>
       </div>
     </section>
+
+
+
 
 
 

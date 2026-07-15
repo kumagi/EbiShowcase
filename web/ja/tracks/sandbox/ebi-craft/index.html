@@ -23,9 +23,20 @@
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>完成形は入力→座標変換→地図更新→持ち物更新→Drawの順。各STEPの関数をこの順に呼び、巨大な一関数にしません。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>handleInput(); updateWorld(); updateInventory()</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+
 <!-- diagram-lesson:end -->
-<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">まず遊ぶ</p><h2>Ebi Craft Expedition</h2><p>苔の野営地、結晶洞窟、火の島を巡り、採取・道具・建築・敵を一つの冒険へつなぎます。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-craft/" title="Ebi Craft Expedition" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Ebi Craft Expedition</h2><p>完成版は3つの島を同じgame状態で順番に読み込みます。島ごとに資源の位置、必要なランタン、夜の敵が変わります。採掘には予備動作と接触があり、破片・点滅・揺れが結果を伝えます。残りHPと速さが得点になるため、クリア後にも近道を考えて再挑戦できます。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>3島の地形・資源・敵をデータから読み込む</p></article><article><b>02</b><h3>UPDATE</h3><p>採掘と建築をアニメーションと粒子でつなぐ</p></article><article><b>03</b><h3>FEEDBACK</h3><p>合計得点とベスト記録で別の採取順を試す</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Ebi Craft Expedition</h2><p>完成版は3つの島を同じgame状態で順番に読み込みます。島ごとに資源の位置、必要なランタン、夜の敵が変わります。採掘には予備動作と接触があり、破片・点滅・揺れが結果を伝えます。残りHPと速さが得点になるため、クリア後にも近道を考えて再挑戦できます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>採掘と建築をアニメーションと粒子でつなぐ</h2><p>苔の野営地、結晶洞窟、火の島を巡り、採取・道具・建築・敵を一つの冒険へつなぎます。</p></div><pre><code>stage := islands[stageIndex]
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">まず遊ぶ</p><h2>Ebi Craft Expedition</h2><p>苔の野営地、結晶洞窟、火の島を巡り、採取・道具・建築・敵を一つの冒険へつなぎます。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-craft/" title="Ebi Craft Expedition" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Ebi Craft Expedition</h2><p>完成版は3つの島を同じgame状態で順番に読み込みます。島ごとに資源の位置、必要なランタン、夜の敵が変わります。採掘には予備動作と接触があり、破片・点滅・揺れが結果を伝えます。残りHPと速さが得点になるため、クリア後にも近道を考えて再挑戦できます。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>3島の地形・資源・敵をデータから読み込む</p></article><article><b>02</b><h3>UPDATE</h3><p>採掘と建築をアニメーションと粒子でつなぐ</p></article><article><b>03</b><h3>FEEDBACK</h3><p>合計得点とベスト記録で別の採取順を試す</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Ebi Craft Expedition</h2><p>完成版は3つの島を同じgame状態で順番に読み込みます。島ごとに資源の位置、必要なランタン、夜の敵が変わります。採掘には予備動作と接触があり、破片・点滅・揺れが結果を伝えます。残りHPと速さが得点になるため、クリア後にも近道を考えて再挑戦できます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
+  <p class="eyebrow">UPDATE と DRAW の境界</p>
+  <h2>数字を決める場所と、絵にする場所を分けよう</h2>
+  <div class="concept-row">
+    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キー・タッチを読み、位置・HP・ゲージ・タイマー・盤面を変えます。判定やキュー操作もこちらです。</p><code>入力 → ルール → game を更新</code></article>
+    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>できあがった game の値を読んで、絵・文字・エフェクトを置きます。game の値は変えません。</p><code>game を読む → ピクセルへ投影</code></article>
+  </div>
+  <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
+</section>
+<!-- update-draw-contract:end -->
+<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>採掘と建築をアニメーションと粒子でつなぐ</h2><p>苔の野営地、結晶洞窟、火の島を巡り、採取・道具・建築・敵を一つの冒険へつなぎます。</p></div><pre><code>stage := islands[stageIndex]
 load(stage.resources)
 if cleared(stage.goal) {
     stageIndex++

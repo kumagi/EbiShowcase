@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Build a stable stack of twelve.</h2></div><p>Tap a horizontal position to drop each circle.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Stacking and Bounce" src="../../../../play/stacking-bounce/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / IMPULSE</p><h2>Do heavy and light circles bounce the same way?</h2><p class="lesson-lead">Large circles get more mass. Divide collision <strong>impulse</strong> according to mass so lighter circles move farther.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Correction</h3><p>Share overlap according to inverse mass.</p><code>overlap := radii-distance</code></article><article><span class="concept-number">2</span><h3>Mass</h3><p>Use radius squared as circle weight.</p><code>mass = radius * radius</code></article><article><span class="concept-number">3</span><h3>Impulse</h3><p>Reflect only velocity along the contact direction.</p><code>velocity += impulse / mass</code></article></div><div class="motion-lab" data-lab="bounce" data-wall="wall" data-paddle="floor"><div class="lab-copy"><p class="eyebrow">TRY IT / BOUNCE</p><h3>Reverse velocity at a surface</h3><p>Step one frame and watch which velocity changes at a wall or floor.</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="Advance position">Step one frame</button><button class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-ball style="position:absolute;border-radius:50%"></div></div><div class="lab-values"><div><span>vx</span><strong data-lab-vx>6.0</strong></div><div><span>vy</span><strong data-lab-vy>4.0</strong></div><div><span>Contact</span><strong data-lab-note>—</strong></div></div></div>
 <div class="lab-go-block">
@@ -59,6 +59,9 @@
         </form>
       </div>
     </section>
+
+
+
 
 
 

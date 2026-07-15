@@ -79,7 +79,9 @@ SNS 向けの OGP は `node scripts/inject-ogp.mjs` と `go run ./cmd/gen-og-ima
 - `examples/data-driven/` — `go:embed` と JSON によるデータ読み込みの実例
 - `docs/Glossary.md` — フレーム、座標、ラジアン、`iota`、スライスなどの用語集
 - `docs/ADVANCED_QUALITY_CHECKLIST.md` — ジャンルトラックの第2品質パス
-- `docs/ROADMAP_RALPH_LOOP.md` — Phase 0–4 を完遂する順序付きチェックリスト
+- `docs/AUTHORING_CHECKLIST.md` — 学習者が RULE を書いて確かめられるか
+- `docs/quality-gates/` — PLAYABLE / AUTHORING / ADVANCED の機械可読ゲート正本
+- `docs/ROADMAP_RALPH_LOOP.md` — Authoring Pass の順序付きチェックリスト
 - `scripts/build.sh` — `dist/` を生成するビルド（生成 HTML の更新を含む）
 - `scripts/ralph-loop.sh` — カリキュラム進捗と検証
 - `scripts/roadmap-ralph-loop.mjs` — 証跡付きロードマップ進捗と完了判定

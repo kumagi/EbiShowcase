@@ -1221,6 +1221,11 @@ function stepPage(lesson, idx, lang) {
   const bridge = lang === "ja"
     ? `このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。`
     : `This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.`;
+  const advancedContract = lesson.tier === "advanced"
+    ? (lang === "ja"
+        ? `<section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED FX の約束</p><h2>ゲームのルールは、そのまま。<br>見た目だけを増やせる。</h2><p><code>updatePlay()</code> は点数・当たり・勝敗をこれまで通り決めます。<code>Game</code> に <code>fx</code> の箱を足し、<code>fx.Update()</code> は粒など<strong>見た目用の時間</strong>だけを進め、<code>Draw</code> で <code>fx.Draw()</code> を重ねます。つまり元のゲームルールを触らずに派手にできます。ただし粒が動く演出には、play を変えない独立した <code>fx.Update()</code> は必要です。</p></section>`
+        : `<section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>`)
+    : "";
 
   const concepts = t.concepts
     .map((c, i) => `        <article>
@@ -1280,6 +1285,7 @@ function stepPage(lesson, idx, lang) {
     </section>
 
     <p class="curriculum-bridge">${bridge}</p>
+    ${advancedContract}
 
     <section class="play lesson-play" id="play">
       <div class="section-head">

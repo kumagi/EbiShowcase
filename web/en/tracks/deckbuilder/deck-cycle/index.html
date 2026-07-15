@@ -25,7 +25,6 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_deck-cycle.svg" alt="Cycle a deck" loading="lazy" decoding="async"><figcaption>A visual map of Cycle a deck. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Cycle twelve cards until you win.</h2></div><p>Press 1–5 or tap a card to play it. Press E or the bottom button to end the turn. Defeat the enemy to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Draw, Hand, Discard" src="../../../../play/deck-cycle/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK CYCLE</p><h2>How does a played card return to your hand later?</h2><p class="lesson-lead">Do not delete it. Change only its home: <strong>draw pile → hand → discard pile</strong>. When draw is empty, move discard back, shuffle, and keep drawing.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Draw one</h3><p>Move the last card of draw into hand. Remove it from draw so one card can never be in two places at once.</p><code>hand = append(hand, draw[last])</code></article><article><span class="concept-number">2</span><h3>Discard after play</h3><p>After calculating attack or block, remove the card from hand and append it to discard. Discard means waiting, not erased.</p><code>discard = append(discard, played)</code></article><article><span class="concept-number">3</span><h3>Shuffle when empty</h3><p>Only when draw reaches zero, return every discarded card and randomize their order. Do not reshuffle early.</p><code>if len(draw) == 0 { reshuffle() }</code></article></div><div class="motion-lab" data-lab="energy-turn" data-max="5" data-empty="hand empty" data-spend="played 1" data-refill="drew back to full" aria-labelledby="lab-title-deck-cycle">
@@ -73,6 +72,9 @@
         </form>
       </div>
     </section>
+
+
+
 
 
 

@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-07-14T15:29:48.743Z",
+  "generatedAt": "2026-07-14T16:14:05.804Z",
   "pages": [
     {
       "file": "web/en/build/empty-loop/index.html",
@@ -2999,7 +2999,7 @@
       "title": "Ebi Showcase – Break Bricks in Two Steps",
       "h1": "Break Bricks in Two Steps",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits. Play the demo, add one Go rule, verify it, and apply the ",
+      "description": "Bricks are game sprites that participate in rules; shards and flames are visual-only FX sprites. Keep the core brick update and collision ru",
       "image": "assets/og/en--tracks--visual-effects--fx-breakout.png"
     },
     {
@@ -3023,7 +3023,7 @@
       "title": "Ebi Showcase – Catch Stars—Then Notice the Split",
       "h1": "Catch Stars—Then Notice the Split",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Stars fall; catches spawn sparks. One []any would force “is this a star or a spark?” every frame. You’ll want two boxes.",
+      "description": "Stars participate in game rules; sparks are visual only. Their jobs and updates differ, so Game keeps stars and fx in separate boxes.",
       "image": "assets/og/en--tracks--visual-effects--fx-catch.png"
     },
     {
@@ -3191,7 +3191,7 @@
       "title": "Ebi Showcase – Break Bricks in Two Steps",
       "h1": "Break Bricks in Two Steps",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits. Play the demo, add one Go rule, verify it, and apply the ",
+      "description": "Bricks are game sprites that participate in rules; shards and flames are visual-only FX sprites. Keep the core brick update and collision ru",
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-breakout.png"
     },
     {
@@ -3215,7 +3215,7 @@
       "title": "Ebi Showcase – Catch Stars—Then Notice the Split",
       "h1": "Catch Stars—Then Notice the Split",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Stars fall; catches spawn sparks. One []any would force “is this a star or a spark?” every frame. You’ll want two boxes.",
+      "description": "Stars participate in game rules; sparks are visual only. Their jobs and updates differ, so Game keeps stars and fx in separate boxes.",
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-catch.png"
     },
     {
@@ -6575,7 +6575,7 @@
       "title": "Ebi Showcase – ブロック破壊を二段にする",
       "h1": "ブロック破壊を二段にする",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "壊れたブロックは配列から削除（プレイ）。飛び散る破片・炎は fx。『壊れたオブジェクトを破片として残す』のを play 側でやると、当たり判定が残骸に引っかかります。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "ブロックはゲームのルールに参加するスプライト、破片・炎は見た目だけのFXスプライトです。基礎編のブロック判定と更新はそのままに、壊れた場所へfx用の絵を足します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja--tracks--visual-effects--fx-breakout.png"
     },
     {
@@ -6599,7 +6599,7 @@
       "title": "Ebi Showcase – 落ちものに演出を足すと気づくこと",
       "h1": "落ちものに演出を足すと気づくこと",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "星が増え、キャッチのたびに粒も増える。もし全部を一つの []any に入れたら、Update で「これは星？粒？」と毎回聞くことになります。ここで分けたくなるはずです。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "星はゲームのルールに参加し、粒は見た目だけを担当します。役割と更新のしかたが違うので、Gameの中でも stars と fx を別の箱として持ちます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja--tracks--visual-effects--fx-catch.png"
     },
     {
@@ -6767,7 +6767,7 @@
       "title": "Ebi Showcase – ブロック破壊を二段にする",
       "h1": "ブロック破壊を二段にする",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "壊れたブロックは配列から削除（プレイ）。飛び散る破片・炎は fx。『壊れたオブジェクトを破片として残す』のを play 側でやると、当たり判定が残骸に引っかかります。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "ブロックはゲームのルールに参加するスプライト、破片・炎は見た目だけのFXスプライトです。基礎編のブロック判定と更新はそのままに、壊れた場所へfx用の絵を足します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-breakout.png"
     },
     {
@@ -6791,7 +6791,7 @@
       "title": "Ebi Showcase – 落ちものに演出を足すと気づくこと",
       "h1": "落ちものに演出を足すと気づくこと",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "星が増え、キャッチのたびに粒も増える。もし全部を一つの []any に入れたら、Update で「これは星？粒？」と毎回聞くことになります。ここで分けたくなるはずです。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "星はゲームのルールに参加し、粒は見た目だけを担当します。役割と更新のしかたが違うので、Gameの中でも stars と fx を別の箱として持ちます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-catch.png"
     },
     {

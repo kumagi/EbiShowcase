@@ -50,9 +50,9 @@
 
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
 
     <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_bounce-angle.svg" alt="Choose a bounce angle" loading="lazy" decoding="async"><figcaption>A visual map of Choose a bounce angle. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
@@ -70,7 +70,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / IMPACT + TRAIL</p>
         <h2>Instant sparks vs<br>ongoing trail</h2>
-        <p class="lesson-lead">Collisions are events; trails are ongoing spawns. Both belong in fx so ball stays thin.</p>
+        <p class="lesson-lead">Collisions are game events; trails are ongoing visual spawns. Keep both FX records in fx so ball stays thin.</p>
       </div>
 
       <div class="concept-row">
@@ -118,19 +118,26 @@
           <h3>Keep ball thin</h3>
           <p>If you want an FX field on ball—put it in fx instead.</p>
         </div>
-        <pre><code>if bounced {
+        <pre><code>type trail struct { x, y float64; life int }
+type System struct { trails []trail } // history belongs to FX
+
+func (fx *System) Trail(x, y float64) {
+  fx.trails = append(fx.trails, trail{x: x, y: y, life: 12})
+}
+// Update decrements only trail life; Draw paints old entries faintly.
+if bounced {
   g.fx.Burst(ball.x, ball.y, …)
 }
 if frame%3 == 0 {
-  g.fx.Burst(ball.x, ball.y, 1, …) // trail crumb
+  g.fx.Trail(ball.x, ball.y)
 }</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
           <p class="eyebrow">WHY TRAIL IN FX?</p>
-          <h3>Body bloat</h3>
-          <p>History slices on ball muddy physics code.</p>
+          <h3>FX owns the history</h3>
+          <p>Keep the trail history slice in fx.System. Ball retains only position and velocity, so physics remains readable.</p>
         </article>
         <article>
           <p class="eyebrow">WHY BURST ON HIT?</p>

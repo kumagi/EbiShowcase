@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Reduce Gloomfin's HP to zero with limited moves.</h2></div><p>Click or tap a move card; keyboard keys 1–4 work too. Guard before every third-turn ABYSS ROAR, balancing reliable attacks against risky power.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Choose-a-move Battle" src="../../../../play/move-battle/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / MOVE DATA AND ORDER</p><h2>Build an order between choosing a move and applying it.</h2><p class="lesson-lead">A move is more than a name: it stores power, accuracy, remaining uses, and priority. Put both choices in an <strong>action queue</strong>, sort it, then remove one action at a time so messages and HP changes stay clear.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Compare move records</h3><p>REEF BURST has power 42 but 70% accuracy. JET PINCH always hits for 18. Different uses make timing part of the choice.</p><code>moveData{power:42, accuracy:70, maxUses:3}</code></article><article><span class="concept-number">2</span><h3>Sort two actions</h3><p>Higher priority acts first. Ties compare speed 12 against 10. SHELL GUARD priority 3 therefore protects before an attack.</p><code>sort.SliceStable(actions, byPriorityThenSpeed)</code></article><article><span class="concept-number">3</span><h3>Check accuracy before effect</h3><p>A random number from 0 to 99 below accuracy means hit. Attacks lower HP, guard halves the next hit, and healing restores HP.</p><code>hit := rng.Intn(100) &lt; move.accuracy</code></article></div><div class="motion-lab" data-lab="turn" data-states="Choose move,Build order,First action,Second action,Check result" aria-labelledby="move-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / ACTION QUEUE</p><h3 id="move-lab-title">Advance a turn one stage at a time</h3><p>Do not change HP immediately after selection. Build order, resolve first and second actions, then check the result.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="next act">Next stage</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board role="img" aria-label="Order from move selection to result"></div><div class="lab-values"><div><span>Current</span><strong data-lab-state>Choose move</strong></div><div><span>Data</span><strong>action queue</strong></div><div><span>Advance</span><strong>one at a time</strong></div></div></div>
 <div class="lab-go-block">
@@ -68,6 +68,9 @@ func resolveNext() {
         </form>
       </div>
     </section>
+
+
+
 
 
 

@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <p class="curriculum-bridge">This continues the shared foundation. If the frame loop is new, begin with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>. Here Update changes the current tile and travel progress; Draw places the runner at the in-between position.</p><!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Collect twelve maze pearls within 45 seconds.</h2></div><p>Hold a direction while on a center. A wall direction never starts. Use arrows/WASD or hold the bottom buttons with mouse or touch.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Run the Maze" src="../../../../play/tile-runner/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CENTER TO CENTER</p><h2>Connect free-moving screen coordinates to maze cells.</h2><p class="lesson-lead">Maze data is a maze[y][x] table of characters: # means wall and . means corridor. The runner remembers its tile, adds a direction to make a <strong>candidate tile</strong>, and begins moving only when that tile is open.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Turn a tile into its center</h3><p>Multiply column x by tile width, then add the maze left and half a tile. The same equation for y gives every corridor a center.</p><code>centerX = mazeX + tileX*tileSize + tileSize/2</code></article><article><span class="concept-number">2</span><h3>Check whether the next tile is legal</h3><p>Add a direction such as (-1,0). Movement is legal when the candidate is inside and maze[nextY][nextX] is not #.</p><code>passable := maze[next.y][next.x] != '#'</code></article><article><span class="concept-number">3</span><h3>Interpolate center to center</h3><p>Increase progress from zero to one and draw between from and to. At one, set the current tile to target.</p><code>screenX = fromX + (toX-fromX)*progress</code></article></div><div class="motion-lab" data-lab="tile" data-blocked="wall that way" aria-labelledby="lab-title-tile-runner">
 <div class="lab-copy">
@@ -76,6 +76,9 @@ if passable(next) {
         </form>
       </div>
     </section>
+
+
+
 
 
 

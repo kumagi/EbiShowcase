@@ -109,7 +109,7 @@
   Flags: ["met_elder"]
 }</code></pre><p>画像やマップ全部ではなく、再開に必要な差分だけを保存します。</p></article></div></section>
 
-<section class="event-runner"><div><p class="eyebrow">EVENT INTERPRETER</p><h2>イベントデータを<br>小さな命令として再生する。</h2><p><code>say</code>、<code>move</code>、<code>wait</code>、<code>flag</code>など少数の命令をGoで実装します。シナリオはその命令を並べるだけです。</p></div><ol><li><span>01</span><strong>現在の命令を読む</strong><small>steps[index]</small></li><li><span>02</span><strong>種類に対応する処理を始める</strong><small>say → メッセージ表示</small></li><li><span>03</span><strong>完了までUpdateで待つ</strong><small>入力や移動の終了</small></li><li><span>04</span><strong>次の命令へ進む</strong><small>index++</small></li></ol></section>
+<section class="event-runner"><div><p class="eyebrow">EVENT INTERPRETER</p><h2>イベントデータを<br>小さな命令として再生する。</h2><p><code>say</code>、<code>move</code>、<code>wait</code>、<code>flag</code>など少数の命令をGoで実装します。シナリオはその命令を並べるだけです。読む前に <code>index &lt; len(steps)</code> を確認し、空のシナリオでも安全に終了できるようにします。</p></div><ol><li><span>01</span><strong>現在の命令を読む</strong><small>if index &lt; len(steps) { step := steps[index] }</small></li><li><span>02</span><strong>種類に対応する処理を始める</strong><small>say → メッセージ表示</small></li><li><span>03</span><strong>完了までUpdateで待つ</strong><small>入力や移動の終了</small></li><li><span>04</span><strong>次の命令へ進む</strong><small>index++（最後なら停止）</small></li></ol></section>
 
 <section class="design-rules"><div class="guide-heading"><p class="eyebrow">PRACTICAL RULES</p><h2>大きくなっても<br>壊れにくい5つの約束。</h2></div><div class="rules-list">
 <article><b>01</b><h3>IDでつなぐ</h3><p>ファイル同士を直接持たせず、<code>slime</code>や<code>event.village.arrive</code>のようなIDで参照します。</p></article>
@@ -143,6 +143,9 @@
         </form>
       </div>
     </section>
+
+
+
 
 
 

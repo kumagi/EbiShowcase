@@ -76,7 +76,7 @@
 </div>
 </section>
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Rotate and lock eight pairs.</h2></div><p>Move with ←→, rotate with Space, drop with ↓, or use touch buttons.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Rotate the Pair" src="../../../../play/pair-rotation/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / PIVOT ROTATION</p><h2>Keep the pivot; change only partner direction.</h2><p class="lesson-lead">Store the partner as one of <strong>four offsets</strong>. If rotation hits a wall, test small pivot corrections.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Direction table</h3><p>Store up, right, down, left offsets.</p><code>dirs={{0,-1},{1,0},{0,1},{-1,0}}</code></article><article><span class="concept-number">2</span><h3>Next direction</h3><p>Modulo four wraps around.</p><code>next=(dir+1)%4</code></article><article><span class="concept-number">3</span><h3>Wall correction</h3><p>Try normal, left, right, then up.</p><code>kicks := []point{{0,0},{-1,0},{1,0},{0,-1}}</code></article></div><div class="motion-lab" data-lab="kick-try" data-kicks="0,0;1,0;-1,0;0,1" data-ok="kick ({dx},{dy}) OK" data-blocked="({dx},{dy}) blocked" data-fail="cancel rotate" aria-labelledby="lab-title-pair-rotation">
 <div class="lab-copy">
@@ -132,6 +132,9 @@ for _, k := range kicks {
         </form>
       </div>
     </section>
+
+
+
 
 
 

@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>見つかったら角へ逃げ、研究バッジを8個集めよう。</h2></div><p>黄色は巡回、赤は追跡、紫は最後に見た場所の捜索。同じ直線通路で7マス以内だと発見されます。矢印/WASD、マウス・タッチ長押し。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="巡回と追跡" src="../../../../play/patrol-chase/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ENEMY MODE MACHINE</p><h2>敵の「行き先」を変えると、同じ移動でも性格が変わる。</h2><p class="lesson-lead">敵はmodeとtargetを持ちます。PATROLは巡回表の次のタイル、CHASEは現在のプレイヤー、SEARCHは最後に見たタイルを目標にします。距離と<strong>視界</strong>がmodeを切り替えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>PATROLは決めた道を巡る</h3><p>patrolRouteに角のタイルを順番で保存します。目標へ着いたらindexを1進め、最後なら0へ戻します。</p><code>target = patrolRoute[patrolIndex]</code></article><article><span class="concept-number">2</span><h3>直線の視界でCHASEへ</h3><p>xかyが同じで、その間に#がなく、距離7以内なら見えています。見えた瞬間にplayerを目標へします。</p><code>if lineOfSight &amp;&amp; distance &lt;= 7 { mode = chase }</code></article><article><span class="concept-number">3</span><h3>見失ったらSEARCH</h3><p>発見中はlastSeenを更新します。角で視界が切れたらそこへ向かい、着くか時間切れで巡回へ戻ります。</p><code>target = lastSeen</code></article></div><section class="motion-lab" data-lab="junction-pick" data-chase="プレイヤー方向へ" data-scatter="隅へ" aria-labelledby="lab-title-patrol-chase">
 <div class="lab-copy">
@@ -82,6 +82,9 @@ case search: target = lastSeen
         </form>
       </div>
     </section>
+
+
+
 
 
 

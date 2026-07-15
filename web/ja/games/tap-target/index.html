@@ -66,12 +66,12 @@ import \"math\"</pre></div></section>
 
     <section class="learn" id="basics">
       <p class="eyebrow">WHAT'S INSIDE / BEFORE ANYTHING ELSE</p>
-      <h2>ゲームの心臓部は、<br>たった3つのメソッド。</h2>
-      <p class="lesson-lead"><strong>メソッドは、Gameという箱に結び付いた関数（ひとまとまりの仕事）</strong>です。Ebitengineのゲームはパラパラ漫画と同じで、毎フレーム「数字を変える」→「画面に描く」をくり返します。このリズムがわかると、あとから出てくる重力も敵も、同じ枠の中に書けます。</p>
+      <h2>Ebitengine が呼ぶ3つは、<br>Update・Draw・Layout。</h2>
+      <p class="lesson-lead"><strong>メソッドは、Gameという箱に結び付いた関数（ひとまとまりの仕事）</strong>です。3つの答えは <strong>Update、Draw、Layout</strong>。ゲームのルールを決める主役は Update と Draw で、Layout はゲーム内の基準サイズを返します。Ebitengineのゲームはパラパラ漫画と同じで、毎フレーム「数字を変える」→「画面に描く」をくり返します。</p>
       <div class="steps" style="grid-template-columns:repeat(3,1fr)">
         <article><b>01</b><h3>UPDATE</h3><p>入力を読み、スコアや位置などの<strong>数字</strong>を進めます。ここには絵を描きません。</p><code>func (g *Game) Update() error</code></article>
         <article><b>02</b><h3>DRAW</h3><p>いまの数字どおりに、丸や文字を<strong>画面へ描きます</strong>。入力も計算も状態変更もしません。</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
-        <article><b>03</b><h3>SAME STATE</h3><p>同じ <code>game</code> なら同じ絵です。ルールは Update 側で決め、Draw は答えを写します。</p><code>Update → game → Draw</code></article>
+        <article><b>03</b><h3>LAYOUT</h3><p>ゲーム内の基準サイズを返します。画面の拡大縮小はエンジンに任せます。</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article>
       </div>
 
       <div class="motion-lab" data-lab="loop" data-update="UPDATE" data-draw="DRAW" data-update-note="数字を変える（スコア・位置・タイマー）" data-draw-note="いまの数字どおりに画面を描く" aria-labelledby="loop-lab-title">
@@ -108,7 +108,7 @@ import \"math\"</pre></div></section>
       <details class="basics-extra">
         <summary>おまけ：Layout とビルドの話（あとでで大丈夫）</summary>
         <div class="steps" style="grid-template-columns:1fr">
-          <article><b>03</b><h3>LAYOUT</h3><p>ゲーム内のマス目の大きさ（論理解像度）を決めます。実機の拡大縮小はエンジンに任せます。</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article>
+          <article><b>補足</b><h3>同じ状態なら同じ絵</h3><p>同じ <code>game</code> なら同じ絵です。ルールは Update 側で決め、Draw は答えを写します。</p><code>Update → game → Draw</code></article>
         </div>
         <div class="recipe">
           <div><p class="eyebrow">BUILD RECIPE</p><h3>Goのコードが、Webのゲームになるまで。</h3></div>
@@ -395,6 +395,9 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
 
 
 

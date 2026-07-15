@@ -813,8 +813,13 @@ function injectLesson(file, lang) {
   const route = pageRoute(file, lang);
   const isLesson = /<iframe[^>]+(?:play\/|lesson-game-frame)/i.test(html) || /<section[^>]+class="[^"]*\bplay(?:-panel|\s|\b)/i.test(html);
   if (!isLesson) return false;
-  const deviceAsset = path.relative(path.dirname(file), path.join(assetRoot, `${lang}_layout-comparison.svg`)).replaceAll(path.sep, "/");
-  const blocks = [figure(deviceAsset, lang === "ja" ? "PC・タブレット・スマホでのゲーム表示比較" : "Game layout comparison on PC, tablet, and phone", lang === "ja" ? "同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。" : "The same canvas scales to the available width while controls stay easy to reach.", "lesson-device-diagram")];
+  // Device scaling is introduced once at LEVEL 01. Repeating this generic
+  // diagram hides the lesson-specific visuals that follow.
+  const blocks = [];
+  if (route === "games/tap-target") {
+    const deviceAsset = path.relative(path.dirname(file), path.join(assetRoot, `${lang}_layout-comparison.svg`)).replaceAll(path.sep, "/");
+    blocks.push(figure(deviceAsset, lang === "ja" ? "PC・タブレット・スマホでのゲーム表示比較" : "Game layout comparison on PC, tablet, and phone", lang === "ja" ? "同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。" : "The same canvas scales to the available width while controls stay easy to reach.", "lesson-device-diagram"));
+  }
   const diagramIds = routeDiagrams.get(route) || [];
   for (const diagramId of diagramIds) {
     const def = diagrams.find((item) => item.id === diagramId);

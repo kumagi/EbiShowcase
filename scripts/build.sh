@@ -56,6 +56,8 @@ node "$ROOT/scripts/inject-core-authoring-links.mjs"
 node "$ROOT/scripts/inject-graduation-ctas.mjs"
 node "$ROOT/scripts/inject-platformer-authoring.mjs"
 node "$ROOT/scripts/inject-match3-authoring.mjs"
+node "$ROOT/scripts/inject-update-draw-contract.mjs"
+node "$ROOT/scripts/inject-feedback-code-examples.mjs"
 node "$ROOT/scripts/gen-feedback-teaching-notes.mjs"
 node "$ROOT/scripts/gen-diagrams.mjs"
 node "$ROOT/scripts/home-thumbnails.mjs" inject

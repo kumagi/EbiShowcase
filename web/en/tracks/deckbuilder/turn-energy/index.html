@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Combine three energy to win.</h2></div><p>Play cards with 1–3 and end with E or the bottom button.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Energy Turns" src="../../../../play/turn-energy/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / TURN PHASE</p><h2>Why does the enemy wait while you choose cards?</h2><p class="lesson-lead">Remember one current phase and run <strong>only that phase's Update</strong>. Ending the player turn passes control to the enemy.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Turn start</h3><p>Restore energy to three and prepare block.</p><code>energy = 3</code></article><article><span class="concept-number">2</span><h3>Card play</h3><p>Subtract cost and play several while energy remains.</p><code>energy -= card.Cost</code></article><article><span class="concept-number">3</span><h3>Enemy action</h3><p>The end button changes phase to Enemy.</p><code>phase = EnemyPhase</code></article></div><div class="motion-lab" data-lab="energy-turn" data-max="3" data-empty="empty" data-spend="spent 1" data-refill="refilled" aria-labelledby="lab-title-turn-energy">
 <div class="lab-copy">
@@ -63,6 +63,9 @@
         </form>
       </div>
     </section>
+
+
+
 
 
 

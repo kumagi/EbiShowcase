@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Read the intent, then choose attack or defense.</h2></div><p>Press 1–3 or tap a card. End with E or the bottom button. Use poison and Weak to defeat the enemy.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Enemy Intents and Statuses" src="../../../../play/intent-status/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / INTENT &amp; STATUS</p><h2>When you see “18 damage next,” you can change your plan.</h2><p class="lesson-lead">Before the enemy acts, <strong>Draw displays its intent data</strong>. Poison and Weak store remaining time as integers; use their effect at turn end, then subtract one.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Make actions data</h3><p>Keep a name, attack, and block together. Use the same data for drawing and acting so the promise always matches the real move.</p><code>type intent struct { damage, block int }</code></article><article><span class="concept-number">2</span><h3>Count a status</h3><p>Poison 4 hurts, then becomes 3. Weak 2 reduces enemy attacks for two turns and then ends.</p><code>enemyHP -= poison; poison--</code></article><article><span class="concept-number">3</span><h3>Fix the update order</h3><p>Resolve poison, enemy attack, duration, then next intent in one function so every turn follows the same rules.</p><code>resolveEnemyTurn()</code></article></div><div class="motion-lab" data-lab="status-ticks" data-status="POISON" data-added="applied" data-ticked="turn passed" data-none="no status" aria-labelledby="lab-title-intent-status">
 <div class="lab-copy">
@@ -77,6 +77,9 @@ intentIndex = (intentIndex+1) % len(intents)</code></pre></div><div class="why-g
         </form>
       </div>
     </section>
+
+
+
 
 
 

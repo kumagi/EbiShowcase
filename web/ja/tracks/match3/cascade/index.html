@@ -25,7 +25,6 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_match3-cascade.svg" alt="マッチ3の連鎖" loading="lazy" decoding="async"><figcaption>マッチ3の連鎖の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>白い並びを解決し、次の連鎖を見つけよう。</h2></div><p>下ボタンをタップまたはSpace。盤面が止まるまで進め、3手を解決するとクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="連鎖リアクション" src="../../../../play/cascade/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RESOLUTION LOOP</p><h2>「もう一度調べる」が連鎖を生む。</h2><p class="lesson-lead">消去、落下、補充のあとでscanを呼びます。結果が空でなければ同じ処理へ戻り、空なら操作を返します。<strong>盤面が止まる条件</strong>がループの出口です。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>一つの連鎖を解決</h3><p>現在のmarkedを消し、列を詰め、空きを補充します。途中でプレイヤーの交換入力は読みません。</p><code>clear(); fall(); refill()</code></article><article><span class="concept-number">2</span><h3>新しい盤面を再検査</h3><p>落ちた結果は前と違う盤面です。そこでscanを再実行し、新しい3個並びをmarkedへ入れます。</p><code>marked = scan(board)</code></article><article><span class="concept-number">3</span><h3>連鎖数を得点へ</h3><p>1連鎖目は×1、2連鎖目は×2と増やします。偶然続いた大連鎖ほど大きなごほうびになります。</p><code>score += cells * 10 * combo</code></article></div><div class="motion-lab" data-lab="match-scan" data-found="連鎖の芽！" data-none="そろいなし（連鎖終了）" data-cleared="落下 — もう一度スキャン" aria-labelledby="lab-title-cascade">
@@ -72,6 +71,9 @@ if len(matches) &gt; 0 {
         </form>
       </div>
     </section>
+
+
+
 
 
 

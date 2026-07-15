@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>同じ数字を重ねてTIER 6を作ろう。</h2></div><p>横位置をタップして次の実を投入します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="同じ実の合体" src="../../../../play/merge-rule/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / REPLACE</p><h2>2個が1個になる時、配列では何が起きる？</h2><p class="lesson-lead">衝突中にすぐ配列を切ると番号がずれます。まず2個へ<strong>削除予定</strong>の印を付け、新しい1個を予約し、最後にまとめて置き換えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>同種判定</h3><p>触れた2個のtierが同じか調べます。</p><code>a.tier == b.tier</code></article><article><span class="concept-number">2</span><h3>中点</h3><p>2つの位置を足して2で割ります。</p><code>(a.position+b.position)/2</code></article><article><span class="concept-number">3</span><h3>置き換え</h3><p>古い2個を除き、tier+1を追加します。</p><code>spawn(tier + 1)</code></article></div><div class="motion-lab" data-lab="merge-same" data-mismatch="段が違うので合体しない" data-merge="合体して T{n} に！" aria-labelledby="lab-title-merge-rule">
 <div class="lab-copy">
@@ -63,6 +63,9 @@
         </form>
       </div>
     </section>
+
+
+
 
 
 

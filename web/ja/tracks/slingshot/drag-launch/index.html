@@ -56,7 +56,7 @@
 
 <p class="curriculum-bridge">これは共通基礎の続きです。まだゲームループを知らない人は、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。ここでは入力から速度を作るところへ進みます。</p>
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>真珠を引っぱり、3つのリングへ届けよう。</h2></div><p>真珠からドラッグして離します。矢印キーで引く向きを変え、Spaceで発射することもできます。6発以内でクリア。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="ひっぱって発射" src="../../../../play/drag-launch/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / OPPOSITE VECTOR</p><h2>引いた矢印を、マイナスでひっくり返す。</h2><p class="lesson-lead">真珠の中心から指までの差を<strong>ドラッグベクトル</strong>として保存します。離した瞬間、XとYの両方にマイナスを付けると、引っぱった向きと正反対の発射速度になります。</p></div>
@@ -107,6 +107,9 @@ if released {
         </form>
       </div>
     </section>
+
+
+
 
 
 

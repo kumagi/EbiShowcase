@@ -50,9 +50,9 @@
 
 
     <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED FX の約束</p><h2>ゲームのルールは、そのまま。<br>見た目だけを増やせる。</h2><p><code>updatePlay()</code> は点数・当たり・勝敗をこれまで通り決めます。<code>Game</code> に <code>fx</code> の箱を足し、<code>fx.Update()</code> は粒など<strong>見た目用の時間</strong>だけを進め、<code>Draw</code> で <code>fx.Draw()</code> を重ねます。つまり元のゲームルールを触らずに派手にできます。ただし粒が動く演出には、play を変えない独立した <code>fx.Update()</code> は必要です。</p></section>
 
     <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_timing-window.svg" alt="タイミング判定の窓" loading="lazy" decoding="async"><figcaption>タイミング判定の窓の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">

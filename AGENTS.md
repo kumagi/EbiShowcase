@@ -9,6 +9,46 @@ Ebi Showcase is a static, bilingual learning site that teaches 2D game developme
 
 The current completion gate is `208/208` playable core + genre entries. A core/genre lesson page or design mockup without a working Ebitengine game is not complete. The separately counted Visual Effects Lab is the intentional exception: its Ebitengine programs are focused interactive drawing toys rather than full games.
 
+## Quality gates (source of truth for “how docs should be”)
+
+Do **not** grow this file into an endless checklist. When you invent a new
+“pages must …” rule, add it to [`docs/quality-gates/catalog.json`](docs/quality-gates/catalog.json)
+first, then teach it in prose elsewhere.
+
+| Meter | Doc / catalog family | Proves |
+| --- | --- | --- |
+| PLAYABLE | curriculum + `structure` / `site` gates | Demo exists and launches |
+| ADVANCED_QUALITY | `docs/ADVANCED_QUALITY_CHECKLIST.md` + `playable` human gates | Finished genre polish |
+| AUTHORING | `docs/AUTHORING_CHECKLIST.md` + `authoring` / `loop` / `pedagogy` gates | Learner can add one RULE and verify |
+
+Commands:
+
+```sh
+node scripts/check-quality-gates.mjs --list
+node scripts/check-quality-gates.mjs --family structure,site,brand
+node scripts/check-quality-gates.mjs --family authoring,loop,pedagogy --sample 24
+bash scripts/ralph-loop.sh gates --lenses loop,authoring
+```
+
+Deterministic gates run in `ralph-loop.sh verify` (structure/site/brand).
+LLM lenses for `ai_feedback_crawler.py` come from the same catalog
+(`--lens loop,authoring`). Human gates stay browser audits.
+
+Non‑negotiable loop vocabulary (also gates `loop.*`):
+
+1. **`Update` owns all mutation and all input.**
+2. **`Draw` only projects the current `game` onto the screen.**
+3. **The screen follows `game` bit-for-bit; `Draw` never writes `game`.**
+
+Treat `Draw(screen)` as a referentially transparent projection: for the same
+game state, assets, and viewport it must produce the same pixels. It must not
+read input, advance clocks, consume randomness, append/remove from slices,
+write caches or counters, mutate the environment, or trigger gameplay/FX
+state transitions. Derived local values (for example an angle calculated from
+the current position) are fine; persistent changes belong in `Update` or in a
+pure helper called by `Update`. Rendering options may be configured locally in
+`Draw`, then discarded after the frame.
+
 The original playable gate is only the baseline. The ongoing advanced-track quality pass is tracked in `docs/ADVANCED_QUALITY_CHECKLIST.md`; do not mark a genre complete there until its final game, intermediate lessons, bilingual content, replay loop, and real desktop/mobile play checks all satisfy that sheet.
 
 ## Start here: repository mental model
@@ -35,9 +75,9 @@ Do not flatten these into one undifferentiated list. A rendering toy is not a mi
 
 For a context-free task, do these in order before changing files:
 
-1. Read this file completely.
+1. Read this file completely (especially **Quality gates**).
 2. Run `git status --short`; assume every existing change belongs to the user or another agent.
-3. Run `bash scripts/ralph-loop.sh status` and `bash scripts/ralph-loop.sh next` for curriculum work.
+3. Run `bash scripts/ralph-loop.sh status` and `bash scripts/ralph-loop.sh next` for curriculum work. For doc-quality work, also skim `docs/quality-gates/catalog.json` and run `bash scripts/ralph-loop.sh gates --family …` as needed.
 4. Identify whether the target is core, VFX-generated, genre-track, or infrastructure using the mental model above.
 5. Read the target JA page, EN page, preceding lesson, following lesson, and track hub before writing. Preserve the teaching progression and pager links.
 6. Read the corresponding Go game and one recently completed neighboring game for local conventions. Do not copy a generic game and merely recolor it.
@@ -126,7 +166,10 @@ Keep these three statements consistent from Build Track through graduation:
 2. **`Draw` only projects the current `game` state into pixels.** It does not
    decide a result, read input, or change a counter.
 3. **The screen follows `game` exactly.** The same state draws the same frame;
-   `Draw` must not mutate state, consume randomness, or append to slices.
+   `Draw` must not mutate state, consume randomness, append to slices, or
+   change any hidden rendering/game environment. Treat it as a pure function
+   of `(game, assets, viewport)` even though Ebitengine gives it a screen
+   handle for output.
 
 A learner RULE belongs in `Update` or in a pure function called by `Update`.
 Draw may map that result to color, position, text, or effects, but never owns the
@@ -190,6 +233,9 @@ then draw that frame without changing its numbers.
 The first pages are the style reference, especially `web/{ja,en}/games/tap-target/index.html` and the generated VFX STEP 01 page.
 
 ### Update / Draw axiom (repeat early and often)
+
+Canonical detail and review lenses live under gate family `loop` in
+`docs/quality-gates/catalog.json`. Restated for contributors:
 
 This is the shared vocabulary for every playable lesson. LEVEL 01 owns the first full explanation; later lessons may finger-point back to it but must not re-teach the engine from zero, and must not contradict it.
 

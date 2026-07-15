@@ -46,7 +46,6 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_collision-rect.svg" alt="矩形の重なり" loading="lazy" decoding="async"><figcaption>矩形の重なりの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_score-flow.svg" alt="得点の流れ" loading="lazy" decoding="async"><figcaption>得点の流れの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
@@ -114,7 +113,7 @@
             <summary>発展：<code>g.stars[:0]</code> の意味（読まなくても大丈夫）</summary>
             <p>コードでは <code>next := g.stars[:0]</code> と書いていますが、これは「中身を捨てた新しいリスト」ではなく、<strong>同じ配列メモリを長さ0から再利用</strong>する書き方です。普通の <code>var next []star</code> でも同じ結果になりますが、毎フレームのメモリ確保を減らせます。</p>
           </details>
-          <p>Y判定の <code>625〜675</code> はカゴ中心（だいたい Y=640）の上下に厚みを持たせた範囲です。カゴの見た目の高さに合わせた「つかみやすい帯」だと思ってください。</p>
+          <p>コードの <code>basketY = 640</code> はカゴ矩形の上端です。描画も <code>basketY</code> から高さ38pxで始まるので、見た目の中心は約Y=659。星の中心を受け止める <code>625〜675</code> は、その上端付近から中心までを含む少し広い帯です。</p>
           <p>リトライの <code>*g = *newGame()</code> は、「ゲーム箱 <code>g</code> の中身を、新品の箱の中身で丸ごと入れ替え」です。ポインタ <code>g</code> 自体は同じまま、スコアや星リストなど全部が初期値に戻ります。</p>
         </div>
         <pre><code>next := g.stars[:0] <i>// 長さ0で再利用（var next []star でも可）</i>
@@ -359,6 +358,9 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
 
 
 

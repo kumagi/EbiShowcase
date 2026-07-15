@@ -5,6 +5,14 @@ learner make one deliberate change and prove what it did?”  They are separate
 meters. A page can remain playable while it is not yet authoring-ready; do not
 reduce the 208/208 playable gate to express authoring backlog.
 
+Machine-readable ids for these checks live in
+[`docs/quality-gates/catalog.json`](quality-gates/catalog.json) (families
+`authoring`, `loop`, `pedagogy`). Run:
+
+```sh
+node scripts/check-quality-gates.mjs --family authoring,loop,pedagogy --sample 24
+```
+
 `ADVANCED_QUALITY` is a third, independent production-quality pass. It asks
 whether a finished genre game has satisfying replay, controls, feedback,
 mobile behavior, and bilingual presentation. It does **not** prove that a

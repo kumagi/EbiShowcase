@@ -25,7 +25,6 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_match3-cascade.svg" alt="マッチ3の連鎖" loading="lazy" decoding="async"><figcaption>マッチ3の連鎖の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>白く囲まれる並びを先に予想しよう。</h2></div><p>SCANをタップまたはSpaceで横・縦を検査。4枚の盤面を読み切ればクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="3個並びを探す" src="../../../../play/find-matches/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / LINE SCAN</p><h2>一つずつ比べれば、何個続いたか数えられる。</h2><p class="lesson-lead">行の左端から進み、種類が変わるまでの区間を覚えます。区間の長さが3以上なら、その座標を<strong>markedという集合</strong>へ入れます。次に同じことを列でも行います。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>区間の始まりを覚える</h3><p>startを同じ色の始まりに置きます。今の色が変わった場所xまでなら、長さはx-startです。</p><code>runLength := x - start</code></article><article><span class="concept-number">2</span><h3>3以上を全部記録</h3><p>長さが3以上ならstartからxの手前までをmarkedへ追加します。4個や5個の並びも同じルールです。</p><code>for i := start; i &lt; x; i++ { mark(i,y) }</code></article><article><span class="concept-number">3</span><h3>交差は1回だけ数える</h3><p>横と縦の両方に入る中央マスも、map[point]boolなら同じキーが上書きされるので1マスとして残ります。</p><code>marked[point{x,y}] = true</code></article></div><div class="motion-lab" data-lab="match-scan" data-found="そろいを発見！" data-none="そろいなし" data-cleared="消去＋重力" aria-labelledby="lab-title-find-matches">
@@ -69,6 +68,9 @@ for x := 0; x &lt; cols; x++ {
         </form>
       </div>
     </section>
+
+
+
 
 
 

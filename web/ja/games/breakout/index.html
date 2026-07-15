@@ -52,7 +52,6 @@
 
 
     <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_score-flow.svg" alt="得点の流れ" loading="lazy" decoding="async"><figcaption>得点の流れの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_bounce-angle.svg" alt="反射角を決める" loading="lazy" decoding="async"><figcaption>反射角を決めるの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
@@ -83,7 +82,7 @@
           <div class="lab-controls">
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
-          <p class="lab-hint">残りの数と得点が右に出ます。</p>
+          <p class="lab-hint">盤面の右側にある数値欄（残ブロック、得点）へ表示します。残ブロックは <code>data-lab-alive</code>、得点はその隣の値です。</p>
         </div>
         <div class="lab-visual">
           <div class="lab-board" role="img" aria-label="lab"><div class="lab-brick-grid" data-lab-grid></div></div>
@@ -373,6 +372,9 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
 
 
 

@@ -66,12 +66,12 @@ import \"math\"</pre></div></section>
 
     <section class="learn" id="basics">
       <p class="eyebrow">WHAT'S INSIDE / BEFORE ANYTHING ELSE</p>
-      <h2>The heart of a game<br>is just three methods.</h2>
-      <p class="lesson-lead">A <strong>method is a function—a named piece of work—attached to the Game box</strong>. An Ebitengine game is a flipbook. Every frame you change the numbers, then paint the screen. Once that rhythm clicks, gravity, enemies, and everything later fits in the same frame.</p>
+      <h2>Ebitengine calls three methods:<br>Update, Draw, and Layout.</h2>
+      <p class="lesson-lead">A <strong>method is a function—a named piece of work—attached to the Game box</strong>. The three answers are <strong>Update, Draw, and Layout</strong>. Update and Draw are the main game loop; Layout returns the game's logical size. An Ebitengine game is a flipbook: every frame it repeats “change numbers” → “draw the screen.”</p>
       <div class="steps" style="grid-template-columns:repeat(3,1fr)">
         <article><b>01</b><h3>UPDATE</h3><p>Read input and advance the <strong>numbers</strong>—score, positions, timers. Do not draw here.</p><code>func (g *Game) Update() error</code></article>
         <article><b>02</b><h3>DRAW</h3><p>Paint circles and text from the current numbers. Do not read input, run game math, or mutate state here.</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
-        <article><b>03</b><h3>SAME STATE</h3><p>The same <code>game</code> draws the same frame. Update decides rules; Draw projects the answer.</p><code>Update → game → Draw</code></article>
+        <article><b>03</b><h3>LAYOUT</h3><p>Return the game's logical size. Let the engine scale it for the real screen.</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article>
       </div>
 
       <div class="motion-lab" data-lab="loop" data-update="UPDATE" data-draw="DRAW" data-update-note="Change numbers (score, positions, timers)" data-draw-note="Paint the current numbers on screen" aria-labelledby="loop-lab-title">
@@ -108,7 +108,7 @@ import \"math\"</pre></div></section>
       <details class="basics-extra">
         <summary>Optional: Layout and the build path (fine to learn later)</summary>
         <div class="steps" style="grid-template-columns:1fr">
-          <article><b>03</b><h3>LAYOUT</h3><p>Choose the logical resolution. Let the engine scale it to phones and desktops.</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article>
+          <article><b>EXTRA</b><h3>Same state, same picture</h3><p>The same <code>game</code> draws the same frame. Update decides rules; Draw projects the answer.</p><code>Update → game → Draw</code></article>
         </div>
         <div class="recipe">
           <div><p class="eyebrow">BUILD RECIPE</p><h3>From Go code to a game on the web.</h3></div>
@@ -395,6 +395,9 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
 
 
 

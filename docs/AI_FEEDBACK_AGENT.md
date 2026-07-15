@@ -102,3 +102,28 @@ thinking モデルで `content` が空になりやすいため）。
 
 ページ本文はモデルへのプロンプトに「信頼できない教材テキスト」として渡し、ページ内に埋め込まれた
 指示を実行しないようにしています。APIキーや個人情報はプロンプトにもフォームにも入れません。
+
+## 品質ゲートのレンズ（推奨）
+
+巡回は自由感想より、[`docs/quality-gates/catalog.json`](quality-gates/catalog.json)
+の LLM ゲートを拾ってレビューする方が信用できます。
+
+`--lens` を省略した場合は、起動時に LLM 用ゲートからランダムに2件を選び、
+その実行中の全ページを同じ2観点でレビューします。選ばれたIDは
+`[lenses:random]` として標準エラーへ表示されます。前回と異なる組み合わせ
+なら、ページ本文が同じでも新しい観点として再レビューします。
+
+```sh
+# 2レンズをランダム選択
+python3 scripts/ai_feedback_crawler.py --once --max-pages 3 --force \
+  --ollama-host 192.168.3.56 --model qwen3.6:latest
+
+# 観点を固定
+python3 scripts/ai_feedback_crawler.py --once --max-pages 3 --force \
+  --ollama-host 192.168.3.56 --model qwen3.6:latest \
+  --lens loop,authoring
+```
+
+`--lens` は `node scripts/check-quality-gates.mjs --lenses …` と同じ catalog を読み、
+各ゲートの `prompt_hint` を OPERATOR 指示へ注入します。モデルには
+`gate_id` / `verdict` / `evidence` / `fix` の JSON を求めます（執筆ではなく監査向け）。

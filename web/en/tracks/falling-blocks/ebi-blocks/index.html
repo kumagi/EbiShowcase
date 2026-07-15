@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Clear the changing row target in all three stages before the stack reaches the top.</h2></div><p>Touch the six bottom buttons. On a keyboard use ←→, ↑/X to turn, ↓, Space to hard drop, and C to HOLD.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Blocks" src="../../../../play/ebi-blocks/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SYSTEM PIPELINE</p><h2>Connect many systems in “what happens now” order.</h2><p class="lesson-lead">A complete game is not one giant rule. It is a line of small jobs: input, movement, collision, locking, line checks, scoring, and the next shape. Pass one piece and board through this <strong>pipeline</strong> so added features do not get lost.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Control the falling piece</h3><p>active stores a kind, rotation, and position. Update those values only when the candidate does not overlap the board.</p><code>if !collides(next) { active = next }</code></article><article><span class="concept-number">2</span><h3>Lock when movement ends</h3><p>Write the four cells into board, clear complete rows, then update score and level. This order matters.</p><code>lock(); clearLines(); addScore()</code></article><article><span class="concept-number">3</span><h3>Prepare the next piece</h3><p>Refill queue from a seven-piece bag. HOLD works once per falling piece, while the ghost tests positions down to the final safe row.</p><code>spawn(takeNext())</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="input,fall,lock,clear,spawn" data-loop="next frame" aria-labelledby="lab-title-ebi-blocks">
 <div class="lab-copy">
@@ -79,6 +79,9 @@
         </form>
       </div>
     </section>
+
+
+
 
 
 

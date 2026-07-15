@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Defeat every reef guard within eight turns.</h2></div><p>Drag backward from the glowing ally and release. Hit an enemy directly or hit your other ally to damage enemies within a 165px wave. Mouse and touch both work.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Strike" src="../../../../play/ebi-strike/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT PIPELINE</p><h2>Turn the same “bump” into events for each target.</h2><p class="lesson-lead">Every moving frame checks walls, rocks, enemies, and allies in order. Push overlapping circles apart and reflect first; then a guard receives direct damage while an ally sends an area wave. It remains one turn until motion stops.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Move and resolve contacts</h3><p>Advance by velocity, then push overlapping circles back to touching distance. Reflecting along the collision normal handles diagonal bounces too.</p><code>move(); bounceWalls(); reflectCircle()</code></article><article><span class="concept-number">2</span><h3>Choose an effect by target</h3><p>An enemy loses one HP. An ally sends one damage to every enemy within 165 pixels of that ally.</p><code>contactEnemy() / contactAlly()</code></article><article><span class="concept-number">3</span><h3>Friction ends the turn</h3><p>Multiply velocity by 0.982 after contacts. Below 0.11, snap to zero and switch active to the other ally.</p><code>if stopped { active = 1 - active }</code></article></div><div class="motion-lab" data-lab="shot-event-queue" data-events="HIT A,HIT B,HIT C,TURN END" data-launched="shot moving along its path" data-contact="contact → push {e}" data-finished="stopped → push TURN END" data-resolved="pop {e} → enemy {target} HP -1" data-turn="pop TURN END → pass the turn" data-empty="the queue is empty" aria-labelledby="lab-title-ebi-strike">
 <div class="lab-copy">
@@ -81,6 +81,9 @@ if active.velocity.length() &lt; stopSpeed {
         </form>
       </div>
     </section>
+
+
+
 
 
 

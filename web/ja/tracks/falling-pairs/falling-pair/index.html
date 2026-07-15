@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。ここではUpdateで軸座標と落下タイマーを変え、Drawで軸と子を現在のマスへ描きます。</p><!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>入口を塞がずに10組を固定しよう。</h2></div><p>LEFT/RIGHTで列を選び、DOWNで1マス、DROPで一気に落とします。キーボードは←→↓、A/D/S、Space。マウスとタッチにも対応。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="2個組を落とす" src="../../../../play/falling-pair/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / PIVOT AND CHILD</p><h2>2個を別々に動かさず、軸から子の場所を求める。</h2><p class="lesson-lead">落下中に保存する位置は軸のx, yです。子はいつも<strong>child = pivot + (0,-1)</strong>。左右へ動くときも下へ落ちるときも、軸の候補位置から2マス両方が空いているかを調べます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>軸から2マスを作る</h3><p>軸は(pivotX, pivotY)、子は(pivotX, pivotY-1)。組の距離はいつも1マスなので、位置がずれません。</p><code>childX, childY := pivotX, pivotY-1</code></article><article><span class="concept-number">2</span><h3>次の場所を先に調べる</h3><p>左右移動も自然落下も、候補の軸と子が盤面内で空かをblockedで確認します。通ったときだけ座標を変えます。</p><code>if !blocked(x+dx, y+dy) { x += dx; y += dy }</code></article><article><span class="concept-number">3</span><h3>下へ行けなければ固定</h3><p>次の1マスが塞がっていたら、現在の軸と子の色をboardの2マスへ書き、新しい組を入口に出します。</p><code>board[y][x] = pivot; board[y-1][x] = child</code></article></div><div class="motion-lab" data-lab="carry" data-dir="1" aria-labelledby="pair-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / MOVE TOGETHER</p><h3 id="pair-lab-title">軸の移動量を子にも渡そう</h3><p>「軸を動かす」と位置が進みます。つながっている間は子も同じ差分だけ進むので、相対位置が保たれます。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="step delta ride">軸を1マス動かす</button><button type="button" class="lab-button" data-lab-toggle data-go-focus="ride">接続 / 切り離し</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board role="img" aria-label="軸の差分を子へ渡す模型"></div><div class="lab-values"><div><span>軸</span><strong data-lab-plat>100</strong></div><div><span>子</span><strong data-lab-player>120</strong></div><div><span>移動差分</span><strong data-lab-delta>0</strong></div></div></div>
 <div class="lab-go-block">
@@ -70,6 +70,9 @@ if !g.move(0, 1) {
         </form>
       </div>
     </section>
+
+
+
 
 
 

@@ -20,16 +20,20 @@ case "${1:-next}" in
     test -f dist/play/flappy/game.wasm
     node scripts/check-lessons.mjs
     node scripts/check-site-metadata.mjs
+    node scripts/check-quality-gates.mjs --family structure,site,brand
     echo "Ralph verification passed"
     ;;
   lessons)
     node scripts/check-lessons.mjs "${@:2}"
     ;;
+  gates)
+    node scripts/check-quality-gates.mjs "${@:2}"
+    ;;
   roadmap)
     node scripts/roadmap-ralph-loop.mjs "${@:2}"
     ;;
   *)
-    echo "usage: $0 {next|status|verify|lessons|roadmap ...}" >&2
+    echo "usage: $0 {next|status|verify|lessons|gates|roadmap ...}" >&2
     exit 2
     ;;
 esac

@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits. Play the demo, add one Go rule, verify it, and apply the ">
+  <meta name="description" content="Bricks are game sprites that participate in rules; shards and flames are visual-only FX sprites. Keep the core brick update and collision ru">
   <title>Ebi Showcase – Break Bricks in Two Steps</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-breakout/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – Break Bricks in Two Steps">
-    <meta property="og:description" content="Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits. Play the demo, add one Go rule, verify it, and apply the ">
+    <meta property="og:description" content="Bricks are game sprites that participate in rules; shards and flames are visual-only FX sprites. Keep the core brick update and collision ru">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-breakout/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-breakout.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – Break Bricks in Two Steps">
-    <meta name="twitter:description" content="Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits. Play the demo, add one Go rule, verify it, and apply the ">
+    <meta name="twitter:description" content="Bricks are game sprites that participate in rules; shards and flames are visual-only FX sprites. Keep the core brick update and collision ru">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-breakout.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Break Bricks in Two Steps">
     <!-- ogp:end -->
@@ -41,8 +41,8 @@
     <section class="overview-hero">
       <p class="eyebrow">★★★★★ / PLAYABLE</p>
       <h1>Break Bricks in Two Steps</h1>
-      <p>Remove the brick from play; shards and flames go to fx. Keeping debris as colliders makes unfair hits.</p>
-      <div class="overview-concept"><small>What you learn here</small><strong>Destroy = remove + FX</strong></div>
+      <p>Bricks are game sprites that participate in rules; shards and flames are visual-only FX sprites. Keep the core brick update and collision rules, then add FX pictures at the broken spot.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Separate game sprites and FX</strong></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if hit { brick.alive=false; fx.Shards(brick.x,brick.y) }</code></pre></div></section>
@@ -50,9 +50,10 @@
 
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
 
     <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head">
@@ -69,7 +70,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / DESTROY</p>
         <h2>What vanishes vs<br>what sprays</h2>
-        <p class="lesson-lead">Leave play space = no more hits. Enter FX space = looks only. That two-step is arcade juice.</p>
+        <p class="lesson-lead">Game bricks own collision, score, and remaining count. FX shards own only lifetime and appearance. Keep these boxes separate in Game, preserve the original Update rules, and layer shards in Draw.</p>
       </div>
 
       <div class="concept-row">
@@ -88,16 +89,16 @@
         <article>
           <span class="concept-number">3</span>
           <h3>Split</h3>
-          <p>FX must not collide.</p>
-          <code>FX ≠ collider</code>
+          <p>Manage game sprites and FX sprites separately.</p>
+          <code>bricks / fx.parts</code>
         </article>
       </div>
 
       <div class="motion-lab" data-lab="fx-breakout" aria-labelledby="lab-title-vfx-fx-breakout">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / TWO BOXES</p>
-          <h3 id="lab-title-vfx-fx-breakout">No hitbox on debris</h3>
-          <p>Pretty shards shouldn’t be clickable/collidable.</p>
+          <h3 id="lab-title-vfx-fx-breakout">Separate game and FX sprites</h3>
+          <p>Left is the game brick; right is the visual shard. Each job gets its own box.</p>
           <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-breakout-hit>Hit a brick</button><button type="button" class="lab-button" data-lab-breakout-tick>Tick shards 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
@@ -130,9 +131,9 @@ g.fx.FlameBurst(x, y, 12)      // fx only</code></pre>
           <p>The brick is gone—then fireworks.</p>
         </article>
         <article>
-          <p class="eyebrow">WHY NOT DEBRIS COLLIDE?</p>
-          <h3>Fairness</h3>
-          <p>Dying to confetti angers players.</p>
+          <p class="eyebrow">WHY TWO SPRITES?</p>
+          <h3>Different jobs</h3>
+          <p>Bricks participate in rules; shards are visual only. The split keeps both kinds of code readable.</p>
         </article>
         <article class="challenge">
           <p class="eyebrow">TRY NEXT</p>

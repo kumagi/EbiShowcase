@@ -50,9 +50,9 @@
 
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
 
     <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_timing-window.svg" alt="Timing judgement window" loading="lazy" decoding="async"><figcaption>A visual map of Timing judgement window. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">

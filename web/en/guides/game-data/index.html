@@ -109,7 +109,7 @@
   Flags: ["met_elder"]
 }</code></pre><p>Save only the differences needed to resume, not every asset.</p></article></div></section>
 
-<section class="event-runner"><div><p class="eyebrow">EVENT INTERPRETER</p><h2>Play event data<br>as small commands.</h2><p>Implement a small set of commands such as <code>say</code>, <code>move</code>, <code>wait</code>, and <code>flag</code> in Go. A scenario is a sequence of those commands.</p></div><ol><li><span>01</span><strong>Read the current command</strong><small>steps[index]</small></li><li><span>02</span><strong>Start its matching action</strong><small>say → show a message</small></li><li><span>03</span><strong>Wait in Update until complete</strong><small>input or movement finishes</small></li><li><span>04</span><strong>Advance to the next command</strong><small>index++</small></li></ol></section>
+<section class="event-runner"><div><p class="eyebrow">EVENT INTERPRETER</p><h2>Play event data<br>as small commands.</h2><p>Implement a small set of commands such as <code>say</code>, <code>move</code>, <code>wait</code>, and <code>flag</code> in Go. A scenario is a sequence of those commands. Before reading, check <code>index &lt; len(steps)</code> so an empty or finished scenario exits safely.</p></div><ol><li><span>01</span><strong>Read the current command</strong><small>if index &lt; len(steps) { step := steps[index] }</small></li><li><span>02</span><strong>Start its matching action</strong><small>say → show a message</small></li><li><span>03</span><strong>Wait in Update until complete</strong><small>input or movement finishes</small></li><li><span>04</span><strong>Advance to the next command</strong><small>index++ (stop at the end)</small></li></ol></section>
 
 <section class="design-rules"><div class="guide-heading"><p class="eyebrow">PRACTICAL RULES</p><h2>Five rules that keep<br>a growing game healthy.</h2></div><div class="rules-list">
 <article><b>01</b><h3>Connect with IDs</h3><p>Reference <code>slime</code> or <code>event.village.arrive</code> instead of linking files directly.</p></article>
@@ -143,6 +143,9 @@
         </form>
       </div>
     </section>
+
+
+
 
 
 

@@ -25,7 +25,6 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_falling-blocks.svg" alt="落ちものの一手" loading="lazy" decoding="async"><figcaption>落ちものの一手の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>回転8回、そのうち壁蹴り3回を成功させよう。</h2></div><p>左右ボタンで壁へ近づき、ROTATEで回転。8個のブロックを置く前に達成します。キーボードは←→、↑/Z、↓です。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="回転と壁ぎわ補正" src="../../../../play/rotation-kicks/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ROTATE THEN TEST</p><h2>回してから、「ここに置ける？」を調べる。</h2><p class="lesson-lead">ブロックの中心を原点(0, 0)と考えると、マス(x, y)を右へ90度回した場所は(-y, x)です。ただし回転後に壁へめり込むことがあります。そこで<strong>ずらす候補</strong>を小さい順に試します。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>4マスを同じ式で回す</h3><p>T字もL字も「中心から何マス離れたか」の4座標です。それぞれへ同じ変換を使います。</p><code>rotated = point{-p.y, p.x}</code></article><article><span class="concept-number">2</span><h3>候補を順番に試す</h3><p>まず移動なし。だめなら左1、右1、左2、右2、上1。最初に衝突しない候補を採用します。</p><code>kicks := []point{{0,0}, {-1,0}, {1,0}}</code></article><article><span class="concept-number">3</span><h3>全部だめなら回さない</h3><p>候補を全部調べても壁・床・積んだマスに重なるなら、位置も向きも元のままにします。</p><code>if noCandidate { return }</code></article></div><div class="motion-lab" data-lab="kick-try" data-kicks="0,0;1,0;-1,0;0,-1" data-ok="kick ({dx},{dy}) OK" data-blocked="kick ({dx},{dy}) 壁" data-fail="全部失敗→キャンセル" aria-labelledby="lab-title-rotation-kicks">
@@ -79,6 +78,9 @@ for _, kick := range kickTests {
         </form>
       </div>
     </section>
+
+
+
 
 
 

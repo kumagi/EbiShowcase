@@ -32,7 +32,7 @@
     <div class="lesson-breadcrumb"><a href="../../">← Index</a><span>BUILD TRACK / STEP 01</span></div>
     <section class="overview-hero"><p class="eyebrow">BUILD TRACK / WRITE FIRST</p><h1>Run an empty game loop</h1><p>Before reading a finished game, make a window that runs in your own Go workspace. You do not need to clone this repository.</p><div class="overview-concept"><small>What you write here</small><strong>The empty shapes of Update and Draw</strong></div></section>
     <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>See an empty window first.</h2></div><p>This dark-blue screen is already a game. It has no rule yet, but Update and Draw are repeating behind it.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Empty game loop" src="../../../play/empty-loop/" allow="autoplay; fullscreen"></iframe></div></div></section>
     <section class="learn"><p class="eyebrow">MAKE IT LOCAL</p><h2>Save one file,<br>then open your own window.</h2><p class="lesson-lead">Download the <code>main.go</code> below. In an empty folder, run <code>go mod init</code> and <code>go get</code> once. That is enough to start — no clone required.</p><div class="steps"><article><b>01</b><h3>SAVE</h3><p><a href="https://github.com/kumagi/EbiShowcase/raw/refs/heads/main/games/build-track/empty-loop/main.go">Download main.go</a> and save it in a new folder.</p></article><article><b>02</b><h3>INSTALL</h3><p>Run <code>go mod init example.com/ebi-build</code>, then <code>go get github.com/hajimehoshi/ebiten/v2</code>.</p></article><article><b>03</b><h3>RUN</h3><p>Run <code>go run .</code>. A dark-blue window means success.</p></article></div><div class="code-lesson"><div><p class="eyebrow">THE AXIOM</p><h3>Keep the jobs<br>separate.</h3><p><code>Update</code> will own input and number changes. <code>Draw</code> will paint the numbers that already exist. Make that promise first.</p></div><pre><code>func (g *game) Update() error { return nil }
@@ -99,6 +99,9 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
 
 
 

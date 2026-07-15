@@ -20,7 +20,7 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/build/tap-score/">
 <link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">INDEX</a><a href="../state-picture/">BUILD 02</a><a class="lang" href="../../../ja/build/tap-score/" lang="ja">JA</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../state-picture/">← BUILD 02</a><span>BUILD TRACK / STEP 03</span></div><section class="overview-hero"><p class="eyebrow">BUILD TRACK / FIRST RULE</p><h1>Tap to add score</h1><p>Read a click or tap, then add one score point. Reading input and changing a number are both jobs for <code>Update</code>.</p><div class="overview-concept"><small>The RULE you write here</small><strong>if pressed { score++ }</strong></div></section><!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>Every press adds a number.</h2></div><p>Tap/click the circle or background once for one point. Draw only displays the score Update already chose.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Tap for score" src="../../../play/tap-score/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="learn"><p class="eyebrow">INPUT → UPDATE</p><h2>Ask “was it pressed?”,<br>then make an answer number.</h2><div class="concept-row"><article><span class="concept-number">1</span><h3>INPUT</h3><p>Mouse and touch become the same <code>pressed</code> fact.</p><code>pressed := justPressed()</code></article><article><span class="concept-number">2</span><h3>RULE</h3><p>Only on that press, add one point.</p><code>if pressed { score++ }</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>Draw turns the decided score into text.</p><code>fmt.Sprintf(... g.score)</code></article></div><div class="code-lesson"><div><p class="eyebrow">THE AXIOM</p><h3>Input and RULEs<br>belong in Update.</h3><p>If Draw reads a mouse or does <code>g.score++</code>, score changes with draw frequency. Update decides the answer first.</p></div><pre><code>func (g *game) Update() error {
     if justPressed() {
@@ -110,6 +110,9 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
 
 
 

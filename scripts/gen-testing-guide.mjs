@@ -289,7 +289,9 @@ if got != want {
   got, _ := pointsForDistance(8)
   if got != 100 { t.Fatal("wrong") }
 }`,
-      after: `func TestPointsForDistance_PerfectEdge(t *testing.T) {
+      after: `import "github.com/stretchr/testify/assert"
+
+func TestPointsForDistance_PerfectEdge(t *testing.T) {
   // Arrange / 準備
   distance := 8.0
 
@@ -297,9 +299,8 @@ if got != want {
   got, label := pointsForDistance(distance)
 
   // Assert / 確認
-  if got != 100 || label != "PERFECT +100" {
-    t.Fatalf("got (%d, %s)", got, label)
-  }
+  assert.Equal(t, 100, got)
+  assert.Equal(t, "PERFECT +100", label)
 }`,
       test: `func TestPointsForDistance_PerfectEdge(t *testing.T) {
   // Arrange
@@ -307,7 +308,7 @@ if got != want {
   // Act
   got, _ := pointsForDistance(distance)
   // Assert
-  if got != 100 { t.Fatalf("got %d, want 100", got) }
+  assert.Equal(t, 100, got)
 }`,
       cases: [["名前", "TestPointsForDistance_PerfectEdge", "どんな例か分かる"], ["Arrange", "入力を用意", "準備"], ["Act", "関数を1回呼ぶ", "実行"], ["Assert", "期待値と比較", "確認"]],
       challenge: "次のテストを、関数名_条件の名前にして、Arrange・Act・Assertの3つに分けよう。",
@@ -319,7 +320,9 @@ if got != want {
   got, _ := pointsForDistance(8)
   if got != 100 { t.Fatal("wrong") }
 }`,
-      after: `func TestPointsForDistance_PerfectEdge(t *testing.T) {
+      after: `import "github.com/stretchr/testify/assert"
+
+func TestPointsForDistance_PerfectEdge(t *testing.T) {
   // Arrange
   distance := 8.0
 
@@ -327,9 +330,8 @@ if got != want {
   got, label := pointsForDistance(distance)
 
   // Assert
-  if got != 100 || label != "PERFECT +100" {
-    t.Fatalf("got (%d, %s)", got, label)
-  }
+  assert.Equal(t, 100, got)
+  assert.Equal(t, "PERFECT +100", label)
 }`,
       test: `func TestPointsForDistance_PerfectEdge(t *testing.T) {
   // Arrange
@@ -337,7 +339,7 @@ if got != want {
   // Act
   got, _ := pointsForDistance(distance)
   // Assert
-  if got != 100 { t.Fatalf("got %d, want 100", got) }
+  assert.Equal(t, 100, got)
 }`,
       cases: [["name", "TestPointsForDistance_PerfectEdge", "names the example"], ["Arrange", "prepare input", "setup"], ["Act", "call the rule once", "run"], ["Assert", "compare expected value", "check"]],
       challenge: "Give one older test a name_condition name and split it into Arrange, Act, and Assert.",
@@ -367,7 +369,8 @@ function hub(lang) {
     eyebrow: "SPECIAL GUIDE / UNIT TESTING", left: "Ebitengine layer", mid: "Pure rule", right: "Back to the game", input: "read input", rule: "turn numbers into an answer", state: "update state", noWindow: "no window, GPU, or touch", command: "$ go test ./...", pass: "ok  internal/lessonlogic", course: "Five small refactors", courseLead: "We genuinely refactor earlier lessons into testable code. There is no demo: code and case tables are the visuals.", start: "READ →",
   };
   const cards = lessons.map((lesson, i) => { const t = lesson[lang]; return `<a class="test-course-card" href="${lesson.slug}/"><span>0${i + 1}</span><h3>${t.title}</h3><p>${t.lead}</p><strong>${copy.start}</strong></a>`; }).join("");
-  const body = `<section class="test-hero"><p class="eyebrow">${copy.eyebrow}</p><h1>${copy.h1}</h1><p>${copy.lead}</p></section><section class="test-boundary" aria-label="logic boundary"><div><small>${copy.left}</small><b>${copy.input}</b></div><i>→</i><div class="is-pure"><small>${copy.mid}</small><b>${copy.rule}</b><em>${copy.noWindow}</em></div><i>→</i><div><small>${copy.right}</small><b>${copy.state}</b></div></section><section class="test-terminal"><code>${copy.command}</code><strong>✓ ${copy.pass}</strong></section><section class="test-course"><p class="eyebrow">COURSE MAP</p><h2>${copy.course}</h2><p>${copy.courseLead}</p><div class="test-course-grid">${cards}</div></section>`;
+  const guideLinks = `<nav class="test-guide-links" aria-label="${ja ? "テスト教材の次のリンク" : "Testing guide links"}"><a href="pure-functions/">${ja ? "最初のステップへ →" : "START STEP 01 →"}</a><a href="../../">${ja ? "← ホームに戻る" : "← BACK TO HOME"}</a></nav>`;
+  const body = `<section class="test-hero"><p class="eyebrow">${copy.eyebrow}</p><h1>${copy.h1}</h1><p>${copy.lead}</p></section><section class="test-boundary" aria-label="logic boundary"><div><small>${copy.left}</small><b>${copy.input}</b></div><i>→</i><div class="is-pure"><small>${copy.mid}</small><b>${copy.rule}</b><em>${copy.noWindow}</em></div><i>→</i><div><small>${copy.right}</small><b>${copy.state}</b></div></section><section class="test-terminal"><code>${copy.command}</code><strong>✓ ${copy.pass}</strong></section><section class="test-course"><p class="eyebrow">COURSE MAP</p><h2>${copy.course}</h2><p>${copy.courseLead}</p><div class="test-course-grid">${cards}</div></section>${guideLinks}`;
   return shell({lang, depth: 3, title: {text: copy.title}, desc: copy.desc, body});
 }
 

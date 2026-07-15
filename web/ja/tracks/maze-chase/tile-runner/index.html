@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。ここではUpdateが現在タイルと移動の進み具合を変え、Drawがその途中位置へ走者を描きます。</p><!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>45秒以内に迷路の真珠を12個集めよう。</h2></div><p>中心で進みたい方向を押し続けます。壁方向なら出発しません。矢印/WASD、画面下ボタンのマウス長押し・タッチ長押しに対応。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="迷路を走る" src="../../../../play/tile-runner/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CENTER TO CENTER</p><h2>自由な座標を、迷路のマスへ結びつける。</h2><p class="lesson-lead">迷路データはmaze[y][x]の文字表です。#なら壁、.なら通路。走者は現在タイルを覚え、方向を足した<strong>候補タイル</strong>が通路のときだけ、その中心へ移動を始めます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>タイルから中心座標を作る</h3><p>列xへタイル幅を掛け、盤面左と半マスを足します。行yも同じ式なので、どの通路にも中心があります。</p><code>centerX = mazeX + tileX*tileSize + tileSize/2</code></article><article><span class="concept-number">2</span><h3>次タイルが通れるか調べる</h3><p>現在タイルへ方向(-1,0)などを足します。範囲内でmaze[nextY][nextX]が#でなければ進めます。</p><code>passable := maze[next.y][next.x] != '#'</code></article><article><span class="concept-number">3</span><h3>中心から中心へ補間する</h3><p>progressを0から1へ増やし、fromとtoの間を描きます。1になったら現在タイルをtargetへそろえます。</p><code>screenX = fromX + (toX-fromX)*progress</code></article></div><div class="motion-lab" data-lab="tile" data-blocked="その方向は壁" aria-labelledby="lab-title-tile-runner">
 <div class="lab-copy">
@@ -76,6 +76,9 @@ if passable(next) {
         </form>
       </div>
     </section>
+
+
+
 
 
 

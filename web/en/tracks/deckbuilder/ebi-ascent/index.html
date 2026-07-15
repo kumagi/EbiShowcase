@@ -25,7 +25,7 @@
 <!-- END BEGINNER BRIDGE -->
 
 <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+
 <!-- diagram-lesson:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Grow your deck and defeat the king of the deep.</h2></div><p>Battle with 1–5 and E; choose rewards and routes by number or tap. Defeat all three enemies to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>FINAL STEP</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Ascent" src="../../../../play/ebi-ascent/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GAME COMPOSITION</p><h2>A large game is still a chain of small screens.</h2><p class="lesson-lead">Switch battle, reward, and route selection with a <strong>phase that names the current scene</strong>. Deck, HP, and floor remain in one game struct across scenes, turning them into one journey.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Separate scenes</h3><p>Battle reads card input, Reward reads three choices, and Route reads two. The phase gives the same tap one clear meaning.</p><code>switch phase { case Battle: ... }</code></article><article><span class="concept-number">2</span><h3>Choose shared data</h3><p>HP, deck, and floor belong to the whole run. Energy and block reset for each battle.</p><code>type game struct { deck []card; floor int }</code></article><article><span class="concept-number">3</span><h3>Join exits to entrances</h3><p>Winning opens Reward, choosing a reward opens Route, and choosing a route starts the next Battle.</p><code>phase = phaseReward</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="map,battle,reward,rest" data-loop="next floor" aria-labelledby="lab-title-ebi-ascent">
 <div class="lab-copy">
@@ -77,6 +77,9 @@ case phaseRoute:
         </form>
       </div>
     </section>
+
+
+
 
 
 
