@@ -20,33 +20,17 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/sandbox/chunk-world/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/sandbox/chunk-world/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2Dブロックサンドボックス</a><span>STEP 03 / 07</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>チャンクで広い世界</h1><p>世界を8×8マスの区画へ分け、カメラの近くだけ生成・読み込み・描画します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>チャンク座標・キャッシュ・描画範囲</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>75秒で12区画を訪れ、ビーコンを5個集めよう。</h2></div><p>矢印/WASDまたは画面下の方向ボタンで探索します。黄色い太線がチャンクの境目。上には現在座標、キャッシュ数、今描いている数が出ます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="チャンクで広い世界" src="../../../../play/chunk-world/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>チャンクは広い地図の小区画。x/256が区画番号、x%256が区画内位置です。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>chunkX, localX := x/256, x%256</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_sandbox-seed.svg" alt="シードから世界を作る" loading="lazy" decoding="async"><figcaption>シードから世界を作るの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>75秒で12区画を訪れ、ビーコンを5個集めよう。</h2></div><p>矢印/WASDまたは画面下の方向ボタンで探索します。黄色い太線がチャンクの境目。上には現在座標、キャッシュ数、今描いている数が出ます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="チャンクで広い世界" src="../../../../play/chunk-world/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CHUNK CACHE</p><h2>大きな世界を、小さな地図カードに分ける。</h2><p class="lesson-lead">世界の全マスを一度に持つ代わりに、8×8マスを一つの<strong>チャンク</strong>として扱います。プレイヤーが新しい区画へ近づいたときだけ生成してmapへ保存し、画面外のチャンクは保存したまま描きません。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>世界のマスをチャンクへ割る</h3><p>世界タイルxを8で割った商がチャンクx、余りがチャンク内xです。負の座標では床方向に割る関数を使います。</p><code>chunkX = floorDiv(tileX, 8)</code></article><article><span class="concept-number">2</span><h3>なければ生成して保存</h3><p>カメラ中央の周囲5×5を調べ、mapにないキーだけ同じシードで生成します。戻ってきたときは同じデータを再利用します。</p><code>chunks[key] = generateChunk(key)</code></article><article><span class="concept-number">3</span><h3>画面と重なる区画だけ描く</h3><p>カメラの左上と右下をチャンク番号へ直し、その間だけDrawします。キャッシュ数が増えても描画数はほぼ一定です。</p><code>for cy := minCY; cy &lt;= maxCY; cy++</code></article></div><div class="motion-lab" data-lab="camera" aria-labelledby="chunk-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / CAMERA WINDOW</p><h3 id="chunk-lab-title">世界とカメラを別々に動かそう</h3><p>プレイヤーを動かし、カメラを追従させます。実ゲームではこのカメラ位置を8マス幅で割り、必要チャンクを決めます。</p><div class="lab-controls"><button type="button" class="lab-button" data-lab-left data-go-focus="target">左へ</button><button type="button" class="lab-button lab-button-primary" data-lab-right data-go-focus="target">右へ</button><button type="button" class="lab-button" data-lab-step data-go-focus="lerp draw" data-go-caption="1枚引く">カメラ追従</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button></div></div><div class="lab-visual"><div class="lab-board" role="img" aria-label="ワールド内のプレイヤーとカメラ"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-actor style="top:50%"></div></div></div><div class="lab-values"><div><span>camera</span><strong data-lab-cam>0</strong></div><div><span>player</span><strong data-lab-player>200</strong></div><div><span>screen X</span><strong data-lab-screen>200</strong></div></div></div>
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CHUNK CACHE</p><h2>大きな世界を、小さな地図カードに分ける。</h2><p class="lesson-lead">世界の全マスを一度に持つ代わりに、8×8マスを一つの<strong>チャンク</strong>として扱います。プレイヤーが新しい区画へ近づいたときだけ生成してmapへ保存し、画面外のチャンクは保存したまま描きません。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>世界のマスをチャンクへ割る</h3><p>世界タイルxを8で割った商がチャンクx、余りがチャンク内xです。負の座標では床方向に割る関数を使います。</p><code>chunkX = floorDiv(tileX, 8)</code></article><article><span class="concept-number">2</span><h3>なければ生成して保存</h3><p>カメラ中央の周囲5×5を調べ、mapにないキーだけ同じシードで生成します。戻ってきたときは同じデータを再利用します。</p><code>chunks[key] = generateChunk(key)</code></article><article><span class="concept-number">3</span><h3>画面と重なる区画だけ描く</h3><p>カメラの左上と右下をチャンク番号へ直し、その間だけDrawします。キャッシュ数が増えても描画数はほぼ一定です。</p><code>for cy := minCY; cy &lt;= maxCY; cy++</code></article></div><div class="motion-lab" data-lab="camera" aria-labelledby="chunk-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / CAMERA WINDOW</p><h3 id="chunk-lab-title">世界とカメラを別々に動かそう</h3><p>プレイヤーを動かし、カメラを追従させます。実ゲームではこのカメラ位置を8マス幅で割り、必要チャンクを決めます。</p><div class="lab-controls"><button type="button" class="lab-button" data-lab-left data-go-focus="target">左へ</button><button type="button" class="lab-button lab-button-primary" data-lab-right data-go-focus="target">右へ</button><button type="button" class="lab-button" data-lab-step data-go-focus="lerp draw" data-go-caption="1枚引く">カメラ追従</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button></div></div><div class="lab-visual"><div class="lab-board" role="img" aria-label="ワールド内のプレイヤーとカメラ"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-actor style="top:50%"></div></div></div><div class="lab-values"><div><span>camera</span><strong data-lab-cam>0</strong></div><div><span>player</span><strong data-lab-player>200</strong></div><div><span>screen X</span><strong data-lab-screen>200</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
 <pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="target">target := playerX - screenW/2</span>
@@ -86,6 +70,8 @@ for cy := center.y-2; cy &lt;= center.y+2; cy++ {
         </form>
       </div>
     </section>
+
+
 
 
 

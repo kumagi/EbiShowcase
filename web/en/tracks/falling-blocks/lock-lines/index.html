@@ -50,33 +50,17 @@
 <strong>Board merging and row compaction</strong>
 </div>
 </section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Complete four rows with two-cell pieces.</h2></div><p>Move with ← → or the screen buttons. Drop with ↓ or Space. Filling each two-cell gap clears its row.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Lock and Clear Lines" src="../../../../play/lock-lines/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>lockPiece(); copy(board[1:y+1],board[0:y])</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>lockPiece(); copy(board[1:y+1],board[0:y])</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_falling-blocks.svg" alt="One move of falling blocks" loading="lazy" decoding="async"><figcaption>A visual map of One move of falling blocks. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Complete four rows with two-cell pieces.</h2></div><p>Move with ← → or the screen buttons. Drop with ↓ or Space. Filling each two-cell gap clears its row.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Lock and Clear Lines" src="../../../../play/lock-lines/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / LOCK AND COMPACT</p><h2>Copy the moving piece into the board, then remove every full row.</h2><p class="lesson-lead">The instant a piece lands, its two cells are <strong>locked into board</strong>. Then inspect every row, skip full rows, and copy every row worth keeping downward.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Detect landing</h3><p>If the next cell is the floor or occupied, the piece cannot descend. Write it into the board array, not only onto the screen.</p><code>board[y][x] = true</code></article><article><span class="concept-number">2</span><h3>Find full rows</h3><p>Keep a row if even one cell is empty. Only a row with all eight cells set to true counts as cleared.</p><code>full = full &amp;&amp; board[y][x]</code></article><article><span class="concept-number">3</span><h3>Compact kept rows</h3><p>Use read for the inspected row and write for its destination. Skip full rows and copy only the others downward.</p><code>board[write] = board[read]</code></article></div>
 <div class="motion-lab" data-lab="line-clear" data-cleared="cleared!" data-none="no full rows" aria-labelledby="lab-title-lock-lines">
@@ -128,6 +112,8 @@ for write &gt;= 0 { board[write] = emptyRow; write-- }</code></pre></div>
         </form>
       </div>
     </section>
+
+
 
 
 

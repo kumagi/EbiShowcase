@@ -36,44 +36,25 @@
       <h1>落ちものキャッチ</h1>
       <p>上から落ちる星を、主人公 海老・天次郎 が持つカゴで受け止めます。見た目はキャラとカゴ、当たり判定は見えない四角形です。<strong>星を3回落とすとゲームオーバー</strong>なので、取りこぼしに気をつけましょう。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>移動と当たり判定</strong></div>
-      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01</a>の状態境界に沿って書きます。ルールはUpdate、描画は自由です。</p>
+      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01</a>と同じく、位置や得点などゲームの中身はUpdateで進めます。Drawは中身を変えず、画面への見せ方だけを担当します。</p>
+    </section>
+
+<section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>主人公を動かして、星を集めよう。</h2></div><p>矢印キー、WASD、ドラッグに対応。3回落とすとゲームオーバーです。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="落ちものキャッチ" src="../../../play/catch-stars/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>スライスは星を何個でも入れられる順番付きリスト。天次郎が星を受け止め、3個落とすとゲームオーバーです。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>stars = append(stars, newStar())</code></pre></div></section>
 <!-- feedback-note:games/catch-stars:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-catch-stars"><div><p class="eyebrow">見えない箱</p><h2 id="feedback-note-games-catch-stars">矩形判定は、星とカゴの箱が重なったかを見る</h2><p>見た目が丸い星でも、最初は四角い箱で十分です。カゴは左右に動かすゲームなのでXだけを変え、Yは落ち着いた高さに固定すると判定を考えやすくなります。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="星とカゴの矩形が重なる図"><span>★ 星の箱</span><b>重なる？</b><strong>▰ カゴの箱 = HIT</strong><code>basket.xだけ変える</code></div></div></section>
 <!-- feedback-note:games/catch-stars:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_collision-rect.svg" alt="矩形の重なり" loading="lazy" decoding="async"><figcaption>矩形の重なりの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_score-flow.svg" alt="得点の流れ" loading="lazy" decoding="async"><figcaption>得点の流れの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>主人公を動かして、星を集めよう。</h2></div><p>矢印キー、WASD、ドラッグに対応。3回落とすとゲームオーバーです。</p></div>
-      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="落ちものキャッチ" src="../../../play/catch-stars/" allow="autoplay; fullscreen"></iframe></div></div>
-    </section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="physics" id="learn">
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / MOVEMENT &amp; BOX HITS</p>
         <h2>どうして星を<br>取れたとわかるの？</h2>
@@ -81,7 +62,7 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>移動</h3><p>星は毎フレーム Y に速さを足して落ちます。カゴはキーやポインタで X だけ動かします。</p><code>star.y += speed</code></article>
+        <article><span class="concept-number">1</span><h3>移動</h3><p>星はUpdateごとに Y へ速さを足して落ちます。カゴはキーやポインタで X だけ動かします。</p><code>star.y += speed</code></article>
         <article><span class="concept-number">2</span><h3>たくさんの星</h3><p>星は1個ではなくスライス（リスト）で持ちます。一定フレームごとに新しい星を追加します。</p><code>stars []star</code></article>
         <article><span class="concept-number">3</span><h3>重なり</h3><p>左右と上下、どちらも食い込んでいればヒット。1辺でも離れていたらはずれです。</p><code>overlaps(a, b)</code></article>
       </div>
@@ -90,9 +71,9 @@
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / RECTANGLE OVERLAP</p>
           <h3 id="aabb-lab-title">星を落として、重なりを見よう</h3>
-          <p>「1フレーム進める」で星が落ちます。カゴの四角形と重なった瞬間、判定が YES になります。</p>
+          <p>「Updateを1回」で星が落ちます。カゴの四角形と重なった瞬間、判定が YES になります。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="fall">1フレーム進める</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="fall">Updateを1回</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">丸く見えても、当たり判定は四角形で十分なことがよくあります。まずは箱で考え、必要ならあとから精密にします。</p>
@@ -103,7 +84,7 @@
             <div class="lab-basket" data-lab-basket aria-hidden="true"></div>
           </div>
           <div class="lab-values" aria-live="polite">
-            <div><span>星の Y</span><strong data-lab-y>80</strong><small>毎フレーム下落</small></div>
+            <div><span>星の Y</span><strong data-lab-y>80</strong><small>Updateごとに下落</small></div>
             <div><span>重なり</span><strong data-lab-overlap data-state="miss">まだ</strong><small>箱の重なり</small></div>
             <div><span>ルール</span><strong>4辺</strong><small>左右上下すべて</small></div>
           </div>
@@ -151,7 +132,7 @@
 g.stars = next</code></pre>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — まずここを見る</p>
         <ol>
@@ -351,7 +332,7 @@ func main() {
       </div>
     </section>
 
-    <p class="lesson-lead">このゲームの星は、決めた <code>speed</code> のまま<strong>一定の速さ</strong>で落ちます。次のレベルでは、速さを毎フレーム変える「加速度」を加え、上昇から落下へ切り替わるジャンプの弧を作ります。</p>
+    <p class="lesson-lead">このゲームの星は、決めた <code>speed</code> のまま<strong>一定の速さ</strong>で落ちます。次のレベルでは、速さをUpdateごとに変える「加速度」を加え、上昇から落下へ切り替わるジャンプの弧を作ります。</p>
 
     <nav class="lesson-pager"><a href="../timing-meter/" rel="prev">← LEVEL 02<strong>ストップ・ザ・メーター</strong></a><a href="../flappy/" rel="next">LEVEL 04 →<strong>Ebi Flight</strong></a></nav>
 
@@ -377,6 +358,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

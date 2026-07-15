@@ -21,30 +21,8 @@
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/monster-collection/">
 <link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/monster-collection/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>9 STEPS</span></div><section class="track-hero track-monster-collection"><span class="track-letter">L</span><div><p class="eyebrow">Build a collect-and-train battle game</p><h1>Creature Collection RPG</h1><p>Build a Pokémon-style game where you catch, raise, and battle creatures. Grow one creature definition into moves, type affinities, parties, capture, growth, and a bestiary.</p></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="Course learning order"><span>01 種族</span><b aria-hidden="true">→</b><span>02 相性</span><b aria-hidden="true">→</b><span>03 戦闘</span><b aria-hidden="true">→</b><span>04 捕獲</span><b aria-hidden="true">→</b><span>05 成長</span></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="Course learning order"><span>01 種族</span><b aria-hidden="true">→</b><span>02 相性</span><b aria-hidden="true">→</b><span>03 戦闘</span><b aria-hidden="true">→</b><span>04 捕獲</span><b aria-hidden="true">→</b><span>05 成長</span></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><!-- diagram-lesson:start -->
-
-<!-- diagram-lesson:end -->
-<iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
 
 <p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 state boundary</a>. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a playable world.</h2><p>Test data changes and algorithms in small games, reusing each step on the way to the final project.</p></div><a class="path-step" href="species-data/"><span>01</span><div><h3>Define One Creature</h3><p>Separate a species "template" (name and base stats) from this one creature's own HP and experience.</p><strong>Species template vs. this one creature's state</strong></div><b>→</b></a>
@@ -81,6 +59,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

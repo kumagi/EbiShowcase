@@ -50,33 +50,17 @@
 <strong>盤面への合成と行の圧縮</strong>
 </div>
 </section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>2マスのピースで4行を完成させよう。</h2></div><p>← →または画面ボタンで移動、↓かSpaceで落下。空いた2マスを埋めると行が消えます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="固定とライン消去" src="../../../../play/lock-lines/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>盤面への合成は落下中の四マスをboardへ固定すること、行の圧縮は満杯行より上を一段下へコピーして空きを詰めることです。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>lockPiece(); copy(board[1:y+1],board[0:y])</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_falling-blocks.svg" alt="落ちものの一手" loading="lazy" decoding="async"><figcaption>落ちものの一手の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>2マスのピースで4行を完成させよう。</h2></div><p>← →または画面ボタンで移動、↓かSpaceで落下。空いた2マスを埋めると行が消えます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="固定とライン消去" src="../../../../play/lock-lines/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / LOCK AND COMPACT</p><h2>動くピースを盤面へ写してから、満員の行を取り除く。</h2><p class="lesson-lead">接地した瞬間、落下中の2マスを<strong>boardへ固定</strong>します。次に各行を調べ、全部埋まった行は飛ばし、それ以外を下から順にコピーします。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>接地を調べる</h3><p>1マス下が床か使用中なら、もう落下できません。見た目だけでなく盤面配列へ書き込みます。</p><code>board[y][x] = true</code></article><article><span class="concept-number">2</span><h3>満員の行を探す</h3><p>左から右まで1個でも空きがあれば残します。8マスすべてtrueの行だけを消去数へ足します。</p><code>full = full &amp;&amp; board[y][x]</code></article><article><span class="concept-number">3</span><h3>残す行を下へ詰める</h3><p>readで読む行、writeで書く行を分けます。満員の行はコピーせず、残った行だけを下へ移します。</p><code>board[write] = board[read]</code></article></div>
 <div class="motion-lab" data-lab="line-clear" data-cleared="消した！" data-none="埋まっていない" aria-labelledby="lab-title-lock-lines">
@@ -128,6 +112,8 @@ for write &gt;= 0 { board[write] = emptyRow; write-- }</code></pre></div>
         </form>
       </div>
     </section>
+
+
 
 
 

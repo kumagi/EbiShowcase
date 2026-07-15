@@ -22,33 +22,17 @@
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/slingshot/wall-bounce/">EN</a></nav></header><main class="overview-main">
 <div class="lesson-breadcrumb"><a href="../">← ひっぱり反射アクション</a><span>STEP 02 / 06</span></div>
 <section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>壁で跳ね返るボール</h1><p>壁にぶつかった向きの速度だけを反転し、狙った回数だけ反射して真珠へ届けます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>法線反射と反発係数</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>指定回数だけ跳ねて、3個の真珠を集めよう。</h2></div><p>−5°・＋5°をタップして角度を選び、LAUNCH。PCでは←→またはA/D、Space。6回外す前に1・2・3回反射の順で命中させます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="壁で跳ね返るボール" src="../../../../play/wall-bounce/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>左右壁はvx、床天井はvyだけ符号反転し、位置も壁の内側へ戻して二重衝突を防ぎます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>vx = -vx; x = wallX-radius</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>指定回数だけ跳ねて、3個の真珠を集めよう。</h2></div><p>−5°・＋5°をタップして角度を選び、LAUNCH。PCでは←→またはA/D、Space。6回外す前に1・2・3回反射の順で命中させます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="壁で跳ね返るボール" src="../../../../play/wall-bounce/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / WALL NORMAL</p><h2>壁へ向かう速さだけ、反対向きにする。</h2><p class="lesson-lead">速度は横の<code>vx</code>と縦の<code>vy</code>に分かれています。縦の壁へ当たったら横向きだけ、床や天井なら縦向きだけを反転します。壁からまっすぐ外へ向く矢印を<strong>法線</strong>といい、反射は法線方向の速度をひっくり返す計算です。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>半径まで含めて接触</h3><p>円の中心が壁へ着いてからでは半分めり込みます。中心から半径を引いた左端が壁を越えたら接触です。</p><code>if x-radius &lt; leftWall</code></article><article><span class="concept-number">2</span><h3>片方の速度を反転</h3><p>左右の壁は<code>vx</code>の符号だけを変えます。<code>vy</code>を残すので、入ってきた角度と同じ角度で出ていきます。</p><code>vx = -vx</code></article><article><span class="concept-number">3</span><h3>少し勢いを失う</h3><p>反転した速さへ0.92を掛けます。この反発係数が1なら同じ速さ、0に近いほど壁へ勢いを渡します。</p><code>vx = -vx * restitution</code></article></div>
@@ -96,6 +80,8 @@ if y-radius &lt; topWall {
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -43,34 +43,9 @@
       <h1>武器進化ラボ</h1>
       <p>武器のクールダウン・弾速・弾数・ダメージを1つのデータにまとめます。条件を満たしたら、別の武器データへ差し替えるだけで進化が完成します。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>データ駆動の強化と合成</strong></div>
-      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01</a>の状態境界に沿って書きます。ルールはUpdate、描画は自由です。</p>
+      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01</a>と同じく、位置や得点などゲームの中身はUpdateで進めます。Drawは中身を変えず、画面への見せ方だけを担当します。</p>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>データ駆動は強さをifの山でなく武器データ表に書く方法。経験値ゲージが満ちるたびlevelを増やし、2で3way、3で連射など次のデータへ交換します。合成は二つの条件を満たして上位武器にすることです。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>weapon = evolutions[level]</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 
-
-
-
-
-
-
-
-
-
-
-
-<!-- diagram-lesson:start -->
-
-<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>コアを拾って、嵐へ進化。</h2></div>
@@ -81,6 +56,15 @@
         <div id="game-wrap"><iframe class="lesson-game-frame" title="武器進化ラボ" src="../../../../play/weapon-evolution/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>データ駆動は強さをifの山でなく武器データ表に書く方法。経験値ゲージが満ちるたびlevelを増やし、2で3way、3で連射など次のデータへ交換します。合成は二つの条件を満たして上位武器にすることです。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>weapon = evolutions[level]</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<!-- diagram-lesson:start -->
+
+<!-- diagram-lesson:end -->
+
+
+
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -110,7 +94,7 @@
         </article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="evolve"  aria-labelledby="lab-title-weapon-evolution">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / LAB</p>
@@ -206,6 +190,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

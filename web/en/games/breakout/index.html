@@ -37,8 +37,16 @@
       <p>Pong’s reflection plus “many identical bricks.” The key is not more variables — it is one slice that holds every brick.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Many objects</strong></div>
     </section>
+<p class="curriculum-bridge">The state boundary still follows <a href="../tap-target/#basics">LEVEL 01</a>: Update owns rules and Draw is a replaceable projection. This lesson only adds its new piece (bounce, bricks, or a growing body). Drawing and hits stay simple shapes.</p>
+
+
+
+<section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Clear every brick.</h2></div><p>Bounce the ball with the paddle and erase the colored wall. You have three lives.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Breakout" src="../../../play/breakout/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if remaining == 0 { state = Win }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if remaining == 0 { state = Win }</code></pre></div></section>
 <!-- feedback-note:games/breakout:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-breakout"><div><p class="eyebrow">Draw every index</p><h2 id="feedback-note-games-breakout">A for loop draws each item in the slice</h2><p><code>i</code> means which block we are visiting. A loop walks from the first block to the last and reuses one drawing rule for all of them.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="for loop drawing every block">for i := range blocks {
     if blocks[i].Alive {
@@ -46,40 +54,13 @@
     }
 }</pre></div></section>
 <!-- feedback-note:games/breakout:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
-<p class="curriculum-bridge">The state boundary still follows <a href="../tap-target/#basics">LEVEL 01</a>: Update owns rules and Draw is a replaceable projection. This lesson only adds its new piece (bounce, bricks, or a growing body). Drawing and hits stay simple shapes.</p>
-
-
-    <!-- diagram-lesson:start -->
+<!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_score-flow.svg" alt="Score flow" loading="lazy" decoding="async"><figcaption>A visual map of Score flow. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_bounce-angle.svg" alt="Choose a bounce angle" loading="lazy" decoding="async"><figcaption>A visual map of Choose a bounce angle. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Clear every brick.</h2></div><p>Bounce the ball with the paddle and erase the colored wall. You have three lives.</p></div>
-      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Breakout" src="../../../play/breakout/" allow="autoplay; fullscreen"></iframe></div></div>
-    </section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="physics" id="learn">
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / MANY OBJECTS</p>
         <h2>How can so many bricks<br>share one rule?</h2>
@@ -92,7 +73,7 @@
         <article><span class="concept-number">3</span><h3>Breaking</h3><p>Only overlapping bricks set <code>alive = false</code>. Update and draw look only at living ones.</p><code>alive = false</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="bricks"  aria-labelledby="lab-title-bricks">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / MANY OBJECTS</p>
@@ -147,7 +128,7 @@
 }</code></pre>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — look here first</p>
         <ol>
@@ -391,6 +372,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

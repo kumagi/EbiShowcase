@@ -14,14 +14,14 @@
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--flappy.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Goで、 主人公が落ちる。">
+    <meta property="og:image:alt" content="タップひとつで、 天次郎が飛ぶ。">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – LEVEL 04 — Ebi Flight">
     <meta name="twitter:description" content="GoとEbitengineで作ったミニゲームを、ブラウザですぐ遊んで学べるショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲ">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--flappy.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Goで、 主人公が落ちる。">
+    <meta name="twitter:image:alt" content="タップひとつで、 天次郎が飛ぶ。">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/games/flappy/">
   <link rel="alternate" hreflang="ja" href="../../../ja/games/flappy/">
@@ -34,29 +34,36 @@
   <main id="top"><div class="lesson-breadcrumb"><a href="../../">← CURRICULUM</a><span>LEVEL 04</span></div>
     <div class="overview-concept" style="margin:18px max(24px,7vw)"><small>このゲームで学ぶこと</small><strong>速度と加速度</strong></div>
     <section class="hero">
-      <div class="hero-copy"><p class="eyebrow">LEVEL 04 / ACCELERATION IN MOTION</p><h1>Goで、<br><em>主人公が落ちる。</em></h1><p class="lead">Update の中で速度を少しずつ変えると、ジャンプが自然な弧になります。見た目はオリジナル主人公の 海老・天次郎。衝突は鳥とパイプを囲む<strong>矩形同士の重なりチェック（AABB）</strong>です。<code>birdRadius</code> は円判定ではなく、鳥の箱の半分の大きさとして使います。ゲームループは LEVEL 01 で学んだはず。ここでは加速度に集中します。</p><a class="cta" href="#play">今すぐプレイ <b>↓</b></a></div>
+      <div class="hero-copy"><p class="eyebrow">LEVEL 04 / ACCELERATION IN MOTION</p><h1>タップひとつで、<br><em>天次郎が飛ぶ。</em></h1><p class="lead">タップすると上へ、何もしないと下へ。まずこの手ざわりを遊び、あとから「速さが少しずつ変わる」と自然な弧になる理由をほどきます。</p><a class="cta" href="#play">まず遊ぶ <b>↓</b></a></div>
       <div class="code-card" aria-hidden="true"><div class="dots">● ● ●</div><pre><span>func</span> (g *Game) Update() error {
   <i>// every frame, keep it simple.</i>
   g.bird.velocity += gravity
   g.bird.y += g.bird.velocity
   <span>return</span> nil
 }</pre><div class="run">GO → WASM → BROWSER</div></div>
-      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01</a>の状態境界に沿って書きます。ルールはUpdate、描画は自由です。</p>
+      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01</a>と同じく、位置や得点などゲームの中身はUpdateで進めます。Drawは中身を変えず、画面への見せ方だけを担当します。</p>
     </section>
 
-    <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_velocity-vector.svg" alt="速度ベクトル" loading="lazy" decoding="async"><figcaption>速度ベクトルの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_flappy-pipes.svg" alt="パイプを一定間隔で出す" loading="lazy" decoding="async"><figcaption>パイプを一定間隔で出すの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
-<!-- diagram-lesson:end -->
+
 <section class="play" id="play">
       <div class="section-head"><div><p class="eyebrow">LEVEL 04 / EBI FLIGHT</p><h2>まずは、飛んでみよう。</h2></div><p>クリック、タップ、またはスペースキーで上昇。パイプを抜けるたびに1ポイント。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / WEBASSEMBLY</span><button id="fullscreen" type="button">FULL SCREEN ↗</button></div><div id="game-wrap"><iframe id="game" title="Ebi Flight game" src="../../../game.html" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>画面は上がY=0で、下へ行くほどYが増えます。加速度は『Updateの刻みごとに速さがどれだけ変わるか』。羽ばたき時の負の速度は上向き、正の重力が少しずつ下向きへ戻します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>vy = -7.4; vy += gravity; y += vy</code></pre></div></section>
+<!-- feedback-note:games/flappy:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-flappy"><div><p class="eyebrow">重力を感じる</p><h2 id="feedback-note-games-flappy">重力は、Updateのたびに下向きの速さを少し足す</h2><p>速度が整数だけだと動きが急に見えます。0.42のような小数を使うと、細かなUpdateの刻みが積み重なり、なめらかな落下の弧になります。順番は速度を変える→位置を変えるです。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="重力が速度へ加わる順番"><span>速度 -7.4</span><b>+ 重力 0.42</b><strong>速度 -6.98</strong><b>→ 位置を更新</b><span>次のUpdate</span></div></div></section>
+<!-- feedback-note:games/flappy:end -->
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_velocity-vector.svg" alt="速度ベクトル" loading="lazy" decoding="async"><figcaption>速度ベクトルの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_flappy-pipes.svg" alt="パイプを一定間隔で出す" loading="lazy" decoding="async"><figcaption>パイプを一定間隔で出すの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="learn" id="learn">
+<section class="learn" id="learn">
       <p class="eyebrow">QUICK REVIEW / FROM LEVEL 01</p>
-      <h2>Update と Draw は、<br>もう知っているはず。</h2>
-      <p style="max-width:720px;font-size:18px;line-height:1.85;color:#4a5378;margin:0 0 36px">ゲームが毎フレーム動く仕組みは、<a href="../tap-target/#basics">LEVEL 01</a> で学びました。ここでは短く復習してから、本題の<strong>加速度</strong>へ進みます。</p>
+      <h2>LEVEL 01の二つの役割を、<br>短く復習しよう。</h2>
+      <p style="max-width:720px;font-size:18px;line-height:1.85;color:#4a5378;margin:0 0 36px"><a href="../tap-target/#basics">LEVEL 01</a>では、ゲームの中身を進めるUpdateと、それを画面へ見せるDrawを分けました。ここではUpdate側へ<strong>加速度</strong>を一つ足します。</p>
       <div class="steps"><article><b>01</b><h3>UPDATE</h3><p>入力・重力・当たり判定。数字を進める場所（復習）。</p><code>func (g *Game) Update() error</code></article><article><b>02</b><h3>DRAW</h3><p>いまの数字どおりに描く場所（復習）。</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article><article><b>03</b><h3>LAYOUT</h3><p>論理解像度を決める場所（復習）。</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article></div>
     </section>
 
@@ -69,29 +76,29 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>位置</h3><p>主人公が「いま、どこにいるか」。画面の上が0で、下へ行くほど数字が大きくなります。</p><code>birdY = 320</code></article>
         <article><span class="concept-number">2</span><h3>速度</h3><p>1回の更新で、どちらへどれだけ動くか。マイナスなら上へ、プラスなら下へ進みます。<code>velocity = -7.4</code> は「はばたいた瞬間、上へ7.4ピクセル分の勢いを与える」という初速です。数字が大きいほど、1回のはばたきが強くなります。</p><code>velocity = -7.4</code></article>
-        <article><span class="concept-number">3</span><h3>加速度</h3><p>速度を毎回どれだけ変えるか。重力として <strong>+0.42</strong>（ピクセル／フレーム²）を足し続けます。60FPSなら1フレーム≈16ms。画面の上が小さいYなので、ジャンプ初速は<strong>負の数</strong>（例: -7.4）です。</p><code>gravity = +0.42</code></article>
+        <article><span class="concept-number">3</span><h3>加速度</h3><p>Updateを1回進めるたび、速度をどれだけ変えるか。この教材では重力として <strong>+0.42</strong>を足します。画面の上が小さいYなので、ジャンプ初速は<strong>負の数</strong>（例: -7.4）です。</p><code>gravity = +0.42</code></article>
       </div>
       <div class="motion-lab" data-lab="flappy" aria-labelledby="motion-lab-title">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p>
-          <h3 id="motion-lab-title">1コマずつ動かしてみよう</h3>
-          <p>ゲームはパラパラ漫画のように、少しずつ計算して描き直します。ボタンを押すたび、重力が速度へ足され、その速度だけ主人公の位置が変わります。見た目は 海老・天次郎。当たりは円ではなく、主人公と足場の四角い範囲が重なるかのチェックです。</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap data-go-focus="flap grav pos">はばたく</button><button type="button" class="lab-button" data-lab-step data-go-focus="grav pos">1フレーム進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button></div>
-          <p class="lab-hint">「はばたく」は、上向きの速度 <code>-7.4</code> をセットしてから1フレーム進めます。</p>
+          <p class="eyebrow">TRY IT / 1 UPDATE AT A TIME</p>
+          <h3 id="motion-lab-title">Updateを1回ずつ進めてみよう</h3>
+          <p>ボタンを押すたび、Update一回分として重力を速度へ足し、その速度だけ主人公の位置を変えます。Drawは計算に参加せず、いまの位置を見せています。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-flap data-go-focus="flap grav pos">はばたく</button><button type="button" class="lab-button" data-lab-step data-go-focus="grav pos">Updateを1回進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button></div>
+          <p class="lab-hint">「はばたく」は上向きの速度 <code>-7.4</code> をセットしてから、Updateを1回進めます。</p>
         </div>
         <div class="lab-visual">
           <div class="lab-sky" role="img" aria-label="主人公の上下運動を示す図"><span class="axis-label axis-top">0 / 上</span><span class="axis-label axis-bottom">720 / 下</span><div class="lab-bird" data-lab-bird aria-hidden="true"><span></span></div></div>
-          <div class="lab-values" aria-live="polite"><div><span>加速度</span><strong>+0.42</strong><small>毎フレーム</small></div><div><span>速度</span><strong data-lab-velocity>0.00</strong><small data-lab-direction>止まっている</small></div><div><span>位置 Y</span><strong data-lab-position>320.00</strong><small>画面の上から</small></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>加速度</span><strong>+0.42</strong><small>Updateごと</small></div><div><span>速度</span><strong data-lab-velocity>0.00</strong><small data-lab-direction>止まっている</small></div><div><span>位置 Y</span><strong data-lab-position>320.00</strong><small>画面の上から</small></div></div>
         </div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="grav">vy += 0.42 // gravity each frame</span>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="grav">vy += 0.42 // gravity each Update</span>
 <span data-go-line="pos">y += vy</span>
 <span data-go-line="flap">if pressed { vy = -7.4 // jump impulse }</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>
-      <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>速度 = 速度 + 重力</code><span>つぎに</span><code>位置 = 位置 + 速度</code></div><p>順番が大切です。まず重力で速度を変え、次にその速度で位置を変えます。毎フレームくり返すだけで、自然なジャンプの曲線が生まれます。Yは下方向がプラスなので、上へ飛ぶには速度をマイナスにします。</p>
+      <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>速度 = 速度 + 重力</code><span>つぎに</span><code>位置 = 位置 + 速度</code></div><p>Updateの中では順番が大切です。まず重力で速度を変え、次にその速度で位置を変えます。Updateごとに繰り返すと、自然なジャンプの曲線が生まれます。Yは下方向がプラスなので、上へ飛ぶには速度をマイナスにします。</p>
       <p>スタート前に主人公がふわふわ揺れているのは <code>math.Sin(...)</code>（サイン、なめらかな波の形を作る関数）を使っているからです。中学ではまだ習わない関数ですが、「時間とともになめらかに上下する値の表」だと思えば十分です。これは<strong>「待っている感」を出すための飾り（発展・任意）</strong>で、加速度や当たり判定の仕組みとは関係ありません。省いて動かない位置のままにしても、ゲームは同じように遊べます。</p>
       <p>パイプとの当たりは距離（円）ではなく、<strong>Xが重なり、かつYが穴の外</strong>ならヒット、という四角形どうしの判定です。見た目が丸くても、まずは箱判定で十分なことが多いです。</p></div>
       <div class="code-lesson">
@@ -381,43 +388,7 @@ func main() {
     <nav class="lesson-pager"><a href="../catch-stars/" rel="prev">← LEVEL 03<strong>落ちものキャッチ</strong></a><a href="../pong/" rel="next">LEVEL 05 →<strong>Pong</strong></a></nav>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>画面は上がY=0で、下へ行くほどYが増えます。加速度は『速さが毎フレームどれだけ変わるか』。羽ばたき時の-7.4px/frameは上向きの初速度、重力+0.42px/frame²が約16.7msごとに下向きへ戻します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>vy = -7.4; vy += gravity; y += vy</code></pre></div></section>
-<!-- feedback-note:games/flappy:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-flappy"><div><p class="eyebrow">重力を感じる</p><h2 id="feedback-note-games-flappy">重力は、毎フレーム下向きの速さを少し足す</h2><p>速度が整数だけだと動きが急に見えます。0.42のような小数を位置に使うと、約16msごとの小さな変化が積み重なり、なめらかな落下の弧になります。順番は速度を変える→位置を変えるです。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="重力が速度へ加わる順番"><span>速度 -7.4</span><b>+ 重力 0.42</b><strong>速度 -6.98</strong><b>→ 位置を更新</b><span>次のフレーム</span></div></div></section>
-<!-- feedback-note:games/flappy:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-<section class="feedback-section" aria-labelledby="feedback-title">
+    <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
           <p class="eyebrow">FEEDBACK</p>
@@ -438,6 +409,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

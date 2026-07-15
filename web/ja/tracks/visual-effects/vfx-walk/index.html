@@ -44,29 +44,11 @@
       <p>1枚に並んだ絵(スプライトシート)から、SubImage で1コマだけ切り出して描きます。タイマーで切り出す位置を進めれば、キャラクターが歩いて見えます。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>SubImage + タイマー</strong></div>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>SubImage（サブイメージ）は、大きな画像から四角い一部分を切り出す命令。タイマーは何コマ進んだかを数える整数（小数でない数）です。type は、その数や絵をまとめる新しい箱の種類を決める書き方。col は横、row は縦の何番目かで、col×コマ幅が左端になります。Updateがコマ番号を変え、Drawが切り出した絵を表示します。加算合成は光を足す描き方、パーティクルは短時間だけ動く小さな粒です。 Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>frame := sheet.SubImage(frameRect).(*ebiten.Image)</code></pre></div></section>
-<!-- feedback-note:tracks/visual-effects/vfx-walk:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-walk"><div><p class="eyebrow">スプライトのコマ</p><h2 id="feedback-note-tracks-visual-effects-vfx-walk">並んだ絵の番号をframeで選ぶ</h2><p>歩きの画像を横に並べたものがスプライトシートです。frame++は次に表示する画像の番号を進める処理で、余りを使えば最後から最初へ戻れます。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="歩きアニメーションの4コマ"><span>0</span><span>1</span><span>2</span><span>3</span><b>frame++ → 次の絵</b></div></div></section>
-<!-- feedback-note:tracks/visual-effects/vfx-walk:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
 
     <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）とDraw（絵）の独立した境界</strong>の上にあります。ここでは同じ状態を別の描き方へ投影する方法を一段深く扱います。</p>
-    
 
-    <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_spritesheet-frames.svg" alt="スプライトシートのフレーム" loading="lazy" decoding="async"><figcaption>スプライトシートのフレームの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
-<!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play">
+
+    <section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>コマを送って再生しよう</h2></div>
         <p>コマ送りと再生/停止を切り替えます。光っている枠が、今 SubImage で切り出しているコマです。</p>
@@ -76,6 +58,16 @@
         <div id="game-wrap"><iframe class="lesson-game-frame" title="パラパラ歩き（コマ送り）" src="../../../../play/vfx-walk/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>SubImage（サブイメージ）は、大きな画像から四角い一部分を切り出す命令。タイマーは何コマ進んだかを数える整数（小数でない数）です。type は、その数や絵をまとめる新しい箱の種類を決める書き方。col は横、row は縦の何番目かで、col×コマ幅が左端になります。Updateがコマ番号を変え、Drawが切り出した絵を表示します。加算合成は光を足す描き方、パーティクルは短時間だけ動く小さな粒です。 Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>frame := sheet.SubImage(frameRect).(*ebiten.Image)</code></pre></div></section>
+<!-- feedback-note:tracks/visual-effects/vfx-walk:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-walk"><div><p class="eyebrow">スプライトのコマ</p><h2 id="feedback-note-tracks-visual-effects-vfx-walk">並んだ絵の番号をframeで選ぶ</h2><p>歩きの画像を横に並べたものがスプライトシートです。frame++は次に表示する画像の番号を進める処理で、余りを使えば最後から最初へ戻れます。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="歩きアニメーションの4コマ"><span>0</span><span>1</span><span>2</span><span>3</span><b>frame++ → 次の絵</b></div></div></section>
+<!-- feedback-note:tracks/visual-effects/vfx-walk:end -->
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_spritesheet-frames.svg" alt="スプライトシートのフレーム" loading="lazy" decoding="async"><figcaption>スプライトシートのフレームの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<!-- END BEGINNER BRIDGE -->
+
 
     <section class="physics" id="learn">
       <div class="lesson-intro">

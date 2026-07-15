@@ -18,10 +18,10 @@
     <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--active-rpg--ebi-active-battle.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Ebi Active Battle">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/active-rpg/ebi-active-battle/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← ゲージ式アクティブRPG</a><span>STEP 06 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">素早さが行動順を作るバトル</p><h1>Ebi Active Battle</h1><p>役割の違う敵編成と3連戦し、ゲージ、コマンド、行動アニメーション、成績を一つにまとめます。</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/active-rpg/ebi-active-battle/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← ゲージ式アクティブRPG</a><span>STEP 06 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">素早さが行動順を作るバトル</p><h1>Ebi Active Battle</h1><p>役割の違う敵編成と3連戦し、ゲージ、コマンド、行動アニメーション、成績を一つにまとめます。</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Active Battle</h2><p>READYになったら1〜3か画面ボタンで行動します。3戦を勝ち抜き、時間と残りHPから計算するBESTを更新しよう。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-active-battle/" title="Ebi Active Battle" allow="autoplay; fullscreen"></iframe></div></section>
+<!-- diagram-lesson:start -->
 
-<!-- diagram-lesson:end -->
-<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Active Battle</h2><p>READYになったら1〜3か画面ボタンで行動します。3戦を勝ち抜き、時間と残りHPから計算するBESTを更新しよう。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-active-battle/" title="Ebi Active Battle" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ゲージ・役割・3連戦の進行</h2><p>READYの待ち行列、3種類のコマンド、命中フレーム、敵編成を順に解決します。戦闘後は仲間を少し回復し、次の編成へ状態を引き継ぎます。</p><div class="concept-row"><article><b>01</b><h3>毎フレーム加算</h3><p>gauge += speedで待ち時間を進めます。</p></article><article><b>02</b><h3>満タンでREADY</h3><p>上限に届いた役だけ行動できます。</p></article><article><b>03</b><h3>行動後に戻す</h3><p>使った役のゲージを0へ戻します。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="GAUGE,READY,COMMAND,RESOLVE"><div><p class="eyebrow">SYSTEM LAB</p><h2>素早さ・行動ゲージ・待ち時間</h2><p>ゲーム内の処理を一段ずつ進め、データが次の処理へ渡る順番を確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ゲージ・役割・3連戦の進行</h2><p>READYの待ち行列、3種類のコマンド、命中フレーム、敵編成を順に解決します。戦闘後は仲間を少し回復し、次の編成へ状態を引き継ぎます。</p><div class="concept-row"><article><b>01</b><h3>毎フレーム加算</h3><p>gauge += speedで待ち時間を進めます。</p></article><article><b>02</b><h3>満タンでREADY</h3><p>上限に届いた役だけ行動できます。</p></article><article><b>03</b><h3>行動後に戻す</h3><p>使った役のゲージを0へ戻します。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="GAUGE,READY,COMMAND,RESOLVE"><div><p class="eyebrow">SYSTEM LAB</p><h2>素早さ・行動ゲージ・待ち時間</h2><p>ゲーム内の処理を一段ずつ進め、データが次の処理へ渡る順番を確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
   <h2>数字を決める場所と、絵にする場所を分けよう</h2>
@@ -32,14 +32,6 @@
   <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
 </section>
 <!-- update-draw-contract:end -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>素早さ・行動ゲージ・待ち時間</h2><p>実ゲームで使っている中心ルールを小さく抜き出します。</p></div><pre><code>actor.gauge += actor.speed
 if actor.gauge &gt;= maxGauge {
     actor.ready = true

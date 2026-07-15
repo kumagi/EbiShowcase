@@ -40,8 +40,13 @@
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Tile map</strong></div>
       <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 state boundary</a>.</p>
     </section>
+
+<section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Push every box onto a goal.</h2></div><p>Arrow keys or WASD to move. Walk into a box to push it. Z or Backspace to undo, R to reset.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 09</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Sokoban" src="../../../play/sokoban/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if moving { progress++; return nil }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if moving { progress++; return nil }</code></pre></div></section>
 <!-- feedback-note:games/sokoban:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-sokoban"><div><p class="eyebrow">A map made of symbols</p><h2 id="feedback-note-games-sokoban">Strings make a stage blueprint easy to read</h2><p>Put one row of cells in each string. You can see walls and boxes at a glance, then convert each character into tile data when the game starts.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="Sokoban symbol map"># wall  @ player
 $ box   . goal
@@ -49,37 +54,13 @@ $ box   . goal
 #@ $.  #
 ########</pre></div></section>
 <!-- feedback-note:games/sokoban:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_push-rule.svg" alt="Decide whether a box can be pushed" loading="lazy" decoding="async"><figcaption>A visual map of Decide whether a box can be pushed. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_tile-map.svg" alt="Play a tile map" loading="lazy" decoding="async"><figcaption>A visual map of Play a tile map. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Push every box onto a goal.</h2></div><p>Arrow keys or WASD to move. Walk into a box to push it. Z or Backspace to undo, R to reset.</p></div>
-      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 09</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Sokoban" src="../../../play/sokoban/" allow="autoplay; fullscreen"></iframe></div></div>
-    </section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="physics" id="learn">
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / TILE MAP</p>
         <h2>How is the stage<br>defined in code?</h2>
@@ -94,7 +75,7 @@ $ box   . goal
         <article><span class="concept-number">3</span><h3>Undo is a stack</h3><p>Picture writing one note per move and stacking it on top of the pile. Undo takes the top note off the pile and restores that state. Before any move, the code actually saves the player and box positions as a snapshot with <code>append([]point(nil), boxes...)</code>, which copies the slice — assigning <code>boxes: g.boxes</code> would share the backing array and corrupt the whole stack of notes later.</p><code>append([]point(nil), boxes...)</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="push" data-blocked="blocked" data-pushed="pushed" aria-labelledby="lab-title-sokoban">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / LAB</p>
@@ -154,7 +135,7 @@ $ box   . goal
 x = lerp(from.x, to.x, progress)</code></pre>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — look here first</p>
         <ol>
@@ -551,6 +532,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

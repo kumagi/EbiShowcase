@@ -37,39 +37,23 @@
       <p>Buy an auto-oven and sweets accumulate on their own. Every frame the game measures how much real time has passed and adds a tiny slice of production. That elapsed-time technique is called delta time.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Delta time and automatic production (CPS)</strong></div>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>stock += cps * dt</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <p class="curriculum-bridge">This track shares the <a href="../../../games/tap-target/#basics">LEVEL 01</a> state boundary: rules advance in Update, while Draw is a replaceable projection—each step adds one new piece.</p>
 
 
-    <!-- diagram-lesson:start -->
 
-<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Produce 200 sweets.</h2></div><p>Tap to bake manually, then buy auto-ovens and watch the counter climb on its own. Press B to buy.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Idle Factory" src="../../../../play/idle-factory/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>stock += cps * dt</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<!-- diagram-lesson:start -->
+
+<!-- diagram-lesson:end -->
+
+
+
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -84,7 +68,7 @@
         <article><span class="concept-number">3</span><h3>Delta time cap</h3><p>When a browser tab is hidden, Update may not be called for a long time. When the tab is shown again, dt could be several seconds, causing a sudden spike. Capping at 0.25 seconds prevents one hidden-tab visit from producing hundreds of sweets.</p><code>if dt &gt; .25 { dt = .25 }</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="idle"  aria-labelledby="lab-title-idle-factory">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / LAB</p>
@@ -165,6 +149,8 @@ g.sweets += float64(g.machines) * dt</code></pre>
         </form>
       </div>
     </section>
+
+
 
 
 

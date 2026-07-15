@@ -31,10 +31,12 @@
   <main class="overview-main">
     <div class="lesson-breadcrumb"><a href="../../">← 目次</a><span>BUILD TRACK / STEP 01</span></div>
     <section class="overview-hero"><p class="eyebrow">BUILD TRACK / WRITE FIRST</p><h1>空のゲームループを動かそう</h1><p>完成ゲームを読む前に、自分の Go 環境で「毎フレーム動く窓」を作ります。リポジトリを clone する必要はありません。</p><div class="overview-concept"><small>このステップで書くこと</small><strong>Update と Draw の空の形</strong></div></section>
-    <!-- diagram-lesson:start -->
+
+<section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>まず、空の窓を見てみよう。</h2></div><p>この濃い青の画面もゲームです。まだルールがなくてもUpdateが時計を進め、Drawは最新の状態を映す独立した方法のひとつです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="空のゲームループ" src="../../../play/empty-loop/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>まず、空の窓を見てみよう。</h2></div><p>この濃い青の画面もゲームです。まだルールがなくてもUpdateが時計を進め、Drawは最新の状態を映す独立した方法のひとつです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="空のゲームループ" src="../../../play/empty-loop/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
     <section class="learn"><p class="eyebrow">MAKE IT LOCAL</p><h2>1ファイルを保存して、<br>自分の窓を開く。</h2><p class="lesson-lead">下の <code>main.go</code> をブラウザから保存します。空のフォルダで <code>go mod init</code> と <code>go get</code> を1回ずつ実行すれば、clone なしで始められます。</p><div class="steps"><article><b>01</b><h3>SAVE</h3><p><a href="https://github.com/kumagi/EbiShowcase/raw/refs/heads/main/games/build-track/empty-loop/main.go">main.go をダウンロード</a>し、新しいフォルダに保存します。</p></article><article><b>02</b><h3>INSTALL</h3><p><code>go mod init example.com/ebi-build</code> の後に <code>go get github.com/hajimehoshi/ebiten/v2</code>。</p></article><article><b>03</b><h3>RUN</h3><p><code>go run .</code>。濃い青の窓が出たら成功です。</p></article></div><div class="code-lesson"><div><p class="eyebrow">THE AXIOM</p><h3>仕事を<br>分けておく。</h3><p><code>Update</code> はこれから入力と数字の変化を受け持ちます。<code>Draw</code> は今ある数字を絵にする場所です。最初から混ぜない約束を作ります。</p></div><pre><code>func (g *game) Update() error { return nil }
 func (g *game) Draw(screen *ebiten.Image) { screen.Fill(navy) }</code></pre></div><div class="next-lines"><p class="eyebrow">NEXT LINES / 次に足す行</p><h3>次は「数字の箱」を作る</h3><p>まだ書かなくて大丈夫。STEP 02 で <code>game</code> に座標を入れ、Draw がその座標を読むようにします。</p><pre><code>type game struct { x, y int }</code></pre><p><a href="../state-picture/">STEP 02 へ進む →</a></p></div><div class="why-grid"><article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>背景色を決める場所を探そう</h3><p><code>main.go</code> の <code>Draw</code> にある <code>screen.Fill</code> を別の色へ変え、<code>go run .</code> で窓の色が変わることを確認します。次のステップから Update 側に本物の RULE を足します。</p></article></div><p class="full-code-intro">この1ファイルが、いま動いているコードの全部です。</p><div class="full-code" data-embed-source="games/build-track/empty-loop/main.go"><div class="full-code-head"><span>main.go · ぜんぶのコード</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーした！">コピー</button></div><pre><code data-embed-slot>// Build Track STEP 01: an empty Ebitengine game loop.
 package main
@@ -99,6 +101,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

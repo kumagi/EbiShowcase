@@ -22,17 +22,6 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>絵を置く→変形→色→重ね方→アニメ→粒の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。 このページの1本はコース全体で共通するgame状態の境界です。ルールはUpdateへ足し、Drawの順番や見た目は自由に差し替えられます。下の01から順に、その中へ各仕組みを実装していきます。 Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="コースの学習順"><span>01 絵を置く</span><b aria-hidden="true">→</b><span>02 変形</span><b aria-hidden="true">→</b><span>03 色</span><b aria-hidden="true">→</b><span>04 重ね方</span><b aria-hidden="true">→</b><span>05 アニメ</span><b aria-hidden="true">→</b><span>06 粒</span></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><!-- diagram-lesson:start -->
-
-<!-- diagram-lesson:end -->
-<iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>基本編と応用編。</h2><p>基本編：画面上のスライダーで「置く・回す・染める・光らせる」を体感。応用編：ルール（得点や当たり）と演出（花火）を別の箱に入れる練習。まずはスタンプからで十分です。</p></div><section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">数字を変えると、見た目が変わる。</h2><p>speed・size・alpha・lifeを変えると、同じルールでも手ざわりが変わります。</p></div><table class="vfx-parameter-table"><thead><tr><th>値</th><th>意味</th><th>小さく</th><th>大きく</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>粒の速さ</td><td>漂う</td><td>飛ぶ</td></tr><tr><th scope="row"><code>size</code></th><td>大きさ</td><td>細かい</td><td>フレア</td></tr><tr><th scope="row"><code>alpha</code></th><td>透明度</td><td>薄い</td><td>濃い</td></tr><tr><th scope="row"><code>life</code></th><td>寿命（フレーム）</td><td>一瞬</td><td>余韻</td></tr></tbody></table></section><div class="path-intro"><p class="eyebrow">BASIC / 基本編</p><h2>描画の文法を<br>手で確かめる。</h2><p>スタンプから魔法ショーケースまで。ページ上のスライダーで「置く・回す・染める」を体感する 17 ステップ（全部やらなくてOK）。</p></div><a class="path-step" href="vfx-stamp/"><span>01</span><div><h3>スタンプと移動</h3><p>1枚の絵を、好きな場所にスタンプします。描画の出発点です。</p><strong>GeoM.Translate</strong></div><b>→</b></a>
 <a class="path-step" href="vfx-transform/"><span>02</span><div><h3>回転と拡大縮小、そして中心</h3><p>回転と拡大縮小。そして「どこを軸に回すか」の順番。</p><strong>GeoM.Rotate / Scale</strong></div><b>→</b></a>
 <a class="path-step" href="vfx-tint/"><span>03</span><div><h3>色を変える・色を抜く</h3><p>同じ絵を赤く染めたり、白く光らせたり、影に落としたり。</p><strong>op.ColorScale</strong></div><b>→</b></a>

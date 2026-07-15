@@ -20,33 +20,17 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/deckbuilder/card-rewards/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/deckbuilder/card-rewards/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← デッキ構築カードゲーム</a><span>STEP 05 / 07</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>カード報酬と強化</h1><p>目標達成後に3枚から1枚を選び、デッキそのものを成長させます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>選択報酬・レア度・デッキ編集</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>強い1枚を選んで、次の目標へ。</h2></div><p>TRAINをタップまたはSpace。報酬は1〜3かカードをタップ。PCではUで強化、Rで古いカードを削除できます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="カード報酬と強化" src="../../../../play/card-rewards/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>選択報酬は戦闘後に一枚だけ選ぶごほうび、レア度は出にくさと強さの目安、デッキ編集は使うカード一覧を変えること。選んだ一枚だけappendします。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>deck = append(deck, chosenCard)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>強い1枚を選んで、次の目標へ。</h2></div><p>TRAINをタップまたはSpace。報酬は1〜3かカードをタップ。PCではUで強化、Rで古いカードを削除できます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="カード報酬と強化" src="../../../../play/card-rewards/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK EDITING</p><h2>報酬は「数字を増やす」だけでなく、次の遊び方を変える。</h2><p class="lesson-lead">候補をカードデータのリストとして作り、選ばれた<strong>たった1枚だけをdeckへappend</strong>します。レア度は色や出やすさを表すデータで、強さそのものとは分けて考えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>候補を作る</h3><p>戦闘番号に合う報酬表から3枚を表示します。画面に見えるカードと選択時に追加するカードは同じデータです。</p><code>rewards := rewardTable[stage]</code></article><article><span class="concept-number">2</span><h3>1枚だけ追加</h3><p>選ばれた番号のカードをデッキの末尾へ入れます。ほかの2枚は追加しないので選択に意味が生まれます。</p><code>deck = append(deck, rewards[choice])</code></article><article><span class="concept-number">3</span><h3>編集は元データを変える</h3><p>強化はdamageを増やし、削除はスライスから要素を抜きます。次の戦闘は編集後のdeckを読みます。</p><code>deck[i].damage += 3</code></article></div><div class="motion-lab" data-lab="deck-pick" data-cards="Strike,Guard,Rare Heal" data-picked="{c} を追加" aria-labelledby="lab-title-card-rewards">
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK EDITING</p><h2>報酬は「数字を増やす」だけでなく、次の遊び方を変える。</h2><p class="lesson-lead">候補をカードデータのリストとして作り、選ばれた<strong>たった1枚だけをdeckへappend</strong>します。レア度は色や出やすさを表すデータで、強さそのものとは分けて考えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>候補を作る</h3><p>戦闘番号に合う報酬表から3枚を表示します。画面に見えるカードと選択時に追加するカードは同じデータです。</p><code>rewards := rewardTable[stage]</code></article><article><span class="concept-number">2</span><h3>1枚だけ追加</h3><p>選ばれた番号のカードをデッキの末尾へ入れます。ほかの2枚は追加しないので選択に意味が生まれます。</p><code>deck = append(deck, rewards[choice])</code></article><article><span class="concept-number">3</span><h3>編集は元データを変える</h3><p>強化はdamageを増やし、削除はスライスから要素を抜きます。次の戦闘は編集後のdeckを読みます。</p><code>deck[i].damage += 3</code></article></div><div class="motion-lab" data-lab="deck-pick" data-cards="Strike,Guard,Rare Heal" data-picked="{c} を追加" aria-labelledby="lab-title-card-rewards">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / REWARD PICK</p>
 <h3 id="lab-title-card-rewards">3枚から1枚をデッキへ足そう</h3>
@@ -93,6 +77,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

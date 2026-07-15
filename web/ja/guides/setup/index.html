@@ -44,22 +44,11 @@
     <p>このサイトのレッスンはブラウザでも遊べます。でも自分の PC でコードを動かしたいときは、まず Go と Ebitengine の準備が必要です。Windows と Mac、どちらの手順も書きます。最後に「何もしない」暗い青い窓が開けば成功です。</p>
   </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>go.modは『このゲームの名前と使う部品』を書いた目次ファイル。PowerShell/ターミナルは文字で命令する同じ役目の窓です。天次郎の最初の一コマを出すところまで進みます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>go.modは『このゲームの名前と使う部品』を書いた目次ファイル。PowerShell/ターミナルは文字で命令する同じ役目の窓です。まずは空のゲーム画面を出すところまで進みます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
 <!-- feedback-note:guides/setup:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-guides-setup"><div><p class="eyebrow">はじめての見取り図</p><h2 id="feedback-note-guides-setup">文字を入力する窓と、ゲームの窓は別もの</h2><p>PowerShellとターミナルは名前や色が違っても、文字で命令を出す同じ役割です。go.modはゲームの名前（モジュール名）と借りる部品を書いた目次。実行すると、今度はEbitengineのゲーム画面が開きます。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="命令を入力する窓からゲーム画面へ"><span>PowerShell / ターミナル</span><b>→ go run . →</b><strong>中身のないゲーム画面</strong></div></div></section>
 <!-- feedback-note:guides/setup:end -->
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><!-- diagram-lesson:start -->
-
-<!-- diagram-lesson:end -->
-<iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 
 
   <section class="setup-goals">

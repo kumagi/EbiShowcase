@@ -77,7 +77,7 @@
     {
       "id": "loop.axiom-visible-early",
       "family": "loop",
-      "severity": "warn",
+      "severity": "fail",
       "check": "deterministic",
       "applies_to": ["core", "build"],
       "summary": "Early loop pages surface the Update/Draw axiom (contract block or clear 3-way wording).",
@@ -167,11 +167,11 @@
     {
       "id": "pedagogy.play-then-explain",
       "family": "pedagogy",
-      "severity": "warn",
+      "severity": "fail",
       "check": "llm",
       "applies_to": ["core", "track", "vfx"],
       "summary": "Lead with something the learner can see or do before naming abstractions.",
-      "prompt_hint": "Does jargon appear before a concrete on-screen action?",
+      "prompt_hint": "Inspect the rendered reading order, not only headings. Does the introduction lead directly to the playable demo before glossary cards, code, diagrams, or an unrelated setup branch? Does every named character appear visually in the same introductory context, or does the copy clearly say that early shape-only levels precede the character?",
       "sources": ["AGENTS.md#teaching-and-writing-contract"]
     },
     {

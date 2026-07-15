@@ -38,36 +38,20 @@
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>XP collection, level-up threshold, draft choice</strong></div>
       <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../../../games/tap-target/#basics">LEVEL 01 state boundary</a>.</p>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if xp>=nextXP { state=ChooseUpgrade }</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 
-
-
-
-
-
-
-
-
-
-
-
-<!-- diagram-lesson:start -->
-
-<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Reach level 5 by collecting XP gems.</h2></div><p>WASD, arrow keys, or drag to move. Blue gems are magnetized when close. Press 1, 2, or 3 (or tap a card) to choose an upgrade.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Experience Draft" src="../../../../play/experience-draft/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if xp>=nextXP { state=ChooseUpgrade }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<!-- diagram-lesson:start -->
+
+<!-- diagram-lesson:end -->
+
+
+
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -82,7 +66,7 @@
         <article><span class="concept-number">3</span><h3>Draft choice</h3><p>One of three upgrade cards is selected by key press or tap. The chosen stat field is incremented, <code>need</code> grows by 3, and <code>draft</code> is cleared to resume play.</p><code>g.speed += .65 // etc.</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="draft" data-combat="combat" data-draft="draft" aria-labelledby="lab-title-experience-draft">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / LAB</p>
@@ -173,6 +157,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -37,44 +37,25 @@
       <p>Your opponent is not another person — it is a <strong>simple CPU (computer-controlled paddle)</strong>. The ball moves with two speeds: how far right and how far down. Hit a wall or paddle, flip only that direction’s sign. That is reflection in its simplest form.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Reflection and vectors</strong></div>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>vx = -vx</code></pre></div></section>
-<!-- feedback-note:games/pong:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-pong"><div><p class="eyebrow">Practice alone</p><h2 id="feedback-note-games-pong">The CPU is your practice opponent</h2><p>The CPU paddle follows the ball, so you can practice reflections without another player. vx is horizontal speed and vy is vertical speed. Flip the matching sign when the ball hits a wall.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="velocity components and reflection"><code>vx = horizontal</code><code>vy = vertical</code><b>wall → vy = -vy</b><strong>bounce</strong></div></div></section>
-<!-- feedback-note:games/pong:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <p class="curriculum-bridge">The state boundary still follows <a href="../tap-target/#basics">LEVEL 01</a>: Update owns rules and Draw is a replaceable projection. This lesson only adds its new piece (bounce, bricks, or a growing body). Drawing and hits stay simple shapes.</p>
 
 
-    <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_bounce-angle.svg" alt="Choose a bounce angle" loading="lazy" decoding="async"><figcaption>A visual map of Choose a bounce angle. Trace the numbers and pictures before reading the code.</figcaption></figure>
-<!-- diagram-lesson:end -->
+
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Return the ball with your paddle.</h2></div><p>Move with arrows, WASD, or drag. Score against the CPU.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Pong" src="../../../play/pong/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>vx = -vx</code></pre></div></section>
+<!-- feedback-note:games/pong:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-pong"><div><p class="eyebrow">Practice alone</p><h2 id="feedback-note-games-pong">The CPU is your practice opponent</h2><p>The CPU paddle follows the ball, so you can practice reflections without another player. vx is horizontal speed and vy is vertical speed. Flip the matching sign when the ball hits a wall.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="velocity components and reflection"><code>vx = horizontal</code><code>vy = vertical</code><b>wall → vy = -vy</b><strong>bounce</strong></div></div></section>
+<!-- feedback-note:games/pong:end -->
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_bounce-angle.svg" alt="Choose a bounce angle" loading="lazy" decoding="async"><figcaption>A visual map of Choose a bounce angle. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="physics" id="learn">
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / REFLECTION</p>
         <h2>Why does the ball<br>bounce back?</h2>
@@ -87,7 +68,7 @@
         <article><span class="concept-number">3</span><h3>Hit offset</h3><p>Hit offset from paddle center × 0.055 is added to vx — a small curve “taste” factor. CPU chases ballX by at most 3.5px/frame when farther than 8px.</p><code>vx += offset * 0.055</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="bounce" data-wall="wall" data-paddle="paddle" aria-labelledby="lab-title-bounce">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / BOUNCE</p>
@@ -141,7 +122,7 @@ g.ballY += g.vy
 }</code></pre>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — look here first</p>
         <ol>
@@ -346,6 +327,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -22,33 +22,17 @@
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/sandbox/terrain-generation/">日本語</a></nav></header><main class="overview-main">
 <div class="lesson-breadcrumb"><a href="../">← 2D Block Sandbox</a><span>STEP 02 / 07</span></div>
 <section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Generate Terrain</h1><p>Build smooth heights, dirt and stone layers, and underground caves from a seed so the same number recreates the same world.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Noise, layers, and seeds</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Explore generated land and find three survey beacons.</h2></div><p>Hold the left or right button. On keyboard use Left/Right or A/D. Touch all three within 38 seconds. NEXT SEED or N makes another world; R rebuilds this one.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Explore terrain generated from a seed" src="../../../../play/terrain-generation/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>tile := rng.Intn(3)</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>tile := rng.Intn(3)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_sandbox-seed.svg" alt="Build a world from a seed" loading="lazy" decoding="async"><figcaption>A visual map of Build a world from a seed. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Explore generated land and find three survey beacons.</h2></div><p>Hold the left or right button. On keyboard use Left/Right or A/D. Touch all three within 38 seconds. NEXT SEED or N makes another world; R rebuilds this one.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Explore terrain generated from a seed" src="../../../../play/terrain-generation/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SEEDED VALUE NOISE</p><h2>Rebuild a large world from a number and coordinates.</h2><p class="lesson-lead">Choosing an unrelated height in every column makes needle-like ground. This game makes the same random value from seed and coordinates, then smoothly connects neighboring values with <strong>value noise</strong>. Once height is known, depth selects grass, dirt, or stone.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Mix seed and coordinates</h3><p><code>hash(seed, x, y)</code> returns the same value whenever those three numbers match. It does not depend on generation order, so a distant location can be built directly.</p><code>n := hash(seed, x, y)</code></article><article><span class="concept-number">2</span><h3>Smooth between samples</h3><p>Use a random marker every eight columns, then change gradually between them with <code>smooth</code>. Heights are less likely to jump many blocks at once.</p><code>height := 3 + int(valueNoise(seed, x/8)*6)</code></article><article><span class="concept-number">3</span><h3>Choose layers by depth</h3><p>The surface cell is grass, the next three are dirt, and deeper cells are stone. Turning stone with cave noise above 0.70 back into air makes caverns.</p><code>if y &gt; surface+3 { tile = Stone }</code></article></div>
@@ -103,6 +87,8 @@ for y := surfaceY; y &lt; worldH; y++ {
         </form>
       </div>
     </section>
+
+
 
 
 

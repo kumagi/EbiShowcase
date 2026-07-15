@@ -38,41 +38,25 @@
       <h1>Dungeon</h1>
       <p>敵はただまっすぐ動くだけでは面白くありません。「普段はランダムに歩き回り、プレイヤーが近づくと追いかける」という状態の切り替えが、生きているような敵AIを生み出します。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>敵AIと状態遷移</strong></div>
-      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01</a>の状態境界に沿って書きます。ルールはUpdate、描画は自由です。</p>
+      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01</a>と同じく、位置や得点などゲームの中身はUpdateで進めます。Drawは中身を変えず、画面への見せ方だけを担当します。</p>
+    </section>
+
+<section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>全ての敵を倒して脱出せよ。</h2></div><p>WASD または矢印キーで移動、スペースまたは上タッチで剣攻撃。敵を全て倒すと出口が開きます。ライフが0になるとゲームオーバーです。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 11</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Dungeon" src="../../../play/dungeon/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>patrol（巡回）は決まった道の見回り、chase（追跡）は天次郎を追う状態。165pxなどは気付く距離を遊びながら調整した値です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if distance &lt; 165 { state = Chase }</code></pre></div></section>
 <!-- feedback-note:games/dungeon-crawler:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-dungeon-crawler"><div><p class="eyebrow">用語とデータ</p><h2 id="feedback-note-games-dungeon-crawler">ダンジョンは、洞窟のような迷路ゲーム</h2><p>ダンジョンという言葉は、部屋や通路が続く探索場所のことです。マップをデータから読むと、同じ移動ルールのまま別の洞窟を増やせます。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="マップデータから洞窟を作る流れ"><span>map.json</span><b>→ 読み込む</b><strong>洞窟の部屋</strong><b>→ 同じルールで探索</b></div></div></section>
 <!-- feedback-note:games/dungeon-crawler:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_tile-map.svg" alt="タイルマップを再生する" loading="lazy" decoding="async"><figcaption>タイルマップを再生するの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_enemy-state.svg" alt="敵AIの状態遷移" loading="lazy" decoding="async"><figcaption>敵AIの状態遷移の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>全ての敵を倒して脱出せよ。</h2></div><p>WASD または矢印キーで移動、スペースまたは上タッチで剣攻撃。敵を全て倒すと出口が開きます。ライフが0になるとゲームオーバーです。</p></div>
-      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 11</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Dungeon" src="../../../play/dungeon/" allow="autoplay; fullscreen"></iframe></div></div>
-    </section>
+<!-- END BEGINNER BRIDGE -->
+
+
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -528,6 +512,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

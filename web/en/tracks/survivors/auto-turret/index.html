@@ -38,37 +38,21 @@
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Nearest-enemy search and cooldown firing</strong></div>
       <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../../../games/tap-target/#basics">LEVEL 01 state boundary</a>.</p>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>target:=nearestEnemy(); if cooldown==0 { fire(target) }</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 
-
-
-
-
-
-
-
-
-
-
-
-<!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_aim-vector.svg" alt="Turn aiming into a vector" loading="lazy" decoding="async"><figcaption>A visual map of Turn aiming into a vector. Trace the numbers and pictures before reading the code.</figcaption></figure>
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_survivor-wave.svg" alt="Manage survivor waves by time" loading="lazy" decoding="async"><figcaption>A visual map of Manage survivor waves by time. Trace the numbers and pictures before reading the code.</figcaption></figure>
-<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Move only — the turret fires by itself.</h2></div><p>WASD, arrow keys, or drag. The turret auto-aims the closest enemy every 28 frames.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Auto Turret Survival" src="../../../../play/auto-turret/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>target:=nearestEnemy(); if cooldown==0 { fire(target) }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_aim-vector.svg" alt="Turn aiming into a vector" loading="lazy" decoding="async"><figcaption>A visual map of Turn aiming into a vector. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_survivor-wave.svg" alt="Manage survivor waves by time" loading="lazy" decoding="async"><figcaption>A visual map of Manage survivor waves by time. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+
+
+
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -83,7 +67,7 @@
         <article><span class="concept-number">3</span><h3>Shot velocity</h3><p>Subtract player position from enemy position, divide by the already-computed distance, then multiply by shot speed. The result is a normalized direction scaled to the right magnitude.</p><code>vx = (e.x - g.px) / dist * 7</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="aim" data-fire="PEW → nearest"  aria-labelledby="lab-title-auto-turret">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / AIM + COOLDOWN</p>
@@ -171,6 +155,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

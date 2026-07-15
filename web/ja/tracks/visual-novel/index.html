@@ -22,17 +22,6 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>会話→立ち絵→選択肢→フラグ→結末の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。 このページの1本はコース全体で共通するgame状態の境界です。ルールはUpdateへ足し、Drawの順番や見た目は自由に差し替えられます。下の01から順に、その中へ各仕組みを実装していきます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="コースの学習順"><span>01 会話</span><b aria-hidden="true">→</b><span>02 立ち絵</span><b aria-hidden="true">→</b><span>03 選択肢</span><b aria-hidden="true">→</b><span>04 フラグ</span><b aria-hidden="true">→</b><span>05 結末</span></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><!-- diagram-lesson:start -->
-
-<!-- diagram-lesson:end -->
-<iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 <p class="curriculum-bridge">共通基礎の Updateが進める状態の上に、Drawは自由な投影として、文章を再生する状態と演出を一段ずつ足します。</p><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>台詞から複数章と結末収集へ</h2><p>一文字ずつ読める会話窓から始め、立ち絵演出、選択フラグ、章データを一つずつ加えて、4つの結末を集める物語へ進みます。</p></div><a class="path-step" href="dialogue-window/"><span>01</span><div><h3>一文字ずつ話す会話窓</h3><p>文章を一度に出さず、表示済みの文字数を増やして、タップで全文表示と次の台詞を切り替えます。</p><strong>Updateでshownを少しずつ増やす</strong></div><b>→</b></a>
 <a class="path-step" href="portrait-staging/"><span>02</span><div><h3>立ち絵の登場を演出する</h3><p>フェード、横移動、拡大、跳ねる動きを0〜1の進み具合から作り、4つすべて試す小さな演出ゲームです。</p><strong>座標・大きさ・透明度を補間する</strong></div><b>→</b></a>
 <a class="path-step" href="choice-flags/"><span>03</span><div><h3>選択を物語のフラグにする</h3><p>3つの質問で勇気と優しさの値を増やし、選んだ履歴から異なる結末を作ります。</p><strong>選んだ瞬間に物語状態へ記録する</strong></div><b>→</b></a>

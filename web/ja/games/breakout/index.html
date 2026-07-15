@@ -37,6 +37,14 @@
       <p>Pong の反射に、「同じ形のブロックがたくさん」が加わります。1個ずつ変数を増やさず、配列（スライス）でまとめて管理するのがポイントです。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>複数オブジェクト</strong></div>
     </section>
+<p class="curriculum-bridge">ゲームの状態境界は <a href="../tap-target/#basics">LEVEL 01</a> と同じです。ルールはUpdate、Drawの描き方は自由です。ここでは反射・ブロック・体の伸びなど、新しい部品だけを足します。見た目も当たりも図形のままです。</p>
+
+
+
+<section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>ブロックをすべて壊そう。</h2></div><p>パドルでボールを返し、色つきブロックを消していきます。ライフは3です。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Breakout" src="../../../play/breakout/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>[]は順番付きの箱、[][]は行と列の方眼紙。全部のbrickが消えたらwinがclear状態を立て、次のDrawで結果画面を出します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if remaining == 0 { state = Win }</code></pre></div></section>
 <!-- feedback-note:games/breakout:start -->
@@ -46,40 +54,13 @@
     }
 }</pre></div></section>
 <!-- feedback-note:games/breakout:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
-<p class="curriculum-bridge">ゲームの状態境界は <a href="../tap-target/#basics">LEVEL 01</a> と同じです。ルールはUpdate、Drawの描き方は自由です。ここでは反射・ブロック・体の伸びなど、新しい部品だけを足します。見た目も当たりも図形のままです。</p>
-
-
-    <!-- diagram-lesson:start -->
+<!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_score-flow.svg" alt="得点の流れ" loading="lazy" decoding="async"><figcaption>得点の流れの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_bounce-angle.svg" alt="反射角を決める" loading="lazy" decoding="async"><figcaption>反射角を決めるの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>ブロックをすべて壊そう。</h2></div><p>パドルでボールを返し、色つきブロックを消していきます。ライフは3です。</p></div>
-      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Breakout" src="../../../play/breakout/" allow="autoplay; fullscreen"></iframe></div></div>
-    </section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="physics" id="learn">
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / MANY OBJECTS</p>
         <h2>どうしてブロックを<br>まとめて扱えるの？</h2>
@@ -92,7 +73,7 @@
         <article><span class="concept-number">3</span><h3>壊す</h3><p>ボールと重なったブロックだけ <code>alive = false</code>。描画も更新も、生きているものだけ見ます。</p><code>alive = false</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="bricks"  aria-labelledby="lab-title-bricks">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / MANY OBJECTS</p>
@@ -148,7 +129,7 @@
 }</code></pre>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — まずここを見る</p>
         <ol>
@@ -391,6 +372,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

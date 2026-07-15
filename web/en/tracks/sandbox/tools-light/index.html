@@ -22,33 +22,17 @@
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/sandbox/tools-light/">日本語</a></nav></header><main class="overview-main">
 <div class="lesson-breadcrumb"><a href="../">← 2D Block Sandbox</a><span>STEP 05 / 07</span></div>
 <section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Tools and Light</h1><p>Save durability by matching tools to materials, then light the day-night cycle with tile-based torch sources.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Tool matchups, durability, and tile light sources</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Mine four wood and four stone, then light camp with two torches.</h2></div><p>Tap Axe, Pick, or Torch, then a board tile. On PC select with 1, 2, or 3/T and mine with the mouse. At night, place a torch near tiles that are too dark.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Tools and tile lighting mining game" src="../../../../play/tools-light/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if tool.Hardness >= block.Required { breakBlock() }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if tool.Hardness >= block.Required { breakBlock() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Mine four wood and four stone, then light camp with two torches.</h2></div><p>Tap Axe, Pick, or Torch, then a board tile. On PC select with 1, 2, or 3/T and mine with the mouse. At night, place a torch near tiles that are too dark.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Tools and tile lighting mining game" src="../../../../play/tools-light/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / TOOL DATA AND TILE LIGHT</p><h2>Check “what mines it?” and “can I see it?” before changing a tile.</h2><p class="lesson-lead">The tools crafted in the previous step now store preferred material, power, and durability. Before mining, compare tool with material and inspect that tile's light. A torch is not one big bright picture: every tile calculates brightness from its <strong>distance to the source</strong>.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Match tool and material</h3><p>Axe on wood or pick on stone gives power 3 for one durability. A mismatch gives power 1 and costs two, wearing out faster for the same job.</p><code>if tool.preferred == block.material { power = 3 }</code></article><article><span class="concept-number">2</span><h3>Store durability as state</h3><p>Subtract durability only when mining. At zero that tool cannot work. If a needed tool breaks before its material goal, the run fails.</p><code>durability[selected] -= cost</code></article><article><span class="concept-number">3</span><h3>Choose the strongest light</h3><p>Compare daylight with every torch and keep the maximum. Torch light loses two units for each tile of distance.</p><code>light = max(daylight, 9-distance*2)</code></article></div>
@@ -103,6 +87,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

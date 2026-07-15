@@ -20,33 +20,17 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/deckbuilder/branching-map/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/deckbuilder/branching-map/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← デッキ構築カードゲーム</a><span>STEP 06 / 07</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>分岐マップの旅</h1><p>つながった次の地点を選び、戦闘・休憩・店を通ってボスを目指します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>グラフ・ノード・選択可能な経路</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>安全な道か、強くなれる危険な道か。</h2></div><p>黄色い地点をタップ、または1・2で選択。HPを残して一番上のボスへ到達します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="分岐マップの旅" src="../../../../play/branching-map/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>グラフは場所（ノード）と道（つながり）の組。nextは今いる場所から次に選べる場所番号のリストです。番号を選ぶとcurrentをその番号へ変えます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>current = nodes[current].next[choice]</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>安全な道か、強くなれる危険な道か。</h2></div><p>黄色い地点をタップ、または1・2で選択。HPを残して一番上のボスへ到達します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="分岐マップの旅" src="../../../../play/branching-map/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GRAPH MAP</p><h2>マップは絵ではなく「地点」と「つながり」のデータ。</h2><p class="lesson-lead">各地点をnodeとして作り、<strong>nextに次へ進める番号</strong>を保存します。現在地のnextだけ入力を受け付ければ、線がない場所へ飛ぶことはありません。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>地点を作る</h3><p>座標、種類、危険度、報酬を1つの構造体へ入れます。Drawは座標を、イベント処理は種類を読みます。</p><code>type node struct { x, y float32; kind string }</code></article><article><span class="concept-number">2</span><h3>つながりを番号で持つ</h3><p>nextが[3,4]なら次は3番か4番です。このつながり全体をグラフと呼びます。</p><code>next []int</code></article><article><span class="concept-number">3</span><h3>訪問済みを覚える</h3><p>選んだ地点をvisitedに記録し、通った道を色で見せます。セーブデータにも現在地と訪問履歴を保存できます。</p><code>visited[current] = true</code></article></div><div class="motion-lab" data-lab="map-nodes"  aria-labelledby="lab-title-branching-map">
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GRAPH MAP</p><h2>マップは絵ではなく「地点」と「つながり」のデータ。</h2><p class="lesson-lead">各地点をnodeとして作り、<strong>nextに次へ進める番号</strong>を保存します。現在地のnextだけ入力を受け付ければ、線がない場所へ飛ぶことはありません。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>地点を作る</h3><p>座標、種類、危険度、報酬を1つの構造体へ入れます。Drawは座標を、イベント処理は種類を読みます。</p><code>type node struct { x, y float32; kind string }</code></article><article><span class="concept-number">2</span><h3>つながりを番号で持つ</h3><p>nextが[3,4]なら次は3番か4番です。このつながり全体をグラフと呼びます。</p><code>next []int</code></article><article><span class="concept-number">3</span><h3>訪問済みを覚える</h3><p>選んだ地点をvisitedに記録し、通った道を色で見せます。セーブデータにも現在地と訪問履歴を保存できます。</p><code>visited[current] = true</code></article></div><div class="motion-lab" data-lab="map-nodes"  aria-labelledby="lab-title-branching-map">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / GRAPH PATH</p>
 <h3 id="lab-title-branching-map">ノードを選んで道を進めよう</h3>
@@ -94,6 +78,8 @@ for _, id := range options {
         </form>
       </div>
     </section>
+
+
 
 
 

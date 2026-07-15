@@ -38,7 +38,12 @@
       <h1>Sokoban</h1>
       <p>文字列の配列でステージを設計し、「どこが壁でどこが床か」をタイル座標で管理します。Undo機能では、操作のたびに状態のスナップショットを履歴に積んでいきます。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>タイルマップ</strong></div>
-      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01</a>の状態境界に沿って書きます。ルールはUpdate、描画は自由です。</p>
+      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01</a>と同じく、位置や得点などゲームの中身はUpdateで進めます。Drawは中身を変えず、画面への見せ方だけを担当します。</p>
+    </section>
+
+<section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>箱をすべてゴールへ押せ。</h2></div><p>矢印キーまたはWASDで移動します。箱に向かって進むと押せます。Z/BackspaceでUndo、Rでリセットです。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 09</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Sokoban" src="../../../play/sokoban/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>論理座標は『何列・何行』、描画座標は画面のピクセル。天次郎が1マス動く間はmoving=trueにして入力を待たせ、Drawだけ途中位置を描きます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if moving { progress++; return nil }</code></pre></div></section>
@@ -49,37 +54,13 @@ $ 箱  . ゴール
 #@ $.  #
 ########</pre></div></section>
 <!-- feedback-note:games/sokoban:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_push-rule.svg" alt="箱を押せるか決める" loading="lazy" decoding="async"><figcaption>箱を押せるか決めるの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_tile-map.svg" alt="タイルマップを再生する" loading="lazy" decoding="async"><figcaption>タイルマップを再生するの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>箱をすべてゴールへ押せ。</h2></div><p>矢印キーまたはWASDで移動します。箱に向かって進むと押せます。Z/BackspaceでUndo、Rでリセットです。</p></div>
-      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 09</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Sokoban" src="../../../play/sokoban/" allow="autoplay; fullscreen"></iframe></div></div>
-    </section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="physics" id="learn">
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / TILE MAP</p>
         <h2>ステージは、<br>どうやって作るの？</h2>
@@ -94,7 +75,7 @@ $ 箱  . ゴール
         <article><span class="concept-number">3</span><h3>Undoは履歴スタック</h3><p>紙のメモを1手ごとに1枚書いて、上に積み上げていくイメージです。Undoは一番上のメモを取って、そこに書かれた状態に戻します。実際には動く前に <code>append([]point(nil), g.boxes...)</code> で箱リストのコピーを保存します。単に <code>boxes: g.boxes</code> と書くと同じ配列を共有し、あとで動かすと積んだはずのメモまで書き換わってしまいます。</p><code>append([]point(nil), boxes...)</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="push" data-blocked="壁／押せない" data-pushed="箱を押した" aria-labelledby="lab-title-sokoban">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / LAB</p>
@@ -154,7 +135,7 @@ $ 箱  . ゴール
 x = lerp(from.x, to.x, progress)</code></pre>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — まずここを見る</p>
         <ol>
@@ -550,6 +531,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

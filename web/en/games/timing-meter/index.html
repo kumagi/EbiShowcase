@@ -34,68 +34,49 @@
     <section class="overview-hero">
       <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
       <h1>Stop the Meter</h1>
-      <p>Stop the bouncing marker inside the center band. The heart of this game is “move a little every frame” plus switching between moving and stopped.</p>
+      <p>Stop the bouncing marker inside the center band. Play first; afterward, find the two ideas underneath: “move a little at a time” and switch between moving and stopped.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Time and game state</strong></div>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>phase := frame % 120</code></pre></div></section>
-<!-- feedback-note:games/timing-meter:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-timing-meter"><div><p class="eyebrow">60 FPS and state</p><h2 id="feedback-note-games-timing-meter">The same button can mean different things</h2><p>Ebitengine calls Update about 60 times each second, so small moves look smooth. A state machine keeps a label such as moving, stopped, or result. Alternating the starting side prevents a memorized timing trick.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="state transitions"><span>moving</span><b>→ button →</b><strong>stopped</strong><b>→ next round →</b><span>moving</span><code>round % 2</code></div></div></section>
-<!-- feedback-note:games/timing-meter:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 
-
-
-
-
-
-
-
-
-
-
-
-<!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_bpm-timing.svg" alt="BPM and frames" loading="lazy" decoding="async"><figcaption>A visual map of BPM and frames. Trace the numbers and pictures before reading the code.</figcaption></figure>
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_timing-window.svg" alt="Timing judgement window" loading="lazy" decoding="async"><figcaption>A visual map of Timing judgement window. Trace the numbers and pictures before reading the code.</figcaption></figure>
-<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Stop it on the sweet spot.</h2></div><p>Use space, click, or tap. Closer to the center means a higher score.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Stop the Meter" src="../../../play/timing-meter/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>phase := frame % 120</code></pre></div></section>
+<!-- feedback-note:games/timing-meter:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-timing-meter"><div><p class="eyebrow">Update ticks and state</p><h2 id="feedback-note-games-timing-meter">The same button can mean different things</h2><p>Update advances state in small, configured ticks. A state machine keeps a label such as moving, stopped, or result. Alternating the starting side prevents a memorized timing trick, and Draw frequency does not change this rule.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="state transitions"><span>moving</span><b>→ button →</b><strong>stopped</strong><b>→ next round →</b><span>moving</span><code>round % 2</code></div></div></section>
+<!-- feedback-note:games/timing-meter:end -->
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_bpm-timing.svg" alt="BPM and frames" loading="lazy" decoding="async"><figcaption>A visual map of BPM and frames. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_timing-window.svg" alt="Timing judgement window" loading="lazy" decoding="async"><figcaption>A visual map of Timing judgement window. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="physics" id="learn">
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / TIME &amp; STATE</p>
         <h2>Why does the marker<br>bounce back and forth?</h2>
-        <p class="lesson-lead">A game is a flipbook. Each frame repeats <strong>position = position + speed</strong>. Flip the sign of speed at the edges and it travels back and forth. Stopping means switching into a “do not move” state.</p>
+        <p class="lesson-lead">Each Update calculates <strong>position = position + speed</strong>. Flip the sign of speed at the edges and it travels back and forth. Stopping means switching into a “do not move” state; Draw presents that current position.</p>
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>Frames</h3><p>One page of the flipbook. Ebitengine calls <code>Update</code> about 60 times a second, so tiny steps look smooth.</p><code>marker += speed</code></article>
+        <article><span class="concept-number">1</span><h3>Update tick</h3><p>Ebitengine calls <code>Update</code> at a configured, steady tick rate. Small additions connect into continuous movement.</p><code>marker += speed</code></article>
         <article><span class="concept-number">2</span><h3>Bounce</h3><p>At the left or right edge, set <code>speed = -speed</code>. Same speed, opposite direction.</p><code>speed = -speed</code></article>
         <article><span class="concept-number">3</span><h3>State</h3><p>Moving or stopped. While stopped, skip movement and score from the distance to the center.</p><code>stopped bool</code></article>
       </div>
 
       <div class="motion-lab" data-lab="meter" data-moving="moving" data-stopped="stopped" aria-labelledby="meter-lab-title">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p>
-          <h3 id="meter-lab-title">Step one frame, then stop</h3>
-          <p>“Next frame” moves the marker. It flips at the edges. “Stop” scores from the distance to the center.</p>
+          <p class="eyebrow">TRY IT / 1 UPDATE AT A TIME</p>
+          <h3 id="meter-lab-title">Advance one Update, then stop</h3>
+          <p>“One Update” moves the marker. It flips at the edges. “Stop” scores from the distance to the center.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="Advance position">Next frame</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="Advance position by one Update">One Update</button>
             <button type="button" class="lab-button" data-lab-stop data-go-focus="stop score" data-go-caption="Input freezes motion → Score near the center">Stop / resume</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
-          <p class="lab-hint">In the real game, frames advance automatically. This lab is slow motion so you can see the rule.</p>
+          <p class="lab-hint">In the real game, Update advances automatically at its configured tick rate. This lab is slow motion so you can see the rule.</p>
         </div>
         <div class="lab-visual">
           <div class="lab-board" role="img" aria-label="Meter movement board">
@@ -155,7 +136,7 @@
 }</code></pre>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — look here first</p>
         <ol>
@@ -321,6 +302,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -22,17 +22,6 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>素早さ→ゲージ→READY→コマンド→演出の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。 このページの1本はコース全体で共通するgame状態の境界です。ルールはUpdateへ足し、Drawの順番や見た目は自由に差し替えられます。下の01から順に、その中へ各仕組みを実装していきます。 ゲージだけを足すと、同じフレームに満タンになった役を一つの変数で上書きしてしまいます。READYキューなら、満タンになった順を全員ぶん保存してから一人ずつ解決できます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="コースの学習順"><span>01 素早さ</span><b aria-hidden="true">→</b><span>02 ゲージ</span><b aria-hidden="true">→</b><span>03 READY</span><b aria-hidden="true">→</b><span>04 コマンド</span><b aria-hidden="true">→</b><span>05 演出</span></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><!-- diagram-lesson:start -->
-
-<!-- diagram-lesson:end -->
-<iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 <p class="curriculum-bridge">共通基礎の続きです。LEVEL 01の状態境界に、このジャンル固有の仕組みを統合します。ルールはUpdate、見た目は自由なDrawです。</p><section class="path-list"><div class="path-intro"><p class="eyebrow">PLAYABLE SHOWCASE</p><h2>Ebi Active Battle</h2><p>全員が順番を待つのではなく、速いキャラクターほど早く、何度も行動できます。ゲージは時間を数値として保存する時計です。</p></div><!-- active-polish:start -->
 <a class="path-step" href="gauge-race/"><span>01</span><div><h3>素早さのゲージ競走</h3><p>3人のゲージを同時に進め、素早さの差が行動回数の差になる様子を観察します。</p><strong>時間をゲージへ足して順番を作る</strong></div><b>→</b></a>
 <a class="path-step" href="ready-queue/"><span>02</span><div><h3>READYを待ち行列に入れる</h3><p>ほぼ同時に満タンになった仲間を順番に保存し、行動を取りこぼさず解決します。</p><strong>満タンの役を安全に一列へ並べる</strong></div><b>→</b></a>

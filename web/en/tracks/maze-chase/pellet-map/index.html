@@ -22,33 +22,17 @@
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/maze-chase/pellet-map/">日本語</a></nav></header><main class="overview-main">
 <div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 03 / 06</span></div>
 <section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Pellet Maze</h1><p>Parse one text map into fixed walls and mutable pellets, updating state and remaining count on collection.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Static layers, collectible state, and count-based completion</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Avoid the red chaser and collect every pellet in 60 seconds.</h2></div><p>Hold LEFT, UP, DOWN, or RIGHT. Keyboard uses Arrows or WASD; mouse can hold the buttons too. Zero remaining clears. Sharing a tile with the enemy or timing out loses.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Maze game with separate wall and pellet layers" src="../../../../play/pellet-map/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if maze[y][x] == Pellet { maze[y][x]=Floor; score++ }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if maze[y][x] == Pellet { maze[y][x]=Floor; score++ }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Avoid the red chaser and collect every pellet in 60 seconds.</h2></div><p>Hold LEFT, UP, DOWN, or RIGHT. Keyboard uses Arrows or WASD; mouse can hold the buttons too. Zero remaining clears. Sharing a tile with the enemy or timing out loses.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Maze game with separate wall and pellet layers" src="../../../../play/pellet-map/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / STATIC AND MUTABLE LAYERS</p><h2>Separate “can I walk here?” from “is it still here?”</h2><p class="lesson-lead">Maze walls never change during this run, but a pellet disappears when collected. Instead of forcing both facts into one character, overlay equal-sized <code>walls</code> and <code>pellets</code> arrays. They share position <code>[y][x]</code> while fixed data and <strong>mutable state</strong> have different jobs.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Parse text into two layers</h3><p>A <code>#</code> sets walls true and a <code>.</code> sets pellets true. Draw paints walls first, then only pellets that remain.</p><code>walls[y][x] = tile == '#'; pellets[y][x] = tile == '.'</code></article><article><span class="concept-number">2</span><h3>Collection changes pellets only</h3><p>When the player enters a tile, change a true pellet to false. Passing through again cannot score twice.</p><code>if pellets[y][x] { pellets[y][x] = false }</code></article><article><span class="concept-number">3</span><h3>Decrease remaining at the same time</h3><p>Do not recount the whole map every frame. Decrement remaining in the successful collection operation. Zero means stage clear immediately.</p><code>remaining--; if remaining == 0 { clear = true }</code></article></div>
@@ -104,6 +88,8 @@ if remaining == 0 { clear = true }</code></pre></div>
         </form>
       </div>
     </section>
+
+
 
 
 

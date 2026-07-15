@@ -22,17 +22,6 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>カメラ→部屋→地図→能力ゲート→戻り道の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。 このページの1本はコース全体で共通するgame状態の境界です。ルールはUpdateへ足し、Drawの順番や見た目は自由に差し替えられます。下の01から順に、その中へ各仕組みを実装していきます。 下の01〜05もこの順番です。カメラで見る範囲を作ってから、部屋・地図・能力ゲート・戻り道を足します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="コースの学習順"><span>01 カメラ</span><b aria-hidden="true">→</b><span>02 部屋</span><b aria-hidden="true">→</b><span>03 地図</span><b aria-hidden="true">→</b><span>04 能力ゲート</span><b aria-hidden="true">→</b><span>05 戻り道</span></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><!-- diagram-lesson:start -->
-
-<!-- diagram-lesson:end -->
-<iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 <p class="curriculum-bridge">共通基礎の続きです。LEVEL 01の状態境界に、このジャンル固有の仕組みを統合します。ルールはUpdate、見た目は自由なDrawです。</p><section class="path-list"><div class="path-intro"><p class="eyebrow">PLAYABLE SHOWCASE</p><h2>Ebi Depths</h2><p>世界座標は3200pxありますが、Drawが見せるのはカメラ周辺だけです。訪れた部屋を集合へ保存すれば、探索に合わせて地図が広がります。</p></div><a class="path-step" href="camera-rooms/"><span>01</span><div><h3>世界座標と追従カメラ</h3><p>画面4枚分の世界を歩き、世界座標からカメラ座標を引いて一部分だけ描きます。</p><strong>世界と画面を別の座標にする</strong></div><b>→</b></a>
 <a class="path-step" href="exploration-map/"><span>02</span><div><h3>歩いた部屋だけ広がる地図</h3><p>部屋番号を訪問済み集合へ記録し、未探索と探索済みを色分けします。</p><strong>探索状態を部屋IDで保存する</strong></div><b>→</b></a>
 <a class="path-step" href="dash-gate/"><span>03</span><div><h3>能力で開くダッシュゲート</h3><p>最初は通れない封印を置き、ダッシュ取得後に同じ場所を突破できるようにします。</p><strong>能力フラグが地形の意味を変える</strong></div><b>→</b></a>

@@ -20,33 +20,17 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/slingshot/ebi-strike/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/slingshot/ebi-strike/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Slingshot Reflection Action</a><span>STEP 06 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Strike</h1><p>Combine drag launching, reflection, friction, circle collisions, contact attacks, ally waves, and turns into one rescue game.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Contact events and turn order</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Defeat every reef guard within eight turns.</h2></div><p>Drag backward from the glowing ally and release. Hit an enemy directly or hit your other ally to damage enemies within a 165px wave. Mouse and touch both work.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Strike" src="../../../../play/ebi-strike/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>aim(); launch(); move(); collide(); updateFX()</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>aim(); launch(); move(); collide(); updateFX()</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Defeat every reef guard within eight turns.</h2></div><p>Drag backward from the glowing ally and release. Hit an enemy directly or hit your other ally to damage enemies within a 165px wave. Mouse and touch both work.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Strike" src="../../../../play/ebi-strike/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT PIPELINE</p><h2>Turn the same “bump” into events for each target.</h2><p class="lesson-lead">Every moving frame checks walls, rocks, enemies, and allies in order. Push overlapping circles apart and reflect first; then a guard receives direct damage while an ally sends an area wave. It remains one turn until motion stops.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Move and resolve contacts</h3><p>Advance by velocity, then push overlapping circles back to touching distance. Reflecting along the collision normal handles diagonal bounces too.</p><code>move(); bounceWalls(); reflectCircle()</code></article><article><span class="concept-number">2</span><h3>Choose an effect by target</h3><p>An enemy loses one HP. An ally sends one damage to every enemy within 165 pixels of that ally.</p><code>contactEnemy() / contactAlly()</code></article><article><span class="concept-number">3</span><h3>Friction ends the turn</h3><p>Multiply velocity by 0.982 after contacts. Below 0.11, snap to zero and switch active to the other ally.</p><code>if stopped { active = 1 - active }</code></article></div><div class="motion-lab" data-lab="shot-event-queue" data-events="HIT A,HIT B,HIT C,TURN END" data-launched="shot moving along its path" data-contact="contact → push {e}" data-finished="stopped → push TURN END" data-resolved="pop {e} → enemy {target} HP -1" data-turn="pop TURN END → pass the turn" data-empty="the queue is empty" aria-labelledby="lab-title-ebi-strike">
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT PIPELINE</p><h2>Turn the same “bump” into events for each target.</h2><p class="lesson-lead">Every moving frame checks walls, rocks, enemies, and allies in order. Push overlapping circles apart and reflect first; then a guard receives direct damage while an ally sends an area wave. It remains one turn until motion stops.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Move and resolve contacts</h3><p>Advance by velocity, then push overlapping circles back to touching distance. Reflecting along the collision normal handles diagonal bounces too.</p><code>move(); bounceWalls(); reflectCircle()</code></article><article><span class="concept-number">2</span><h3>Choose an effect by target</h3><p>An enemy loses one HP. An ally sends one damage to every enemy within 165 pixels of that ally.</p><code>contactEnemy() / contactAlly()</code></article><article><span class="concept-number">3</span><h3>Friction ends the turn</h3><p>Multiply velocity by 0.982 after contacts. Below 0.11, snap to zero and switch active to the other ally.</p><code>if stopped { active = 1 - active }</code></article></div><div class="motion-lab" data-lab="shot-event-queue" data-events="HIT A,HIT B,HIT C,TURN END" data-launched="shot moving along its path" data-contact="contact → push {e}" data-finished="stopped → push TURN END" data-resolved="pop {e} → enemy {target} HP -1" data-turn="pop TURN END → pass the turn" data-empty="the queue is empty" aria-labelledby="lab-title-ebi-strike">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / SHOT EVENTS</p>
 <h3 id="lab-title-ebi-strike">Watch contacts and the event queue together</h3>
@@ -100,6 +84,8 @@ if active.velocity.length() &lt; stopSpeed {
         </form>
       </div>
     </section>
+
+
 
 
 

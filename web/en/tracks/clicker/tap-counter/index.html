@@ -37,38 +37,22 @@
       <p>Press the large sweet and the count rises by one. The key is detecting only the instant of a press, not every frame it is held. This is the smallest complete clicker.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Click input and counter</strong></div>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if inpututil.IsMouseButtonJustPressed(0) { g.count++ }</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <p class="curriculum-bridge">This track shares the <a href="../../../games/tap-target/#basics">LEVEL 01</a> state boundary: rules advance in Update, while Draw is a replaceable projection—each step adds one new piece.</p>
 
-    <!-- diagram-lesson:start -->
 
-<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Bake thirty sweets.</h2></div><p>Tap, click, or press Space on the big sweet. Reach 30 to finish.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Sweet Counter" src="../../../../play/tap-counter/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if inpututil.IsMouseButtonJustPressed(0) { g.count++ }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<!-- diagram-lesson:start -->
+
+<!-- diagram-lesson:end -->
+
+
+
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -83,7 +67,7 @@
         <article><span class="concept-number">3</span><h3>Pulse for visual feedback</h3><p>On each press, set <code>pulse = 10</code> and decrement it by one every frame. Use that value to scale the circle radius slightly outward. The result is a quick expand-and-shrink animation.</p><code>scale := 1 + float64(g.pulse)*.012</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="click"  aria-labelledby="lab-title-tap-counter">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / LAB</p>
@@ -169,6 +153,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

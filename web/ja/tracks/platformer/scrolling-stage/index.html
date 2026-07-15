@@ -44,35 +44,10 @@
       <p>2500ピクセルの広いステージを走り抜けます。カメラはプレイヤーを追いかけ、画面外のオブジェクトは描画をスキップします。緑の旗はチェックポイントになります。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>カメラスクロールとカリング</strong></div>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ワールド座標は広いステージ内の位置、画面座標は今見えている窓の位置。screenX=worldX-cameraXで変換します。カリングは画面外の物をDrawしない工夫です。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>screenX := worldX - cameraX</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。</p>
 
 
-    <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_camera-offset.svg" alt="カメラのオフセット" loading="lazy" decoding="async"><figcaption>カメラのオフセットの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
-<!-- diagram-lesson:end -->
+
 <section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>丘を走り抜けてゴールへ。</h2></div>
@@ -83,6 +58,15 @@
         <div id="game-wrap"><iframe class="lesson-game-frame" title="横スクロールの丘" src="../../../../play/scrolling-stage/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ワールド座標は広いステージ内の位置、画面座標は今見えている窓の位置。screenX=worldX-cameraXで変換します。カリングは画面外の物をDrawしない工夫です。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>screenX := worldX - cameraX</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_camera-offset.svg" alt="カメラのオフセット" loading="lazy" decoding="async"><figcaption>カメラのオフセットの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
+
+
+
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -112,7 +96,7 @@
         </article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="camera"  aria-labelledby="lab-title-scrolling-stage">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / LAB</p>
@@ -219,6 +203,8 @@ g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
         </form>
       </div>
     </section>
+
+
 
 
 

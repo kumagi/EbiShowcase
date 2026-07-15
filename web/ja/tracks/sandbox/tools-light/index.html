@@ -22,33 +22,17 @@
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/sandbox/tools-light/">EN</a></nav></header><main class="overview-main">
 <div class="lesson-breadcrumb"><a href="../">← 2Dブロックサンドボックス</a><span>STEP 05 / 07</span></div>
 <section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>道具と明かり</h1><p>素材に合う道具で耐久を節約し、昼夜の暗さを松明から広がるタイル光で照らします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>道具の相性・耐久値・タイル光源</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>木4個・石4個を採掘し、松明2本でキャンプを照らそう。</h2></div><p>斧・ツルハシ・松明をタップして選び、盤面をタップ。PCでは1・2・3/Tで選択しマウスで採掘。夜に暗いマスは、近くへ松明を置いて照らします。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="道具と明かりの採掘ゲーム" src="../../../../play/tools-light/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>Tool structはNameとHardnessを一組にする箱。tool.Hardness>=block.Requiredなら壊せます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if tool.Hardness >= block.Required { breakBlock() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>木4個・石4個を採掘し、松明2本でキャンプを照らそう。</h2></div><p>斧・ツルハシ・松明をタップして選び、盤面をタップ。PCでは1・2・3/Tで選択しマウスで採掘。夜に暗いマスは、近くへ松明を置いて照らします。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="道具と明かりの採掘ゲーム" src="../../../../play/tools-light/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / TOOL DATA AND TILE LIGHT</p><h2>「何で掘るか」と「見えるか」を、マスを変える前に調べる。</h2><p class="lesson-lead">前のステップで作った道具には、得意素材・威力・耐久値を持たせます。採掘する前に道具と素材の組を調べ、さらにそのマスの光量を調べます。松明は周りを一度に明るくする絵ではなく、各マスが<strong>光源までの距離</strong>から明るさを計算します。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>道具と素材を照合</h3><p>斧は木、ツルハシは石なら威力3・耐久消費1です。相性が違うと威力1・消費2になり、同じ仕事でも道具が早く壊れます。</p><code>if tool.preferred == block.material { power = 3 }</code></article><article><span class="concept-number">2</span><h3>耐久値も状態として減らす</h3><p>採掘したときだけ耐久値を引き、0ならそれ以上使えません。必要な素材を集める前に対応道具が0になると失敗です。</p><code>durability[selected] -= cost</code></article><article><span class="concept-number">3</span><h3>いちばん強い光を選ぶ</h3><p>昼夜の光と各松明の光を比べ、最大値をそのマスの光量にします。松明は1マス離れるごとに2ずつ暗くなります。</p><code>light = max(daylight, 9-distance*2)</code></article></div>
@@ -103,6 +87,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -20,33 +20,17 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/slingshot/ebi-strike/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/slingshot/ebi-strike/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← ひっぱり反射アクション</a><span>STEP 06 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Strike</h1><p>引っ張り、反射、摩擦、円の衝突、直接攻撃、味方の波、手番交代を一つのレスキューゲームへ統合します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>接触イベントと手番の処理順</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>8手以内にリーフガードを全て倒そう。</h2></div><p>光る味方から後ろへ引っぱり、離して発射。敵へ直接当てるか、もう一人の味方へ当てて周囲165pxの波を起こします。マウスとタッチに対応します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Strike" src="../../../../play/ebi-strike/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>完成形はaim→launch→move→collide→fxの五関数。どのSTEPの部品かが呼び出し順で分かります。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>aim(); launch(); move(); collide(); updateFX()</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>8手以内にリーフガードを全て倒そう。</h2></div><p>光る味方から後ろへ引っぱり、離して発射。敵へ直接当てるか、もう一人の味方へ当てて周囲165pxの波を起こします。マウスとタッチに対応します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Strike" src="../../../../play/ebi-strike/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT PIPELINE</p><h2>同じ「ぶつかった」を、相手ごとのイベントへ変える。</h2><p class="lesson-lead">動いている味方は毎フレーム、壁・岩・敵・味方の順に接触を調べます。円を押し戻して反射したあと、相手が敵なら直接ダメージ、味方なら範囲波という<strong>別の結果</strong>を起こします。止まるまで同じ手番です。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>移動して接触を解決</h3><p>速度で位置を進め、重なった円を接する場所まで戻します。速度の法線方向を反転すれば、斜めにも跳ね返ります。</p><code>move(); bounceWalls(); reflectCircle()</code></article><article><span class="concept-number">2</span><h3>相手から効果を選ぶ</h3><p>敵ならその1体のHPを1減らします。味方ならその味方を中心に165px以内の敵へ波のダメージを送ります。</p><code>contactEnemy() / contactAlly()</code></article><article><span class="concept-number">3</span><h3>摩擦で止まり手番交代</h3><p>接触処理のあと速度へ0.982を掛けます。速さが0.11未満なら0へそろえ、activeをもう一人へ切り替えます。</p><code>if stopped { active = 1 - active }</code></article></div><div class="motion-lab" data-lab="shot-event-queue" data-events="HIT A,HIT B,HIT C,TURN END" data-launched="弾が軌道を進んでいます" data-contact="接触 → {e} をpush" data-finished="停止 → TURN ENDをpush" data-resolved="{e} をpop → 敵{target} HP -1" data-turn="TURN ENDをpop → 次の手番へ" data-empty="キューは空です" aria-labelledby="lab-title-ebi-strike">
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT PIPELINE</p><h2>同じ「ぶつかった」を、相手ごとのイベントへ変える。</h2><p class="lesson-lead">動いている味方は毎フレーム、壁・岩・敵・味方の順に接触を調べます。円を押し戻して反射したあと、相手が敵なら直接ダメージ、味方なら範囲波という<strong>別の結果</strong>を起こします。止まるまで同じ手番です。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>移動して接触を解決</h3><p>速度で位置を進め、重なった円を接する場所まで戻します。速度の法線方向を反転すれば、斜めにも跳ね返ります。</p><code>move(); bounceWalls(); reflectCircle()</code></article><article><span class="concept-number">2</span><h3>相手から効果を選ぶ</h3><p>敵ならその1体のHPを1減らします。味方ならその味方を中心に165px以内の敵へ波のダメージを送ります。</p><code>contactEnemy() / contactAlly()</code></article><article><span class="concept-number">3</span><h3>摩擦で止まり手番交代</h3><p>接触処理のあと速度へ0.982を掛けます。速さが0.11未満なら0へそろえ、activeをもう一人へ切り替えます。</p><code>if stopped { active = 1 - active }</code></article></div><div class="motion-lab" data-lab="shot-event-queue" data-events="HIT A,HIT B,HIT C,TURN END" data-launched="弾が軌道を進んでいます" data-contact="接触 → {e} をpush" data-finished="停止 → TURN ENDをpush" data-resolved="{e} をpop → 敵{target} HP -1" data-turn="TURN ENDをpop → 次の手番へ" data-empty="キューは空です" aria-labelledby="lab-title-ebi-strike">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / SHOT EVENTS</p>
 <h3 id="lab-title-ebi-strike">弾の接触とイベントキューを同時に見る</h3>
@@ -100,6 +84,8 @@ if active.velocity.length() &lt; stopSpeed {
         </form>
       </div>
     </section>
+
+
 
 
 

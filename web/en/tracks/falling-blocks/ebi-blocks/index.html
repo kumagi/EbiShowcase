@@ -20,33 +20,17 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/falling-blocks/ebi-blocks/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/falling-blocks/ebi-blocks/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Falling-block Puzzle</a><span>STEP 08 / 08</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Blocks</h1><p>Combine seven shapes and the core rules with three rule seas, animated line clears, particles, shake, and a best score.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Joining systems into a state pipeline</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Clear the changing row target in all three stages before the stack reaches the top.</h2></div><p>Touch the six bottom buttons. On a keyboard use ←→, ↑/X to turn, ↓, Space to hard drop, and C to HOLD.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Blocks" src="../../../../play/ebi-blocks/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>switch phase { case Fall: updateFall(); case Clear: clearLines() }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>switch phase { case Fall: updateFall(); case Clear: clearLines() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Clear the changing row target in all three stages before the stack reaches the top.</h2></div><p>Touch the six bottom buttons. On a keyboard use ←→, ↑/X to turn, ↓, Space to hard drop, and C to HOLD.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Blocks" src="../../../../play/ebi-blocks/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SYSTEM PIPELINE</p><h2>Connect many systems in “what happens now” order.</h2><p class="lesson-lead">A complete game is not one giant rule. It is a line of small jobs: input, movement, collision, locking, line checks, scoring, and the next shape. Pass one piece and board through this <strong>pipeline</strong> so added features do not get lost.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Control the falling piece</h3><p>active stores a kind, rotation, and position. Update those values only when the candidate does not overlap the board.</p><code>if !collides(next) { active = next }</code></article><article><span class="concept-number">2</span><h3>Lock when movement ends</h3><p>Write the four cells into board, clear complete rows, then update score and level. This order matters.</p><code>lock(); clearLines(); addScore()</code></article><article><span class="concept-number">3</span><h3>Prepare the next piece</h3><p>Refill queue from a seven-piece bag. HOLD works once per falling piece, while the ghost tests positions down to the final safe row.</p><code>spawn(takeNext())</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="input,fall,lock,clear,spawn" data-loop="next frame" aria-labelledby="lab-title-ebi-blocks">
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SYSTEM PIPELINE</p><h2>Connect many systems in “what happens now” order.</h2><p class="lesson-lead">A complete game is not one giant rule. It is a line of small jobs: input, movement, collision, locking, line checks, scoring, and the next shape. Pass one piece and board through this <strong>pipeline</strong> so added features do not get lost.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Control the falling piece</h3><p>active stores a kind, rotation, and position. Update those values only when the candidate does not overlap the board.</p><code>if !collides(next) { active = next }</code></article><article><span class="concept-number">2</span><h3>Lock when movement ends</h3><p>Write the four cells into board, clear complete rows, then update score and level. This order matters.</p><code>lock(); clearLines(); addScore()</code></article><article><span class="concept-number">3</span><h3>Prepare the next piece</h3><p>Refill queue from a seven-piece bag. HOLD works once per falling piece, while the ghost tests positions down to the final safe row.</p><code>spawn(takeNext())</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="input,fall,lock,clear,spawn" data-loop="next frame" aria-labelledby="lab-title-ebi-blocks">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / FRAME JOBS</p>
 <h3 id="lab-title-ebi-blocks">Order the jobs one input travels</h3>
@@ -98,6 +82,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

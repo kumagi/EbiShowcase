@@ -37,39 +37,23 @@
       <p>自動オーブンを買うと、何もしなくてもお菓子が増え続けます。「何秒経ったか」を計算して毎フレーム少しずつ足す――デルタタイムの仕組みです。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>デルタタイムと自動生産（CPS）</strong></div>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>デルタタイムdtは前のコマから何秒たったか、CPSはCookies Per Secondのような一秒あたり生産量。生産量×dtを足すと画面速度が変わっても同じ量になります。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>stock += cps * dt</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。</p>
 
 
-    <!-- diagram-lesson:start -->
 
-<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>200個のお菓子を作ろう。</h2></div><p>手でタップしてお菓子を貯め、自動オーブンを買えば放置でも増え続けます。Bキーで購入。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="アイドルファクトリー" src="../../../../play/idle-factory/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>デルタタイムdtは前のコマから何秒たったか、CPSはCookies Per Secondのような一秒あたり生産量。生産量×dtを足すと画面速度が変わっても同じ量になります。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>stock += cps * dt</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<!-- diagram-lesson:start -->
+
+<!-- diagram-lesson:end -->
+
+
+
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -84,7 +68,7 @@
         <article><span class="concept-number">3</span><h3>dt の上限キャップ</h3><p>ブラウザのタブを隠すと長時間 Update が呼ばれず、復帰した瞬間に巨大な dt になることがあります。<code>0.25</code> 秒でキャップして、一気に何百個も増えないようにします。</p><code>if dt &gt; .25 { dt = .25 }</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="idle"  aria-labelledby="lab-title-idle-factory">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / LAB</p>
@@ -165,6 +149,8 @@ g.sweets += float64(g.machines) * dt</code></pre>
         </form>
       </div>
     </section>
+
+
 
 
 

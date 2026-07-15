@@ -22,33 +22,17 @@
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/slingshot/ally-effects/">日本語</a></nav></header><main class="overview-main">
 <div class="lesson-breadcrumb"><a href="../">← Slingshot Reflection Action</a><span>STEP 05 / 06</span></div>
 <section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ally-triggered Effects</h1><p>Turn the instant of ally contact into an event, then use ability data to choose laser, healing, or a shockwave.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Contact events and ability data</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Combine three allies to clear the coral guards.</h2></div><p>Hold or tap toward a destination. On keyboard use Arrows or WASD. Laser hits the nearest guard, Heal restores HP, and Pulse hits nearby guards. Clear all within 50 seconds.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ally-triggered Effects" src="../../../../play/ally-effects/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>spawnEffect(hitX, hitY, ally.effect)</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>spawnEffect(hitX, hitY, ally.effect)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Combine three allies to clear the coral guards.</h2></div><p>Hold or tap toward a destination. On keyboard use Arrows or WASD. Laser hits the nearest guard, Heal restores HP, and Pulse hits nearby guards. Clear all within 50 seconds.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ally-triggered Effects" src="../../../../play/ally-effects/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT EVENT</p><h2>Extract “contact began” from “still touching.”</h2><p class="lesson-lead">Checking overlap every frame could fire an ability 60 times while circles remain together. Compare this frame with the previous one and create an event only when <strong>touching now but separated before</strong>. That event reads the ally's ability data.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Test contact now</h3><p>Contact occurs when center distance is no greater than the two radii added together. It uses the same simple circles visible on screen.</p><code>touching := distance &lt;= playerR + allyR</code></article><article><span class="concept-number">2</span><h3>Emit only on the edge</h3><p>If <code>touching</code> is true and old <code>wasTouching</code> is false, contact just began. Save the new value for next frame.</p><code>if touching &amp;&amp; !wasTouching { activate() }</code></article><article><span class="concept-number">3</span><h3>Dispatch from ability data</h3><p>An ally stores name, kind, and power. Shared <code>activate</code> reads the kind and selects laser, heal, or pulse.</p><code>Ability{Name: "HEAL", Kind: Heal, Power: 2}</code></article></div>
@@ -101,6 +85,8 @@ ally.wasTouching = now</code></pre></div>
         </form>
       </div>
     </section>
+
+
 
 
 

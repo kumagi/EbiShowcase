@@ -2,8 +2,7 @@ flowchart LR
   input["入力<br/>タッチ"]
   update["Update<br/>位置を計算"]
   draw["Draw<br/>現在の絵"]
-  repeat["約60回/秒<br/>くり返す"]
+  repeat["設定された刻みで<br/>Updateを続ける"]
   input --> update
+  update --> repeat
   update --> draw
-  draw --> repeat
-  repeat --> update

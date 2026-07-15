@@ -22,33 +22,17 @@
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/falling-blocks/bag-hold-ghost/">日本語</a></nav></header><main class="overview-main">
 <div class="lesson-breadcrumb"><a href="../">← Falling-block Puzzle</a><span>STEP 05 / 06</span></div>
 <section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Bag, Hold, and Ghost</h1><p>Combine a fair seven-shape bag, one storage shelf, and a shadow that predicts each landing.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Fair randomization, state swaps, and landing prediction</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Read the ghost and place two bags: 14 pieces.</h2></div><p>Tap Left, Turn, Drop, and Right. On a keyboard use arrows and Space. HOLD uses its button or C/H once per piece. Place 14 before the reef tops out.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Bag, Hold, and Ghost" src="../../../../play/bag-hold-ghost/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>held,current = current,held</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>held,current = current,held</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Read the ghost and place two bags: 14 pieces.</h2></div><p>Tap Left, Turn, Drop, and Right. On a keyboard use arrows and Space. HOLD uses its button or C/H once per piece. Place 14 before the reef tops out.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Bag, Hold, and Ghost" src="../../../../play/bag-hold-ghost/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FAIR QUEUE AND PREDICTION</p><h2>Turn invisible luck into visible data.</h2><p class="lesson-lead">With independent random picks, one needed shape might disappear for dozens of turns. A seven-shape bag shuffles one of each and prevents huge droughts. HOLD and the ghost then let players <strong>make a plan</strong> instead of only reacting to luck.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Fill seven, then shuffle</h3><p>Put I, O, T, S, Z, J, and L into a slice once each and shuffle only their order. Refill only when the bag becomes empty.</p><code>bag = []int{I, O, T, S, Z, J, L}</code></article><article><span class="concept-number">2</span><h3>Swap current with HOLD</h3><p>If storage is empty, save current and draw next. Otherwise swap the two. Allow this only once until a piece locks, preventing endless swaps.</p><code>held, current = current, held</code></article><article><span class="concept-number">3</span><h3>Test a copy downward</h3><p>Leave the real position alone and increase a temporary y. The final y before collision is where the outlined ghost belongs.</p><code>for canPlace(x, ghostY+1) { ghostY++ }</code></article></div>
@@ -103,6 +87,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -20,33 +20,17 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/deckbuilder/ebi-ascent/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/deckbuilder/ebi-ascent/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Deckbuilding Card Game</a><span>STEP 07 / 07</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Ascent</h1><p>The path finale combines card battles, rewards, and routes into one three-floor run.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Composing a whole game from connected states</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Grow your deck and defeat the king of the deep.</h2></div><p>Battle with 1–5 and E; choose rewards and routes by number or tap. Defeat all three enemies to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>FINAL STEP</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Ascent" src="../../../../play/ebi-ascent/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>switch phase { case Battle: updateBattle() }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>switch phase { case Battle: updateBattle() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Grow your deck and defeat the king of the deep.</h2></div><p>Battle with 1–5 and E; choose rewards and routes by number or tap. Defeat all three enemies to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>FINAL STEP</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Ascent" src="../../../../play/ebi-ascent/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GAME COMPOSITION</p><h2>A large game is still a chain of small screens.</h2><p class="lesson-lead">Switch battle, reward, and route selection with a <strong>phase that names the current scene</strong>. Deck, HP, and floor remain in one game struct across scenes, turning them into one journey.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Separate scenes</h3><p>Battle reads card input, Reward reads three choices, and Route reads two. The phase gives the same tap one clear meaning.</p><code>switch phase { case Battle: ... }</code></article><article><span class="concept-number">2</span><h3>Choose shared data</h3><p>HP, deck, and floor belong to the whole run. Energy and block reset for each battle.</p><code>type game struct { deck []card; floor int }</code></article><article><span class="concept-number">3</span><h3>Join exits to entrances</h3><p>Winning opens Reward, choosing a reward opens Route, and choosing a route starts the next Battle.</p><code>phase = phaseReward</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="map,battle,reward,rest" data-loop="next floor" aria-labelledby="lab-title-ebi-ascent">
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GAME COMPOSITION</p><h2>A large game is still a chain of small screens.</h2><p class="lesson-lead">Switch battle, reward, and route selection with a <strong>phase that names the current scene</strong>. Deck, HP, and floor remain in one game struct across scenes, turning them into one journey.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Separate scenes</h3><p>Battle reads card input, Reward reads three choices, and Route reads two. The phase gives the same tap one clear meaning.</p><code>switch phase { case Battle: ... }</code></article><article><span class="concept-number">2</span><h3>Choose shared data</h3><p>HP, deck, and floor belong to the whole run. Energy and block reset for each battle.</p><code>type game struct { deck []card; floor int }</code></article><article><span class="concept-number">3</span><h3>Join exits to entrances</h3><p>Winning opens Reward, choosing a reward opens Route, and choosing a route starts the next Battle.</p><code>phase = phaseReward</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="map,battle,reward,rest" data-loop="next floor" aria-labelledby="lab-title-ebi-ascent">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / RUN LOOP</p>
 <h3 id="lab-title-ebi-ascent">Pipe map → battle → reward</h3>
@@ -96,6 +80,8 @@ case phaseRoute:
         </form>
       </div>
     </section>
+
+
 
 
 

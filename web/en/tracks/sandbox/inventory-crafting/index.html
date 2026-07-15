@@ -50,33 +50,17 @@
 <strong>Stacks, recipes, and consumption</strong>
 </div>
 </section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Gather, then craft a pickaxe and beacon.</h2></div><p>Tap gathering patches above and recipes below. On PC, gather with 1–3 and craft with R/P/B. Finish both tools within 50 seconds.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Inventory and Crafting" src="../../../../play/inventory-crafting/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if released { slots[target] = selectedItem }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if released { slots[target] = selectedItem }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Gather, then craft a pickaxe and beacon.</h2></div><p>Tap gathering patches above and recipes below. On PC, gather with 1–3 and craft with R/P/B. Finish both tools within 50 seconds.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Inventory and Crafting" src="../../../../play/inventory-crafting/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RECIPE TRANSACTION</p><h2>Check ingredients, consume them together, then add the output.</h2><p class="lesson-lead">Identical materials are stacked as a <strong>kind and quantity pair</strong>. A recipe is a table of required counts. Check every count first; only a successful match subtracts ingredients and creates the result.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Add gathering to stacks</h3><p>Picking up two wood adds two to wood count instead of creating two separate objects. Display and saving stay small.</p><code>inventory[Wood] += 2</code></article><article><span class="concept-number">2</span><h3>Match the whole recipe</h3><p>Compare required wood, stone, fiber, and rope. If even one kind is short, consume nothing.</p><code>if haveWood &amp;&amp; haveStone &amp;&amp; haveRope</code></article><article><span class="concept-number">3</span><h3>Pair consumption and output</h3><p>After the check passes, subtract every cost and add the pickaxe or other output. Never stop halfway through.</p><code>wood -= 2; stone -= 2; pickaxe = true</code></article></div>
 <div class="motion-lab" data-lab="craft-recipe" data-need="need materials" data-made="crafted bow" aria-labelledby="lab-title-inventory-crafting">
@@ -135,6 +119,8 @@ addOutput(r.name)</code></pre></div>
         </form>
       </div>
     </section>
+
+
 
 
 

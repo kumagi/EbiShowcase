@@ -50,29 +50,6 @@
 <strong>Four orientations and wall correction</strong>
 </div>
 </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>newDX, newDY := -dy, dx</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <section class="overview-plan">
 <p class="eyebrow">PLAY / INSPECT / BUILD</p>
 <h2>See the data change.<br>Compose the rule.</h2>
@@ -94,10 +71,17 @@
 </article>
 </div>
 </section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Rotate and lock eight pairs.</h2></div><p>Move with ←→, rotate with Space, drop with ↓, or use touch buttons.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Rotate the Pair" src="../../../../play/pair-rotation/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>newDX, newDY := -dy, dx</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Rotate and lock eight pairs.</h2></div><p>Move with ←→, rotate with Space, drop with ↓, or use touch buttons.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Rotate the Pair" src="../../../../play/pair-rotation/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / PIVOT ROTATION</p><h2>Keep the pivot; change only partner direction.</h2><p class="lesson-lead">Store the partner as one of <strong>four offsets</strong>. If rotation hits a wall, test small pivot corrections.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Direction table</h3><p>Store up, right, down, left offsets.</p><code>dirs={{0,-1},{1,0},{0,1},{-1,0}}</code></article><article><span class="concept-number">2</span><h3>Next direction</h3><p>Modulo four wraps around.</p><code>next=(dir+1)%4</code></article><article><span class="concept-number">3</span><h3>Wall correction</h3><p>Try normal, left, right, then up.</p><code>kicks := []point{{0,0},{-1,0},{1,0},{0,-1}}</code></article></div><div class="motion-lab" data-lab="kick-try" data-kicks="0,0;1,0;-1,0;0,1" data-ok="kick ({dx},{dy}) OK" data-blocked="({dx},{dy}) blocked" data-fail="cancel rotate" aria-labelledby="lab-title-pair-rotation">
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / PIVOT ROTATION</p><h2>Keep the pivot; change only partner direction.</h2><p class="lesson-lead">Store the partner as one of <strong>four offsets</strong>. If rotation hits a wall, test small pivot corrections.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Direction table</h3><p>Store up, right, down, left offsets.</p><code>dirs={{0,-1},{1,0},{0,1},{-1,0}}</code></article><article><span class="concept-number">2</span><h3>Next direction</h3><p>Modulo four wraps around.</p><code>next=(dir+1)%4</code></article><article><span class="concept-number">3</span><h3>Wall correction</h3><p>Try normal, left, right, then up.</p><code>kicks := []point{{0,0},{-1,0},{1,0},{0,-1}}</code></article></div><div class="motion-lab" data-lab="kick-try" data-kicks="0,0;1,0;-1,0;0,1" data-ok="kick ({dx},{dy}) OK" data-blocked="({dx},{dy}) blocked" data-fail="cancel rotate" aria-labelledby="lab-title-pair-rotation">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / PAIR KICKS</p>
 <h3 id="lab-title-pair-rotation">Kick a rotating pair</h3>
@@ -151,6 +135,8 @@ for _, k := range kicks {
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -18,10 +18,10 @@
     <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--metroidvania--dash-gate.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="能力で開くダッシュゲート">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/metroidvania/dash-gate/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 巨大マップ探索アクション</a><span>STEP 3/5</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>能力で開くダッシュゲート</h1><p>最初は通れない封印を置き、ダッシュ取得後に同じ場所を突破できるようにします。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/metroidvania/dash-gate/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 巨大マップ探索アクション</a><span>STEP 3/5</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>能力で開くダッシュゲート</h1><p>最初は通れない封印を置き、ダッシュ取得後に同じ場所を突破できるようにします。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>能力で開くダッシュゲート</h2><p>最初は通れない封印を置き、ダッシュ取得後に同じ場所を突破できるようにします。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/dash-gate/" title="能力で開くダッシュゲート" allow="autoplay; fullscreen"></iframe></div></section>
+<!-- diagram-lesson:start -->
 
-<!-- diagram-lesson:end -->
-<section class="play-panel"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>能力で開くダッシュゲート</h2><p>最初は通れない封印を置き、ダッシュ取得後に同じ場所を突破できるようにします。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/dash-gate/" title="能力で開くダッシュゲート" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>能力フラグが地形の意味を変える</h2><p>dashがfalseなら壁として止め、trueならX入力で大きな速度を与えます。同じ地形が取得前は障害、取得後は通路になります。</p><div class="concept-row"><article><b>01</b><h3>WORLD</h3><p>最初は通れない封印を置き、ダッシュ取得後に同じ場所を突破できるようにします。</p></article><article><b>02</b><h3>STATE</h3><p>dashがfalseなら壁として止め、trueならX入力で大きな速度を与えます。同じ地形が取得前は障害、取得後は通路になります。</p></article><article><b>03</b><h3>RETURN</h3><p>前に見た場所へ意味を足します。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>能力フラグが地形の意味を変える</h2><p>dashがfalseなら壁として止め、trueならX入力で大きな速度を与えます。同じ地形が取得前は障害、取得後は通路になります。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>能力フラグが地形の意味を変える</h2><p>dashがfalseなら壁として止め、trueならX入力で大きな速度を与えます。同じ地形が取得前は障害、取得後は通路になります。</p><div class="concept-row"><article><b>01</b><h3>WORLD</h3><p>最初は通れない封印を置き、ダッシュ取得後に同じ場所を突破できるようにします。</p></article><article><b>02</b><h3>STATE</h3><p>dashがfalseなら壁として止め、trueならX入力で大きな速度を与えます。同じ地形が取得前は障害、取得後は通路になります。</p></article><article><b>03</b><h3>RETURN</h3><p>前に見た場所へ意味を足します。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>能力フラグが地形の意味を変える</h2><p>dashがfalseなら壁として止め、trueならX入力で大きな速度を与えます。同じ地形が取得前は障害、取得後は通路になります。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
   <h2>数字を決める場所と、絵にする場所を分けよう</h2>
@@ -32,14 +32,6 @@
   <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
 </section>
 <!-- update-draw-contract:end -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>能力フラグが地形の意味を変える</h2><p>最初は通れない封印を置き、ダッシュ取得後に同じ場所を突破できるようにします。</p></div><pre><code>if !hasDash &amp;&amp; playerX &gt; sealX { playerX = sealX }
 if hasDash &amp;&amp; pressedX { velocityX = dashSpeed }</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>dashがfalseなら壁として止め、trueならX入力で大きな速度を与えます。同じ地形が取得前は障害、取得後は通路になります。</p></article><article><h3>CHANGE</h3><p>部屋幅や能力値を変えます。</p></article><article><h3>CHALLENGE</h3><p>新能力と対応ゲートを追加しよう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>巨大マップ探索アクション</strong></a><a href="../ebi-depths/" rel="next">FINAL →<strong>Ebi Depths</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">

@@ -22,33 +22,17 @@
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/falling-pairs/ebi-chain/">EN</a></nav></header><main class="overview-main">
 <div class="lesson-breadcrumb"><a href="../">← 落下ペア連鎖パズル</a><span>STEP 08 / 08</span></div>
 <section class="overview-hero"><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>Ebi Chain</h1><p>落下ペア、回転、同色探索、同時消去、重力、再探索、連鎖得点、全消し、おじゃま対戦を一つにします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>解決フェーズと対戦結果の統合</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>ルールの違う3つの海底デュエルを勝ち抜こう。</h2></div><p>LEFT/TURN/RIGHT/DROPをタップ。PCでは←・↑・→/A・W・DとSpace。白枠を同時消去し、重力後に再探索します。不発の上限は海ごとに変わるので、画面上のMISSESを確認します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Chain 連鎖おじゃま対戦" src="../../../../play/ebi-chain/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>完成形はinput→fall→lock→findGroup→clear→gravityをphaseで一つずつ進めます。最初はこの一列を復習地図として読みます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>updateInput(); updateFall(); resolveBoard()</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>ルールの違う3つの海底デュエルを勝ち抜こう。</h2></div><p>LEFT/TURN/RIGHT/DROPをタップ。PCでは←・↑・→/A・W・DとSpace。白枠を同時消去し、重力後に再探索します。不発の上限は海ごとに変わるので、画面上のMISSESを確認します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Chain 連鎖おじゃま対戦" src="../../../../play/ebi-chain/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RESOLUTION STATE MACHINE</p><h2>操作を止め、盤面が落ち着くまで同じ循環を回す。</h2><p class="lesson-lead">ペアを固定したら、プレイヤー入力から盤面解決へ主役を渡します。<code>find → clear all → gravity → find again</code>を、見つからなくなるまで続けます。止まった時だけ得点とおじゃまを確定し、次のペアを出す。この<strong>フェーズの境界</strong>が、前5段の処理を安全につなぎます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>現在と次のペアを分ける</h3><p>spawnは予告データを現在へ移し、その後に次の予告を補充します。Drawは操作中のペアとNEXT欄を別々の値から描きます。</p><code>pivotKind = nextPivotKind; refillNext()</code></article><article><span class="concept-number">2</span><h3>消去と重力を交互にする</h3><p>4連結を全部markedへ入れて同時消去し、列を圧縮してから再探索します。新しい組があればchainを増やしてCLEARへ戻ります。</p><code>CLEAR → GRAVITY → RESCAN → CLEAR ...</code></article><article><span class="concept-number">3</span><h3>停止時に対戦結果を送る</h3><p>1連鎖ごとにおじゃま2個、盤面が空ならさらに2個です。不発なら逆に灰色おじゃまが自分の盤面へ1個落ちます。</p><code>sent := chain*2 + allClearBonus</code></article></div>
@@ -98,6 +82,8 @@ spawn()</code></pre></div>
         </form>
       </div>
     </section>
+
+
 
 
 

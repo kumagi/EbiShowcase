@@ -50,33 +50,17 @@
 <strong>円衝突と接触ダメージ</strong>
 </div>
 </section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>勢いをつけ、3体のサンゴガードを倒そう。</h2></div><p>矢印/WASD、または行きたい場所を押し続けて真珠を加速。45秒以内に各3回、速くぶつかります。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="円形キャラクターの衝突" src="../../../../play/circle-battle/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>全敵を一度ずつ調べ、中心距離²が半径合計²未満なら命中。敵数が小さい教材ではこのO(n)走査が最も読みやすい方法です。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>for i := range enemies { checkCircle(projectile, enemies[i]) }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>勢いをつけ、3体のサンゴガードを倒そう。</h2></div><p>矢印/WASD、または行きたい場所を押し続けて真珠を加速。45秒以内に各3回、速くぶつかります。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="円形キャラクターの衝突" src="../../../../play/circle-battle/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CIRCLE CONTACT</p><h2>中心の距離を測り、重なった分だけ外へ戻す。</h2><p class="lesson-lead">2つの円は、中心間の距離が<strong>半径の合計より短い</strong>と重なっています。判定したら真珠を円のふちまで押し戻し、十分な速さで初めてダメージを与えます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>円の重なりを探す</h3><p>XとYの差から中心間の距離を計算します。半径20と30なら、距離50未満が接触です。</p><code>distance &lt; playerR + enemyR</code></article><article><span class="concept-number">2</span><h3>ふちまで押し戻す</h3><p>敵から真珠へ向かう方向を長さ1にそろえ、半径の合計だけ離れた位置へ置きます。</p><code>player = enemy + normal * minDistance</code></article><article><span class="concept-number">3</span><h3>1接触を1回にする</h3><p>命中後24フレームはcooldownを残します。重なりが続いてもHPを毎フレーム減らしません。</p><code>if cooldown == 0 { hp--; cooldown = 24 }</code></article></div>
 <div class="motion-lab" data-lab="hit-test" data-hit="接触!" data-miss="離れている" data-wait="ボードを押してね"><div class="lab-copy"><p class="eyebrow">TRY IT / CENTER DISTANCE</p><h3>円の中心との距離を測ろう</h3><p>右のボードを押して、X差、Y差、距離を比べます。実ゲームも色ではなく数で接触を判断します。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-sample-hit data-go-focus="dxdy hypot hit" data-go-caption="押した点と中心の差 → 距離を求める → 半径以下ならヒット">当たる位置</button><button type="button" class="lab-button" data-lab-sample-miss data-go-focus="dxdy hypot miss" data-go-caption="押した点と中心の差 → 距離を求める → 遠いのではずれる">離れた位置</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board data-state="wait" role="img" aria-label="円の距離判定"><div class="lab-circle" aria-hidden="true"></div><div class="lab-tap" data-lab-tap hidden aria-hidden="true"></div></div><div class="lab-values"><div><span>dx</span><strong data-lab-dx>—</strong></div><div><span>dy</span><strong data-lab-dy>—</strong></div><div><span>距離</span><strong data-lab-dist>—</strong><small data-lab-result data-state="wait">ボードを押してね</small></div></div></div>
@@ -127,6 +111,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

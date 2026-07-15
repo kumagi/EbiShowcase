@@ -19,10 +19,12 @@
     <meta name="twitter:image:alt" content="押したら得点を増やそう">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/build/tap-score/">
-<link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a href="../state-picture/">BUILD 02</a><a class="lang" href="../../../en/build/tap-score/" lang="en">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../state-picture/">← BUILD 02</a><span>BUILD TRACK / STEP 03</span></div><section class="overview-hero"><p class="eyebrow">BUILD TRACK / FIRST RULE</p><h1>押したら得点を増やそう</h1><p>クリックまたはタッチを読んで、得点を1つ増やします。入力を読むのも、数字を変えるのも <code>Update</code> の仕事です。</p><div class="overview-concept"><small>このステップで書く RULE</small><strong>if pressed { score++ }</strong></div></section><!-- diagram-lesson:start -->
+<link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a href="../state-picture/">BUILD 02</a><a class="lang" href="../../../en/build/tap-score/" lang="en">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../state-picture/">← BUILD 02</a><span>BUILD TRACK / STEP 03</span></div><section class="overview-hero"><p class="eyebrow">BUILD TRACK / FIRST RULE</p><h1>押したら得点を増やそう</h1><p>クリックまたはタッチを読んで、得点を1つ増やします。入力を読むのも、数字を変えるのも <code>Update</code> の仕事です。</p><div class="overview-concept"><small>このステップで書く RULE</small><strong>if pressed { score++ }</strong></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>押すたび、数字が増える。</h2></div><p>丸でも背景でも、画面を1回押すと1点です。Draw はその点数を表示しているだけです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="押したら得点" src="../../../play/tap-score/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>押すたび、数字が増える。</h2></div><p>丸でも背景でも、画面を1回押すと1点です。Draw はその点数を表示しているだけです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="押したら得点" src="../../../play/tap-score/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="learn"><p class="eyebrow">INPUT → UPDATE</p><h2>「押した？」を聞いて、<br>答えを数字にする。</h2><div class="concept-row"><article><span class="concept-number">1</span><h3>INPUT</h3><p>マウスとタッチを、同じ <code>pressed</code> にそろえます。</p><code>pressed := justPressed()</code></article><article><span class="concept-number">2</span><h3>RULE</h3><p>押した瞬間だけ、得点に1を足します。</p><code>if pressed { score++ }</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>Draw は決まった得点を文字にします。</p><code>fmt.Sprintf(... g.score)</code></article></div><div class="code-lesson"><div><p class="eyebrow">THE AXIOM</p><h3>入力も RULE も<br>Update へ。</h3><p>Draw でマウスを読んだり <code>g.score++</code> したりすると、絵を描く回数で得点が変わります。先に Update が答えを決めます。</p></div><pre><code>func (g *game) Update() error {
+<section class="learn"><p class="eyebrow">INPUT → UPDATE</p><h2>「押した？」を聞いて、<br>答えを数字にする。</h2><div class="concept-row"><article><span class="concept-number">1</span><h3>INPUT</h3><p>マウスとタッチを、同じ <code>pressed</code> にそろえます。</p><code>pressed := justPressed()</code></article><article><span class="concept-number">2</span><h3>RULE</h3><p>押した瞬間だけ、得点に1を足します。</p><code>if pressed { score++ }</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>Draw は決まった得点を文字にします。</p><code>fmt.Sprintf(... g.score)</code></article></div><div class="code-lesson"><div><p class="eyebrow">THE AXIOM</p><h3>入力も RULE も<br>Update へ。</h3><p>Draw でマウスを読んだり <code>g.score++</code> したりすると、絵を描く回数で得点が変わります。先に Update が答えを決めます。</p></div><pre><code>func (g *game) Update() error {
     if justPressed() {
         g.score = addScore(g.score) // ← YOUR FIRST RULE
     }
@@ -110,6 +112,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

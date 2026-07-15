@@ -44,29 +44,11 @@
       <p>Sparks, smoke, and sparkle are crowds of tiny dots. Hold an array of particles and each frame just move them, age them, and fade them for many effects.</p>
       <div class="overview-concept"><small>What you learn here</small><strong>[]particle</strong></div>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if p.life > 0 { next = append(next, p) }</code></pre></div></section>
-<!-- feedback-note:tracks/visual-effects/vfx-particles:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-particles"><div><p class="eyebrow">Give particles life</p><h2 id="feedback-note-tracks-visual-effects-vfx-particles">Smoke, sparks, and dust need slightly different directions</h2><p>A particle is a tiny piece of data. Randomly vary its angle and speed so every dot does not travel in one straight line; the burst then looks like smoke or sparks.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="sparks with random directions"><span>✦</span><span>·</span><span>✧</span><span>•</span><b>random angle → natural spread</b></div></div></section>
-<!-- feedback-note:tracks/visual-effects/vfx-particles:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
-    
 
-    <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_particle-lifecycle.svg" alt="A particle's life" loading="lazy" decoding="async"><figcaption>A visual map of A particle's life. Trace the numbers and pictures before reading the code.</figcaption></figure>
-<!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play">
+
+    <section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Burst them out</h2></div>
         <p>Press the button and particles fly out and fade. Dozens are born and die with one tap.</p>
@@ -76,6 +58,16 @@
         <div id="game-wrap"><iframe class="lesson-game-frame" title="Scatter Particles" src="../../../../play/vfx-particles/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if p.life > 0 { next = append(next, p) }</code></pre></div></section>
+<!-- feedback-note:tracks/visual-effects/vfx-particles:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-particles"><div><p class="eyebrow">Give particles life</p><h2 id="feedback-note-tracks-visual-effects-vfx-particles">Smoke, sparks, and dust need slightly different directions</h2><p>A particle is a tiny piece of data. Randomly vary its angle and speed so every dot does not travel in one straight line; the burst then looks like smoke or sparks.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="sparks with random directions"><span>✦</span><span>·</span><span>✧</span><span>•</span><b>random angle → natural spread</b></div></div></section>
+<!-- feedback-note:tracks/visual-effects/vfx-particles:end -->
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_particle-lifecycle.svg" alt="A particle's life" loading="lazy" decoding="async"><figcaption>A visual map of A particle's life. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<!-- END BEGINNER BRIDGE -->
+
 
     <section class="physics" id="learn">
       <div class="lesson-intro">

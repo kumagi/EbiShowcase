@@ -34,68 +34,49 @@
     <section class="overview-hero">
       <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
       <h1>ストップ・ザ・メーター</h1>
-      <p>左右に動く白い線を、真ん中の帯で止めます。「毎フレーム少し動かす」と「今は動いている／止まっている」の切り替えが、このゲームの心臓です。</p>
+      <p>左右に動く白い線を、真ん中の帯で止めます。まず遊び、そのあとで「少しずつ動かす」と「今は動いている／止まっている」の切り替えを見つけます。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>時間とゲーム状態</strong></div>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>状態は『狙っている・判定を見ている・再挑戦待ち』のような今の場面。switchは状態ごとの処理をif/elseより読みやすく並べます。%は割り算の余りです。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>phase := frame % 120</code></pre></div></section>
-<!-- feedback-note:games/timing-meter:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-timing-meter"><div><p class="eyebrow">60 FPSと状態</p><h2 id="feedback-note-games-timing-meter">同じボタンでも、今の状態で意味が変わる</h2><p>Ebitengineはおよそ毎秒60回Updateを呼ぶので、少しずつ動かすと目に滑らかなアニメになります。状態機械は「動く／止める／結果」の札を持ち、ラウンドごとに左右を交代すると同じタイミングの暗記ゲームになりません。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="状態の移り変わり"><span>動く</span><b>→ ボタン →</b><strong>止める</strong><b>→ 次のラウンド →</b><span>動く</span><code>round % 2</code></div></div></section>
-<!-- feedback-note:games/timing-meter:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 
-
-
-
-
-
-
-
-
-
-
-
-<!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_bpm-timing.svg" alt="BPMとフレーム" loading="lazy" decoding="async"><figcaption>BPMとフレームの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_timing-window.svg" alt="タイミング判定の窓" loading="lazy" decoding="async"><figcaption>タイミング判定の窓の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
-<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>タイミングをねらって止めよう。</h2></div><p>スペース、クリック、タップで停止。中央に近いほど高得点です。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="ストップ・ザ・メーター" src="../../../play/timing-meter/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>状態は『狙っている・判定を見ている・再挑戦待ち』のような今の場面。switchは状態ごとの処理をif/elseより読みやすく並べます。%は割り算の余りです。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>phase := frame % 120</code></pre></div></section>
+<!-- feedback-note:games/timing-meter:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-timing-meter"><div><p class="eyebrow">Updateの刻みと状態</p><h2 id="feedback-note-games-timing-meter">同じボタンでも、今の状態で意味が変わる</h2><p>Updateは設定された一定の刻みで状態を少しずつ進めます。状態機械は「動く／止める／結果」の札を持ち、ラウンドごとに左右を交代すると同じタイミングの暗記ゲームになりません。Drawの回数はこのルールを変えません。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="状態の移り変わり"><span>動く</span><b>→ ボタン →</b><strong>止める</strong><b>→ 次のラウンド →</b><span>動く</span><code>round % 2</code></div></div></section>
+<!-- feedback-note:games/timing-meter:end -->
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_bpm-timing.svg" alt="BPMとフレーム" loading="lazy" decoding="async"><figcaption>BPMとフレームの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_timing-window.svg" alt="タイミング判定の窓" loading="lazy" decoding="async"><figcaption>タイミング判定の窓の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="physics" id="learn">
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / TIME &amp; STATE</p>
         <h2>どうして線は、<br>行ったり来たりするの？</h2>
-        <p class="lesson-lead">ゲームはパラパラ漫画です。1コマごとに <strong>位置 = 位置 + 速さ</strong> をくり返します。端に着いたら速さの符号をひっくり返すと、行ったり来たりになります。止めるときは「動かない状態」へ切り替えます。</p>
+        <p class="lesson-lead">Updateのたびに <strong>位置 = 位置 + 速さ</strong> を計算します。端に着いたら速さの符号をひっくり返すと、行ったり来たりになります。止めるときは「動かない状態」へ切り替え、Drawはその時点の位置を表示します。</p>
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>フレーム</h3><p>画面の1コマ。Ebitengineはだいたい毎秒60回 <code>Update</code> を呼びます。少しずつ足すので、なめらかに見えます。</p><code>marker += speed</code></article>
+        <article><span class="concept-number">1</span><h3>Updateの刻み</h3><p>Ebitengineは設定された一定の刻みで <code>Update</code> を呼びます。位置へ少しずつ速さを足すので、動きがつながります。</p><code>marker += speed</code></article>
         <article><span class="concept-number">2</span><h3>反射</h3><p>左端や右端へ着いたら <code>speed = -speed</code>。向きだけ変えて、同じ速さで戻ります。</p><code>speed = -speed</code></article>
         <article><span class="concept-number">3</span><h3>状態</h3><p>動いているか、止まっているか。止まっているあいだは位置を進めず、中央との距離だけ採点します。</p><code>stopped bool</code></article>
       </div>
 
       <div class="motion-lab" data-lab="meter" data-moving="動いている" data-stopped="止まっている" aria-labelledby="meter-lab-title">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / 1 FRAME AT A TIME</p>
-          <h3 id="meter-lab-title">1コマずつ動かして、止めてみよう</h3>
-          <p>「1フレーム進める」で線が動きます。端で向きが変わります。「止める」を押すと中央との距離で得点します。</p>
+          <p class="eyebrow">TRY IT / 1 UPDATE AT A TIME</p>
+          <h3 id="meter-lab-title">Updateを1回ずつ進めて、止めてみよう</h3>
+          <p>「Updateを1回」で線が動きます。端で向きが変わります。「止める」を押すと中央との距離で得点します。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="位置を進める">1フレーム進める</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="位置をUpdate一回分進める">Updateを1回</button>
             <button type="button" class="lab-button" data-lab-stop data-go-focus="stop score" data-go-caption="入力で止める">止める / 再開</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
-          <p class="lab-hint">本物のゲームでは、ボタンを押さなくても毎フレーム自動で進みます。ここは仕組みを見るためのスローモーションです。</p>
+          <p class="lab-hint">本物のゲームでは、設定された刻みでUpdateが自動で進みます。ここは仕組みを見るためのスローモーションです。</p>
         </div>
         <div class="lab-visual">
           <div class="lab-board" role="img" aria-label="メーターの動きを示すボード">
@@ -156,7 +137,7 @@
 }</code></pre>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — まずここを見る</p>
         <ol>
@@ -321,6 +302,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

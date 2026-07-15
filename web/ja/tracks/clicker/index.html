@@ -23,28 +23,6 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>押して増やす→買う→自動生産→保存の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。 このページの1本はコース全体で共通するgame状態の境界です。ルールはUpdateへ足し、Drawの順番や見た目は自由に差し替えられます。下の01から順に、その中へ各仕組みを実装していきます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="コースの学習順"><span>01 押して増やす</span><b aria-hidden="true">→</b><span>02 買う</span><b aria-hidden="true">→</b><span>03 自動生産</span><b aria-hidden="true">→</b><span>04 保存</span></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><!-- diagram-lesson:start -->
-
-<!-- diagram-lesson:end -->
-<iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
 
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>小さな完成を<br>積み重ねる。</h2><p>各ステップは単独で遊べるミニゲームです。前の仕組みを再利用しながら、最後に1本の作品へ統合します。</p></div><a class="path-step" href="tap-counter/"><span>01</span><div><h3>お菓子カウンター</h3><p>大きなボタンを押すたびに数が増える、最小のクリッカーを作ります。</p><strong>クリック入力と数値表示</strong></div><b>→</b></a>
 <a class="path-step" href="first-shop/"><span>02</span><div><h3>はじめてのお店</h3><p>貯めたポイントで生産装置を買い、足りないときは購入を止めます。</p><strong>購入条件とコスト</strong></div><b>→</b></a>
@@ -78,6 +56,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

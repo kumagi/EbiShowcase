@@ -38,42 +38,23 @@
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Movement and collision</strong></div>
       <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 state boundary</a>.</p>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>stars = append(stars, newStar())</code></pre></div></section>
-<!-- feedback-note:games/catch-stars:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-catch-stars"><div><p class="eyebrow">Invisible boxes</p><h2 id="feedback-note-games-catch-stars">A box hit checks whether the star and basket overlap</h2><p>Even a round-looking star can start as a simple rectangle. The basket only needs horizontal movement, so keep Y at a steady height and change X with the pointer or keys.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="star and basket boxes overlap"><span>★ star box</span><b>overlap?</b><strong>▰ basket box = HIT</strong><code>change basket.x only</code></div></div></section>
-<!-- feedback-note:games/catch-stars:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 
-
-
-
-
-
-
-
-
-
-
-
-<!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_collision-rect.svg" alt="Rectangle overlap" loading="lazy" decoding="async"><figcaption>A visual map of Rectangle overlap. Trace the numbers and pictures before reading the code.</figcaption></figure>
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_score-flow.svg" alt="Score flow" loading="lazy" decoding="async"><figcaption>A visual map of Score flow. Trace the numbers and pictures before reading the code.</figcaption></figure>
-<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Move the basket and catch stars.</h2></div><p>Arrow keys, WASD, and drag all work. Drop three stars and the round ends.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Catch the Stars" src="../../../play/catch-stars/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>stars = append(stars, newStar())</code></pre></div></section>
+<!-- feedback-note:games/catch-stars:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-catch-stars"><div><p class="eyebrow">Invisible boxes</p><h2 id="feedback-note-games-catch-stars">A box hit checks whether the star and basket overlap</h2><p>Even a round-looking star can start as a simple rectangle. The basket only needs horizontal movement, so keep Y at a steady height and change X with the pointer or keys.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="star and basket boxes overlap"><span>★ star box</span><b>overlap?</b><strong>▰ basket box = HIT</strong><code>change basket.x only</code></div></div></section>
+<!-- feedback-note:games/catch-stars:end -->
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_collision-rect.svg" alt="Rectangle overlap" loading="lazy" decoding="async"><figcaption>A visual map of Rectangle overlap. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_score-flow.svg" alt="Score flow" loading="lazy" decoding="async"><figcaption>A visual map of Score flow. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="physics" id="learn">
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / MOVEMENT &amp; BOX HITS</p>
         <h2>How does the game know<br>the star landed in the basket?</h2>
@@ -81,7 +62,7 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>Movement</h3><p>Stars add speed to Y every frame. The basket only changes X from keys or a pointer.</p><code>star.y += speed</code></article>
+        <article><span class="concept-number">1</span><h3>Movement</h3><p>Stars add speed to Y on each Update. The basket only changes X from keys or a pointer.</p><code>star.y += speed</code></article>
         <article><span class="concept-number">2</span><h3>Many stars</h3><p>Stars live in a slice (list), not one variable. New stars are appended on a timer.</p><code>stars []star</code></article>
         <article><span class="concept-number">3</span><h3>Overlap</h3><p>If left/right and top/bottom both overlap, it is a hit. Separated on any side means a miss.</p><code>overlaps(a, b)</code></article>
       </div>
@@ -90,9 +71,9 @@
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / RECTANGLE OVERLAP</p>
           <h3 id="aabb-lab-title">Drop the star and watch overlap</h3>
-          <p>“Next frame” lowers the star. The moment its box overlaps the basket, the verdict becomes YES.</p>
+          <p>“One Update” lowers the star. The moment its box overlaps the basket, the verdict becomes YES.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="fall" data-go-caption="Fall each frame">Next frame</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="fall" data-go-caption="Fall on one Update">One Update</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">Even round art often uses a rectangle for hits first. Start with boxes, refine later if needed.</p>
@@ -103,7 +84,7 @@
             <div class="lab-basket" data-lab-basket aria-hidden="true"></div>
           </div>
           <div class="lab-values" aria-live="polite">
-            <div><span>star Y</span><strong data-lab-y>80</strong><small>falls each frame</small></div>
+            <div><span>star Y</span><strong data-lab-y>80</strong><small>falls each Update</small></div>
             <div><span>overlap</span><strong data-lab-overlap data-state="miss">not yet</strong><small>box hit</small></div>
             <div><span>rule</span><strong>4 sides</strong><small>left right top bottom</small></div>
           </div>
@@ -149,7 +130,7 @@ g.stars = next</code></pre>
         <p>The Y band <code>625–675</code> is a catchable thickness around the basket near y≈640. Retry uses <code>*g = *newGame()</code>: same pointer, brand-new contents.</p>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — look here first</p>
         <ol>
@@ -350,7 +331,7 @@ func main() {
       </div>
     </section>
 
-    <p class="lesson-lead">Stars in this game fall at one <strong>constant speed</strong> stored in <code>speed</code>. The next level adds acceleration—changing speed every frame—to make an arc that rises first and then falls.</p>
+    <p class="lesson-lead">Stars in this game fall at one <strong>constant speed</strong> stored in <code>speed</code>. The next level adds acceleration—changing speed on each Update—to make an arc that rises first and then falls.</p>
 
     <nav class="lesson-pager"><a href="../timing-meter/" rel="prev">← LEVEL 02<strong>Stop the Meter</strong></a><a href="../flappy/" rel="next">LEVEL 04 →<strong>Ebi Flight</strong></a></nav>
 
@@ -376,6 +357,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

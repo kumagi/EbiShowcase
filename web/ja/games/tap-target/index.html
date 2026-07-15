@@ -36,28 +36,8 @@
       <h1>光る丸をタッチ</h1>
       <p>画面に出た丸をすばやくタッチする、いちばん小さなゲームです。ここから「ゲームはどう動くか」と「押した場所はどう数えるか」をいっしょに学びます。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>ゲームループと入力</strong></div>
-      <p class="curriculum-bridge" style="margin-top:22px">自分の PC でコードを動かしたい人は、先に <a href="../../guides/setup/">はじめての環境づくり</a>（Go の入れ方〜空の窓）をどうぞ。このページのデモはブラウザだけで遊べます。</p>
+      <a class="cta" href="#play">説明より先に遊ぶ <b>↓</b></a>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>メソッドはGameという箱に結び付いた関数。Updateは1秒に約60回、入力を読みスコアや位置を1コマ進めます。Drawはその数字を絵にするだけで、入力を読んだり状態を書き換えたりしません。Layoutはゲーム内部の基準サイズを返します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *game) Update() error { g.score++; return nil }</code></pre></div></section>
-<!-- feedback-note:games/tap-target:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-tap-target"><div><p class="eyebrow">数字 → 絵</p><h2 id="feedback-note-games-tap-target">アニメは、先に数字を決めてから描く</h2><p>Updateが状態を進め、Drawはそのスナップショットを読むだけです。Drawの呼ばれる順番や見た目は交換できます。実際の違いは、この下で動くWASMデモを見比べてください。画面の左上が(0,0)で、math.Hypotを使うファイルには先に<code>import "math"</code>を書きます。</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="Updateの状態をDrawが画面へ投影">UPDATE x=0 → 1 → 2
-          ↓
-      GAME STATE
-          ↓
-    Draw(screen)
-          ↓
-        PIXELS</pre></div></section>
-<!-- feedback-note:games/tap-target:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 
 
 
@@ -70,20 +50,16 @@
 
 
 
-<!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_core-loop.svg" alt="LEVEL 01 ゲームループ" loading="lazy" decoding="async"><figcaption>LEVEL 01 ゲームループの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_input-coordinate.svg" alt="入力と座標の変換" loading="lazy" decoding="async"><figcaption>入力と座標の変換の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
-<!-- diagram-lesson:end -->
+
 <section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>まずは、丸を押してみよう。</h2></div><p>クリック、タップ、または画面タッチで得点。30秒で何回当てられるか挑戦します。スマホの指でも押しやすいよう、タップ領域は最低48dpを目安にし、命中時は色とリングで反応を返します。</p></div>
+      <div class="section-head"><div><p class="eyebrow">PLAY FIRST / まず遊ぶ</p><h2>説明はあとで大丈夫。<br>光る丸を押してみよう。</h2></div><p>クリックでも画面タッチでも遊べます。丸を押すと1点入り、丸は別の場所へ移動します。30秒で何回当てられるか挑戦してみましょう。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="光る丸をタッチ" src="../../../play/tap-target/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 
     <section class="learn" id="basics">
       <p class="eyebrow">WHAT'S INSIDE / BEFORE ANYTHING ELSE</p>
       <h2>Ebitengine が呼ぶ3つは、<br>Update・Draw・Layout。</h2>
-      <p class="lesson-lead"><strong>メソッドは、Gameという箱に結び付いた関数（ひとまとまりの仕事）</strong>です。3つの答えは <strong>Update、Draw、Layout</strong>。Updateは通常毎秒約60回のゲーム時計として、入力・ルール・状態を進めます。Drawはその時点の状態を画面へ投影するだけで、描画が遅くて毎秒1回しか呼ばれなくてもゲーム進行を止めません。UpdateとDrawが交互に同じ仕事をするのではなく、進行はUpdate、表示はDrawと分担するのが大切です。Layoutはゲーム内の基準サイズを返します。</p>
+      <p class="lesson-lead">さっき遊んだゲームを、3つの仕事に分けます。<strong>Update</strong>は入力を読み、「当たったら1点」「丸を移動する」というルールと状態を、エンジンが決めた一定の刻みで進めます。<strong>Draw</strong>は呼ばれた時に最新の状態を読み、画面へ見せるだけです。Drawが何回呼ばれても、呼ばれなくても、得点や丸の位置を勝手に変えません。<strong>Layout</strong>はゲーム内の基準サイズを答えます。Goでは、このようにGameへ結び付いた仕事を<strong>メソッド</strong>と呼びます。</p>
       <div class="steps" style="grid-template-columns:repeat(3,1fr)">
         <article><b>01</b><h3>UPDATE</h3><p>入力を読み、スコアや位置などの<strong>数字</strong>を進めます。ここには絵を描きません。</p><code>func (g *Game) Update() error</code></article>
         <article><b>02</b><h3>DRAW</h3><p>いまの数字どおりに、丸や文字を<strong>画面へ描きます</strong>。入力も計算も状態変更もしません。</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
@@ -93,13 +69,13 @@
       <div class="motion-lab" data-lab="loop" data-update="UPDATE" data-draw="DRAW" data-update-note="数字を変える（スコア・位置・タイマー）" data-draw-note="いまの数字どおりに画面を描く" aria-labelledby="loop-lab-title">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / GAME LOOP</p>
-          <h3 id="loop-lab-title">UpdateとDrawの境界を確かめる</h3>
-          <p>ボタンを押すたび、説明用のフェーズが切り替わります。本物のゲームではUpdateがゲーム時計を進め、Drawは最新の状態を表示します。描画が遅れてもUpdate側の操作や時間が止まらないようにするのが、この分離の理由です。</p>
+          <h3 id="loop-lab-title">UpdateとDraw、二つの役割を見比べる</h3>
+          <p>ボタンを押すと、説明の注目先だけが切り替わります。これは実行順を再現するボタンではありません。Updateはゲームを進め、Drawは呼ばれた時の状態を表示する、という独立した役割を見比べるための模型です。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="update draw" data-go-caption="Update で数字を変える → 1枚引く">次のフェーズ</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="update draw" data-go-caption="ゲームを進める役割と、表示する役割を見比べる">注目する役割を切り替える</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
-          <p class="lab-hint">Updateは約60回/秒のゲーム時計、Drawは最新状態の表示。Drawが遅くても、Updateが決めた操作とルールは変わりません。</p>
+          <p class="lab-hint">Updateの刻みは設定できます。Drawの回数や見た目を変えても、Updateが決めた操作とルールは変わりません。</p>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-loop-board" data-lab-board data-phase="update" role="img" aria-label="UpdateとDrawの切り替え">
@@ -107,9 +83,9 @@
             <span data-lab-note>数字を変える（スコア・位置・タイマー）</span>
           </div>
           <div class="lab-values" aria-live="polite">
-            <div><span>フェーズ</span><strong data-lab-phase>UPDATE</strong><small>いまやっていること</small></div>
-            <div><span>フレーム</span><strong data-lab-frame>0</strong><small>何コマ目か</small></div>
-            <div><span>ルール</span><strong>U → D</strong><small>つねにこの順</small></div>
+            <div><span>注目中</span><strong data-lab-phase>UPDATE</strong><small>説明している役割</small></div>
+            <div><span>切替回数</span><strong data-lab-frame>0</strong><small>説明ボタンを押した回数</small></div>
+            <div><span>約束</span><strong>独立</strong><small>Drawは状態を変えない</small></div>
           </div>
         </div>
 <div class="lab-go-block">
@@ -124,7 +100,7 @@
       <details class="basics-extra">
         <summary>おまけ：Layout とビルドの話（あとでで大丈夫）</summary>
         <div class="steps" style="grid-template-columns:1fr">
-          <article><b>補足</b><h3>同じ状態なら同じ絵</h3><p>同じ <code>game</code> なら同じ絵です。ルールは Update 側で決め、Draw は答えを写します。</p><code>Update → game → Draw</code></article>
+          <article><b>補足</b><h3>一つの状態から、好きな見た目を作れる</h3><p>ルールと現在地は同じ <code>game</code> にあり、Drawはそれをどう見せるか担当します。見た目を描き替えても、ゲームのルールはそのままです。</p><code>Update → game / game → Draw</code></article>
         </div>
         <div class="recipe">
           <div><p class="eyebrow">BUILD RECIPE</p><h3>Goのコードが、Webのゲームになるまで。</h3></div>
@@ -138,7 +114,29 @@
       </details>
     </section>
 
-    <section class="physics" id="learn">
+
+
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_core-loop.svg" alt="LEVEL 01 ゲームループ" loading="lazy" decoding="async"><figcaption>LEVEL 01 ゲームループの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_input-coordinate.svg" alt="入力と座標の変換" loading="lazy" decoding="async"><figcaption>入力と座標の変換の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
+<!-- diagram-lesson:end -->
+<!-- feedback-note:games/tap-target:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-tap-target"><div><p class="eyebrow">ゲームの事実 → 見せ方</p><h2 id="feedback-note-games-tap-target">先にゲームを進め、表示はその事実を読む</h2><p>Updateは得点や位置など、ゲームの事実を進めます。Drawはそれを変えず、呼ばれた時に画面へ見せます。すぐ下の動く見本では、一つのゲーム状態を違う描き方で同時に表示しています。</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="ゲームの事実と表示の役割分担">UPDATE: score / position
+          ↓
+        game
+          ↓
+DRAW: 画面にどう見せるか</pre></div></section>
+<!-- feedback-note:games/tap-target:end -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Drawの独立性">
+  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
+  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
+  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
+  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
+</section>
+<!-- renderer-freedom:end -->
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / INPUT &amp; COORDINATES</p>
         <h2>どうして、<br>押した場所がわかるの？</h2>
@@ -215,7 +213,7 @@
 }</code></pre>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — まずここを見る</p>
         <p class="lab-hint" style="margin-bottom:8px">この3つは、下の全部のコードを読むときの「地図」です。まずこの順番で探せば迷いません。全部を一度に理解しなくても大丈夫、あとで少しずつ読み直せば十分です。</p>
@@ -411,6 +409,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -22,17 +22,6 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>移動範囲→地形コスト→射程→敵予告の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。 このページの1本はコース全体で共通するgame状態の境界です。ルールはUpdateへ足し、Drawの順番や見た目は自由に差し替えられます。下の01から順に、その中へ各仕組みを実装していきます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="コースの学習順"><span>01 移動範囲</span><b aria-hidden="true">→</b><span>02 地形コスト</span><b aria-hidden="true">→</b><span>03 射程</span><b aria-hidden="true">→</b><span>04 敵予告</span></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><!-- diagram-lesson:start -->
-
-<!-- diagram-lesson:end -->
-<iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 <p class="curriculum-bridge">LEVEL 01のUpdate / Drawから続き、盤面上の情報を読んで一手を決めるゲームへ広げます。</p><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>小さな判断を重ねて、3つの任務へ。</h2><p>移動コスト、武器射程、敵の狙い、任務データを小さなゲームで学び、3つの戦場を戦う完成版へ進みます。</p></div><a class="path-step" href="terrain-reach/"><span>01</span><div><h3>地形コストで移動範囲を作る</h3><p>平地1・森2・山3を足し、同じ移動力でも道によって届く場所が変わる盤面を作ります。</p><strong>安い道から確定する重み付き探索</strong></div><b>→</b></a>
 <a class="path-step" href="weapon-range/"><span>02</span><div><h3>剣と弓の射程を読み分ける</h3><p>剣は1マス、弓は2マスという違いを盤面に重ね、武器を選んで正しい距離の敵を狙います。</p><strong>マンハッタン距離と武器データ</strong></div><b>→</b></a>
 <a class="path-step" href="enemy-intent/"><span>03</span><div><h3>敵の狙いを見せる</h3><p>敵が次に狙う仲間を先に表示し、攻撃が来る場所へガードを置く読み合いを作ります。</p><strong>敵AIの決定と表示を同じデータにする</strong></div><b>→</b></a>

@@ -24,11 +24,16 @@ for (const lang of ["ja", "en"]) {
   if (lang === "ja") {
     html = html.replaceAll("12の基礎ゲーム＋22の専門トラック", "12の基礎ゲーム＋25の専門トラック")
       .replaceAll("22の専門コース", "25の専門コース")
-      .replaceAll("22専門トラック", "25専門トラック");
+      .replaceAll("22専門トラック", "25専門トラック")
+      .replace("12本の共通基礎（ループから弾幕まで）を終えたら、25の専門コースへ。どれも LEVEL 01 の Update / Draw の続きです。完成形をいきなり作らず、仕組みをひとつずつ足します。", "基礎で使った移動、当たり判定、時間、状態管理を、作りたいジャンルに合わせて組み合わせます。完成形をいきなり作らず、小さく遊べる仕組みをひとつずつ足します。")
+      .replace("Update / Draw のゲームループと、タッチ座標の当たり判定を学びます。", "丸を押した場所を調べ、当たったら得点する最初のルールを学びます。")
+      .replace("動くバーを狙った場所で止め、フレームと状態を理解します。", "動くバーを狙った場所で止め、時間の進み方とゲームの状態を学びます。");
   } else {
     html = html.replaceAll("12 core games + 22 specializations", "12 core games + 25 specializations")
       .replaceAll("twenty-two specializations", "twenty-five specializations")
-      .replaceAll("22 SPECIALIST TRACKS", "25 SPECIALIST TRACKS");
+      .replaceAll("22 SPECIALIST TRACKS", "25 SPECIALIST TRACKS")
+      .replace("Learn the Update / Draw game loop, then tap targets with coordinate hit tests.", "Check where the player pressed, then learn the first rule: a hit adds a point.")
+      .replace("Stop a moving marker in the target and understand frames and state.", "Stop a moving marker in the target and learn how time and game state advance.");
   }
   writeFileSync(file, html);
 }

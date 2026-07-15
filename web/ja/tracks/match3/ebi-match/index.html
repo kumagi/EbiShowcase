@@ -20,33 +20,17 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/match3/ebi-match/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/match3/ebi-match/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 3マッチパズル</a><span>STEP 08 / 08</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Match</h1><p>交換アニメーション、3個並び、落下、連鎖、特殊ピースを全部つなぎ、手数がなくなる前に目標点をめざす完成版です。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>交換演出・特殊ピース・ステージデータ</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3つの海をめぐり、ベスト記録を更新しよう。</h2></div><p>となり合うピースを2個タップして交換します。4個でロケット、5個で同色ウェーブ、L字・T字で3×3爆弾が生まれ、特殊ピース同士も連鎖します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Match" src="../../../../play/ebi-match/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>手数は交換できる残り回数、目標は集める色と個数、ステージデータは盤面・手数・目標をまとめた設計図。ルールは共通のUpdateに置き、数値だけデータから読みます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>stage := stages[stageIndex]</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3つの海をめぐり、ベスト記録を更新しよう。</h2></div><p>となり合うピースを2個タップして交換します。4個でロケット、5個で同色ウェーブ、L字・T字で3×3爆弾が生まれ、特殊ピース同士も連鎖します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Match" src="../../../../play/ebi-match/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / LEVEL DATA</p><h2>ゲームのルールと、ステージの数字を分けよう。</h2><p class="lesson-lead">「3個なら消える」「4個以上なら特殊ピースを残す」は全ステージで使う<strong>ルール</strong>です。「12手で650点」はこの面だけの<strong>データ</strong>です。交換中の見た目は0→1の割合で動かし、接触してから盤面のルールを解決します。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>ステージを表にする</h3><p>名前、手数、目標点、最初の盤面を一つのstageに入れます。これはゲームへの注文票です。</p><code>stage{moves: 12, targetScore: 650}</code></article><article><span class="concept-number">2</span><h3>交換を見せてから解決</h3><p>2個をなめらかに移動させ、接触後に並びを検査します。3個にならない交換は同じ道を戻り、正しい交換だけ手数を1減らします。</p><code>swapT += 0.12; resolveOrReturn()</code></article><article><span class="concept-number">3</span><h3>長い並びを力へ変える</h3><p>4個は縦横ロケット、5個は同じ色を消すウェーブ、L字・T字は3×3爆弾になります。爆風が別の特殊ピースへ届くと、続けて発動します。</p><code>special = specialForMatch(board, anchor)</code></article></div><div class="motion-lab" data-lab="stage-goals" data-goal="30" data-moves="10" data-hit="+8点" data-clear="クリア！" data-out="手数切れ" aria-labelledby="lab-title-ebi-match">
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / LEVEL DATA</p><h2>ゲームのルールと、ステージの数字を分けよう。</h2><p class="lesson-lead">「3個なら消える」「4個以上なら特殊ピースを残す」は全ステージで使う<strong>ルール</strong>です。「12手で650点」はこの面だけの<strong>データ</strong>です。交換中の見た目は0→1の割合で動かし、接触してから盤面のルールを解決します。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>ステージを表にする</h3><p>名前、手数、目標点、最初の盤面を一つのstageに入れます。これはゲームへの注文票です。</p><code>stage{moves: 12, targetScore: 650}</code></article><article><span class="concept-number">2</span><h3>交換を見せてから解決</h3><p>2個をなめらかに移動させ、接触後に並びを検査します。3個にならない交換は同じ道を戻り、正しい交換だけ手数を1減らします。</p><code>swapT += 0.12; resolveOrReturn()</code></article><article><span class="concept-number">3</span><h3>長い並びを力へ変える</h3><p>4個は縦横ロケット、5個は同じ色を消すウェーブ、L字・T字は3×3爆弾になります。爆風が別の特殊ピースへ届くと、続けて発動します。</p><code>special = specialForMatch(board, anchor)</code></article></div><div class="motion-lab" data-lab="stage-goals" data-goal="30" data-moves="10" data-hit="+8点" data-clear="クリア！" data-out="手数切れ" aria-labelledby="lab-title-ebi-match">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / STAGE DATA</p>
 <h3 id="lab-title-ebi-match">手数と目標スコアを同時に見よう</h3>
@@ -98,6 +82,8 @@ func newGame(level stage) *game {
         </form>
       </div>
     </section>
+
+
 
 
 

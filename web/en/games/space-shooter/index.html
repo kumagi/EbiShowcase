@@ -40,8 +40,13 @@
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Lists by kind</strong></div>
       <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 state boundary</a>.</p>
     </section>
+
+<section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Survive every wave.</h2></div><p>Arrow keys or drag to move, Space or touch to shoot. Enemies arrive in "waves" — groups that drop in one after another over time. Clear all enemies in the current wave to trigger the next one. Lose all three lives and the mission fails.</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Space Shooter" src="../../../play/space-shooter/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>for _, b := range bullets { for _, e := range enemies { check(b,e) } }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>for _, b := range bullets { for _, e := range enemies { check(b,e) } }</code></pre></div></section>
 <!-- feedback-note:games/space-shooter:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-space-shooter"><div><p class="eyebrow">Lists by kind</p><h2 id="feedback-note-games-space-shooter">Define Enemy so the meaning of i is clear</h2><p>Keep enemies and bullets in separate slices so each group can be updated or removed independently. <code>i</code> is the index: which item in that list we are reading.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="Enemy struct and index i">type Enemy struct {
     X, Y float64
@@ -51,38 +56,14 @@ for i := range enemies {
     enemies[i].X -= 2
 }</pre></div></section>
 <!-- feedback-note:games/space-shooter:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_input-map.svg" alt="Input mapping" loading="lazy" decoding="async"><figcaption>A visual map of Input mapping. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_aim-vector.svg" alt="Turn aiming into a vector" loading="lazy" decoding="async"><figcaption>A visual map of Turn aiming into a vector. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_bullet-pool.svg" alt="Bullet reuse" loading="lazy" decoding="async"><figcaption>A visual map of Bullet reuse. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Survive every wave.</h2></div><p>Arrow keys or drag to move, Space or touch to shoot. Enemies arrive in "waves" — groups that drop in one after another over time. Clear all enemies in the current wave to trigger the next one. Lose all three lives and the mission fails.</p></div>
-      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Space Shooter" src="../../../play/space-shooter/" allow="autoplay; fullscreen"></iframe></div></div>
-    </section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="physics" id="learn">
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / LISTS BY KIND</p>
         <h2>Why doesn't the code grow<br>when bullets multiply?</h2>
@@ -95,7 +76,7 @@ for i := range enemies {
         <article><span class="concept-number">3</span><h3>Delete backward</h3><p>Remove off-screen or dead entities from the list. In plain words: <strong>deleting from the back (the highest index first) keeps the numbers ahead of you from shifting</strong>, so nothing gets skipped.</p><code>bullets[:i], bullets[i+1:]</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="bullets" data-fire="pew" data-step="fly" aria-labelledby="lab-title-space-shooter">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / BULLET LIST</p>
@@ -146,7 +127,7 @@ for i := range enemies {
 }</code></pre>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — look here first</p>
         <ol>
@@ -533,6 +514,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

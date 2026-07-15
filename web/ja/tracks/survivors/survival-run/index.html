@@ -36,38 +36,22 @@
       <h1>サバイバルラン（最終）</h1>
       <p>3つのウェーブで難易度が上昇し、35秒後にボスが登場します。スポーン間隔と移動速度を時間から計算し、倒した敵のジェムで強化を選びます。止まっているだけでは生き残れません。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>ウェーブ設計・ボス・難易度曲線</strong></div>
-      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01</a>の状態境界に沿って書きます。ルールはUpdate、描画は自由です。</p>
+      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01</a>と同じく、位置や得点などゲームの中身はUpdateで進めます。Drawは中身を変えず、画面への見せ方だけを担当します。</p>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ウェーブは時間で区切った敵の波、ボスは区切りの最後に出る強敵、難易度曲線は時間とともに数・速さ・HPを少しずつ増やす設計です。目標時間まで生き残ればクリアです。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>wave := elapsed / waveSeconds</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 
-
-
-
-
-
-
-
-
-
-
-
-<!-- diagram-lesson:start -->
-
-<!-- diagram-lesson:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>3ウェーブを乗り越えてボスを倒せ！</h2></div><p>WASD・方向キー・ドラッグで移動。立ち止まると接触ダメージを受けます。ジェムを集めてレベルアップ（オーラ／速さ／ライフ）を選び、45秒以内にボスを倒そう。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="サバイバルラン" src="../../../../play/survival-run/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ウェーブは時間で区切った敵の波、ボスは区切りの最後に出る強敵、難易度曲線は時間とともに数・速さ・HPを少しずつ増やす設計です。目標時間まで生き残ればクリアです。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>wave := elapsed / waveSeconds</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<!-- diagram-lesson:start -->
+
+<!-- diagram-lesson:end -->
+
+
+
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -82,7 +66,7 @@
         <article><span class="concept-number">3</span><h3>ボスとHPバー</h3><p>35秒で出現する紫の大きな敵は HP 80 です。ジェムを集めて AURA+ / SPEED+ / LIFE+ を選ぶと生き残れる幅が広がります。</p><code>g.mobs = append(g.mobs, mob{..., 80, 40, true})</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="curve"  aria-labelledby="lab-title-survival-run">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / LAB</p>
@@ -172,6 +156,8 @@ speed := .85 + float64(sec)*.018
         </form>
       </div>
     </section>
+
+
 
 
 

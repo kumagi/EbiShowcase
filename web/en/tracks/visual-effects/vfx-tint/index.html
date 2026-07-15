@@ -44,30 +44,11 @@
       <p>Keep the pixels, multiply the color with ColorScale. Red tint, white flash, pitch-black silhouette—three looks from one image.</p>
       <div class="overview-concept"><small>What you learn here</small><strong>op.ColorScale</strong></div>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>op.ColorScale.Scale(1, .4, .4, 1)</code></pre></div></section>
-<!-- feedback-note:tracks/visual-effects/vfx-tint:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-tint"><div><p class="eyebrow">See color as numbers</p><h2 id="feedback-note-tracks-visual-effects-vfx-tint">RGB uses three numbers; alpha 0.5 means half transparent</h2><p>Think of red as (1,0,0) and green as (0,1,0). Multiplying by 0.5 makes a channel half as bright. Alpha 0.5 lets half of the background show through.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="RGB and alpha example">red (1,0,0) × 0.5 = (0.5,0,0)
-alpha 0.5 = half visible</pre></div></section>
-<!-- feedback-note:tracks/visual-effects/vfx-tint:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
-    
 
-    <!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_color-channel.svg" alt="Change color channels" loading="lazy" decoding="async"><figcaption>A visual map of Change color channels. Trace the numbers and pictures before reading the code.</figcaption></figure>
-<!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play">
+
+    <section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Switch the modes</h2></div>
         <p>Flip between NORMAL, TINT, FLASH, and SHADOW and only the color of the same square changes. The code shown is the ColorScale in use.</p>
@@ -77,6 +58,17 @@ alpha 0.5 = half visible</pre></div></section>
         <div id="game-wrap"><iframe class="lesson-game-frame" title="Tint & Drain Color" src="../../../../play/vfx-tint/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>op.ColorScale.Scale(1, .4, .4, 1)</code></pre></div></section>
+<!-- feedback-note:tracks/visual-effects/vfx-tint:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-tint"><div><p class="eyebrow">See color as numbers</p><h2 id="feedback-note-tracks-visual-effects-vfx-tint">RGB uses three numbers; alpha 0.5 means half transparent</h2><p>Think of red as (1,0,0) and green as (0,1,0). Multiplying by 0.5 makes a channel half as bright. Alpha 0.5 lets half of the background show through.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="RGB and alpha example">red (1,0,0) × 0.5 = (0.5,0,0)
+alpha 0.5 = half visible</pre></div></section>
+<!-- feedback-note:tracks/visual-effects/vfx-tint:end -->
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_color-channel.svg" alt="Change color channels" loading="lazy" decoding="async"><figcaption>A visual map of Change color channels. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<!-- END BEGINNER BRIDGE -->
+
 
     <section class="physics" id="learn">
       <div class="lesson-intro">

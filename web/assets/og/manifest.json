@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-07-15T13:33:02.767Z",
+  "generatedAt": "2026-07-15T14:18:44.480Z",
   "pages": [
     {
       "file": "web/en/build/empty-loop/index.html",
@@ -129,7 +129,7 @@
       "lang": "en",
       "kind": "core",
       "title": "Ebi Showcase – LEVEL 04 — Ebi Flight",
-      "h1": "Make the hero fall for real.",
+      "h1": "One tap makes Tenjiroh fly.",
       "eyebrow": "LEVEL 04 / ACCELERATION IN MOTION",
       "description": "A playable showcase for learning game development with Go and Ebitengine in your browser. Play the demo, add one Go rule, verify it, and apply the idea to your",
       "image": "assets/og/en--games--flappy.png"
@@ -453,8 +453,8 @@
       "lang": "en",
       "kind": "home",
       "title": "Ebi Showcase – Learn to make games by playing",
-      "h1": "Play more. Build more.",
-      "eyebrow": "12 core games + 25 specializations in your browser",
+      "h1": "Play it. Notice it. Build it yourself.",
+      "eyebrow": "PLAYABLE IN YOUR BROWSER · A GAME-MAKING CLASSROOM",
       "description": "A practice site for making games yourself: play mini games in the browser and learn Go with Ebitengine, explained for beginners.",
       "image": "assets/og/en.png"
     },
@@ -3705,7 +3705,7 @@
       "lang": "ja",
       "kind": "core",
       "title": "Ebi Showcase – LEVEL 04 — Ebi Flight",
-      "h1": "Goで、 主人公が落ちる。",
+      "h1": "タップひとつで、 天次郎が飛ぶ。",
       "eyebrow": "LEVEL 04 / ACCELERATION IN MOTION",
       "description": "GoとEbitengineで作ったミニゲームを、ブラウザですぐ遊んで学べるショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲ",
       "image": "assets/og/ja--games--flappy.png"
@@ -4029,8 +4029,8 @@
       "lang": "ja",
       "kind": "home",
       "title": "Ebi Showcase – 遊んで学ぶ・自分で作るゲーム教室",
-      "h1": "遊ぶたび、 作れることが増える。",
-      "eyebrow": "ブラウザで遊べる・12の基礎ゲーム＋25の専門トラック",
+      "h1": "遊んで、気づいて、 自分で作る。",
+      "eyebrow": "ブラウザで遊べる・ゲームづくりの教室",
       "description": "ブラウザでミニゲームを遊びながら、自分でゲームを作る練習をするサイト。Go と Ebitengine を中学生でも追える言葉で教えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja.png"
     },

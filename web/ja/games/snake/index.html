@@ -39,6 +39,14 @@
       <p>マス目の世界を動き、通ってきた座標をそのまま「体」として残します。配列の先頭に頭を追加し、末尾のしっぽを消すだけで、あのくねくねした動きが完成します。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>グリッドと履歴</strong></div>
     </section>
+<p class="curriculum-bridge">ゲームの状態境界は <a href="../tap-target/#basics">LEVEL 01</a> と同じです。ルールはUpdate、Drawの描き方は自由です。ここでは反射・ブロック・体の伸びなど、新しい部品だけを足します。見た目も当たりも図形のままです。</p>
+
+
+
+<section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>食べて、のびて、ぶつかるな。</h2></div><p>矢印キーまたは画面タップで進む方向を変えます。エサを食べると体が1マス伸びます。壁または自分の体にぶつかったらゲームオーバーです。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 07</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Snake" src="../../../play/snake/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>スライスは長さを変えられるリスト。ヘビの体は通ったマス座標の順番で、appendで頭を足し、最後を外すと一歩進みます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>body = append([]Cell{head}, body[:len(body)-1]...)</code></pre></div></section>
 <!-- feedback-note:games/snake:start -->
@@ -46,39 +54,12 @@
 new head → [●][●][●] → drop tail
              先頭        最後</pre></div></section>
 <!-- feedback-note:games/snake:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
-<p class="curriculum-bridge">ゲームの状態境界は <a href="../tap-target/#basics">LEVEL 01</a> と同じです。ルールはUpdate、Drawの描き方は自由です。ここでは反射・ブロック・体の伸びなど、新しい部品だけを足します。見た目も当たりも図形のままです。</p>
-
-
-    <!-- diagram-lesson:start -->
+<!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_snake-body.svg" alt="スライスで体を動かす" loading="lazy" decoding="async"><figcaption>スライスで体を動かすの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>食べて、のびて、ぶつかるな。</h2></div><p>矢印キーまたは画面タップで進む方向を変えます。エサを食べると体が1マス伸びます。壁または自分の体にぶつかったらゲームオーバーです。</p></div>
-      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 07</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Snake" src="../../../play/snake/" allow="autoplay; fullscreen"></iframe></div></div>
-    </section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="physics" id="learn">
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / GRID AND HISTORY</p>
         <h2>ヘビの体は、<br>どうやって動くの？</h2>
@@ -91,7 +72,7 @@ new head → [●][●][●] → drop tail
         <article><span class="concept-number">3</span><h3>追加と削除</h3><p>新しい頭を先頭に追加し、エサを食べていなければ末尾を1個切り捨てる。この2行でヘビの移動が完成します。</p><code>body[:len(body)-1]</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="snake" data-ate="食べた" data-move="移動" aria-labelledby="lab-title-snake">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / GRID HISTORY</p>
@@ -164,7 +145,7 @@ new head → [●][●][●] → drop tail
 }</code></pre>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — まずここを見る</p>
         <ol>
@@ -471,6 +452,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

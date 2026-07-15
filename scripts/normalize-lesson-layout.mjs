@@ -300,12 +300,12 @@ function normalizePage(relPath) {
     : "";
 
   const castNote = lang === "ja"
-    ? `<p class="cast-note">動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01</a> の状態境界に沿ってUpdateへ書き、Drawはその結果を自由に投影します。</p>`
-    : `<p class="cast-note">Frame math belongs in Update's state boundary from <a href="../../../games/tap-target/#basics">LEVEL 01</a>; Draw may project it in any style.</p>`;
+    ? `<p class="cast-note"><a href="../../../games/tap-target/#basics">LEVEL 01</a>と同じく、位置や得点などゲームの中身はUpdateで進めます。Drawは中身を変えず、画面への見せ方だけを担当します。</p>`
+    : `<p class="cast-note">As in <a href="../../../games/tap-target/#basics">LEVEL 01</a>, Update advances game facts such as positions and score. Draw presents those facts without changing them.</p>`;
 
   const bridge = lang === "ja"
-    ? `<p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>`
-    : `<p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>`;
+    ? `<p class="curriculum-bridge">共通基礎の続きです。UpdateとDrawという名前が初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01</a>を遊んでください。</p>`
+    : `<p class="curriculum-bridge">This continues the shared basics. If Update and Draw are new names, play <a href="../../../games/tap-target/#basics">LEVEL 01</a> first.</p>`;
 
   const descMeta = description
     ? `  <meta name="description" content="${description}">\n`

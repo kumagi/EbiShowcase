@@ -8,14 +8,12 @@ const marker = /<!-- BEGIN BEGINNER BRIDGE -->[\s\S]*?<!-- END BEGINNER BRIDGE -
 // Short, concrete bridges requested by classroom review.  These complement the
 // deep dive: first define the unfamiliar word, then show one rule to trace.
 const notes = {
-  "home":"ゲームループは、Updateが約60回/秒の時計として数字を進め、Drawがその最新状態を絵にする仕組みです。Drawが遅くてもゲーム進行は止まりません。海老・天次郎（えび・てんじろう）が的を追う最小例から始めます。|func (g *Game) Update() error { g.x++; return nil }\nfunc (g *Game) Draw(screen *ebiten.Image) { drawTarget(screen, g.x) }",
-  "setup":"go.modは『このゲームの名前と使う部品』を書いた目次ファイル。PowerShell/ターミナルは文字で命令する同じ役目の窓です。天次郎の最初の一コマを出すところまで進みます。|func (g *Game) Update() error { return nil }",
+  "setup":"go.modは『このゲームの名前と使う部品』を書いた目次ファイル。PowerShell/ターミナルは文字で命令する同じ役目の窓です。まずは空のゲーム画面を出すところまで進みます。|func (g *Game) Update() error { return nil }",
   "game-data":"データ駆動とは、村・台詞・敵をコードへ直接書かず、交換できるデータとして読む作り方。asset loaderはそのファイルをゲームへ渡す係、IDは部品同士を結ぶ名前札です。|village := loadMap(\"village.json\")",
   "ebi-depths":"巨大な世界は、世界座標・カメラ・訪問済み部屋・能力フラグを別々に覚えます。Updateで主人公と能力を進め、Drawではカメラの窓に入る部分だけを描きます。|screenX := worldX - cameraX",
-  "tap-target":"メソッドはGameという箱に結び付いた関数。Updateは1秒に約60回、入力を読みスコアや位置を1コマ進めます。Drawはその数字を絵にするだけで、入力を読んだり状態を書き換えたりしません。Layoutはゲーム内部の基準サイズを返します。|func (g *game) Update() error { g.score++; return nil }",
   "timing-meter":"状態は『狙っている・判定を見ている・再挑戦待ち』のような今の場面。switchは状態ごとの処理をif/elseより読みやすく並べます。%は割り算の余りです。|phase := frame % 120",
   "catch-stars":"スライスは星を何個でも入れられる順番付きリスト。天次郎が星を受け止め、3個落とすとゲームオーバーです。|stars = append(stars, newStar())",
-  "flappy":"画面は上がY=0で、下へ行くほどYが増えます。加速度は『速さが毎フレームどれだけ変わるか』。羽ばたき時の-7.4px/frameは上向きの初速度、重力+0.42px/frame²が約16.7msごとに下向きへ戻します。|vy = -7.4; vy += gravity; y += vy",
+  "flappy":"画面は上がY=0で、下へ行くほどYが増えます。加速度は『Updateの刻みごとに速さがどれだけ変わるか』。羽ばたき時の負の速度は上向き、正の重力が少しずつ下向きへ戻します。|vy = -7.4; vy += gravity; y += vy",
   "pong":"ベクトルは横の速さvxと縦の速さvyを組にしたもの。符号反転は+を-へ変え、壁へ向かう速さを反対向きにします。|vx = -vx",
   "breakout":"[]は順番付きの箱、[][]は行と列の方眼紙。全部のbrickが消えたらwinがclear状態を立て、次のDrawで結果画面を出します。|if remaining == 0 { state = Win }",
   "snake":"スライスは長さを変えられるリスト。ヘビの体は通ったマス座標の順番で、appendで頭を足し、最後を外すと一歩進みます。|body = append([]Cell{head}, body[:len(body)-1]...)",
@@ -161,7 +159,7 @@ const generic = [
   [/append|スライス/,"スライスは個数を増減できる順番付きリスト。append(list,item)は末尾へitemを一つ足します。"],
   [/\[\]\[\]|二次元配列/,"[][]は行の中に列がある方眼紙。まず[y]で行、次に[x]で列を選びます。"],
   [/struct|構造体/,"structは位置・速さ・HPなど関係する値を一つの箱へまとめる書き方です。"],
-  [/Update|Draw/,"Updateは次の一コマの数字を決め、Drawはその数字を絵にします。これがEbitengineのゲームループです。"],
+  [/Update|Draw/,"Updateは入力とルールからゲームの状態を進めます。Drawは呼ばれた時点の状態を読むだけで、進行を変えません。二つの回数や順番を同じものとは考えません。"],
 ];
 
 function walk(dir){return readdirSync(dir).flatMap(n=>{const p=join(dir,n);return statSync(p).isDirectory()?walk(p):[p]})}
@@ -170,6 +168,12 @@ for(const path of walk(root).filter(p=>p.endsWith(".html"))){
   const route="/"+relative(root,path).replace(/index\.html$/,"").replaceAll("\\","/");
   if(!html.includes("<main")||!/(\/games\/|\/tracks\/|\/guides\/|^\/(ja|en)\/$)/.test(route))continue;
   const bits=route.split("/").filter(Boolean), lang=bits[0], slug=bits.length===1?"home":bits.at(-1);
+  // Home must lead with an obvious choice, and LEVEL 01 must lead with play.
+  // Their own pages introduce terminology only after the reader has context.
+  if(slug === "home" || slug === "tap-target") {
+    writeFileSync(path, html);
+    continue;
+  }
   const lookupSlug=slug.startsWith("fx-")?`vfx-${slug}`:slug==="three-punch"?"frame-attack":slug==="hit-reaction-dojyo"?"hit-reaction":slug;
   const isHub=bits[1]==="tracks"&&bits.length===3;
   let pair=notes[lookupSlug]?["ここを先に見よう",...notes[lookupSlug].split("|")]:undefined;
@@ -190,7 +194,7 @@ for(const path of walk(root).filter(p=>p.endsWith(".html"))){
   if(lang==="ja"&&route.includes("/tracks/")&&!route.includes("/tracks/visual-effects/")&&!isHub){
     pair[1]+=" PLAYABLEは『このページで実際に操作できる』という印です。";
   }
-  if(lang==="en")pair=route==="/en/"?["Trace one rule first","Update is the roughly 60 Hz game clock: it advances input and state. Draw only projects the latest numbers, so even a delayed Draw does not change gameplay. This is the shared state boundary; the renderer can be swapped freely.","func (g *Game) Update() error { g.x++; return nil }\nfunc (g *Game) Draw(screen *ebiten.Image) { drawTarget(screen, g.x) }"]:["Trace one rule first","Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.",pair[2] || "func (g *Game) Update() error { return nil }"];
+  if(lang==="en")pair=["Trace one rule first","Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.",pair[2] || "func (g *Game) Update() error { return nil }"];
   pair[2] ||= "func (g *Game) Update() error { return nil }";
   const esc=s=>s.replaceAll("&","&amp;").replaceAll("<","&lt;");
   const flowVisual = isHub && trackParts[slug]
@@ -198,8 +202,21 @@ for(const path of walk(root).filter(p=>p.endsWith(".html"))){
     : "";
   const block=`<!-- BEGIN BEGINNER BRIDGE -->\n<section class="beginner-bridge"><div><p class="eyebrow">${lang==="ja"?"はじめて読む人へ":"FIRST-TIME READER"}</p><h2>${pair[0]}</h2><p>${pair[1]}</p></div><div class="beginner-code"><p><strong>${lang==="ja"?"このページの1本":"ONE RULE TO TRACE"}</strong><br>${lang==="ja"?"説明と次のコードを対応させてから、ゲームで変化を確かめよう。":"Match the explanation to this line, then test the change in the game."}</p><pre><code>${esc(pair[2])}</code></pre></div>${flowVisual}</section>\n<!-- END BEGINNER BRIDGE -->\n`;
 
-  // Put the orientation card directly after the page hero.  Falling back to
-  // </main> used to leave it below the feedback form, long after it was useful.
+  // A playable lesson must keep its promise: let the reader play before
+  // introducing vocabulary or code. Put the orientation immediately after
+  // the first play section; hubs without a game still use the hero.
+  const playStart = html.search(/<section[^>]*class=["'][^"']*play[^"']*["'][^>]*>/i);
+  if (playStart >= 0) {
+    const playEnd = html.indexOf("</section>", playStart);
+    if (playEnd >= 0) {
+      const at = playEnd + "</section>".length;
+      html = html.slice(0, at) + "\n" + block + html.slice(at);
+      writeFileSync(path, html);
+      continue;
+    }
+  }
+  // Hubs and setup guides have no playable section, so orient the reader
+  // immediately after their introduction.
   const heroClasses=["data-hero","lesson-hero","track-hero","overview-hero","setup-hero","catalog-hero"];
   let inserted=false;
   for(const className of heroClasses){

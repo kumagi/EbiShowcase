@@ -20,33 +20,17 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/merge-physics/stacking-bounce/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/merge-physics/stacking-bounce/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Merge Physics Puzzle</a><span>STEP 03 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Stacking and Bounce</h1><p>Correct overlapping circles and change velocity using mass and restitution.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Penetration correction and impulse</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Build a stable stack of twelve.</h2></div><p>Tap a horizontal position to drop each circle.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Stacking and Bounce" src="../../../../play/stacking-bounce/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>velocity += collisionNormal * impulse</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>velocity += collisionNormal * impulse</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Build a stable stack of twelve.</h2></div><p>Tap a horizontal position to drop each circle.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Stacking and Bounce" src="../../../../play/stacking-bounce/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / IMPULSE</p><h2>Do heavy and light circles bounce the same way?</h2><p class="lesson-lead">Large circles get more mass. Divide collision <strong>impulse</strong> according to mass so lighter circles move farther.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Correction</h3><p>Share overlap according to inverse mass.</p><code>overlap := radii-distance</code></article><article><span class="concept-number">2</span><h3>Mass</h3><p>Use radius squared as circle weight.</p><code>mass = radius * radius</code></article><article><span class="concept-number">3</span><h3>Impulse</h3><p>Reflect only velocity along the contact direction.</p><code>velocity += impulse / mass</code></article></div><div class="motion-lab" data-lab="bounce" data-wall="wall" data-paddle="floor"><div class="lab-copy"><p class="eyebrow">TRY IT / BOUNCE</p><h3>Reverse velocity at a surface</h3><p>Step one frame and watch which velocity changes at a wall or floor.</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="Advance position">Step one frame</button><button class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-ball style="position:absolute;border-radius:50%"></div></div><div class="lab-values"><div><span>vx</span><strong data-lab-vx>6.0</strong></div><div><span>vy</span><strong data-lab-vy>4.0</strong></div><div><span>Contact</span><strong data-lab-note>—</strong></div></div></div>
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / IMPULSE</p><h2>Do heavy and light circles bounce the same way?</h2><p class="lesson-lead">Large circles get more mass. Divide collision <strong>impulse</strong> according to mass so lighter circles move farther.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Correction</h3><p>Share overlap according to inverse mass.</p><code>overlap := radii-distance</code></article><article><span class="concept-number">2</span><h3>Mass</h3><p>Use radius squared as circle weight.</p><code>mass = radius * radius</code></article><article><span class="concept-number">3</span><h3>Impulse</h3><p>Reflect only velocity along the contact direction.</p><code>velocity += impulse / mass</code></article></div><div class="motion-lab" data-lab="bounce" data-wall="wall" data-paddle="floor"><div class="lab-copy"><p class="eyebrow">TRY IT / BOUNCE</p><h3>Reverse velocity at a surface</h3><p>Step one frame and watch which velocity changes at a wall or floor.</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="Advance position">Step one frame</button><button class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-ball style="position:absolute;border-radius:50%"></div></div><div class="lab-values"><div><span>vx</span><strong data-lab-vx>6.0</strong></div><div><span>vy</span><strong data-lab-vy>4.0</strong></div><div><span>Contact</span><strong data-lab-note>—</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
 <pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="move">x += vx; y += vy</span>
@@ -78,6 +62,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

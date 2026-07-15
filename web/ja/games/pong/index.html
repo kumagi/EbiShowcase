@@ -37,44 +37,25 @@
       <p>対戦相手は人間ではなく、シンプルな<strong>CPU（コンピューターが動かすパドル）</strong>です。ボールは「右へどれだけ・下へどれだけ」の2つの速さで動きます。壁やパドルに当たったら、その向きの符号だけひっくり返す。反射の基本です。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>反射とベクトル</strong></div>
     </section>
+<p class="curriculum-bridge">ゲームの状態境界は <a href="../tap-target/#basics">LEVEL 01</a> と同じです。ルールはUpdate、Drawの描き方は自由です。ここでは反射・ブロック・体の伸びなど、新しい部品だけを足します。見た目も当たりも図形のままです。</p>
+
+
+
+<section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>パドルでボールを打ち返そう。</h2></div><p>矢印キー、WASD、ドラッグで自機を動かします。CPUと得点を競います。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Pong" src="../../../play/pong/" allow="autoplay; fullscreen"></iframe></div></div>
+    </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ベクトルは横の速さvxと縦の速さvyを組にしたもの。符号反転は+を-へ変え、壁へ向かう速さを反対向きにします。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>vx = -vx</code></pre></div></section>
 <!-- feedback-note:games/pong:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-pong"><div><p class="eyebrow">ひとりでも練習</p><h2 id="feedback-note-games-pong">CPUは、ひとりで反射を試すための相手</h2><p>CPUのパドルがボールを追うので、もう一人いなくても反射とベクトルを試せます。vxはX方向、vyはY方向の速さです。壁に当たったら該当する符号を反転します。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="速度成分と反射"><code>vx = 横の速さ</code><code>vy = 縦の速さ</code><b>壁 → vy = -vy</b><strong>跳ね返る</strong></div></div></section>
 <!-- feedback-note:games/pong:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
-<p class="curriculum-bridge">ゲームの状態境界は <a href="../tap-target/#basics">LEVEL 01</a> と同じです。ルールはUpdate、Drawの描き方は自由です。ここでは反射・ブロック・体の伸びなど、新しい部品だけを足します。見た目も当たりも図形のままです。</p>
-
-
-    <!-- diagram-lesson:start -->
+<!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_bounce-angle.svg" alt="反射角を決める" loading="lazy" decoding="async"><figcaption>反射角を決めるの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>パドルでボールを打ち返そう。</h2></div><p>矢印キー、WASD、ドラッグで自機を動かします。CPUと得点を競います。</p></div>
-      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Pong" src="../../../play/pong/" allow="autoplay; fullscreen"></iframe></div></div>
-    </section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="physics" id="learn">
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / REFLECTION</p>
         <h2>どうしてボールは、<br>はね返るの？</h2>
@@ -87,7 +68,7 @@
         <article><span class="concept-number">3</span><h3>ヒット位置</h3><p>パドル中心からのずれ × <code>0.055</code> を vx に足します。端で返すほど横に飛び、中央ならほぼ真上。0.055 は「味付け用の小さめの係数」で、大きくすると曲がりの効きが強くなります。</p><code>vx += offset * 0.055</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="bounce" data-wall="壁" data-paddle="パドル" aria-labelledby="lab-title-bounce">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / BOUNCE</p>
@@ -142,7 +123,7 @@ g.ballY += g.vy
 }</code></pre>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — まずここを見る</p>
         <ol>
@@ -346,6 +327,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

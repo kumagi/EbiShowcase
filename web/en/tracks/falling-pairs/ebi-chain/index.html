@@ -22,33 +22,17 @@
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/falling-pairs/ebi-chain/">日本語</a></nav></header><main class="overview-main">
 <div class="lesson-breadcrumb"><a href="../">← Falling-pair Chain Puzzle</a><span>STEP 08 / 08</span></div>
 <section class="overview-hero"><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>Ebi Chain</h1><p>Combine falling pairs, kicked rotation, color search, simultaneous clears, gravity, rescans, chain score, all-clears, and versus garbage.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Integrated resolution phases and versus results</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Win three reef duels with changing goals and counterattacks.</h2></div><p>Tap LEFT, TURN, RIGHT, and DROP. Keyboard uses Left/Up/Right or A/W/D and Space. White groups clear together and the board rescans after gravity. The miss limit changes by reef, so watch MISSES at the top.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Chain cascade and garbage duel" src="../../../../play/ebi-chain/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>updateInput(); updateFall(); resolveBoard()</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>updateInput(); updateFall(); resolveBoard()</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Win three reef duels with changing goals and counterattacks.</h2></div><p>Tap LEFT, TURN, RIGHT, and DROP. Keyboard uses Left/Up/Right or A/W/D and Space. White groups clear together and the board rescans after gravity. The miss limit changes by reef, so watch MISSES at the top.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Chain cascade and garbage duel" src="../../../../play/ebi-chain/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RESOLUTION STATE MACHINE</p><h2>Lock input and loop until the board settles.</h2><p class="lesson-lead">After a pair locks, control passes from the player to board resolution. Repeat <code>find → clear all → gravity → find again</code> until nothing is found. Only then commit score and garbage and spawn the next pair. These <strong>phase boundaries</strong> connect the previous five systems safely.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Separate current and next pair</h3><p>Spawn moves preview data into the active pair, then refills the preview. Draw reads active and NEXT from separate values.</p><code>pivotKind = nextPivotKind; refillNext()</code></article><article><span class="concept-number">2</span><h3>Alternate clear and gravity</h3><p>Collect every four-way group into marked, clear together, compact columns, then rescan. A new group increments chain and returns to CLEAR.</p><code>CLEAR → GRAVITY → RESCAN → CLEAR ...</code></article><article><span class="concept-number">3</span><h3>Send versus results at settle</h3><p>Each chain sends two garbage, plus two if the board becomes empty. A no-chain move instead drops one gray garbage on your board.</p><code>sent := chain*2 + allClearBonus</code></article></div>
@@ -98,6 +82,8 @@ spawn()</code></pre></div>
         </form>
       </div>
     </section>
+
+
 
 
 

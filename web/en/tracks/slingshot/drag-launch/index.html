@@ -50,34 +50,18 @@
 <strong>Drag vectors and launch velocity</strong>
 </div>
 </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>vx, vy = -dx*power, -dy*power</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <p class="curriculum-bridge">This continues the shared foundation. If the game loop is new, first visit <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>. Here, input becomes launch velocity.</p>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Pull the pearl into all three signal rings.</h2></div><p>Drag from the pearl and release. You can also change the pull with arrow keys and launch with Space. Reach all rings in six shots.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Drag and Launch" src="../../../../play/drag-launch/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>vx, vy = -dx*power, -dy*power</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Pull the pearl into all three signal rings.</h2></div><p>Drag from the pearl and release. You can also change the pull with arrow keys and launch with Space. Reach all rings in six shots.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Drag and Launch" src="../../../../play/drag-launch/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / OPPOSITE VECTOR</p><h2>Flip the pull arrow with a minus sign.</h2><p class="lesson-lead">Store the difference from the pearl's center to the pointer as a <strong>drag vector</strong>. On release, put a minus sign on both X and Y. That makes launch velocity point exactly opposite the pull.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Subtract two points</h3><p>Subtract the pearl position from the pointer. Pulling right makes dragX positive; pulling down makes dragY positive.</p><code>dragX = pointerX - ballX</code></article><article><span class="concept-number">2</span><h3>Limit long pulls</h3><p>If length exceeds 160, shrink the vector without changing its direction. Pulling beyond the screen cannot create wild speed.</p><code>dx *= 160 / length</code></article><p class="lab-hint">Multiply by 160/length to keep direction while capping length at 160.</p><article><span class="concept-number">3</span><h3>Launch oppositely</h3><p>Only on release, negate dragX and dragY to make velocity. A pearl pulled downward launches upward.</p><code>velocity = -drag * power</code></article></div>
 <div class="motion-lab" data-lab="sling-drag"><div class="lab-copy"><p class="eyebrow">TRY IT / VECTOR LENGTH</p><h3>How does combining directions change length?</h3><p>Compare a horizontal vector with a diagonal one. The game measures length and caps it so an overlong pull stays controlled.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-cardinal data-go-focus="drag len">Pull sideways</button><button type="button" class="lab-button" data-lab-diag data-go-focus="drag len clamp">Pull diagonally</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Raw length</span><strong data-lab-raw>—</strong></div><div><span>Normalized length</span><strong data-lab-norm>—</strong></div></div></div>
@@ -126,6 +110,8 @@ if released {
         </form>
       </div>
     </section>
+
+
 
 
 

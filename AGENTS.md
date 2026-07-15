@@ -38,7 +38,7 @@ Non‑negotiable loop vocabulary (also gates `loop.*`):
 
 1. **`Update` owns all mutation and all input.**
 2. **`Draw` only projects the current `game` onto the screen.**
-3. **The screen follows `game` bit-for-bit; `Draw` never writes `game`.**
+3. **The screen is derived from `game`; `Draw` never writes `game`.**
 
 Treat `Draw(screen)` as a referentially transparent projection: for the same
 game state, assets, and viewport it must produce the same pixels. It must not
@@ -49,9 +49,10 @@ the current position) are fine; persistent changes belong in `Update` or in a
 pure helper called by `Update`. Rendering options may be configured locally in
 `Draw`, then discarded after the frame.
 
-Gameplay must not depend on Draw cadence. Ebitengine normally calls `Update`
-about 60 times per second; gameplay time, input, physics, timers, and rules
-advance there. `Draw` may be delayed, skipped, or observed only once per
+Gameplay must not depend on Draw cadence. Ebitengine calls `Update` at its
+configured tick rate (the default is commonly 60 per second, not a universal
+promise); gameplay time, input, physics, timers, and rules advance there.
+`Draw` may be delayed, skipped, or observed only once per
 second under load, and the next `Update` must still produce the same result
 for the same input sequence. Do not teach the loop as two equal alternating
 steps whose progress can live in `Draw`; this separation keeps play stable
@@ -81,7 +82,13 @@ lesson needs more detail rather than repeating a generic receiver paragraph.
 
 The public learning path is therefore:
 
-`optional local setup (Go + empty window) → LEVEL 01 game loop → core mechanics → unit testing → Visual Effects Lab → genre specialization → data/architecture thinking`
+`play LEVEL 01 in the browser → name the rule the learner just saw → inspect Go → continue through core mechanics → choose a specialization`
+
+Local setup is a parallel entry for a learner who is ready to write code, not
+a prerequisite and not a detour inserted between a PLAY FIRST promise and its
+game. On a playable lesson, the rendered order is introduction → playable demo
+→ vocabulary/diagram/code. Do not put first-time-reader cards, implementation
+details, or an unrelated setup choice before the promised demo.
 
 Do not flatten these into one undifferentiated list. A rendering toy is not a missing game, a guide is not PLAYABLE, and a genre step must not reintroduce `Update`/`Draw` as if LEVEL 01 did not exist.
 
@@ -104,7 +111,7 @@ Use stable curriculum IDs such as `tracks/falling-blocks/falling-cell`, not reme
 
 - Game logic, input, simulation, collision, and rendering belong in Go + Ebitengine. HTML, CSS, and JavaScript are only for the static showcase and shared WASM loader.
 - Ebi Showcase's own code, prose, and original assets are Apache License 2.0. Compatible third-party dependencies and assets (including OFL/BSD fonts) may retain their original license only when copyright, source, and license are recorded in `THIRD_PARTY_NOTICES.md`; never relabel them as Apache-2.0. Do not add material with incompatible or unclear licensing.
-- Prefer original simple shapes; the shared protagonist 海老・天次郎 (Ebi Tenjiroh) sprite is allowed as the curriculum hero. Ebi-themed presentation otherwise. Famous games are references for mechanics, not permission to copy their art, text, characters, music, maps, or branding.
+- Prefer original simple shapes; the shared protagonist 海老・天次郎 (Ebi Tenjiroh) sprite is allowed as the curriculum hero. When a page first names a character, show that character in the same introductory context; never ask a new reader to imagine an unseen mascot. If early lessons intentionally use only shapes, say where the character begins. Ebi-themed presentation otherwise. Famous games are references for mechanics, not permission to copy their art, text, characters, music, maps, or branding.
 - Every game must work with keyboard/mouse on PC and touch input on phones and tablets.
 - GitHub Pages project URLs must work. Use relative links; do not assume the site is hosted at `/`.
 - Japanese and English are independent, shareable URLs. Keep both versions in sync.
@@ -179,13 +186,13 @@ Keep these three statements consistent from Build Track through graduation:
    AI, collisions, and scene changes all write the `game` state here.
 2. **`Draw` only projects the current `game` state into pixels.** It does not
    decide a result, read input, or change a counter.
-3. **The screen follows `game` exactly.** The same state draws the same frame;
-   `Draw` must not mutate state, consume randomness, append to slices, or
-   change any hidden rendering/game environment. Treat it as a pure function
-   of `(game, assets, viewport)` even though Ebitengine gives it a screen
-   handle for output.
-4. **Draw frequency is not gameplay time.** `Update` advances one game tick
-   (normally about 60 per second); Draw only presents the latest snapshot. A
+3. **The screen is derived from `game`.** For one chosen Draw implementation,
+   the same `(game, assets, viewport)` produces the same pixels. Another Draw
+   implementation may present that state differently. `Draw` must not mutate
+   state, consume randomness, append to slices, or change hidden state.
+4. **Draw frequency is not gameplay time.** `Update` advances one configured
+   game tick (the default is commonly 60 per second, but it is not a universal
+   promise); Draw only presents the latest snapshot. A
    slow or skipped Draw must not pause, accelerate, or otherwise change rules,
    timers, physics, input handling, or the outcome.
 5. **The renderer is replaceable.** The same `game` snapshot can be rendered
@@ -195,8 +202,8 @@ Keep these three statements consistent from Build Track through graduation:
 
 A learner RULE belongs in `Update` or in a pure function called by `Update`.
 Draw may map that result to color, position, text, or effects, but never owns the
-rule itself. The flipbook metaphor is literal: decide the numbers for a frame,
-then draw that frame without changing its numbers.
+rule itself. A flipbook may illustrate many pictures, but it must never imply
+that every Update is immediately paired with exactly one Draw.
 
 ## Visual Effects Lab (between core and tracks)
 
@@ -263,7 +270,7 @@ This is the shared vocabulary for every playable lesson. LEVEL 01 owns the first
 
 1. **`Update` owns all mutation and all input.** Scores, positions, timers, AI, collisions, scene changes, and reading keys/pointers/touches belong here. Do not put input or rules in `Draw`.
 2. **`Draw` only projects the current `game` struct onto the screen.** Genre-specific look rules decide how fields become pixels. `Draw` does not decide outcomes.
-3. **The screen follows `game` bit-for-bit.** The same `game` must produce the same picture. **`Draw` must not write `game`** (no `++`, no RNG, no input reads, no slice edits inside `Draw`).
+3. **The screen is derived from `game`.** For one chosen Draw implementation, the same game state, assets, and viewport produce the same pixels. Another Draw implementation may present that same state differently. **`Draw` must not write `game`** (no `++`, no RNG, no input reads, no slice edits inside `Draw`).
 
 Flipbook metaphor: decide the frame’s numbers first, then paint that frame—never change the numbers while painting. If a lesson must break this, document in one sentence why the work cannot live in `Update`. Default: no exceptions. Authoring RULE challenges add logic on the `Update` side (or a pure function `Update` calls); never ask learners to put rules in `Draw`.
 
@@ -271,8 +278,8 @@ Flipbook metaphor: decide the frame’s numbers first, then paint that frame—n
 
 - Lead with a concrete thing the learner can see or do, then name the abstraction. Japanese copy should be understandable to an upper-primary-school learner without talking down to them.
 - Teach one main idea and at most one closely related supporting idea per step. State what came from the previous lesson and what the new piece adds.
-- Use the pattern **play → observe/predict → manipulate a small lab → inspect representative Go → explain why → offer one challenge**.
-- Use concrete metaphors only when they map accurately to the code. LEVEL 01's flipbook explanation must match the axiom above: `Update` changes numbers/state; `Draw` renders the current state. Do not later claim Draw runs rules or Update paints the screen.
+- Use the pattern **brief introduction → play → observe/predict → manipulate a small lab → inspect representative Go → explain why → offer one challenge**. “Play first” describes rendered order, not merely the heading: no glossary, code card, diagram, or optional setup branch may intervene between the introduction and the playable demo.
+- Use concrete metaphors only when they map accurately to the code. A flipbook may explain why many pictures look like motion, but it must not imply one Update is paired with one Draw. `Update` changes state; `Draw` renders the current state without changing it.
 - Progressive disclosure is intentional. LEVEL 01 foregrounds Update and Draw while putting Layout and build details in an optional section. Keep advanced implementation details out of the learner's first conceptual step unless needed to understand the mechanic.
 - A `DEEP DIVE` must explain the named mechanic, not merely describe controls. The three `concept-row` cards should form an ordered explanation. The motion lab must let the learner change or step through the same concept. The code snippet must correspond to the real Go implementation.
 - Explain data and state transitions, not just visible results: where values live, when they change, and why update order matters.
@@ -363,7 +370,7 @@ Know the owner before editing:
 - Maze-chase polish lessons (`guard-memory` and `maze-director`) and their hub/final-page updates are owned by `scripts/gen-maze-chase-polish.mjs`.
 - Core full-source slots are owned by `data-embed-source` plus `scripts/embed-lesson-sources.mjs`. Edit the Go source and surrounding explanation, not the generated code inside `data-embed-slot`.
 - Feedback markup is owned by `scripts/insert-feedback-form.mjs`. Do not hand-edit one page's copied form; change the injector when site-wide behavior or wording changes.
-- First-time-reader cards are owned by `scripts/inject-beginner-bridges.mjs`. They appear immediately after the page hero, define unfamiliar terms, and show one route-specific rule to trace. Do not repeat generic Update/Draw or receiver boilerplate across lessons; explain the receiver only on a lesson where it is the concept being taught. Add route-specific material to that injector instead of editing its generated block in HTML.
+- First-time-reader cards are owned by `scripts/inject-beginner-bridges.mjs`. On a playable lesson they appear immediately after the first playable section; on a non-playable hub or guide they may follow the hero. They define unfamiliar terms and show one route-specific rule to trace. Do not repeat generic Update/Draw or receiver boilerplate across lessons; explain the receiver only on a lesson where it is the concept being taught. Add route-specific material to that injector instead of editing its generated block in HTML.
 - Legacy lesson URLs (`/games/dungeon-crawler/`, early `visual-effects/fx-*` names, and early fighting names) are full-content aliases generated by `scripts/gen-legacy-aliases.mjs`. Keep them as complete lessons rather than thin redirects because static review tools and link-preview crawlers do not follow client-side redirects consistently.
 - Character and effect PNG/JSON assets are owned by `cmd/gen-atlas`, `cmd/gen-track-atlas`, `cmd/gen-vfx`, and their layout packages. Regenerate them; do not paint over generated binaries.
 

@@ -50,34 +50,18 @@
 <strong>Mutable tile maps</strong>
 </div>
 </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>tx, ty := mouseX/TileSize, mouseY/TileSize</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <p class="curriculum-bridge">This continues the shared foundation. If the game loop is new, first visit <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>. Here, input changes board data.</p>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Recover materials and finish the six-cell blueprint.</h2></div><p>Outlines mark the plan. Choose PLACE/BREAK and DIRT/STONE, then tap a bright in-range cell. On PC, use P/B, 1/2, and click.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Place and Break" src="../../../../play/place-break/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>tx, ty := mouseX/TileSize, mouseY/TileSize</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Recover materials and finish the six-cell blueprint.</h2></div><p>Outlines mark the plan. Choose PLACE/BREAK and DIRT/STONE, then tap a bright in-range cell. On PC, use P/B, 1/2, and click.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Place and Break" src="../../../../play/place-break/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / MUTABLE TILE MAP</p><h2>Change a cell's number and the world changes shape.</h2><p class="lesson-lead">The board is a table of numbers called <strong>board[y][x]</strong>. Zero is air, one is dirt, and two is stone. Placing spends one item and writes its number; breaking writes zero and returns the material to inventory.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Turn screen into cell</h3><p>Subtract the board's top-left from the pointer, then divide by cell width. This gives integer column x and row y.</p><code>x = (pointerX - boardX) / cell</code></article><article><span class="concept-number">2</span><h3>Check reach and stock</h3><p>Place only within three steps of the builder and when at least one selected block remains. Invalid input changes no data.</p><code>if inReach(x,y) &amp;&amp; stock[kind] &gt; 0</code></article><article><span class="concept-number">3</span><h3>Pair place and break</h3><p>Placing moves material from inventory to board. Breaking moves it from board to inventory. Material does not appear from nowhere.</p><code>board[y][x] = kind; stock[kind]--</code></article></div>
 <div class="motion-lab" data-lab="tile" data-blocked="That cell is a wall"><div class="lab-copy"><p class="eyebrow">TRY IT / GRID POSITION</p><h3>Move one row or column at a time</h3><p>A cell uses integer x,y, not a loose continuous position. Rejecting a wall cell follows the same pattern as rejecting a place action.</p><div class="lab-controls"><button type="button" class="lab-button" data-lab-up data-go-focus="try go">↑</button><button type="button" class="lab-button" data-lab-left data-go-focus="try go">←</button><button type="button" class="lab-button" data-lab-right data-go-focus="try go">→</button><button type="button" class="lab-button" data-lab-down data-go-focus="try go">↓</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Cell x,y</span><strong data-lab-pos>1,1</strong></div><div><span>Facing</span><strong data-lab-face>S</strong></div><div><span>Result</span><strong data-lab-note>—</strong></div></div></div>
@@ -127,6 +111,8 @@ board[y][x] = empty</code></pre></div>
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -30,12 +30,16 @@ let changed = 0;
 for (const lang of ["ja", "en"]) {
   for (const file of walk(join(root, "web", lang))) {
     const html = readFileSync(file, "utf8");
-    const clean = html.replace(marker, "");
-    if (!clean.includes("<!-- update-draw-contract:end -->") && !clean.includes("<!-- END BEGINNER BRIDGE -->")) continue;
-    const anchor = clean.includes("<!-- update-draw-contract:end -->")
-      ? "<!-- update-draw-contract:end -->"
-      : "<!-- END BEGINNER BRIDGE -->";
-    const next = clean.replace(anchor, `${anchor}\n${panel(lang === "ja", file)}`);
+    // Removing a generated panel must not leave indentation-only lines that
+    // fail git diff checks after a full rebuild.
+    const clean = html.replace(marker, "").replace(/^[ \t]+$/gm, "");
+    const route = relative(join(root, "web", lang), file).split(sep).join("/");
+    if (route !== "games/tap-target/index.html") {
+      if (clean !== html) { writeFileSync(file, clean); changed++; }
+      continue;
+    }
+    const anchor = '<section class="physics" id="learn">';
+    const next = clean.replace(anchor, `${panel(lang === "ja", file)}\n${anchor}`);
     if (next !== html) { writeFileSync(file, next); changed++; }
   }
 }

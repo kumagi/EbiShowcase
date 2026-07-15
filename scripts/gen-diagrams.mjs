@@ -63,14 +63,14 @@ const diagrams = [
   {
     id: "core-loop",
     title: { ja: "LEVEL 01 ゲームループ", en: "LEVEL 01 game loop" },
-    description: { ja: "入力を数字へ、数字を絵へ変える順番", en: "The order that turns input into a picture" },
+    description: { ja: "入力から状態が進み、Drawがその状態を表示する役割分担", en: "Update advances state from input; Draw independently presents that state" },
     nodes: [
       { id: "input", ja: "入力\nタッチ", en: "Input\ntap" },
       { id: "update", ja: "Update\n位置を計算", en: "Update\ncalculate position" },
       { id: "draw", ja: "Draw\n現在の絵", en: "Draw\ncurrent picture" },
-      { id: "repeat", ja: "約60回/秒\nくり返す", en: "about 60/sec\nrepeat" },
+      { id: "repeat", ja: "設定された刻みで\nUpdateを続ける", en: "keep Update ticking\nat its configured rate" },
     ],
-    edges: [["input", "update"], ["update", "draw"], ["draw", "repeat"], ["repeat", "update"]],
+    edges: [["input", "update"], ["update", "repeat"], ["update", "draw"]],
   },
   {
     id: "velocity-vector",
@@ -792,14 +792,16 @@ function figure(relativeAsset, alt, caption, extraClass = "") {
 function curriculumBlock(lang) {
   const ja = lang === "ja";
   const links = coreLinks.map(([jaLabel, enLabel, href]) => `<a href="${href}"><span>${ja ? jaLabel : enLabel}</span><b>→</b></a>`).join("");
-  return `<!-- curriculum-map:start -->\n<section class="curriculum-map" aria-labelledby="curriculum-map-title"><div><p class="eyebrow">CURRICULUM MAP / 学びの地図</p><h2 id="curriculum-map-title">${ja ? "小さなルールから、大きなゲームへ。" : "From one small rule to a bigger game."}</h2><p>${ja ? "LEVEL 01でゲームループを覚え、部品を足し、見た目を磨いてから専門トラックへ進みます。" : "Start with the game loop, add building blocks, polish the picture, then choose a specialist track."}</p></div><figure class="diagram-figure curriculum-map-figure"><img src="../assets/diagrams/${lang}_curriculum-flow.svg" alt="${esc(ja ? "LEVEL 01から専門トラックまでの学習の流れ" : "Learning flow from LEVEL 01 to specialist tracks")}" loading="lazy" decoding="async"><figcaption>${ja ? "矢印はおすすめの順番。気になる場所へ直接ジャンプできます。" : "The arrows show a suggested order. You can jump to any panel."}</figcaption></figure><nav class="curriculum-map-links" aria-label="${ja ? "カリキュラムへのリンク" : "Curriculum links"}">${links}<a href="tracks/visual-effects/"><span>${ja ? "VISUAL EFFECTS LAB · 見た目" : "VISUAL EFFECTS LAB · polish"}</span><b>→</b></a><a href="#specializations"><span>${ja ? "25専門トラック · 大きなゲーム" : "25 SPECIALIST TRACKS · bigger games"}</span><b>→</b></a></nav></section>\n<!-- curriculum-map:end -->`;
+  return `<!-- curriculum-map:start -->\n<section class="curriculum-map" aria-labelledby="curriculum-map-title"><div><p class="eyebrow">CURRICULUM MAP / 学びの地図</p><h2 id="curriculum-map-title">${ja ? "小さな遊びから、大きなゲームへ。" : "From one tiny game to a bigger one."}</h2><p>${ja ? "最初は丸を押すだけ。次のレベルでは時間、当たり判定、動きへ進み、最後に作りたいジャンルを選びます。" : "Start by pressing one target. Later levels add timing, collisions, and movement before you choose a genre to build."}</p></div><figure class="diagram-figure curriculum-map-figure"><img src="../assets/diagrams/${lang}_curriculum-flow.svg" alt="${esc(ja ? "LEVEL 01から専門トラックまでの学習の流れ" : "Learning flow from LEVEL 01 to specialist tracks")}" loading="lazy" decoding="async"><figcaption>${ja ? "矢印はおすすめの順番です。迷ったらLEVEL 01から、気になるゲームがあればそこから始めても大丈夫です。" : "Arrows show a suggested order. Start at LEVEL 01 if unsure, or jump to a game that interests you."}</figcaption></figure><nav class="curriculum-map-links" aria-label="${ja ? "カリキュラムへのリンク" : "Curriculum links"}">${links}<a href="tracks/visual-effects/"><span>${ja ? "VISUAL EFFECTS LAB · 見た目" : "VISUAL EFFECTS LAB · polish"}</span><b>→</b></a><a href="#specializations"><span>${ja ? "25専門トラック · 大きなゲーム" : "25 SPECIALIST TRACKS · bigger games"}</span><b>→</b></a></nav></section>\n<!-- curriculum-map:end -->`;
 }
 
 function injectHome(file, lang) {
   let html = fs.readFileSync(file, "utf8");
   const block = curriculumBlock(lang);
   const marker = /<!-- curriculum-map:start -->[\s\S]*?<!-- curriculum-map:end -->/;
-  html = marker.test(html) ? html.replace(marker, block) : html.replace("<!-- BEGIN BEGINNER BRIDGE -->", `${block}\n<!-- BEGIN BEGINNER BRIDGE -->`);
+  html = html.replace(marker, "");
+  const anchor = "<!-- home-next-steps:start -->";
+  html = html.replace(anchor, `${block}\n${anchor}`);
   fs.writeFileSync(file, html);
 }
 
@@ -829,13 +831,29 @@ function injectLesson(file, lang) {
   }
   const block = `<!-- diagram-lesson:start -->\n${blocks.join("\n")}\n<!-- diagram-lesson:end -->`;
   const marker = /<!-- diagram-lesson:start -->[\s\S]*?<!-- diagram-lesson:end -->/;
-  if (marker.test(html)) html = html.replace(marker, block);
+  if (route === "games/tap-target") {
+    html = html.replace(marker, "");
+    const anchor = "<!-- feedback-note:games/tap-target:start -->";
+    if (!html.includes(anchor)) return false;
+    html = html.replace(anchor, `${block}\n${anchor}`);
+  }
   else {
-    const play = /<section(?=[^>]*class="[^"]*\bplay(?:-panel|\s|\b))[^>]*>/i;
-    const fallback = /<iframe[^>]+(?:play\/|lesson-game-frame)[^>]*>/i;
-    if (play.test(html)) html = html.replace(play, `${block}\n$&`);
-    else if (fallback.test(html)) html = html.replace(fallback, `${block}\n$&`);
-    else return false;
+    html = html.replace(marker, "");
+    const feedbackEnd = [...html.matchAll(/<!-- feedback-note:[^>]+:end -->/g)].at(0);
+    const beginnerEnd = "<!-- END BEGINNER BRIDGE -->";
+    if (feedbackEnd) {
+      const at = feedbackEnd.index + feedbackEnd[0].length;
+      html = html.slice(0, at) + `\n${block}` + html.slice(at);
+    } else if (html.includes(beginnerEnd)) {
+      html = html.replace(beginnerEnd, `${beginnerEnd}\n${block}`);
+    } else {
+      const play = html.search(/<section[^>]*class=["'][^"']*play[^"']*["'][^>]*>/i);
+      if (play < 0) return false;
+      const close = html.indexOf("</section>", play);
+      if (close < 0) return false;
+      const at = close + "</section>".length;
+      html = html.slice(0, at) + `\n${block}` + html.slice(at);
+    }
   }
   fs.writeFileSync(file, html);
   return true;

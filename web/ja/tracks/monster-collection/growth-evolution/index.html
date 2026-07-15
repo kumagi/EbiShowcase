@@ -50,29 +50,6 @@
 <strong>成長曲線・レベル・進化条件</strong>
 </div>
 </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>経験値追加後、前level<5かつ新level>=5なら一度だけ進化を始めます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if oldLevel &lt; 5 &amp;&amp; level >= 5 { evolve() }</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <section class="overview-plan">
 <p class="eyebrow">PLAY / INSPECT / BUILD</p>
 <h2>データの変化を見て、<br>ルールを組み立てる。</h2>
@@ -94,10 +71,17 @@
 </article>
 </div>
 </section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>育成と休息を計画し、進化して勝とう。</h2></div><p>TRAIN・REST・CHALLENGEをタップ。PCは1〜3またはT/R/C。15ターン以内にレベル4へ育てます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="経験値と進化" src="../../../../play/growth-evolution/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>経験値追加後、前level<5かつ新level>=5なら一度だけ進化を始めます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if oldLevel &lt; 5 &amp;&amp; level >= 5 { evolve() }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_monster-growth.svg" alt="モンスターを育てる" loading="lazy" decoding="async"><figcaption>モンスターを育てるの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>育成と休息を計画し、進化して勝とう。</h2></div><p>TRAIN・REST・CHALLENGEをタップ。PCは1〜3またはT/R/C。15ターン以内にレベル4へ育てます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="経験値と進化" src="../../../../play/growth-evolution/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GROWTH CURVE</p><h2>経験値を残し、レベルと能力を計算する。</h2><p class="lesson-lead">経験値を<strong>(次レベル)²×10</strong>の境界と比べます。進化では経験値や現在HPを消さず、基礎能力を持つ種族定義だけを替えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>曲線からレベル</h3><p>次の境界を超える間levelを増やします。</p><code>exp &gt;= (level+1)*(level+1)*10</code></article><article><span class="concept-number">2</span><h3>能力を再計算</h3><p>種族の基礎値へレベル成長を足します。</p><code>attack = baseAttack + level*2</code></article><article><span class="concept-number">3</span><h3>定義だけ切替</h3><p>レベル4でspeciesIDを変更し、expとhpは保持します。</p><code>m.speciesID = evolvedID</code></article></div><div class="motion-lab" data-lab="xp-level" data-gained="+4 XP" data-evolve="進化できる！" aria-labelledby="lab-title-growth-evolution">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / XP CURVE</p>
@@ -149,6 +133,8 @@ if level &gt;= 4 {
         </form>
       </div>
     </section>
+
+
 
 
 

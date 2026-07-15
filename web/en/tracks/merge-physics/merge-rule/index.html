@@ -20,33 +20,17 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/merge-physics/merge-rule/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/merge-physics/merge-rule/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Merge Physics Puzzle</a><span>STEP 05 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Matching Fruit Merge</h1><p>When equal tiers touch, remove both and create one larger circle at their midpoint.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Collision events and replacement</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Match numbers and create TIER 6.</h2></div><p>Tap a horizontal position to drop the next fruit.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Matching Fruit Merge" src="../../../../play/merge-rule/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if a.tier == b.tier { merge(a, b) }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if a.tier == b.tier { merge(a, b) }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_merge-step.svg" alt="Merge matching objects" loading="lazy" decoding="async"><figcaption>A visual map of Merge matching objects. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Match numbers and create TIER 6.</h2></div><p>Tap a horizontal position to drop the next fruit.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Matching Fruit Merge" src="../../../../play/merge-rule/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / REPLACE</p><h2>What happens in the slice when two become one?</h2><p class="lesson-lead">Removing during a loop shifts indices. First mark two as <strong>pending deletion</strong>, queue one new fruit, then replace everything at the end.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Same type</h3><p>Compare the tier of both touching circles.</p><code>a.tier == b.tier</code></article><article><span class="concept-number">2</span><h3>Midpoint</h3><p>Add both positions and divide by two.</p><code>(a.position+b.position)/2</code></article><article><span class="concept-number">3</span><h3>Replace</h3><p>Remove two old and add tier+1.</p><code>spawn(tier + 1)</code></article></div><div class="motion-lab" data-lab="merge-same" data-mismatch="tiers differ — no merge" data-merge="merged → T{n}" aria-labelledby="lab-title-merge-rule">
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / REPLACE</p><h2>What happens in the slice when two become one?</h2><p class="lesson-lead">Removing during a loop shifts indices. First mark two as <strong>pending deletion</strong>, queue one new fruit, then replace everything at the end.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Same type</h3><p>Compare the tier of both touching circles.</p><code>a.tier == b.tier</code></article><article><span class="concept-number">2</span><h3>Midpoint</h3><p>Add both positions and divide by two.</p><code>(a.position+b.position)/2</code></article><article><span class="concept-number">3</span><h3>Replace</h3><p>Remove two old and add tier+1.</p><code>spawn(tier + 1)</code></article></div><div class="motion-lab" data-lab="merge-same" data-mismatch="tiers differ — no merge" data-merge="merged → T{n}" aria-labelledby="lab-title-merge-rule">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / SAME TIER</p>
 <h3 id="lab-title-merge-rule">Merge only matching tiers</h3>
@@ -82,6 +66,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

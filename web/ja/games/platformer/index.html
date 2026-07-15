@@ -38,44 +38,25 @@
       <h1>Platformer</h1>
       <p>横スクロールアクションの核心は2つです。「X軸とY軸を分けて衝突解決する」こと、そして「カメラがプレイヤーをなめらかに追いかける」こと。どちらも数行のコードで実現できます。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>衝突の解決とカメラ</strong></div>
-      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01</a>の状態境界に沿って書きます。ルールはUpdate、描画は自由です。</p>
+      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01</a>と同じく、位置や得点などゲームの中身はUpdateで進めます。Drawは中身を変えず、画面への見せ方だけを担当します。</p>
+    </section>
+
+<section class="play lesson-play" id="play">
+      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>走って、ジャンプして、コインを集めろ。</h2></div><p>A/D または左右矢印で走り、スペースまたは上タッチでジャンプ。コイン7枚を集めてゴールへ。落ちたらミスです。</p></div>
+      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 10</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Platformer" src="../../../play/platformer/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>めり込みは物体が壁の中へ重なること。Xを動かして直し、次にYを動かして直すと角でも滑れます。0.09はカメラが差の9%ずつ追う調整値です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>cameraX += (playerX-cameraX) * .09</code></pre></div></section>
 <!-- feedback-note:games/platformer:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-platformer"><div><p class="eyebrow">重なりを先に見る</p><h2 id="feedback-note-games-platformer">衝突はXを直してから、Yを直す</h2><p>まず2つの箱が重なったかを見ます。横のめり込みをXだけ戻し、次に縦のめり込みをYだけ戻すと、床の角でも滑らかに着地できます。gravityの小数は落下を滑らかにするためです。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="XとYを別に解決する順番"><span>重なった？</span><b>→ Xを分離</b><b>→ Yを分離</b><strong>着地</strong></div></div></section>
 <!-- feedback-note:games/platformer:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_jump-arc.svg" alt="ジャンプの軌道" loading="lazy" decoding="async"><figcaption>ジャンプの軌道の見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_tile-map.svg" alt="タイルマップを再生する" loading="lazy" decoding="async"><figcaption>タイルマップを再生するの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>走って、ジャンプして、コインを集めろ。</h2></div><p>A/D または左右矢印で走り、スペースまたは上タッチでジャンプ。コイン7枚を集めてゴールへ。落ちたらミスです。</p></div>
-      <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 10</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Platformer" src="../../../play/platformer/" allow="autoplay; fullscreen"></iframe></div></div>
-    </section>
+<!-- END BEGINNER BRIDGE -->
 
-    <section class="physics" id="learn">
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / COLLISION AND CAMERA</p>
         <h2>壁にめり込まず、<br>カメラはどう動くの？</h2>
@@ -90,7 +71,7 @@
         <article><span class="concept-number">3</span><h3>カメラの追従</h3><p>カメラは目標の位置に、少しずつ近づいていきます——毎フレーム、<strong>残りの距離の約9%だけ</strong>動く、という意味です。もし一気に100%動いてピタッと追いつくと、プレイヤーの小さな動きにもカメラが急にガクッと反応して見づらくなります。少しずつ近づくことで、画面がなめらかになり、見ていて目が回りにくくなります。この動き方を「線形補間（イージング）」と呼びます。</p><code>camera += (target - camera) * .09</code></article>
       </div>
 
-      
+
       <div class="motion-lab" data-lab="camera"  aria-labelledby="lab-title-platformer">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / LAB</p>
@@ -171,7 +152,7 @@ target := g.player.x - width*.38
 g.camera += (target - g.camera) * .09</code></pre>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — まずここを見る</p>
         <ol>
@@ -479,6 +460,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

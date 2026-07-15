@@ -36,28 +36,8 @@
       <h1>Tap the Target</h1>
       <p>A tiny game where you tap glowing circles as they appear. This is where you learn how a game runs—and how taps become numbers on screen.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Game loop and input</strong></div>
-      <p class="curriculum-bridge" style="margin-top:22px">Want to run code on your own PC first? See <a href="../../guides/setup/">Getting started setup</a> (install Go → empty window). This page’s demo also works in the browser alone.</p>
+      <a class="cta" href="#play">PLAY BEFORE THE EXPLANATION <b>↓</b></a>
     </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *game) Update() error { g.score++; return nil }</code></pre></div></section>
-<!-- feedback-note:games/tap-target:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-tap-target"><div><p class="eyebrow">Numbers → picture</p><h2 id="feedback-note-games-tap-target">Decide the numbers before drawing</h2><p>Update advances the state; Draw only reads that snapshot. Its timing and presentation can be replaced without changing the rules. Compare the live WASM views below to see the difference. The top-left is (0,0), and a file using math.Hypot starts with <code>import "math"</code>.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="Draw projects Update state onto the screen">UPDATE x=0 → 1 → 2
-          ↓
-      GAME STATE
-          ↓
-    Draw(screen)
-          ↓
-        PIXELS</pre></div></section>
-<!-- feedback-note:games/tap-target:end -->
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 
 
 
@@ -70,20 +50,16 @@
 
 
 
-<!-- diagram-lesson:start -->
-<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_core-loop.svg" alt="LEVEL 01 game loop" loading="lazy" decoding="async"><figcaption>A visual map of LEVEL 01 game loop. Trace the numbers and pictures before reading the code.</figcaption></figure>
-<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_input-coordinate.svg" alt="Input to canvas coordinates" loading="lazy" decoding="async"><figcaption>A visual map of Input to canvas coordinates. Trace the numbers and pictures before reading the code.</figcaption></figure>
-<!-- diagram-lesson:end -->
+
 <section class="play lesson-play" id="play">
-      <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>First, tap the circle.</h2></div><p>Score with click, tap, or touch. How many hits can you land in 30 seconds? Keep touch targets at least 48dp (about 48 CSS pixels) and show a color or ring immediately when a hit lands.</p></div>
+      <div class="section-head"><div><p class="eyebrow">PLAY FIRST</p><h2>The explanation can wait.<br>Press the glowing target.</h2></div><p>Use a mouse click or touch the screen. A hit adds one point and moves the target somewhere else. See how many hits you can land in 30 seconds.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Tap the Target" src="../../../play/tap-target/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 
     <section class="learn" id="basics">
       <p class="eyebrow">WHAT'S INSIDE / BEFORE ANYTHING ELSE</p>
       <h2>Ebitengine calls three methods:<br>Update, Draw, and Layout.</h2>
-      <p class="lesson-lead">A <strong>method is a function—a named piece of work—attached to the Game box</strong>. The three answers are <strong>Update, Draw, and Layout</strong>. Update is the game clock, normally ticking about 60 times per second, and owns input, rules, physics, and state. Draw only projects the latest snapshot; even if it runs once per second under load, the next Update must continue the same game. This is not two equal alternating jobs: progress lives in Update, pixels live in Draw. Layout returns the game's logical size.</p>
+      <p class="lesson-lead">Split the game you just played into three jobs. <strong>Update</strong> reads input and advances rules and state—“a hit adds one point” and “move the target”—at the engine's configured tick rate. <strong>Draw</strong> reads the latest state when called and presents it. No matter how often Draw is called, it must not secretly change the score or target position. <strong>Layout</strong> answers the game's logical size. In Go, a job attached to Game like this is called a <strong>method</strong>.</p>
       <div class="steps" style="grid-template-columns:repeat(3,1fr)">
         <article><b>01</b><h3>UPDATE</h3><p>Read input and advance the <strong>numbers</strong>—score, positions, timers. Do not draw here.</p><code>func (g *Game) Update() error</code></article>
         <article><b>02</b><h3>DRAW</h3><p>Paint circles and text from the current numbers. Do not read input, run game math, or mutate state here.</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
@@ -93,13 +69,13 @@
       <div class="motion-lab" data-lab="loop" data-update="UPDATE" data-draw="DRAW" data-update-note="Change numbers (score, positions, timers)" data-draw-note="Paint the current numbers on screen" aria-labelledby="loop-lab-title">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / GAME LOOP</p>
-          <h3 id="loop-lab-title">Step through the state boundary</h3>
-          <p>Each click flips this teaching phase. In a real game, Update advances the game clock and Draw presents the latest snapshot. If rendering slows down, Update-side input and rules continue unchanged.</p>
+          <h3 id="loop-lab-title">Compare the two independent jobs</h3>
+          <p>The button only changes which role this teaching model highlights; it does not reproduce an execution order. Update advances the game. Draw presents the state when called.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="update draw" data-go-caption="Update changes numbers → Draw paints the frame">Next phase</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="update draw" data-go-caption="Compare the job that advances the game with the job that presents it">Switch highlighted role</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
-          <p class="lab-hint">Update is the roughly 60 Hz game clock; Draw presents the latest state. Slow or skipped Draw calls must not change the rules or input result.</p>
+          <p class="lab-hint">Update's tick rate can be configured. Changing Draw frequency or presentation must not change the rules or input result.</p>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-loop-board" data-lab-board data-phase="update" role="img" aria-label="Update and Draw phases">
@@ -107,9 +83,9 @@
             <span data-lab-note>Change numbers (score, positions, timers)</span>
           </div>
           <div class="lab-values" aria-live="polite">
-            <div><span>phase</span><strong data-lab-phase>UPDATE</strong><small>what is running</small></div>
-            <div><span>frame</span><strong data-lab-frame>0</strong><small>which flipbook page</small></div>
-            <div><span>order</span><strong>U → D</strong><small>always this sequence</small></div>
+            <div><span>highlight</span><strong data-lab-phase>UPDATE</strong><small>role being explained</small></div>
+            <div><span>switches</span><strong data-lab-frame>0</strong><small>teaching-button presses</small></div>
+            <div><span>contract</span><strong>SEPARATE</strong><small>Draw never changes state</small></div>
           </div>
         </div>
 <div class="lab-go-block">
@@ -124,7 +100,7 @@
       <details class="basics-extra">
         <summary>Optional: Layout and the build path (fine to learn later)</summary>
         <div class="steps" style="grid-template-columns:1fr">
-          <article><b>EXTRA</b><h3>Same state, same picture</h3><p>The same <code>game</code> draws the same frame. Update decides rules; Draw projects the answer.</p><code>Update → game → Draw</code></article>
+          <article><b>EXTRA</b><h3>One state can have any presentation</h3><p>Rules and positions live in <code>game</code>; Draw decides how to present them. Replace the presentation and the game rules stay intact.</p><code>Update → game / game → Draw</code></article>
         </div>
         <div class="recipe">
           <div><p class="eyebrow">BUILD RECIPE</p><h3>From Go code to a game on the web.</h3></div>
@@ -137,7 +113,29 @@
       </details>
     </section>
 
-    <section class="physics" id="learn">
+
+
+<!-- diagram-lesson:start -->
+<figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_core-loop.svg" alt="LEVEL 01 game loop" loading="lazy" decoding="async"><figcaption>A visual map of LEVEL 01 game loop. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_input-coordinate.svg" alt="Input to canvas coordinates" loading="lazy" decoding="async"><figcaption>A visual map of Input to canvas coordinates. Trace the numbers and pictures before reading the code.</figcaption></figure>
+<!-- diagram-lesson:end -->
+<!-- feedback-note:games/tap-target:start -->
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-tap-target"><div><p class="eyebrow">Game facts → presentation</p><h2 id="feedback-note-games-tap-target">Advance the game first; presentation reads those facts</h2><p>Update advances game facts such as score and position. Draw does not change them; it presents them whenever called. The live example below shows one game state through different presentations at the same time.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="game facts and presentation">UPDATE: score / position
+          ↓
+        game
+          ↓
+DRAW: choose how to present it</pre></div></section>
+<!-- feedback-note:games/tap-target:end -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
+  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
+</section>
+<!-- renderer-freedom:end -->
+<section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / INPUT &amp; COORDINATES</p>
         <h2>How does the game<br>know where you tapped?</h2>
@@ -214,7 +212,7 @@
 }</code></pre>
       </div>
 
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — look here first</p>
         <p class="lab-hint" style="margin-bottom:8px">Think of these three as a map for reading the full listing below. Follow this order first and you won't get lost — you do not need to understand every line right away.</p>
@@ -411,6 +409,8 @@ func main() {
         </form>
       </div>
     </section>
+
+
 
 
 

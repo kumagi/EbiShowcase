@@ -22,33 +22,17 @@
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/sandbox/terrain-generation/">EN</a></nav></header><main class="overview-main">
 <div class="lesson-breadcrumb"><a href="../">← 2Dブロックサンドボックス</a><span>STEP 02 / 07</span></div>
 <section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>地形を生み出す</h1><p>seedからなめらかな高さ、土と石の層、地下の空洞を作り、同じ数字なら同じ世界を再現します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>ノイズ・地層・seed</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>生成された世界を歩き、3本の観測ビーコンを探そう。</h2></div><p>左右ボタンを長押し。PCでは←→またはA/D。38秒以内に3本へ触れればクリア。NEXT SEEDまたはNで別世界、Rで同じ世界を作り直せます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="seedから地形を生み出す探索" src="../../../../play/terrain-generation/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>0=草、1=砂、2=水の対応表を先に決めます。同じseedなら同じ教材世界を再現できます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>tile := rng.Intn(3)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_sandbox-seed.svg" alt="シードから世界を作る" loading="lazy" decoding="async"><figcaption>シードから世界を作るの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>生成された世界を歩き、3本の観測ビーコンを探そう。</h2></div><p>左右ボタンを長押し。PCでは←→またはA/D。38秒以内に3本へ触れればクリア。NEXT SEEDまたはNで別世界、Rで同じ世界を作り直せます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="seedから地形を生み出す探索" src="../../../../play/terrain-generation/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SEEDED VALUE NOISE</p><h2>大きな世界を保存せず、数字と座標から作り直す。</h2><p class="lesson-lead">マスごとに完全にばらばらな高さを選ぶと、針のような地面になります。このゲームはseedと座標から同じ乱数を作り、となりの値との間をなめらかにつなぐ<strong>値ノイズ</strong>を使います。高さが決まったら、深さで草・土・石へ分けます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>seedと座標を混ぜる</h3><p><code>hash(seed, x, y)</code>は、同じ3つの数字なら毎回同じ値を返します。実行する順番に左右されないので、遠い場所も直接作れます。</p><code>n := hash(seed, x, y)</code></article><article><span class="concept-number">2</span><h3>点の間をなめらかにつなぐ</h3><p>8列ごとの乱数を目印にし、その間を<code>smooth</code>で少しずつ変えます。高さが急に何段も飛びにくくなります。</p><code>height := 3 + int(valueNoise(seed, x/8)*6)</code></article><article><span class="concept-number">3</span><h3>表面からの深さで地層</h3><p>高さと同じyは草、その下3マスは土、さらに下は石です。地下ノイズが0.70より大きい石だけを空へ戻すと空洞になります。</p><code>if y &gt; surface+3 { tile = Stone }</code></article></div>
@@ -103,6 +87,8 @@ for y := surfaceY; y &lt; worldH; y++ {
         </form>
       </div>
     </section>
+
+
 
 
 

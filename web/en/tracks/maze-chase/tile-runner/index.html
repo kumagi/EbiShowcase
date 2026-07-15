@@ -20,33 +20,17 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/maze-chase/tile-runner/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/maze-chase/tile-runner/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Maze Chase</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Run the Maze</h1><p>Represent a maze with wall and corridor tiles, moving straight to the center of each legal next tile.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Tile centers, passability, and center-to-center motion</strong></div></section>
+<p class="curriculum-bridge">This continues the shared foundation. If the frame loop is new, begin with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>. Here Update changes the current tile and travel progress; Draw places the runner at the in-between position.</p>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Collect twelve maze pearls within 45 seconds.</h2></div><p>Hold a direction while on a center. A wall direction never starts. Use arrows/WASD or hold the bottom buttons with mouse or touch.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Run the Maze" src="../../../../play/tile-runner/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if map[ny][nx] != Wall { x,y = nx,ny }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if map[ny][nx] != Wall { x,y = nx,ny }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
-<p class="curriculum-bridge">This continues the shared foundation. If the frame loop is new, begin with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>. Here Update changes the current tile and travel progress; Draw places the runner at the in-between position.</p><!-- diagram-lesson:start -->
+<!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Collect twelve maze pearls within 45 seconds.</h2></div><p>Hold a direction while on a center. A wall direction never starts. Use arrows/WASD or hold the bottom buttons with mouse or touch.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Run the Maze" src="../../../../play/tile-runner/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CENTER TO CENTER</p><h2>Connect free-moving screen coordinates to maze cells.</h2><p class="lesson-lead">Maze data is a maze[y][x] table of characters: # means wall and . means corridor. The runner remembers its tile, adds a direction to make a <strong>candidate tile</strong>, and begins moving only when that tile is open.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Turn a tile into its center</h3><p>Multiply column x by tile width, then add the maze left and half a tile. The same equation for y gives every corridor a center.</p><code>centerX = mazeX + tileX*tileSize + tileSize/2</code></article><article><span class="concept-number">2</span><h3>Check whether the next tile is legal</h3><p>Add a direction such as (-1,0). Movement is legal when the candidate is inside and maze[nextY][nextX] is not #.</p><code>passable := maze[next.y][next.x] != '#'</code></article><article><span class="concept-number">3</span><h3>Interpolate center to center</h3><p>Increase progress from zero to one and draw between from and to. At one, set the current tile to target.</p><code>screenX = fromX + (toX-fromX)*progress</code></article></div><div class="motion-lab" data-lab="tile" data-blocked="wall that way" aria-labelledby="lab-title-tile-runner">
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CENTER TO CENTER</p><h2>Connect free-moving screen coordinates to maze cells.</h2><p class="lesson-lead">Maze data is a maze[y][x] table of characters: # means wall and . means corridor. The runner remembers its tile, adds a direction to make a <strong>candidate tile</strong>, and begins moving only when that tile is open.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Turn a tile into its center</h3><p>Multiply column x by tile width, then add the maze left and half a tile. The same equation for y gives every corridor a center.</p><code>centerX = mazeX + tileX*tileSize + tileSize/2</code></article><article><span class="concept-number">2</span><h3>Check whether the next tile is legal</h3><p>Add a direction such as (-1,0). Movement is legal when the candidate is inside and maze[nextY][nextX] is not #.</p><code>passable := maze[next.y][next.x] != '#'</code></article><article><span class="concept-number">3</span><h3>Interpolate center to center</h3><p>Increase progress from zero to one and draw between from and to. At one, set the current tile to target.</p><code>screenX = fromX + (toX-fromX)*progress</code></article></div><div class="motion-lab" data-lab="tile" data-blocked="wall that way" aria-labelledby="lab-title-tile-runner">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / LEGAL TILE</p>
 <h3 id="lab-title-tile-runner">Walls reject the step</h3>
@@ -95,6 +79,8 @@ if passable(next) {
         </form>
       </div>
     </section>
+
+
 
 
 

@@ -20,32 +20,16 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/merge-physics/same-merge/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/merge-physics/merge-rule/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 合体物理パズル</a><span>STEP 05 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>同じ実の合体</h1><p>同じ段階の円が触れたら2個を消し、中点へ次の大きさを1個生成します。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>衝突イベントと置き換え</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>同じ数字を重ねてTIER 6を作ろう。</h2></div><p>横位置をタップして次の実を投入します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="同じ実の合体" src="../../../../play/merge-rule/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>同じtierの円が触れたら二つを消し、中心へtier+1を一つ作ります。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if a.tier == b.tier { merge(a, b) }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>同じ数字を重ねてTIER 6を作ろう。</h2></div><p>横位置をタップして次の実を投入します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="同じ実の合体" src="../../../../play/merge-rule/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / REPLACE</p><h2>2個が1個になる時、配列では何が起きる？</h2><p class="lesson-lead">衝突中にすぐ配列を切ると番号がずれます。まず2個へ<strong>削除予定</strong>の印を付け、新しい1個を予約し、最後にまとめて置き換えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>同種判定</h3><p>触れた2個のtierが同じか調べます。</p><code>a.tier == b.tier</code></article><article><span class="concept-number">2</span><h3>中点</h3><p>2つの位置を足して2で割ります。</p><code>(a.position+b.position)/2</code></article><article><span class="concept-number">3</span><h3>置き換え</h3><p>古い2個を除き、tier+1を追加します。</p><code>spawn(tier + 1)</code></article></div><div class="motion-lab" data-lab="merge-same" data-mismatch="段が違うので合体しない" data-merge="合体して T{n} に！" aria-labelledby="lab-title-merge-rule">
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / REPLACE</p><h2>2個が1個になる時、配列では何が起きる？</h2><p class="lesson-lead">衝突中にすぐ配列を切ると番号がずれます。まず2個へ<strong>削除予定</strong>の印を付け、新しい1個を予約し、最後にまとめて置き換えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>同種判定</h3><p>触れた2個のtierが同じか調べます。</p><code>a.tier == b.tier</code></article><article><span class="concept-number">2</span><h3>中点</h3><p>2つの位置を足して2で割ります。</p><code>(a.position+b.position)/2</code></article><article><span class="concept-number">3</span><h3>置き換え</h3><p>古い2個を除き、tier+1を追加します。</p><code>spawn(tier + 1)</code></article></div><div class="motion-lab" data-lab="merge-same" data-mismatch="段が違うので合体しない" data-merge="合体して T{n} に！" aria-labelledby="lab-title-merge-rule">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / SAME TIER</p>
 <h3 id="lab-title-merge-rule">同じ段だけ合体させよう</h3>
@@ -81,6 +65,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

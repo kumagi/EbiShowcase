@@ -20,33 +20,17 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/match3/clear-and-fall/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/match3/clear-and-fall/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Match-three Puzzle</a><span>STEP 03 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Clear and Fall</h1><p>Empty matched cells, compact columns, then animate the fall: the array settles immediately; Draw lerps y over a few frames.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Fall tween = Update progress × Draw lerp</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Watch clear, fall, and refill one step at a time.</h2></div><p>Tap the bottom button or press Space. Complete three cycles to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Clear and Fall" src="../../../../play/clear-and-fall/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>drawY := oldY + (newY-oldY)*progress</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>drawY := oldY + (newY-oldY)*progress</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Watch clear, fall, and refill one step at a time.</h2></div><p>Tap the bottom button or press Space. Complete three cycles to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Clear and Fall" src="../../../../play/clear-and-fall/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FALL TWEEN</p><h2>Settle the array now. Let Draw chase with progress.</h2><p class="lesson-lead">The key to match-3 falls is splitting <strong>logical board</strong> from <strong>drawn y</strong>. Update compacts columns to final cells and stores <code>fromY→toY</code> plus <code>progress</code> (0→1). While falling, ignore input; only Draw paints the in-between height. No physics engine needed.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Commit logic first</h3><p>Mark empties and compact each column. That final board is what cascade checks will read next.</p><code>compactColumns()</code></article><article><span class="concept-number">2</span><h3>Advance progress only</h3><p>While falling, do not read Space—just <code>progress += 0.07</code>. At 1.0, unlock the refill step.</p><code>if falling { progress += …; return }</code></article><article><span class="concept-number">3</span><h3>Draw interpolates</h3><p>Paint each gem at <code>fromY+(toY-fromY)*progress</code>. Keep logical coords still during the tween.</p><code>y = lerp(fromY, toY, progress)</code></article></div>
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FALL TWEEN</p><h2>Settle the array now. Let Draw chase with progress.</h2><p class="lesson-lead">The key to match-3 falls is splitting <strong>logical board</strong> from <strong>drawn y</strong>. Update compacts columns to final cells and stores <code>fromY→toY</code> plus <code>progress</code> (0→1). While falling, ignore input; only Draw paints the in-between height. No physics engine needed.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Commit logic first</h3><p>Mark empties and compact each column. That final board is what cascade checks will read next.</p><code>compactColumns()</code></article><article><span class="concept-number">2</span><h3>Advance progress only</h3><p>While falling, do not read Space—just <code>progress += 0.07</code>. At 1.0, unlock the refill step.</p><code>if falling { progress += …; return }</code></article><article><span class="concept-number">3</span><h3>Draw interpolates</h3><p>Paint each gem at <code>fromY+(toY-fromY)*progress</code>. Keep logical coords still during the tween.</p><code>y = lerp(fromY, toY, progress)</code></article></div>
 <div class="motion-lab" data-lab="match-scan" data-found="ready to clear" data-none="no match yet" data-cleared="collapsed" aria-labelledby="lab-title-clear-and-fall">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / GRAVITY</p>
@@ -97,6 +81,8 @@ for write &gt;= 0 { board[write][x] = empty; write-- }
         </form>
       </div>
     </section>
+
+
 
 
 

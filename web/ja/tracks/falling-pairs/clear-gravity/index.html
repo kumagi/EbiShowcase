@@ -20,33 +20,17 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/falling-pairs/clear-gravity/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/falling-pairs/clear-gravity/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 落下ペア連鎖パズル</a><span>STEP 04 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>消去とちぎれ落ち</h1><p>4個以上の全グループを同時に消し、その後で各列の残りを下から詰めます。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>同時消去・空きマス・列圧縮</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>4枚の盤面を正しい二段階で解決しよう。</h2></div><p>白枠を確認してCLEAR ALL、その穴を確認してGRAVITY、止まったらNEXT。順番を3回間違えると失敗です。クリック/タップ、またはC/G/N。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="消去とちぎれ落ち" src="../../../../play/clear-gravity/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>各列を独立に下から詰めます。下→上なら、まだ読んでいないピースを上書きしません。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>for x:=0; x&lt;width; x++ { compactColumn(x) }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>4枚の盤面を正しい二段階で解決しよう。</h2></div><p>白枠を確認してCLEAR ALL、その穴を確認してGRAVITY、止まったらNEXT。順番を3回間違えると失敗です。クリック/タップ、またはC/G/N。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="消去とちぎれ落ち" src="../../../../play/clear-gravity/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CLEAR THEN COMPACT</p><h2>「消す」と「落とす」を、同じループに混ぜない。</h2><p class="lesson-lead">前のSTEPで見つけた4個以上のグループをmarkedへ全部集めます。まずmarkedをすべて空へ変え、盤面の穴を確定します。その後にだけ、各列を下から読み直して<strong>圧縮</strong>します。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>消す対象を先に全部集める</h3><p>盤面を書き換える前にFlood Fillを終え、条件を通った複数グループの座標を一つのmarkedへ入れます。</p><code>marked[p] = true</code></article><article><span class="concept-number">2</span><h3>全グループを同時に空へ</h3><p>markedを一周してemptyを書きます。探索中に消さないので、後のグループのつながりを壊しません。</p><code>for p := range marked { board[p.y][p.x] = empty }</code></article><article><span class="concept-number">3</span><h3>列を下から圧縮</h3><p>writeを最下段に置き、下から上へ空でないセルだけコピーします。最後にwriteより上をemptyで埋めます。</p><code>board[write][x] = board[read][x]; write--</code></article></div><div class="motion-lab" data-lab="turn" data-states="グループ探索,同時消去,列圧縮,停止確認" aria-labelledby="clear-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / TWO-STAGE BOARD UPDATE</p><h3 id="clear-lab-title">盤面処理を一段階ずつ進めよう</h3><p>探索、消去、圧縮、停止の順に進めます。途中の状態を分けると、どこでデータが変わったか追えます。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="next act">次の段階</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>最初へ戻す</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board role="img" aria-label="探索から停止までの盤面処理"></div><div class="lab-values"><div><span>現在</span><strong data-lab-state>グループ探索</strong></div><div><span>変更単位</span><strong>board phase</strong></div><div><span>順番</span><strong>1つずつ</strong></div></div></div>
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CLEAR THEN COMPACT</p><h2>「消す」と「落とす」を、同じループに混ぜない。</h2><p class="lesson-lead">前のSTEPで見つけた4個以上のグループをmarkedへ全部集めます。まずmarkedをすべて空へ変え、盤面の穴を確定します。その後にだけ、各列を下から読み直して<strong>圧縮</strong>します。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>消す対象を先に全部集める</h3><p>盤面を書き換える前にFlood Fillを終え、条件を通った複数グループの座標を一つのmarkedへ入れます。</p><code>marked[p] = true</code></article><article><span class="concept-number">2</span><h3>全グループを同時に空へ</h3><p>markedを一周してemptyを書きます。探索中に消さないので、後のグループのつながりを壊しません。</p><code>for p := range marked { board[p.y][p.x] = empty }</code></article><article><span class="concept-number">3</span><h3>列を下から圧縮</h3><p>writeを最下段に置き、下から上へ空でないセルだけコピーします。最後にwriteより上をemptyで埋めます。</p><code>board[write][x] = board[read][x]; write--</code></article></div><div class="motion-lab" data-lab="turn" data-states="グループ探索,同時消去,列圧縮,停止確認" aria-labelledby="clear-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / TWO-STAGE BOARD UPDATE</p><h3 id="clear-lab-title">盤面処理を一段階ずつ進めよう</h3><p>探索、消去、圧縮、停止の順に進めます。途中の状態を分けると、どこでデータが変わったか追えます。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="next act">次の段階</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>最初へ戻す</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board role="img" aria-label="探索から停止までの盤面処理"></div><div class="lab-values"><div><span>現在</span><strong data-lab-state>グループ探索</strong></div><div><span>変更単位</span><strong>board phase</strong></div><div><span>順番</span><strong>1つずつ</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
 <pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="state">switch phase {</span>
@@ -89,6 +73,8 @@
         </form>
       </div>
     </section>
+
+
 
 
 

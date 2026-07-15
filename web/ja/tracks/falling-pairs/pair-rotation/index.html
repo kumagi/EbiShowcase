@@ -50,29 +50,6 @@
 <strong>4方向状態と壁補正</strong>
 </div>
 </section>
-<!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>相方の差(dx,dy)を90度回すと(-dy,dx)。新しい列と行が盤内で空の時だけ採用します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>newDX, newDY := -dy, dx</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <section class="overview-plan">
 <p class="eyebrow">PLAY / INSPECT / BUILD</p>
 <h2>データの変化を見て、<br>ルールを組み立てる。</h2>
@@ -94,10 +71,17 @@
 </article>
 </div>
 </section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>回転を使って8組を固定しよう。</h2></div><p>←→、Spaceで回転、↓で落下。画面下ボタンはタッチ対応。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="ペアを回転する" src="../../../../play/pair-rotation/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>相方の差(dx,dy)を90度回すと(-dy,dx)。新しい列と行が盤内で空の時だけ採用します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>newDX, newDY := -dy, dx</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>回転を使って8組を固定しよう。</h2></div><p>←→、Spaceで回転、↓で落下。画面下ボタンはタッチ対応。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="ペアを回転する" src="../../../../play/pair-rotation/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / PIVOT ROTATION</p><h2>中心はそのまま、相方の方向だけを替える。</h2><p class="lesson-lead">相方は中心からの<strong>4方向の差</strong>で表します。回転後が壁なら中心を左右へずらす候補を試します。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>方向表</h3><p>上右下左を差の配列にします。</p><code>dirs={{0,-1},{1,0},{0,1},{-1,0}}</code></article><article><span class="concept-number">2</span><h3>次の方向</h3><p>4の余りで循環します。</p><code>next=(dir+1)%4</code></article><article><span class="concept-number">3</span><h3>壁補正</h3><p>通常、左、右、上の候補を順に試します。</p><code>kicks := []point{{0,0},{-1,0},{1,0},{0,-1}}</code></article></div><div class="motion-lab" data-lab="kick-try" data-kicks="0,0;1,0;-1,0;0,1" data-ok="補正 ({dx},{dy}) OK" data-blocked="({dx},{dy}) 不可" data-fail="回転キャンセル" aria-labelledby="lab-title-pair-rotation">
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / PIVOT ROTATION</p><h2>中心はそのまま、相方の方向だけを替える。</h2><p class="lesson-lead">相方は中心からの<strong>4方向の差</strong>で表します。回転後が壁なら中心を左右へずらす候補を試します。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>方向表</h3><p>上右下左を差の配列にします。</p><code>dirs={{0,-1},{1,0},{0,1},{-1,0}}</code></article><article><span class="concept-number">2</span><h3>次の方向</h3><p>4の余りで循環します。</p><code>next=(dir+1)%4</code></article><article><span class="concept-number">3</span><h3>壁補正</h3><p>通常、左、右、上の候補を順に試します。</p><code>kicks := []point{{0,0},{-1,0},{1,0},{0,-1}}</code></article></div><div class="motion-lab" data-lab="kick-try" data-kicks="0,0;1,0;-1,0;0,1" data-ok="補正 ({dx},{dy}) OK" data-blocked="({dx},{dy}) 不可" data-fail="回転キャンセル" aria-labelledby="lab-title-pair-rotation">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / PAIR KICKS</p>
 <h3 id="lab-title-pair-rotation">ペア回転のずらしを試そう</h3>
@@ -151,6 +135,8 @@ for _, k := range kicks {
         </form>
       </div>
     </section>
+
+
 
 
 

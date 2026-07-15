@@ -24,33 +24,17 @@
 <body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/falling-blocks/tetromino-shapes/">EN</a></nav></header><main class="overview-main">
 <div class="lesson-breadcrumb"><a href="../">← 落ちものブロックパズル</a><span>STEP 02 / 06</span></div>
 <section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>4マスの形</h1><p>4個のマスを中心からの相対座標で覚え、ばらばらにせず一つの形として落とします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>相対座標と形データ</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>4種類の形を点線のドックへ届けよう。</h2></div><p>左右ボタンまたは←→・A/Dで移動し、中央ボタンかSpaceですぐ落とします。3回外す前にI・O・T・Sの全部をぴったり置けばクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="4マスの形" src="../../../../play/tetromino-shapes/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>相対座標は形の中心から何マスずれたかを表す座標。四つのずれを形データにすると、基準位置へ足すだけで4マスの形を置けます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>boardX := pieceX + cell.dx</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>4種類の形を点線のドックへ届けよう。</h2></div><p>左右ボタンまたは←→・A/Dで移動し、中央ボタンかSpaceですぐ落とします。3回外す前にI・O・T・Sの全部をぴったり置けばクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="4マスの形" src="../../../../play/tetromino-shapes/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RELATIVE COORDINATES</p><h2>形は「親の場所＋4個のずれ」で動かせる。</h2><p class="lesson-lead">4個それぞれの画面座標を動かすと、途中で離れてしまうかもしれません。そこで形に一つの基準点 <code>(x, y)</code> を持たせ、各マスはそこからの<strong>ずれ</strong>だけを覚えます。親を1マス動かせば、4個が同時に動きます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>形をデータで書く</h3><p>O形なら、基準から右、下、右下の4地点です。絵ではなく数字なので、同じ描画や当たり判定をどの形にも使えます。</p><code>{{0,0}, {1,0}, {0,1}, {1,1}}</code></article><article><span class="concept-number">2</span><h3>親の座標を足す</h3><p>実際の盤面マスは <code>x + offset.x</code>。左へ動くときは親のxだけを1減らせば十分です。</p><code>cellX := piece.x + offset.x</code></article><article><span class="concept-number">3</span><h3>4マス全部を検査</h3><p>一つでも壁の外へ出るなら、その移動は取り消します。「全員が入れるか」を確かめてから親を動かします。</p><code>for _, p := range shape.blocks { check(x+p.x) }</code></article></div>
@@ -106,6 +90,8 @@ for _, offset := range shape.blocks {
         </form>
       </div>
     </section>
+
+
 
 
 

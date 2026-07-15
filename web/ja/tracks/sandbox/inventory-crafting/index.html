@@ -50,33 +50,17 @@
 <strong>スタック・レシピ・消費</strong>
 </div>
 </section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>採取して、ツルハシとビーコンを作ろう。</h2></div><p>上の採取場所をタップし、下のレシピをタップ。PCは1〜3で採取、R/P/Bでクラフト。50秒で2つの道具を完成させます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="道具袋とクラフト" src="../../../../play/inventory-crafting/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ドラッグ中はselectedItemを覚え、離したマス番号へ移します。レシピは配置後のID列と必要ID列を比べます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if released { slots[target] = selectedItem }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>採取して、ツルハシとビーコンを作ろう。</h2></div><p>上の採取場所をタップし、下のレシピをタップ。PCは1〜3で採取、R/P/Bでクラフト。50秒で2つの道具を完成させます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="道具袋とクラフト" src="../../../../play/inventory-crafting/" allow="autoplay; fullscreen"></iframe></div></div></section>
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RECIPE TRANSACTION</p><h2>材料を確かめてから、まとめて消費し、完成品を足す。</h2><p class="lesson-lead">同じ素材は <strong>種類と個数の組</strong>として在庫へ束ねます。レシピは必要数の表です。全部そろうか先に確認し、成功する時だけ材料を減らして完成品を増やします。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>採取をスタックへ足す</h3><p>木を2個拾ったら、別々の物体を増やす代わりにwoodの個数へ2を足します。表示も保存も小さくできます。</p><code>inventory[Wood] += 2</code></article><article><span class="concept-number">2</span><h3>レシピ全部を照合</h3><p>木だけでなく、石、繊維、ロープの必要数をすべて比べます。1種類でも不足なら何も消費しません。</p><code>if haveWood &amp;&amp; haveStone &amp;&amp; haveRope</code></article><article><span class="concept-number">3</span><h3>消費と生成を一組にする</h3><p>条件を通った後で必要数を引き、ツルハシなどの完成品を追加します。途中だけ実行しません。</p><code>wood -= 2; stone -= 2; pickaxe = true</code></article></div>
 <div class="motion-lab" data-lab="craft-recipe" data-need="材料不足" data-made="弓を作った" aria-labelledby="lab-title-inventory-crafting">
@@ -135,6 +119,8 @@ addOutput(r.name)</code></pre></div>
         </form>
       </div>
     </section>
+
+
 
 
 

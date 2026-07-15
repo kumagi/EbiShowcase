@@ -18,10 +18,10 @@
     <meta name="twitter:description" content="遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--slingshot--trajectory-preview.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="点で見える発射予測">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/slingshot/trajectory-preview/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← ひっぱり反射アクション</a><span>POLISH 1/2</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>点で見える発射予測</h1><p>引っぱった速度を数フレームだけ先に計算し、白い点として発射前に表示します。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- diagram-lesson:start -->
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/slingshot/trajectory-preview/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← ひっぱり反射アクション</a><span>POLISH 1/2</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>点で見える発射予測</h1><p>引っぱった速度を数フレームだけ先に計算し、白い点として発射前に表示します。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>点で見える発射予測</h2><p>引っぱった速度を数フレームだけ先に計算し、白い点として発射前に表示します。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/trajectory-preview/" title="点で見える発射予測" allow="autoplay; fullscreen"></iframe></div></section>
+<!-- diagram-lesson:start -->
 
-<!-- diagram-lesson:end -->
-<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>点で見える発射予測</h2><p>引っぱった速度を数フレームだけ先に計算し、白い点として発射前に表示します。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/trajectory-preview/" title="点で見える発射予測" allow="autoplay; fullscreen"></iframe></div></section><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>同じ速度式を予測描画にも使う</h2><p>本番の位置を動かさず、仮の座標と速度を用意して数回だけ更新します。実際の移動と同じ式を使うため、照準と発射後の動きが一致します。</p><div class="concept-row"><article><b>01</b><h3>AIM</h3><p>引っぱった速度を数フレームだけ先に計算し、白い点として発射前に表示します。</p></article><article><b>02</b><h3>SIMULATE</h3><p>本番の位置を動かさず、仮の座標と速度を用意して数回だけ更新します。実際の移動と同じ式を使うため、照準と発射後の動きが一致します。</p></article><article><b>03</b><h3>RETRY</h3><p>少ない手数を次の目標にします。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>同じ速度式を予測描画にも使う</h2><p>本番の位置を動かさず、仮の座標と速度を用意して数回だけ更新します。実際の移動と同じ式を使うため、照準と発射後の動きが一致します。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>同じ速度式を予測描画にも使う</h2><p>本番の位置を動かさず、仮の座標と速度を用意して数回だけ更新します。実際の移動と同じ式を使うため、照準と発射後の動きが一致します。</p><div class="concept-row"><article><b>01</b><h3>AIM</h3><p>引っぱった速度を数フレームだけ先に計算し、白い点として発射前に表示します。</p></article><article><b>02</b><h3>SIMULATE</h3><p>本番の位置を動かさず、仮の座標と速度を用意して数回だけ更新します。実際の移動と同じ式を使うため、照準と発射後の動きが一致します。</p></article><article><b>03</b><h3>RETRY</h3><p>少ない手数を次の目標にします。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>同じ速度式を予測描画にも使う</h2><p>本番の位置を動かさず、仮の座標と速度を用意して数回だけ更新します。実際の移動と同じ式を使うため、照準と発射後の動きが一致します。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
   <h2>数字を決める場所と、絵にする場所を分けよう</h2>
@@ -32,14 +32,6 @@
   <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
 </section>
 <!-- update-draw-contract:end -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
-  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>同じ速度式を予測描画にも使う</h2><p>引っぱった速度を数フレームだけ先に計算し、白い点として発射前に表示します。</p></div><pre><code>previewPos := ally.pos
 for i := 0; i &lt; 12; i++ {
     previewPos = step(previewPos, launchVelocity)

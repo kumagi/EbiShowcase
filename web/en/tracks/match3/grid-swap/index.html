@@ -20,34 +20,18 @@
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/match3/grid-swap/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/match3/grid-swap/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Match-three Puzzle</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Swap Neighboring Cells</h1><p>Store a board as rows and columns, then swap only two cells sharing an edge.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Two-dimensional grids and adjacency</strong></div></section>
+
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Make ten legal neighboring swaps.</h2></div><p>Tap the first and second piece. Diagonal and distant cells are rejected. Mouse clicks work on PC.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Swap Neighboring Cells" src="../../../../play/grid-swap/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>adjacent := abs(ax-bx)+abs(ay-by)==1</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>adjacent := abs(ax-bx)+abs(ay-by)==1</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
-<!-- renderer-freedom:start -->
-<section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
-  <h2>Change the picture, not the game.</h2>
-  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
-  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
-</section>
-<!-- renderer-freedom:end -->
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_puzzle-rotation.svg" alt="Puzzle rotation pivot" loading="lazy" decoding="async"><figcaption>A visual map of Puzzle rotation pivot. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_match3-cascade.svg" alt="Match-3 cascade" loading="lazy" decoding="async"><figcaption>A visual map of Match-3 cascade. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Make ten legal neighboring swaps.</h2></div><p>Tap the first and second piece. Diagonal and distant cells are rejected. Mouse clicks work on PC.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Swap Neighboring Cells" src="../../../../play/grid-swap/" allow="autoplay; fullscreen"></iframe></div></div></section><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GRID &amp; ADJACENCY</p><h2>Turn screen coordinates into a board row and column.</h2><p class="lesson-lead">Store pieces in <strong>board[row][column]</strong>. Subtract the board's top-left from a tap and divide by cell size to get integer coordinates.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>A two-dimensional box</h3><p>A 7×6 array remembers type numbers in the same arrangement as the screen. board[2][4] is row three, column five.</p><code>var board [7][6]int</code></article><article><span class="concept-number">2</span><h3>Position to cell</h3><p>Subtract the board origin and divide by 64. Dropping the fraction maps every point inside a cell to one number.</p><code>col := (x - originX) / cellSize</code></article><article><span class="concept-number">3</span><h3>Distance one is adjacent</h3><p>Add the absolute row and column differences. One means up, down, left, or right; two means diagonal or farther.</p><code>abs(ax-bx) + abs(ay-by) == 1</code></article></div><div class="motion-lab" data-lab="hitbox"><div class="lab-copy"><p class="eyebrow">TRY IT / CELL HIT TEST</p><h3>Move a cell hitbox</h3><p>Move the rectangle and observe overlap. The game also treats each board cell as an equal rectangle for taps.</p><div class="lab-controls"><button class="lab-button" data-lab-left>← Left</button><button class="lab-button" data-lab-right>Right →</button><button class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="hitbox-stage"><div class="hitbox-box hitbox-a" data-lab-a>A</div><div class="hitbox-box hitbox-b" data-lab-b>B</div></div><div class="lab-values"><div><span>Result</span><strong data-lab-result>apart</strong></div><div><span>A position</span><strong data-lab-x>0</strong></div></div></div>
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GRID &amp; ADJACENCY</p><h2>Turn screen coordinates into a board row and column.</h2><p class="lesson-lead">Store pieces in <strong>board[row][column]</strong>. Subtract the board's top-left from a tap and divide by cell size to get integer coordinates.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>A two-dimensional box</h3><p>A 7×6 array remembers type numbers in the same arrangement as the screen. board[2][4] is row three, column five.</p><code>var board [7][6]int</code></article><article><span class="concept-number">2</span><h3>Position to cell</h3><p>Subtract the board origin and divide by 64. Dropping the fraction maps every point inside a cell to one number.</p><code>col := (x - originX) / cellSize</code></article><article><span class="concept-number">3</span><h3>Distance one is adjacent</h3><p>Add the absolute row and column differences. One means up, down, left, or right; two means diagonal or farther.</p><code>abs(ax-bx) + abs(ay-by) == 1</code></article></div><div class="motion-lab" data-lab="hitbox"><div class="lab-copy"><p class="eyebrow">TRY IT / CELL HIT TEST</p><h3>Move a cell hitbox</h3><p>Move the rectangle and observe overlap. The game also treats each board cell as an equal rectangle for taps.</p><div class="lab-controls"><button class="lab-button" data-lab-left>← Left</button><button class="lab-button" data-lab-right>Right →</button><button class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="hitbox-stage"><div class="hitbox-box hitbox-a" data-lab-a>A</div><div class="hitbox-box hitbox-b" data-lab-b>B</div></div><div class="lab-values"><div><span>Result</span><strong data-lab-result>apart</strong></div><div><span>A position</span><strong data-lab-x>0</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
 <pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="atk">atk := Rect{x, y, w, h} // active only</span>
@@ -83,6 +67,8 @@ if distance == 1 {
         </form>
       </div>
     </section>
+
+
 
 
 
