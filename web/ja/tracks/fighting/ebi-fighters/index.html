@@ -49,14 +49,18 @@
 <!-- END BEGINNER BRIDGE -->
 <!-- renderer-freedom:start -->
 <section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">同じ STATE、4つの DRAW</p>
+  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
   <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateが作った同じ <code>game</code> を、ASCII、ワイヤーフレーム、ドット絵、美麗なスプライトの4通りで描けます。4分割画面へ同時に描いても、Update・入力・物理は一つのままです。DrawはUpdateの直後に必ず呼ばれる相棒ではなく、状態を読む差し替え可能な投影です。</p>
-  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
-| @ |
-+---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
+  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
 </section>
 <!-- renderer-freedom:end -->
+
+
+
+
+
+
 
 
 
@@ -211,6 +215,12 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

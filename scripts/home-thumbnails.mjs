@@ -39,7 +39,12 @@ function escAttr(value) {
 }
 
 function playSlug(html) {
-  return html.match(/<iframe[^>]+src="[^"]*\/play\/([^/]+)\//)?.[1] || "";
+  for (const match of html.matchAll(/<iframe\b[^>]*>/gi)) {
+    if (match[0].includes("data-shared-demo=")) continue;
+    const slug = match[0].match(/src="[^"]*\/play\/([^/]+)\//)?.[1];
+    if (slug) return slug;
+  }
+  return "";
 }
 
 function resolvePlayable(route) {

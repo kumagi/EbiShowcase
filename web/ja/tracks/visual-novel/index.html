@@ -24,12 +24,13 @@
 <!-- END BEGINNER BRIDGE -->
 <!-- renderer-freedom:start -->
 <section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">同じ STATE、4つの DRAW</p>
+  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
   <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateが作った同じ <code>game</code> を、ASCII、ワイヤーフレーム、ドット絵、美麗なスプライトの4通りで描けます。4分割画面へ同時に描いても、Update・入力・物理は一つのままです。DrawはUpdateの直後に必ず呼ばれる相棒ではなく、状態を読む差し替え可能な投影です。</p>
-  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
-| @ |
-+---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
+  <div class="renderer-freedom-demo"><!-- diagram-lesson:start -->
+
+<!-- diagram-lesson:end -->
+<iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
 </section>
 <!-- renderer-freedom:end -->
 <p class="curriculum-bridge">共通基礎の Updateが進める状態の上に、Drawは自由な投影として、文章を再生する状態と演出を一段ずつ足します。</p><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>台詞から複数章と結末収集へ</h2><p>一文字ずつ読める会話窓から始め、立ち絵演出、選択フラグ、章データを一つずつ加えて、4つの結末を集める物語へ進みます。</p></div><a class="path-step" href="dialogue-window/"><span>01</span><div><h3>一文字ずつ話す会話窓</h3><p>文章を一度に出さず、表示済みの文字数を増やして、タップで全文表示と次の台詞を切り替えます。</p><strong>Updateでshownを少しずつ増やす</strong></div><b>→</b></a>

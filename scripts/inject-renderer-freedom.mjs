@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /** Add the renderer-independence lesson beside the loop contract. */
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { dirname, join, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(join(fileURLToPath(import.meta.url), "..", ".."));
@@ -14,13 +14,14 @@ function walk(dir) {
   });
 }
 
-function panel(ja) {
+function panel(ja, file) {
+  const playURL = relative(dirname(file), join(root, "web", "play", "renderer-freedom")).split(sep).join("/") + "/";
   return `<!-- renderer-freedom:start -->
 <section class="renderer-freedom" aria-label="${ja ? "Drawの独立性" : "Renderer independence"}">
-  <p class="eyebrow">${ja ? "同じ STATE、4つの DRAW" : "ONE STATE, FOUR DRAWS"}</p>
+  <p class="eyebrow">${ja ? "ひとつのゲーム、自由な見せ方" : "ONE GAME, OPEN-ENDED PRESENTATION"}</p>
   <h2>${ja ? "描き方を替えても、ゲームのルールは替わらない。" : "Change the picture, not the game."}</h2>
-  <p>${ja ? "Updateが作った同じ <code>game</code> を、ASCII、ワイヤーフレーム、ドット絵、美麗なスプライトの4通りで描けます。4分割画面へ同時に描いても、Update・入力・物理は一つのままです。DrawはUpdateの直後に必ず呼ばれる相棒ではなく、状態を読む差し替え可能な投影です。" : "The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update."}</p>
-  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+\n| @ |\n+---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+  <p>${ja ? "Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。" : "Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation."}</p>
+  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="${ja ? "同じゲーム状態を異なるDrawで表示する自動プレイデモ" : "Autoplay demo showing one game state through different Draw functions"}" src="${playURL}" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
 </section>
 <!-- renderer-freedom:end -->`;
 }
@@ -34,7 +35,7 @@ for (const lang of ["ja", "en"]) {
     const anchor = clean.includes("<!-- update-draw-contract:end -->")
       ? "<!-- update-draw-contract:end -->"
       : "<!-- END BEGINNER BRIDGE -->";
-    const next = clean.replace(anchor, `${anchor}\n${panel(lang === "ja")}`);
+    const next = clean.replace(anchor, `${anchor}\n${panel(lang === "ja", file)}`);
     if (next !== html) { writeFileSync(file, next); changed++; }
   }
 }

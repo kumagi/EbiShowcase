@@ -41,7 +41,7 @@
   g.bird.y += g.bird.velocity
   <span>return</span> nil
 }</pre><div class="run">GO → WASM → BROWSER</div></div>
-      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01の状態境界に沿って書きます。ルールはUpdate、描画は自由です。</p>
+      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01</a>の状態境界に沿って書きます。ルールはUpdate、描画は自由です。</p>
     </section>
 
     <!-- diagram-lesson:start -->
@@ -113,7 +113,7 @@
     <span>return</span> nil
 }</code></pre>
       </div>
-      
+
             <div class="code-focus">
         <p class="eyebrow">TODAY — まずここを見る</p>
         <ol>
@@ -381,15 +381,27 @@ func main() {
     <nav class="lesson-pager"><a href="../catch-stars/" rel="prev">← LEVEL 03<strong>落ちものキャッチ</strong></a><a href="../pong/" rel="next">LEVEL 05 →<strong>Pong</strong></a></nav>
 
 
-    
 
-    
 
-    
 
-    
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>画面は上がY=0で、下へ行くほどYが増えます。加速度は『速さが毎フレームどれだけ変わるか』。羽ばたき時の-7.4px/frameは上向きの初速度、重力+0.42px/frame²が約16.7msごとに下向きへ戻します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>vy = -7.4; vy += gravity; y += vy</code></pre></div></section>
@@ -399,12 +411,10 @@ func main() {
 <!-- END BEGINNER BRIDGE -->
 <!-- renderer-freedom:start -->
 <section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">同じ STATE、4つの DRAW</p>
+  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
   <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateが作った同じ <code>game</code> を、ASCII、ワイヤーフレーム、ドット絵、美麗なスプライトの4通りで描けます。4分割画面へ同時に描いても、Update・入力・物理は一つのままです。DrawはUpdateの直後に必ず呼ばれる相棒ではなく、状態を読む差し替え可能な投影です。</p>
-  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
-| @ |
-+---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
+  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
 </section>
 <!-- renderer-freedom:end -->
 <section class="feedback-section" aria-labelledby="feedback-title">
@@ -428,6 +438,12 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

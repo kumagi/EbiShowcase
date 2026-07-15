@@ -41,23 +41,29 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>メソッドはGameという箱に結び付いた関数。Updateは1秒に約60回、入力を読みスコアや位置を1コマ進めます。Drawはその数字を絵にするだけで、入力を読んだり状態を書き換えたりしません。Layoutはゲーム内部の基準サイズを返します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *game) Update() error { g.score++; return nil }</code></pre></div></section>
 <!-- feedback-note:games/tap-target:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-tap-target"><div><p class="eyebrow">数字 → 絵</p><h2 id="feedback-note-games-tap-target">アニメは、先に数字を決めてから描く</h2><p>Updateが状態を進め、Drawはそのスナップショットを読むだけです。Drawの呼ばれる順番や見た目は交換できます。画面の左上が(0,0)で、math.Hypotを使うファイルには先に<code>import "math"</code>を書きます。</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="Updateの状態を複数の描き方へ投影">UPDATE x=0 → 1 → 2
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-tap-target"><div><p class="eyebrow">数字 → 絵</p><h2 id="feedback-note-games-tap-target">アニメは、先に数字を決めてから描く</h2><p>Updateが状態を進め、Drawはそのスナップショットを読むだけです。Drawの呼ばれる順番や見た目は交換できます。実際の違いは、この下で動くWASMデモを見比べてください。画面の左上が(0,0)で、math.Hypotを使うファイルには先に<code>import "math"</code>を書きます。</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="Updateの状態をDrawが画面へ投影">UPDATE x=0 → 1 → 2
           ↓
-GAME STATE
-   ↙   ↓   ↘
-ASCII  PIXEL  WIREFRAME</pre></div></section>
+      GAME STATE
+          ↓
+    Draw(screen)
+          ↓
+        PIXELS</pre></div></section>
 <!-- feedback-note:games/tap-target:end -->
 <!-- END BEGINNER BRIDGE -->
 <!-- renderer-freedom:start -->
 <section class="renderer-freedom" aria-label="Drawの独立性">
-  <p class="eyebrow">同じ STATE、4つの DRAW</p>
+  <p class="eyebrow">ひとつのゲーム、自由な見せ方</p>
   <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
-  <p>Updateが作った同じ <code>game</code> を、ASCII、ワイヤーフレーム、ドット絵、美麗なスプライトの4通りで描けます。4分割画面へ同時に描いても、Update・入力・物理は一つのままです。DrawはUpdateの直後に必ず呼ばれる相棒ではなく、状態を読む差し替え可能な投影です。</p>
-  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
-| @ |
-+---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+  <p>Updateと<code>game</code>構造体がゲームの事実を司ります。下の並んだ画面は、同じ自動プレイの位置・箱・ゴールを同時に見ています。違うのはDrawだけで、このデモ以外の見せ方にも自由に差し替えられます。</p>
+  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="同じゲーム状態を異なるDrawで表示する自動プレイデモ" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
 </section>
 <!-- renderer-freedom:end -->
+
+
+
+
+
+
 
 
 
@@ -405,6 +411,12 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

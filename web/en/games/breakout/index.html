@@ -49,14 +49,18 @@
 <!-- END BEGINNER BRIDGE -->
 <!-- renderer-freedom:start -->
 <section class="renderer-freedom" aria-label="Renderer independence">
-  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <p class="eyebrow">ONE GAME, OPEN-ENDED PRESENTATION</p>
   <h2>Change the picture, not the game.</h2>
-  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
-  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
-| @ |
-+---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+  <p>Update and the <code>game</code> struct own the facts of the game. The views below observe the same autoplaying position, box, and goal at the same time. Only Draw differs, and these views can be replaced by any other presentation.</p>
+  <div class="renderer-freedom-demo"><iframe data-shared-demo="renderer-freedom" title="Autoplay demo showing one game state through different Draw functions" src="../../../play/renderer-freedom/" loading="lazy" allow="autoplay; fullscreen"></iframe></div>
 </section>
 <!-- renderer-freedom:end -->
+
+
+
+
+
+
 
 
 
@@ -387,6 +391,12 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 
