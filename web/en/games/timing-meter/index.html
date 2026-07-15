@@ -36,6 +36,7 @@
       <h1>Stop the Meter</h1>
       <p>Stop the bouncing marker inside the center band. Play first; afterward, find the two ideas underneath: “move a little at a time” and switch between moving and stopped.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Time and game state</strong></div>
+      <p class="cast-note">Only <strong>Update</strong> changes the marker's position, speed, and state. <strong>Draw</strong> only projects the values it receives; it never mutates position or score. Different Draw frequencies therefore do not change how the same input advances the rules.</p>
     </section>
 
 <section class="play lesson-play" id="play">

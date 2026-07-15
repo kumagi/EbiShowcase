@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-07-15T14:18:44.480Z",
+  "generatedAt": "2026-07-15T19:07:20.193Z",
   "pages": [
     {
       "file": "web/en/build/empty-loop/index.html",
@@ -3455,7 +3455,7 @@
       "title": "Ebi Showcase – Stamp & Move",
       "h1": "Stamp & Move",
       "eyebrow": "★☆☆☆☆ / PLAYABLE",
-      "description": "Put one image anywhere on screen. Its position comes from GeoM.Translate on DrawImageOptions. Every effect starts from this act of placing.",
+      "description": "Put one image anywhere on screen with GeoM.Translate on DrawImageOptions. In this lesson, (x, y) means the image's top-left corner. The next",
       "image": "assets/og/en--tracks--visual-effects--vfx-stamp.png"
     },
     {
@@ -7031,7 +7031,7 @@
       "title": "Ebi Showcase – スタンプと移動",
       "h1": "スタンプと移動",
       "eyebrow": "★☆☆☆☆ / PLAYABLE",
-      "description": "画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。エフェクトはすべて、この「置く」から始まります。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。この章の (x, y) は画像の左上です。中心に置く方法は次の章で学びます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja--tracks--visual-effects--vfx-stamp.png"
     },
     {

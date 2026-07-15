@@ -118,12 +118,17 @@
         </div>
         <pre><code>type particle struct{ x, y, vx, vy, life float64 }
 
-for i := range ps { // Update
-    ps[i].x += ps[i].vx
-    ps[i].y += ps[i].vy
-    ps[i].vy += gravity
-    ps[i].life--
-}</code></pre>
+next := ps[:0] // 生き残りを同じ配列へ詰め直す
+for _, p := range ps { // Update
+    p.x += p.vx
+    p.y += p.vy
+    p.vy += gravity
+    p.life--
+    if p.life &gt; 0 {
+        next = append(next, p)
+    }
+}
+ps = next // 寿命0の粒はここで退場</code></pre>
       </div>
 
       <div class="why-grid">

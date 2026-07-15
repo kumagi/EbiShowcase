@@ -59,7 +59,7 @@ const basicLessons = [
     ja: {
       navConcept: "1枚の絵を置く",
       title: "スタンプと移動",
-      lead: "画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。エフェクトはすべて、この「置く」から始まります。",
+      lead: "画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。この章の (x, y) は画像の左上です。中心に置く方法は次の章で学びます。",
       deepEyebrow: "DEEP DIVE / DRAW ONE IMAGE",
       deepH: "絵はどうやって<br>その場所に出る？",
       deepLead: "Ebitengine では、描く絵に「変換」を持たせてから screen.DrawImage します。いちばん基本の変換が平行移動 Translate。同じ絵を、Translate の数字を変えるだけで何個でも置けます。",
@@ -71,7 +71,7 @@ const basicLessons = [
       lab: {
         eyebrow: "TRY IT / TRANSLATE",
         title: "タップした場所に置こう",
-        p: "盤面をタップすると、その座標へ絵が飛びます。表示される (x, y) が、そのまま GeoM.Translate に渡す数字です。",
+        p: "盤面をタップすると、その座標へ絵の左上が移ります。少し右下へずれて見えるのはバグではありません。表示される (x, y) をそのまま GeoM.Translate に渡し、次の章で中心を合わせます。",
       },
       codeHead: { eyebrow: "IN THE REAL GAME", h: "同じ絵を好きな場所へ", p: "オプションを作って Translate で位置を決め、その設定で描くだけです。" },
       whys: [
@@ -83,7 +83,7 @@ const basicLessons = [
     en: {
       navConcept: "Place one image",
       title: "Stamp & Move",
-      lead: "Put one image anywhere on screen. Its position comes from GeoM.Translate on DrawImageOptions. Every effect starts from this act of placing.",
+      lead: "Put one image anywhere on screen with GeoM.Translate on DrawImageOptions. In this lesson, (x, y) means the image's top-left corner. The next lesson shows how to place its center instead.",
       deepEyebrow: "DEEP DIVE / DRAW ONE IMAGE",
       deepH: "How does a picture<br>reach that spot?",
       deepLead: "In Ebitengine you give a drawing a transform, then call screen.DrawImage. The most basic transform is Translate. You can stamp the same image many times just by changing the Translate numbers.",
@@ -95,7 +95,7 @@ const basicLessons = [
       lab: {
         eyebrow: "TRY IT / TRANSLATE",
         title: "Place it where you tap",
-        p: "Tap the board and the image jumps to that spot. The (x, y) you see is exactly what you pass to GeoM.Translate.",
+        p: "Tap the board and the image's top-left jumps to that coordinate. The apparent down-right offset is intentional, not a bug. Pass (x, y) directly here; the next lesson centers the image.",
       },
       codeHead: { eyebrow: "IN THE REAL GAME", h: "One image, any place", p: "Make an options box, set the position with Translate, then draw." },
       whys: [
@@ -299,7 +299,10 @@ screen.DrawImage(sprite, op)`,
         { eyebrow: "TRY NEXT", h: "Fade-outs", p: "Drive alpha 1→0 to make a defeated enemy melt away." },
       ],
     },
-    code: `for i, p := range trail {
+    code: `if len(trail) == 0 {
+    return // 0個なら割り算も描画もしない
+}
+for i, p := range trail {
     op := &ebiten.DrawImageOptions{}
     op.GeoM.Translate(p.x, p.y)
     a := float32(i+1) / float32(len(trail))
@@ -519,12 +522,17 @@ screen.DrawImage(frame, op)`,
     },
     code: `type particle struct{ x, y, vx, vy, life float64 }
 
-for i := range ps { // Update
-    ps[i].x += ps[i].vx
-    ps[i].y += ps[i].vy
-    ps[i].vy += gravity
-    ps[i].life--
-}`,
+next := ps[:0] // 生き残りを同じ配列へ詰め直す
+for _, p := range ps { // Update
+    p.x += p.vx
+    p.y += p.vy
+    p.vy += gravity
+    p.life--
+    if p.life > 0 {
+        next = append(next, p)
+    }
+}
+ps = next // 寿命0の粒はここで退場`,
   },
   {
     slug: "vfx-spells",

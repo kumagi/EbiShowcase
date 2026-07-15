@@ -36,7 +36,7 @@
       <h1>Catch the Stars</h1>
       <p>Catch falling stars with a basket. Movement, falling objects, and overlap checks — this is the step where “game objects” multiply. <strong>Drop three stars and it's game over</strong>, so don't let too many slip past.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Movement and collision</strong></div>
-      <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 state boundary</a>.</p>
+      <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. As in the <a href="../tap-target/#basics">LEVEL 01 state boundary</a>, only Update mutates positions and score. Draw projects those values and never changes game state.</p>
     </section>
 
 <section class="play lesson-play" id="play">

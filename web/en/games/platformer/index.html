@@ -117,7 +117,7 @@
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>X first, then Y —<br>order is everything</h3>
           <p>Mixing both axes in one pass causes corner-clipping bugs where the player can pass through the edge of a platform. Separate passes make the behavior predictable.</p>
-          <p>Reset <code>onGround = false</code> every frame, then set it <code>true</code> only when a Y collision lands you on a platform — do not keep yesterday's ground memory.</p>
+          <p>After vertical movement in each Update, reset <code>onGround = false</code>, then immediately rebuild the answer from Y collisions. Jump input has already used the previous contact result before this reset. If the player is still standing, collision resolution restores <code>true</code> in the same Update, so there is no one-step gap where a grounded player becomes airborne.</p>
           <p><code>math.Mod(a, 320)</code> is remainder (safe for negatives). It folds camera scroll into 0..320 so a 320px parallax strip can tile forever.</p>
         </div>
         <pre><code><i>// move horizontally and resolve</i>
@@ -134,7 +134,7 @@ g.player.x += g.vx
 }
 <i>// move vertically and resolve</i>
 g.player.y += g.vy
-g.onGround = false <i>// clear each frame</i>
+g.onGround = false <i>// rebuild contact for this Update</i>
 <span>for</span> _, p := range g.platforms {
     <span>if</span> overlap(g.player, p) {
         <span>if</span> g.vy > 0 { <i>// falling → land</i>

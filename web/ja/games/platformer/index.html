@@ -117,7 +117,7 @@
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>X → 衝突 → Y → 衝突<br>の順番が大切</h3>
           <p>X方向の移動と衝突解決を終えてから、Y方向を処理します。混ぜると「壁の角でコーナーカットできてしまう」バグが起きます。</p>
-          <p><code>onGround</code> は毎フレーム <code>false</code> に戻し、Y衝突で足場に乗れたときだけ <code>true</code> にします。「昨日乗っていた」記憶を残さないのがコツです。</p>
+          <p><code>onGround</code> は各 Update のY移動後に <code>false</code> へ戻し、その直後のY衝突で足場に乗れたときだけ <code>true</code> にします。ジャンプ入力はこのリセットより前に、前回の接地結果を使って判定済みです。着地中なら同じ Update の衝突処理ですぐ <code>true</code> に戻るため、「1回だけ空中扱いになる」隙間は生まれません。</p>
           <p><code>math.Mod(a, 320)</code> は余り（負数にも安全な版）。カメラが進んでも 0〜320 に折り返すので、幅320の遠景を繰り返し並べられます。</p>
         </div>
         <pre><code><i>// X方向に動かして衝突を解決</i>
@@ -134,7 +134,7 @@ g.player.x += g.vx
 }
 <i>// Y方向に動かして衝突を解決</i>
 g.player.y += g.vy
-g.onGround = false <i>// 毎フレームいったん空中へ</i>
+g.onGround = false <i>// このUpdateの接地結果を作り直す</i>
 <span>for</span> _, p := range g.platforms {
     <span>if</span> overlap(g.player, p) {
         <span>if</span> g.vy > 0 { <i>// 落下中なら接地</i>

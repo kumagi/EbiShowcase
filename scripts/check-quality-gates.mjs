@@ -74,14 +74,17 @@ function challengeText(html) {
 
 function hasAxiomWording(html) {
   if (html.includes("update-draw-contract") || html.includes("Update / Draw") || html.includes("Update/Draw")) return true;
+  // Authors naturally emphasize Update and Draw with inline markup. Check the
+  // words readers see, rather than letting <strong> or <code> split a sentence.
+  const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
   const ja =
-    /Update[^<]{0,40}(入力|状態|書き換)/.test(html) &&
-    /Draw[^<]{0,40}(投影|絵|描)/.test(html) &&
-    /(書き換えてはならない|書き換えない|書かない|mutat)/i.test(html);
+    /Update.{0,80}(入力|状態|書き換)/.test(text) &&
+    /Draw.{0,80}(投影|絵|描)/.test(text) &&
+    /(書き換えてはならない|書き換えない|変更しません|書かない|mutat)/i.test(text);
   const en =
-    /Update[^<]{0,80}(owns|mutation|input)/i.test(html) &&
-    /Draw[^<]{0,80}(project|pixels|render)/i.test(html) &&
-    /(must not write|never write|does not mutate)/i.test(html);
+    /Update.{0,100}(owns|mutation|mutate|input|changes)/i.test(text) &&
+    /Draw.{0,100}(project|pixels|render)/i.test(text) &&
+    /(must not write|never write|does not mutate|never mutates|never changes)/i.test(text);
   return ja || en;
 }
 

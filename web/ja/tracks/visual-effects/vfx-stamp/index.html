@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。エフェクトはすべて、この「置く」から始まります。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
+  <meta name="description" content="画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。この章の (x, y) は画像の左上です。中心に置く方法は次の章で学びます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
   <title>Ebi Showcase – スタンプと移動</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-stamp/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – スタンプと移動">
-    <meta property="og:description" content="画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。エフェクトはすべて、この「置く」から始まります。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta property="og:description" content="画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。この章の (x, y) は画像の左上です。中心に置く方法は次の章で学びます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/vfx-stamp/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-stamp.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -20,7 +20,7 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – スタンプと移動">
-    <meta name="twitter:description" content="画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。エフェクトはすべて、この「置く」から始まります。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta name="twitter:description" content="画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。この章の (x, y) は画像の左上です。中心に置く方法は次の章で学びます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--vfx-stamp.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="スタンプと移動">
     <!-- ogp:end -->
@@ -41,7 +41,7 @@
     <section class="overview-hero">
       <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
       <h1>スタンプと移動</h1>
-      <p>画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。エフェクトはすべて、この「置く」から始まります。</p>
+      <p>画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。この章の (x, y) は画像の左上です。中心に置く方法は次の章で学びます。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>GeoM.Translate</strong></div>
     </section>
 
@@ -51,7 +51,7 @@
     <section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>タップした場所に置こう</h2></div>
-        <p>盤面をタップすると、その座標へ絵が飛びます。表示される (x, y) が、そのまま GeoM.Translate に渡す数字です。</p>
+        <p>盤面をタップすると、その座標へ絵の左上が移ります。少し右下へずれて見えるのはバグではありません。表示される (x, y) をそのまま GeoM.Translate に渡し、次の章で中心を合わせます。</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div>
@@ -101,7 +101,7 @@
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / TRANSLATE</p>
           <h3 id="lab-title-vfx-stamp">タップした場所に置こう</h3>
-          <p>盤面をタップすると、その座標へ絵が飛びます。表示される (x, y) が、そのまま GeoM.Translate に渡す数字です。</p>
+          <p>盤面をタップすると、その座標へ絵の左上が移ります。少し右下へずれて見えるのはバグではありません。表示される (x, y) をそのまま GeoM.Translate に渡し、次の章で中心を合わせます。</p>
           <div class="lab-controls"><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
         </div>
         <div class="lab-visual">

@@ -734,8 +734,11 @@ function graphSvg(def, lang) {
 function collisionSvg(def, lang) {
   const title = def.title[lang]; const description = def.description[lang];
   const labels = lang === "ja" ? ["カゴ", "星", "重なった？"] : ["basket", "star", "overlap?"];
-  const content = `<rect width="920" height="300" rx="28" fill="#f4f6ff"/><rect x="135" y="75" width="250" height="130" rx="18" fill="#dffaf4" stroke="#0a8f7f" stroke-width="6"/><rect x="310" y="125" width="250" height="130" rx="18" fill="#ffe4ef" stroke="#e56891" stroke-width="6"/><path d="M565 150 C650 150 670 150 725 150" fill="none" stroke="#6a58e6" stroke-width="5" marker-end="url(#arrow)"/>${multilineText([labels[0]], 260, 145, {size: 23})}${multilineText([labels[1]], 435, 196, {size: 23})}${multilineText([labels[2]], 805, 160, {size: 22, color: "#6a58e6"})}<text x="55" y="40" font-family="monospace" font-size="15" fill="#6a58e6">AABB: left &lt; right かつ top &lt; bottom</text>`;
-  return svgShell(920, 300, title, description, content);
+  const rules = lang === "ja"
+    ? ["星の左 < カゴの右", "星の右 > カゴの左", "星の上 < カゴの下", "星の下 > カゴの上"]
+    : ["star left < basket right", "star right > basket left", "star top < basket bottom", "star bottom > basket top"];
+  const content = `<rect width="920" height="390" rx="28" fill="#f4f6ff"/><rect x="80" y="78" width="250" height="130" rx="18" fill="#dffaf4" stroke="#0a8f7f" stroke-width="6"/><rect x="255" y="128" width="250" height="130" rx="18" fill="#ffe4ef" stroke="#e56891" stroke-width="6"/><path d="M510 166 C565 166 585 166 625 166" fill="none" stroke="#6a58e6" stroke-width="5" marker-end="url(#arrow)"/>${multilineText([labels[0]], 205, 145, {size: 23})}${multilineText([labels[1]], 380, 199, {size: 23})}${multilineText([labels[2]], 745, 176, {size: 22, color: "#6a58e6"})}<g font-family="monospace" font-size="15" fill="#2b3158"><text x="80" y="305">✓ ${esc(rules[0])}</text><text x="485" y="305">✓ ${esc(rules[1])}</text><text x="80" y="345">✓ ${esc(rules[2])}</text><text x="485" y="345">✓ ${esc(rules[3])}</text></g><text x="80" y="375" font-family="monospace" font-size="14" fill="#6a58e6">AABB: all four conditions must be true</text>`;
+  return svgShell(920, 390, title, description, content);
 }
 
 function spritesheetSvg(def, lang) {

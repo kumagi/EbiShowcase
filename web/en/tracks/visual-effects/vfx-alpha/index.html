@@ -113,7 +113,10 @@
           <h3>The trail</h3>
           <p>Loop the position history and lower alpha for older copies.</p>
         </div>
-        <pre><code>for i, p := range trail {
+        <pre><code>if len(trail) == 0 {
+    return // 0個なら割り算も描画もしない
+}
+for i, p := range trail {
     op := &amp;ebiten.DrawImageOptions{}
     op.GeoM.Translate(p.x, p.y)
     a := float32(i+1) / float32(len(trail))

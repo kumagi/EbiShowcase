@@ -100,7 +100,7 @@
       <div class="formula">
         <p class="eyebrow">THE BOUNCE RULE</p>
         <div class="formula-lines"><code>wall: vx = -vx</code><span>paddle</span><code>vy = -vy (optionally a bit faster)</code></div>
-        <p>Flipping the sign alone still leaves the ball a little inside the surface. On the very next frame it would still count as "touching," causing a bounce loop that flips back and forth. So the code moves the ball just outside the surface before flipping the sign (for example, <code>g.ballY = 646</code> pushes it above the paddle, and <code>math.Max/Min</code> keeps it inside the walls). That way the ball bounces exactly once instead of sticking inside the surface.</p>
+        <p>Flipping the sign alone can leave the ball slightly inside a surface, so the next Update still sees a hit and flips it again. For a side wall, <code>g.ballX = math.Max(14, math.Min(screenWidth-14, g.ballX))</code> first clamps the center back inside the wall. For the lower paddle, <code>g.ballY = 646</code> first pushes the ball just above it. The expressions differ, but the rule is the same: separate the shapes, then reverse velocity, so one contact produces one bounce.</p>
       </div>
 
       <div class="code-lesson">
