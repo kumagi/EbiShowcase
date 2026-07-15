@@ -38,11 +38,26 @@
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Time and game state</strong></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>phase := frame % 120</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>phase := frame % 120</code></pre></div></section>
 <!-- feedback-note:games/timing-meter:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-timing-meter"><div><p class="eyebrow">60 FPS and state</p><h2 id="feedback-note-games-timing-meter">The same button can mean different things</h2><p>Ebitengine calls Update about 60 times each second, so small moves look smooth. A state machine keeps a label such as moving, stopped, or result. Alternating the starting side prevents a memorized timing trick.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="state transitions"><span>moving</span><b>→ button →</b><strong>stopped</strong><b>→ next round →</b><span>moving</span><code>round % 2</code></div></div></section>
 <!-- feedback-note:games/timing-meter:end -->
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
+
+
+
+
+
 
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_bpm-timing.svg" alt="BPM and frames" loading="lazy" decoding="async"><figcaption>A visual map of BPM and frames. Trace the numbers and pictures before reading the code.</figcaption></figure>
@@ -302,6 +317,12 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

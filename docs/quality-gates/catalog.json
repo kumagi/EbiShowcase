@@ -59,6 +59,16 @@
       "sources": ["AGENTS.md#game-loop-axioms-for-authoring", "docs/Glossary.md", "docs/AUTHORING_CHECKLIST.md"]
     },
     {
+      "id": "loop.renderer-independent",
+      "family": "loop",
+      "severity": "fail",
+      "check": "llm",
+      "applies_to": ["core", "track", "build", "graduation", "vfx"],
+      "summary": "Update does not depend on Draw's timing, order, or visual representation.",
+      "prompt_hint": "Flag wording that says Update must be immediately followed by Draw, or that gameplay requires a particular renderer. The lesson should make clear that the same game state can be drawn as ASCII, wireframe, pixel art, or polished graphics (even four ways at once) without changing Update or game rules.",
+      "sources": ["AGENTS.md#game-loop-axioms-for-authoring", "docs/Glossary.md", "docs/AUTHORING_CHECKLIST.md"]
+    },
+    {
       "id": "loop.axiom-visible-early",
       "family": "loop",
       "severity": "warn",
@@ -167,16 +177,6 @@
       "summary": "DEEP DIVE explains the named mechanic, not only controls.",
       "prompt_hint": "Is DEEP DIVE mostly a control list without data/state explanation?",
       "sources": ["AGENTS.md#teaching-and-writing-contract"]
-    },
-    {
-      "id": "pedagogy.concept-row-ordered",
-      "family": "pedagogy",
-      "severity": "warn",
-      "check": "deterministic",
-      "applies_to": ["core", "track", "vfx", "build"],
-      "summary": "Three concept-row cards are distinct (not three copies of the same paragraph).",
-      "prompt_hint": "Are the three concept cards unique steps (often data → update → draw)?",
-      "sources": ["docs/AUTHORING_CHECKLIST.md", "AGENTS.md"]
     },
     {
       "id": "pedagogy.code-matches-impl",

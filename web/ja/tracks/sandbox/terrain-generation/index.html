@@ -25,6 +25,21 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>0=草、1=砂、2=水の対応表を先に決めます。同じseedなら同じ教材世界を再現できます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>tile := rng.Intn(3)</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Drawの独立性">
+  <p class="eyebrow">同じ STATE、4つの DRAW</p>
+  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
+  <p>Updateが作った同じ <code>game</code> を、ASCII、ワイヤーフレーム、ドット絵、美麗なスプライトの4通りで描けます。4分割画面へ同時に描いても、Update・入力・物理は一つのままです。DrawはUpdateの直後に必ず呼ばれる相棒ではなく、状態を読む差し替え可能な投影です。</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
+
+
+
+
+
 
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_sandbox-seed.svg" alt="シードから世界を作る" loading="lazy" decoding="async"><figcaption>シードから世界を作るの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
@@ -84,6 +99,12 @@ for y := surfaceY; y &lt; worldH; y++ {
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

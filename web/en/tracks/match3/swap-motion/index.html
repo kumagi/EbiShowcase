@@ -32,6 +32,16 @@
   <p class="update-draw-note">For this lesson, put a new rule in Update (or a pure helper called by Update). Draw only shows the result of that rule.</p>
 </section>
 <!-- update-draw-contract:end -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Split swap, check, clear, and fall</h2><p>Move two pieces, clear a matching swap, and return an invalid swap to its original cells.</p></div><pre><code>swapT += 0.1
 drawX = startX + (endX-startX)*swapT
 if swapT &gt;= 1 { resolveOrReturn() }</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>Do not change the board instantly. Advance a travel ratio from zero to one, check at contact, then clear or return based on the result.</p></article><article><h3>CHANGE</h3><p>Change travel time or score goals.</p></article><article><h3>CHALLENGE</h3><p>Add a fourth reef using data only.</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>Match-three Puzzle</strong></a><a href="../ebi-match/" rel="next">FINAL →<strong>Ebi Match</strong></a></nav>

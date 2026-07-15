@@ -36,6 +36,16 @@
   <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
 </section>
 <!-- update-draw-contract:end -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Drawの独立性">
+  <p class="eyebrow">同じ STATE、4つの DRAW</p>
+  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
+  <p>Updateが作った同じ <code>game</code> を、ASCII、ワイヤーフレーム、ドット絵、美麗なスプライトの4通りで描けます。4分割画面へ同時に描いても、Update・入力・物理は一つのままです。DrawはUpdateの直後に必ず呼ばれる相棒ではなく、状態を読む差し替え可能な投影です。</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>採掘と建築をアニメーションと粒子でつなぐ</h2><p>苔の野営地、結晶洞窟、火の島を巡り、採取・道具・建築・敵を一つの冒険へつなぎます。</p></div><pre><code>stage := islands[stageIndex]
 load(stage.resources)
 if cleared(stage.goal) {

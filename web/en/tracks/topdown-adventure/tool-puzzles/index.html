@@ -32,6 +32,16 @@
   <p class="update-draw-note">For this lesson, put a new rule in Update (or a pure helper called by Update). Draw only shows the result of that rule.</p>
 </section>
 <!-- update-draw-contract:end -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 <section class="code-lesson">
   <div><p class="eyebrow">EDIT THIS ENTRY</p><h3>games/tracks/topdown-adventure/tool-puzzles/main.go</h3><p>This short entry is the real Go file the learner opens and changes.</p></div>
   <pre><code>package main

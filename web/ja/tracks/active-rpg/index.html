@@ -20,9 +20,19 @@
     <meta name="twitter:image:alt" content="ゲージ式アクティブRPG">
     <!-- ogp:end --><link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">全コース</a><a class="lang" href="../../../en/tracks/active-rpg/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>6 PLAYABLE STEPS</span></div><section class="track-hero track-active-rpg"><span class="track-letter">Q</span><div><p class="eyebrow">素早さが行動順を作るバトル</p><h1>ゲージ式アクティブRPG</h1><p>味方と敵の行動ゲージへ素早さを足し、満タンになった仲間からコマンドを選びます。</p></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>素早さ→ゲージ→READY→コマンド→演出の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。 このページの1本はコース全体で共通するUpdate→Drawの骨格です。下の01から順に、その中へ各仕組みを実装していきます。 ゲージだけを足すと、同じフレームに満タンになった役を一つの変数で上書きしてしまいます。READYキューなら、満タンになった順を全員ぶん保存してから一人ずつ解決できます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="コースの学習順"><span>01 素早さ</span><b aria-hidden="true">→</b><span>02 ゲージ</span><b aria-hidden="true">→</b><span>03 READY</span><b aria-hidden="true">→</b><span>04 コマンド</span><b aria-hidden="true">→</b><span>05 演出</span></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>素早さ→ゲージ→READY→コマンド→演出の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。 このページの1本はコース全体で共通するgame状態の境界です。ルールはUpdateへ足し、Drawの順番や見た目は自由に差し替えられます。下の01から順に、その中へ各仕組みを実装していきます。 ゲージだけを足すと、同じフレームに満タンになった役を一つの変数で上書きしてしまいます。READYキューなら、満タンになった順を全員ぶん保存してから一人ずつ解決できます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="コースの学習順"><span>01 素早さ</span><b aria-hidden="true">→</b><span>02 ゲージ</span><b aria-hidden="true">→</b><span>03 READY</span><b aria-hidden="true">→</b><span>04 コマンド</span><b aria-hidden="true">→</b><span>05 演出</span></div></section>
 <!-- END BEGINNER BRIDGE -->
-<p class="curriculum-bridge">共通基礎の続きです。LEVEL 01 の Update / Draw に、このジャンル固有の仕組みを統合します。</p><section class="path-list"><div class="path-intro"><p class="eyebrow">PLAYABLE SHOWCASE</p><h2>Ebi Active Battle</h2><p>全員が順番を待つのではなく、速いキャラクターほど早く、何度も行動できます。ゲージは時間を数値として保存する時計です。</p></div><!-- active-polish:start -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Drawの独立性">
+  <p class="eyebrow">同じ STATE、4つの DRAW</p>
+  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
+  <p>Updateが作った同じ <code>game</code> を、ASCII、ワイヤーフレーム、ドット絵、美麗なスプライトの4通りで描けます。4分割画面へ同時に描いても、Update・入力・物理は一つのままです。DrawはUpdateの直後に必ず呼ばれる相棒ではなく、状態を読む差し替え可能な投影です。</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
+<p class="curriculum-bridge">共通基礎の続きです。LEVEL 01の状態境界に、このジャンル固有の仕組みを統合します。ルールはUpdate、見た目は自由なDrawです。</p><section class="path-list"><div class="path-intro"><p class="eyebrow">PLAYABLE SHOWCASE</p><h2>Ebi Active Battle</h2><p>全員が順番を待つのではなく、速いキャラクターほど早く、何度も行動できます。ゲージは時間を数値として保存する時計です。</p></div><!-- active-polish:start -->
 <a class="path-step" href="gauge-race/"><span>01</span><div><h3>素早さのゲージ競走</h3><p>3人のゲージを同時に進め、素早さの差が行動回数の差になる様子を観察します。</p><strong>時間をゲージへ足して順番を作る</strong></div><b>→</b></a>
 <a class="path-step" href="ready-queue/"><span>02</span><div><h3>READYを待ち行列に入れる</h3><p>ほぼ同時に満タンになった仲間を順番に保存し、行動を取りこぼさず解決します。</p><strong>満タンの役を安全に一列へ並べる</strong></div><b>→</b></a>
 <a class="path-step" href="command-roles/"><span>03</span><div><h3>攻撃・大技・回復の役割</h3><p>安全な攻撃、反動のある大技、回復を比べ、READYの一回を何に使うか選びます。</p><strong>同じ入力タイミングへ違う効果を結ぶ</strong></div><b>→</b></a>

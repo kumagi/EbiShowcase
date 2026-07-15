@@ -38,14 +38,28 @@
       <h1>Dungeon</h1>
       <p>An enemy that charges straight at you from the start feels unfair. Switch between a patrol state and a chase state triggered by distance, and suddenly the enemy feels alive.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Enemy AI and state transitions</strong></div>
-      <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
+      <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 state boundary</a>.</p>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if distance &lt; 165 { state = Chase }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if distance &lt; 165 { state = Chase }</code></pre></div></section>
 <!-- feedback-note:games/dungeon-crawler:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-dungeon-crawler"><div><p class="eyebrow">Words and data</p><h2 id="feedback-note-games-dungeon-crawler">A dungeon is a cave-like maze to explore</h2><p>A dungeon is an exploration place made of rooms and paths. Loading a map from data lets you add another cave without rewriting movement rules.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="map data to cave rooms"><span>map.json</span><b>→ load</b><strong>cave rooms</strong><b>→ explore with one rule</b></div></div></section>
 <!-- feedback-note:games/dungeon-crawler:end -->
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
+
+
+
+
 
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_tile-map.svg" alt="Play a tile map" loading="lazy" decoding="async"><figcaption>A visual map of Play a tile map. Trace the numbers and pictures before reading the code.</figcaption></figure>
@@ -511,6 +525,12 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

@@ -26,6 +26,21 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>データ駆動とは、村・台詞・敵をコードへ直接書かず、交換できるデータとして読む作り方。asset loaderはそのファイルをゲームへ渡す係、IDは部品同士を結ぶ名前札です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>village := loadMap("village.json")</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Drawの独立性">
+  <p class="eyebrow">同じ STATE、4つの DRAW</p>
+  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
+  <p>Updateが作った同じ <code>game</code> を、ASCII、ワイヤーフレーム、ドット絵、美麗なスプライトの4通りで描けます。4分割画面へ同時に描いても、Update・入力・物理は一つのままです。DrawはUpdateの直後に必ず呼ばれる相棒ではなく、状態を読む差し替え可能な投影です。</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
+
+
+
+
+
 
 <section class="data-basics" aria-labelledby="data-basics-title"><div><p class="eyebrow">TWO WORDS FIRST / 先に2つの用語</p><h2 id="data-basics-title">マス目と、<br>並べる箱。</h2><p>この先で何度も使う「タイルマップ」と「スライス」を、図で先に確かめます。</p></div><article><h3>タイルマップ</h3><div class="tile-map-mini" role="img" aria-label="5列4行のマス目に壁、道、主人公、宝箱を置いた地図"><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span>道</span><span>道</span><span class="chest">箱</span><span class="wall">壁</span><span class="wall">壁</span><span>道</span><span class="hero">人</span><span>道</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span><span class="wall">壁</span></div><p><strong>ゲームの世界を同じ大きさのマスに分ける方法</strong>です。「2列目・3行目は道」のように数字で保存でき、絵は後から各マスへ描きます。</p></article><article><h3>配列・スライス・リスト</h3><p><code>[4]int</code> の<strong>配列</strong>は、長さ4で固定された箱。<code>[]int</code> の<strong>スライス</strong>は、必要に応じて要素を増減しやすい並びです。この教材で「敵のリスト」と呼ぶものは、Goコードではたいていスライスを使います。</p><code>enemies := []Enemy{...}</code></article></section>
 
@@ -143,6 +158,12 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

@@ -45,14 +45,24 @@
       <div class="overview-concept"><small>What you learn here</small><strong>GeoM.Rotate / Scale</strong></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>op.GeoM.Rotate(angle); op.GeoM.Scale(sx, sy)</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>op.GeoM.Rotate(angle); op.GeoM.Scale(sx, sy)</code></pre></div></section>
 <!-- feedback-note:tracks/visual-effects/vfx-transform:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-transform"><div><p class="eyebrow">A pivot example</p><h2 id="feedback-note-tracks-visual-effects-vfx-transform">A pivot is like the screw at the center of a tire</h2><p>Rotating around the top-left makes the picture swing away. Move its center to the origin, rotate and scale, then translate it to the final place.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="transform around the pivot"><span>center to origin</span><b>→ Rotate / Scale</b><strong>→ Translate to place</strong></div></div></section>
 <!-- feedback-note:tracks/visual-effects/vfx-transform:end -->
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 
 
-    <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.</p>
+    <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
     
 
     <!-- diagram-lesson:start -->

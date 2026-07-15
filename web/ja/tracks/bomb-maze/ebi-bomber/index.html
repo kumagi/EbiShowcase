@@ -36,11 +36,26 @@
       <h1>Ebi Bomber</h1>
       <p>海老・天次郎が壁を壊し、能力を集め、敵を倒して出口を開きます。個別に学んだタイマー、爆風、タイル変化、強化、危険回避を同じ更新順序で統合します。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>6つの仕組みを1本の進行へ</strong></div>
-      <p class="cast-note">動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
+      <p class="cast-note">動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01の状態境界に沿って書きます。ルールはUpdate、描画は自由です。</p>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>完成形も設置→timer更新→爆風計算→壁/敵判定→出口判定の順。各STEPの関数をそのまま一列に並べます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>placeBomb(); tickBombs(); resolveBlasts()</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Drawの独立性">
+  <p class="eyebrow">同じ STATE、4つの DRAW</p>
+  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
+  <p>Updateが作った同じ <code>game</code> を、ASCII、ワイヤーフレーム、ドット絵、美麗なスプライトの4通りで描けます。4分割画面へ同時に描いても、Update・入力・物理は一つのままです。DrawはUpdateの直後に必ず呼ばれる相棒ではなく、状態を読む差し替え可能な投影です。</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
+
+
+
+
+
 
 <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
 
@@ -121,6 +136,12 @@ checkWinOrLoss()</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

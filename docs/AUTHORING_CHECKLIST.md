@@ -46,6 +46,11 @@ must make clear that slow, delayed, or once-per-second `Draw` calls only show a
 later snapshot; they must not pause or change input, timers, physics, rules, or
 the outcome.
 
+The Update/Draw boundary is renderer-independent: never imply that Draw must
+run immediately after Update or that one visual style is required. The same
+`game` snapshot may be rendered as ASCII, wireframe, pixel art, or full
+sprites, including several projections at once.
+
 RULE challenges add logic on the Update side (or a pure function Update calls).
 Do not set a primary challenge that mutates state inside `Draw`.
 
@@ -72,6 +77,9 @@ Do not set a primary challenge that mutates state inside `Draw`.
   Draw maps state to pixels, and the same `game` state produces the same frame.
 - [ ] Explains that gameplay cadence belongs to Update, not Draw: rendering
   frequency may fall without changing the same input sequence's result.
+- [ ] Treats Draw as a replaceable projection, not an immediate partner of
+  Update; at least one example shows multiple visual representations of the
+  same state.
 - [ ] Keeps Japanese and English semantically aligned and uses relative links.
 
 ## A complete track

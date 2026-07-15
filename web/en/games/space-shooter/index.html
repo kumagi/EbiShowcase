@@ -38,10 +38,10 @@
       <h1>Space Shooter</h1>
       <p>Bullets, enemies, stars, a player — when many different kinds of objects need to coexist, put each kind in a slice and let one loop handle them all. That is lists by kind.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Lists by kind</strong></div>
-      <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>
+      <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../tap-target/#basics">LEVEL 01 state boundary</a>.</p>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>for _, b := range bullets { for _, e := range enemies { check(b,e) } }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>for _, b := range bullets { for _, e := range enemies { check(b,e) } }</code></pre></div></section>
 <!-- feedback-note:games/space-shooter:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-space-shooter"><div><p class="eyebrow">Lists by kind</p><h2 id="feedback-note-games-space-shooter">Define Enemy so the meaning of i is clear</h2><p>Keep enemies and bullets in separate slices so each group can be updated or removed independently. <code>i</code> is the index: which item in that list we are reading.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="Enemy struct and index i">type Enemy struct {
     X, Y float64
@@ -52,6 +52,21 @@ for i := range enemies {
 }</pre></div></section>
 <!-- feedback-note:games/space-shooter:end -->
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
+
+
+
+
+
 
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_input-map.svg" alt="Input mapping" loading="lazy" decoding="async"><figcaption>A visual map of Input mapping. Trace the numbers and pictures before reading the code.</figcaption></figure>
@@ -514,6 +529,12 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

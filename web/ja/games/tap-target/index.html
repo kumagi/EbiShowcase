@@ -41,18 +41,28 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>メソッドはGameという箱に結び付いた関数。Updateは1秒に約60回、入力を読みスコアや位置を1コマ進めます。Drawはその数字を絵にするだけで、入力を読んだり状態を書き換えたりしません。Layoutはゲーム内部の基準サイズを返します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *game) Update() error { g.score++; return nil }</code></pre></div></section>
 <!-- feedback-note:games/tap-target:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-tap-target"><div><p class="eyebrow">数字 → 絵</p><h2 id="feedback-note-games-tap-target">アニメは、先に数字を決めてから描く</h2><p>毎フレームUpdateが位置を少し変え、その直後のDrawがその位置へ丸を描きます。画面の左上が(0,0)で、math.Hypotを使うファイルには先に<code>import "math"</code>を書きます。</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="左上原点とUpdate Drawの順番">UPDATE x=0 → 1 → 2
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-tap-target"><div><p class="eyebrow">数字 → 絵</p><h2 id="feedback-note-games-tap-target">アニメは、先に数字を決めてから描く</h2><p>Updateが状態を進め、Drawはそのスナップショットを読むだけです。Drawの呼ばれる順番や見た目は交換できます。画面の左上が(0,0)で、math.Hypotを使うファイルには先に<code>import "math"</code>を書きます。</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="Updateの状態を複数の描き方へ投影">UPDATE x=0 → 1 → 2
           ↓
-DRAW   ● at x
-
-(0,0) ┌────────→ X
-      │   ●
-      ↓
-      Y
-
-import \"math\"</pre></div></section>
+GAME STATE
+   ↙   ↓   ↘
+ASCII  PIXEL  WIREFRAME</pre></div></section>
 <!-- feedback-note:games/tap-target:end -->
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Drawの独立性">
+  <p class="eyebrow">同じ STATE、4つの DRAW</p>
+  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
+  <p>Updateが作った同じ <code>game</code> を、ASCII、ワイヤーフレーム、ドット絵、美麗なスプライトの4通りで描けます。4分割画面へ同時に描いても、Update・入力・物理は一つのままです。DrawはUpdateの直後に必ず呼ばれる相棒ではなく、状態を読む差し替え可能な投影です。</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
+
+
+
+
+
 
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/ja_layout-comparison.svg" alt="PC・タブレット・スマホでのゲーム表示比較" loading="lazy" decoding="async"><figcaption>同じキャンバスが画面幅に合わせて縮み、操作ボタンは押しやすい位置に並びます。</figcaption></figure>
@@ -77,7 +87,7 @@ import \"math\"</pre></div></section>
       <div class="motion-lab" data-lab="loop" data-update="UPDATE" data-draw="DRAW" data-update-note="数字を変える（スコア・位置・タイマー）" data-draw-note="いまの数字どおりに画面を描く" aria-labelledby="loop-lab-title">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / GAME LOOP</p>
-          <h3 id="loop-lab-title">Update → Draw を1コマずつ</h3>
+          <h3 id="loop-lab-title">UpdateとDrawの境界を確かめる</h3>
           <p>ボタンを押すたび、説明用のフェーズが切り替わります。本物のゲームではUpdateがゲーム時計を進め、Drawは最新の状態を表示します。描画が遅れてもUpdate側の操作や時間が止まらないようにするのが、この分離の理由です。</p>
           <div class="lab-controls">
             <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="update draw" data-go-caption="Update で数字を変える → 1枚引く">次のフェーズ</button>
@@ -395,6 +405,12 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

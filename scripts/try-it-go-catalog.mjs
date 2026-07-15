@@ -8,7 +8,7 @@ export const catalog = {
     lines: [
       { id: "update", code: "func (g *game) Update() error { /* numbers */ }" },
       { id: "draw", code: "func (g *game) Draw(screen *ebiten.Image) { /* paint */ }" },
-      { id: "run", code: "ebiten.RunGame(g) // Update → Draw → repeat" },
+      { id: "run", code: "ebiten.RunGame(g) // Update ticks; Draw projects state" },
     ],
     buttons: {
       "data-lab-step": { ids: ["update", "draw"], cycle: true },

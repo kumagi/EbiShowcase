@@ -20,7 +20,7 @@
     <meta name="twitter:image:alt" content="Attack Impact Lab">
     <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/survivors/impact-feedback/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Arena Survivors</a><span>POLISH 1/2</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Attack Impact Lab</h1><p>Layer flash, particles, and screen shake to communicate the exact instant an attack lands.</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>enemy.flash=6; shake=4</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>enemy.flash=6; shake=4</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
 
@@ -36,6 +36,16 @@
   <p class="update-draw-note">For this lesson, put a new rule in Update (or a pure helper called by Update). Draw only shows the result of that rule.</p>
 </section>
 <!-- update-draw-contract:end -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Split one hit into three timed reactions</h2><p>Read the central rule in isolation.</p></div><pre><code>enemy.flashFrames = 6
 spawnParticles(hitX, hitY)
 if defeated { shakeFrames = 5 }</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>Tint the enemy brightly for a few frames.</p></article><article><h3>CHANGE</h3><p>Launch small circles from the hit point.</p></article><article><h3>CHALLENGE</h3><p>Offset the world briefly for important defeats.</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>Arena Survivors</strong></a><a href="../survival-run/" rel="next">FINAL →<strong>Ebi Survivors</strong></a></nav>

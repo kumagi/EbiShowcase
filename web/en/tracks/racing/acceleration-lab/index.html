@@ -32,6 +32,16 @@
   <p class="update-draw-note">For this lesson, put a new rule in Update (or a pure helper called by Update). Draw only shows the result of that rule.</p>
 </section>
 <!-- update-draw-contract:end -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Accumulate acceleration and drag in velocity</h2><p>Add speed with the throttle and let per-frame drag slow the car naturally.</p></div><pre><code>speed += acceleration
 speed *= drag
 x += speed</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>Do not move position directly. Add throttle into speed, apply drag, then add speed to position so press duration changes the drive.</p></article><article><h3>CHANGE</h3><p>Change one coefficient and compare feel.</p></article><article><h3>CHALLENGE</h3><p>Try it on another course.</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>Top-down Racing</strong></a><a href="../ebi-racing/" rel="next">FINAL →<strong>Ebi Circuit Cup</strong></a></nav>

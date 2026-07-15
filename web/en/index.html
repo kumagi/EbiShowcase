@@ -34,9 +34,24 @@
   <main>
     <section class="catalog-hero"><p class="eyebrow">12 core games + 25 specializations in your browser</p><h1>Play more.<br><em>Build more.</em></h1><p>This site is a <strong>practice ground for making games yourself</strong>. Play tiny games in the browser and learn Go plus the game library <strong>Ebitengine</strong>, one idea at a time. The hero is original character <strong>Ebi Tenjiroh (海老・天次郎 / ebi-tenjiroh)</strong>—a shrimp-themed adventurer. Start at LEVEL 01 with the simple loop: advance numbers, then draw the picture.</p><p class="catalog-start-note"><strong>New here? Start with LEVEL 01, “Tap the Target.”</strong> Play first, then trace the explanation and Go code one small step at a time.</p><a class="cta" href="#curriculum">SEE THE PATH <b>↓</b></a></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Update is the roughly 60 Hz game clock: it advances input and state. Draw only projects the latest numbers, so even a delayed Draw does not change gameplay. This is the shared boundary for the whole path.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { g.x++; return nil }
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Update is the roughly 60 Hz game clock: it advances input and state. Draw only projects the latest numbers, so even a delayed Draw does not change gameplay. This is the shared state boundary; the renderer can be swapped freely.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { g.x++; return nil }
 func (g *Game) Draw(screen *ebiten.Image) { drawTarget(screen, g.x) }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
+
+
+
+
+
 
 <!-- curriculum-map:start -->
 <section class="curriculum-map" aria-labelledby="curriculum-map-title"><div><p class="eyebrow">CURRICULUM MAP / 学びの地図</p><h2 id="curriculum-map-title">From one small rule to a bigger game.</h2><p>Start with the game loop, add building blocks, polish the picture, then choose a specialist track.</p></div><figure class="diagram-figure curriculum-map-figure"><img src="../assets/diagrams/en_curriculum-flow.svg" alt="Learning flow from LEVEL 01 to specialist tracks" loading="lazy" decoding="async"><figcaption>The arrows show a suggested order. You can jump to any panel.</figcaption></figure><nav class="curriculum-map-links" aria-label="Curriculum links"><a href="games/tap-target/"><span>LEVEL 01 · Tap</span><b>→</b></a><a href="games/timing-meter/"><span>LEVEL 02 · Timing</span><b>→</b></a><a href="games/catch-stars/"><span>LEVEL 03 · Collision</span><b>→</b></a><a href="games/flappy/"><span>LEVEL 04 · Acceleration</span><b>→</b></a><a href="games/pong/"><span>LEVEL 05 · Reflection</span><b>→</b></a><a href="games/breakout/"><span>LEVEL 06 · Arrays</span><b>→</b></a><a href="games/snake/"><span>LEVEL 07 · History</span><b>→</b></a><a href="games/space-shooter/"><span>LEVEL 08 · Entities</span><b>→</b></a><a href="games/sokoban/"><span>LEVEL 09 · Map</span><b>→</b></a><a href="games/platformer/"><span>LEVEL 10 · Camera</span><b>→</b></a><a href="games/dungeon/"><span>LEVEL 11 · AI</span><b>→</b></a><a href="games/bullet-hell/"><span>LEVEL 12 · Bullets</span><b>→</b></a><a href="tracks/visual-effects/"><span>VISUAL EFFECTS LAB · polish</span><b>→</b></a><a href="#specializations"><span>25 SPECIALIST TRACKS · bigger games</span><b>→</b></a></nav></section>
@@ -149,6 +164,12 @@ func (g *Game) Draw(screen *ebiten.Image) { drawTarget(screen, g.x) }</code></pr
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

@@ -34,7 +34,7 @@
     <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>See an empty window first.</h2></div><p>This dark-blue screen is already a game. It has no rule yet, but Update and Draw are repeating behind it.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Empty game loop" src="../../../play/empty-loop/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="play lesson-play" id="play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>See an empty window first.</h2></div><p>This dark-blue screen is already a game. Update owns the clock even with no rules yet; Draw is simply one independent way to project the latest state.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Empty game loop" src="../../../play/empty-loop/" allow="autoplay; fullscreen"></iframe></div></div></section>
     <section class="learn"><p class="eyebrow">MAKE IT LOCAL</p><h2>Save one file,<br>then open your own window.</h2><p class="lesson-lead">Download the <code>main.go</code> below. In an empty folder, run <code>go mod init</code> and <code>go get</code> once. That is enough to start — no clone required.</p><div class="steps"><article><b>01</b><h3>SAVE</h3><p><a href="https://github.com/kumagi/EbiShowcase/raw/refs/heads/main/games/build-track/empty-loop/main.go">Download main.go</a> and save it in a new folder.</p></article><article><b>02</b><h3>INSTALL</h3><p>Run <code>go mod init example.com/ebi-build</code>, then <code>go get github.com/hajimehoshi/ebiten/v2</code>.</p></article><article><b>03</b><h3>RUN</h3><p>Run <code>go run .</code>. A dark-blue window means success.</p></article></div><div class="code-lesson"><div><p class="eyebrow">THE AXIOM</p><h3>Keep the jobs<br>separate.</h3><p><code>Update</code> will own input and number changes. <code>Draw</code> will paint the numbers that already exist. Make that promise first.</p></div><pre><code>func (g *game) Update() error { return nil }
 func (g *game) Draw(screen *ebiten.Image) { screen.Fill(navy) }</code></pre></div><div class="next-lines"><p class="eyebrow">NEXT LINES</p><h3>Next, make a box for numbers</h3><p>Do not write this yet. In STEP 02, we put a position in <code>game</code>, then let Draw read it.</p><pre><code>type game struct { x, y int }</code></pre><p><a href="../state-picture/">Go to STEP 02 →</a></p></div><div class="why-grid"><article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Find where the background colour belongs</h3><p>In <code>main.go</code>, change the <code>screen.Fill</code> colour in <code>Draw</code>, then use <code>go run .</code> to verify the window changes. The next step adds a real RULE on the Update side.</p></article></div><p class="full-code-intro">This one file is all of the code that is running now.</p><div class="full-code" data-embed-source="games/build-track/empty-loop/main.go"><div class="full-code-head"><span>main.go · complete code</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy</button></div><pre><code data-embed-slot>// Build Track STEP 01: an empty Ebitengine game loop.
 package main
@@ -99,6 +99,12 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

@@ -300,8 +300,8 @@ function normalizePage(relPath) {
     : "";
 
   const castNote = lang === "ja"
-    ? `<p class="cast-note">動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>`
-    : `<p class="cast-note">The frame math sits in the same <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop.</p>`;
+    ? `<p class="cast-note">動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01</a> の状態境界に沿ってUpdateへ書き、Drawはその結果を自由に投影します。</p>`
+    : `<p class="cast-note">Frame math belongs in Update's state boundary from <a href="../../../games/tap-target/#basics">LEVEL 01</a>; Draw may project it in any style.</p>`;
 
   const bridge = lang === "ja"
     ? `<p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>`

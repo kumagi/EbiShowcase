@@ -39,20 +39,30 @@
       <p class="curriculum-bridge" style="margin-top:22px">Want to run code on your own PC first? See <a href="../../guides/setup/">Getting started setup</a> (install Go → empty window). This page’s demo also works in the browser alone.</p>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *game) Update() error { g.score++; return nil }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *game) Update() error { g.score++; return nil }</code></pre></div></section>
 <!-- feedback-note:games/tap-target:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-tap-target"><div><p class="eyebrow">Numbers → picture</p><h2 id="feedback-note-games-tap-target">An animation chooses numbers before it draws</h2><p>Each frame, Update changes the position a little. Draw then paints the circle at that position. The top-left is (0,0), and a file using math.Hypot starts with <code>import "math"</code>.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="top-left origin and Update Draw order">UPDATE x=0 → 1 → 2
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-tap-target"><div><p class="eyebrow">Numbers → picture</p><h2 id="feedback-note-games-tap-target">One state, many pictures</h2><p>Update advances the state; Draw only reads that snapshot. Swap ASCII, pixel art, wireframe, or detailed sprites without changing the rules. The top-left is (0,0), and a file using math.Hypot starts with <code>import "math"</code>.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="one state, many renderers">UPDATE x=0 → 1 → 2
           ↓
-DRAW   ● at x
-
-(0,0) ┌────────→ X
-      │   ●
-      ↓
-      Y
-
-import \"math\"</pre></div></section>
+GAME STATE
+   ↙   ↓   ↘
+ASCII  PIXEL  WIREFRAME</pre></div></section>
 <!-- feedback-note:games/tap-target:end -->
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
+
+
+
+
+
 
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-device-diagram"><img src="../../../assets/diagrams/en_layout-comparison.svg" alt="Game layout comparison on PC, tablet, and phone" loading="lazy" decoding="async"><figcaption>The same canvas scales to the available width while controls stay easy to reach.</figcaption></figure>
@@ -77,7 +87,7 @@ import \"math\"</pre></div></section>
       <div class="motion-lab" data-lab="loop" data-update="UPDATE" data-draw="DRAW" data-update-note="Change numbers (score, positions, timers)" data-draw-note="Paint the current numbers on screen" aria-labelledby="loop-lab-title">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / GAME LOOP</p>
-          <h3 id="loop-lab-title">Step through Update → Draw</h3>
+          <h3 id="loop-lab-title">Step through the state boundary</h3>
           <p>Each click flips this teaching phase. In a real game, Update advances the game clock and Draw presents the latest snapshot. If rendering slows down, Update-side input and rules continue unchanged.</p>
           <div class="lab-controls">
             <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="update draw" data-go-caption="Update changes numbers → Draw paints the frame">Next phase</button>
@@ -395,6 +405,12 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

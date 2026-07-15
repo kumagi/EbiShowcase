@@ -44,11 +44,21 @@
     <p>You can play every lesson in the browser. To run code on your own PC, you need Go and Ebitengine first. This guide covers Windows and Mac. Success looks like a dark-blue window that does nothing—that’s the foundation.</p>
   </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
 <!-- feedback-note:guides/setup:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-guides-setup"><div><p class="eyebrow">A first map</p><h2 id="feedback-note-guides-setup">The command window and the game window are different</h2><p>PowerShell and Terminal may look different, but both accept typed commands. go.mod is the table of contents with your module name and borrowed parts. Running the program opens a separate Ebitengine game window.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="from command window to game window"><span>PowerShell / Terminal</span><b>→ go run . →</b><strong>empty game window</strong></div></div></section>
 <!-- feedback-note:guides/setup:end -->
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 
 
   <section class="setup-goals">

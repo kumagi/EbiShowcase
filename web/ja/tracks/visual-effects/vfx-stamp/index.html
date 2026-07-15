@@ -50,9 +50,19 @@
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-stamp"><div><p class="eyebrow">UpdateとDrawを分ける</p><h2 id="feedback-note-tracks-visual-effects-vfx-stamp">画像は一度用意し、Drawで置き場所だけ変える</h2><p>画像を読む処理は初期化で一度だけ。毎フレームはUpdateで座標を決め、DrawでDrawImageOptionsのGeoM.Translateへ渡します。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="画像を読む、座標を決める、描く"><span>初期化：画像を読む</span><b>→ Update：座標</b><b>→ Draw：Translate</b><strong>画面へ描く</strong></div></div></section>
 <!-- feedback-note:tracks/visual-effects/vfx-stamp:end -->
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Drawの独立性">
+  <p class="eyebrow">同じ STATE、4つの DRAW</p>
+  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
+  <p>Updateが作った同じ <code>game</code> を、ASCII、ワイヤーフレーム、ドット絵、美麗なスプライトの4通りで描けます。4分割画面へ同時に描いても、Update・入力・物理は一つのままです。DrawはUpdateの直後に必ず呼ばれる相棒ではなく、状態を読む差し替え可能な投影です。</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 
 
-    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。</p>
+    <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）とDraw（絵）の独立した境界</strong>の上にあります。ここでは同じ状態を別の描き方へ投影する方法を一段深く扱います。</p>
     
 
     <!-- diagram-lesson:start -->

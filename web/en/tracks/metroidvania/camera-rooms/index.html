@@ -32,6 +32,16 @@
   <p class="update-draw-note">For this lesson, put a new rule in Update (or a pure helper called by Update). Draw only shows the result of that rule.</p>
 </section>
 <!-- update-draw-contract:end -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Separate world and screen coordinates</h2><p>Walk through a four-screen world and draw only one slice by subtracting camera position.</p></div><pre><code>cameraX += (playerX-screenCenter-cameraX)*0.1
 screenX := worldX-cameraX</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>The player stores a world position; only Draw subtracts cameraX. Following ten percent of the gap creates a smooth camera.</p></article><article><h3>CHANGE</h3><p>Change room width or ability strength.</p></article><article><h3>CHALLENGE</h3><p>Add another ability and matching gate.</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>Large-map Exploration</strong></a><a href="../ebi-depths/" rel="next">FINAL →<strong>Ebi Depths</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">

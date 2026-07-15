@@ -38,7 +38,7 @@
       <h1>Dungeon</h1>
       <p>敵はただまっすぐ動くだけでは面白くありません。「普段はランダムに歩き回り、プレイヤーが近づくと追いかける」という状態の切り替えが、生きているような敵AIを生み出します。</p>
       <div class="overview-concept"><small>このゲームで学ぶこと</small><strong>敵AIと状態遷移</strong></div>
-      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01 の Update / Draw</a> と同じ枠の中に書きます。</p>
+      <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../tap-target/#basics">LEVEL 01の状態境界に沿って書きます。ルールはUpdate、描画は自由です。</p>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>patrol（巡回）は決まった道の見回り、chase（追跡）は天次郎を追う状態。165pxなどは気付く距離を遊びながら調整した値です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if distance &lt; 165 { state = Chase }</code></pre></div></section>
@@ -46,6 +46,20 @@
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-dungeon-crawler"><div><p class="eyebrow">用語とデータ</p><h2 id="feedback-note-games-dungeon-crawler">ダンジョンは、洞窟のような迷路ゲーム</h2><p>ダンジョンという言葉は、部屋や通路が続く探索場所のことです。マップをデータから読むと、同じ移動ルールのまま別の洞窟を増やせます。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="マップデータから洞窟を作る流れ"><span>map.json</span><b>→ 読み込む</b><strong>洞窟の部屋</strong><b>→ 同じルールで探索</b></div></div></section>
 <!-- feedback-note:games/dungeon-crawler:end -->
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Drawの独立性">
+  <p class="eyebrow">同じ STATE、4つの DRAW</p>
+  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
+  <p>Updateが作った同じ <code>game</code> を、ASCII、ワイヤーフレーム、ドット絵、美麗なスプライトの4通りで描けます。4分割画面へ同時に描いても、Update・入力・物理は一つのままです。DrawはUpdateの直後に必ず呼ばれる相棒ではなく、状態を読む差し替え可能な投影です。</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
+
+
+
+
 
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_tile-map.svg" alt="タイルマップを再生する" loading="lazy" decoding="async"><figcaption>タイルマップを再生するの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
@@ -510,6 +524,12 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

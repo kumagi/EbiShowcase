@@ -36,6 +36,16 @@
   <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
 </section>
 <!-- update-draw-contract:end -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Drawの独立性">
+  <p class="eyebrow">同じ STATE、4つの DRAW</p>
+  <h2>描き方を替えても、ゲームのルールは替わらない。</h2>
+  <p>Updateが作った同じ <code>game</code> を、ASCII、ワイヤーフレーム、ドット絵、美麗なスプライトの4通りで描けます。4分割画面へ同時に描いても、Update・入力・物理は一つのままです。DrawはUpdateの直後に必ず呼ばれる相棒ではなく、状態を読む差し替え可能な投影です。</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>状態と時間でフレームを選ぶ</h2><p>遊べるゲームから中心部分だけを抜き出します。</p></div><pre><code>if !grounded { frame = airFrame } else if math.Abs(vx) &gt; 0.4 { frame = (tick / 7) % 3 }</code></pre></section><section class="why-grid"><article><h3>試してみよう</h3><p>数値を1つ変えて、見え方や難しさを比べよう。</p></article><article><h3>観察しよう</h3><p>tick / 7で、同じ絵を7フレーム保ちます。</p></article><article><h3>CHALLENGE</h3><p>着地時のつぶれや空中の伸びで動きを伝えます。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>横スクロールアクション</strong></a><a href="../powerup-adventure/" rel="next">FINAL →<strong>Ebi Adventure</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">

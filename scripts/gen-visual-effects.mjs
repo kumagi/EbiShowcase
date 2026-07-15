@@ -1219,8 +1219,8 @@ function stepPage(lesson, idx, lang) {
   const learnLabel = "HOW IT WORKS";
   const playEyebrow = lang === "ja" ? "PLAYABLE / LIVE GO + マウス" : "PLAYABLE / LIVE GO + MOUSE";
   const bridge = lang === "ja"
-    ? `このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上にあります。ここでは Draw の“描き方”を一段深く扱います。`
-    : `This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> loop of <strong>Update (numbers) → Draw (pixels)</strong>. Here we dig one layer deeper into how Draw paints.`;
+    ? `このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）とDraw（絵）の独立した境界</strong>の上にあります。ここでは同じ状態を別の描き方へ投影する方法を一段深く扱います。`
+    : `This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.`;
   const advancedContract = lesson.tier === "advanced"
     ? (lang === "ja"
         ? `<section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED FX の約束</p><h2>ゲームのルールは、そのまま。<br>見た目だけを増やせる。</h2><p><code>updatePlay()</code> は点数・当たり・勝敗をこれまで通り決めます。<code>Game</code> に <code>fx</code> の箱を足し、<code>fx.Update()</code> は粒など<strong>見た目用の時間</strong>だけを進め、<code>Draw</code> で <code>fx.Draw()</code> を重ねます。つまり元のゲームルールを触らずに派手にできます。ただし粒が動く演出には、play を変えない独立した <code>fx.Update()</code> は必要です。</p></section>`
@@ -1351,8 +1351,8 @@ function hubPage(lang) {
   const basicSteps = basic.map(stepLink).join("\n");
   const advSteps = advanced.map(stepLink).join("\n");
   const bridge = lang === "ja"
-    ? `<p class="curriculum-bridge">共通基礎(LEVEL 01〜12)の続きです。<a href="../../games/tap-target/#basics">Update / Draw</a> のループの上に、見た目を作る道具を1つずつ足します。主人公はオリジナルの海老・天次郎（えび・てんじろう）です。</p>`
-    : `<p class="curriculum-bridge">This continues the core lessons (LEVEL 01–12). On top of the <a href="../../games/tap-target/#basics">Update / Draw</a> loop, add one presentation tool at a time. The hero is original Ebi Tenjiroh (海老・天次郎 / ebi-tenjiroh).</p>`;
+    ? `<p class="curriculum-bridge">共通基礎(LEVEL 01〜12)の続きです。ルールはUpdateで進め、<a href="../../games/tap-target/#basics">Draw</a>は同じ状態を好きな見た目へ投影します。見た目を作る道具を1つずつ足します。主人公はオリジナルの海老・天次郎（えび・てんじろう）です。</p>`
+    : `<p class="curriculum-bridge">This continues the core lessons (LEVEL 01–12). Update advances the rules; <a href="../../games/tap-target/#basics">Draw</a> projects that state into any visual style. Add one presentation tool at a time. The hero is original Ebi Tenjiroh (海老・天次郎 / ebi-tenjiroh).</p>`;
   const parameterTableBlock = lang === "ja"
     ? `<section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">数字を変えると、見た目が変わる。</h2><p>speed・size・alpha・lifeを変えると、同じルールでも手ざわりが変わります。</p></div><table class="vfx-parameter-table"><thead><tr><th>値</th><th>意味</th><th>小さく</th><th>大きく</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>粒の速さ</td><td>漂う</td><td>飛ぶ</td></tr><tr><th scope="row"><code>size</code></th><td>大きさ</td><td>細かい</td><td>フレア</td></tr><tr><th scope="row"><code>alpha</code></th><td>透明度</td><td>薄い</td><td>濃い</td></tr><tr><th scope="row"><code>life</code></th><td>寿命（フレーム）</td><td>一瞬</td><td>余韻</td></tr></tbody></table></section>`
     : `<section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">Change a number, change the feel.</h2><p>Try speed, size, alpha, and life independently from the game rules.</p></div><table class="vfx-parameter-table"><thead><tr><th>Value</th><th>Meaning</th><th>Smaller</th><th>Larger</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>Particle speed</td><td>Drift</td><td>Burst</td></tr><tr><th scope="row"><code>size</code></th><td>Scale</td><td>Tiny</td><td>Flare</td></tr><tr><th scope="row"><code>alpha</code></th><td>Opacity</td><td>Faint</td><td>Solid</td></tr><tr><th scope="row"><code>life</code></th><td>Frames alive</td><td>Quick</td><td>Afterglow</td></tr></tbody></table></section>`;

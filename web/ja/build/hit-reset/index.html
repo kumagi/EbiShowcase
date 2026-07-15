@@ -29,7 +29,7 @@
         g.moveTarget()
     }
     return nil
-}</code></pre></div><div class="next-lines"><p class="eyebrow">NEXT / 完成形と比べよう</p><h3>LEVEL 01 へつながる</h3><p>ここまでの「入力 → Update の RULE → Draw」の型が、完成版のタップターゲットにもそのままあります。</p><pre><code>dist := math.Hypot(touchX-circleX, touchY-circleY)</code></pre><p><a href="../../games/tap-target/">LEVEL 01 の完成ゲームを見る →</a></p></div><div class="why-grid"><article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>命中したら2点にしよう</h3><p><code>games/build-track/hit-reset/main.go</code> の <code>Update</code> にある命中ブロックで <code>g.score += 2</code> にします。<code>go test ./...</code> を通し、<code>go run .</code> で丸を1回当てて SCORE 02 を確認します。<code>math.Hypot</code> の行は Update 側に残します。</p></article></div><p class="full-code-intro">この1ファイルには、テストできる hit ルールと、それを呼ぶ Update があります。</p><div class="full-code" data-embed-source="games/build-track/hit-reset/main.go"><div class="full-code-head"><span>main.go · ぜんぶのコード</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーした！">コピー</button></div><pre><code data-embed-slot>// Build Track STEP 04: hit testing and relocation belong in Update.
+}</code></pre></div><div class="next-lines"><p class="eyebrow">NEXT / 完成形と比べよう</p><h3>LEVEL 01 へつながる</h3><p>ここまでの「入力をUpdateでルールへ変換し、Drawは状態を投影する」型が、完成版のタップターゲットにもそのままあります。</p><pre><code>dist := math.Hypot(touchX-circleX, touchY-circleY)</code></pre><p><a href="../../games/tap-target/">LEVEL 01 の完成ゲームを見る →</a></p></div><div class="why-grid"><article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>命中したら2点にしよう</h3><p><code>games/build-track/hit-reset/main.go</code> の <code>Update</code> にある命中ブロックで <code>g.score += 2</code> にします。<code>go test ./...</code> を通し、<code>go run .</code> で丸を1回当てて SCORE 02 を確認します。<code>math.Hypot</code> の行は Update 側に残します。</p></article></div><p class="full-code-intro">この1ファイルには、テストできる hit ルールと、それを呼ぶ Update があります。</p><div class="full-code" data-embed-source="games/build-track/hit-reset/main.go"><div class="full-code-head"><span>main.go · ぜんぶのコード</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーした！">コピー</button></div><pre><code data-embed-slot>// Build Track STEP 04: hit testing and relocation belong in Update.
 package main
 
 import (
@@ -137,6 +137,12 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

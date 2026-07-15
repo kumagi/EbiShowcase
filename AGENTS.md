@@ -57,6 +57,13 @@ for the same input sequence. Do not teach the loop as two equal alternating
 steps whose progress can live in `Draw`; this separation keeps play stable
 when rendering is slow.
 
+The renderer is replaceable. `Update` must not know whether `Draw` uses ASCII
+characters, wireframes, pixel art, vector shapes, shaders, or detailed
+sprites. One `game` value may be projected four different ways in four
+viewports at once, and swapping those projections must not change input,
+physics, rules, or `Update`. `Update → Draw` is a data boundary, not a promise
+about immediate call order or visual style.
+
 The original playable gate is only the baseline. The ongoing advanced-track quality pass is tracked in `docs/ADVANCED_QUALITY_CHECKLIST.md`; do not mark a genre complete there until its final game, intermediate lessons, bilingual content, replay loop, and real desktop/mobile play checks all satisfy that sheet.
 
 ## Start here: repository mental model
@@ -182,6 +189,9 @@ Keep these three statements consistent from Build Track through graduation:
    (normally about 60 per second); Draw only presents the latest snapshot. A
    slow or skipped Draw must not pause, accelerate, or otherwise change rules,
    timers, physics, input handling, or the outcome.
+5. **The renderer is replaceable.** The same `game` snapshot can be rendered
+   as ASCII, wireframe, pixel art, or polished sprites—even four projections
+   side by side—without changing Update or the rules.
 
 A learner RULE belongs in `Update` or in a pure function called by `Update`.
 Draw may map that result to color, position, text, or effects, but never owns the

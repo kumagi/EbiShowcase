@@ -32,6 +32,16 @@
   <p class="update-draw-note">For this lesson, put a new rule in Update (or a pure helper called by Update). Draw only shows the result of that rule.</p>
 </section>
 <!-- update-draw-contract:end -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Feed new match conditions into the same chain rules</h2><p>Store the garbage goal, miss limit, and counterattack size as data for a three-match run.</p></div><pre><code>rule := duels[duelIndex]
 if sent &gt;= rule.goal { nextDuel() }
 best = max(best, score-misses*50)</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>List a sunny lagoon, current cave, and storm palace in a rule table. Changing the required sends and cost of mistakes changes decisions without replacing the chain engine, while a best grade invites another run.</p></article><article><h3>CHANGE</h3><p>Change beat timing or duel goals.</p></article><article><h3>CHALLENGE</h3><p>Add a fourth duel with data only.</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>Falling-pair Chain Puzzle</strong></a><a href="../ebi-chain/" rel="next">FINAL →<strong>Ebi Chain</strong></a></nav>

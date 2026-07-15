@@ -21,10 +21,25 @@
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/monster-collection/">
 <link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/monster-collection/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>9 STEPS</span></div><section class="track-hero track-monster-collection"><span class="track-letter">L</span><div><p class="eyebrow">Build a collect-and-train battle game</p><h1>Creature Collection RPG</h1><p>Build a Pokémon-style game where you catch, raise, and battle creatures. Grow one creature definition into moves, type affinities, parties, capture, growth, and a bestiary.</p></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="Course learning order"><span>01 種族</span><b aria-hidden="true">→</b><span>02 相性</span><b aria-hidden="true">→</b><span>03 戦闘</span><b aria-hidden="true">→</b><span>04 捕獲</span><b aria-hidden="true">→</b><span>05 成長</span></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="Course learning order"><span>01 種族</span><b aria-hidden="true">→</b><span>02 相性</span><b aria-hidden="true">→</b><span>03 戦闘</span><b aria-hidden="true">→</b><span>04 捕獲</span><b aria-hidden="true">→</b><span>05 成長</span></div></section>
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 
-<p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+
+
+
+
+
+<p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 state boundary</a>. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a playable world.</h2><p>Test data changes and algorithms in small games, reusing each step on the way to the final project.</p></div><a class="path-step" href="species-data/"><span>01</span><div><h3>Define One Creature</h3><p>Separate a species "template" (name and base stats) from this one creature's own HP and experience.</p><strong>Species template vs. this one creature's state</strong></div><b>→</b></a>
 <a class="path-step" href="move-battle/"><span>02</span><div><h3>Choose-a-move Battle</h3><p>Choose moves with power, accuracy, and uses, then resolve their effects.</p><strong>Move data, accuracy, and damage</strong></div><b>→</b></a>
 <a class="path-step" href="type-matchup/"><span>03</span><div><h3>Affinity Matchup Lab</h3><p>Look up whether an attack is stronger or weaker from the attacking and defending types (an affinity table) and apply that multiplier.</p><strong>Type strengths and weaknesses (affinity table) and multipliers</strong></div><b>→</b></a>
@@ -59,6 +74,12 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

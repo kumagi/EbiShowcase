@@ -176,7 +176,7 @@ for(const path of walk(root).filter(p=>p.endsWith(".html"))){
   if(isHub&&trackParts[slug]) pair=[`このコースの組み立て図`,`${trackParts[slug]}の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。`,`func (g *Game) Update() error { return nil }`];
   if(isHub&&trackParts[slug]){
     // “このページの1本” is the shared skeleton, not the finished game.
-    pair[1] += ` このページの1本はコース全体で共通するUpdate→Drawの骨格です。下の01から順に、その中へ各仕組みを実装していきます。`;
+    pair[1] += ` このページの1本はコース全体で共通するgame状態の境界です。ルールはUpdateへ足し、Drawの順番や見た目は自由に差し替えられます。下の01から順に、その中へ各仕組みを実装していきます。`;
     if(slug === "active-rpg") pair[1] += ` ゲージだけを足すと、同じフレームに満タンになった役を一つの変数で上書きしてしまいます。READYキューなら、満タンになった順を全員ぶん保存してから一人ずつ解決できます。`;
     if(slug === "racing") pair[1] += ` 各ステップは前の状態を引き継ぎ、加速→旋回→ゲート→ライバルの順で同じ車へ重ねます。`;
     if(slug === "metroidvania") pair[1] += ` 下の01〜05もこの順番です。カメラで見る範囲を作ってから、部屋・地図・能力ゲート・戻り道を足します。`;
@@ -190,7 +190,7 @@ for(const path of walk(root).filter(p=>p.endsWith(".html"))){
   if(lang==="ja"&&route.includes("/tracks/")&&!route.includes("/tracks/visual-effects/")&&!isHub){
     pair[1]+=" PLAYABLEは『このページで実際に操作できる』という印です。";
   }
-  if(lang==="en")pair=route==="/en/"?["Trace one rule first","Update is the roughly 60 Hz game clock: it advances input and state. Draw only projects the latest numbers, so even a delayed Draw does not change gameplay. This is the shared boundary for the whole path.","func (g *Game) Update() error { g.x++; return nil }\nfunc (g *Game) Draw(screen *ebiten.Image) { drawTarget(screen, g.x) }"]:["Trace one rule first","Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.",pair[2] || "func (g *Game) Update() error { return nil }"];
+  if(lang==="en")pair=route==="/en/"?["Trace one rule first","Update is the roughly 60 Hz game clock: it advances input and state. Draw only projects the latest numbers, so even a delayed Draw does not change gameplay. This is the shared state boundary; the renderer can be swapped freely.","func (g *Game) Update() error { g.x++; return nil }\nfunc (g *Game) Draw(screen *ebiten.Image) { drawTarget(screen, g.x) }"]:["Trace one rule first","Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.",pair[2] || "func (g *Game) Update() error { return nil }"];
   pair[2] ||= "func (g *Game) Update() error { return nil }";
   const esc=s=>s.replaceAll("&","&amp;").replaceAll("<","&lt;");
   const flowVisual = isHub && trackParts[slug]

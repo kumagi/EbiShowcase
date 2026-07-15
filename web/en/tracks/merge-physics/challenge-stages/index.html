@@ -32,6 +32,16 @@
   <p class="update-draw-note">For this lesson, put a new rule in Update (or a pure helper called by Update). Draw only shows the result of that rule.</p>
 </section>
 <!-- update-draw-contract:end -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Put physics constants and goals in stage data</h2><p>Load three stages with different target tiers and gravity values from data.</p></div><pre><code>stage := stages[level]
 gravity = stage.gravity
 targetTier = stage.targetTier</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>Keep the collision rules and store gravity, target tier, and required merges per stage. Progressing from light to heavy gravity changes drop decisions without rewriting the simulation.</p></article><article><h3>CHANGE</h3><p>Change gravity or effect duration.</p></article><article><h3>CHALLENGE</h3><p>Add a fourth stage using data only.</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>Merge Physics</strong></a><a href="../ebi-merge/" rel="next">FINAL →<strong>Ebi Merge</strong></a></nav>

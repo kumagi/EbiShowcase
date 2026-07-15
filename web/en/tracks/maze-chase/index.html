@@ -21,10 +21,25 @@
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/maze-chase/">
 <link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/maze-chase/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-maze-chase"><span class="track-letter">N</span><div><p class="eyebrow">Build a Pac-Man-style chase</p><h1>Maze Chase</h1><p>Build a Pac-Man-style game where you eat pellets in a maze while running from enemies. Start with tile movement, then add remembering your next turn early (buffered input), intersections, enemy modes, path choice, and power states.</p></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="Course learning order"><span>01 マス移動</span><b aria-hidden="true">→</b><span>02 曲がり予約</span><b aria-hidden="true">→</b><span>03 餌</span><b aria-hidden="true">→</b><span>04 分岐AI</span><b aria-hidden="true">→</b><span>05 追跡</span></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="Course learning order"><span>01 マス移動</span><b aria-hidden="true">→</b><span>02 曲がり予約</span><b aria-hidden="true">→</b><span>03 餌</span><b aria-hidden="true">→</b><span>04 分岐AI</span><b aria-hidden="true">→</b><span>05 追跡</span></div></section>
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 
-<p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> loop. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
+
+
+
+
+
+<p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 state boundary</a>. When a hero appears, it is the original Ebi Tenjiroh (海老・天次郎).</p>
 <section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>From one system<br>to a playable world.</h2><p>Test data changes and algorithms in small games, reusing each step on the way to the final project.</p></div><a class="path-step" href="tile-runner/"><span>01</span><div><h3>Run the Maze</h3><p>Move smoothly along corridor centers and block turns into walls.</p><strong>Tile centers and direction</strong></div><b>→</b></a>
 <a class="path-step" href="buffered-turn/"><span>02</span><div><h3>Buffered Corner Turns</h3><p>Remember an early direction press (buffering it) and turn automatically at the next intersection.</p><strong>Remembering the next turn early (input buffering) and intersections</strong></div><b>→</b></a>
 <a class="path-step" href="pellet-map/"><span>03</span><div><h3>Pellet Maze</h3><p>Track each pellet and clear the stage when none remain.</p><strong>Collectible state and completion</strong></div><b>→</b></a>
@@ -58,6 +73,12 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 

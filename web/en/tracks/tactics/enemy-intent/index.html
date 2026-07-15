@@ -32,6 +32,16 @@
   <p class="update-draw-note">For this lesson, put a new rule in Update (or a pure helper called by Update). Draw only shows the result of that rule.</p>
 </section>
 <!-- update-draw-contract:end -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Use one AI decision for display and resolution</h2><p>Reveal which ally the enemy will target, then place a guard where the attack is coming.</p></div><pre><code>intent.target = chooseTarget(allies)
 drawIntent(intent.target)
 resolveAttack(intent.target)</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>Choose target at the start of a turn, not at the instant of impact. Draw that same target and later resolve it, creating a fair enemy players can read.</p></article><article><h3>CHANGE</h3><p>Change movement, range, or turn limit.</p></article><article class="challenge"><h3>CHALLENGE</h3><p>Add a defend-the-bridge mission as data.</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>Terrain-aware Tactical RPG</strong></a><a href="../ebi-tactics/" rel="next">FINAL →<strong>Ebi Tactics</strong></a></nav>

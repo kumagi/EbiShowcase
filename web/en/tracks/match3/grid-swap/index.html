@@ -21,8 +21,23 @@
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/match3/grid-swap/">
 <link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/match3/grid-swap/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Match-three Puzzle</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Swap Neighboring Cells</h1><p>Store a board as rows and columns, then swap only two cells sharing an edge.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Two-dimensional grids and adjacency</strong></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared Update → Draw skeleton for the whole path; the numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>adjacent := abs(ax-bx)+abs(ay-by)==1</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose any independent renderer in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>adjacent := abs(ax-bx)+abs(ay-by)==1</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
+<!-- renderer-freedom:start -->
+<section class="renderer-freedom" aria-label="Renderer independence">
+  <p class="eyebrow">ONE STATE, FOUR DRAWS</p>
+  <h2>Change the picture, not the game.</h2>
+  <p>The same <code>game</code> made by Update can be rendered as ASCII, wireframe, pixel art, or polished sprites. Draw it four ways in four panels and Update, input, and physics remain one unchanged system. Draw is a replaceable projection, not a partner that must run immediately after Update.</p>
+  <div class="renderer-freedom-grid" aria-hidden="true"><span><b>ASCII</b><code>+---+
+| @ |
++---+</code></span><span><b>WIREFRAME</b><i>◇───◇<br>╲ ○ ╱</i></span><span><b>PIXEL ART</b><i>▪▪●▪▪<br>▪▪▪▪▪</i></span><span><b>SPRITES</b><i>✦  EBI  ✦</i></span></div>
+</section>
+<!-- renderer-freedom:end -->
+
+
+
+
+
 
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_puzzle-rotation.svg" alt="Puzzle rotation pivot" loading="lazy" decoding="async"><figcaption>A visual map of Puzzle rotation pivot. Trace the numbers and pictures before reading the code.</figcaption></figure>
@@ -64,6 +79,12 @@ if distance == 1 {
         </form>
       </div>
     </section>
+
+
+
+
+
+
 
 
 
