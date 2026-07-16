@@ -9,6 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/hero"
+	"github.com/kumagi/EbiShowcase/internal/lessonlogic"
 )
 
 const (
@@ -111,11 +112,11 @@ func (g *game) Update() error {
 	for _, s := range g.stars {
 		s.y += s.speed
 
-		if g.caught(s) {
+		switch lessonlogic.ClassifyFallingObject(g.caught(s), s.y, screenHeight) {
+		case lessonlogic.FallingCaught:
 			g.score++
 			continue // 取れたので消す
-		}
-		if s.y > screenHeight {
+		case lessonlogic.FallingMissed:
 			g.lives--
 			if g.lives <= 0 {
 				g.gameOver = true

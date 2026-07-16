@@ -43,6 +43,8 @@
 
 
 
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT EVENT</p><h2>「触れている」から「触れた瞬間」を取り出す。</h2><p class="lesson-lead">円の重なりをtickごとに調べるだけだと、くっついている間に60回も能力が出ます。今の接触と前の接触を比べ、<strong>今は触れていて、前は離れていた</strong>ときだけイベントを作ります。そのイベントが味方の能力データを読みます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>今の接触を調べる</h3><p>中心どうしの距離が二つの半径の合計以下なら接触です。画面の円と同じ簡単な円判定を使います。</p><code>touching := distance &lt;= playerR + allyR</code></article><article><span class="concept-number">2</span><h3>開始した瞬間だけイベント</h3><p><code>touching</code>がtrueで、前回の<code>wasTouching</code>がfalseなら新しい接触です。最後に今の値を次回用へ保存します。</p><code>if touching &amp;&amp; !wasTouching { activate() }</code></article><article><span class="concept-number">3</span><h3>能力データで処理を選ぶ</h3><p>味方は名前、種類、強さを持ちます。共通の<code>activate</code>が種類を見て、レーザー・回復・衝撃波へ分けます。</p><code>Ability{Name: "HEAL", Kind: Heal, Power: 2}</code></article></div>
@@ -95,6 +97,7 @@ ally.wasTouching = now</code></pre></div>
         </form>
       </div>
     </section>
+
 
 
 

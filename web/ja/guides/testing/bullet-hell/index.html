@@ -1,0 +1,155 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="何百発のスライスではなく、円2個の重なりと1点の画面外判定をテストします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><title>Ebi Showcase – 弾幕：大量ループの判定を1発へ縮める</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/testing/bullet-hell/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – 弾幕：大量ループの判定を1発へ縮める">
+    <meta property="og:description" content="何百発のスライスではなく、円2個の重なりと1点の画面外判定をテストします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/guides/testing/bullet-hell/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--bullet-hell.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="弾幕：大量ループの判定を1発へ縮める">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – 弾幕：大量ループの判定を1発へ縮める">
+    <meta name="twitter:description" content="何百発のスライスではなく、円2個の重なりと1点の画面外判定をテストします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--bullet-hell.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="弾幕：大量ループの判定を1発へ縮める">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../en/guides/testing/bullet-hell/" lang="en">EN</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 12 / 12</p><h1>弾幕：大量ループの判定を1発へ縮める</h1><p>何百発のスライスではなく、円2個の重なりと1点の画面外判定をテストします。</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Updateは逆順削除とHP更新を担当します。純粋関数には1発分の数字だけを渡し、接触境界と余白30を固定します。</h2><p><strong>Draw:</strong> 弾幕の美しさ、避けられる隙間、被弾の見やすさはプレイ確認です。</p></div><div class="test-case-table"><p class="eyebrow">境界を先に決める</p><table><tbody><tr><th>円が重なる</th><td><code>distance9,sum10</code></td><td><code>true</code></td></tr><tr><th>円が接するだけ</th><td><code>distance10,sum10</code></td><td><code>false</code></td></tr><tr><th>余白上</th><td><code>x=-30</code></td><td><code>inside</code></td></tr><tr><th>余白外</th><td><code>x=-30.1</code></td><td><code>outside</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>現行Updateの全手順</h2><p>省略記号はありません。入力から早期return、ループ、勝敗まで、現在ゲームで動く順番です。この中から抽出した純粋関数を直接テストします。</p></div><ol><li><span>01</span><p>終了時は再開だけ</p></li><li><span>02</span><p>tickと無敵時間を更新</p></li><li><span>03</span><p>プレイヤー移動</p></li><li><span>04</span><p>自機弾・リング・扇弾を周期生成</p></li><li><span>05</span><p>全弾を逆順に移動</p></li><li><span>06</span><p>画面外判定</p></li><li><span>07</span><p>自機弾×ボス／敵弾×自機</p></li><li><span>08</span><p>弾削除と勝敗更新</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / Update()全文</p><code>games/core/bullet-hell/main.go</code></div><pre><code>func (g *game) Update() error {
+	if g.cleared || g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}
+
+	g.frame++
+	if g.invincible &gt; 0 {
+		g.invincible--
+	}
+
+	g.movePlayer()
+
+	// 自動で自分の弾を撃つ
+	if g.frame%7 == 0 {
+		g.bullets = append(g.bullets,
+			bullet{g.playerX - 7, g.playerY - 15, -0.25, -10, 4, false},
+			bullet{g.playerX + 7, g.playerY - 15, 0.25, -10, 4, false},
+		)
+	}
+
+	// ボスの弾幕パターン
+	if g.frame%38 == 0 {
+		g.spawnRing()
+	}
+	if g.frame%91 == 0 {
+		g.spawnAimFan()
+	}
+
+	// 弾を動かして当たりを見る
+	for i := len(g.bullets) - 1; i &gt;= 0; i-- {
+		b := &amp;g.bullets[i]
+		b.x += b.vx
+		b.y += b.vy
+
+		remove := lessonlogic.Outside(b.x, b.y, 0, 0, screenWidth, screenHeight, 30)
+
+		// 自分の弾がボスに当たった
+		if !b.enemy &amp;&amp; lessonlogic.CircleHit(b.x, b.y, b.r, bossX, bossY, 48-b.r) {
+			g.bossHP--
+			remove = true
+			if g.bossHP &lt;= 0 {
+				g.cleared = true
+			}
+		}
+
+		// 敵弾が自分に当たった
+		if b.enemy &amp;&amp; g.invincible == 0 &amp;&amp; lessonlogic.CircleHit(b.x, b.y, b.r, g.playerX, g.playerY, 4) {
+			g.life--
+			g.invincible = 90
+			remove = true
+			if g.life &lt;= 0 {
+				g.gameOver = true
+			}
+		}
+
+		if remove {
+			g.bullets = append(g.bullets[:i], g.bullets[i+1:]...)
+		}
+	}
+	return nil
+}</code></pre></section><section class="test-code-compare"><article><p>EXTRACTED / 完全な純粋ロジック</p><code>internal/lessonlogic/core_updates.go</code><pre><code>package lessonlogic
+import "math"
+
+func CircleHit(ax, ay, ar, bx, by, br float64) bool {
+	return math.Hypot(ax-bx, ay-by) &lt; ar+br
+}
+
+func Outside(x, y, minX, minY, maxX, maxY, margin float64) bool {
+	return x &lt; minX-margin || x &gt; maxX+margin || y &lt; minY-margin || y &gt; maxY+margin
+}
+</code></pre></article><article class="is-after"><p>TEST / 完全な_test.go</p><code>internal/lessonlogic/core_updates_test.go</code><pre><code>package lessonlogic
+
+import "testing"
+
+func TestCircleHit(t *testing.T) {
+	tests := []struct {
+		name string
+		bx   float64
+		want bool
+	}{{name: "overlap", bx: 9, want: true}, {name: "touch is not overlap", bx: 10}, {name: "separate", bx: 10.1}}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := CircleHit(0, 0, 4, tt.bx, 0, 6); got != tt.want {
+				t.Fatalf("CircleHit() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestOutside(t *testing.T) {
+	tests := []struct {
+		name string
+		x, y float64
+		want bool
+	}{{name: "inside", x: 240, y: 360}, {name: "on margin", x: -30, y: 100}, {name: "past margin", x: -30.1, y: 100, want: true}}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Outside(tt.x, tt.y, 0, 0, 480, 720, 30); got != tt.want {
+				t.Fatalf("Outside() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+</code></pre></article></section><section class="test-run"><p>自分のGoプロジェクトに上のファイルを作って実行</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>テストのあとも人が確認すること</h2><p>弾幕の美しさ、避けられる隙間、被弾の見やすさはプレイ確認です。</p></section><nav class="test-pager"><a href="../dungeon/">← 前へ</a><span>12 / 12</span><a href="../">次へ →</a></nav>
+    <!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>cos/sinは角度から円周上の横・縦位置を得る道具。ラジアンは角度単位で2πが一周、tick%周期は一定tickごとに同じ模様を繰り返します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>angle := 2*math.Pi*float64(i)/count</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/guides/testing/bullet-hell/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

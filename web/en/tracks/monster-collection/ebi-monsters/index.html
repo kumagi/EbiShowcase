@@ -43,6 +43,8 @@
 
 
 
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / INTEGRATED GAME STATE</p><h2>Turn six systems into one adventure flow.</h2><p class="lesson-lead">A complete game is not a row of disconnected features. Region choice selects encounter data, battle results change capture chance, and capture success updates bestiary, EXP, party, and box together. <code>modeMap</code> and <code>modeBattle</code> separate screens while <strong>state transitions</strong> pass results forward.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Create an instance from a region</h3><p>Each region's encounter table is a list of species IDs. Visit count selects the next ID, then species data supplies wild HP and type.</p><code>wildSpecies = encounterTables[region][visits[region]%2]</code></article><article><span class="concept-number">2</span><h3>Commit capture as one transaction</h3><p>Move power, accuracy, uses, and matchup reduce HP. Only capture success registers the dex, adds an instance, shares EXP, checks evolution, and returns to map together.</p><code>dex[id]=true; addMonster(); shareEXP(); mode=modeMap</code></article><article><span class="concept-number">3</span><h3>Save only required state</h3><p>Screen colors and buttons are not saved. Copy party species and EXP, box, bestiary, and region visits into <code>saveData</code>, then produce JSON bytes.</p><code>saveSlot, _ = json.Marshal(payload)</code></article></div>
@@ -102,6 +104,7 @@ if err == nil {
         </form>
       </div>
     </section>
+
 
 
 

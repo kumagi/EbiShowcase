@@ -1,58 +1,34 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Match-three special pieces are hard to reproduce by hand. Freeze the failing board as small data and keep a test that fails before the fix."><title>Ebi Showcase – Never reintroduce a fixed bug</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Continue to the new LEVEL 01–12 testing guide. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step."><title>Ebi Showcase – Testing lesson moved</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/regression-tests/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Never reintroduce a fixed bug">
-    <meta property="og:description" content="Match-three special pieces are hard to reproduce by hand. Freeze the failing board as small data and keep a test that fails before the fix.">
+    <meta property="og:title" content="Ebi Showcase – Testing lesson moved">
+    <meta property="og:description" content="Continue to the new LEVEL 01–12 testing guide. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/regression-tests/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--regression-tests.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Never reintroduce a fixed bug">
+    <meta property="og:image:alt" content="Now part of the LEVEL 01–12 course.">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Never reintroduce a fixed bug">
-    <meta name="twitter:description" content="Match-three special pieces are hard to reproduce by hand. Freeze the failing board as small data and keep a test that fails before the fix.">
+    <meta name="twitter:title" content="Ebi Showcase – Testing lesson moved">
+    <meta name="twitter:description" content="Continue to the new LEVEL 01–12 testing guide. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--regression-tests.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Never reintroduce a fixed bug">
+    <meta name="twitter:image:alt" content="Now part of the LEVEL 01–12 course.">
     <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
   <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
   <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
   <!-- favicon:end -->
-</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/regression-tests/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">STEP 04 / 05</p><h1>Never reintroduce a fixed bug</h1><p>Match-three special pieces are hard to reproduce by hand. Freeze the failing board as small data and keep a test that fails before the fix.</p></section>
+</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/regression-tests/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><p class="eyebrow">GUIDE UPDATED</p><h1>Now part of the LEVEL 01–12 course.</h1><p><a href="../bullet-hell/">OPEN THE NEW LESSON →</a></p></section>
 <!-- feedback-note:guides/testing/regression-tests:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-guides-testing-regression-tests"><div><p class="eyebrow">See the reproduction board</p><h2 id="feedback-note-guides-testing-regression-tests">Make the small board the test input</h2><p>A board made from simple symbols shows exactly which arrangement caused the bug. Pass the same board data to the rule and check the same answer every time without opening the game.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="match-three reproduction board">A B C A B
 B C C C A
 A B C B A
 C C A B C
 B A B C A</pre><p class="feedback-note-caption">Three C cells → test the clear result</p></div></section>
-<!-- feedback-note:guides/testing/regression-tests:end --><section class="test-rule-strip"><span>input + state</span><i>→</i><strong>pure function</strong><i>→</i><span>next state + answer</span></section><section class="test-explain"><div><p class="eyebrow">Why does this build confidence?</p><h2>A reproduction board is a bug specimen. If a later cleanup brings the bug back, go test warns you immediately.</h2></div><div class="test-case-table"><p class="eyebrow">List the cases first</p><table><tbody><tr><th>four across</th><td><code>row</code></td><td><code>clear one row</code></td></tr><tr><th>five</th><td><code>rainbow</code></td><td><code>clear one color</code></td></tr><tr><th>cross/T</th><td><code>burst</code></td><td><code>clear neighbors</code></td></tr><tr><th>special + special</th><td><code>chain</code></td><td><code>chain continues</code></td></tr></tbody></table></div></section><section class="test-code-compare"><article><p>BEFORE / Everything lives in Update</p><pre><code>// Manual checking only
-// 1. Start the game
-// 2. Swap many times
-// 3. Wait until five pieces align
-// 4. Watch the special-piece chain</code></pre></article><article class="is-after"><p>AFTER / Separate the rule</p><pre><code>board := [8][8]int{
-  {1, 2, 3, 4, 5, 1, 2, 3},
-  // Freeze only the arrangement you need.
-}
-
-got := specialForMatch(board, matchedCells)
-want := specialRainbow
-if got != want {
-  t.Fatalf("got %v, want %v", got, want)
-}</code></pre></article></section><section class="test-code-focus"><div><p class="eyebrow">TEST / Write the expected answer</p><h2>_test.go</h2><p>A reproduction board is a bug specimen. If a later cleanup brings the bug back, go test warns you immediately.</p></div><pre><code>func TestSpecialForMatch(t *testing.T) {
-  tests := []struct {
-    name  string
-    cells []cell
-    want  specialKind
-  }{
-    {"four horizontal", fourInRow(), specialRow},
-    {"five", fiveInRow(), specialRainbow},
-    {"cross", crossShape(), specialBurst},
-  }
-  // Compare the same input with the same expectation.
-}</code></pre></section><section class="test-run"><p>Run it in this repository</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS — checked without opening the game</strong></section><section class="test-challenge"><p class="eyebrow">YOUR TURN</p><h2>For the next bug, write the smallest failing board before the fix. Keep that test after it passes.</h2></section><nav class="test-pager"><a href="../state-transitions/">← PREVIOUS</a><span>4 / 5</span><a href="../readable-tests/">NEXT →</a></nav>
+<!-- feedback-note:guides/testing/regression-tests:end -->
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -74,4 +50,4 @@ if got != want {
         </form>
       </div>
     </section>
-</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

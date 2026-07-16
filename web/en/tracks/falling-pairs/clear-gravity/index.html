@@ -40,6 +40,8 @@
 
 
 
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CLEAR THEN COMPACT</p><h2>Do not mix clearing and falling in one loop.</h2><p class="lesson-lead">Collect every four-plus group from the previous step into marked. First turn all marked cells into empty holes. Only after the hole pattern is final should each column be read bottom-up and <strong>compacted</strong>.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Collect all targets first</h3><p>Finish flood fill before changing the board, adding coordinates from every qualifying group to one marked set.</p><code>marked[p] = true</code></article><article><span class="concept-number">2</span><h3>Clear every group together</h3><p>Walk marked and write empty. Never clear during search, where it could break a later group's connections.</p><code>for p := range marked { board[p.y][p.x] = empty }</code></article><article><span class="concept-number">3</span><h3>Compact columns from below</h3><p>Put write on the bottom. Copy only nonempty cells while reading upward, then fill every row above write with empty.</p><code>board[write][x] = board[read][x]; write--</code></article></div><div class="motion-lab" data-lab="turn" data-states="Find groups,Clear together,Compact columns,Check settled" aria-labelledby="clear-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / TWO-STAGE BOARD UPDATE</p><h3 id="clear-lab-title">Advance the board one stage at a time</h3><p>Move through find, clear, compact, and settle. Separate states expose exactly when data changes.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="next act">Next stage</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Start over</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board role="img" aria-label="Board processing from search to settled"></div><div class="lab-values"><div><span>Current</span><strong data-lab-state>Find groups</strong></div><div><span>Change unit</span><strong>board phase</strong></div><div><span>Order</span><strong>one at a time</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -83,6 +85,7 @@
         </form>
       </div>
     </section>
+
 
 
 

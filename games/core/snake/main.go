@@ -9,6 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/lessonlogic"
 )
 
 const (
@@ -192,7 +193,7 @@ func (g *game) Update() error {
 
 	g.frame++
 	// スコアが上がると少し速くなる
-	wait := max(4, 10-g.score/3)
+	wait := lessonlogic.SnakeStepInterval(g.score)
 	if g.frame%wait != 0 {
 		return nil
 	}

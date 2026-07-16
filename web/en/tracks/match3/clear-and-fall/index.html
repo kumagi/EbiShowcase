@@ -40,6 +40,8 @@
 
 
 
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FALL TWEEN</p><h2>Settle the array now. Let Draw chase with progress.</h2><p class="lesson-lead">The key to match-3 falls is splitting <strong>logical board</strong> from <strong>drawn y</strong>. Update compacts columns to final cells and stores <code>fromY→toY</code> plus <code>progress</code> (0→1). While falling, ignore input; only Draw paints the in-between height. No physics engine needed.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Commit logic first</h3><p>Mark empties and compact each column. That final board is what cascade checks will read next.</p><code>compactColumns()</code></article><article><span class="concept-number">2</span><h3>Advance progress only</h3><p>While falling, do not read Space—just <code>progress += 0.07</code>. At 1.0, unlock the refill step.</p><code>if falling { progress += …; return }</code></article><article><span class="concept-number">3</span><h3>Draw interpolates</h3><p>Paint each gem at <code>fromY+(toY-fromY)*progress</code>. Keep logical coords still during the tween.</p><code>y = lerp(fromY, toY, progress)</code></article></div>
 <div class="motion-lab" data-lab="match-scan" data-found="ready to clear" data-none="no match yet" data-cleared="collapsed" aria-labelledby="lab-title-clear-and-fall">
 <div class="lab-copy">
@@ -91,6 +93,7 @@ for write &gt;= 0 { board[write][x] = empty; write-- }
         </form>
       </div>
     </section>
+
 
 
 

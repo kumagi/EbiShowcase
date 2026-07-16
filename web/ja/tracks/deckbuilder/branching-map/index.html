@@ -40,6 +40,8 @@
 
 
 
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GRAPH MAP</p><h2>マップは絵ではなく「地点」と「つながり」のデータ。</h2><p class="lesson-lead">各地点をnodeとして作り、<strong>nextに次へ進める番号</strong>を保存します。現在地のnextだけ入力を受け付ければ、線がない場所へ飛ぶことはありません。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>地点を作る</h3><p>座標、種類、危険度、報酬を1つの構造体へ入れます。Drawは座標を、イベント処理は種類を読みます。</p><code>type node struct { x, y float32; kind string }</code></article><article><span class="concept-number">2</span><h3>つながりを番号で持つ</h3><p>nextが[3,4]なら次は3番か4番です。このつながり全体をグラフと呼びます。</p><code>next []int</code></article><article><span class="concept-number">3</span><h3>訪問済みを覚える</h3><p>選んだ地点をvisitedに記録し、通った道を色で見せます。セーブデータにも現在地と訪問履歴を保存できます。</p><code>visited[current] = true</code></article></div><div class="motion-lab" data-lab="map-nodes"  aria-labelledby="lab-title-branching-map">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / GRAPH PATH</p>
@@ -88,6 +90,7 @@ for _, id := range options {
         </form>
       </div>
     </section>
+
 
 
 

@@ -8,6 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/lessonlogic"
 )
 
 const (
@@ -111,13 +112,11 @@ func (g *game) Update() error {
 	g.moveCPU()
 	g.bounceBall()
 
-	// 上に抜けたらプレイヤーの得点
-	if g.ballY < -20 {
+	switch lessonlogic.ExitScore(g.ballY, -20, screenHeight+20) {
+	case 0: // 上に抜けたらプレイヤーの得点
 		g.playerScore++
 		g.serve(1)
-	}
-	// 下に抜けたら CPU の得点
-	if g.ballY > screenHeight+20 {
+	case 1: // 下に抜けたら CPU の得点
 		g.cpuScore++
 		g.serve(-1)
 	}

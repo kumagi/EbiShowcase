@@ -1,0 +1,83 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="得点から『何tickごとに1マス進むか』だけを計算する関数にします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><title>Ebi Showcase – Snake：速さの式を時間制御から外す</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/testing/snake/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Snake：速さの式を時間制御から外す">
+    <meta property="og:description" content="得点から『何tickごとに1マス進むか』だけを計算する関数にします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/guides/testing/snake/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--snake.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Snake：速さの式を時間制御から外す">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Snake：速さの式を時間制御から外す">
+    <meta name="twitter:description" content="得点から『何tickごとに1マス進むか』だけを計算する関数にします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--snake.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Snake：速さの式を時間制御から外す">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../en/guides/testing/snake/" lang="en">EN</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 08 / 12</p><h1>Snake：速さの式を時間制御から外す</h1><p>得点から『何tickごとに1マス進むか』だけを計算する関数にします。</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>frame%waitのタイミングはUpdateが担当し、waitの下限4と難易度曲線は表テストで確認します。</h2><p><strong>Draw:</strong> 曲がる操作感、盤面サイズ、餌の見つけやすさはプレイ確認です。</p></div><div class="test-case-table"><p class="eyebrow">境界を先に決める</p><table><tbody><tr><th>開始</th><td><code>score0</code></td><td><code>10</code></td></tr><tr><th>得点3</th><td><code>score3</code></td><td><code>9</code></td></tr><tr><th>高速上限</th><td><code>score18/99</code></td><td><code>4</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>現行Updateの全手順</h2><p>省略記号はありません。入力から早期return、ループ、勝敗まで、現在ゲームで動く順番です。この中から抽出した純粋関数を直接テストします。</p></div><ol><li><span>01</span><p>終了時は再開だけ受ける</p></li><li><span>02</span><p>次方向を入力バッファへ保存</p></li><li><span>03</span><p>tickカウンターを進める</p></li><li><span>04</span><p>得点から移動間隔を計算</p></li><li><span>05</span><p>移動tickでなければ終了</p></li><li><span>06</span><p>頭・餌・尾・自己衝突を1マス進める</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / Update()全文</p><code>games/core/snake/main.go</code></div><pre><code>func (g *game) Update() error {
+	if g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}
+
+	g.readInput()
+
+	g.frame++
+	// スコアが上がると少し速くなる
+	wait := lessonlogic.SnakeStepInterval(g.score)
+	if g.frame%wait != 0 {
+		return nil
+	}
+	g.stepSnake()
+	return nil
+}</code></pre></section><section class="test-code-compare"><article><p>EXTRACTED / 完全な純粋ロジック</p><code>internal/lessonlogic/core_updates.go</code><pre><code>package lessonlogic
+func SnakeStepInterval(score int) int {
+	return max(4, 10-score/3)
+}
+</code></pre></article><article class="is-after"><p>TEST / 完全な_test.go</p><code>internal/lessonlogic/core_updates_test.go</code><pre><code>package lessonlogic
+
+import "testing"
+
+func TestSnakeStepInterval(t *testing.T) {
+	tests := []struct{ score, want int }{{0, 10}, {3, 9}, {18, 4}, {99, 4}}
+	for _, tt := range tests {
+		if got := SnakeStepInterval(tt.score); got != tt.want {
+			t.Errorf("SnakeStepInterval(%d) = %d, want %d", tt.score, got, tt.want)
+		}
+	}
+}
+</code></pre></article></section><section class="test-run"><p>自分のGoプロジェクトに上のファイルを作って実行</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>テストのあとも人が確認すること</h2><p>曲がる操作感、盤面サイズ、餌の見つけやすさはプレイ確認です。</p></section><nav class="test-pager"><a href="../breakout/">← 前へ</a><span>8 / 12</span><a href="../sokoban/">次へ →</a></nav>
+    <!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>スライスは長さを変えられるリスト。ヘビの体は通ったマス座標の順番で、appendで頭を足し、最後を外すと一歩進みます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>body = append([]Cell{head}, body[:len(body)-1]...)</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/guides/testing/snake/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

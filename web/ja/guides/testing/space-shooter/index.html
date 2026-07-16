@@ -1,0 +1,181 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="敵から自機への差分を、指定した速さの弾ベクトルへ変換します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><title>Ebi Showcase – シューティング：照準ベクトルを純粋にする</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/testing/space-shooter/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – シューティング：照準ベクトルを純粋にする">
+    <meta property="og:description" content="敵から自機への差分を、指定した速さの弾ベクトルへ変換します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/guides/testing/space-shooter/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--space-shooter.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="シューティング：照準ベクトルを純粋にする">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – シューティング：照準ベクトルを純粋にする">
+    <meta name="twitter:description" content="敵から自機への差分を、指定した速さの弾ベクトルへ変換します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--space-shooter.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="シューティング：照準ベクトルを純粋にする">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../en/guides/testing/space-shooter/" lang="en">EN</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 06 / 12</p><h1>シューティング：照準ベクトルを純粋にする</h1><p>敵から自機への差分を、指定した速さの弾ベクトルへ変換します。</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>敵スライスや弾生成を渡さず、dx・dy・speedだけを渡します。3-4-5の三角形なら期待値を手計算できます。</h2><p><strong>Draw:</strong> 敵の出現量、弾の読みやすさ、爆発の手応えはプレイ確認です。</p></div><div class="test-case-table"><p class="eyebrow">境界を先に決める</p><table><tbody><tr><th>3-4-5</th><td><code>3,4,speed10</code></td><td><code>6,8</code></td></tr><tr><th>同じ位置</th><td><code>0,0,speed10</code></td><td><code>0,0</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>現行Updateの全手順</h2><p>省略記号はありません。入力から早期return、ループ、勝敗まで、現在ゲームで動く順番です。この中から抽出した純粋関数を直接テストします。</p></div><ol><li><span>01</span><p>終了状態・無敵時間・背景を更新</p></li><li><span>02</span><p>プレイヤー入力と射撃</p></li><li><span>03</span><p>味方弾／敵弾を移動</p></li><li><span>04</span><p>敵AIと照準射撃</p></li><li><span>05</span><p>弾×敵を逆順で解決</p></li><li><span>06</span><p>敵弾×自機と画面外敵を解決</p></li><li><span>07</span><p>全滅時に次ウェーブ生成</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / Update()全文</p><code>games/core/space-shooter/main.go</code></div><pre><code>func (g *game) Update() error {
+	if g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}
+
+	g.frame++
+	if g.invincible &gt; 0 {
+		g.invincible--
+	}
+
+	// 背景の星を流す
+	for i := range g.stars {
+		g.stars[i].y += g.stars[i].speed
+		if g.stars[i].y &gt; screenHeight {
+			g.stars[i].y = 0
+			g.stars[i].x = g.rng.Float64() * screenWidth
+		}
+	}
+
+	g.movePlayer()
+	g.tryShoot()
+
+	// 弾を動かす
+	for i := range g.bullets {
+		g.bullets[i].x += g.bullets[i].vx
+		g.bullets[i].y += g.bullets[i].vy
+	}
+	for i := range g.enemyBullets {
+		g.enemyBullets[i].x += g.enemyBullets[i].vx
+		g.enemyBullets[i].y += g.enemyBullets[i].vy
+	}
+
+	// 敵の移動と射撃
+	for i := range g.enemies {
+		e := &amp;g.enemies[i]
+		e.y += e.vy
+		e.x += math.Sin(float64(g.frame)*0.025+e.phase) * 1.2
+		e.reload--
+		if e.reload &lt;= 0 &amp;&amp; e.y &gt; 60 {
+			dx := g.player.x - e.x
+			dy := g.player.y - e.y
+			vx, vy := aimVelocity(dx, dy, 2.3)
+			g.enemyBullets = append(g.enemyBullets, body{
+				x: e.x, y: e.y + 15,
+				vx:     vx,
+				vy:     vy,
+				radius: 7,
+			})
+			e.reload = float64(max(42, 125-g.wave*5) + g.rng.Intn(70))
+		}
+	}
+
+	// 自分の弾 × 敵
+	for bi := len(g.bullets) - 1; bi &gt;= 0; bi-- {
+		hit := false
+		for ei := len(g.enemies) - 1; ei &gt;= 0; ei-- {
+			if overlaps(g.bullets[bi], g.enemies[ei].body) {
+				g.enemies = append(g.enemies[:ei], g.enemies[ei+1:]...)
+				g.score += 100
+				hit = true
+				break
+			}
+		}
+		if hit || g.bullets[bi].y &lt; -20 {
+			g.bullets = append(g.bullets[:bi], g.bullets[bi+1:]...)
+		}
+	}
+
+	// 敵の弾 × 自分
+	for i := len(g.enemyBullets) - 1; i &gt;= 0; i-- {
+		b := g.enemyBullets[i]
+		offscreen := b.y &gt; screenHeight+20 || b.x &lt; -20 || b.x &gt; screenWidth+20
+		if offscreen {
+			g.enemyBullets = append(g.enemyBullets[:i], g.enemyBullets[i+1:]...)
+			continue
+		}
+		if g.invincible == 0 &amp;&amp; overlaps(g.player, b) {
+			g.enemyBullets = append(g.enemyBullets[:i], g.enemyBullets[i+1:]...)
+			g.hurt()
+		}
+	}
+
+	// 敵が下まで来たらダメージ
+	for i := len(g.enemies) - 1; i &gt;= 0; i-- {
+		if g.enemies[i].y &gt; screenHeight+30 {
+			g.enemies = append(g.enemies[:i], g.enemies[i+1:]...)
+			g.hurt()
+		}
+	}
+
+	if len(g.enemies) == 0 {
+		g.spawnWave()
+	}
+	return nil
+}</code></pre></section><section class="test-code-compare"><article><p>EXTRACTED / 完全な純粋ロジック</p><code>internal/lessonlogic/core_updates.go</code><pre><code>package lessonlogic
+import "math"
+
+func AimVelocity(dx, dy, speed float64) (vx, vy float64) {
+	distance := math.Hypot(dx, dy)
+	if distance == 0 {
+		return 0, 0
+	}
+	return dx / distance * speed, dy / distance * speed
+}
+</code></pre></article><article class="is-after"><p>TEST / 完全な_test.go</p><code>internal/lessonlogic/core_updates_test.go</code><pre><code>package lessonlogic
+
+import (
+	"math"
+	"testing"
+)
+
+func TestAimVelocity(t *testing.T) {
+	tests := []struct {
+		name          string
+		dx, dy, speed float64
+		wantX, wantY  float64
+	}{
+		{name: "three four five", dx: 3, dy: 4, speed: 10, wantX: 6, wantY: 8},
+		{name: "zero direction", speed: 10, wantX: 0, wantY: 0},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vx, vy := AimVelocity(tt.dx, tt.dy, tt.speed)
+			if math.Abs(vx-tt.wantX) &gt; 1e-9 || math.Abs(vy-tt.wantY) &gt; 1e-9 {
+				t.Fatalf("AimVelocity() = (%v, %v), want (%v, %v)", vx, vy, tt.wantX, tt.wantY)
+			}
+		})
+	}
+}
+</code></pre></article></section><section class="test-run"><p>自分のGoプロジェクトに上のファイルを作って実行</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>テストのあとも人が確認すること</h2><p>敵の出現量、弾の読みやすさ、爆発の手応えはプレイ確認です。</p></section><nav class="test-pager"><a href="../pong/">← 前へ</a><span>6 / 12</span><a href="../breakout/">次へ →</a></nav>
+    <!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>自機・弾・敵を別リストにすると、それぞれ同じUpdateを繰り返せます。全弾×全敵を調べる総当たりは、教材の小さな数なら十分です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>for _, b := range bullets { for _, e := range enemies { check(b,e) } }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/guides/testing/space-shooter/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

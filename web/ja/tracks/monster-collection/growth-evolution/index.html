@@ -91,6 +91,8 @@
 
 
 
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GROWTH CURVE</p><h2>経験値を残し、レベルと能力を計算する。</h2><p class="lesson-lead">経験値を<strong>(次レベル)²×10</strong>の境界と比べます。進化では経験値や現在HPを消さず、基礎能力を持つ種族定義だけを替えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>曲線からレベル</h3><p>次の境界を超える間levelを増やします。</p><code>exp &gt;= (level+1)*(level+1)*10</code></article><article><span class="concept-number">2</span><h3>能力を再計算</h3><p>種族の基礎値へレベル成長を足します。</p><code>attack = baseAttack + level*2</code></article><article><span class="concept-number">3</span><h3>定義だけ切替</h3><p>レベル4でspeciesIDを変更し、expとhpは保持します。</p><code>m.speciesID = evolvedID</code></article></div><div class="motion-lab" data-lab="xp-level" data-gained="+4 XP" data-evolve="進化できる！" aria-labelledby="lab-title-growth-evolution">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / XP CURVE</p>
@@ -142,6 +144,7 @@ if level &gt;= 4 {
         </form>
       </div>
     </section>
+
 
 
 

@@ -166,6 +166,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/hero"
+	"github.com/kumagi/EbiShowcase/internal/lessonlogic"
 )
 
 const (
@@ -406,8 +407,9 @@ func (g *game) Update() error {
 
 	// While sliding between tiles, advance the tween and ignore move input.
 	if g.moving {
-		g.progress += 0.14
-		if g.progress &gt;= 1 {
+		var complete bool
+		g.progress, complete = lessonlogic.AdvanceTween(g.progress, 0.14)
+		if complete {
 			g.player = g.toPlayer
 			if g.boxIndex &gt;= 0 {
 				g.boxes[g.boxIndex] = g.toBox
@@ -536,6 +538,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

@@ -1,0 +1,197 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="165未満で追跡、230超で徘徊へ戻り、その間は今の状態を保つ規則を分離します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><title>Ebi Showcase – ダンジョン：AIのヒステリシスをテストする</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/testing/dungeon/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – ダンジョン：AIのヒステリシスをテストする">
+    <meta property="og:description" content="165未満で追跡、230超で徘徊へ戻り、その間は今の状態を保つ規則を分離します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/guides/testing/dungeon/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--dungeon.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="ダンジョン：AIのヒステリシスをテストする">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – ダンジョン：AIのヒステリシスをテストする">
+    <meta name="twitter:description" content="165未満で追跡、230超で徘徊へ戻り、その間は今の状態を保つ規則を分離します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--dungeon.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="ダンジョン：AIのヒステリシスをテストする">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../en/guides/testing/dungeon/" lang="en">EN</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 11 / 12</p><h1>ダンジョン：AIのヒステリシスをテストする</h1><p>165未満で追跡、230超で徘徊へ戻り、その間は今の状態を保つ規則を分離します。</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>敵を実際に歩かせず、距離200で現在状態が保持されることをテストすると、境界でのガタガタ切替を防げます。</h2><p><strong>Draw:</strong> 敵の怖さ、剣の間合い、迷路の読みやすさはプレイ確認です。</p></div><div class="test-case-table"><p class="eyebrow">境界を先に決める</p><table><tbody><tr><th>接近</th><td><code>164.9</code></td><td><code>chase</code></td></tr><tr><th>中間・徘徊中</th><td><code>200,current0</code></td><td><code>wander</code></td></tr><tr><th>中間・追跡中</th><td><code>200,current1</code></td><td><code>chase</code></td></tr><tr><th>遠い</th><td><code>230.1</code></td><td><code>wander</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>現行Updateの全手順</h2><p>省略記号はありません。入力から早期return、ループ、勝敗まで、現在ゲームで動く順番です。この中から抽出した純粋関数を直接テストします。</p></div><ol><li><span>01</span><p>終了時は再開だけ</p></li><li><span>02</span><p>プレイヤーをX→Yに移動</p></li><li><span>03</span><p>攻撃タイマーと新規攻撃入力</p></li><li><span>04</span><p>敵ごとに距離から状態を遷移</p></li><li><span>05</span><p>徘徊または追跡速度を決定</p></li><li><span>06</span><p>敵をX→Yに移動</p></li><li><span>07</span><p>剣命中・接触ダメージ</p></li><li><span>08</span><p>全滅＋出口でクリア</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / Update()全文</p><code>games/core/dungeon/main.go</code></div><pre><code>func (g *game) Update() error {
+	if g.cleared || g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}
+
+	dx, dy := g.readMove()
+	g.movePlayer(dx, 0)
+	g.movePlayer(0, dy)
+
+	if g.attack &gt; 0 {
+		g.attack--
+	}
+
+	attackPressed := inpututil.IsKeyJustPressed(ebiten.KeySpace) ||
+		inpututil.IsKeyJustPressed(ebiten.KeyX) ||
+		inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft)
+	for _, id := range inpututil.AppendJustPressedTouchIDs(nil) {
+		_, y := ebiten.TouchPosition(id)
+		if y &lt;= screenHeight/2 {
+			attackPressed = true
+		}
+	}
+	if attackPressed &amp;&amp; g.attack == 0 {
+		g.attack = 18
+	}
+
+	playerCX := g.player.x + 14
+	playerCY := g.player.y + 14
+
+	for i := range g.enemies {
+		e := &amp;g.enemies[i]
+		if !e.alive {
+			continue
+		}
+
+		dist := math.Hypot(playerCX-e.x, playerCY-e.y)
+		e.state = lessonlogic.EnemyMode(e.state, dist, 165, 230)
+
+		if e.state == 0 {
+			e.timer--
+			if e.timer &lt;= 0 {
+				e.vx, e.vy = -e.vy, e.vx
+				if e.vx == 0 &amp;&amp; e.vy == 0 {
+					e.vx = 1.1
+				}
+				e.timer = 100
+			}
+		} else {
+			if dist &lt; 1 {
+				dist = 1 // 重なったときの 0 割り（NaN）を防ぐ
+			}
+			e.vx, e.vy = lessonlogic.AimVelocity(playerCX-e.x, playerCY-e.y, 1.35)
+		}
+
+		g.moveEnemy(e, e.vx, 0)
+		g.moveEnemy(e, 0, e.vy)
+
+		// 剣の先端に当たったら倒す
+		swordX := playerCX + g.facingX*30
+		swordY := playerCY + g.facingY*30
+		if g.attack &gt; 8 &amp;&amp; math.Hypot(swordX-e.x, swordY-e.y) &lt; 35 {
+			e.alive = false
+		}
+
+		// 接触ダメージ（攻撃中は受けない）
+		if dist &lt; 22 &amp;&amp; g.attack == 0 {
+			g.life--
+			g.attack = 55 // のけぞりも兼ねる
+			if g.life &lt;= 0 {
+				g.gameOver = true
+			}
+		}
+	}
+
+	// 敵を全滅して出口へ
+	if g.aliveCount() == 0 &amp;&amp; g.player.y &lt; 115 &amp;&amp; g.player.x &gt; 390 {
+		g.cleared = true
+	}
+	return nil
+}</code></pre></section><section class="test-code-compare"><article><p>EXTRACTED / 完全な純粋ロジック</p><code>internal/lessonlogic/core_updates.go</code><pre><code>package lessonlogic
+import "math"
+
+func EnemyMode(current int, distance, chaseBelow, wanderAbove float64) int {
+	if distance &lt; chaseBelow {
+		return 1
+	}
+	if distance &gt; wanderAbove {
+		return 0
+	}
+	return current
+}
+
+func AimVelocity(dx, dy, speed float64) (vx, vy float64) {
+	distance := math.Hypot(dx, dy)
+	if distance == 0 {
+		return 0, 0
+	}
+	return dx / distance * speed, dy / distance * speed
+}
+</code></pre></article><article class="is-after"><p>TEST / 完全な_test.go</p><code>internal/lessonlogic/core_updates_test.go</code><pre><code>package lessonlogic
+
+import (
+	"math"
+	"testing"
+)
+
+func TestEnemyMode(t *testing.T) {
+	tests := []struct {
+		name     string
+		current  int
+		distance float64
+		want     int
+	}{
+		{name: "starts chase", distance: 164.9, want: 1},
+		{name: "keeps wander in band", distance: 200, want: 0},
+		{name: "keeps chase in band", current: 1, distance: 200, want: 1},
+		{name: "returns to wander", current: 1, distance: 230.1, want: 0},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := EnemyMode(tt.current, tt.distance, 165, 230); got != tt.want {
+				t.Fatalf("EnemyMode() = %d, want %d", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestAimVelocity(t *testing.T) {
+	tests := []struct {
+		name          string
+		dx, dy, speed float64
+		wantX, wantY  float64
+	}{
+		{name: "three four five", dx: 3, dy: 4, speed: 10, wantX: 6, wantY: 8},
+		{name: "zero direction", speed: 10, wantX: 0, wantY: 0},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vx, vy := AimVelocity(tt.dx, tt.dy, tt.speed)
+			if math.Abs(vx-tt.wantX) &gt; 1e-9 || math.Abs(vy-tt.wantY) &gt; 1e-9 {
+				t.Fatalf("AimVelocity() = (%v, %v), want (%v, %v)", vx, vy, tt.wantX, tt.wantY)
+			}
+		})
+	}
+}
+</code></pre></article></section><section class="test-run"><p>自分のGoプロジェクトに上のファイルを作って実行</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>テストのあとも人が確認すること</h2><p>敵の怖さ、剣の間合い、迷路の読みやすさはプレイ確認です。</p></section><nav class="test-pager"><a href="../platformer/">← 前へ</a><span>11 / 12</span><a href="../bullet-hell/">次へ →</a></nav>
+    <!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>patrol（巡回）は決まった道の見回り、chase（追跡）は天次郎を追う状態。165pxなどは気付く距離を遊びながら調整した値です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if distance &lt; 165 { state = Chase }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/guides/testing/dungeon/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

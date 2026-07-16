@@ -1,49 +1,27 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Named tests and the AAA pattern—Arrange, Act, Assert—let a reader predict the function's promise without reading its implementation."><title>Ebi Showcase – Make Tests Read Like Examples</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Continue to the new LEVEL 01–12 testing guide. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step."><title>Ebi Showcase – Testing lesson moved</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/readable-tests/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Make Tests Read Like Examples">
-    <meta property="og:description" content="Named tests and the AAA pattern—Arrange, Act, Assert—let a reader predict the function's promise without reading its implementation.">
+    <meta property="og:title" content="Ebi Showcase – Testing lesson moved">
+    <meta property="og:description" content="Continue to the new LEVEL 01–12 testing guide. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/readable-tests/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--readable-tests.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Make Tests Read Like Examples">
+    <meta property="og:image:alt" content="Now part of the LEVEL 01–12 course.">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Make Tests Read Like Examples">
-    <meta name="twitter:description" content="Named tests and the AAA pattern—Arrange, Act, Assert—let a reader predict the function's promise without reading its implementation.">
+    <meta name="twitter:title" content="Ebi Showcase – Testing lesson moved">
+    <meta name="twitter:description" content="Continue to the new LEVEL 01–12 testing guide. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--readable-tests.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Make Tests Read Like Examples">
+    <meta name="twitter:image:alt" content="Now part of the LEVEL 01–12 course.">
     <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
   <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
   <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
   <!-- favicon:end -->
-</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/readable-tests/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">STEP 05 / 05</p><h1>Make Tests Read Like Examples</h1><p>Named tests and the AAA pattern—Arrange, Act, Assert—let a reader predict the function's promise without reading its implementation.</p></section><section class="test-rule-strip"><span>input + state</span><i>→</i><strong>pure function</strong><i>→</i><span>next state + answer</span></section><section class="test-explain"><div><p class="eyebrow">Why does this build confidence?</p><h2>A test is a small answer sheet. A clear name and three short parts also show where to look when it fails.</h2></div><div class="test-case-table"><p class="eyebrow">List the cases first</p><table><tbody><tr><th>name</th><td><code>TestPointsForDistance_PerfectEdge</code></td><td><code>names the example</code></td></tr><tr><th>Arrange</th><td><code>prepare input</code></td><td><code>setup</code></td></tr><tr><th>Act</th><td><code>call the rule once</code></td><td><code>run</code></td></tr><tr><th>Assert</th><td><code>compare expected value</code></td><td><code>check</code></td></tr></tbody></table></div></section><section class="test-code-compare"><article><p>BEFORE / Everything lives in Update</p><pre><code>func TestRule(t *testing.T) {
-  got, _ := pointsForDistance(8)
-  if got != 100 { t.Fatal("wrong") }
-}</code></pre></article><article class="is-after"><p>AFTER / Separate the rule</p><pre><code>import "github.com/stretchr/testify/assert"
-
-func TestPointsForDistance_PerfectEdge(t *testing.T) {
-  // Arrange
-  distance := 8.0
-
-  // Act
-  got, label := pointsForDistance(distance)
-
-  // Assert
-  assert.Equal(t, 100, got)
-  assert.Equal(t, "PERFECT +100", label)
-}</code></pre></article></section><section class="test-code-focus"><div><p class="eyebrow">TEST / Write the expected answer</p><h2>_test.go</h2><p>A test is a small answer sheet. A clear name and three short parts also show where to look when it fails.</p></div><pre><code>func TestPointsForDistance_PerfectEdge(t *testing.T) {
-  // Arrange
-  distance := 8.0
-  // Act
-  got, _ := pointsForDistance(distance)
-  // Assert
-  assert.Equal(t, 100, got)
-}</code></pre></section><section class="test-run"><p>Run it in this repository</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS — checked without opening the game</strong></section><section class="test-challenge"><p class="eyebrow">YOUR TURN</p><h2>Give one older test a name_condition name and split it into Arrange, Act, and Assert.</h2></section><nav class="test-pager"><a href="../regression-tests/">← PREVIOUS</a><span>5 / 5</span><a href="../">NEXT →</a></nav>
+</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/readable-tests/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><p class="eyebrow">GUIDE UPDATED</p><h1>Now part of the LEVEL 01–12 course.</h1><p><a href="../tap-target/">OPEN THE NEW LESSON →</a></p></section>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -65,4 +43,4 @@ func TestPointsForDistance_PerfectEdge(t *testing.T) {
         </form>
       </div>
     </section>
-</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

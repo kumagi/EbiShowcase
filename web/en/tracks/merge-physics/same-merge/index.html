@@ -39,6 +39,8 @@
 
 
 
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / REPLACE</p><h2>What happens in the slice when two become one?</h2><p class="lesson-lead">Removing during a loop shifts indices. First mark two as <strong>pending deletion</strong>, queue one new fruit, then replace everything at the end.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Same type</h3><p>Compare the tier of both touching circles.</p><code>a.tier == b.tier</code></article><article><span class="concept-number">2</span><h3>Midpoint</h3><p>Add both positions and divide by two.</p><code>(a.position+b.position)/2</code></article><article><span class="concept-number">3</span><h3>Replace</h3><p>Remove two old and add tier+1.</p><code>spawn(tier + 1)</code></article></div><div class="motion-lab" data-lab="merge-same" data-mismatch="tiers differ — no merge" data-merge="merged → T{n}" aria-labelledby="lab-title-merge-rule">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / SAME TIER</p>
@@ -75,6 +77,7 @@
         </form>
       </div>
     </section>
+
 
 
 

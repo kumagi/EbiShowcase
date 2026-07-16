@@ -10,6 +10,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/hero"
+	"github.com/kumagi/EbiShowcase/internal/lessonlogic"
 )
 
 const (
@@ -182,10 +183,10 @@ func (g *game) Update() error {
 		b.x += b.vx
 		b.y += b.vy
 
-		remove := b.x < -30 || b.x > 510 || b.y < -30 || b.y > 750
+		remove := lessonlogic.Outside(b.x, b.y, 0, 0, screenWidth, screenHeight, 30)
 
 		// 自分の弾がボスに当たった
-		if !b.enemy && math.Hypot(b.x-bossX, b.y-bossY) < 48 {
+		if !b.enemy && lessonlogic.CircleHit(b.x, b.y, b.r, bossX, bossY, 48-b.r) {
 			g.bossHP--
 			remove = true
 			if g.bossHP <= 0 {
@@ -194,7 +195,7 @@ func (g *game) Update() error {
 		}
 
 		// 敵弾が自分に当たった
-		if b.enemy && g.invincible == 0 && math.Hypot(b.x-g.playerX, b.y-g.playerY) < b.r+4 {
+		if b.enemy && g.invincible == 0 && lessonlogic.CircleHit(b.x, b.y, b.r, g.playerX, g.playerY, 4) {
 			g.life--
 			g.invincible = 90
 			remove = true

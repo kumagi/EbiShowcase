@@ -43,6 +43,8 @@
 
 
 
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DEFINITION VS STATE</p><h2>図鑑に1回書くことと、1体ずつ覚えることを分ける。</h2><p class="lesson-lead"><a href="../../../games/tap-target/#basics">LEVEL 01のUpdate / Draw</a>で数字を変えて描いたように、今回もUpdateが個体のHPと経験値を変えます。ただし、REEFLETという種族の名前や最大HPは何体いても同じです。共有する<strong>定義</strong>と変化する<strong>状態</strong>を分けます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>種族は読み取り専用の表</h3><p>種族表には名前、最大HP、攻撃力、色を一度だけ置きます。トレーニングしても、この表の最大HPは10のままです。</p><code>speciesTable[0] = Species{"REEFLET", 10, 3}</code></article><article><span class="concept-number">2</span><h3>個体は種族IDを指す</h3><p>AQUAもBUBBLEも<code>speciesID: 0</code>を持ち、同じ定義を読みます。名前を2回コピーしないので、修正する場所も1か所です。</p><code>Creature{nickname: "AQUA", speciesID: 0}</code></article><article><span class="concept-number">3</span><h3>HPとXPは個体へ保存</h3><p>現在HPや経験値は冒険で変わるので、個体構造体に置きます。同じ種族でもAはHP10、BはHP6から始められます。</p><code>creature.hp -= 2; creature.xp += 3</code></article></div>
@@ -95,6 +97,7 @@ c.xp += 3</code></pre></div>
         </form>
       </div>
     </section>
+
 
 
 

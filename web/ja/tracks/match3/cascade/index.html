@@ -40,6 +40,8 @@
 
 
 
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RESOLUTION LOOP</p><h2>「もう一度調べる」が連鎖を生む。</h2><p class="lesson-lead">消去、落下、補充のあとでscanを呼びます。結果が空でなければ同じ処理へ戻り、空なら操作を返します。<strong>盤面が止まる条件</strong>がループの出口です。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>一つの連鎖を解決</h3><p>現在のmarkedを消し、列を詰め、空きを補充します。途中でプレイヤーの交換入力は読みません。</p><code>clear(); fall(); refill()</code></article><article><span class="concept-number">2</span><h3>新しい盤面を再検査</h3><p>落ちた結果は前と違う盤面です。そこでscanを再実行し、新しい3個並びをmarkedへ入れます。</p><code>marked = scan(board)</code></article><article><span class="concept-number">3</span><h3>連鎖数を得点へ</h3><p>1連鎖目は×1、2連鎖目は×2と増やします。偶然続いた大連鎖ほど大きなごほうびになります。</p><code>score += cells * 10 * combo</code></article></div><div class="motion-lab" data-lab="match-scan" data-found="連鎖の芽！" data-none="そろいなし（連鎖終了）" data-cleared="落下 — もう一度スキャン" aria-labelledby="lab-title-cascade">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / CASCADE</p>
@@ -84,6 +86,7 @@ if len(matches) &gt; 0 {
         </form>
       </div>
     </section>
+
 
 
 

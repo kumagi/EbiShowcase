@@ -45,6 +45,8 @@
 
 
 
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RELATIVE COORDINATES</p><h2>形は「親の場所＋4個のずれ」で動かせる。</h2><p class="lesson-lead">4個それぞれの画面座標を動かすと、途中で離れてしまうかもしれません。そこで形に一つの基準点 <code>(x, y)</code> を持たせ、各マスはそこからの<strong>ずれ</strong>だけを覚えます。親を1マス動かせば、4個が同時に動きます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>形をデータで書く</h3><p>O形なら、基準から右、下、右下の4地点です。絵ではなく数字なので、同じ描画や当たり判定をどの形にも使えます。</p><code>{{0,0}, {1,0}, {0,1}, {1,1}}</code></article><article><span class="concept-number">2</span><h3>親の座標を足す</h3><p>実際の盤面マスは <code>x + offset.x</code>。左へ動くときは親のxだけを1減らせば十分です。</p><code>cellX := piece.x + offset.x</code></article><article><span class="concept-number">3</span><h3>4マス全部を検査</h3><p>一つでも壁の外へ出るなら、その移動は取り消します。「全員が入れるか」を確かめてから親を動かします。</p><code>for _, p := range shape.blocks { check(x+p.x) }</code></article></div>
@@ -100,6 +102,7 @@ for _, offset := range shape.blocks {
         </form>
       </div>
     </section>
+
 
 
 

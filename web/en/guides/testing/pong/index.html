@@ -1,0 +1,97 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Extract a rule that maps ball Y to no score, upper exit, or lower exit. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine gam"><title>Ebi Showcase – Pong: separate leaving the field from serving</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/pong/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Pong: separate leaving the field from serving">
+    <meta property="og:description" content="Extract a rule that maps ball Y to no score, upper exit, or lower exit. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine gam">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/pong/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--pong.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Pong: separate leaving the field from serving">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Pong: separate leaving the field from serving">
+    <meta name="twitter:description" content="Extract a rule that maps ball Y to no score, upper exit, or lower exit. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine gam">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--pong.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Pong: separate leaving the field from serving">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/pong/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 05 / 12</p><h1>Pong: separate leaving the field from serving</h1><p>Extract a rule that maps ball Y to no score, upper exit, or lower exit.</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Serve uses randomness, so do not mix it into the boundary test. Decide who scored deterministically first.</h2><p><strong>Draw:</strong> Play-test CPU strength, bounce audio, and paddle contact feel.</p></div><div class="test-case-table"><p class="eyebrow">Choose boundaries first</p><table><tbody><tr><th>inside</th><td><code>360</code></td><td><code>no score</code></td></tr><tr><th>exits top</th><td><code>-20.1</code></td><td><code>player</code></td></tr><tr><th>exits bottom</th><td><code>740.1</code></td><td><code>CPU</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>Every step in the current Update</h2><p>There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.</p></div><ol><li><span>01</span><p>Move the player paddle</p></li><li><span>02</span><p>Make the CPU follow the ball</p></li><li><span>03</span><p>Move and bounce off walls and paddles</p></li><li><span>04</span><p>Convert top/bottom exit into a score</p></li><li><span>05</span><p>Create a new serve after scoring</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / complete Update()</p><code>games/core/pong/main.go</code></div><pre><code>func (g *game) Update() error {
+	g.movePlayer()
+	g.moveCPU()
+	g.bounceBall()
+
+	switch lessonlogic.ExitScore(g.ballY, -20, screenHeight+20) {
+	case 0: // 上に抜けたらプレイヤーの得点
+		g.playerScore++
+		g.serve(1)
+	case 1: // 下に抜けたら CPU の得点
+		g.cpuScore++
+		g.serve(-1)
+	}
+	return nil
+}</code></pre></section><section class="test-code-compare"><article><p>EXTRACTED / complete pure logic</p><code>internal/lessonlogic/core_updates.go</code><pre><code>package lessonlogic
+func ExitScore(y, min, max float64) int {
+	if y &lt; min {
+		return 0
+	}
+	if y &gt; max {
+		return 1
+	}
+	return -1
+}
+</code></pre></article><article class="is-after"><p>TEST / complete _test.go</p><code>internal/lessonlogic/core_updates_test.go</code><pre><code>package lessonlogic
+
+import "testing"
+
+func TestExitScore(t *testing.T) {
+	tests := []struct {
+		name string
+		y    float64
+		want int
+	}{
+		{name: "inside", y: 360, want: -1},
+		{name: "upper boundary stays", y: -20, want: -1},
+		{name: "leaves top", y: -20.1, want: 0},
+		{name: "lower boundary stays", y: 740, want: -1},
+		{name: "leaves bottom", y: 740.1, want: 1},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ExitScore(tt.y, -20, 740); got != tt.want {
+				t.Fatalf("ExitScore(%v) = %d, want %d", tt.y, got, tt.want)
+			}
+		})
+	}
+}
+</code></pre></article></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Play-test CPU strength, bounce audio, and paddle contact feel.</p></section><nav class="test-pager"><a href="../flappy/">← PREVIOUS</a><span>5 / 12</span><a href="../space-shooter/">NEXT →</a></nav>
+    <!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>vx = -vx</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/guides/testing/pong/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

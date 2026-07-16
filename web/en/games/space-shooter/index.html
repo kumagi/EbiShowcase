@@ -160,6 +160,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/hero"
+	"github.com/kumagi/EbiShowcase/internal/lessonlogic"
 )
 
 const (
@@ -230,11 +231,7 @@ func overlaps(a, b body) bool {
 // exactly on the shooter, there is no direction to normalize, so return zero
 // instead of dividing by zero and producing NaN.
 func aimVelocity(dx, dy, speed float64) (float64, float64) {
-	length := math.Hypot(dx, dy)
-	if length == 0 {
-		return 0, 0
-	}
-	return dx / length * speed, dy / length * speed
+	return lessonlogic.AimVelocity(dx, dy, speed)
 }
 
 func restartPressed() bool {
@@ -518,6 +515,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

@@ -137,6 +137,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/hero"
+	"github.com/kumagi/EbiShowcase/internal/lessonlogic"
 )
 
 // --- 授業で触る数字 ---
@@ -248,10 +249,8 @@ func (g *game) Update() error {
 		g.velocity = flapSpeed
 	}
 
-	// 1. 速さに重力を足す（加速度）
-	g.velocity += gravity
-	// 2. 速さで位置を動かす
-	g.birdY += g.velocity
+	// 純粋関数の中で、速さに重力を足してから位置を動かす。
+	g.birdY, g.velocity = lessonlogic.IntegrateGravity(g.birdY, g.velocity, gravity)
 
 	// パイプを左へ流す
 	for i := range g.pipes {
@@ -394,6 +393,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

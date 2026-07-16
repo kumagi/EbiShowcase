@@ -10,6 +10,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/hero"
+	"github.com/kumagi/EbiShowcase/internal/lessonlogic"
 )
 
 const (
@@ -199,11 +200,7 @@ func (g *game) Update() error {
 		}
 
 		dist := math.Hypot(playerCX-e.x, playerCY-e.y)
-		if dist < 165 {
-			e.state = 1 // 近づいたら追う
-		} else if dist > 230 {
-			e.state = 0 // 離れたらうろつく
-		}
+		e.state = lessonlogic.EnemyMode(e.state, dist, 165, 230)
 
 		if e.state == 0 {
 			e.timer--
@@ -218,8 +215,7 @@ func (g *game) Update() error {
 			if dist < 1 {
 				dist = 1 // 重なったときの 0 割り（NaN）を防ぐ
 			}
-			e.vx = (playerCX - e.x) / dist * 1.35
-			e.vy = (playerCY - e.y) / dist * 1.35
+			e.vx, e.vy = lessonlogic.AimVelocity(playerCX-e.x, playerCY-e.y, 1.35)
 		}
 
 		g.moveEnemy(e, e.vx, 0)

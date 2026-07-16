@@ -1,0 +1,188 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Compute horizontal and vertical velocity purely, then let Update apply X collision followed by Y collision. Play the demo, add one Go rule, verify it, and apply"><title>Ebi Showcase – Platformer: stage input→velocity before collision</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/platformer/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Platformer: stage input→velocity before collision">
+    <meta property="og:description" content="Compute horizontal and vertical velocity purely, then let Update apply X collision followed by Y collision. Play the demo, add one Go rule, verify it, and apply">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/platformer/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--platformer.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Platformer: stage input→velocity before collision">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Platformer: stage input→velocity before collision">
+    <meta name="twitter:description" content="Compute horizontal and vertical velocity purely, then let Update apply X collision followed by Y collision. Play the demo, add one Go rule, verify it, and apply">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--platformer.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Platformer: stage input→velocity before collision">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/platformer/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 10 / 12</p><h1>Platformer: stage input→velocity before collision</h1><p>Compute horizontal and vertical velocity purely, then let Update apply X collision followed by Y collision.</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Do not call the giant Update. Freeze opposite inputs, air jump, and fall cap independently.</h2><p><strong>Draw:</strong> Always play-test jump height, corner feel, and camera comfort.</p></div><div class="test-case-table"><p class="eyebrow">Choose boundaries first</p><table><tbody><tr><th>right accel</th><td><code>vx0,right</code></td><td><code>0.65</code></td></tr><tr><th>friction</th><td><code>vx5,no input</code></td><td><code>3.9</code></td></tr><tr><th>ground jump</th><td><code>jump+ground</code></td><td><code>jumpSpeed+gravity</code></td></tr><tr><th>air jump</th><td><code>jump+air</code></td><td><code>ignored</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>Every step in the current Update</h2><p>There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.</p></div><ol><li><span>01</span><p>When finished, accept restart only</p></li><li><span>02</span><p>Read left, right, and jump</p></li><li><span>03</span><p>Calculate acceleration/friction/cap and jump/gravity</p></li><li><span>04</span><p>Move X then resolve X collision</p></li><li><span>05</span><p>Move Y then resolve Y collision and grounding</p></li><li><span>06</span><p>Resolve coins, falling, and goal</p></li><li><span>07</span><p>Advance camera follow state</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / complete Update()</p><code>games/core/platformer/main.go</code></div><pre><code>func (g *game) Update() error {
+	if g.cleared || g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}
+
+	left, right, jump := g.readControls()
+
+	g.vx = lessonlogic.HorizontalVelocity(g.vx, left, right, 0.65, 0.78, 6)
+	var leftGround bool
+	g.vy, leftGround = lessonlogic.VerticalVelocity(g.vy, jump, g.onGround, jumpSpeed, gravity, 14)
+	if leftGround {
+		g.onGround = false
+	}
+
+	// 横移動 → 壁との当たり
+	g.player.x += g.vx
+	for _, p := range g.platforms {
+		if overlap(g.player, p) {
+			if g.vx &gt; 0 {
+				g.player.x = p.x - g.player.w
+			} else if g.vx &lt; 0 {
+				g.player.x = p.x + p.w
+			}
+			g.vx = 0
+		}
+	}
+
+	// 縦移動 → 床・天井との当たり
+	g.player.y += g.vy
+	g.onGround = false
+	for _, p := range g.platforms {
+		if overlap(g.player, p) {
+			if g.vy &gt; 0 {
+				g.player.y = p.y - g.player.h
+				g.onGround = true
+			} else if g.vy &lt; 0 {
+				g.player.y = p.y + p.h
+			}
+			g.vy = 0
+		}
+	}
+
+	// コイン取得
+	for i := len(g.coins) - 1; i &gt;= 0; i-- {
+		if overlap(g.player, g.coins[i]) {
+			g.coins = append(g.coins[:i], g.coins[i+1:]...)
+			g.collected++
+		}
+	}
+
+	if g.player.y &gt; screenHeight+100 {
+		g.gameOver = true
+	}
+	if g.player.x &gt; goalX {
+		g.cleared = true
+	}
+
+	// カメラはプレイヤーを少し左に置いて追う
+	target := g.player.x - screenWidth*0.38
+	g.cameraX += (target - g.cameraX) * 0.09
+	g.cameraX = clamp(g.cameraX, 0, 1940)
+	return nil
+}</code></pre></section><section class="test-code-compare"><article><p>EXTRACTED / complete pure logic</p><code>internal/lessonlogic/core_updates.go</code><pre><code>package lessonlogic
+import "math"
+
+func HorizontalVelocity(vx float64, left, right bool, acceleration, friction, maxSpeed float64) float64 {
+	if left {
+		vx -= acceleration
+	}
+	if right {
+		vx += acceleration
+	}
+	if !left &amp;&amp; !right {
+		vx *= friction
+	}
+	return math.Max(-maxSpeed, math.Min(maxSpeed, vx))
+}
+
+func VerticalVelocity(vy float64, jump, onGround bool, jumpSpeed, gravity, maxFall float64) (nextVY float64, leftGround bool) {
+	if jump &amp;&amp; onGround {
+		vy = jumpSpeed
+		leftGround = true
+	}
+	return math.Min(vy+gravity, maxFall), leftGround
+}
+</code></pre></article><article class="is-after"><p>TEST / complete _test.go</p><code>internal/lessonlogic/core_updates_test.go</code><pre><code>package lessonlogic
+
+import (
+	"math"
+	"testing"
+)
+
+func TestHorizontalVelocity(t *testing.T) {
+	tests := []struct {
+		name        string
+		vx          float64
+		left, right bool
+		want        float64
+	}{
+		{name: "accelerate left", left: true, want: -0.65},
+		{name: "accelerate right", right: true, want: 0.65},
+		{name: "friction", vx: 5, want: 3.9},
+		{name: "cap", vx: 5.8, right: true, want: 6},
+		{name: "opposites cancel", left: true, right: true, want: 0},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := HorizontalVelocity(tt.vx, tt.left, tt.right, 0.65, 0.78, 6); math.Abs(got-tt.want) &gt; 1e-9 {
+				t.Fatalf("HorizontalVelocity() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestVerticalVelocity(t *testing.T) {
+	tests := []struct {
+		name           string
+		vy             float64
+		jump, grounded bool
+		wantVY         float64
+		wantLeftGround bool
+	}{
+		{name: "gravity", vy: 2, wantVY: 2.62},
+		{name: "grounded jump", jump: true, grounded: true, wantVY: -11.88, wantLeftGround: true},
+		{name: "air jump ignored", vy: 2, jump: true, wantVY: 2.62},
+		{name: "fall cap", vy: 13.8, wantVY: 14},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, leftGround := VerticalVelocity(tt.vy, tt.jump, tt.grounded, -12.5, 0.62, 14)
+			if math.Abs(got-tt.wantVY) &gt; 1e-9 || leftGround != tt.wantLeftGround {
+				t.Fatalf("VerticalVelocity() = (%v, %v), want (%v, %v)", got, leftGround, tt.wantVY, tt.wantLeftGround)
+			}
+		})
+	}
+}
+</code></pre></article></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Always play-test jump height, corner feel, and camera comfort.</p></section><nav class="test-pager"><a href="../sokoban/">← PREVIOUS</a><span>10 / 12</span><a href="../dungeon/">NEXT →</a></nav>
+    <!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>cameraX += (playerX-cameraX) * .09</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/guides/testing/platformer/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

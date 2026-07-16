@@ -40,6 +40,8 @@
 
 
 
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / TURN PHASE</p><h2>どうして敵は、カードを選んでいる途中に攻撃しないの？</h2><p class="lesson-lead">今のフェーズを1つだけ覚え、<strong>そのフェーズのUpdateだけ</strong>を動かすからです。プレイヤー終了後に敵へ順番を渡します。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>ターン開始</h3><p>エナジーを3へ戻し、ブロックを準備します。</p><code>energy = 3</code></article><article><span class="concept-number">2</span><h3>カード使用</h3><p>コストを引き、残り範囲で何枚も使えます。</p><code>energy -= card.Cost</code></article><article><span class="concept-number">3</span><h3>敵行動</h3><p>終了ボタンでphaseをEnemyへ変えます。</p><code>phase = EnemyPhase</code></article></div><div class="motion-lab" data-lab="energy-turn" data-max="3" data-empty="もう0" data-spend="1コスト消費" data-refill="満タンに回復" aria-labelledby="lab-title-turn-energy">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / REFILL</p>
@@ -76,6 +78,7 @@
         </form>
       </div>
     </section>
+
 
 
 

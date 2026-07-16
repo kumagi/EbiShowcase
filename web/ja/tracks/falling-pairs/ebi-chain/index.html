@@ -43,6 +43,8 @@
 
 
 
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RESOLUTION STATE MACHINE</p><h2>操作を止め、盤面が落ち着くまで同じ循環を回す。</h2><p class="lesson-lead">ペアを固定したら、プレイヤー入力から盤面解決へ主役を渡します。<code>find → clear all → gravity → find again</code>を、見つからなくなるまで続けます。止まった時だけ得点とおじゃまを確定し、次のペアを出す。この<strong>フェーズの境界</strong>が、前5段の処理を安全につなぎます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>現在と次のペアを分ける</h3><p>spawnは予告データを現在へ移し、その後に次の予告を補充します。Drawは操作中のペアとNEXT欄を別々の値から描きます。</p><code>pivotKind = nextPivotKind; refillNext()</code></article><article><span class="concept-number">2</span><h3>消去と重力を交互にする</h3><p>4連結を全部markedへ入れて同時消去し、列を圧縮してから再探索します。新しい組があればchainを増やしてCLEARへ戻ります。</p><code>CLEAR → GRAVITY → RESCAN → CLEAR ...</code></article><article><span class="concept-number">3</span><h3>停止時に対戦結果を送る</h3><p>1連鎖ごとにおじゃま2個、盤面が空ならさらに2個です。不発なら逆に灰色おじゃまが自分の盤面へ1個落ちます。</p><code>sent := chain*2 + allClearBonus</code></article></div>
@@ -92,6 +94,7 @@ spawn()</code></pre></div>
         </form>
       </div>
     </section>
+
 
 
 

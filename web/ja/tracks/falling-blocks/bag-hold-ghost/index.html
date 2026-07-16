@@ -43,6 +43,8 @@
 
 
 
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FAIR QUEUE AND PREDICTION</p><h2>見えない運を、見えるデータに変える。</h2><p class="lesson-lead">完全なくじ引きでは、欲しい形が何十回も来ないことがあります。7種バッグなら7個を一度ずつ混ぜて配るので大きな偏りがありません。さらにHOLDとゴーストを加えると、プレイヤーは運だけでなく<strong>予定を立てる</strong>ことができます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>7個を入れて混ぜる</h3><p>I・O・T・S・Z・J・Lを一つずつsliceへ入れ、順番だけをシャッフルします。空になったときだけ新しい袋を作ります。</p><code>bag = []int{I, O, T, S, Z, J, L}</code></article><article><span class="concept-number">2</span><h3>現在とHOLDを交換</h3><p>棚が空なら現在の形を預けて次を取り、入っていれば二つを交換します。同じ形で何度も交換できないよう、固定するまで一回だけです。</p><code>held, current = current, held</code></article><article><span class="concept-number">3</span><h3>コピーを下へ試す</h3><p>現在位置は変えず、仮のyだけを1ずつ増やします。次が衝突する直前のyが、点線で描くゴースト位置です。</p><code>for canPlace(x, ghostY+1) { ghostY++ }</code></article></div>
@@ -97,6 +99,7 @@
         </form>
       </div>
     </section>
+
 
 
 

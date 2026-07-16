@@ -43,6 +43,8 @@
 
 
 
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / INTEGRATED GAME STATE</p><h2>6個の仕組みを、1本の「冒険の流れ」にする。</h2><p class="lesson-lead">完成ゲームは機能を横に並べただけではありません。地域選択が遭遇データを選び、戦闘結果が捕獲確率を変え、捕獲成功が図鑑・経験値・パーティ・箱をまとめて更新します。各画面を<code>modeMap</code>と<code>modeBattle</code>で分け、結果を次の状態へ渡す<strong>状態遷移</strong>が背骨です。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>地域から個体を作る</h3><p>地域ごとの遭遇表は種族IDの並びです。訪問回数で次のIDを選び、種族定義から野生個体のHPとタイプを作ります。</p><code>wildSpecies = encounterTables[region][visits[region]%2]</code></article><article><span class="concept-number">2</span><h3>戦闘結果を一つの取引にする</h3><p>技の威力・命中・回数と相性表でHPを下げます。捕獲成功時だけ、図鑑登録、個体追加、全員への経験値、進化判定、マップ復帰をまとめて行います。</p><code>dex[id]=true; addMonster(); shareEXP(); mode=modeMap</code></article><article><span class="concept-number">3</span><h3>必要な状態だけ保存する</h3><p>画面の色やボタンは保存しません。パーティの種族とEXP、箱、図鑑、地域訪問数を<code>saveData</code>へ写し、JSONバイト列にします。</p><code>saveSlot, _ = json.Marshal(payload)</code></article></div>
@@ -102,6 +104,7 @@ if err == nil {
         </form>
       </div>
     </section>
+
 
 
 

@@ -14,6 +14,7 @@ import { collectHomeThumbnails } from "./home-thumbnails.mjs";
 const root = new URL("..", import.meta.url).pathname;
 const json = process.argv.includes("--json");
 const expected = { gated: 208, vfx: 29, core: 12, track: 25, cards: 66 };
+const testingLessons = ["tap-target", "timing-meter", "catch-stars", "flappy", "pong", "space-shooter", "breakout", "snake", "sokoban", "platformer", "dungeon", "bullet-hell"];
 const failures = [];
 
 function fail(message) {
@@ -68,6 +69,19 @@ if (new Set(tracks.map((entry) => entry.id.split("/")[1])).size !== expected.tra
 for (const entry of curriculum) {
   if (!entry.playable) fail(`${entry.id}: missing Go implementation at ${entry.source}`);
   for (const lang of ["ja", "en"]) readPage(lang, entry.route);
+}
+
+for (const lang of ["ja", "en"]) {
+  const hub = readPage(lang, "guides/testing");
+  if (!hub.includes("Draw()") || !hub.includes("Update()") || !hub.includes("internal/lessonlogic")) {
+    fail(`${lang}/guides/testing: missing Draw/Update testing boundary`);
+  }
+  for (const slug of testingLessons) {
+    const page = readPage(lang, `guides/testing/${slug}`);
+    for (const required of ["func (g *game) Update() error", "package lessonlogic", "func Test", "go test ./internal/lessonlogic"]) {
+      if (!page.includes(required)) fail(`${lang}/guides/testing/${slug}: missing complete testing material ${required}`);
+    }
+  }
 }
 
 const cards = collectHomeThumbnails();

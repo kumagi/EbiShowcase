@@ -32,6 +32,7 @@
 
 
 
+
 <section class="learn"><p class="eyebrow">COLLISION IN UPDATE</p><h2>Measure distance first,<br>then change state.</h2><div class="concept-row"><article><span class="concept-number">1</span><h3>MEASURE</h3><p>Use the horizontal and vertical differences to measure distance.</p><code>math.Hypot(px-cx, py-cy)</code></article><article><span class="concept-number">2</span><h3>DECIDE</h3><p>Distance within radius means hit; a pure function can test it.</p><code>dist &lt;= radius</code></article><article><span class="concept-number">3</span><h3>UPDATE</h3><p>Only a hit changes score and the next position.</p><code>score++; moveTarget()</code></article></div><div class="code-lesson"><div><p class="eyebrow">YOUR HYPOT LINE</p><h3>Never put this distance<br>decision in Draw.</h3><p>Input and the hit answer finish in Update, so equal game state always makes an equal picture.</p></div><pre><code>func (g *game) Update() error {
     px, py, pressed := justPressedPosition()
     if pressed &amp;&amp; hit(float64(px), float64(py), g.targetX, g.targetY, radius) {
@@ -147,6 +148,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

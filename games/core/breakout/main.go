@@ -8,6 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/lessonlogic"
 )
 
 const (
@@ -140,8 +141,9 @@ func (g *game) Update() error {
 
 	// ボールが下に落ちた
 	if g.ballY > screenHeight+15 {
-		g.lives--
-		if g.lives <= 0 {
+		var gameOver bool
+		g.lives, gameOver = lessonlogic.SpendLife(g.lives)
+		if gameOver {
 			*g = *newGame()
 		} else {
 			g.serve()

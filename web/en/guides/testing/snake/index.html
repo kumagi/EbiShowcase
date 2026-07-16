@@ -1,0 +1,83 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Make a function that only converts score into ticks per grid move. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game ste"><title>Ebi Showcase – Snake: remove the speed formula from time control</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/snake/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Snake: remove the speed formula from time control">
+    <meta property="og:description" content="Make a function that only converts score into ticks per grid move. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game ste">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/snake/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--snake.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Snake: remove the speed formula from time control">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Snake: remove the speed formula from time control">
+    <meta name="twitter:description" content="Make a function that only converts score into ticks per grid move. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game ste">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--snake.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Snake: remove the speed formula from time control">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/snake/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 08 / 12</p><h1>Snake: remove the speed formula from time control</h1><p>Make a function that only converts score into ticks per grid move.</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Update owns frame%wait timing; a table test protects the floor of 4 and the difficulty curve.</h2><p><strong>Draw:</strong> Play-test turning feel, board size, and food visibility.</p></div><div class="test-case-table"><p class="eyebrow">Choose boundaries first</p><table><tbody><tr><th>start</th><td><code>score0</code></td><td><code>10</code></td></tr><tr><th>score three</th><td><code>score3</code></td><td><code>9</code></td></tr><tr><th>speed floor</th><td><code>score18/99</code></td><td><code>4</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>Every step in the current Update</h2><p>There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.</p></div><ol><li><span>01</span><p>When over, accept restart only</p></li><li><span>02</span><p>Store next direction in the input buffer</p></li><li><span>03</span><p>Advance tick counter</p></li><li><span>04</span><p>Convert score into move interval</p></li><li><span>05</span><p>Return on a non-move tick</p></li><li><span>06</span><p>Advance head, food, tail, and self collision one cell</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / complete Update()</p><code>games/core/snake/main.go</code></div><pre><code>func (g *game) Update() error {
+	if g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}
+
+	g.readInput()
+
+	g.frame++
+	// スコアが上がると少し速くなる
+	wait := lessonlogic.SnakeStepInterval(g.score)
+	if g.frame%wait != 0 {
+		return nil
+	}
+	g.stepSnake()
+	return nil
+}</code></pre></section><section class="test-code-compare"><article><p>EXTRACTED / complete pure logic</p><code>internal/lessonlogic/core_updates.go</code><pre><code>package lessonlogic
+func SnakeStepInterval(score int) int {
+	return max(4, 10-score/3)
+}
+</code></pre></article><article class="is-after"><p>TEST / complete _test.go</p><code>internal/lessonlogic/core_updates_test.go</code><pre><code>package lessonlogic
+
+import "testing"
+
+func TestSnakeStepInterval(t *testing.T) {
+	tests := []struct{ score, want int }{{0, 10}, {3, 9}, {18, 4}, {99, 4}}
+	for _, tt := range tests {
+		if got := SnakeStepInterval(tt.score); got != tt.want {
+			t.Errorf("SnakeStepInterval(%d) = %d, want %d", tt.score, got, tt.want)
+		}
+	}
+}
+</code></pre></article></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Play-test turning feel, board size, and food visibility.</p></section><nav class="test-pager"><a href="../breakout/">← PREVIOUS</a><span>8 / 12</span><a href="../sokoban/">NEXT →</a></nav>
+    <!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>body = append([]Cell{head}, body[:len(body)-1]...)</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/guides/testing/snake/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

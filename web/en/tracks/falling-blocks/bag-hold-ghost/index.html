@@ -43,6 +43,8 @@
 
 
 
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FAIR QUEUE AND PREDICTION</p><h2>Turn invisible luck into visible data.</h2><p class="lesson-lead">With independent random picks, one needed shape might disappear for dozens of turns. A seven-shape bag shuffles one of each and prevents huge droughts. HOLD and the ghost then let players <strong>make a plan</strong> instead of only reacting to luck.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Fill seven, then shuffle</h3><p>Put I, O, T, S, Z, J, and L into a slice once each and shuffle only their order. Refill only when the bag becomes empty.</p><code>bag = []int{I, O, T, S, Z, J, L}</code></article><article><span class="concept-number">2</span><h3>Swap current with HOLD</h3><p>If storage is empty, save current and draw next. Otherwise swap the two. Allow this only once until a piece locks, preventing endless swaps.</p><code>held, current = current, held</code></article><article><span class="concept-number">3</span><h3>Test a copy downward</h3><p>Leave the real position alone and increase a temporary y. The final y before collision is where the outlined ghost belongs.</p><code>for canPlace(x, ghostY+1) { ghostY++ }</code></article></div>
@@ -97,6 +99,7 @@
         </form>
       </div>
     </section>
+
 
 
 

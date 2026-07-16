@@ -10,6 +10,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/hero"
+	"github.com/kumagi/EbiShowcase/internal/lessonlogic"
 )
 
 const (
@@ -137,24 +138,12 @@ func (g *game) Update() error {
 
 	left, right, jump := g.readControls()
 
-	if left {
-		g.vx -= 0.65
-	}
-	if right {
-		g.vx += 0.65
-	}
-	if !left && !right {
-		g.vx *= 0.78
-	}
-	g.vx = clamp(g.vx, -6, 6)
-
-	if jump && g.onGround {
-		g.vy = jumpSpeed
+	g.vx = lessonlogic.HorizontalVelocity(g.vx, left, right, 0.65, 0.78, 6)
+	var leftGround bool
+	g.vy, leftGround = lessonlogic.VerticalVelocity(g.vy, jump, g.onGround, jumpSpeed, gravity, 14)
+	if leftGround {
 		g.onGround = false
 	}
-
-	// 重力
-	g.vy = math.Min(g.vy+gravity, 14)
 
 	// 横移動 → 壁との当たり
 	g.player.x += g.vx

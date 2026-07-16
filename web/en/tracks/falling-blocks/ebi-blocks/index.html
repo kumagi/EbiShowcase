@@ -44,6 +44,8 @@
 
 
 
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SYSTEM PIPELINE</p><h2>Connect many systems in “what happens now” order.</h2><p class="lesson-lead">A complete game is not one giant rule. It is a line of small jobs: input, movement, collision, locking, line checks, scoring, and the next shape. Pass one piece and board through this <strong>pipeline</strong> so added features do not get lost.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Control the falling piece</h3><p>active stores a kind, rotation, and position. Update those values only when the candidate does not overlap the board.</p><code>if !collides(next) { active = next }</code></article><article><span class="concept-number">2</span><h3>Lock when movement ends</h3><p>Write the four cells into board, clear complete rows, then update score and level. This order matters.</p><code>lock(); clearLines(); addScore()</code></article><article><span class="concept-number">3</span><h3>Prepare the next piece</h3><p>Refill queue from a seven-piece bag. HOLD works once per falling piece, while the ghost tests positions down to the final safe row.</p><code>spawn(takeNext())</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="input,fall,lock,clear,spawn" data-loop="next tick" aria-labelledby="lab-title-ebi-blocks">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / FRAME JOBS</p>
@@ -96,6 +98,7 @@
         </form>
       </div>
     </section>
+
 
 
 

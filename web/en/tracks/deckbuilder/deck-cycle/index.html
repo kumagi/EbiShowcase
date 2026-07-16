@@ -40,6 +40,8 @@
 
 
 
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK CYCLE</p><h2>How does a played card return to your hand later?</h2><p class="lesson-lead">Do not delete it. Change only its home: <strong>draw pile → hand → discard pile</strong>. When draw is empty, move discard back, shuffle, and keep drawing.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Draw one</h3><p>Move the last card of draw into hand. Remove it from draw so one card can never be in two places at once.</p><code>hand = append(hand, draw[last])</code></article><article><span class="concept-number">2</span><h3>Discard after play</h3><p>After calculating attack or block, remove the card from hand and append it to discard. Discard means waiting, not erased.</p><code>discard = append(discard, played)</code></article><article><span class="concept-number">3</span><h3>Shuffle when empty</h3><p>Only when draw reaches zero, return every discarded card and randomize their order. Do not reshuffle early.</p><code>if len(draw) == 0 { reshuffle() }</code></article></div><div class="motion-lab" data-lab="energy-turn" data-max="5" data-empty="hand empty" data-spend="played 1" data-refill="drew back to full" aria-labelledby="lab-title-deck-cycle">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / DRAW CYCLE</p>
@@ -85,6 +87,7 @@
         </form>
       </div>
     </section>
+
 
 
 

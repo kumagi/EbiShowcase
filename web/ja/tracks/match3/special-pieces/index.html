@@ -59,6 +59,8 @@
 
 
 
+
+
   <section class="physics" id="learn">
     <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DETECT → KIND → EFFECT</p><h2>特殊ピースは「形の判定」と「消す範囲」の2関数。</h2><p class="lesson-lead">マッチ3の特殊ピースは魔法ではありません。<strong>①盤面から形を読み取る</strong>（4連・5連・L/T）、<strong>②種類ごとに消すマスの集合を返す</strong>、の2段です。効果の違いは「集合の作り方」だけで、最後の消去処理はふつうのマッチと同じにできます。</p></div>
 <div class="concept-row">
@@ -116,6 +118,7 @@ for p := range effectCells(kind, at, board) {
         </form>
       </div>
     </section>
+
 
 
 

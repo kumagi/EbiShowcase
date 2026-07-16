@@ -43,6 +43,8 @@
 
 
 
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / BREADTH-FIRST FLOOD FILL</p><h2>Start at one cell and spread only along same-color paths.</h2><p class="lesson-lead">Right after a pair locks, choose an unvisited colored cell as an entrance. Put it in a queue, remove one, and add same-colored neighbors. Recording each discovered cell in <strong>visited</strong> prevents adjacent cells from adding each other forever.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Put the entrance in a queue</h3><p>Add one colored cell and mark visited immediately. Waiting until removal could let multiple neighbors enqueue the same cell.</p><code>queue := []Point{start}; visited[start] = true</code></article><article><span class="concept-number">2</span><h3>Inspect only four directions</h3><p>Diagonals do not connect. Check right, left, down, and up, appending in-bounds neighbors of the same color.</p><code>directions := []Point{{1,0},{-1,0},{0,1},{0,-1}}</code></article><article><span class="concept-number">3</span><h3>Count after collection</h3><p>An empty queue means the whole color island is collected. If group length is at least four, add every cell to marked.</p><code>if len(group) &gt;= 4 { mark(group) }</code></article></div>
@@ -102,6 +104,7 @@
         </form>
       </div>
     </section>
+
 
 
 

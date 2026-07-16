@@ -40,6 +40,8 @@
 
 
 
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / TURN PHASE</p><h2>Why does the enemy wait while you choose cards?</h2><p class="lesson-lead">Remember one current phase and run <strong>only that phase's Update</strong>. Ending the player turn passes control to the enemy.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Turn start</h3><p>Restore energy to three and prepare block.</p><code>energy = 3</code></article><article><span class="concept-number">2</span><h3>Card play</h3><p>Subtract cost and play several while energy remains.</p><code>energy -= card.Cost</code></article><article><span class="concept-number">3</span><h3>Enemy action</h3><p>The end button changes phase to Enemy.</p><code>phase = EnemyPhase</code></article></div><div class="motion-lab" data-lab="energy-turn" data-max="3" data-empty="empty" data-spend="spent 1" data-refill="refilled" aria-labelledby="lab-title-turn-energy">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / REFILL</p>
@@ -76,6 +78,7 @@
         </form>
       </div>
     </section>
+
 
 
 

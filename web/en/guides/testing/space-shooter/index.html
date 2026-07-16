@@ -1,0 +1,181 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Turn enemy-to-player displacement into a bullet vector with a requested speed. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebiteng"><title>Ebi Showcase – Shooter: make aiming a pure vector rule</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/space-shooter/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Shooter: make aiming a pure vector rule">
+    <meta property="og:description" content="Turn enemy-to-player displacement into a bullet vector with a requested speed. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebiteng">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/space-shooter/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--space-shooter.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Shooter: make aiming a pure vector rule">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Shooter: make aiming a pure vector rule">
+    <meta name="twitter:description" content="Turn enemy-to-player displacement into a bullet vector with a requested speed. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebiteng">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--space-shooter.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Shooter: make aiming a pure vector rule">
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/space-shooter/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 06 / 12</p><h1>Shooter: make aiming a pure vector rule</h1><p>Turn enemy-to-player displacement into a bullet vector with a requested speed.</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Pass only dx, dy, and speed—not enemy slices or spawning. A 3-4-5 triangle has an answer you can calculate by hand.</h2><p><strong>Draw:</strong> Play-test enemy density, bullet readability, and explosion feedback.</p></div><div class="test-case-table"><p class="eyebrow">Choose boundaries first</p><table><tbody><tr><th>3-4-5</th><td><code>3,4,speed10</code></td><td><code>6,8</code></td></tr><tr><th>same point</th><td><code>0,0,speed10</code></td><td><code>0,0</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>Every step in the current Update</h2><p>There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.</p></div><ol><li><span>01</span><p>Update end state, invincibility, and background</p></li><li><span>02</span><p>Read player movement and shooting</p></li><li><span>03</span><p>Move friendly and enemy bullets</p></li><li><span>04</span><p>Run enemy AI and aimed shots</p></li><li><span>05</span><p>Resolve shots vs enemies backwards</p></li><li><span>06</span><p>Resolve enemy shots and escaped enemies</p></li><li><span>07</span><p>Spawn a wave when none remain</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / complete Update()</p><code>games/core/space-shooter/main.go</code></div><pre><code>func (g *game) Update() error {
+	if g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}
+
+	g.frame++
+	if g.invincible &gt; 0 {
+		g.invincible--
+	}
+
+	// 背景の星を流す
+	for i := range g.stars {
+		g.stars[i].y += g.stars[i].speed
+		if g.stars[i].y &gt; screenHeight {
+			g.stars[i].y = 0
+			g.stars[i].x = g.rng.Float64() * screenWidth
+		}
+	}
+
+	g.movePlayer()
+	g.tryShoot()
+
+	// 弾を動かす
+	for i := range g.bullets {
+		g.bullets[i].x += g.bullets[i].vx
+		g.bullets[i].y += g.bullets[i].vy
+	}
+	for i := range g.enemyBullets {
+		g.enemyBullets[i].x += g.enemyBullets[i].vx
+		g.enemyBullets[i].y += g.enemyBullets[i].vy
+	}
+
+	// 敵の移動と射撃
+	for i := range g.enemies {
+		e := &amp;g.enemies[i]
+		e.y += e.vy
+		e.x += math.Sin(float64(g.frame)*0.025+e.phase) * 1.2
+		e.reload--
+		if e.reload &lt;= 0 &amp;&amp; e.y &gt; 60 {
+			dx := g.player.x - e.x
+			dy := g.player.y - e.y
+			vx, vy := aimVelocity(dx, dy, 2.3)
+			g.enemyBullets = append(g.enemyBullets, body{
+				x: e.x, y: e.y + 15,
+				vx:     vx,
+				vy:     vy,
+				radius: 7,
+			})
+			e.reload = float64(max(42, 125-g.wave*5) + g.rng.Intn(70))
+		}
+	}
+
+	// 自分の弾 × 敵
+	for bi := len(g.bullets) - 1; bi &gt;= 0; bi-- {
+		hit := false
+		for ei := len(g.enemies) - 1; ei &gt;= 0; ei-- {
+			if overlaps(g.bullets[bi], g.enemies[ei].body) {
+				g.enemies = append(g.enemies[:ei], g.enemies[ei+1:]...)
+				g.score += 100
+				hit = true
+				break
+			}
+		}
+		if hit || g.bullets[bi].y &lt; -20 {
+			g.bullets = append(g.bullets[:bi], g.bullets[bi+1:]...)
+		}
+	}
+
+	// 敵の弾 × 自分
+	for i := len(g.enemyBullets) - 1; i &gt;= 0; i-- {
+		b := g.enemyBullets[i]
+		offscreen := b.y &gt; screenHeight+20 || b.x &lt; -20 || b.x &gt; screenWidth+20
+		if offscreen {
+			g.enemyBullets = append(g.enemyBullets[:i], g.enemyBullets[i+1:]...)
+			continue
+		}
+		if g.invincible == 0 &amp;&amp; overlaps(g.player, b) {
+			g.enemyBullets = append(g.enemyBullets[:i], g.enemyBullets[i+1:]...)
+			g.hurt()
+		}
+	}
+
+	// 敵が下まで来たらダメージ
+	for i := len(g.enemies) - 1; i &gt;= 0; i-- {
+		if g.enemies[i].y &gt; screenHeight+30 {
+			g.enemies = append(g.enemies[:i], g.enemies[i+1:]...)
+			g.hurt()
+		}
+	}
+
+	if len(g.enemies) == 0 {
+		g.spawnWave()
+	}
+	return nil
+}</code></pre></section><section class="test-code-compare"><article><p>EXTRACTED / complete pure logic</p><code>internal/lessonlogic/core_updates.go</code><pre><code>package lessonlogic
+import "math"
+
+func AimVelocity(dx, dy, speed float64) (vx, vy float64) {
+	distance := math.Hypot(dx, dy)
+	if distance == 0 {
+		return 0, 0
+	}
+	return dx / distance * speed, dy / distance * speed
+}
+</code></pre></article><article class="is-after"><p>TEST / complete _test.go</p><code>internal/lessonlogic/core_updates_test.go</code><pre><code>package lessonlogic
+
+import (
+	"math"
+	"testing"
+)
+
+func TestAimVelocity(t *testing.T) {
+	tests := []struct {
+		name          string
+		dx, dy, speed float64
+		wantX, wantY  float64
+	}{
+		{name: "three four five", dx: 3, dy: 4, speed: 10, wantX: 6, wantY: 8},
+		{name: "zero direction", speed: 10, wantX: 0, wantY: 0},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vx, vy := AimVelocity(tt.dx, tt.dy, tt.speed)
+			if math.Abs(vx-tt.wantX) &gt; 1e-9 || math.Abs(vy-tt.wantY) &gt; 1e-9 {
+				t.Fatalf("AimVelocity() = (%v, %v), want (%v, %v)", vx, vy, tt.wantX, tt.wantY)
+			}
+		})
+	}
+}
+</code></pre></article></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Play-test enemy density, bullet readability, and explosion feedback.</p></section><nav class="test-pager"><a href="../pong/">← PREVIOUS</a><span>6 / 12</span><a href="../breakout/">NEXT →</a></nav>
+    <!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>for _, b := range bullets { for _, e := range enemies { check(b,e) } }</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/guides/testing/space-shooter/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

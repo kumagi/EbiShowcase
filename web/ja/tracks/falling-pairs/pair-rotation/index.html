@@ -90,6 +90,8 @@
 
 
 
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / PIVOT ROTATION</p><h2>中心はそのまま、相方の方向だけを替える。</h2><p class="lesson-lead">相方は中心からの<strong>4方向の差</strong>で表します。回転後が壁なら中心を左右へずらす候補を試します。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>方向表</h3><p>上右下左を差の配列にします。</p><code>dirs={{0,-1},{1,0},{0,1},{-1,0}}</code></article><article><span class="concept-number">2</span><h3>次の方向</h3><p>4の余りで循環します。</p><code>next=(dir+1)%4</code></article><article><span class="concept-number">3</span><h3>壁補正</h3><p>通常、左、右、上の候補を順に試します。</p><code>kicks := []point{{0,0},{-1,0},{1,0},{0,-1}}</code></article></div><div class="motion-lab" data-lab="kick-try" data-kicks="0,0;1,0;-1,0;0,1" data-ok="補正 ({dx},{dy}) OK" data-blocked="({dx},{dy}) 不可" data-fail="回転キャンセル" aria-labelledby="lab-title-pair-rotation">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / PAIR KICKS</p>
@@ -144,6 +146,7 @@ for _, k := range kicks {
         </form>
       </div>
     </section>
+
 
 
 

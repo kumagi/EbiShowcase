@@ -44,6 +44,8 @@
 
 
 
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CONTACT PIPELINE</p><h2>同じ「ぶつかった」を、相手ごとのイベントへ変える。</h2><p class="lesson-lead">動いている味方はtickごとに、壁・岩・敵・味方の順に接触を調べます。円を押し戻して反射したあと、相手が敵なら直接ダメージ、味方なら範囲波という<strong>別の結果</strong>を起こします。止まるまで同じ手番です。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>移動して接触を解決</h3><p>速度で位置を進め、重なった円を接する場所まで戻します。速度の法線方向を反転すれば、斜めにも跳ね返ります。</p><code>move(); bounceWalls(); reflectCircle()</code></article><article><span class="concept-number">2</span><h3>相手から効果を選ぶ</h3><p>敵ならその1体のHPを1減らします。味方ならその味方を中心に165px以内の敵へ波のダメージを送ります。</p><code>contactEnemy() / contactAlly()</code></article><article><span class="concept-number">3</span><h3>摩擦で止まり手番交代</h3><p>接触処理のあと速度へ0.982を掛けます。速さが0.11未満なら0へそろえ、activeをもう一人へ切り替えます。</p><code>if stopped { active = 1 - active }</code></article></div><div class="motion-lab" data-lab="shot-event-queue" data-events="HIT A,HIT B,HIT C,TURN END" data-launched="弾が軌道を進んでいます" data-contact="接触 → {e} をpush" data-finished="停止 → TURN ENDをpush" data-resolved="{e} をpop → 敵{target} HP -1" data-turn="TURN ENDをpop → 次の手番へ" data-empty="キューは空です" aria-labelledby="lab-title-ebi-strike">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / SHOT EVENTS</p>
@@ -98,6 +100,7 @@ if active.velocity.length() &lt; stopSpeed {
         </form>
       </div>
     </section>
+
 
 
 

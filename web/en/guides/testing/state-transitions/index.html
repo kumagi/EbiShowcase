@@ -1,50 +1,27 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="An active-battle RPG adds speed to a gauge every tick. Test the exact transition that becomes READY at 1000, one step at a time."><title>Ebi Showcase – Compare the state one tick later</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Continue to the new LEVEL 01–12 testing guide. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step."><title>Ebi Showcase – Testing lesson moved</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/state-transitions/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Compare the state one tick later">
-    <meta property="og:description" content="An active-battle RPG adds speed to a gauge every tick. Test the exact transition that becomes READY at 1000, one step at a time.">
+    <meta property="og:title" content="Ebi Showcase – Testing lesson moved">
+    <meta property="og:description" content="Continue to the new LEVEL 01–12 testing guide. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/state-transitions/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--state-transitions.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Compare the state one tick later">
+    <meta property="og:image:alt" content="Now part of the LEVEL 01–12 course.">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Compare the state one tick later">
-    <meta name="twitter:description" content="An active-battle RPG adds speed to a gauge every tick. Test the exact transition that becomes READY at 1000, one step at a time.">
+    <meta name="twitter:title" content="Ebi Showcase – Testing lesson moved">
+    <meta name="twitter:description" content="Continue to the new LEVEL 01–12 testing guide. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--state-transitions.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Compare the state one tick later">
+    <meta name="twitter:image:alt" content="Now part of the LEVEL 01–12 course.">
     <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
   <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
   <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
   <!-- favicon:end -->
-</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/state-transitions/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">STEP 03 / 05</p><h1>Compare the state one tick later</h1><p>An active-battle RPG adds speed to a gauge every tick. Test the exact transition that becomes READY at 1000, one step at a time.</p></section><section class="test-rule-strip"><span>input + state</span><i>→</i><strong>pure function</strong><i>→</i><span>next state + answer</span></section><section class="test-explain"><div><p class="eyebrow">Why does this build confidence?</p><h2>Instead of replaying a whole battle, construct only the important frames: 987→999 and 988→READY.</h2></div><div class="test-case-table"><p class="eyebrow">List the cases first</p><table><tbody><tr><th>charging</th><td><code>400 + 12</code></td><td><code>412 / false</code></td></tr><tr><th>one short</th><td><code>987 + 12</code></td><td><code>999 / false</code></td></tr><tr><th>exact</th><td><code>988 + 12</code></td><td><code>0 / true</code></td></tr><tr><th>passes limit</th><td><code>995 + 12</code></td><td><code>0 / true</code></td></tr></tbody></table></div></section><section class="test-code-compare"><article><p>BEFORE / Everything lives in Update</p><pre><code>func (g *game) Update() error {
-  for i := range g.runners {
-    r := &amp;g.runners[i]
-    r.gauge += r.speed
-    if r.gauge &gt;= 1000 {
-      r.gauge = 0
-      r.ready = true
-    }
-  }
-  return nil
-}</code></pre></article><article class="is-after"><p>AFTER / Separate the rule</p><pre><code>func AdvanceGauge(gauge, speed, limit int) (int, bool) {
-  next := gauge + speed
-  if next &gt;= limit {
-    return 0, true
-  }
-  return next, false
-}
-
-// Update applies the rule to each runner.
-r.gauge, ready = lessonlogic.AdvanceGauge(r.gauge, r.speed, 1000)</code></pre></article></section><section class="test-code-focus"><div><p class="eyebrow">TEST / Write the expected answer</p><h2>_test.go</h2><p>Instead of replaying a whole battle, construct only the important frames: 987→999 and 988→READY.</p></div><pre><code>gauge, ready := AdvanceGauge(988, 12, 1000)
-if gauge != 0 || !ready {
-  t.Fatalf("got (%d, %v), want (0, true)",
-    gauge, ready)
-}</code></pre></section><section class="test-run"><p>Run it in this repository</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS — checked without opening the game</strong></section><section class="test-challenge"><p class="eyebrow">YOUR TURN</p><h2>If overflow should carry into the next gauge, how would you change the return value and its test?</h2></section><nav class="test-pager"><a href="../table-tests/">← PREVIOUS</a><span>3 / 5</span><a href="../regression-tests/">NEXT →</a></nav>
+</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/state-transitions/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><p class="eyebrow">GUIDE UPDATED</p><h1>Now part of the LEVEL 01–12 course.</h1><p><a href="../platformer/">OPEN THE NEW LESSON →</a></p></section>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -66,4 +43,4 @@ if gauge != 0 || !ready {
         </form>
       </div>
     </section>
-</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

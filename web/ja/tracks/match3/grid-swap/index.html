@@ -41,6 +41,8 @@
 
 
 
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GRID &amp; ADJACENCY</p><h2>画面の座標を、盤面の「何行・何列」へ変える。</h2><p class="lesson-lead">ピースを<strong>board[行][列]</strong>に保存します。タップ位置から盤面の左上を引き、マス幅で割ると、選ばれた列と行が整数で求まります。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>2次元の箱</h3><p>7行×6列の配列は、画面と同じ並びで種類番号を覚えます。board[2][4]は上から3行目、左から5列目です。</p><code>var board [7][6]int</code></article><article><span class="concept-number">2</span><h3>座標からマスへ</h3><p>盤面の開始位置を引いて64で割ります。割り算の小数を捨てることで、同じマス内は同じ番号になります。</p><code>col := (x - originX) / cellSize</code></article><article><span class="concept-number">3</span><h3>距離が1なら隣</h3><p>列の差と行の差の絶対値を足します。合計1なら上下左右、2以上なら斜めか遠い場所です。</p><code>abs(ax-bx) + abs(ay-by) == 1</code></article></div><div class="motion-lab" data-lab="hitbox"><div class="lab-copy"><p class="eyebrow">TRY IT / CELL HIT TEST</p><h3>マスの当たり判定を動かそう</h3><p>四角を動かして重なりを観察します。ゲームでは各マスも同じ大きさの四角としてタップ位置を判定します。</p><div class="lab-controls"><button class="lab-button" data-lab-left>← 左</button><button class="lab-button" data-lab-right>右 →</button><button class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div></div><div class="lab-visual"><div class="hitbox-stage"><div class="hitbox-box hitbox-a" data-lab-a>A</div><div class="hitbox-box hitbox-b" data-lab-b>B</div></div><div class="lab-values"><div><span>判定</span><strong data-lab-result>はなれている</strong></div><div><span>Aの位置</span><strong data-lab-x>0</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -77,6 +79,7 @@ if distance == 1 {
         </form>
       </div>
     </section>
+
 
 
 

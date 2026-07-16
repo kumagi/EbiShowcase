@@ -40,6 +40,8 @@
 
 
 
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK EDITING</p><h2>A reward changes your next strategy, not just one number.</h2><p class="lesson-lead">Build candidates as a list of card data, then <strong>append exactly one chosen card</strong> to deck. Rarity is data for color and appearance chance; keep it separate from raw power.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Build candidates</h3><p>Display three cards from the reward table for this stage. Drawing and selection use the same data, so what you see is what you get.</p><code>rewards := rewardTable[stage]</code></article><article><span class="concept-number">2</span><h3>Add only one</h3><p>Append the selected card to the end of the deck. The other two disappear, making the choice meaningful.</p><code>deck = append(deck, rewards[choice])</code></article><article><span class="concept-number">3</span><h3>Edit source data</h3><p>Upgrade increases damage; removal cuts an element from the slice. The next battle reads this edited deck.</p><code>deck[i].damage += 3</code></article></div><div class="motion-lab" data-lab="deck-pick" data-cards="Strike,Guard,Rare Heal" data-picked="added {c}" aria-labelledby="lab-title-card-rewards">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / REWARD PICK</p>
@@ -87,6 +89,7 @@
         </form>
       </div>
     </section>
+
 
 
 

@@ -43,6 +43,8 @@
 
 
 
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RESOLUTION STATE MACHINE</p><h2>Lock input and loop until the board settles.</h2><p class="lesson-lead">After a pair locks, control passes from the player to board resolution. Repeat <code>find → clear all → gravity → find again</code> until nothing is found. Only then commit score and garbage and spawn the next pair. These <strong>phase boundaries</strong> connect the previous five systems safely.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Separate current and next pair</h3><p>Spawn moves preview data into the active pair, then refills the preview. Draw reads active and NEXT from separate values.</p><code>pivotKind = nextPivotKind; refillNext()</code></article><article><span class="concept-number">2</span><h3>Alternate clear and gravity</h3><p>Collect every four-way group into marked, clear together, compact columns, then rescan. A new group increments chain and returns to CLEAR.</p><code>CLEAR → GRAVITY → RESCAN → CLEAR ...</code></article><article><span class="concept-number">3</span><h3>Send versus results at settle</h3><p>Each chain sends two garbage, plus two if the board becomes empty. A no-chain move instead drops one gray garbage on your board.</p><code>sent := chain*2 + allClearBonus</code></article></div>
@@ -92,6 +94,7 @@ spawn()</code></pre></div>
         </form>
       </div>
     </section>
+
 
 
 

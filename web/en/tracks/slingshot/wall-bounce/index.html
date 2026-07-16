@@ -43,6 +43,8 @@
 
 
 
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / WALL NORMAL</p><h2>Reverse only the speed pointing into the wall.</h2><p class="lesson-lead">Velocity has a horizontal <code>vx</code> and vertical <code>vy</code>. A vertical wall changes only horizontal motion; a floor or ceiling changes only vertical motion. The arrow pointing straight out of a wall is its <strong>normal</strong>, and reflection flips the velocity along that normal.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Include the radius</h3><p>Waiting for the center to touch would sink half the circle into the wall. Contact begins when the left edge, center minus radius, crosses the wall.</p><code>if x-radius &lt; leftWall</code></article><article><span class="concept-number">2</span><h3>Reverse one component</h3><p>A side wall changes only the sign of <code>vx</code>. Keeping <code>vy</code> makes the outgoing angle match the incoming angle.</p><code>vx = -vx</code></article><article><span class="concept-number">3</span><h3>Lose a little energy</h3><p>Multiply the reflected speed by 0.92. Restitution 1 keeps all speed; a value near 0 gives most of it to the wall.</p><code>vx = -vx * restitution</code></article></div>
@@ -90,6 +92,7 @@ if y-radius &lt; topWall {
         </form>
       </div>
     </section>
+
 
 
 
