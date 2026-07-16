@@ -8,7 +8,6 @@ import (
 	"image/color"
 	"math"
 	"math/rand"
-	"sort"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
@@ -25,7 +24,7 @@ import (
 //go:embed assets/pearl-nursery-v2.png
 var nurseryPNG []byte
 
-//go:embed assets/merge-creatures.png
+//go:embed assets/merge-creatures-v2.png
 var creaturesPNG []byte
 
 var nurseryArt *ebiten.Image
@@ -43,7 +42,7 @@ func loadGeneratedArt() {
 	nursery := decode(nurseryPNG)
 	creatures := decode(creaturesPNG)
 	nurseryArt = ebiten.NewImageFromImage(nursery)
-	creatureRects = opaqueCells(creatures, 7)
+	creatureRects = alphaColumnCells(creatures, 7)
 	subImager, ok := creatures.(interface {
 		SubImage(image.Rectangle) image.Image
 	})
@@ -55,64 +54,59 @@ func loadGeneratedArt() {
 	}
 }
 
-// opaqueCells finds the largest disconnected opaque silhouettes, then crops
-// each pose to its own bounds. Generated atlases are not guaranteed to use
-// equal columns, and later creatures overlap horizontally without touching.
-// Splitting width/cells therefore cut several creatures in half. Physics still
-// uses radii; these rectangles affect presentation only.
-func opaqueCells(atlas image.Image, cells int) []image.Rectangle {
+// alphaColumnCells splits a production atlas only at fully transparent column
+// gutters. A creature may contain disconnected details (a pearl, antenna, or
+// crown), so connected-component detection is not a valid sprite boundary.
+// Requiring transparent gutters makes it impossible for a neighboring animal
+// to leak into the crop. Physics still uses radii; these rectangles affect
+// presentation only.
+func alphaColumnCells(atlas image.Image, cells int) []image.Rectangle {
 	bounds := atlas.Bounds()
 	w, h := bounds.Dx(), bounds.Dy()
-	visited := make([]bool, w*h)
-	type component struct {
-		area int
-		rect image.Rectangle
-	}
-	components := make([]component, 0, cells*2)
-	queue := make([]int, 0, 8192)
 	opaque := func(x, y int) bool {
 		_, _, _, a := atlas.At(bounds.Min.X+x, bounds.Min.Y+y).RGBA()
 		return a >= 0x1000
 	}
-	for sy := 0; sy < h; sy++ {
-		for sx := 0; sx < w; sx++ {
-			start := sy*w + sx
-			if visited[start] || !opaque(sx, sy) {
-				continue
+	columnHasInk := func(x int) bool {
+		for y := 0; y < h; y++ {
+			if opaque(x, y) {
+				return true
 			}
-			visited[start] = true
-			queue = append(queue[:0], start)
-			c := component{rect: image.Rect(sx, sy, sx+1, sy+1)}
-			for len(queue) > 0 {
-				index := queue[len(queue)-1]
-				queue = queue[:len(queue)-1]
-				x, y := index%w, index/w
-				c.area++
-				c.rect = c.rect.Union(image.Rect(x, y, x+1, y+1))
-				for _, d := range [...]image.Point{{X: -1}, {X: 1}, {Y: -1}, {Y: 1}} {
-					nx, ny := x+d.X, y+d.Y
-					if nx < 0 || nx >= w || ny < 0 || ny >= h {
-						continue
-					}
-					next := ny*w + nx
-					if !visited[next] && opaque(nx, ny) {
-						visited[next] = true
-						queue = append(queue, next)
-					}
-				}
-			}
-			components = append(components, c)
+		}
+		return false
+	}
+	type run struct{ minX, maxX int }
+	runs := make([]run, 0, cells)
+	start := -1
+	for x := 0; x <= w; x++ {
+		hasInk := x < w && columnHasInk(x)
+		if hasInk && start < 0 {
+			start = x
+		}
+		if !hasInk && start >= 0 {
+			runs = append(runs, run{start, x})
+			start = -1
 		}
 	}
-	sort.Slice(components, func(i, j int) bool { return components[i].area > components[j].area })
-	if len(components) < cells {
-		panic("merge-creatures atlas contains fewer than seven opaque poses")
+	if len(runs) != cells {
+		panic(fmt.Sprintf("merge-creatures atlas has %d transparent-gutter cells, want %d", len(runs), cells))
 	}
-	components = components[:cells]
-	sort.Slice(components, func(i, j int) bool { return components[i].rect.Min.X < components[j].rect.Min.X })
+
 	result := make([]image.Rectangle, cells)
-	for i, component := range components {
-		result[i] = component.rect.Add(bounds.Min)
+	for i, r := range runs {
+		minY, maxY := h, 0
+		for x := r.minX; x < r.maxX; x++ {
+			for y := 0; y < h; y++ {
+				if opaque(x, y) {
+					minY = min(minY, y)
+					maxY = max(maxY, y+1)
+				}
+			}
+		}
+		// Four transparent pixels prevent linear filtering from shaving bright
+		// antennae or pearl ornaments at the exact alpha edge.
+		result[i] = image.Rect(r.minX-4, minY-4, r.maxX+4, maxY+4).
+			Intersect(image.Rect(0, 0, w, h)).Add(bounds.Min)
 	}
 	return result
 }

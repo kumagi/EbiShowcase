@@ -11,6 +11,14 @@ were generated with Codex's built-in image generation tool on 2026-07-16.
 - `merge-creatures.png`: seven-column evolution atlas: pearl shrimp, sapphire
   seal, moon jelly, coral puffer, sea turtle, violet manta, pearl whale-dragon.
   The flat `#ff00ff` chroma background was removed locally.
+- `merge-creatures-v2.png`: production-safe replacement generated on
+  2026-07-17 from the same seven-creature reference. Every animal is isolated
+  by a fully transparent vertical gutter so rectangular sprite extraction
+  cannot include a neighbor. The built-in image generator produced a flat
+  magenta-keyed row; the repository image-generation skill's chroma-key helper
+  removed that background with a soft matte and despill. Prompt constraints:
+  preserve the seven identities and order, one horizontal row, generous
+  padding, no body part or ornament crossing a cell, no text/logo/watermark.
 
 Prompts required original production-ready contemporary Japanese mobile-game
 illustration, distinct silhouettes/materials, no text/logo/watermark, and no

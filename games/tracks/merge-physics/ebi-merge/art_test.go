@@ -7,21 +7,39 @@ import (
 	"testing"
 )
 
-func TestGeneratedCreatureAtlasFindsSevenWholePoses(t *testing.T) {
+func TestGeneratedCreatureAtlasHasSevenTransparentGutterCells(t *testing.T) {
 	atlas, _, err := image.Decode(bytes.NewReader(creaturesPNG))
 	if err != nil {
 		t.Fatal(err)
 	}
-	rects := opaqueCells(atlas, 7)
+	rects := alphaColumnCells(atlas, 7)
 	if len(rects) != 7 {
-		t.Fatalf("opaqueCells() returned %d poses, want 7", len(rects))
+		t.Fatalf("alphaColumnCells() returned %d poses, want 7", len(rects))
 	}
 	for i, rect := range rects {
 		if rect.Dx() < 80 || rect.Dy() < 80 {
 			t.Fatalf("pose %d looks clipped: %v", i, rect)
 		}
-		if i > 0 && rect.Min.X+rect.Max.X <= rects[i-1].Min.X+rects[i-1].Max.X {
-			t.Fatalf("pose centers are out of order at %d: %v / %v", i, rects[i-1], rect)
+		if i > 0 && rect.Min.X <= rects[i-1].Max.X {
+			t.Fatalf("pose %d overlaps its neighbor: %v / %v", i, rects[i-1], rect)
+		}
+	}
+}
+
+func TestCreatureAtlasGuttersAreActuallyTransparent(t *testing.T) {
+	atlas, _, err := image.Decode(bytes.NewReader(creaturesPNG))
+	if err != nil {
+		t.Fatal(err)
+	}
+	rects := alphaColumnCells(atlas, 7)
+	for i := 1; i < len(rects); i++ {
+		for x := rects[i-1].Max.X; x < rects[i].Min.X; x++ {
+			for y := atlas.Bounds().Min.Y; y < atlas.Bounds().Max.Y; y++ {
+				_, _, _, a := atlas.At(x, y).RGBA()
+				if a >= 0x1000 {
+					t.Fatalf("opaque neighbor fragment in gutter %d at (%d,%d)", i, x, y)
+				}
+			}
 		}
 	}
 }
