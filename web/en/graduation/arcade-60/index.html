@@ -26,7 +26,6 @@
   <!-- favicon:end -->
 </head><body><header class="nav"><a class="brand" href="../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">GRADUATION</a><a class="lang" href="../../../ja/graduation/arcade-60/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Graduation projects</a><span>MAKE / 60 MINUTES</span></div><section class="lesson-hero"><div><p class="eyebrow">GRADUATION 01</p><h1>Turn red tests into a 60-second game.</h1><p>Start in an empty Go workspace. Download only three starter files in the browser, then turn each failing test green in TODO order.</p></div></section><section class="lesson-section"><p class="eyebrow">0. DOWNLOAD</p><h2>Start without cloning</h2><p>In an empty folder, run these commands, then save the <a href="https://github.com/kumagi/EbiShowcase/tree/main/graduation/arcade-60/starter">three starter files</a> from their Raw browser view into that folder.</p><pre><code>mkdir arcade-60 &amp;&amp; cd arcade-60; go mod init example.com/arcade-60; go get github.com/hajimehoshi/ebiten/v2; go test</code></pre><p><strong>The first failures are correct.</strong> Do not open reference yet.</p></section><section class="lesson-section"><p class="eyebrow">1. SCORE</p><h2>Make the first red test green</h2><p>When <code>TestActionAddsOneStar</code> fails, work on <strong>TODO 4</strong> in <code>rules.go</code>. Add 10 to Score only for <code>Input{Action: true}</code>. <code>main.go</code> reads a key or click; <code>Round.Step</code> owns the score rule.</p><pre><code>go test -run TestActionAddsOneStar</code></pre></section><section class="lesson-section"><p class="eyebrow">2. TIMER</p><h2>End after 60 seconds</h2><p><code>TestTimeLimitEndsRound</code> maps to <strong>TODO 5</strong>. Advance Frames once per <code>Step</code>, then set <code>Over</code> when it reaches <code>RoundFrames</code>. Draw only displays that result.</p><pre><code>go test -run TestTimeLimitEndsRound</code></pre></section><section class="lesson-section"><p class="eyebrow">3. RESTART</p><h2>Make one more try</h2><p><code>TestRestartMakesFreshRound</code> maps to <strong>TODO 3</strong>. The R key returns to <code>NewRound()</code>. The test protects against carrying old Score or Frames into the new game.</p><pre><code>go test; go run .</code></pre></section><section class="why-grid"><article><h3>ADD ONE RULE</h3><p>Choose a combo, a missed-action penalty, or a last-ten-seconds effect, and write its test first.</p></article><article><h3>KEEP IT PURE</h3><p>Rules live in rules.go; input and drawing live in main.go. You can trust a rule without reopening a window.</p></article><article><h3>COMPARE LAST</h3><p>Only after every test is green, open reference to observe structural differences—not to copy it.</p></article></section>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -48,37 +47,5 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer></body></html>

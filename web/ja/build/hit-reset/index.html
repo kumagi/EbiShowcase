@@ -30,17 +30,6 @@
 
 <!-- diagram-lesson:end -->
 
-
-
-
-
-
-
-
-
-
-
-
 <section class="learn"><p class="eyebrow">COLLISION IN UPDATE</p><h2>距離を比べてから、<br>状態を変える。</h2><div class="concept-row"><article><span class="concept-number">1</span><h3>MEASURE</h3><p>横と縦の差から、点どうしの距離を出します。</p><code>math.Hypot(px-cx, py-cy)</code></article><article><span class="concept-number">2</span><h3>DECIDE</h3><p>距離が半径以下なら hit。純粋関数ならテストできます。</p><code>dist &lt;= radius</code></article><article><span class="concept-number">3</span><h3>UPDATE</h3><p>命中時だけ得点と次の位置を変えます。</p><code>score++; moveTarget()</code></article></div><div class="code-lesson"><div><p class="eyebrow">YOUR HYPOT LINE</p><h3>この距離判定は<br>Draw に書かない。</h3><p>同じゲーム状態なら同じ絵にするため、押した座標を読むことも、当たった答えを決めることも Update の中で終えます。</p></div><pre><code>func (g *game) Update() error {
     px, py, pressed := justPressedPosition()
     if pressed &amp;&amp; hit(float64(px), float64(py), g.targetX, g.targetY, radius) {
@@ -134,7 +123,6 @@ func main() {
 }
 </code></pre></div></section><nav class="lesson-pager" aria-label="レッスン移動"><a href="../tap-score/" rel="prev">← STEP 03</a><a href="../../games/tap-target/" rel="next">LEVEL 01（完成形） →</a></nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -156,42 +144,5 @@ func main() {
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main><script src="../../../learn.js"></script></body></html>

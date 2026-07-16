@@ -43,8 +43,6 @@
     </section>
 <p class="curriculum-bridge">This track shares the <a href="../../../games/tap-target/#basics">LEVEL 01</a> state boundary: rules advance in Update, while Draw is a replaceable projection—each step adds one new piece.</p>
 
-
-
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Collect five ovens.</h2></div><p>Tap the top half to bake, tap the lower button or press B to buy. Watch the cost rise with each purchase.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="First Shop" src="../../../../play/first-shop/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -55,32 +53,6 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -94,7 +66,6 @@
         <article><span class="concept-number">2</span><h3>Split zones by touch Y</h3><p>One press event can mean two different actions depending on where it landed. A y coordinate below 470 is the bake zone; above it is the shop. No separate buttons needed — the coordinate splits behavior.</p><code>if y &lt; 470 { bake } else { buy }</code></article>
         <article><span class="concept-number">3</span><h3>Linearly rising cost</h3><p>Each purchase adds 5 to cost. Starting at 10, the second oven costs 15, the third 20. The same baking pace that cleared the first oven will fall short for later ones, giving the game a natural difficulty curve.</p><code>g.cost += 5</code></article>
       </div>
-
 
       <div class="motion-lab" data-lab="shop" data-bought="bought" data-cant="not enough" aria-labelledby="lab-title-first-shop">
         <div class="lab-copy">
@@ -160,7 +131,6 @@
 
     <nav class="lesson-pager"><a href="../tap-counter/" rel="prev">← STEP 01<strong>Sweet Counter</strong></a><a href="../idle-factory/" rel="next">STEP 03 →<strong>Idle Factory</strong></a></nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -182,201 +152,6 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>

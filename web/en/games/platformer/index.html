@@ -75,7 +75,6 @@
         <article><span class="concept-number">3</span><h3>Smooth camera</h3><p>Every tick, the camera edges a little closer to its target — specifically, <strong>about 9% of the remaining distance</strong>. Jumping straight to 100% would snap the camera onto every tiny wiggle the player makes, which looks jerky and dizzying. Closing the gap gradually instead keeps the motion smooth and easy on the eyes. This gradual catch-up is called "lerp" (linear interpolation), or easing.</p><code>camera += (target - camera) * .09</code></article>
       </div>
 
-
       <div class="motion-lab" data-lab="camera"  aria-labelledby="lab-title-platformer">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / LAB</p>
@@ -154,7 +153,6 @@ g.onGround = false <i>// rebuild contact for this Update</i>
 target := g.player.x - width*.38
 g.camera += (target - g.camera) * .09</code></pre>
       </div>
-
 
             <div class="code-focus">
         <p class="eyebrow">TODAY — look here first</p>
@@ -431,7 +429,6 @@ func main() {
 
     <nav class="lesson-pager"><a href="../sokoban/" rel="prev">← LEVEL 09<strong>Sokoban</strong></a><a href="../dungeon/" rel="next">LEVEL 11 →<strong>Dungeon</strong></a></nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -453,201 +450,6 @@ func main() {
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- core-authoring-links:start -->
 <section class="next-lines core-authoring-links"><p class="eyebrow">WRITE NEXT</p><h3>After playing, write and verify one rule</h3><p>YOUR FIRST RULE: open <code>games/core/platformer/main.go</code>, add one jump or platform rule, then run <code>go test ./games/core/platformer</code> before playing again.</p><p><a href="../../build/">Build Track →</a> · <a href="../../guides/testing/">Testing guide →</a> · <a href="../../guides/first-30-minutes/">first-30-minutes →</a></p></section>

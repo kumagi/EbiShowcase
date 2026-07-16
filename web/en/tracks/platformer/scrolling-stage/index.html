@@ -50,8 +50,6 @@
     </section>
 <p class="curriculum-bridge">This track shares the <a href="../../../games/tap-target/#basics">LEVEL 01</a> state boundary: rules advance in Update, while Draw is a replaceable projection—each step adds one new piece.</p>
 
-
-
 <section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Run through the hills to the goal.</h2></div>
@@ -68,32 +66,6 @@
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_camera-offset.svg" alt="Camera offset" loading="lazy" decoding="async"><figcaption>A visual map of Camera offset. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -122,7 +94,6 @@
           <code>if x+w &lt; 0 || x &gt; width { continue }</code>
         </article>
       </div>
-
 
       <div class="motion-lab" data-lab="camera"  aria-labelledby="lab-title-scrolling-stage">
         <div class="lab-copy">
@@ -208,7 +179,6 @@ g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
       <a href="../powerup-adventure/" rel="next">STEP 05 →<strong>Ebi Adventure</strong></a>
     </nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -230,201 +200,6 @@ g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- platformer-authoring:start -->
 <section class="next-lines core-authoring-links"><p class="eyebrow">YOUR FIRST RULE</p><h3>Write one rule from the real entry point</h3><p>Open <code>games/tracks/platformer/scrolling-stage/main.go</code>, add one rule and verify that play changes. Run <code>go test ./games/tracks/platformer/scrolling-stage</code>, then play again.</p></section>

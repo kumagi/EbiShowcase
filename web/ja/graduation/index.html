@@ -26,7 +26,6 @@
   <!-- favicon:end -->
 </head><body><header class="nav"><a class="brand" href="../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../../ja/">PATH</a><a class="lang" href="../../en/graduation/">EN</a></nav></header><main><section class="test-hero"><p class="eyebrow">MAKE / GRADUATION PROJECTS</p><h1>学んだ部品を、<em>自分のゲームにする。</em></h1><p>3つの小さな完成ゲームを、赤いテストから作ります。遊べるだけでなく、ルールを自分で変更して確かめる卒業制作です。</p></section><section class="lesson-section"><p class="eyebrow">BEFORE YOU START</p><h2>用意するもの</h2><p>Go とブラウザだけです。リポジトリを clone する必要はありません。各課題ページから starter の3ファイルを Raw 表示で保存し、空のフォルダで始めます。</p><pre><code>mkdir my-ebi-game &amp;&amp; cd my-ebi-game; go mod init example.com/my-ebi-game; go get github.com/hajimehoshi/ebiten/v2; go test</code></pre><p>最初の <code>go test</code> が赤くなるのは成功です。テスト名に対応した TODO を一つずつ埋め、緑になってから <code>go run .</code> で遊びます。</p></section><section class="path-list"><div class="path-intro"><p class="eyebrow">CHOOSE A BRIEF</p><h2>一つ選び、最後まで作る。</h2></div><a class="path-step" href="arcade-60/"><span>01</span><div><h3>60秒アーケード</h3><p>入力、得点、60秒タイマー、リスタート。短いゲームループをテストで完成させます。</p><strong>score / timer / restart</strong></div><b>→</b></a><a class="path-step" href="exploration-3rooms/"><span>02</span><div><h3>3部屋の探索</h3><p>鍵を拾い、部屋を移動し、出口を開く状態遷移を作ります。</p><strong>state / key / transition</strong></div><b>→</b></a><a class="path-step" href="puzzle-3stages/"><span>03</span><div><h3>3ステージパズル</h3><p>ステージデータを追加して、同じ進行ルールでパズルを増やします。</p><strong>data / progress / tests</strong></div><b>→</b></a></section><section class="why-grid"><article><h3>1. RED</h3><p>失敗するテストを読み、どのルールが足りないか知ります。</p></article><article><h3>2. GREEN</h3><p>TODO を一つ埋め、go test で規則を確かめます。</p></article><article><h3>3. PLAY</h3><p>go run で遊び、自分だけのルールとテストを追加します。</p></article></section>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -48,37 +47,5 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer></body></html>

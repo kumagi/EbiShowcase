@@ -26,7 +26,6 @@
   <!-- favicon:end -->
 </head><body><header class="nav"><a class="brand" href="../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a class="lang" href="../../../en/guides/release/">EN</a></nav></header><main><section class="test-hero"><p class="eyebrow">SYSTEM GUIDE / RELEASE</p><h1>遊べる、配れる、<br><em>説明できる。</em></h1><p>ゲームを公開する前は、動作だけでなく、WASM・GitHub Pages・素材の権利・もう一度作れる手順まで確かめます。</p></section><section class="test-course"><h2>公開前の5チェック</h2><div class="test-course-grid"><article class="test-course-card"><span>01</span><h3>ローカル</h3><p>`go test ./...`。PCとスマホ幅で操作し、キーボード・マウス・タッチを1回ずつ試します。</p></article><article class="test-course-card"><span>02</span><h3>WASM</h3><p>`GOOS=js GOARCH=wasm go build`。HTMLは置き場、ゲーム本体はGo/EbitengineのWASMです。</p></article><article class="test-course-card"><span>03</span><h3>Pages</h3><p>ActionsのartifactとSettings → Pagesを確認。公開URLの `/ja/` と `/en/` を開きます。</p></article><article class="test-course-card"><span>04</span><h3>ライセンス</h3><p>自分のコードはApache-2.0。外部フォント・依存・素材は `THIRD_PARTY_NOTICES.md` に元の権利を書きます。</p></article><article class="test-course-card"><span>05</span><h3>リリース</h3><p>タイトル、説明、OGP、日英リンク、フィードバックフォーム、READMEの手順を見直します。</p></article></div></section><section class="test-terminal"><code>go test ./...<br>bash scripts/build.sh --fast<br>node scripts/check-metadata.mjs</code><strong>test → build → metadata → deploy</strong></section>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -48,54 +47,5 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer></body></html>

@@ -60,31 +60,6 @@
 <!-- diagram-lesson:end -->
 <!-- END BEGINNER BRIDGE -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / ENEMY AI AND STATE TRANSITIONS</p>
@@ -97,7 +72,6 @@
         <article><span class="concept-number">2</span><h3>距離で切り替え</h3><p>tickごとに、プレイヤーとの距離を計算します。<strong>「見え始める」距離（165ピクセル）</strong>より近づいたら追跡モードへ、<strong>「遠すぎて見失う」距離（230ピクセル）</strong>まで離れたら巡回モードに戻ります。この2つの数字は「どのくらい近づいたら気づくか」を決めるつまみ（調整用の数値）です。</p><code>if dist &lt; 165 { e.state = 1 }</code></article>
         <article><span class="concept-number">3</span><h3>状態ごとの動き</h3><p>state == 0（巡回）ではタイマーで向きを変えてランダムに動きます。state == 1（追跡）ではプレイヤーの方向へ一定速度で向かいます。</p><code>if e.state == 0 { … } else { … }</code></article>
       </div>
-
 
       <div class="motion-lab" data-lab="ai" data-patrol="パトロール" data-chase="追跡" aria-labelledby="lab-title-dungeon">
         <div class="lab-copy">
@@ -165,7 +139,6 @@
     }
 }</code></pre>
       </div>
-
 
             <div class="code-focus">
         <p class="eyebrow">TODAY — まずここを見る</p>
@@ -513,7 +486,6 @@ func main() {
 
     <nav class="lesson-pager"><a href="../platformer/" rel="prev">← LEVEL 10<strong>Platformer</strong></a><a href="../bullet-hell/" rel="next">LEVEL 12 →<strong>Bullet Hell</strong></a></nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -535,201 +507,6 @@ func main() {
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- core-authoring-links:start -->
 <section class="next-lines core-authoring-links"><p class="eyebrow">WRITE NEXT</p><h3>遊んだら、1ルールを書いて確かめよう</h3><p>YOUR FIRST RULE: <code>games/core/dungeon/main.go</code> を開き、room or key ruleを1つ足す。<code>go test ./games/core/dungeon</code> を実行してから遊び直そう。</p><p><a href="../../build/">Build Track →</a> · <a href="../../guides/testing/">ユニットテスト入門 →</a> · <a href="../../guides/first-30-minutes/">first-30-minutes →</a></p></section>

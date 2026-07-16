@@ -26,7 +26,6 @@
   <!-- favicon:end -->
 </head><body><header class="nav"><a class="brand" href="../../../en/"><span>EBI</span> SHOWCASE</a><nav><a class="lang" href="../../../ja/guides/project-structure/">JA</a></nav></header><main><section class="test-hero"><p class="eyebrow">SYSTEM GUIDE / PROJECT STRUCTURE</p><h1>When a game grows,<br><em>give each job its own room.</em></h1><p>`cmd` starts the game, `internal` holds its machinery, and `assets` holds images, sounds, and maps.</p></section><section class="test-terminal"><code>examples/project-structure/<br>├── cmd/reef-run/main.go<br>├── internal/game/game.go<br>├── internal/rules/score.go<br>└── assets/</code><strong>entry / presentation / pure rules / assets</strong></section><section class="test-course"><h2>A real split sample</h2><p>A tiny Space-to-collect-gem game is actually split this way. `rules.Collect` imports no Ebitengine, so `go test ./examples/project-structure/internal/rules` checks it without opening a window.</p><p>Keep `cmd` thin. Let `internal/game` connect input, update, and drawing. Move calculations into `internal/rules`. Put assets in `assets`, with their licenses beside them.</p></section>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -48,54 +47,5 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer></body></html>

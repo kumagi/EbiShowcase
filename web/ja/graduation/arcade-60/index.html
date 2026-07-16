@@ -26,7 +26,6 @@
   <!-- favicon:end -->
 </head><body><header class="nav"><a class="brand" href="../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">GRADUATION</a><a class="lang" href="../../../en/graduation/arcade-60/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 卒業制作</a><span>MAKE / 60 MINUTES</span></div><section class="lesson-hero"><div><p class="eyebrow">GRADUATION 01</p><h1>赤いテストを、60秒ゲームに変える。</h1><p>空の Go 作業フォルダで始めます。スターターを3ファイルだけブラウザから保存し、失敗するテストを TODO の順に緑へ変えます。</p></div></section><section class="lesson-section"><p class="eyebrow">0. DOWNLOAD</p><h2>clone せずに始める</h2><p>空のフォルダで下のコマンドを実行し、<a href="https://github.com/kumagi/EbiShowcase/tree/main/graduation/arcade-60/starter">starter の3ファイル</a>を Raw 表示から同じフォルダへ保存します。</p><pre><code>mkdir arcade-60 &amp;&amp; cd arcade-60; go mod init example.com/arcade-60; go get github.com/hajimehoshi/ebiten/v2; go test</code></pre><p><strong>最初の失敗は正解です。</strong> まだ reference は開きません。</p></section><section class="lesson-section"><p class="eyebrow">1. SCORE</p><h2>最初の赤を緑にする</h2><p><code>TestActionAddsOneStar</code> が失敗したら、<code>rules.go</code> の <strong>TODO 4</strong> です。<code>Input{Action: true}</code> を受け取ったときだけ Score に10を足します。キーやクリックを読むのは <code>main.go</code>、点数の規則は <code>Round.Step</code> です。</p><pre><code>go test -run TestActionAddsOneStar</code></pre></section><section class="lesson-section"><p class="eyebrow">2. TIMER</p><h2>60秒で終わらせる</h2><p><code>TestTimeLimitEndsRound</code> は <strong>TODO 5</strong> に対応します。毎回の <code>Step</code> で Frames を一つ増やし、<code>RoundFrames</code> に届いたら <code>Over</code> を true にします。Draw は Over を見て結果を表示するだけです。</p><pre><code>go test -run TestTimeLimitEndsRound</code></pre></section><section class="lesson-section"><p class="eyebrow">3. RESTART</p><h2>もう一回を作る</h2><p><code>TestRestartMakesFreshRound</code> は <strong>TODO 3</strong> に対応します。Rキーで <code>NewRound()</code> の状態へ戻します。古い Score と Frames が残らないことをテストが守ります。</p><pre><code>go test; go run .</code></pre></section><section class="why-grid"><article><h3>ADD ONE RULE</h3><p>コンボ、ミスの減点、残り10秒の演出などを一つ選び、先にテストを書きます。</p></article><article><h3>KEEP IT PURE</h3><p>得点と時間の規則は rules.go、入力と絵は main.go。窓を毎回開かずに規則を確かめられます。</p></article><article><h3>COMPARE LAST</h3><p>全テストが緑になってからだけ reference を開き、構成の違いを観察します。写しません。</p></article></section>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -48,37 +47,5 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer></body></html>

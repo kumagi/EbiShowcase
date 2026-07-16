@@ -43,8 +43,6 @@
     </section>
 <p class="curriculum-bridge">ゲームの状態境界は <a href="../tap-target/#basics">LEVEL 01</a> と同じです。ルールはUpdate、Drawの描き方は自由です。ここでは反射・ブロック・体の伸びなど、新しい部品だけを足します。見た目も当たりも図形のままです。</p>
 
-
-
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>ブロックをすべて壊そう。</h2></div><p>パドルでボールを返し、色つきブロックを消していきます。ライフは3です。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 06</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Breakout" src="../../../play/breakout/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -76,7 +74,6 @@
         <article><span class="concept-number">2</span><h3>並べる</h3><p>二重ループで行と列を作り、スライスへ append します。48個でもコードは増えません。</p><code>bricks []brick</code></article>
         <article><span class="concept-number">3</span><h3>壊す</h3><p>ボールと重なったブロックだけ <code>alive = false</code>。描画も更新も、生きているものだけ見ます。</p><code>alive = false</code></article>
       </div>
-
 
       <div class="motion-lab" data-lab="bricks"  aria-labelledby="lab-title-bricks">
         <div class="lab-copy">
@@ -132,7 +129,6 @@
     }
 }</code></pre>
       </div>
-
 
             <div class="code-focus">
         <p class="eyebrow">TODAY — まずここを見る</p>
@@ -356,7 +352,6 @@ func main() {
 
     <nav class="lesson-pager"><a href="../pong/" rel="prev">← LEVEL 05<strong>Pong</strong></a><a href="../snake/" rel="next">LEVEL 07 →<strong>Snake</strong></a></nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -378,201 +373,6 @@ func main() {
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- core-authoring-links:start -->
 <section class="next-lines core-authoring-links"><p class="eyebrow">WRITE NEXT</p><h3>遊んだら、1ルールを書いて確かめよう</h3><p>空の Go フォルダから書くなら Build Track、ルールをテストするならユニットテスト入門、30分で自分の1本を始めるなら first-30-minutes へ進みます。</p><p><a href="../../build/">Build Track →</a> · <a href="../../guides/testing/">ユニットテスト入門 →</a> · <a href="../../guides/first-30-minutes/">first-30-minutes →</a></p></section>

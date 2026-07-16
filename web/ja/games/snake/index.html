@@ -45,8 +45,6 @@
     </section>
 <p class="curriculum-bridge">ゲームの状態境界は <a href="../tap-target/#basics">LEVEL 01</a> と同じです。ルールはUpdate、Drawの描き方は自由です。ここでは反射・ブロック・体の伸びなど、新しい部品だけを足します。見た目も当たりも図形のままです。</p>
 
-
-
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>食べて、のびて、ぶつかるな。</h2></div><p>矢印キーまたは画面タップで進む方向を変えます。エサを食べると体が1マス伸びます。壁または自分の体にぶつかったらゲームオーバーです。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 07</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Snake" src="../../../play/snake/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -75,7 +73,6 @@ new head → [●][●][●] → drop tail
         <article><span class="concept-number">2</span><h3>スライスが体</h3><p>体は <code>[]point</code>（マス座標のスライス）です。先頭 <code>[0]</code> が頭、末尾が尻尾。長さがそのまま体の長さになります。</p><code>body []point</code></article>
         <article><span class="concept-number">3</span><h3>追加と削除</h3><p>新しい頭を先頭に追加し、エサを食べていなければ末尾を1個切り捨てる。この2行でヘビの移動が完成します。</p><code>body[:len(body)-1]</code></article>
       </div>
-
 
       <div class="motion-lab" data-lab="snake" data-ate="食べた" data-move="移動" aria-labelledby="lab-title-snake">
         <div class="lab-copy">
@@ -148,7 +145,6 @@ new head → [●][●][●] → drop tail
     <span>return</span> nil
 }</code></pre>
       </div>
-
 
             <div class="code-focus">
         <p class="eyebrow">TODAY — まずここを見る</p>
@@ -435,7 +431,6 @@ func main() {
 
     <nav class="lesson-pager"><a href="../breakout/" rel="prev">← LEVEL 06<strong>Breakout</strong></a><a href="../space-shooter/" rel="next">LEVEL 08 →<strong>Space Shooter</strong></a></nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -457,201 +452,6 @@ func main() {
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- core-authoring-links:start -->
 <section class="next-lines core-authoring-links"><p class="eyebrow">WRITE NEXT</p><h3>遊んだら、1ルールを書いて確かめよう</h3><p>YOUR FIRST RULE: <code>games/core/snake/main.go</code> を開き、food score ruleを1つ足す。<code>go test ./games/core/snake</code> を実行してから遊び直そう。</p><p><a href="../../build/">Build Track →</a> · <a href="../../guides/testing/">ユニットテスト入門 →</a> · <a href="../../guides/first-30-minutes/">first-30-minutes →</a></p></section>

@@ -43,8 +43,6 @@
     </section>
 <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。</p>
 
-
-
 <!-- showcase-final:start -->
 <section class="showcase-final-bridge" aria-label="ショーケース最終ステップ">
   <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>ここから先は、完成品へのジャンプ。</h2><p>ここまでの小さな仕組みを全部つなぎ、アート、動き、光、音、UI、リプレイ性まで一気に磨いた最終ステップです。すべてを今すぐ書けなくても大丈夫。Ebitengineで到達できる景色を、まず遊んで確かめてください。</p></div>
@@ -62,32 +60,6 @@
 
 <!-- diagram-lesson:end -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / SAVE &amp; OFFLINE</p>
@@ -100,7 +72,6 @@
         <article><span class="concept-number">2</span><h3>オフライン経過時間の計算</h3><p>保存時の Unix タイムスタンプを読み出し、現在時刻との差を秒で求めます。上限は8時間（28800秒）。あまり長くしすぎると、久しぶりに戻った瞬間の「ボーナス」が大きすぎてバランスを壊します。</p><code>away := math.Min(8*3600, float64(now-stamp))</code></article>
         <article><span class="concept-number">3</span><h3>120tickごとの自動セーブ</h3><p>tickごとにセーブすると localStorage の書き込みが多すぎます。フレームカウンターが 120 の倍数のときだけ save() を呼ぶことで、約2秒ごとに定期セーブします。</p><code>if g.frame%120 == 0 { g.save() }</code></article>
       </div>
-
 
       <div class="motion-lab" data-lab="save"  aria-labelledby="lab-title-offline-bakery">
         <div class="lab-copy">
@@ -169,7 +140,6 @@
 
     <nav class="lesson-pager"><a href="../growth-curves/" rel="prev">← STEP 04<strong>成長曲線ラボ</strong></a><span></span></nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -191,201 +161,6 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- capstone-renderers:start -->
 <section class="capstone-renderers" aria-label="Drawだけを替えるおまけ">

@@ -45,8 +45,6 @@
     </section>
 <p class="curriculum-bridge">The state boundary still follows <a href="../tap-target/#basics">LEVEL 01</a>: Update owns rules and Draw is a replaceable projection. This lesson only adds its new piece (bounce, bricks, or a growing body). Drawing and hits stay simple shapes.</p>
 
-
-
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Eat, grow, don't crash.</h2></div><p>Arrow keys or a tap in any direction turns the snake. Each piece of food adds one body segment. Hit a wall or yourself and the game ends.</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 07</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Snake" src="../../../play/snake/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -75,7 +73,6 @@ new head → [●][●][●] → drop tail
         <article><span class="concept-number">2</span><h3>A slice is the body</h3><p>The body is a <code>[]point</code> slice. Index <code>[0]</code> is the head; the last index is the tail. The length of the slice is the length of the snake.</p><code>body []point</code></article>
         <article><span class="concept-number">3</span><h3>Prepend and trim</h3><p>Add the new head at position zero, remove the last element if no food was eaten. Two lines of code, complete movement.</p><code>body[:len(body)-1]</code></article>
       </div>
-
 
       <div class="motion-lab" data-lab="snake"  aria-labelledby="lab-title-snake">
         <div class="lab-copy">
@@ -148,7 +145,6 @@ new head → [●][●][●] → drop tail
     <span>return</span> nil
 }</code></pre>
       </div>
-
 
             <div class="code-focus">
         <p class="eyebrow">TODAY — look here first</p>
@@ -436,7 +432,6 @@ func main() {
 
     <nav class="lesson-pager"><a href="../breakout/" rel="prev">← LEVEL 06<strong>Breakout</strong></a><a href="../space-shooter/" rel="next">LEVEL 08 →<strong>Space Shooter</strong></a></nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -458,201 +453,6 @@ func main() {
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- core-authoring-links:start -->
 <section class="next-lines core-authoring-links"><p class="eyebrow">WRITE NEXT</p><h3>After playing, write and verify one rule</h3><p>YOUR FIRST RULE: open <code>games/core/snake/main.go</code>, add one food-score rule, then run <code>go test ./games/core/snake</code> before playing again.</p><p><a href="../../build/">Build Track →</a> · <a href="../../guides/testing/">Testing guide →</a> · <a href="../../guides/first-30-minutes/">first-30-minutes →</a></p></section>

@@ -43,8 +43,6 @@
     </section>
 <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。</p>
 
-
-
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>200個のお菓子を作ろう。</h2></div><p>手でタップしてお菓子を貯め、自動オーブンを買えば放置でも増え続けます。Bキーで購入。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="アイドルファクトリー" src="../../../../play/idle-factory/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -55,32 +53,6 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -94,7 +66,6 @@
         <article><span class="concept-number">2</span><h3>毎秒生産量（CPS）</h3><p>「1台のオーブンが1秒に1個作る」という定義にすると、machines × dt 個/tickで足し算できます。台数を増やすほど1秒あたりの増加量が増えます。</p><code>g.sweets += float64(g.machines) * dt</code></article>
         <article><span class="concept-number">3</span><h3>dt の上限キャップ</h3><p>ブラウザのタブを隠すと長時間 Update が呼ばれず、復帰した瞬間に巨大な dt になることがあります。<code>0.25</code> 秒でキャップして、一気に何百個も増えないようにします。</p><code>if dt &gt; .25 { dt = .25 }</code></article>
       </div>
-
 
       <div class="motion-lab" data-lab="idle"  aria-labelledby="lab-title-idle-factory">
         <div class="lab-copy">
@@ -154,7 +125,6 @@ g.sweets += float64(g.machines) * dt</code></pre>
 
     <nav class="lesson-pager"><a href="../first-shop/" rel="prev">← STEP 02<strong>はじめてのお店</strong></a><a href="../growth-curves/" rel="next">STEP 04 →<strong>成長曲線ラボ</strong></a></nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -176,201 +146,6 @@ g.sweets += float64(g.machines) * dt</code></pre>
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>

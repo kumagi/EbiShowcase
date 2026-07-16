@@ -26,7 +26,6 @@
   <!-- favicon:end -->
 </head><body><header class="nav"><a class="brand" href="../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="./">SAVE</a><a class="lang" href="../../../ja/guides/save/">JA</a></nav></header><main><section class="test-hero"><p class="eyebrow">SYSTEM GUIDE / SAVE</p><h1>Make a game that resumes,<br><em>without becoming fragile.</em></h1><p>A save is more than putting state into JSON. Give it a version, choose meaningful autosave moments, recover safely from unreadable data, and pass facts—not screens—between scenes.</p></section><section class="test-course"><p class="eyebrow">FOUR PROMISES</p><h2>Four promises for saves</h2><div class="test-course-grid"><article class="test-course-card"><span>01</span><h3>Write a version first</h3><p>Your future self can identify old data after rules change. Unknown versions start safely instead of guessing.</p></article><article class="test-course-card"><span>02</span><h3>Autosave after meaningful change</h3><p>Save after a chest, a room transition, or a setting change—not every tick.</p></article><article class="test-course-card"><span>03</span><h3>Recover to a safe initial state</h3><p>If JSON is broken, keep the game playable and say that the save could not be restored.</p></article><article class="test-course-card"><span>04</span><h3>Screens do not carry facts</h3><p>A scene presents; the save model is the fact. Pass the model, then build a new scene.</p></article></div></section><section class="test-terminal"><code>savegame.Autosave(store, "adventure.slot", state, time.Now())</code><strong>version + updated_at + data</strong></section><section class="test-course"><h2>Recovery order</h2><p><b>Load → Decode → check version → read payload → create a new scene.</b> On any failure, return to a safe initial state. `internal/savegame` uses localStorage in WASM and an in-memory store in local tests through one interface.</p></section>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -48,54 +47,5 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer></body></html>

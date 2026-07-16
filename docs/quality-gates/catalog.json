@@ -362,6 +362,15 @@
       "sources": ["AGENTS.md", "scripts/inject-ogp.mjs"]
     },
     {
+      "id": "site.html-whitespace",
+      "family": "site",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["site"],
+      "summary": "Generated HTML does not accumulate repeated blank lines between elements.",
+      "sources": ["scripts/normalize-html-whitespace.mjs", "scripts/build.sh"]
+    },
+    {
       "id": "brand.hero-name",
       "family": "brand",
       "severity": "fail",

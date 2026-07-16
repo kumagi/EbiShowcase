@@ -26,7 +26,6 @@
   <!-- favicon:end -->
 </head><body><header class="nav"><a class="brand" href="../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a class="lang" href="../../../en/guides/project-structure/">EN</a></nav></header><main><section class="test-hero"><p class="eyebrow">SYSTEM GUIDE / PROJECT STRUCTURE</p><h1>ゲームが大きくなったら、<br><em>役割ごとに部屋を分けよう。</em></h1><p>`cmd` は起動する場所、`internal` はゲームの仕組み、`assets` は画像・音・マップの置き場です。</p></section><section class="test-terminal"><code>examples/project-structure/<br>├── cmd/reef-run/main.go<br>├── internal/game/game.go<br>├── internal/rules/score.go<br>└── assets/</code><strong>入口 / 表示 / 純粋ルール / 素材</strong></section><section class="test-course"><h2>本当に分けたサンプル</h2><p>Spaceで宝石を取る最小ゲームを、実際にこの構成へ分割しました。`rules.Collect` はEbitengineをimportしないので `go test ./examples/project-structure/internal/rules` で画面を開かずに確かめられます。</p><p>まず `cmd` は薄く保ちます。次に `internal/game` が入力・更新・描画をつなぎます。最後に計算は `internal/rules` に移します。素材だけは `assets` に置き、ライセンスも隣に残します。</p></section>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -48,54 +47,5 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer></body></html>

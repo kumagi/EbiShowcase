@@ -44,7 +44,6 @@
     </section>
 <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
 
-
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>2連鎖を3回つくろう</h2></div><p>1〜3キー、クリック、タップで置き方を選びます。白く囲まれた仲間が消え、落下後にもう一度探索される様子を見てください。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 05</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="連鎖スコア研究所を遊ぶ" src="../../../../play/chain-score/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -55,32 +54,6 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -103,8 +76,6 @@
 </div>
 </div>
 
-
-
       <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>状態を輪につなぐ</h3><p><code>Update</code>は待ち時間ごとに1段だけ進めます。落下後に<code>searching</code>へ戻す一行が連鎖の中心です。</p></div><pre><code>switch phase {
 case searching:
     marked = findGroups(board)
@@ -124,7 +95,6 @@ case falling:
     </section>
 
     <nav class="lesson-pager"><a href="../clear-gravity/" rel="prev">← STEP 04<strong>消去とちぎれ落ち</strong></a><a href="../ebi-chain/" rel="next">STEP 06 →<strong>Ebi Chain</strong></a></nav>
-
 
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
@@ -147,151 +117,6 @@ case falling:
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>

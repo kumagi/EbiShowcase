@@ -57,32 +57,6 @@
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_enemy-state.svg" alt="Enemy AI state machine" loading="lazy" decoding="async"><figcaption>A visual map of Enemy AI state machine. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / ENEMY AI AND STATE TRANSITIONS</p>
@@ -95,7 +69,6 @@
         <article><span class="concept-number">2</span><h3>Distance triggers</h3><p>Every tick, compute the distance to the player. Once they come within <strong>165 pixels — close enough to be noticed</strong> — switch to chase. Once they get past <strong>230 pixels — far enough to lose interest</strong> — return to patrol. These two numbers are just tuning knobs for "how close counts as close," and the gap between them prevents jittery switching.</p><code>if dist &lt; 165 { e.state = 1 }</code></article>
         <article><span class="concept-number">3</span><h3>One rule per state</h3><p>Patrol rotates velocity by 90 degrees on a timer. Chase normalizes the vector toward the player and applies a constant speed.</p><code>if e.state == 0 { … } else { … }</code></article>
       </div>
-
 
       <div class="motion-lab" data-lab="ai" data-patrol="patrol" data-chase="chase" aria-labelledby="lab-title-dungeon">
         <div class="lab-copy">
@@ -163,7 +136,6 @@
     }
 }</code></pre>
       </div>
-
 
             <div class="code-focus">
         <p class="eyebrow">TODAY — look here first</p>
@@ -512,7 +484,6 @@ func main() {
 
     <nav class="lesson-pager"><a href="../platformer/" rel="prev">← LEVEL 10<strong>Platformer</strong></a><a href="../bullet-hell/" rel="next">LEVEL 12 →<strong>Bullet Hell</strong></a></nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -534,201 +505,6 @@ func main() {
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- core-authoring-links:start -->
 <section class="next-lines core-authoring-links"><p class="eyebrow">WRITE NEXT</p><h3>After playing, write and verify one rule</h3><p>YOUR FIRST RULE: open <code>games/core/dungeon/main.go</code>, add one room or key rule, then run <code>go test ./games/core/dungeon</code> before playing again.</p><p><a href="../../build/">Build Track →</a> · <a href="../../guides/testing/">Testing guide →</a> · <a href="../../guides/first-30-minutes/">first-30-minutes →</a></p></section>

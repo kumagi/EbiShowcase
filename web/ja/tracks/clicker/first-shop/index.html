@@ -43,8 +43,6 @@
     </section>
 <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。</p>
 
-
-
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>オーブンを5台集めよう。</h2></div><p>上半分をタップでお菓子を焼き、下のボタンで買います。Bキーでも購入できます。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="はじめてのお店" src="../../../../play/first-shop/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -55,32 +53,6 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -94,7 +66,6 @@
         <article><span class="concept-number">2</span><h3>タッチ位置で領域を分ける</h3><p>マウスやタッチの y 座標が 470 より上ならベイク、下ならショップ。同じ「押した」イベントを座標で振り分けることで、ボタンなしで2つの操作を分けられます。</p><code>if y &lt; 470 { bake } else { buy }</code></article>
         <article><span class="concept-number">3</span><h3>コストの段階的上昇</h3><p>買うたびに cost += 5 します。初期値10、1台目は15、2台目は20…と増えるので、同じペースで押し続けるだけでは全台買えなくなります。これがクリッカーの「進む感」の仕組みです。</p><code>g.cost += 5</code></article>
       </div>
-
 
       <div class="motion-lab" data-lab="shop" data-bought="購入した" data-cant="足りない" aria-labelledby="lab-title-first-shop">
         <div class="lab-copy">
@@ -160,7 +131,6 @@
 
     <nav class="lesson-pager"><a href="../tap-counter/" rel="prev">← STEP 01<strong>お菓子カウンター</strong></a><a href="../idle-factory/" rel="next">STEP 03 →<strong>アイドルファクトリー</strong></a></nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -182,201 +152,6 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>

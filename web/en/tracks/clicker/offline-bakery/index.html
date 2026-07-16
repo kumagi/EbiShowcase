@@ -43,8 +43,6 @@
     </section>
 <p class="curriculum-bridge">This track shares the <a href="../../../games/tap-target/#basics">LEVEL 01</a> state boundary: rules advance in Update, while Draw is a replaceable projection—each step adds one new piece.</p>
 
-
-
 <!-- showcase-final:start -->
 <section class="showcase-final-bridge" aria-label="Showcase final step">
   <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>Now take the leap to a finished game.</h2><p>This final step connects the small mechanics, then makes a deliberate leap in art, motion, light, sound, UI, and replay value. You do not need to write it all at once—play first and see what Ebitengine can grow into.</p></div>
@@ -62,32 +60,6 @@
 
 <!-- diagram-lesson:end -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / SAVE &amp; OFFLINE</p>
@@ -100,7 +72,6 @@
         <article><span class="concept-number">2</span><h3>Offline elapsed time</h3><p>The saved timestamp is a Unix second count. Subtracting it from <code>time.Now().Unix()</code> gives the seconds the page was closed. That duration is capped at 8 hours (28 800 s) to prevent returning after weeks and instantly winning.</p><code>away := math.Min(8*3600, float64(now-stamp))</code></article>
         <article><span class="concept-number">3</span><h3>Autosave every 120 frames</h3><p>Saving on every tick would hammer localStorage unnecessarily. A frame counter modulo 120 triggers a save roughly every two seconds — frequent enough that a browser crash loses little progress, rare enough to be cheap.</p><code>if g.frame%120 == 0 { g.save() }</code></article>
       </div>
-
 
       <div class="motion-lab" data-lab="save"  aria-labelledby="lab-title-offline-bakery">
         <div class="lab-copy">
@@ -169,7 +140,6 @@
 
     <nav class="lesson-pager"><a href="../growth-curves/" rel="prev">← STEP 04<strong>Growth Curves</strong></a><span></span></nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -191,201 +161,6 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 <!-- capstone-renderers:start -->
 <section class="capstone-renderers" aria-label="Draw-only renderer bonus">

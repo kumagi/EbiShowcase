@@ -43,7 +43,6 @@
     </section>
 <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。</p>
 
-
 <section class="play lesson-play" id="play">
       <div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>お菓子を30個焼こう。</h2></div><p>タップ・クリック・スペースキーで大きなお菓子を押します。30回で完成です。</p></div>
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="お菓子カウンター" src="../../../../play/tap-counter/" allow="autoplay; fullscreen"></iframe></div></div>
@@ -54,32 +53,6 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
@@ -93,7 +66,6 @@
         <article><span class="concept-number">2</span><h3>カウンター変数</h3><p>「今何個か」を表す整数変数 <code>count</code> に 1 を足すだけです。表示のときは <code>fmt.Sprintf("%03d", g.count)</code> で 3桁ゼロ埋めにすると、数字の位置がずれず読みやすくなります。</p><code>g.count++</code></article>
         <article><span class="concept-number">3</span><h3>パルスで視覚フィードバック</h3><p>押した瞬間に <code>pulse = 10</code> をセットし、tickごとに 1 ずつ減らします。その値で円の半径を少し大きくすると「ぷにっ」と膨らむアニメになります。</p><code>scale := 1 + float64(g.pulse)*.012</code></article>
       </div>
-
 
       <div class="motion-lab" data-lab="click"  aria-labelledby="lab-title-tap-counter">
         <div class="lab-copy">
@@ -158,7 +130,6 @@
 
     <nav class="lesson-pager"><span></span><a href="../first-shop/" rel="next">STEP 02 →<strong>はじめてのお店</strong></a></nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -180,201 +151,6 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>

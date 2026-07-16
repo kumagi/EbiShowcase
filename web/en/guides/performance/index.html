@@ -26,7 +26,6 @@
   <!-- favicon:end -->
 </head><body><header class="nav"><a class="brand" href="../../../en/"><span>EBI</span> SHOWCASE</a><nav><a class="lang" href="../../../ja/guides/performance/">JA</a></nav></header><main><section class="test-hero"><p class="eyebrow">SYSTEM GUIDE / PERFORMANCE</p><h1>Before making it fast,<br><em>choose what to measure.</em></h1><p>“Slow” is not one problem. Measure per-frame allocation, drawing things off screen, and every-object collision checks separately.</p></section><section class="test-course"><h2>Three small tools</h2><div class="test-course-grid"><article class="test-course-card"><span>01</span><h3>Reuse a slice</h3><p>Pack visible objects into `dst[:0]`. Our Cull benchmark measured <b>0 allocs/op</b>.</p></article><article class="test-course-card"><span>02</span><h3>Pool</h3><p>Return short-lived bullets and sparks instead of allocating them every time.</p></article><article class="test-course-card"><span>03</span><h3>Spatial grid</h3><p>Inspect candidates in nine nearby cells, not every object against every other object.</p></article></div></section><section class="test-terminal"><code>$ go test -bench . -benchmem ./internal/perflab<br>BenchmarkCullReuse  5527 ns/op  0 allocs/op<br>BenchmarkGridNearby 1707 ns/op  2 allocs/op</code><strong>measure first, then improve</strong></section>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -48,54 +47,5 @@
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE + WASM</span><span>APACHE-2.0</span></footer></body></html>

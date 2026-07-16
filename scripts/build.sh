@@ -68,6 +68,8 @@ node "$ROOT/scripts/gen-feedback-teaching-notes.mjs"
 node "$ROOT/scripts/gen-diagrams.mjs"
 node "$ROOT/scripts/home-thumbnails.mjs" inject
 node "$ROOT/scripts/inject-ogp.mjs"
+node "$ROOT/scripts/normalize-html-whitespace.mjs"
+node "$ROOT/scripts/normalize-html-whitespace.mjs" --check
 node "$ROOT/scripts/check-authoring-copy-regression.mjs"
 node "$ROOT/scripts/check-tick-language.mjs"
 OGP_STATE="$ROOT/.cache/ebi-showcase/ogp-inputs.sha256"

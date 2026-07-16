@@ -30,17 +30,6 @@
 
 <!-- diagram-lesson:end -->
 
-
-
-
-
-
-
-
-
-
-
-
 <section class="learn"><p class="eyebrow">INPUT → UPDATE</p><h2>Ask “was it pressed?”,<br>then make an answer number.</h2><div class="concept-row"><article><span class="concept-number">1</span><h3>INPUT</h3><p>Mouse and touch become the same <code>pressed</code> fact.</p><code>pressed := justPressed()</code></article><article><span class="concept-number">2</span><h3>RULE</h3><p>Only on that press, add one point.</p><code>if pressed { score++ }</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>Draw turns the decided score into text.</p><code>fmt.Sprintf(... g.score)</code></article></div><div class="code-lesson"><div><p class="eyebrow">THE AXIOM</p><h3>Input and RULEs<br>belong in Update.</h3><p>If Draw reads a mouse or does <code>g.score++</code>, score changes with draw frequency. Update decides the answer first.</p></div><pre><code>func (g *game) Update() error {
     if justPressed() {
         g.score = addScore(g.score) // ← YOUR FIRST RULE
@@ -107,7 +96,6 @@ func main() {
 }
 </code></pre></div></section><nav class="lesson-pager" aria-label="Lesson navigation"><a href="../state-picture/" rel="prev">← STEP 02</a><a href="../hit-reset/" rel="next">STEP 04 →</a><a href="../../games/tap-target/" rel="next">LEVEL 01 (finished game) →</a></nav>
 
-
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -129,44 +117,5 @@ func main() {
         </form>
       </div>
     </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main><script src="../../../learn.js"></script></body></html>
