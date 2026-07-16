@@ -181,6 +181,13 @@ function runStructureGates(gates) {
           /data-embed-slot[\s\S]*package main/.test(html);
         note("structure.core-full-source", "fail", ok, target, ok ? "ok" : "missing full embed/copy");
       }
+      if (ids.has("structure.core-update-workshop") && kind === "core" && (entry.order <= 12 || entry.id.startsWith("core/"))) {
+        const workshop = html.match(/<!-- core-update-workshop:start -->([\s\S]*?)<!-- core-update-workshop:end -->/);
+        const steps = workshop ? (workshop[1].match(/class="update-build-step"/g) || []).length : 0;
+        const copies = workshop ? (workshop[1].match(/data-copy/g) || []).length : 0;
+        const ok = Boolean(workshop) && steps >= 2 && copies === steps && /Update/.test(workshop[1]);
+        note("structure.core-update-workshop", "fail", ok, target, ok ? `${steps} explained blocks` : "missing or incomplete Update workshop");
+      }
       if (ids.has("structure.go-exists")) {
         const src = entry.source || (entry.slug === "flappy" ? "game/main.go" : null);
         const path = src ? join(root, src) : entry.group === "track" ? join(root, "games", "tracks", entry.id.split("/")[1], entry.slug, "main.go") : null;
@@ -221,7 +228,7 @@ function runStructureGates(gates) {
           note("authoring.rule-named", "warn", ok, target, ok ? "ok" : "no YOUR FIRST RULE style challenge");
         }
         if (ids.has("authoring.edit-path")) {
-          const ok = /games\/[\w./-]+\.go|graduation\/[\w./-]+|build\/[\w./-]+/.test(challenge) || /games\/[\w./-]+\.go/.test(html);
+          const ok = /(?:games|game)\/[\w./-]+\.go|graduation\/[\w./-]+|build\/[\w./-]+/.test(challenge) || /(?:games|game)\/[\w./-]+\.go/.test(html);
           note("authoring.edit-path", "warn", ok, target, ok ? "ok" : "no games/... path in challenge");
         }
         if (ids.has("authoring.verify-hint")) {

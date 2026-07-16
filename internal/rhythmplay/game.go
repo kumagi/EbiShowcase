@@ -16,6 +16,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/cameralab"
 	"github.com/kumagi/EbiShowcase/internal/ogfont"
 	"github.com/kumagi/EbiShowcase/internal/rhythmcore"
@@ -97,7 +98,7 @@ func New(cfg Config) *Game {
 	if lang == "ja" {
 		state = "音声準備完了"
 	}
-	g := &Game{cfg: cfg, menu: true, best: map[string]int{}, audioContext: audio.NewContext(48000), offset: storedInt("ebiShowcase.rhythm.offset"), lang: lang, audioState: state}
+	g := &Game{cfg: cfg, menu: true, best: map[string]int{}, audioContext: audiolab.Context(), offset: storedInt("ebiShowcase.rhythm.offset"), lang: lang, audioState: state}
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{ViewW: W, ViewH: H}
 	g.badge = ebiten.NewImage(20, 20)
@@ -410,7 +411,7 @@ func (g *Game) drawPlay(s *ebiten.Image) {
 	vector.StrokeCircle(s, W/2, 135, pulseR, 4, color.RGBA{55, 235, 207, pulseA}, false)
 	rhythmLabel(s, fmt.Sprintf("%s / %s", g.cfg.Title, g.cfg.Songs[g.song].Name), 88, 28, color.White, 15)
 	rhythmLabel(s, fmt.Sprintf("%s %06d  %s %03d  %s %03d", g.tr("SCORE", "得点"), g.session.Score, g.tr("COMBO", "コンボ"), g.session.Combo, g.tr("BEST", "最大"), g.session.Best), 42, 54, color.RGBA{255, 211, 112, 255}, 14)
-	rhythmLabel(s, fmt.Sprintf("PERFECT %02d  GOOD %02d  MISS %02d", g.session.Perfects, g.session.Goods, g.session.Misses), 94, 76, color.RGBA{210, 220, 238, 255}, 13)
+	rhythmLabel(s, fmt.Sprintf("PERFECT %02d  GREAT %02d  MISS %02d", g.session.Perfects, g.session.Goods, g.session.Misses), 94, 76, color.RGBA{210, 220, 238, 255}, 13)
 	laneW := float32(W / c.Lanes)
 	for i := 0; i < c.Lanes; i++ {
 		shade := color.RGBA{18 + uint8(i%2)*8, 28, 56, 255}

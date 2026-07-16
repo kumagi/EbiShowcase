@@ -24,7 +24,7 @@
   <!-- favicon:end -->
 </head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/topdown-adventure/ebi-adventure/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Top-down Action Adventure</a><span>STEP 08 / 08</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Relic Dungeon</h1><p>Clear one four-room dungeon combining a key gate, sealed battle, three-tool puzzle, and three-phase boss.</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- showcase-final:start -->
 <section class="showcase-final-bridge" aria-label="Showcase final step">
-  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>Now take the leap to a finished game.</h2><p>This final step connects the small mechanics, then makes a deliberate leap in art, motion, light, sound, UI, and replay value. You do not need to write it all at once—play first and see what Ebitengine can grow into.</p></div>
+  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>Unite a painted relic shrine, a four-room quest, and a three-phase boss.</h2><p>This capstone combines a painted relic shrine, a four-room quest, and a three-phase boss into one playable Update loop. Play it first, then identify where each earlier lesson now works inside the finished game.</p></div>
   <ul><li>a painted relic shrine</li><li>a four-room quest</li><li>a three-phase boss</li></ul>
 </section>
 <!-- showcase-final:end -->
@@ -51,7 +51,7 @@ import "github.com/kumagi/EbiShowcase/internal/topdownadventuregame"
 func main() { topdownadventuregame.Run(8) }</code></pre>
 </section>
 <section class="code-lesson">
-  <div><p class="eyebrow">HOW IT WORKS</p><h3>internal/topdownadventuregame/game.go</h3><p>This is the real mechanism the entry calls. The two labelled layers keep source and explanation traceable.</p></div>
+  <div><p class="eyebrow">HOW IT WORKS</p><h3>internal/topdownadventuregame/game.go</h3><p>The games/tracks/topdown-adventure/ebi-adventure/main.go file above only supplies the starting configuration. Movement, checks, scoring, and other rules live here; the excerpt below shows where that configuration is used.</p></div>
   <pre><code>func (g *game) Update() error {
 	if g.clear || g.over {
 		if retryPressed() {

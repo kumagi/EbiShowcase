@@ -17,7 +17,7 @@ type game struct {
 	flash int
 }
 
-func newGame() *game { return &game{ctx: audio.NewContext(audiolab.SampleRate)} }
+func newGame() *game { return &game{ctx: audiolab.Context()} }
 func (g *game) Update() error {
 	hit := inpututil.IsKeyJustPressed(ebiten.KeySpace) || inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || len(inpututil.AppendJustPressedTouchIDs(nil)) > 0
 	if hit {

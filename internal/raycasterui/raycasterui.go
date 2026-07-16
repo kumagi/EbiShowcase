@@ -175,7 +175,7 @@ type Game struct {
 func New(variant Variant) *Game {
 	loadRaycastArt()
 	g := &Game{variant: variant, viewW: W, viewH: H, lang: browserLanguage(), message: "TURN, MOVE, AND READ THE RAYS"}
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.badge = ebiten.NewImage(20, 20)
 	g.badge.Fill(color.RGBA{46, 230, 200, 255})

@@ -327,6 +327,45 @@ func main() {
 }
 </code></pre>
       </div>
+<!-- core-update-workshop:start -->
+<section class="core-update-workshop" id="update-workshop"><div class="update-workshop-intro"><p class="eyebrow">BUILD IT LINE BY LINE / UPDATE WORKSHOP</p><h2>Spawn, move, and filter a growing star list</h2><p>LEVEL 03 introduces slices. One loop can apply the same rule to any number of stars.</p><div class="update-workshop-route"><b>1</b><span>Paste the full source above into main.go</span><i>→</i><b>2</b><span>Empty its Update, then paste the pieces below in order</span><i>→</i><b>3</b><span>Save and run after the final piece</span></div><p class="update-workshop-tip">Some braces intentionally stay open between pieces, so intermediate code may not compile yet. Each card explains what to paste, why it belongs here, and which Go feature helps. The snippets are extracted from the running game; after the final paste, Update exactly matches the real one.</p></div><div class="update-build-list"><article class="update-build-step"><header><span>01</span><div><small>PASTE NEXT</small><h3>During game over, allow only restart</h3></div></header><p>Replacing *g with a fresh game resets old stars and random state together, then returns before gameplay runs.</p><div class="update-go-note"><b>GO</b><span>*g = *newGame() replaces the contents of the current game value.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 1/5</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>func (g *game) Update() error {
+	if g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>02</span><div><small>PASTE NEXT</small><h3>Move the basket first</h3></div></header><p>Input changes position before collision checks, so a basket moved onto a star catches it in the same tick.</p><div class="update-go-note"><b>GO</b><span>Order inside Update becomes cause and effect the player can feel.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 2/5</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	g.moveBasket()</code></pre></div></article>
+<article class="update-build-step"><header><span>03</span><div><small>PASTE NEXT</small><h3>Append a star at a steady interval</h3></div></header><p>Increment frame and create a star only when it divides evenly by 45. A struct literal groups named x, y, and speed values.</p><div class="update-go-note"><b>GO</b><span>append is Go's built-in way to grow a slice.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 3/5</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	g.frame++
+	// 45 tickごとに星を1つ出す
+	if g.frame%45 == 0 {
+		g.stars = append(g.stars, star{
+			x:     25 + g.rng.Float64()*(screenWidth-50),
+			y:     -20,
+			speed: 2.6 + g.rng.Float64()*2,
+		})
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>04</span><div><small>PASTE NEXT</small><h3>Prepare a keep-list and move every star</h3></div></header><p>g.stars[:0] makes an empty slice that reuses storage. range visits each star, then its copied value is advanced.</p><div class="update-go-note"><b>GO</b><span>Thinking “keep survivors” is often clearer than deleting while moving forward.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 4/5</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// 残す星だけを next に集める
+	next := g.stars[:0]
+	for _, s := range g.stars {
+		s.y += s.speed</code></pre></div></article>
+<article class="update-build-step"><header><span>05</span><div><small>PASTE NEXT</small><h3>Continue on outcomes; keep everything else</h3></div></header><p>switch separates caught, missed, and still falling. continue skips append, so those stars disappear; the rest enter next.</p><div class="update-go-note"><b>GO</b><span>switch lays several paths from one result out vertically.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 5/5</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>		switch lessonlogic.ClassifyFallingObject(g.caught(s), s.y, screenHeight) {
+		case lessonlogic.FallingCaught:
+			g.score++
+			continue // 取れたので消す
+		case lessonlogic.FallingMissed:
+			g.lives--
+			if g.lives &lt;= 0 {
+				g.gameOver = true
+			}
+			continue // 落としたので消す
+		}
+		next = append(next, s)
+	}
+	g.stars = next
+	return nil
+}</code></pre></div></article></div><div class="update-workshop-finish"><strong>COMPLETE</strong><p>Update owns only input and advancing game state. Replace Draw with another presentation and the controls, timing, collisions, and outcomes assembled here remain unchanged.</p></div></section>
+<!-- core-update-workshop:end -->
 
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT LISTS</p><h3>Only one star</h3><p>One variable per star hits a wall fast. A list lets every star follow the same rule.</p></article>

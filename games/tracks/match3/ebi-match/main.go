@@ -148,7 +148,7 @@ type game struct {
 func newGame(level stage) *game {
 	g := &game{level: level, rng: rand.New(rand.NewSource(level.seed))}
 	g.loadGeneratedArt()
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: screenWidth / 2, Y: screenHeight / 2}, ViewW: screenWidth, ViewH: screenHeight}
 	g.badge = ebiten.NewImage(20, 20)

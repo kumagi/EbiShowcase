@@ -57,7 +57,7 @@ func newGame() *game {
 	loadQuestArt()
 	b := ebiten.NewImage(20, 20)
 	b.Fill(color.RGBA{255, 210, 80, 255})
-	g := &game{x: 1, y: 10, hp: 60, message: "Meet Momo in the southwest village.", audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: b}
+	g := &game{x: 1, y: 10, hp: 60, message: "Meet Momo in the southwest village.", audio: audiolab.Context(), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: b}
 	g.load()
 	return g
 }

@@ -1919,8 +1919,16 @@ document.querySelectorAll(".full-code").forEach((block) => {
   const done = button.dataset.copiedLabel || "Copied!";
   button.addEventListener("click", async () => {
     const text = code.textContent || "";
+    let copied = false;
     try {
-      await navigator.clipboard.writeText(text);
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
+      // Some embedded browsers leave clipboard permission requests pending
+      // forever. Fall back quickly so a learner's button never appears dead.
+      await Promise.race([
+        navigator.clipboard.writeText(text),
+        new Promise((_, reject) => window.setTimeout(() => reject(new Error("Clipboard timeout")), 600)),
+      ]);
+      copied = true;
     } catch {
       const area = document.createElement("textarea");
       area.value = text;
@@ -1929,9 +1937,10 @@ document.querySelectorAll(".full-code").forEach((block) => {
       area.style.left = "-9999px";
       document.body.appendChild(area);
       area.select();
-      document.execCommand("copy");
+      copied = document.execCommand("copy");
       area.remove();
     }
+    if (!copied) return;
     button.dataset.copied = "1";
     button.textContent = done;
     window.setTimeout(() => {

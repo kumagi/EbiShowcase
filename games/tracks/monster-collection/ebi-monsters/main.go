@@ -128,7 +128,7 @@ func newGame() *game {
 		message: "Start at EMBER COVE: regional tables decide who appears.",
 	}
 	g.dex[0] = true
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: width / 2, Y: height / 2}, ViewW: width, ViewH: height}
 	g.badge = ebiten.NewImage(20, 20)

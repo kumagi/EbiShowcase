@@ -34,7 +34,7 @@ type game struct {
 func newGame() *game {
 	b := ebiten.NewImage(24, 24)
 	b.Fill(color.RGBA{255, 210, 90, 255})
-	return &game{cost: 15, last: time.Now(), audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), cam: cameralab.State{Pos: cameralab.Vec{240, 360}, ViewW: width, ViewH: height}, badge: b}
+	return &game{cost: 15, last: time.Now(), audio: audiolab.Context(), pulse: shaderlab.NewPulse(), cam: cameralab.State{Pos: cameralab.Vec{240, 360}, ViewW: width, ViewH: height}, badge: b}
 }
 func (g *game) Update() error {
 	now := time.Now()

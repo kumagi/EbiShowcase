@@ -92,7 +92,7 @@ type game struct {
 func newGame() *game {
 	prepareTacticsArt()
 	g := &game{selected: 0, cursor: pt{0, 7}, rng: rand.New(rand.NewSource(1601))}
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: W / 2, Y: H / 2}, ViewW: W, ViewH: H}
 	g.badge = ebiten.NewImage(20, 20)
@@ -196,7 +196,7 @@ func (g *game) Update() error {
 		if x >= ox && x < ox+cols*tile && y >= oy && y < oy+rows*tile {
 			p := pt{(x - ox) / tile, (y - oy) / tile}
 			g.choose(p)
-		} else if y >= 600 {
+		} else if x >= 278 && x <= 436 && y >= 624 && y <= 674 {
 			g.waitUnit()
 		}
 	}
@@ -240,7 +240,7 @@ func (g *game) choose(p pt) {
 	if c, ok := g.reach[p]; ok && !g.units[g.selected].moved && !g.units[g.selected].acted {
 		g.units[g.selected].p = p
 		g.units[g.selected].moved = true
-		g.message = fmt.Sprintf("Moved through terrain cost %d. Now choose an enemy in range.", c)
+		g.message = fmt.Sprintf("MOVE CONFIRMED (cost %d). Tap an enemy, or END ACTION.", c)
 		g.recalc()
 	}
 }
@@ -464,8 +464,8 @@ func (g *game) drawScene(s *ebiten.Image) {
 	ebitenutil.DebugPrintAt(s, role, 128, 615)
 	vector.DrawFilledRect(s, 278, 634, 158, 30, color.RGBA{52, 82, 118, 255}, false)
 	vector.StrokeRect(s, 278, 634, 158, 30, 2, color.RGBA{181, 221, 235, 150}, false)
-	ebitenutil.DebugPrintAt(s, "WAIT [W]", 329, 645)
-	ebitenutil.DebugPrintAt(s, "Tap unit → tile → enemy | TAB switches ally", 74, 692)
+	ebitenutil.DebugPrintAt(s, "END ACTION [W]", 302, 645)
+	ebitenutil.DebugPrintAt(s, "Tap ally → tile (move is immediate) → enemy / END ACTION", 40, 692)
 	if g.won {
 		overlay(s, fmt.Sprintf("3 MISSIONS CLEARED!\nTOTAL TURNS %d  BEST %d\nTAP / ENTER TO REPLAY", g.totalTurns, g.bestTurns))
 	}

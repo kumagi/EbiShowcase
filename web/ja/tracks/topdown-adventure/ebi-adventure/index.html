@@ -24,7 +24,7 @@
   <!-- favicon:end -->
 </head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/topdown-adventure/ebi-adventure/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 見下ろし型アクションアドベンチャー</a><span>STEP 08 / 08</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Relic Dungeon</h1><p>鍵の部屋、全滅戦、3道具の仕掛け、3段階ボスを一つの4部屋ダンジョンとして攻略します。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- showcase-final:start -->
 <section class="showcase-final-bridge" aria-label="ショーケース最終ステップ">
-  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>ここから先は、完成品へのジャンプ。</h2><p>ここまでの小さな仕組みを全部つなぎ、アート、動き、光、音、UI、リプレイ性まで一気に磨いた最終ステップです。すべてを今すぐ書けなくても大丈夫。Ebitengineで到達できる景色を、まず遊んで確かめてください。</p></div>
+  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>海底レリック神殿・4部屋の冒険・3段階ボスを、1本のゲームへ。</h2><p>この最終ステップでは「海底レリック神殿」「4部屋の冒険」「3段階ボス」を、同じUpdateの中で動く一つの遊びにまとめます。まず完成版を遊び、前のステップで作った小さな仕組みがどこで働いているか探してください。</p></div>
   <ul><li>海底レリック神殿</li><li>4部屋の冒険</li><li>3段階ボス</li></ul>
 </section>
 <!-- showcase-final:end -->
@@ -51,7 +51,7 @@ import "github.com/kumagi/EbiShowcase/internal/topdownadventuregame"
 func main() { topdownadventuregame.Run(8) }</code></pre>
 </section>
 <section class="code-lesson">
-  <div><p class="eyebrow">仕組みの抜粋</p><h3>internal/topdownadventuregame/game.go</h3><p>入口が呼ぶ本物の仕組みです。入口と内部を混同せず、両方の場所をたどれます。</p></div>
+  <div><p class="eyebrow">仕組みの抜粋</p><h3>internal/topdownadventuregame/game.go</h3><p>上の games/tracks/topdown-adventure/ebi-adventure/main.go は開始設定を書く短いファイルです。移動・判定・得点などの処理はこのファイルにあり、次の抜粋で設定がどのルールへ渡るかを追えます。</p></div>
   <pre><code>func (g *game) Update() error {
 	if g.clear || g.over {
 		if retryPressed() {

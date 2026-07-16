@@ -32,3 +32,11 @@ func TestTriggerBombsCreatesChainReaction(t *testing.T) {
 		t.Fatalf("unreached bomb timer = %d, want 45", bombs[1].timer)
 	}
 }
+
+func TestNewGameCanBeCreatedAgainForRetry(t *testing.T) {
+	first := newGame()
+	second := newGame()
+	if first.audio == nil || first.audio != second.audio {
+		t.Fatal("retry must reuse the single Ebitengine audio context")
+	}
+}

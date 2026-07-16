@@ -13,6 +13,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/rhythmcore"
 	"github.com/kumagi/EbiShowcase/internal/rhythmplay"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
@@ -50,7 +51,7 @@ func newGame(cfg config) *game {
 	if len(cfg.Songs) == 0 {
 		panic("ebi-rhythm: at least one song is required")
 	}
-	return &game{cfg: cfg, menu: true, best: map[string]int{}, audio: audio.NewContext(48000)}
+	return &game{cfg: cfg, menu: true, best: map[string]int{}, audio: audiolab.Context()}
 }
 
 func (g *game) chart() rhythmcore.Chart {
@@ -347,7 +348,7 @@ func (g *game) drawResult(s *ebiten.Image) {
 	label(s, "SONG CLEAR", 51, 237, 28, color.White)
 	label(s, "RANK "+rank, 52, 292, 40, color.RGBA{255, 222, 118, 255})
 	label(s, fmt.Sprintf("SCORE  %06d", g.session.Score), 52, 358, 16, color.White)
-	label(s, fmt.Sprintf("PERFECT %02d  GOOD %02d  MISS %02d", g.session.Perfects, g.session.Goods, g.session.Misses), 52, 392, 12, color.RGBA{210, 237, 250, 255})
+	label(s, fmt.Sprintf("PERFECT %02d  GREAT %02d  MISS %02d", g.session.Perfects, g.session.Goods, g.session.Misses), 52, 392, 12, color.RGBA{210, 237, 250, 255})
 	label(s, "TAP / ENTER TO RETURN", 52, 475, 13, color.RGBA{255, 163, 190, 255})
 }
 

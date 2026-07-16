@@ -63,7 +63,7 @@ type game struct {
 func newGame() *game {
 	loadBomberArt()
 	g := &game{stage: 1}
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: screenW / 2, Y: screenH / 2}, ViewW: screenW, ViewH: screenH}
 	g.titleFace, _ = uilab.Face("en", 16)
 	g.loadStage()

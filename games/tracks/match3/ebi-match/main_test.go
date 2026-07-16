@@ -88,3 +88,11 @@ func TestFirstStageOffersASpecialSwap(t *testing.T) {
 	}
 	t.Fatal("first stage has no swap that demonstrates a special piece")
 }
+
+func TestNewGameCanBeCreatedAgainForRetry(t *testing.T) {
+	first := newGame(stages[0])
+	second := newGame(stages[0])
+	if first.audio == nil || first.audio != second.audio {
+		t.Fatal("retry must reuse the single Ebitengine audio context")
+	}
+}

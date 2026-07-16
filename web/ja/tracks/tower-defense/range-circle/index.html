@@ -45,7 +45,7 @@ import "github.com/kumagi/EbiShowcase/internal/towerdefenseplay"
 func main() { towerdefenseplay.Run(towerdefenseplay.Config{Step: 2, Title: "TOWER RANGE LAB"}) }</code></pre>
 </section>
 <section class="code-lesson">
-  <div><p class="eyebrow">仕組みの抜粋</p><h3>internal/towerdefense (shared engine)</h3><p>入口が呼ぶ本物の仕組みです。入口と内部を混同せず、両方の場所をたどれます。</p></div>
+  <div><p class="eyebrow">仕組みの抜粋</p><h3>internal/towerdefense (shared engine)</h3><p>上の games/tracks/tower-defense/range-circle/main.go は開始設定を書く短いファイルです。移動・判定・得点などの処理はこのファイルにあり、次の抜粋で設定がどのルールへ渡るかを追えます。</p></div>
   <pre><code>// shared engine: Update advances enemies, chooses targets, and applies hits
 world.Update(inputs)</code></pre>
 </section>

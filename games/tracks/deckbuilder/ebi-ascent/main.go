@@ -23,6 +23,11 @@ import (
 )
 
 const width, height = 480, 720
+
+const (
+	handCardWidth = 142
+	handCardGap   = 10
+)
 const (
 	phaseBattle = iota
 	phaseReward
@@ -79,7 +84,7 @@ type spark struct{ x, y, vx, vy, life float64 }
 func newGame() *game {
 	g := &game{hp: 46, phase: phaseBattle, message: "Play cards, then end the turn."}
 	g.loadGeneratedArt()
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: width / 2, Y: height / 2}, ViewW: width, ViewH: height}
 	g.badge = ebiten.NewImage(20, 20)
@@ -169,7 +174,7 @@ func (g *game) Update() error {
 			if y > 640 {
 				end = true
 			} else if y > 470 {
-				choice = min(len(g.hand)-1, x/(width/len(g.hand)))
+				choice = handCardAt(x, len(g.hand))
 			}
 		case phaseReward:
 			if y > 390 && y < 590 {
@@ -353,6 +358,32 @@ func cardArtIndex(c card) int {
 	return 0
 }
 
+func handLayout(count int) (start, cardWidth, step float32) {
+	if count <= 0 {
+		return 0, 0, 0
+	}
+	cardWidth = handCardWidth
+	step = cardWidth + handCardGap
+	if count > 1 {
+		step = min(step, (width-8-cardWidth)/float32(count-1))
+	}
+	total := cardWidth + step*float32(count-1)
+	return (width - total) / 2, cardWidth, step
+}
+
+func handCardAt(x, count int) int {
+	start, cardWidth, step := handLayout(count)
+	// Later cards are drawn over earlier cards, so test them in reverse order
+	// when a five-card hand overlaps.
+	for i := count - 1; i >= 0; i-- {
+		left := start + float32(i)*step
+		if float32(x) >= left && float32(x) < left+cardWidth {
+			return i
+		}
+	}
+	return -1
+}
+
 func (g *game) drawCardArt(s *ebiten.Image, c card, x, y, w, h float64) {
 	art := g.cardArt[cardArtIndex(c)]
 	op := &ebiten.DrawImageOptions{}
@@ -407,17 +438,17 @@ func (g *game) drawBattle(s *ebiten.Image) {
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("ENERGY %d/3   BLOCK %d", g.energy, g.block), 160, 340)
 	ebitenutil.DebugPrintAt(s, g.message, 45, 390)
 	if len(g.hand) > 0 {
-		w := float32(width / len(g.hand))
+		start, w, step := handLayout(len(g.hand))
 		for i, c := range g.hand {
-			x := float32(i)*w + 3
+			x := start + float32(i)*step
 			y := float32(465)
 			if i%2 == 0 {
 				y -= float32(math.Sin(float64(g.tick)*.08)) * 3
 			}
-			vector.DrawFilledRect(s, x+4, y+7, w-6, 155, color.RGBA{1, 5, 14, 150}, false)
-			vector.DrawFilledRect(s, x, y, w-6, 155, color.RGBA{11, 18, 34, 248}, false)
-			vector.StrokeRect(s, x, y, w-6, 155, 3, c.color, false)
-			g.drawCardArt(s, c, float64(x+6), float64(y+7), float64(w-18), 74)
+			vector.DrawFilledRect(s, x+4, y+7, w, 155, color.RGBA{1, 5, 14, 150}, false)
+			vector.DrawFilledRect(s, x, y, w, 155, color.RGBA{11, 18, 34, 248}, false)
+			vector.StrokeRect(s, x, y, w, 155, 3, c.color, false)
+			g.drawCardArt(s, c, float64(x+6), float64(y+7), float64(w-12), 74)
 			vector.DrawFilledCircle(s, x+16, y+16, 12, color.RGBA{35, 223, 235, 255}, true)
 			ebitenutil.DebugPrintAt(s, "1", int(x)+13, int(y)+11)
 			ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d %s\nDMG %d  BLK %d", i+1, c.name, c.damage, c.block), int(x)+8, int(y)+91)

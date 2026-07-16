@@ -31,7 +31,7 @@ type Grade string
 
 const (
 	Perfect Grade = "PERFECT"
-	Good    Grade = "GOOD"
+	Good    Grade = "GREAT"
 	Miss    Grade = "MISS"
 )
 

@@ -129,7 +129,7 @@ func uiFace(size float64) font.Face {
 func New(variant Variant) *Game {
 	loadBackdrop()
 	g := &Game{variant: variant, difficulty: Positional, lang: browserLanguage()}
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{ViewW: 900, ViewH: 720}
 	g.badge = ebiten.NewImage(20, 20)

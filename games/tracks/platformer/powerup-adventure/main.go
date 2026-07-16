@@ -76,7 +76,7 @@ func newGame() *game {
 	loadPlatformerArt()
 	badge := ebiten.NewImage(32, 32)
 	badge.Fill(color.RGBA{255, 220, 72, 255})
-	g := &game{stage: 1, life: 3, audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), camState: cameralab.State{ViewW: width, ViewH: height}, shaderBadge: badge}
+	g := &game{stage: 1, life: 3, audio: audiolab.Context(), pulse: shaderlab.NewPulse(), camState: cameralab.State{ViewW: width, ViewH: height}, shaderBadge: badge}
 	g.load()
 	return g
 }

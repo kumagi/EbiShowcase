@@ -16,6 +16,7 @@ fi
 if [[ -n "${CI:-}" ]]; then
   FAST_BUILD=0
 fi
+node "$ROOT/scripts/check-audio-context.mjs"
 node "$ROOT/scripts/gen-setup-guide.mjs"
 node "$ROOT/scripts/gen-testing-guide.mjs"
 node "$ROOT/scripts/gen-visual-effects.mjs"
@@ -51,6 +52,7 @@ node "$ROOT/scripts/gen-maze-chase-polish.mjs"
 node "$ROOT/scripts/gen-new-genre-cards.mjs"
 node "$ROOT/scripts/gen-legacy-aliases.mjs"
 node "$ROOT/scripts/embed-lesson-sources.mjs"
+node "$ROOT/scripts/inject-core-update-workshops.mjs"
 node "$ROOT/scripts/insert-feedback-form.mjs"
 node "$ROOT/scripts/inject-beginner-bridges.mjs"
 node "$ROOT/scripts/inject-core-authoring-links.mjs"

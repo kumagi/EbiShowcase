@@ -371,6 +371,40 @@ func main() {
 }
 </code></pre>
       </div>
+<!-- core-update-workshop:start -->
+<section class="core-update-workshop" id="update-workshop"><div class="update-workshop-intro"><p class="eyebrow">BUILD IT LINE BY LINE / UPDATE WORKSHOP</p><h2>Unpack Update from input to score</h2><p>This first Update makes four decisions in order: start, timeout, timer, and hit. Even a small function can read like a story from top to bottom.</p><div class="update-workshop-route"><b>1</b><span>Paste the full source above into main.go</span><i>→</i><b>2</b><span>Empty its Update, then paste the pieces below in order</span><i>→</i><b>3</b><span>Save and run after the final piece</span></div><p class="update-workshop-tip">Some braces intentionally stay open between pieces, so intermediate code may not compile yet. Each card explains what to paste, why it belongs here, and which Go feature helps. The snippets are extracted from the running game; after the final paste, Update exactly matches the real one.</p></div><div class="update-build-list"><article class="update-build-step"><header><span>01</span><div><small>PASTE NEXT</small><h3>Read input once at the entrance</h3></div></header><p>Mouse and touch become px, py, and pressed. Go can return several values cleanly, and every later rule uses the same snapshot for this tick.</p><div class="update-go-note"><b>GO</b><span>The three names on the left match the three returned values in order.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 1/5</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>func (g *game) Update() error {
+	px, py, pressed := pressedPosition()</code></pre></div></article>
+<article class="update-build-step"><header><span>02</span><div><small>PASTE NEXT</small><h3>Before play, handle only Start</h3></div></header><p>! means “not.” While the game has not started, a press flips started to true and an early return prevents that same press from scoring.</p><div class="update-go-note"><b>GO</b><span>An early return is a signpost: skip rules that do not belong to this state.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 2/5</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// まだ始まっていない → 押したらスタート
+	if !g.started {
+		if pressed {
+			g.started = true
+		}
+		return nil
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>03</span><div><small>PASTE NEXT</small><h3>After timeout, handle only Reset</h3></div></header><p>At zero ticks the run is over. A press restores score, time, and target state so the next run is genuinely fresh.</p><div class="update-go-note"><b>GO</b><span>&lt;= safely covers zero and any accidental negative value.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 3/5</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// 時間切れ → 押したら最初から
+	if g.framesLeft &lt;= 0 {
+		if pressed {
+			g.score = 0
+			g.framesLeft = startSeconds * 60
+			g.started = false
+			g.moveTarget()
+		}
+		return nil
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>04</span><div><small>PASTE NEXT</small><h3>Advance the clock only during play</h3></div></header><p>Only a tick that passed both early returns reaches framesLeft--. It is shorthand for subtracting one and storing the result.</p><div class="update-go-note"><b>GO</b><span>Placement is part of the rule: the timer cannot move on the start screen.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 4/5</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// タイマーを1 tick減らす
+	g.framesLeft--</code></pre></div></article>
+<article class="update-build-step"><header><span>05</span><div><small>PASTE NEXT</small><h3>Score one decision on the press</h3></div></header><p>Only a fresh press runs the circle test. A hit increments score, clamps the shrinking radius with math.Max, and moves the target. nil means this tick ended normally.</p><div class="update-go-note"><b>GO</b><span>Nested if statements read as “pressed, and then hit.”</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 5/5</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// 押した瞬間だけ、丸との距離を調べる
+	if pressed {
+		if lessonlogic.PointInCircle(float64(px), float64(py), g.circleX, g.circleY, g.radius) {
+			g.score++
+			// 当たるほど丸を少し小さくする
+			g.radius = math.Max(22, 38-float64(g.score)/2)
+			g.moveTarget()
+		}
+	}
+	return nil
+}</code></pre></div></article></div><div class="update-workshop-finish"><strong>COMPLETE</strong><p>Update owns only input and advancing game state. Replace Draw with another presentation and the controls, timing, collisions, and outcomes assembled here remain unchanged.</p></div></section>
+<!-- core-update-workshop:end -->
 
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT THE LOOP</p><h3>Nowhere obvious to put code</h3><p>With Update / Draw roles fixed, you know where input goes and where painting goes. The <code>error</code> return is an Ebitengine rule: return a problem to stop, or <code>nil</code> for “all fine”. Draw does not return error.</p></article>

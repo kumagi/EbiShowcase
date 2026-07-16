@@ -480,6 +480,97 @@ func main() {
 }
 </code></pre>
       </div>
+<!-- core-update-workshop:start -->
+<section class="core-update-workshop" id="update-workshop"><div class="update-workshop-intro"><p class="eyebrow">BUILD IT LINE BY LINE / UPDATE工房</p><h2>三種類のリストが動く、シューティングの管制塔</h2><p>自機、敵、自弾、敵弾を一つのUpdateが順番に指揮します。長くなっても、各ブロックの入力と結果を追えば迷いません。</p><div class="update-workshop-route"><b>1</b><span>上の「ぜんぶのコード」を main.go へ貼る</span><i>→</i><b>2</b><span>そのUpdateを空にし、下の断片を番号順に貼る</span><i>→</i><b>3</b><span>最後の断片まで貼って保存し、動かす</span></div><p class="update-workshop-tip">途中は波かっこが閉じていない場合があり、まだ実行できなくて正常です。各カードでは「何を貼るか」だけでなく、「なぜこの順番か」「Goのどの書き方が役立つか」を一つずつ確認します。コードは完成ゲームの実物から取り出しているため、最後まで貼ると本物のUpdateと同じになります。</p></div><div class="update-build-list"><article class="update-build-step"><header><span>01</span><div><small>PASTE NEXT / 次に貼る</small><h3>終了状態を先に閉じる</h3></div></header><p>ゲームオーバーならリスタートだけを見て戻ります。通常世界へ進む入口が一つに保たれます。</p><div class="update-go-note"><b>GO</b><span>長い関数ほど、最初のガード節が安全な範囲をはっきりさせます。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 1/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>func (g *game) Update() error {
+	if g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>02</span><div><small>PASTE NEXT / 次に貼る</small><h3>共通時計と無敵時間を進める</h3></div></header><p>frameを増やし、invincibleが正の間だけ1減らします。&gt; 0 のガードがあるので負の値になりません。</p><div class="update-go-note"><b>GO</b><span>カウンターは『あと何tick続くか』を表す最小の状態です。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 2/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	g.frame++
+	if g.invincible &gt; 0 {
+		g.invincible--
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>03</span><div><small>PASTE NEXT / 次に貼る</small><h3>背景の星を循環させる</h3></div></header><p>rangeのindexで全ての星を動かし、下へ抜けた星だけ上へ戻します。装飾もUpdateで位置が決まり、Drawはその位置を映します。</p><div class="update-go-note"><b>GO</b><span>同じ配列を循環利用すると、毎回作って捨てる必要がありません。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 3/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// 背景の星を流す
+	for i := range g.stars {
+		g.stars[i].y += g.stars[i].speed
+		if g.stars[i].y &gt; screenHeight {
+			g.stars[i].y = 0
+			g.stars[i].x = g.rng.Float64() * screenWidth
+		}
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>04</span><div><small>PASTE NEXT / 次に貼る</small><h3>自機の入力と発射を処理する</h3></div></header><p>移動と射撃を名前付きメソッドへ分けます。Updateのこの2行だけで、プレイヤー操作の順序が読めます。</p><div class="update-go-note"><b>GO</b><span>『一つのメソッドに一つの動詞』は、コードを組み替えやすくします。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 4/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	g.movePlayer()
+	g.tryShoot()</code></pre></div></article>
+<article class="update-build-step"><header><span>05</span><div><small>PASTE NEXT / 次に貼る</small><h3>二種類の弾を同じ形で動かす</h3></div></header><p>自弾と敵弾は別sliceですが、x += vx、y += vyという同じ規則を持ちます。役割は分け、運動の考え方はそろえます。</p><div class="update-go-note"><b>GO</b><span>+= は今の値へ速度を足して再代入する短い書き方です。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 5/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// 弾を動かす
+	for i := range g.bullets {
+		g.bullets[i].x += g.bullets[i].vx
+		g.bullets[i].y += g.bullets[i].vy
+	}
+	for i := range g.enemyBullets {
+		g.enemyBullets[i].x += g.enemyBullets[i].vx
+		g.enemyBullets[i].y += g.enemyBullets[i].vy
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>06</span><div><small>PASTE NEXT / 次に貼る</small><h3>敵ごとに移動し、狙って撃つ</h3></div></header><p>&amp;g.enemies[i] でslice内の敵そのものを指し、再装填を減らします。射撃時は自機との差から速度を求め、新しい弾をappendします。</p><div class="update-go-note"><b>GO</b><span>ポインタを使う理由は、コピーでなく元の敵を書き換えるためです。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 6/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// 敵の移動と射撃
+	for i := range g.enemies {
+		e := &amp;g.enemies[i]
+		e.y += e.vy
+		e.x += math.Sin(float64(g.frame)*0.025+e.phase) * 1.2
+		e.reload--
+		if e.reload &lt;= 0 &amp;&amp; e.y &gt; 60 {
+			dx := g.player.x - e.x
+			dy := g.player.y - e.y
+			vx, vy := aimVelocity(dx, dy, 2.3)
+			g.enemyBullets = append(g.enemyBullets, body{
+				x: e.x, y: e.y + 15,
+				vx:     vx,
+				vy:     vy,
+				radius: 7,
+			})
+			e.reload = float64(max(42, 125-g.wave*5) + g.rng.Intn(70))
+		}
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>07</span><div><small>PASTE NEXT / 次に貼る</small><h3>自弾と敵を後ろから調べる</h3></div></header><p>削除しながらsliceを走査するためindexを末尾から減らします。命中した敵と弾を切り取り、得点を加えます。</p><div class="update-go-note"><b>GO</b><span>後ろから消せば、まだ調べていないindexがずれません。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 7/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// 自分の弾 × 敵
+	for bi := len(g.bullets) - 1; bi &gt;= 0; bi-- {
+		hit := false
+		for ei := len(g.enemies) - 1; ei &gt;= 0; ei-- {
+			if overlaps(g.bullets[bi], g.enemies[ei].body) {
+				g.enemies = append(g.enemies[:ei], g.enemies[ei+1:]...)
+				g.score += 100
+				hit = true
+				break
+			}
+		}
+		if hit || g.bullets[bi].y &lt; -20 {
+			g.bullets = append(g.bullets[:bi], g.bullets[bi+1:]...)
+		}
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>08</span><div><small>PASTE NEXT / 次に貼る</small><h3>敵弾を片付け、当たればhurtする</h3></div></header><p>画面外なら先に削除してcontinue。残った弾だけ無敵時間と衝突を調べます。条件の安いものから落とすと読みやすく効率的です。</p><div class="update-go-note"><b>GO</b><span>continueは『この弾の話は終わり、次へ』を表します。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 8/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// 敵の弾 × 自分
+	for i := len(g.enemyBullets) - 1; i &gt;= 0; i-- {
+		b := g.enemyBullets[i]
+		offscreen := b.y &gt; screenHeight+20 || b.x &lt; -20 || b.x &gt; screenWidth+20
+		if offscreen {
+			g.enemyBullets = append(g.enemyBullets[:i], g.enemyBullets[i+1:]...)
+			continue
+		}
+		if g.invincible == 0 &amp;&amp; overlaps(g.player, b) {
+			g.enemyBullets = append(g.enemyBullets[:i], g.enemyBullets[i+1:]...)
+			g.hurt()
+		}
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>09</span><div><small>PASTE NEXT / 次に貼る</small><h3>突破した敵もダメージへ変える</h3></div></header><p>敵が画面下へ出たらsliceから消し、hurtを呼びます。弾の衝突と敵の突破が同じダメージ処理へ合流します。</p><div class="update-go-note"><b>GO</b><span>共通処理を一か所にすると、ライフ減少の仕様がずれません。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 9/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// 敵が下まで来たらダメージ
+	for i := len(g.enemies) - 1; i &gt;= 0; i-- {
+		if g.enemies[i].y &gt; screenHeight+30 {
+			g.enemies = append(g.enemies[:i], g.enemies[i+1:]...)
+			g.hurt()
+		}
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>10</span><div><small>PASTE NEXT / 次に貼る</small><h3>敵が0なら次のwaveを作る</h3></div></header><p>lenは現在の敵数です。0になった瞬間にspawnWaveを呼び、次の遊びを用意してUpdateを終えます。</p><div class="update-go-note"><b>GO</b><span>『空になった』というデータが、そのまま場面転換の合図になります。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 10/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	if len(g.enemies) == 0 {
+		g.spawnWave()
+	}
+	return nil
+}</code></pre></div></article></div><div class="update-workshop-finish"><strong>できあがり</strong><p>Updateは入力とゲーム状態を進める仕事だけを持ちます。Drawを別の絵へ交換しても、ここで組み立てた操作・時間・衝突・勝敗は変わりません。</p></div></section>
+<!-- core-update-workshop:end -->
 
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT SLICES</p><h3>変数が爆発する</h3><p>弾を <code>bullet1, bullet2, …</code> と変数で持つと、最大数をあらかじめ決めなければなりません。数が増えるたびにコードを書き直す必要があります。</p></article>

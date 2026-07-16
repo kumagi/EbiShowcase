@@ -110,7 +110,7 @@ var scenarios = []towerdefense.Scenario{
 func newGame(cfg Config) *game {
 	s := scenarios[0]
 	g := &game{cfg: cfg, lives: s.Lives, coins: s.Coins, selected: 0, lang: browserLanguage()}
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{ViewW: W, ViewH: H}
 	g.badge = ebiten.NewImage(20, 20)

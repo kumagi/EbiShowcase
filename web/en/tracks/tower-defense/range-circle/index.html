@@ -45,7 +45,7 @@ import "github.com/kumagi/EbiShowcase/internal/towerdefenseplay"
 func main() { towerdefenseplay.Run(towerdefenseplay.Config{Step: 2, Title: "TOWER RANGE LAB"}) }</code></pre>
 </section>
 <section class="code-lesson">
-  <div><p class="eyebrow">HOW IT WORKS</p><h3>internal/towerdefense (shared engine)</h3><p>This is the real mechanism the entry calls. The two labelled layers keep source and explanation traceable.</p></div>
+  <div><p class="eyebrow">HOW IT WORKS</p><h3>internal/towerdefense (shared engine)</h3><p>The games/tracks/tower-defense/range-circle/main.go file above only supplies the starting configuration. Movement, checks, scoring, and other rules live here; the excerpt below shows where that configuration is used.</p></div>
   <pre><code>// shared engine: Update advances enemies, chooses targets, and applies hits
 world.Update(inputs)</code></pre>
 </section>

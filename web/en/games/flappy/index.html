@@ -363,6 +363,60 @@ func main() {
 }
 </code></pre>
       </div>
+<!-- core-update-workshop:start -->
+<section class="core-update-workshop" id="update-workshop"><div class="update-workshop-intro"><p class="eyebrow">BUILD IT LINE BY LINE / UPDATE WORKSHOP</p><h2>Build a world with gravity from one flap</h2><p>Change velocity first, then position. That order turns a few numbers into a smooth jump arc.</p><div class="update-workshop-route"><b>1</b><span>Paste the full source above into main.go</span><i>→</i><b>2</b><span>Empty its Update, then paste the pieces below in order</span><i>→</i><b>3</b><span>Save and run after the final piece</span></div><p class="update-workshop-tip">Some braces intentionally stay open between pieces, so intermediate code may not compile yet. Each card explains what to paste, why it belongs here, and which Go feature helps. The snippets are extracted from the running game; after the final paste, Update exactly matches the real one.</p></div><div class="update-build-list"><article class="update-build-step"><header><span>01</span><div><small>PASTE NEXT</small><h3>Record the tick and one input snapshot</h3></div></header><p>Increment frame and read a fresh press once. Every later rule shares the same pressed value.</p><div class="update-go-note"><b>GO</b><span>:= creates a variable while Go infers its type.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 1/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>func (g *game) Update() error {
+	g.frame++
+	pressed := justPressed()</code></pre></div></article>
+<article class="update-build-step"><header><span>02</span><div><small>PASTE NEXT</small><h3>During game over, reset only</h3></div></header><p>A press calls reset, while return prevents gravity and pipes from continuing behind the result screen.</p><div class="update-go-note"><b>GO</b><span>State-specific entrances reduce impossible combinations.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 2/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	if g.gameOver {
+		if pressed {
+			g.reset()
+		}
+		return nil
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>03</span><div><small>PASTE NEXT</small><h3>Idle motion and the first flap</h3></div></header><p>Sin adds a gentle bob. A press sets started and upward velocity. Even presentation motion is decided in Update; Draw only reads birdY.</p><div class="update-go-note"><b>GO</b><span>A tiny formula giving motion personality is one joy of game programming.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 3/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// スタート前は少し上下にゆらす
+	if !g.started {
+		g.birdY = 320 + math.Sin(float64(g.frame)*0.06)*7
+		if pressed {
+			g.started = true
+			g.velocity = flapSpeed
+		}
+		return nil
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>04</span><div><small>PASTE NEXT</small><h3>On a press, change upward velocity</h3></div></header><p>Do not teleport position. Change velocity, which naturally feeds the gravity rule next.</p><div class="update-go-note"><b>GO</b><span>Input changes the motion, not its final answer.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 4/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// 押した瞬間、上向きの速さにする
+	if pressed {
+		g.velocity = flapSpeed
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>05</span><div><small>PASTE NEXT</small><h3>Add gravity, then advance position</h3></div></header><p>A pure helper returns next position and velocity from current state and acceleration, so this physics can be tested without a window.</p><div class="update-go-note"><b>GO</b><span>Multiple assignment updates related state from one result.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 5/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// 純粋関数の中で、速さに重力を足してから位置を動かす。
+	g.birdY, g.velocity = lessonlogic.IntegrateGravity(g.birdY, g.velocity, gravity)</code></pre></div></article>
+<article class="update-build-step"><header><span>06</span><div><small>PASTE NEXT</small><h3>Move every pipe and score each once</h3></div></header><p>An index from range mutates the real slice element. scored remembers that one pipe has already paid out.</p><div class="update-go-note"><b>GO</b><span>One bool can be a tiny state machine.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 6/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// パイプを左へ流す
+	for i := range g.pipes {
+		g.pipes[i].x -= 2.8
+		if !g.pipes[i].scored &amp;&amp; g.pipes[i].x+pipeWidth &lt; birdX {
+			g.pipes[i].scored = true
+			g.score++
+		}
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>07</span><div><small>PASTE NEXT</small><h3>Recycle the off-screen pipe</h3></div></header><p>Drop the first pipe and append a new one after the last, preserving a flowing queue without rebuilding everything.</p><div class="update-go-note"><b>GO</b><span>len keeps this code useful if the pipe count changes.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 7/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// 画面外のパイプを消して、右に新しいパイプを足す
+	if g.pipes[0].x+pipeWidth &lt; -10 {
+		lastX := g.pipes[len(g.pipes)-1].x
+		newPipe := pipe{
+			x:    lastX + 270,
+			gapY: 225 + g.rng.Float64()*230,
+		}
+		g.pipes = append(g.pipes[1:], newPipe)
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>08</span><div><small>PASTE NEXT</small><h3>Combine collisions and save the best</h3></div></header><p>Ground, ceiling, or pipe sets gameOver. Named booleans make the || condition readable; another if records only a new best.</p><div class="update-go-note"><b>GO</b><span>Naming conditions turns math into a sentence.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 8/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// 地面・天井・パイプに当たったらゲームオーバー
+	hitGround := g.birdY+17 &gt;= groundY
+	hitCeiling := g.birdY-17 &lt;= 0
+	if hitGround || hitCeiling || g.hitPipe() {
+		g.gameOver = true
+		if g.score &gt; g.best {
+			g.best = g.score
+		}
+	}
+	return nil
+}</code></pre></div></article></div><div class="update-workshop-finish"><strong>COMPLETE</strong><p>Update owns only input and advancing game state. Replace Draw with another presentation and the controls, timing, collisions, and outcomes assembled here remain unchanged.</p></div></section>
+<!-- core-update-workshop:end -->
 
     <div class="why-grid"><article><p class="eyebrow">WITHOUT ACCELERATION</p><h3>One constant speed</h3><p>The hero travels up and down in straight lines, so movement feels mechanical.</p></article><article><p class="eyebrow">WITH ACCELERATION</p><h3>A smooth arc</h3><p>Upward velocity weakens, nears zero at the top, then grows downward.</p></article><article class="challenge"><p class="eyebrow">YOUR FIRST RULE</p><h3>Add a five-point speed flag in Update</h3><p>In <code>game/main.go</code>, add <code>fastMode bool</code> to <code>game</code>. Immediately after <code>g.score++</code> in Update, write <code>if g.score &gt;= 5 { g.fastMode = true }</code>. Make only the Update-side pipe movement slightly faster when the flag is true. Draw may read the flag for colour or text only. Run <code>go test ./...</code> and verify after five points locally.</p></article></div>
     </section>

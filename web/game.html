@@ -26,6 +26,20 @@
       return c;
     };
     document.addEventListener("pointerdown", focusCanvas, true);
+    // Keep gameplay keys inside the embedded game. Tab would otherwise move
+    // focus out of the iframe before Ebitengine can use it for ally/target
+    // switching, making later controls and retry keys appear unresponsive.
+    const gameKeys = new Set([
+      "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",
+      " ", "Enter", "Tab", "w", "a", "s", "d", "W", "A", "S", "D",
+    ]);
+    for (const type of ["keydown", "keyup"]) {
+      document.addEventListener(type, (event) => {
+        if (!gameKeys.has(event.key)) return;
+        event.preventDefault();
+        focusCanvas();
+      }, true);
+    }
     const go = new Go();
     WebAssembly.instantiateStreaming(fetch("game.wasm"), go.importObject)
       .then((r) => {

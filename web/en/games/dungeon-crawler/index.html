@@ -477,6 +477,80 @@ func main() {
 }
 </code></pre>
       </div>
+<!-- core-update-workshop:start -->
+<section class="core-update-workshop" id="update-workshop"><div class="update-workshop-intro"><p class="eyebrow">BUILD IT LINE BY LINE / UPDATE WORKSHOP</p><h2>Read enemy AI as think, move, collide</h2><p>Even a long Update handles the player, then advances one enemy at a time. Pointers, distance, and state transitions make a small AI.</p><div class="update-workshop-route"><b>1</b><span>Paste the full source above into main.go</span><i>→</i><b>2</b><span>Empty its Update, then paste the pieces below in order</span><i>→</i><b>3</b><span>Save and run after the final piece</span></div><p class="update-workshop-tip">Some braces intentionally stay open between pieces, so intermediate code may not compile yet. Each card explains what to paste, why it belongs here, and which Go feature helps. The snippets are extracted from the running game; after the final paste, Update exactly matches the real one.</p></div><div class="update-build-list"><article class="update-build-step"><header><span>01</span><div><small>PASTE NEXT</small><h3>Close terminal states</h3></div></header><p>Only restart is accepted after clear or game over, freezing AI and attack timers.</p><div class="update-go-note"><b>GO</b><span>The guard divides the live world from the stopped world.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 1/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>func (g *game) Update() error {
+	if g.cleared || g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>02</span><div><small>PASTE NEXT</small><h3>Move player X, then Y</h3></div></header><p>Pass dx and dy separately so wall collision resolves per axis.</p><div class="update-go-note"><b>GO</b><span>This reuses LEVEL 10's axis decomposition from a top-down view.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 2/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	dx, dy := g.readMove()
+	g.movePlayer(dx, 0)
+	g.movePlayer(0, dy)</code></pre></div></article>
+<article class="update-build-step"><header><span>03</span><div><small>PASTE NEXT</small><h3>Count down attack time</h3></div></header><p>Only positive attack decrements. Zero means idle; positive values are a timed attack/invulnerability state.</p><div class="update-go-note"><b>GO</b><span>One integer can schedule animation and rules.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 3/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	if g.attack &gt; 0 {
+		g.attack--
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>04</span><div><small>PASTE NEXT</small><h3>Merge devices into attackPressed</h3></div></header><p>Keyboard, mouse, and touch become one bool; only cooldown zero starts 18 ticks.</p><div class="update-go-note"><b>GO</b><span>More input methods do not complicate the game rule.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 4/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	attackPressed := inpututil.IsKeyJustPressed(ebiten.KeySpace) ||
+		inpututil.IsKeyJustPressed(ebiten.KeyX) ||
+		inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft)
+	for _, id := range inpututil.AppendJustPressedTouchIDs(nil) {
+		_, y := ebiten.TouchPosition(id)
+		if y &lt;= screenHeight/2 {
+			attackPressed = true
+		}
+	}
+	if attackPressed &amp;&amp; g.attack == 0 {
+		g.attack = 18
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>05</span><div><small>PASTE NEXT</small><h3>Calculate player center once</h3></div></header><p>Name the +14 center used by distance and sword-tip math.</p><div class="update-go-note"><b>GO</b><span>Naming a repeated expression gives it meaning and one edit point.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 5/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	playerCX := g.player.x + 14
+	playerCY := g.player.y + 14</code></pre></div></article>
+<article class="update-build-step"><header><span>06</span><div><small>PASTE NEXT</small><h3>Point to each real enemy</h3></div></header><p>&amp;g.enemies[i] mutates the original; continue skips dead enemies.</p><div class="update-go-note"><b>GO</b><span>Pointers plus continue focus the loop on relevant objects.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 6/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	for i := range g.enemies {
+		e := &amp;g.enemies[i]
+		if !e.alive {
+			continue
+		}</code></pre></div></article>
+<article class="update-build-step"><header><span>07</span><div><small>PASTE NEXT</small><h3>Choose patrol or chase from distance</h3></div></header><p>EnemyMode receives current state and separate enter/exit thresholds, avoiding jitter.</p><div class="update-go-note"><b>GO</b><span>A pure transition helper invites table-driven boundary tests.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 7/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>		dist := math.Hypot(playerCX-e.x, playerCY-e.y)
+		e.state = lessonlogic.EnemyMode(e.state, dist, 165, 230)</code></pre></div></article>
+<article class="update-build-step"><header><span>08</span><div><small>PASTE NEXT</small><h3>Build velocity differently by state</h3></div></header><p>Patrol turns periodically; chase aims at the player, guarding distance zero.</p><div class="update-go-note"><b>GO</b><span>Both paths join at vx/vy, so movement need not know the AI kind.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 8/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>		if e.state == 0 {
+			e.timer--
+			if e.timer &lt;= 0 {
+				e.vx, e.vy = -e.vy, e.vx
+				if e.vx == 0 &amp;&amp; e.vy == 0 {
+					e.vx = 1.1
+				}
+				e.timer = 100
+			}
+		} else {
+			if dist &lt; 1 {
+				dist = 1 // 重なったときの 0 割り（NaN）を防ぐ
+			}
+			e.vx, e.vy = lessonlogic.AimVelocity(playerCX-e.x, playerCY-e.y, 1.35)
+		}</code></pre></div></article>
+<article class="update-build-step"><header><span>09</span><div><small>PASTE NEXT</small><h3>Move enemy X, then Y</h3></div></header><p>Two moveEnemy calls keep AI decisions separate from collision resolution.</p><div class="update-go-note"><b>GO</b><span>Separating thinking from movement makes new AI easier.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 9/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>		g.moveEnemy(e, e.vx, 0)
+		g.moveEnemy(e, 0, e.vy)</code></pre></div></article>
+<article class="update-build-step"><header><span>10</span><div><small>PASTE NEXT</small><h3>Defeat an enemy at the sword tip</h3></div></header><p>Facing times 30 gives the tip; active attack time and distance set alive=false.</p><div class="update-go-note"><b>GO</b><span>Invisible hitboxes use the same coordinates and distance tools.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 10/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>		// 剣の先端に当たったら倒す
+		swordX := playerCX + g.facingX*30
+		swordY := playerCY + g.facingY*30
+		if g.attack &gt; 8 &amp;&amp; math.Hypot(swordX-e.x, swordY-e.y) &lt; 35 {
+			e.alive = false
+		}</code></pre></div></article>
+<article class="update-build-step"><header><span>11</span><div><small>PASTE NEXT</small><h3>Apply contact damage once</h3></div></header><p>Near and not attacking decrements life, starts recovery, and may set gameOver.</p><div class="update-go-note"><b>GO</b><span>&amp;&amp; makes danger require every condition.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 11/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>		// 接触ダメージ（攻撃中は受けない）
+		if dist &lt; 22 &amp;&amp; g.attack == 0 {
+			g.life--
+			g.attack = 55 // のけぞりも兼ねる
+			if g.life &lt;= 0 {
+				g.gameOver = true
+			}
+		}
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>12</span><div><small>PASTE NEXT</small><h3>Combine defeat-all and exit into victory</h3></div></header><p>No living enemies plus the exit region sets cleared.</p><div class="update-go-note"><b>GO</b><span>Combining facts with &amp;&amp; creates a story condition.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 12/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// 敵を全滅して出口へ
+	if g.aliveCount() == 0 &amp;&amp; g.player.y &lt; 115 &amp;&amp; g.player.x &gt; 390 {
+		g.cleared = true
+	}
+	return nil
+}</code></pre></div></article></div><div class="update-workshop-finish"><strong>COMPLETE</strong><p>Update owns only input and advancing game state. Replace Draw with another presentation and the controls, timing, collisions, and outcomes assembled here remain unchanged.</p></div></section>
+<!-- core-update-workshop:end -->
 
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT A STATE MACHINE</p><h3>Always chasing</h3><p>An enemy that charges from the moment it spawns is easy to predict and hard to balance. The player always knows exactly what to expect.</p></article>

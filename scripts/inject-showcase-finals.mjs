@@ -77,10 +77,12 @@ function finalPage(lang, track, slug) {
 function bridge(lang, slug) {
   const features = (lang === "ja" ? ja : en)[slug];
   if (!features) throw new Error(`Missing showcase copy for ${slug}`);
-  const title = lang === "ja" ? "ここから先は、完成品へのジャンプ。" : "Now take the leap to a finished game.";
+  const title = lang === "ja"
+    ? `${features[0]}・${features[1]}・${features[2]}を、1本のゲームへ。`
+    : `Unite ${features[0]}, ${features[1]}, and ${features[2]}.`;
   const body = lang === "ja"
-    ? "ここまでの小さな仕組みを全部つなぎ、アート、動き、光、音、UI、リプレイ性まで一気に磨いた最終ステップです。すべてを今すぐ書けなくても大丈夫。Ebitengineで到達できる景色を、まず遊んで確かめてください。"
-    : "This final step connects the small mechanics, then makes a deliberate leap in art, motion, light, sound, UI, and replay value. You do not need to write it all at once—play first and see what Ebitengine can grow into.";
+    ? `この最終ステップでは「${features[0]}」「${features[1]}」「${features[2]}」を、同じUpdateの中で動く一つの遊びにまとめます。まず完成版を遊び、前のステップで作った小さな仕組みがどこで働いているか探してください。`
+    : `This capstone combines ${features[0]}, ${features[1]}, and ${features[2]} into one playable Update loop. Play it first, then identify where each earlier lesson now works inside the finished game.`;
   return `<!-- showcase-final:start -->\n<section class="showcase-final-bridge" aria-label="${lang === "ja" ? "ショーケース最終ステップ" : "Showcase final step"}">\n  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>${title}</h2><p>${body}</p></div>\n  <ul>${features.map((f) => `<li>${f}</li>`).join("")}</ul>\n</section>\n<!-- showcase-final:end -->\n`;
 }
 

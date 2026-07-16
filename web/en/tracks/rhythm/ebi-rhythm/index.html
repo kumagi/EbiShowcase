@@ -24,7 +24,7 @@
   <!-- favicon:end -->
 </head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/rhythm/ebi-rhythm/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Rhythm Games</a><span>STEP 07 / 07</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Rhythm Tour</h1><p>Choose among three original charts and chase scores through EASY/HARD taps, holds, and rolls.</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- showcase-final:start -->
 <section class="showcase-final-bridge" aria-label="Showcase final step">
-  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>Now take the leap to a finished game.</h2><p>This final step connects the small mechanics, then makes a deliberate leap in art, motion, light, sound, UI, and replay value. You do not need to write it all at once—play first and see what Ebitengine can grow into.</p></div>
+  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>Unite a live concert stage, four-lane charts, and three songs in two modes.</h2><p>This capstone combines a live concert stage, four-lane charts, and three songs in two modes into one playable Update loop. Play it first, then identify where each earlier lesson now works inside the finished game.</p></div>
   <ul><li>a live concert stage</li><li>four-lane charts</li><li>three songs in two modes</li></ul>
 </section>
 <!-- showcase-final:end -->
@@ -64,7 +64,7 @@ func main() {
 }</code></pre>
 </section>
 <section class="code-lesson">
-  <div><p class="eyebrow">HOW IT WORKS</p><h3>internal/rhythmplay</h3><p>This is the real mechanism the entry calls. The two labelled layers keep source and explanation traceable.</p></div>
+  <div><p class="eyebrow">HOW IT WORKS</p><h3>internal/rhythmplay</h3><p>The games/tracks/rhythm/ebi-rhythm/main.go file above only supplies the starting configuration. Movement, checks, scoring, and other rules live here; the excerpt below shows where that configuration is used.</p></div>
   <pre><code>// internal/rhythmplay: chart data enters the shared runner
 session := NewSession(chart)</code></pre>
 </section>

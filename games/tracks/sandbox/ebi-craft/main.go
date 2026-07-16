@@ -77,7 +77,7 @@ type game struct {
 func newGame() *game {
 	prepareCraftArt()
 	g := &game{hp: 5, rng: rand.New(rand.NewSource(44)), best: sessionBest}
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: width / 2, Y: height / 2}, ViewW: width, ViewH: height}
 	g.badge = ebiten.NewImage(20, 20)

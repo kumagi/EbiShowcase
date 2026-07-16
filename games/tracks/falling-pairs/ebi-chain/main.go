@@ -102,7 +102,7 @@ func newGame() *game {
 		loadArt()
 	}
 	g := &game{}
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: width / 2, Y: height / 2}, ViewW: width, ViewH: height}
 	g.badge = ebiten.NewImage(20, 20)

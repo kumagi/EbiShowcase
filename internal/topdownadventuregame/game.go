@@ -116,7 +116,7 @@ func Run(lesson int) {
 }
 func newGame(lesson int) *game {
 	g := &game{lesson: lesson, face: topdownadventurelogic.Vec{X: 1}, player: topdownadventurelogic.Fighter{Pos: topdownadventurelogic.Vec{X: 75, Y: 320}, HP: 5}, best: max(sessionBest[lesson], storedBest(gBestKey(lesson))), lang: browserLanguage(), background: loadRelicShrine(), art: loadAdventureArt()}
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.badge = ebiten.NewImage(20, 20)
 	g.badge.Fill(color.RGBA{255, 211, 112, 255})
@@ -681,6 +681,21 @@ func (g *game) drawActors(s *ebiten.Image) {
 	}
 	vector.DrawFilledCircle(s, float32(g.player.Pos.X), float32(g.player.Pos.Y+21), 13, color.RGBA{0, 8, 18, 105}, true)
 	drawAdventureArt(s, g.art["hero"], g.player.Pos.X, g.player.Pos.Y+bob, 72, 82, alpha)
+	// The portrait itself is mostly front-facing, so show the gameplay-facing
+	// direction as a bright weapon arrow. This is derived entirely from face;
+	// attack reach and movement continue to use the same state in Update.
+	dx, dy := g.face.X, g.face.Y
+	length := math.Hypot(dx, dy)
+	if length == 0 {
+		dx, dy, length = 1, 0, 1
+	}
+	dx, dy = dx/length, dy/length
+	tipX, tipY := g.player.Pos.X+dx*44, g.player.Pos.Y+dy*44
+	baseX, baseY := g.player.Pos.X+dx*28, g.player.Pos.Y+dy*28
+	perpX, perpY := -dy*7, dx*7
+	vector.StrokeLine(s, float32(g.player.Pos.X+dx*18), float32(g.player.Pos.Y+dy*18), float32(tipX), float32(tipY), 5, color.RGBA{255, 224, 112, 235}, true)
+	vector.StrokeLine(s, float32(tipX), float32(tipY), float32(baseX+perpX), float32(baseY+perpY), 4, color.RGBA{255, 245, 198, 245}, true)
+	vector.StrokeLine(s, float32(tipX), float32(tipY), float32(baseX-perpX), float32(baseY-perpY), 4, color.RGBA{255, 245, 198, 245}, true)
 	for _, e := range g.enemies {
 		if e.hp <= 0 {
 			continue

@@ -8,6 +8,7 @@ import (
 	"image/color"
 	"math"
 	"math/rand"
+	"sort"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
@@ -27,8 +28,9 @@ var nurseryPNG []byte
 //go:embed assets/merge-creatures.png
 var creaturesPNG []byte
 
-var nurseryArt, creaturesArt *ebiten.Image
+var nurseryArt *ebiten.Image
 var creatureRects []image.Rectangle
+var creatureSprites [7]*ebiten.Image
 
 func loadGeneratedArt() {
 	decode := func(data []byte) image.Image {
@@ -40,35 +42,77 @@ func loadGeneratedArt() {
 	}
 	nursery := decode(nurseryPNG)
 	creatures := decode(creaturesPNG)
-	nurseryArt, creaturesArt = ebiten.NewImageFromImage(nursery), ebiten.NewImageFromImage(creatures)
+	nurseryArt = ebiten.NewImageFromImage(nursery)
 	creatureRects = opaqueCells(creatures, 7)
+	subImager, ok := creatures.(interface {
+		SubImage(image.Rectangle) image.Image
+	})
+	if !ok {
+		panic("merge-creatures image does not support cropping")
+	}
+	for i, rect := range creatureRects {
+		creatureSprites[i] = ebiten.NewImageFromImage(subImager.SubImage(rect))
+	}
 }
 
-// opaqueCells removes the generous transparent staging area around each
-// generated atlas pose. Physics still uses radii; this only makes the artwork
-// occupy the same readable diameter on screen.
+// opaqueCells finds the largest disconnected opaque silhouettes, then crops
+// each pose to its own bounds. Generated atlases are not guaranteed to use
+// equal columns, and later creatures overlap horizontally without touching.
+// Splitting width/cells therefore cut several creatures in half. Physics still
+// uses radii; these rectangles affect presentation only.
 func opaqueCells(atlas image.Image, cells int) []image.Rectangle {
 	bounds := atlas.Bounds()
-	cellW := bounds.Dx() / cells
-	result := make([]image.Rectangle, cells)
-	for cell := 0; cell < cells; cell++ {
-		base := image.Rect(bounds.Min.X+cell*cellW, bounds.Min.Y, bounds.Min.X+(cell+1)*cellW, bounds.Max.Y)
-		minX, minY, maxX, maxY := base.Max.X, base.Max.Y, base.Min.X, base.Min.Y
-		for y := base.Min.Y; y < base.Max.Y; y++ {
-			for x := base.Min.X; x < base.Max.X; x++ {
-				_, _, _, a := atlas.At(x, y).RGBA()
-				if a < 0x0800 {
-					continue
-				}
-				minX, minY = min(minX, x), min(minY, y)
-				maxX, maxY = max(maxX, x+1), max(maxY, y+1)
+	w, h := bounds.Dx(), bounds.Dy()
+	visited := make([]bool, w*h)
+	type component struct {
+		area int
+		rect image.Rectangle
+	}
+	components := make([]component, 0, cells*2)
+	queue := make([]int, 0, 8192)
+	opaque := func(x, y int) bool {
+		_, _, _, a := atlas.At(bounds.Min.X+x, bounds.Min.Y+y).RGBA()
+		return a >= 0x1000
+	}
+	for sy := 0; sy < h; sy++ {
+		for sx := 0; sx < w; sx++ {
+			start := sy*w + sx
+			if visited[start] || !opaque(sx, sy) {
+				continue
 			}
+			visited[start] = true
+			queue = append(queue[:0], start)
+			c := component{rect: image.Rect(sx, sy, sx+1, sy+1)}
+			for len(queue) > 0 {
+				index := queue[len(queue)-1]
+				queue = queue[:len(queue)-1]
+				x, y := index%w, index/w
+				c.area++
+				c.rect = c.rect.Union(image.Rect(x, y, x+1, y+1))
+				for _, d := range [...]image.Point{{X: -1}, {X: 1}, {Y: -1}, {Y: 1}} {
+					nx, ny := x+d.X, y+d.Y
+					if nx < 0 || nx >= w || ny < 0 || ny >= h {
+						continue
+					}
+					next := ny*w + nx
+					if !visited[next] && opaque(nx, ny) {
+						visited[next] = true
+						queue = append(queue, next)
+					}
+				}
+			}
+			components = append(components, c)
 		}
-		if minX >= maxX || minY >= maxY {
-			result[cell] = base
-		} else {
-			result[cell] = image.Rect(minX, minY, maxX, maxY)
-		}
+	}
+	sort.Slice(components, func(i, j int) bool { return components[i].area > components[j].area })
+	if len(components) < cells {
+		panic("merge-creatures atlas contains fewer than seven opaque poses")
+	}
+	components = components[:cells]
+	sort.Slice(components, func(i, j int) bool { return components[i].rect.Min.X < components[j].rect.Min.X })
+	result := make([]image.Rectangle, cells)
+	for i, component := range components {
+		result[i] = component.rect.Add(bounds.Min)
 	}
 	return result
 }
@@ -107,7 +151,7 @@ func newGame() *game {
 	}
 	b := ebiten.NewImage(20, 20)
 	b.Fill(color.RGBA{255, 130, 80, 255})
-	g := &game{rng: rand.New(rand.NewSource(4806)), cursor: 240, level: 1, audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), cam: cameralab.State{Pos: cameralab.Vec{240, 360}, ViewW: width, ViewH: height}, badge: b}
+	g := &game{rng: rand.New(rand.NewSource(4806)), cursor: 240, level: 1, audio: audiolab.Context(), pulse: shaderlab.NewPulse(), cam: cameralab.State{Pos: cameralab.Vec{240, 360}, ViewW: width, ViewH: height}, badge: b}
 	g.next = g.rng.Intn(3)
 	g.after = g.rng.Intn(3)
 	// A prepared opening board communicates the merge goal immediately.
@@ -337,12 +381,11 @@ func (g *game) Draw(s *ebiten.Image) {
 }
 
 func drawCreature(dst *ebiten.Image, tier int, cx, cy, size float64) {
-	if tier < 0 || tier >= len(radii) || creaturesArt == nil {
+	if tier < 0 || tier >= len(radii) || creatureSprites[tier] == nil {
 		return
 	}
-	r := creatureRects[tier]
-	w, h := r.Dx(), r.Dy()
-	src := creaturesArt.SubImage(r).(*ebiten.Image)
+	src := creatureSprites[tier]
+	w, h := src.Bounds().Dx(), src.Bounds().Dy()
 	op := &ebiten.DrawImageOptions{}
 	scale := size / float64(max(w, h))
 	op.GeoM.Scale(scale, scale)

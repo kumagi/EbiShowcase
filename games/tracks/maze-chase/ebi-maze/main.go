@@ -148,7 +148,7 @@ func newGame() *game {
 		loadGeneratedArt()
 	}
 	g := &game{lives: 3, best: sessionBest, rng: rand.New(rand.NewSource(70))}
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: screenW / 2, Y: screenH / 2}, ViewW: screenW, ViewH: screenH}
 	g.badge = ebiten.NewImage(20, 20)

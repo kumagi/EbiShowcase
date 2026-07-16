@@ -74,7 +74,7 @@ func newGame() *game {
 		px: 240, py: 360,
 		rng:  rand.New(rand.NewSource(2306)),
 		life: 4, speed: 3.6, aura: 46, auraTick: 18,
-		level: 1, need: 4, audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: badge,
+		level: 1, need: 4, audio: audiolab.Context(), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: badge,
 	}
 	// Begin in the middle of a recognizable encounter instead of an empty room.
 	g.seedOpeningMobs()

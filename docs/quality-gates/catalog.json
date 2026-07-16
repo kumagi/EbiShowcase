@@ -307,6 +307,15 @@
       "sources": ["scripts/check-lessons.mjs", "AGENTS.md"]
     },
     {
+      "id": "structure.core-update-workshop",
+      "family": "structure",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["core"],
+      "summary": "Every LEVEL 01–12 page explains every real Update block with paste-in-order snippets and individual copy buttons.",
+      "sources": ["scripts/inject-core-update-workshops.mjs", "AGENTS.md"]
+    },
+    {
       "id": "structure.go-exists",
       "family": "structure",
       "severity": "fail",
@@ -417,6 +426,15 @@
       "summary": "Keyboard/pointer and touch complete the game loop.",
       "prompt_hint": "Browser audit: both desktop and phone-size controls finish a run.",
       "sources": ["docs/ADVANCED_QUALITY_CHECKLIST.md", "AGENTS.md"]
+    },
+    {
+      "id": "playable.single-audio-context",
+      "family": "playable",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "build"],
+      "summary": "A new run reuses the process-wide Ebitengine audio context instead of creating a second context and panicking.",
+      "sources": ["internal/audiolab/context.go", "scripts/check-audio-context.mjs"]
     },
     {
       "id": "playable.replay-reason",

@@ -45,7 +45,7 @@ import "github.com/kumagi/EbiShowcase/internal/topdownadventuregame"
 func main() { topdownadventuregame.Run(3) }</code></pre>
 </section>
 <section class="code-lesson">
-  <div><p class="eyebrow">HOW IT WORKS</p><h3>internal/topdownadventuregame/game.go</h3><p>This is the real mechanism the entry calls. The two labelled layers keep source and explanation traceable.</p></div>
+  <div><p class="eyebrow">HOW IT WORKS</p><h3>internal/topdownadventuregame/game.go</h3><p>The games/tracks/topdown-adventure/hurt-recovery/main.go file above only supplies the starting configuration. Movement, checks, scoring, and other rules live here; the excerpt below shows where that configuration is used.</p></div>
   <pre><code>func (g *game) Update() error {
 	if g.clear || g.over {
 		if retryPressed() {

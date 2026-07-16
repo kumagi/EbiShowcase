@@ -46,7 +46,7 @@ import "github.com/kumagi/EbiShowcase/internal/raycasterui"
 func main() { raycasterui.Run(raycasterui.DistanceStrip) }</code></pre>
 </section>
 <section class="code-lesson">
-  <div><p class="eyebrow">HOW IT WORKS</p><h3>internal/raycaster (shared engine)</h3><p>This is the real mechanism the entry calls. The two labelled layers keep source and explanation traceable.</p></div>
+  <div><p class="eyebrow">HOW IT WORKS</p><h3>internal/raycaster (shared engine)</h3><p>The games/tracks/raycaster/distance-strip/main.go file above only supplies the starting configuration. Movement, checks, scoring, and other rules live here; the excerpt below shows where that configuration is used.</p></div>
   <pre><code>// shared engine: Update decides movement and cast results
 hit := Cast(world, player, angle)</code></pre>
 </section>

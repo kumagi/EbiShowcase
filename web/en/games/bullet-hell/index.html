@@ -422,6 +422,63 @@ func main() {
 }
 </code></pre>
       </div>
+<!-- core-update-workshop:start -->
+<section class="core-update-workshop" id="update-workshop"><div class="update-workshop-intro"><p class="eyebrow">BUILD IT LINE BY LINE / UPDATE WORKSHOP</p><h2>Advance a bullet storm one shot at a time</h2><p>Bullet hell combines spawn schedules with one rule per bullet. A backward slice pass handles movement, hits, and deletion.</p><div class="update-workshop-route"><b>1</b><span>Paste the full source above into main.go</span><i>→</i><b>2</b><span>Empty its Update, then paste the pieces below in order</span><i>→</i><b>3</b><span>Save and run after the final piece</span></div><p class="update-workshop-tip">Some braces intentionally stay open between pieces, so intermediate code may not compile yet. Each card explains what to paste, why it belongs here, and which Go feature helps. The snippets are extracted from the running game; after the final paste, Update exactly matches the real one.</p></div><div class="update-build-list"><article class="update-build-step"><header><span>01</span><div><small>PASTE NEXT</small><h3>Close terminal states</h3></div></header><p>Clear or game over accepts restart only, freezing spawning and movement while Draw presents the result.</p><div class="update-go-note"><b>GO</b><span>The first return establishes every later assumption.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 1/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>func (g *game) Update() error {
+	if g.cleared || g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>02</span><div><small>PASTE NEXT</small><h3>Advance the clock and invincibility</h3></div></header><p>frame schedules attacks; invincible spaces damage. It stops safely at zero.</p><div class="update-go-note"><b>GO</b><span>Different systems can reuse the same tick-counter idea.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 2/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	g.frame++
+	if g.invincible &gt; 0 {
+		g.invincible--
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>03</span><div><small>PASTE NEXT</small><h3>Finalize player position first</h3></div></header><p>movePlayer runs before firing and aiming, so later rules use this tick's latest position.</p><div class="update-go-note"><b>GO</b><span>Choosing update order chooses game feel.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 3/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	g.movePlayer()</code></pre></div></article>
+<article class="update-build-step"><header><span>04</span><div><small>PASTE NEXT</small><h3>Append two player shots every seven ticks</h3></div></header><p>%7==0 is the firing clock; two struct literals carry position, velocity, radius, and team.</p><div class="update-go-note"><b>GO</b><span>Adding data is enough—the shared loop below will move it.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 4/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// 自動で自分の弾を撃つ
+	if g.frame%7 == 0 {
+		g.bullets = append(g.bullets,
+			bullet{g.playerX - 7, g.playerY - 15, -0.25, -10, 4, false},
+			bullet{g.playerX + 7, g.playerY - 15, 0.25, -10, 4, false},
+		)
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>05</span><div><small>PASTE NEXT</small><h3>Call two patterns on different periods</h3></div></header><p>A 38-tick ring and 91-tick aimed fan may overlap, producing complexity from simple schedules.</p><div class="update-go-note"><b>GO</b><span>Layering simple periods is part of the fun of bullet patterns.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 5/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// ボスの弾幕パターン
+	if g.frame%38 == 0 {
+		g.spawnRing()
+	}
+	if g.frame%91 == 0 {
+		g.spawnAimFan()
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>06</span><div><small>PASTE NEXT</small><h3>Move every bullet backward</h3></div></header><p>Count indices down and mutate x/y through a pointer, keeping deletion safe later.</p><div class="update-go-note"><b>GO</b><span>One rule expanded by for is the power of programming.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 6/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// 弾を動かして当たりを見る
+	for i := len(g.bullets) - 1; i &gt;= 0; i-- {
+		b := &amp;g.bullets[i]
+		b.x += b.vx
+		b.y += b.vy</code></pre></div></article>
+<article class="update-build-step"><header><span>07</span><div><small>PASTE NEXT</small><h3>Mark off-screen bullets for removal</h3></div></header><p>Store Outside in a bool so later hit paths can join at remove=true and one cleanup point.</p><div class="update-go-note"><b>GO</b><span>Mark now, delete once at the end.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 7/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>		remove := lessonlogic.Outside(b.x, b.y, 0, 0, screenWidth, screenHeight, 30)</code></pre></div></article>
+<article class="update-build-step"><header><span>08</span><div><small>PASTE NEXT</small><h3>For player shots, test the boss</h3></div></header><p>Only !enemy bullets reduce boss HP, mark removal, and set cleared at zero.</p><div class="update-go-note"><b>GO</b><span>One bullet type can represent teams with a bool.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 8/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>		// 自分の弾がボスに当たった
+		if !b.enemy &amp;&amp; lessonlogic.CircleHit(b.x, b.y, b.r, bossX, bossY, 48-b.r) {
+			g.bossHP--
+			remove = true
+			if g.bossHP &lt;= 0 {
+				g.cleared = true
+			}
+		}</code></pre></div></article>
+<article class="update-build-step"><header><span>09</span><div><small>PASTE NEXT</small><h3>For enemy shots, test invincibility and player</h3></div></header><p>Team, zero invincibility, and circle hit must all pass; then life drops and recovery starts.</p><div class="update-go-note"><b>GO</b><span>Each &amp;&amp; narrows the rule to a real hit.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 9/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>		// 敵弾が自分に当たった
+		if b.enemy &amp;&amp; g.invincible == 0 &amp;&amp; lessonlogic.CircleHit(b.x, b.y, b.r, g.playerX, g.playerY, 4) {
+			g.life--
+			g.invincible = 90
+			remove = true
+			if g.life &lt;= 0 {
+				g.gameOver = true
+			}
+		}</code></pre></div></article>
+<article class="update-build-step"><header><span>10</span><div><small>PASTE NEXT</small><h3>Delete every marked bullet once</h3></div></header><p>Off-screen and either hit outcome all converge on one slice operation.</p><div class="update-go-note"><b>GO</b><span>New removal reasons do not need a new cleanup mechanism.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 10/10</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>		if remove {
+			g.bullets = append(g.bullets[:i], g.bullets[i+1:]...)
+		}
+	}
+	return nil
+}</code></pre></div></article></div><div class="update-workshop-finish"><strong>COMPLETE</strong><p>Update owns only input and advancing game state. Replace Draw with another presentation and the controls, timing, collisions, and outcomes assembled here remain unchanged.</p></div></section>
+<!-- core-update-workshop:end -->
 
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT PATTERNS</p><h3>Random is just chaos</h3><p>Bullets fired at random angles give the player no visual cues to react to. Structured patterns create the "read and dodge" loop that makes the genre satisfying.</p></article>

@@ -419,6 +419,67 @@ func main() {
 }
 </code></pre>
       </div>
+<!-- core-update-workshop:start -->
+<section class="core-update-workshop" id="update-workshop"><div class="update-workshop-intro"><p class="eyebrow">BUILD IT LINE BY LINE / UPDATE工房</p><h2>横と縦を分けると、足場の衝突が解ける</h2><p>2Dの衝突を一度に解こうとすると、どちらへ押し戻すか分かりません。横を動かして直し、次に縦を動かして直します。</p><div class="update-workshop-route"><b>1</b><span>上の「ぜんぶのコード」を main.go へ貼る</span><i>→</i><b>2</b><span>そのUpdateを空にし、下の断片を番号順に貼る</span><i>→</i><b>3</b><span>最後の断片まで貼って保存し、動かす</span></div><p class="update-workshop-tip">途中は波かっこが閉じていない場合があり、まだ実行できなくて正常です。各カードでは「何を貼るか」だけでなく、「なぜこの順番か」「Goのどの書き方が役立つか」を一つずつ確認します。コードは完成ゲームの実物から取り出しているため、最後まで貼ると本物のUpdateと同じになります。</p></div><div class="update-build-list"><article class="update-build-step"><header><span>01</span><div><small>PASTE NEXT / 次に貼る</small><h3>終了状態を閉じる</h3></div></header><p>クリアまたはゲームオーバーなら、再開以外の物理を止めます。|| はどちらか一方でもtrueなら成立します。</p><div class="update-go-note"><b>GO</b><span>最初に世界を止めることで、結果表示中の落下や得点を防ぎます。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 1/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>func (g *game) Update() error {
+	if g.cleared || g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>02</span><div><small>PASTE NEXT / 次に貼る</small><h3>三つの操作を一度に読む</h3></div></header><p>readControlsがleft、right、jumpを返します。呼び出し側は入力機器の細部を知らず、ゲームの意味だけを受け取ります。</p><div class="update-go-note"><b>GO</b><span>多値returnは、関連する小さな情報を構造体なしで渡すのに便利です。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 2/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	left, right, jump := g.readControls()</code></pre></div></article>
+<article class="update-build-step"><header><span>03</span><div><small>PASTE NEXT / 次に貼る</small><h3>入力から横速度、ジャンプから縦速度を作る</h3></div></header><p>純粋関数へ現在速度と入力を渡し、次の速度を受け取ります。地面を離れた合図も返るためonGroundを更新できます。</p><div class="update-go-note"><b>GO</b><span>物理式をEbitengineから分けると、数値だけでテストできます。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 3/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	g.vx = lessonlogic.HorizontalVelocity(g.vx, left, right, 0.65, 0.78, 6)
+	var leftGround bool
+	g.vy, leftGround = lessonlogic.VerticalVelocity(g.vy, jump, g.onGround, jumpSpeed, gravity, 14)
+	if leftGround {
+		g.onGround = false
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>04</span><div><small>PASTE NEXT / 次に貼る</small><h3>横だけ動かし、壁から押し戻す</h3></div></header><p>xへvxを足した後、全platformと重なりを調べます。進行方向を見て左右どちらへ戻すか決め、速度を0にします。</p><div class="update-go-note"><b>GO</b><span>一軸ずつ解くことで、押し戻す方向が一意になります。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 4/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// 横移動 → 壁との当たり
+	g.player.x += g.vx
+	for _, p := range g.platforms {
+		if overlap(g.player, p) {
+			if g.vx &gt; 0 {
+				g.player.x = p.x - g.player.w
+			} else if g.vx &lt; 0 {
+				g.player.x = p.x + p.w
+			}
+			g.vx = 0
+		}
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>05</span><div><small>PASTE NEXT / 次に貼る</small><h3>縦だけ動かし、床と天井を分ける</h3></div></header><p>yへvyを足し、落下中なら床の上へ、上昇中なら天井の下へ戻します。床に着いた時だけonGround=trueです。</p><div class="update-go-note"><b>GO</b><span>速度の正負が、ぶつかった面を教えてくれます。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 5/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// 縦移動 → 床・天井との当たり
+	g.player.y += g.vy
+	g.onGround = false
+	for _, p := range g.platforms {
+		if overlap(g.player, p) {
+			if g.vy &gt; 0 {
+				g.player.y = p.y - g.player.h
+				g.onGround = true
+			} else if g.vy &lt; 0 {
+				g.player.y = p.y + p.h
+			}
+			g.vy = 0
+		}
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>06</span><div><small>PASTE NEXT / 次に貼る</small><h3>コインを後ろから取り除く</h3></div></header><p>末尾から調べ、重なったcoinをsliceから切り取ってcollectedを増やします。複数枚が同じtickに重なっても安全です。</p><div class="update-go-note"><b>GO</b><span>削除を伴うslice走査では後ろ向きが定番です。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 6/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// コイン取得
+	for i := len(g.coins) - 1; i &gt;= 0; i-- {
+		if overlap(g.player, g.coins[i]) {
+			g.coins = append(g.coins[:i], g.coins[i+1:]...)
+			g.collected++
+		}
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>07</span><div><small>PASTE NEXT / 次に貼る</small><h3>失敗とゴールを別々の条件にする</h3></div></header><p>画面下へ落ちればgameOver、goalXを越えればclearedです。勝敗の事実だけをUpdateに保存します。</p><div class="update-go-note"><b>GO</b><span>Drawはこのboolを読んで表示を変えるだけで、勝敗を決めません。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 7/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	if g.player.y &gt; screenHeight+100 {
+		g.gameOver = true
+	}
+	if g.player.x &gt; goalX {
+		g.cleared = true
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>08</span><div><small>PASTE NEXT / 次に貼る</small><h3>カメラを目標へ少しずつ近づける</h3></div></header><p>プレイヤーを画面左寄りに置くtargetを作り、差の9%だけcameraXを進めます。最後にclampしてステージ外を見せません。</p><div class="update-go-note"><b>GO</b><span>『差の一部を足す』だけで滑らかな追従が生まれます。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 8/8</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// カメラはプレイヤーを少し左に置いて追う
+	target := g.player.x - screenWidth*0.38
+	g.cameraX += (target - g.cameraX) * 0.09
+	g.cameraX = clamp(g.cameraX, 0, 1940)
+	return nil
+}</code></pre></div></article></div><div class="update-workshop-finish"><strong>できあがり</strong><p>Updateは入力とゲーム状態を進める仕事だけを持ちます。Drawを別の絵へ交換しても、ここで組み立てた操作・時間・衝突・勝敗は変わりません。</p></div></section>
+<!-- core-update-workshop:end -->
 
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT AXIS SEPARATION</p><h3>コーナーで詰まる</h3><p>XYを同時に処理すると、壁の角にプレイヤーがはまって動けなくなるバグが起きます。軸を分けるだけで多くのコーナーケースが解決します。</p></article>

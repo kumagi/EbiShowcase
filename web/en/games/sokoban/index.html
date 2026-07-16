@@ -504,6 +504,44 @@ func main() {
 }
 </code></pre>
       </div>
+<!-- core-update-workshop:start -->
+<section class="core-update-workshop" id="update-workshop"><div class="update-workshop-intro"><p class="eyebrow">BUILD IT LINE BY LINE / UPDATE WORKSHOP</p><h2>Decide priority before accepting a move</h2><p>Reset, undo, cleared, animation, next input: Sokoban narrows what is currently legal from top to bottom.</p><div class="update-workshop-route"><b>1</b><span>Paste the full source above into main.go</span><i>→</i><b>2</b><span>Empty its Update, then paste the pieces below in order</span><i>→</i><b>3</b><span>Save and run after the final piece</span></div><p class="update-workshop-tip">Some braces intentionally stay open between pieces, so intermediate code may not compile yet. Each card explains what to paste, why it belongs here, and which Go feature helps. The snippets are extracted from the running game; after the final paste, Update exactly matches the real one.</p></div><div class="update-build-list"><article class="update-build-step"><header><span>01</span><div><small>PASTE NEXT</small><h3>Place highest-priority commands as guards</h3></div></header><p>R always resets; undo works only while still; cleared accepts restart only. Each returns so one tick cannot mix commands.</p><div class="update-go-note"><b>GO</b><span>Ordering conditions by priority keeps specification and code aligned.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 1/3</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>func (g *game) Update() error {
+	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
+		*g = *newGame()
+		return nil
+	}
+	if !g.moving &amp;&amp; (inpututil.IsKeyJustPressed(ebiten.KeyZ) || inpututil.IsKeyJustPressed(ebiten.KeyBackspace)) {
+		g.undo()
+		return nil
+	}
+	if g.cleared {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>02</span><div><small>PASTE NEXT</small><h3>While between tiles, advance only the tween</h3></div></header><p>moving advances progress and commits logical player/box positions only on completion. New movement input is ignored until then.</p><div class="update-go-note"><b>GO</b><span>Temporary animation state stays separate from committed game state.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 2/3</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	// While sliding between tiles, advance the tween and ignore move input.
+	if g.moving {
+		var complete bool
+		g.progress, complete = lessonlogic.AdvanceTween(g.progress, 0.14)
+		if complete {
+			g.player = g.toPlayer
+			if g.boxIndex &gt;= 0 {
+				g.boxes[g.boxIndex] = g.toBox
+			}
+			g.moving = false
+			g.progress = 0
+			g.checkCleared()
+		}
+		return nil
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>03</span><div><small>PASTE NEXT</small><h3>Read one move only while settled</h3></div></header><p>A nonzero direction goes to move, which checks walls and boxes before starting a transition.</p><div class="update-go-note"><b>GO</b><span>Go's zero value naturally represents “no direction.”</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 3/3</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	d := g.readMove()
+	if d.x != 0 || d.y != 0 {
+		g.move(d)
+	}
+	return nil
+}</code></pre></div></article></div><div class="update-workshop-finish"><strong>COMPLETE</strong><p>Update owns only input and advancing game state. Replace Draw with another presentation and the controls, timing, collisions, and outcomes assembled here remain unchanged.</p></div></section>
+<!-- core-update-workshop:end -->
 
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT A TILE MAP</p><h3>Pixel coordinates are fragile</h3><p>Hardcoding wall positions in pixels means touching dozens of numbers for a small layout change. Tile coordinates shrink each position to a single integer pair.</p></article>

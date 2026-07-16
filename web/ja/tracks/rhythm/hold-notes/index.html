@@ -51,7 +51,7 @@ func main() {
 }</code></pre>
 </section>
 <section class="code-lesson">
-  <div><p class="eyebrow">仕組みの抜粋</p><h3>internal/rhythmcore</h3><p>入口が呼ぶ本物の仕組みです。入口と内部を混同せず、両方の場所をたどれます。</p></div>
+  <div><p class="eyebrow">仕組みの抜粋</p><h3>internal/rhythmcore</h3><p>上の games/tracks/rhythm/hold-notes/main.go は開始設定を書く短いファイルです。移動・判定・得点などの処理はこのファイルにあり、次の抜粋で設定がどのルールへ渡るかを追えます。</p></div>
   <pre><code>// internal/rhythmcore: judge events decide hold / roll results
 results := session.Step(inputs)</code></pre>
 </section>

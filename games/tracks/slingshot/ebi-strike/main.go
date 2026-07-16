@@ -65,7 +65,7 @@ type game struct {
 	enemies                             []enemy
 	active, turns                       int
 	dragging, moving                    bool
-	dragNow                             vec
+	dragNow, dragOrigin                 vec
 	allyEffectUsed                      bool
 	pulseAt                             vec
 	pulseFrames                         int
@@ -85,7 +85,7 @@ type game struct {
 func newGame() *game {
 	loadStrikeArt()
 	g := &game{stage: 1}
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.shader = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: screenW / 2, Y: screenH / 2}, ViewW: screenW, ViewH: screenH}
 	g.badge = ebiten.NewImage(20, 20)
@@ -179,6 +179,7 @@ func (g *game) updateAim() {
 		x, y, ok := pressPosition()
 		if ok && distance(vec{float64(x), float64(y)}, a.pos) <= allyRadius+18 {
 			g.dragging = true
+			g.dragOrigin = a.pos
 			g.dragNow = vec{float64(x), float64(y)}
 		}
 		return
@@ -193,17 +194,15 @@ func (g *game) updateAim() {
 		g.dragNow = vec{float64(x), float64(y)}
 	}
 	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) || len(inpututil.AppendJustReleasedTouchIDs(nil)) > 0 {
-		pull := vec{a.pos.x - g.dragNow.x, a.pos.y - g.dragNow.y}
+		dragged := dragPosition(g.dragOrigin, g.dragNow)
+		pull := vec{g.dragOrigin.x - dragged.x, g.dragOrigin.y - dragged.y}
 		length := math.Hypot(pull.x, pull.y)
 		g.dragging = false
 		if length < 14 {
 			g.message = "Pull farther before release."
 			return
 		}
-		if length > 145 {
-			pull.x *= 145 / length
-			pull.y *= 145 / length
-		}
+		a.pos = dragged
 		a.velocity = vec{pull.x * 0.105, pull.y * 0.105}
 		g.play(380)
 		g.turns++
@@ -375,29 +374,33 @@ func (g *game) Draw(screen *ebiten.Image) {
 		vector.StrokeCircle(screen, float32(g.pulseAt.x), float32(g.pulseAt.y), r, 5, color.RGBA{250, 210, 72, 210}, false)
 	}
 	for i, a := range g.allies {
+		drawPos := a.pos
+		if g.dragging && i == g.active {
+			drawPos = dragPosition(g.dragOrigin, g.dragNow)
+		}
 		angle := math.Sin(float64(g.tick)*.08+float64(i)) * .035
 		if g.moving && i == g.active {
 			angle = math.Atan2(a.velocity.y, a.velocity.x) + float64(g.tick)*.16
 		}
-		vector.DrawFilledCircle(screen, float32(a.pos.x), float32(a.pos.y+18), 29, color.RGBA{2, 12, 28, 90}, true)
-		drawStrikeSprite(screen, strikeAllies[i], a.pos.x, a.pos.y, 76, angle, 1, false)
+		vector.DrawFilledCircle(screen, float32(drawPos.x), float32(drawPos.y+18), 29, color.RGBA{2, 12, 28, 90}, true)
+		drawStrikeSprite(screen, strikeAllies[i], drawPos.x, drawPos.y, 76, angle, 1, false)
 		if i == g.active && !g.moving {
-			vector.StrokeCircle(screen, float32(a.pos.x), float32(a.pos.y), 42+float32(math.Sin(float64(g.tick)*.12)*3), 4, color.RGBA{255, 222, 105, 235}, true)
-			vector.StrokeCircle(screen, float32(a.pos.x), float32(a.pos.y), 49, 1, color.RGBA{117, 240, 255, 145}, true)
+			vector.StrokeCircle(screen, float32(drawPos.x), float32(drawPos.y), 42+float32(math.Sin(float64(g.tick)*.12)*3), 4, color.RGBA{255, 222, 105, 235}, true)
+			vector.StrokeCircle(screen, float32(drawPos.x), float32(drawPos.y), 49, 1, color.RGBA{117, 240, 255, 145}, true)
 		}
 	}
 	if g.dragging {
-		a := g.allies[g.active]
-		vector.StrokeLine(screen, float32(a.pos.x), float32(a.pos.y), float32(g.dragNow.x), float32(g.dragNow.y), 5, color.RGBA{246, 184, 64, 255}, false)
-		vector.StrokeLine(screen, float32(a.pos.x), float32(a.pos.y), float32(a.pos.x+a.pos.x-g.dragNow.x), float32(a.pos.y+a.pos.y-g.dragNow.y), 2, color.White, false)
-		pull := vec{a.pos.x - g.dragNow.x, a.pos.y - g.dragNow.y}
+		dragged := dragPosition(g.dragOrigin, g.dragNow)
+		pull := vec{g.dragOrigin.x - dragged.x, g.dragOrigin.y - dragged.y}
+		vector.StrokeLine(screen, float32(g.dragOrigin.x), float32(g.dragOrigin.y), float32(dragged.x), float32(dragged.y), 5, color.RGBA{246, 184, 64, 255}, false)
+		vector.StrokeLine(screen, float32(dragged.x), float32(dragged.y), float32(dragged.x+pull.x), float32(dragged.y+pull.y), 2, color.White, false)
 		for i := 1; i <= 6; i++ {
 			t := float64(i) * .55
-			vector.DrawFilledCircle(screen, float32(a.pos.x+pull.x*.105*t), float32(a.pos.y+pull.y*.105*t), 3, color.RGBA{255, 255, 255, 150}, true)
+			vector.DrawFilledCircle(screen, float32(dragged.x+pull.x*.105*t), float32(dragged.y+pull.y*.105*t), 3, color.RGBA{255, 255, 255, 150}, true)
 		}
 		// A translucent landing reticle makes the slingshot payoff obvious.
-		landX := a.pos.x + pull.x*.72
-		landY := a.pos.y + pull.y*.72
+		landX := dragged.x + pull.x*.72
+		landY := dragged.y + pull.y*.72
 		vector.StrokeCircle(screen, float32(landX), float32(landY), 24, 3, color.RGBA{255, 229, 126, 170}, true)
 	}
 	vector.DrawFilledRect(screen, 15, 605, 450, 76, color.RGBA{4, 15, 31, 220}, true)
@@ -449,13 +452,13 @@ func loadStrikeArt() {
 		}
 		allyAtlas := strikeArt["allies"]
 		for i := range strikeAllies {
-			strikeAllies[i] = allyAtlas.SubImage(image.Rect(i*512, 0, (i+1)*512, 512)).(*ebiten.Image)
+			strikeAllies[i] = ebiten.NewImageFromImage(allyAtlas.SubImage(image.Rect(i*512, 0, (i+1)*512, 512)))
 		}
 		enemyAtlas := strikeArt["enemies"]
 		obstacleAtlas := strikeArt["obstacles"]
 		for i := range strikeEnemies {
-			strikeEnemies[i] = enemyAtlas.SubImage(image.Rect(i*512, 0, (i+1)*512, 512)).(*ebiten.Image)
-			strikeObstacles[i] = obstacleAtlas.SubImage(image.Rect(i*512, 0, (i+1)*512, 512)).(*ebiten.Image)
+			strikeEnemies[i] = ebiten.NewImageFromImage(enemyAtlas.SubImage(image.Rect(i*512, 0, (i+1)*512, 512)))
+			strikeObstacles[i] = ebiten.NewImageFromImage(obstacleAtlas.SubImage(image.Rect(i*512, 0, (i+1)*512, 512)))
 		}
 		strikeFace14, _ = uilab.Face("en", 14)
 		strikeFace16, _ = uilab.Face("en", 16)
@@ -540,6 +543,17 @@ func (g *game) alive() int {
 }
 
 func distance(a, b vec) float64 { return math.Hypot(a.x-b.x, a.y-b.y) }
+
+func dragPosition(origin, pointer vec) vec {
+	dx, dy := pointer.x-origin.x, pointer.y-origin.y
+	if length := math.Hypot(dx, dy); length > 145 {
+		dx, dy = dx*145/length, dy*145/length
+	}
+	return vec{
+		x: min(452.0, max(28.0, origin.x+dx)),
+		y: min(570.0, max(100.0, origin.y+dy)),
+	}
+}
 
 func pressPosition() (int, int, bool) {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {

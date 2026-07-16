@@ -59,7 +59,7 @@ type game struct {
 func newGame() *game {
 	prepareRacingArt()
 	g := &game{stage: 1}
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: W / 2, Y: H / 2}, ViewW: W, ViewH: H}
 	g.badge = ebiten.NewImage(20, 20)

@@ -28,7 +28,7 @@ func beep() []byte {
 	}
 	return b
 }
-func newGame() *game { return &game{ctx: audio.NewContext(48000)} }
+func newGame() *game { return &game{ctx: audiolab.Context()} }
 func (g *game) Update() error {
 	g.t += .04
 	hit := inpututil.IsKeyJustPressed(ebiten.KeySpace) || inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || len(inpututil.AppendJustPressedTouchIDs(nil)) > 0

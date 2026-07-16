@@ -46,7 +46,7 @@ func newGame() *game {
 	prepareFightingArt()
 	b := ebiten.NewImage(20, 20)
 	b.Fill(color.RGBA{255, 100, 80, 255})
-	g := &game{round: 1, rng: rand.New(rand.NewSource(4207)), audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: b}
+	g := &game{round: 1, rng: rand.New(rand.NewSource(4207)), audio: audiolab.Context(), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: b}
 	g.resetRound()
 	return g
 }

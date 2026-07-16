@@ -473,6 +473,80 @@ func main() {
 }
 </code></pre>
       </div>
+<!-- core-update-workshop:start -->
+<section class="core-update-workshop" id="update-workshop"><div class="update-workshop-intro"><p class="eyebrow">BUILD IT LINE BY LINE / UPDATE工房</p><h2>敵AIの『考える→動く→当たる』を順番に読む</h2><p>長いUpdateでも、プレイヤー処理の後に各敵を一体ずつ進めるだけです。ポインタ、距離、状態遷移が一つの小さなAIになります。</p><div class="update-workshop-route"><b>1</b><span>上の「ぜんぶのコード」を main.go へ貼る</span><i>→</i><b>2</b><span>そのUpdateを空にし、下の断片を番号順に貼る</span><i>→</i><b>3</b><span>最後の断片まで貼って保存し、動かす</span></div><p class="update-workshop-tip">途中は波かっこが閉じていない場合があり、まだ実行できなくて正常です。各カードでは「何を貼るか」だけでなく、「なぜこの順番か」「Goのどの書き方が役立つか」を一つずつ確認します。コードは完成ゲームの実物から取り出しているため、最後まで貼ると本物のUpdateと同じになります。</p></div><div class="update-build-list"><article class="update-build-step"><header><span>01</span><div><small>PASTE NEXT / 次に貼る</small><h3>終了状態を閉じる</h3></div></header><p>クリアかゲームオーバーなら再開だけを受け付けます。AIも攻撃時間も進まないため、結果画面が安定します。</p><div class="update-go-note"><b>GO</b><span>先頭のガード節が、生きている世界と止まった世界を分けます。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 1/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>func (g *game) Update() error {
+	if g.cleared || g.gameOver {
+		if restartPressed() {
+			*g = *newGame()
+		}
+		return nil
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>02</span><div><small>PASTE NEXT / 次に貼る</small><h3>プレイヤーを横、次に縦へ動かす</h3></div></header><p>readMoveのdx、dyを一軸ずつmovePlayerへ渡します。壁衝突を方向ごとに解けます。</p><div class="update-go-note"><b>GO</b><span>LEVEL 10の一軸分解を、見下ろし移動にも再利用しています。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 2/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	dx, dy := g.readMove()
+	g.movePlayer(dx, 0)
+	g.movePlayer(0, dy)</code></pre></div></article>
+<article class="update-build-step"><header><span>03</span><div><small>PASTE NEXT / 次に貼る</small><h3>攻撃の残り時間を減らす</h3></div></header><p>attackが正の時だけ--します。0は攻撃していない、1以上は攻撃中／無敵中という時間付き状態です。</p><div class="update-go-note"><b>GO</b><span>一つの整数がアニメとルールの両方の時刻表になります。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 3/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	if g.attack &gt; 0 {
+		g.attack--
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>04</span><div><small>PASTE NEXT / 次に貼る</small><h3>複数の入力機器をattackPressedへまとめる</h3></div></header><p>Space、X、マウス、上半分のタッチを一つのboolへ統合し、クールダウン0の時だけ18を入れます。</p><div class="update-go-note"><b>GO</b><span>入力方法が増えても、その後のゲームルールは一つのboolだけを見ます。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 4/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	attackPressed := inpututil.IsKeyJustPressed(ebiten.KeySpace) ||
+		inpututil.IsKeyJustPressed(ebiten.KeyX) ||
+		inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft)
+	for _, id := range inpututil.AppendJustPressedTouchIDs(nil) {
+		_, y := ebiten.TouchPosition(id)
+		if y &lt;= screenHeight/2 {
+			attackPressed = true
+		}
+	}
+	if attackPressed &amp;&amp; g.attack == 0 {
+		g.attack = 18
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>05</span><div><small>PASTE NEXT / 次に貼る</small><h3>プレイヤー中心を一度計算する</h3></div></header><p>矩形左上ではなく中心で距離や剣先を計算するため、+14した座標へ名前を付けます。</p><div class="update-go-note"><b>GO</b><span>繰り返す式へ名前を付けると、意味と修正場所が一つになります。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 5/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	playerCX := g.player.x + 14
+	playerCY := g.player.y + 14</code></pre></div></article>
+<article class="update-build-step"><header><span>06</span><div><small>PASTE NEXT / 次に貼る</small><h3>敵sliceの本物を一体ずつ指す</h3></div></header><p>&amp;g.enemies[i]で元の敵を更新し、aliveでない敵はcontinueします。死んだ敵へAIを走らせません。</p><div class="update-go-note"><b>GO</b><span>ポインタとcontinueが、必要な対象だけを扱うループを作ります。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 6/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	for i := range g.enemies {
+		e := &amp;g.enemies[i]
+		if !e.alive {
+			continue
+		}</code></pre></div></article>
+<article class="update-build-step"><header><span>07</span><div><small>PASTE NEXT / 次に貼る</small><h3>距離から巡回／追跡を選ぶ</h3></div></header><p>Hypotで距離を求め、EnemyModeへ今のstateと二つのしきい値を渡します。追い始める距離と諦める距離を分けることでガタつきを防ぎます。</p><div class="update-go-note"><b>GO</b><span>状態遷移を純粋関数にすると、距離の境界を表形式でテストできます。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 7/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>		dist := math.Hypot(playerCX-e.x, playerCY-e.y)
+		e.state = lessonlogic.EnemyMode(e.state, dist, 165, 230)</code></pre></div></article>
+<article class="update-build-step"><header><span>08</span><div><small>PASTE NEXT / 次に貼る</small><h3>巡回と追跡で速度の作り方を変える</h3></div></header><p>state 0なら一定時間ごとに方向転換、それ以外ならプレイヤー方向の単位速度を求めます。distが0なら割り算を守ります。</p><div class="update-go-note"><b>GO</b><span>同じe.vx/e.vyへ合流させるため、後の移動処理はAIの種類を知りません。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 8/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>		if e.state == 0 {
+			e.timer--
+			if e.timer &lt;= 0 {
+				e.vx, e.vy = -e.vy, e.vx
+				if e.vx == 0 &amp;&amp; e.vy == 0 {
+					e.vx = 1.1
+				}
+				e.timer = 100
+			}
+		} else {
+			if dist &lt; 1 {
+				dist = 1 // 重なったときの 0 割り（NaN）を防ぐ
+			}
+			e.vx, e.vy = lessonlogic.AimVelocity(playerCX-e.x, playerCY-e.y, 1.35)
+		}</code></pre></div></article>
+<article class="update-build-step"><header><span>09</span><div><small>PASTE NEXT / 次に貼る</small><h3>敵も横、次に縦へ動かす</h3></div></header><p>決まった速度を二回のmoveEnemyへ渡します。AIの判断と衝突解決を別の仕事に保ちます。</p><div class="update-go-note"><b>GO</b><span>考える処理と動かす処理を分けると、新しいAIを足しやすくなります。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 9/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>		g.moveEnemy(e, e.vx, 0)
+		g.moveEnemy(e, 0, e.vy)</code></pre></div></article>
+<article class="update-build-step"><header><span>10</span><div><small>PASTE NEXT / 次に貼る</small><h3>剣先との距離で敵を倒す</h3></div></header><p>向き×30で剣先を作り、攻撃の前半と距離35以内が重なった時だけalive=falseにします。</p><div class="update-go-note"><b>GO</b><span>見えない当たり判定も、座標と距離という同じ道具で作れます。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 10/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>		// 剣の先端に当たったら倒す
+		swordX := playerCX + g.facingX*30
+		swordY := playerCY + g.facingY*30
+		if g.attack &gt; 8 &amp;&amp; math.Hypot(swordX-e.x, swordY-e.y) &lt; 35 {
+			e.alive = false
+		}</code></pre></div></article>
+<article class="update-build-step"><header><span>11</span><div><small>PASTE NEXT / 次に貼る</small><h3>接触ダメージを一度だけ処理する</h3></div></header><p>近く、かつ攻撃中でない時にlifeを減らし、attack=55をのけぞり兼無敵時間にします。0以下ならgameOverです。</p><div class="update-go-note"><b>GO</b><span>&amp;&amp; は全条件を満たす時だけ危険を成立させます。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 11/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>		// 接触ダメージ（攻撃中は受けない）
+		if dist &lt; 22 &amp;&amp; g.attack == 0 {
+			g.life--
+			g.attack = 55 // のけぞりも兼ねる
+			if g.life &lt;= 0 {
+				g.gameOver = true
+			}
+		}
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>12</span><div><small>PASTE NEXT / 次に貼る</small><h3>全滅と出口位置を勝利条件にする</h3></div></header><p>aliveCountが0で、出口の座標範囲に入った時だけclearedです。敵を無視して出口へ走ることはできません。</p><div class="update-go-note"><b>GO</b><span>複数の事実を&amp;&amp;で組み合わせると、物語の条件になります。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 12/12</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// 敵を全滅して出口へ
+	if g.aliveCount() == 0 &amp;&amp; g.player.y &lt; 115 &amp;&amp; g.player.x &gt; 390 {
+		g.cleared = true
+	}
+	return nil
+}</code></pre></div></article></div><div class="update-workshop-finish"><strong>できあがり</strong><p>Updateは入力とゲーム状態を進める仕事だけを持ちます。Drawを別の絵へ交換しても、ここで組み立てた操作・時間・衝突・勝敗は変わりません。</p></div></section>
+<!-- core-update-workshop:end -->
 
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT STATE MACHINE</p><h3>ただ追いかけるだけ</h3><p>常にプレイヤーへ向かうだけの敵は、最初から画面端からまっすぐ突進してきます。予測が簡単すぎて面白くありません。</p></article>

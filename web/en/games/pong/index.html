@@ -294,6 +294,22 @@ func main() {
 }
 </code></pre>
       </div>
+<!-- core-update-workshop:start -->
+<section class="core-update-workshop" id="update-workshop"><div class="update-workshop-intro"><p class="eyebrow">BUILD IT LINE BY LINE / UPDATE WORKSHOP</p><h2>Split a large Update into named jobs</h2><p>Pong's Update looks short because movement, AI, and reflection have meaningful method names—not because the hard parts disappeared.</p><div class="update-workshop-route"><b>1</b><span>Paste the full source above into main.go</span><i>→</i><b>2</b><span>Empty its Update, then paste the pieces below in order</span><i>→</i><b>3</b><span>Save and run after the final piece</span></div><p class="update-workshop-tip">Some braces intentionally stay open between pieces, so intermediate code may not compile yet. Each card explains what to paste, why it belongs here, and which Go feature helps. The snippets are extracted from the running game; after the final paste, Update exactly matches the real one.</p></div><div class="update-build-list"><article class="update-build-step"><header><span>01</span><div><small>PASTE NEXT</small><h3>Read one tick as three verbs</h3></div></header><p>Update player, CPU, then ball. Details live in small methods while Update shows the whole game's order at a glance.</p><div class="update-go-note"><b>GO</b><span>Small Go methods are executable headings, more precise than comments.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 1/2</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>func (g *game) Update() error {
+	g.movePlayer()
+	g.moveCPU()
+	g.bounceBall()</code></pre></div></article>
+<article class="update-build-step"><header><span>02</span><div><small>PASTE NEXT</small><h3>Score by the side the ball exited</h3></div></header><p>switch maps ExitScore to player or CPU points. serve receives 1 or -1 for the next direction.</p><div class="update-go-note"><b>GO</b><span>Cases keep parallel outcomes easy to extend.</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 2/2</span><button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy this part</button></div><pre><code>	switch lessonlogic.ExitScore(g.ballY, -20, screenHeight+20) {
+	case 0: // 上に抜けたらプレイヤーの得点
+		g.playerScore++
+		g.serve(1)
+	case 1: // 下に抜けたら CPU の得点
+		g.cpuScore++
+		g.serve(-1)
+	}
+	return nil
+}</code></pre></div></article></div><div class="update-workshop-finish"><strong>COMPLETE</strong><p>Update owns only input and advancing game state. Replace Draw with another presentation and the controls, timing, collisions, and outcomes assembled here remain unchanged.</p></div></section>
+<!-- core-update-workshop:end -->
 
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT VECTORS</p><h3>One number cannot aim a bounce</h3><p>Without separate axes, clean wall reflections are hard to express.</p></article>

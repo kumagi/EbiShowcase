@@ -64,7 +64,7 @@ func party() []actor {
 func newGame() *game {
 	prepareActiveRPGArt()
 	g := &game{ready: -1, best: 0, flashTarget: -1}
-	g.audio = audio.NewContext(audiolab.SampleRate)
+	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: W / 2, Y: H / 2}, ViewW: W, ViewH: H}
 	g.badge = ebiten.NewImage(20, 20)

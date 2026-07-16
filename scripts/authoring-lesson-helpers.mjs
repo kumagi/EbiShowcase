@@ -31,7 +31,7 @@ export function dualLayerCodeLesson(lesson) {
   <pre><code>${escapeHTML(lesson.entryCode)}</code></pre>
 </section>
 <section class="code-lesson">
-  <div><p class="eyebrow">${mechanismLabel}</p><h3>${escapeHTML(lesson.implementationPath)}</h3><p>${ja ? "入口が呼ぶ本物の仕組みです。入口と内部を混同せず、両方の場所をたどれます。" : "This is the real mechanism the entry calls. The two labelled layers keep source and explanation traceable."}</p></div>
+  <div><p class="eyebrow">${mechanismLabel}</p><h3>${escapeHTML(lesson.implementationPath)}</h3><p>${ja ? `上の ${escapeHTML(lesson.entryPath)} は開始設定を書く短いファイルです。移動・判定・得点などの処理はこのファイルにあり、次の抜粋で設定がどのルールへ渡るかを追えます。` : `The ${escapeHTML(lesson.entryPath)} file above only supplies the starting configuration. Movement, checks, scoring, and other rules live here; the excerpt below shows where that configuration is used.`}</p></div>
   <pre><code>${escapeHTML(lesson.implementationCode)}</code></pre>
 </section>
 <section class="why-grid"><article class="challenge"><p class="eyebrow">${ruleLabel}</p><h3>${ja ? "1つルールを書いて確かめよう" : "Write one rule, then verify it"}</h3><p>${escapeHTML(edit)}</p></article></section>`;

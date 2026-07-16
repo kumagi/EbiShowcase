@@ -342,6 +342,28 @@ func main() {
 }
 </code></pre>
       </div>
+<!-- core-update-workshop:start -->
+<section class="core-update-workshop" id="update-workshop"><div class="update-workshop-intro"><p class="eyebrow">BUILD IT LINE BY LINE / UPDATE工房</p><h2>ボール、命、ブロックを小さな規則でつなぐ</h2><p>複数のブロックがあってもUpdateの骨格は短くできます。まず世界を進め、その結果として失敗やクリアを判定します。</p><div class="update-workshop-route"><b>1</b><span>上の「ぜんぶのコード」を main.go へ貼る</span><i>→</i><b>2</b><span>そのUpdateを空にし、下の断片を番号順に貼る</span><i>→</i><b>3</b><span>最後の断片まで貼って保存し、動かす</span></div><p class="update-workshop-tip">途中は波かっこが閉じていない場合があり、まだ実行できなくて正常です。各カードでは「何を貼るか」だけでなく、「なぜこの順番か」「Goのどの書き方が役立つか」を一つずつ確認します。コードは完成ゲームの実物から取り出しているため、最後まで貼ると本物のUpdateと同じになります。</p></div><div class="update-build-list"><article class="update-build-step"><header><span>01</span><div><small>PASTE NEXT / 次に貼る</small><h3>操作・反射・破壊を順に進める</h3></div></header><p>パドルを動かしてから壁、最後にブロックとの衝突を処理します。一つ前の結果を次の仕事が読むため、順序がはっきりします。</p><div class="update-go-note"><b>GO</b><span>メソッド分割は、どこを直せばよいかも教えてくれます。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 1/3</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>func (g *game) Update() error {
+	g.movePaddle()
+	g.bounceWorld()
+	g.hitBricks()</code></pre></div></article>
+<article class="update-build-step"><header><span>02</span><div><small>PASTE NEXT / 次に貼る</small><h3>落下したら命を一つ使う</h3></div></header><p>SpendLifeは新しいlivesとgameOverを返します。最後の命なら全初期化、まだあればserveだけに分岐します。</p><div class="update-go-note"><b>GO</b><span>計算を純粋関数へ出すと、境界値1と0をテストしやすくなります。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 2/3</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// ボールが下に落ちた
+	if g.ballY &gt; screenHeight+15 {
+		var gameOver bool
+		g.lives, gameOver = lessonlogic.SpendLife(g.lives)
+		if gameOver {
+			*g = *newGame()
+		} else {
+			g.serve()
+		}
+	}</code></pre></div></article>
+<article class="update-build-step"><header><span>03</span><div><small>PASTE NEXT / 次に貼る</small><h3>残り0個をクリア条件にする</h3></div></header><p>aliveBrickCountが0なら新しいゲームへ置き換えます。『全部壊した』を数として表すため、ブロックの総数に依存しません。</p><div class="update-go-note"><b>GO</b><span>状態を数える関数名が、そのまま勝利条件の説明になります。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 3/3</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// ブロックを全部壊したらクリア → 最初から
+	if g.aliveBrickCount() == 0 {
+		*g = *newGame()
+	}
+	return nil
+}</code></pre></div></article></div><div class="update-workshop-finish"><strong>できあがり</strong><p>Updateは入力とゲーム状態を進める仕事だけを持ちます。Drawを別の絵へ交換しても、ここで組み立てた操作・時間・衝突・勝敗は変わりません。</p></div></section>
+<!-- core-update-workshop:end -->
 
     <div class="why-grid">
         <article><p class="eyebrow">WITHOUT A SLICE</p><h3>brick1, brick2, brick3…</h3><p>変数名を増やしていくと、すぐに行き詰まります。数を変えるたびにコードを書き直すことになります。</p></article>

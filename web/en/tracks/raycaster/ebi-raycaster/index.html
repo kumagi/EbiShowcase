@@ -24,7 +24,7 @@
   <!-- favicon:end -->
 </head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/raycaster/ebi-raycaster/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← From 2D to Pseudo-3D: Ray-cast Maze FPS</a><span>EXPERIMENT 06 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>Complete Three Ebi Raycaster Missions</h1><p>Combine enemies, a key, an exit, HP, damage, grades, and BEST records into three replayable maze-FPS missions.</p><div class="lesson-meta"><span>GO + EBITENGINE / PSEUDO 3D</span><strong>PLAYABLE</strong></div></div></section><!-- showcase-final:start -->
 <section class="showcase-final-bridge" aria-label="Showcase final step">
-  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>Now take the leap to a finished game.</h2><p>This final step connects the small mechanics, then makes a deliberate leap in art, motion, light, sound, UI, and replay value. You do not need to write it all at once—play first and see what Ebitengine can grow into.</p></div>
+  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>Unite a DDA 3D maze, depth-scaled enemies, and three rescue missions.</h2><p>This capstone combines a DDA 3D maze, depth-scaled enemies, and three rescue missions into one playable Update loop. Play it first, then identify where each earlier lesson now works inside the finished game.</p></div>
   <ul><li>a DDA 3D maze</li><li>depth-scaled enemies</li><li>three rescue missions</li></ul>
 </section>
 <!-- showcase-final:end -->
@@ -52,7 +52,7 @@ import "github.com/kumagi/EbiShowcase/internal/raycasterui"
 func main() { raycasterui.Run(raycasterui.EbiRaycaster) }</code></pre>
 </section>
 <section class="code-lesson">
-  <div><p class="eyebrow">HOW IT WORKS</p><h3>internal/raycaster (shared engine)</h3><p>This is the real mechanism the entry calls. The two labelled layers keep source and explanation traceable.</p></div>
+  <div><p class="eyebrow">HOW IT WORKS</p><h3>internal/raycaster (shared engine)</h3><p>The games/tracks/raycaster/ebi-raycaster/main.go file above only supplies the starting configuration. Movement, checks, scoring, and other rules live here; the excerpt below shows where that configuration is used.</p></div>
   <pre><code>// shared engine: Update decides movement and cast results
 hit := Cast(world, player, angle)</code></pre>
 </section>
