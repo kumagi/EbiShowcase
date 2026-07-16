@@ -1,9 +1,14 @@
 package main
 
 import (
+	"bytes"
+	"embed"
 	"fmt"
+	"image"
 	"image/color"
+	_ "image/png"
 	"math"
+	"sync"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
@@ -14,7 +19,6 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/cameralab"
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
-	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
@@ -26,6 +30,20 @@ const (
 	stopSpeed   = 0.11
 	friction    = 0.982
 	maxTurns    = 8
+)
+
+//go:embed assets/strike-pearl-coliseum.png assets/strike-allies-atlas.png assets/strike-enemies-atlas.png assets/strike-obstacles-atlas.png
+var strikeArtFS embed.FS
+
+var (
+	strikeArtOnce   sync.Once
+	strikeArt       map[string]*ebiten.Image
+	strikeAllies    [2]*ebiten.Image
+	strikeEnemies   [3]*ebiten.Image
+	strikeObstacles [3]*ebiten.Image
+	strikeFace14    *text.GoTextFace
+	strikeFace16    *text.GoTextFace
+	strikeFace20    *text.GoTextFace
 )
 
 type vec struct{ x, y float64 }
@@ -54,6 +72,7 @@ type game struct {
 	message                             string
 	won, lost                           bool
 	stage, totalTurns, bestTurns, shake int
+	tick                                int
 	pillars                             []vec
 	sparks                              []spark
 	audio                               *audio.Context
@@ -64,6 +83,7 @@ type game struct {
 }
 
 func newGame() *game {
+	loadStrikeArt()
 	g := &game{stage: 1}
 	g.audio = audio.NewContext(audiolab.SampleRate)
 	g.shader = shaderlab.NewPulse()
@@ -89,6 +109,7 @@ func (g *game) loadStage() {
 }
 
 func (g *game) Update() error {
+	g.tick++
 	if g.won || g.lost {
 		if retryPressed() {
 			if g.won && g.stage < 3 {
@@ -316,32 +337,35 @@ func (g *game) endTurn() {
 }
 
 func (g *game) Draw(screen *ebiten.Image) {
-	bgs := []color.RGBA{{10, 22, 41, 255}, {28, 25, 55, 255}, {54, 25, 35, 255}}
-	screen.Fill(bgs[g.stage-1])
+	drawStrikeCover(screen, strikeArt["arena"], 0, 0, screenW, screenH)
+	washes := []color.RGBA{{10, 106, 118, 10}, {82, 37, 128, 24}, {154, 28, 57, 30}}
+	vector.DrawFilledRect(screen, 0, 0, screenW, screenH, washes[g.stage-1], false)
 	ox := 0.0
 	if g.shake > 0 {
-		ox = math.Sin(float64(g.pulseFrames+g.turns)*2) * 5
+		ox = math.Sin(float64(g.tick)*2.4) * 5
 	}
+	vector.DrawFilledRect(screen, 10, 8, 460, 78, color.RGBA{4, 15, 31, 226}, true)
+	vector.StrokeRect(screen, 10, 8, 460, 78, 2, color.RGBA{255, 225, 157, 165}, true)
 	g.drawTitle(screen)
-	g.drawEffectBadge(screen)
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("STAGE %d/3 TURN %d/%d ALLY %d ENEMIES %d BEST %d", g.stage, g.turns, maxTurns, g.active+1, g.alive(), g.bestTurns), 55, 49)
-	ebitenutil.DebugPrintAt(screen, g.message, 78, 74)
-	vector.DrawFilledRect(screen, 18, 88, 444, 505, color.RGBA{25, 55, 72, 255}, false)
-	vector.StrokeRect(screen, 18, 88, 444, 505, 4, color.RGBA{83, 137, 158, 255}, false)
+	drawCenteredStrikeLabel(screen, fmt.Sprintf("STAGE %d/3   •   TURN %d/%d   •   TARGETS %d   •   BEST %d", g.stage, g.turns, maxTurns, g.alive(), g.bestTurns), 240, 35, strikeFace14, color.White)
+	drawCenteredStrikeLabel(screen, g.message, 240, 59, strikeFace14, color.RGBA{140, 239, 247, 255})
+	vector.StrokeRect(screen, 18, 92, 444, 500, 3, color.RGBA{103, 218, 231, 105}, true)
 
 	for _, p := range g.pillars {
-		trackatlas.DrawCentered(screen, "peg", p.x+ox, p.y, 48)
+		vector.DrawFilledCircle(screen, float32(p.x+ox), float32(p.y+18), 30, color.RGBA{2, 13, 27, 85}, true)
+		drawStrikeSprite(screen, strikeObstacles[g.stage-1], p.x+ox, p.y, 76, 0, 1, false)
 	}
 	for _, e := range g.enemies {
 		if e.hp <= 0 {
 			continue
 		}
-		if e.cooldown > 0 {
-			trackatlas.DrawTinted(screen, "leaf-guard", e.pos.x+ox, e.pos.y, enemyRadius*2, 1.3, 1.1, 0.7, 1)
-		} else {
-			trackatlas.DrawCentered(screen, "leaf-guard", e.pos.x+ox, e.pos.y, enemyRadius*2)
-		}
-		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("HP%d", e.hp), int(e.pos.x)-11, int(e.pos.y)-5)
+		size := []float64{76, 84, 98}[g.stage-1]
+		bob := math.Sin(float64(g.tick)*.09+e.pos.x) * 2.5
+		vector.DrawFilledCircle(screen, float32(e.pos.x+ox), float32(e.pos.y+size*.27), float32(size*.32), color.RGBA{2, 12, 28, 95}, true)
+		drawStrikeSprite(screen, strikeEnemies[g.stage-1], e.pos.x+ox, e.pos.y+bob, size, 0, 1, e.cooldown > 0)
+		vector.DrawFilledRect(screen, float32(e.pos.x-24+ox), float32(e.pos.y+size*.42), 48, 21, color.RGBA{4, 16, 31, 220}, true)
+		vector.StrokeRect(screen, float32(e.pos.x-24+ox), float32(e.pos.y+size*.42), 48, 21, 1, color.RGBA{255, 123, 133, 175}, true)
+		drawCenteredStrikeLabel(screen, fmt.Sprintf("HP %d", e.hp), e.pos.x+ox, e.pos.y+size*.42+2, strikeFace14, color.White)
 	}
 	for _, p := range g.sparks {
 		vector.DrawFilledCircle(screen, float32(p.x+ox), float32(p.y), float32(2+p.life/14), color.RGBA{255, 211, 62, 255}, true)
@@ -351,11 +375,16 @@ func (g *game) Draw(screen *ebiten.Image) {
 		vector.StrokeCircle(screen, float32(g.pulseAt.x), float32(g.pulseAt.y), r, 5, color.RGBA{250, 210, 72, 210}, false)
 	}
 	for i, a := range g.allies {
-		trackatlas.DrawCentered(screen, "ally", a.pos.x, a.pos.y, allyRadius*2)
-		if i == g.active && !g.moving {
-			vector.StrokeCircle(screen, float32(a.pos.x), float32(a.pos.y), allyRadius+2, 4, color.RGBA{252, 205, 68, 255}, false)
+		angle := math.Sin(float64(g.tick)*.08+float64(i)) * .035
+		if g.moving && i == g.active {
+			angle = math.Atan2(a.velocity.y, a.velocity.x) + float64(g.tick)*.16
 		}
-		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("A%d", i+1), int(a.pos.x)-7, int(a.pos.y)-5)
+		vector.DrawFilledCircle(screen, float32(a.pos.x), float32(a.pos.y+18), 29, color.RGBA{2, 12, 28, 90}, true)
+		drawStrikeSprite(screen, strikeAllies[i], a.pos.x, a.pos.y, 76, angle, 1, false)
+		if i == g.active && !g.moving {
+			vector.StrokeCircle(screen, float32(a.pos.x), float32(a.pos.y), 42+float32(math.Sin(float64(g.tick)*.12)*3), 4, color.RGBA{255, 222, 105, 235}, true)
+			vector.StrokeCircle(screen, float32(a.pos.x), float32(a.pos.y), 49, 1, color.RGBA{117, 240, 255, 145}, true)
+		}
 	}
 	if g.dragging {
 		a := g.allies[g.active]
@@ -366,10 +395,27 @@ func (g *game) Draw(screen *ebiten.Image) {
 			t := float64(i) * .55
 			vector.DrawFilledCircle(screen, float32(a.pos.x+pull.x*.105*t), float32(a.pos.y+pull.y*.105*t), 3, color.RGBA{255, 255, 255, 150}, true)
 		}
+		// A translucent landing reticle makes the slingshot payoff obvious.
+		landX := a.pos.x + pull.x*.72
+		landY := a.pos.y + pull.y*.72
+		vector.StrokeCircle(screen, float32(landX), float32(landY), 24, 3, color.RGBA{255, 229, 126, 170}, true)
 	}
-	ebitenutil.DebugPrintAt(screen, "DRAG ACTIVE ALLY BACKWARD, THEN RELEASE", 89, 620)
-	ebitenutil.DebugPrintAt(screen, "Touch ally = wave  |  Touch enemy = direct hit", 74, 650)
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("FRICTION %.3f  |  STOP %.2f", friction, stopSpeed), 151, 680)
+	vector.DrawFilledRect(screen, 15, 605, 450, 76, color.RGBA{4, 15, 31, 220}, true)
+	vector.StrokeRect(screen, 15, 605, 450, 76, 2, color.RGBA{255, 226, 150, 140}, true)
+	drawCenteredStrikeLabel(screen, "DRAG THE GLOWING HERO BACKWARD — RELEASE TO STRIKE", 240, 620, strikeFace14, color.RGBA{255, 240, 202, 255})
+	drawCenteredStrikeLabel(screen, "HIT YOUR PARTNER FOR A 165px ALLY WAVE", 240, 645, strikeFace14, color.RGBA{126, 242, 255, 255})
+	drawCenteredStrikeLabel(screen, fmt.Sprintf("FRICTION %.3f   •   STOP %.2f", friction, stopSpeed), 240, 668, strikeFace14, color.RGBA{206, 220, 232, 255})
+	if g.tick < 150 && g.stage == 1 {
+		alpha := uint8(235)
+		if g.tick > 105 {
+			alpha = uint8(max(0, 235-(g.tick-105)*5))
+		}
+		vector.DrawFilledRect(screen, 48, 96, 384, 62, color.RGBA{4, 17, 33, alpha}, true)
+		vector.StrokeRect(screen, 48, 96, 384, 62, 3, color.RGBA{255, 225, 126, alpha}, true)
+		drawCenteredStrikeLabel(screen, "PULL EBI BACK  •  HIT TARGETS  •  BOUNCE INTO MOMO", 240, 111, strikeFace14, color.RGBA{255, 244, 210, alpha})
+		drawCenteredStrikeLabel(screen, "CLEAR THE REEF IN 8 TURNS", 240, 135, strikeFace16, color.RGBA{128, 242, 255, alpha})
+	}
+	g.drawEffectBadge(screen)
 	if g.won {
 		msg := "STAGE CLEAR!\n\nTAP / ENTER FOR NEXT STAGE"
 		if g.stage == 3 {
@@ -382,15 +428,92 @@ func (g *game) Draw(screen *ebiten.Image) {
 	}
 }
 
-func (g *game) drawTitle(screen *ebiten.Image) {
-	const label = "EBI STRIKE / REEF RESCUE"
-	if face, err := uilab.Face("en", 16); err == nil {
-		op := &text.DrawOptions{}
-		op.GeoM.Translate(149, 9)
-		text.Draw(screen, label, face, op)
+func loadStrikeArt() {
+	strikeArtOnce.Do(func() {
+		strikeArt = make(map[string]*ebiten.Image, 4)
+		for key, filename := range map[string]string{
+			"arena":     "strike-pearl-coliseum.png",
+			"allies":    "strike-allies-atlas.png",
+			"enemies":   "strike-enemies-atlas.png",
+			"obstacles": "strike-obstacles-atlas.png",
+		} {
+			data, err := strikeArtFS.ReadFile("assets/" + filename)
+			if err != nil {
+				panic(err)
+			}
+			decoded, _, err := image.Decode(bytes.NewReader(data))
+			if err != nil {
+				panic(err)
+			}
+			strikeArt[key] = ebiten.NewImageFromImage(decoded)
+		}
+		allyAtlas := strikeArt["allies"]
+		for i := range strikeAllies {
+			strikeAllies[i] = allyAtlas.SubImage(image.Rect(i*512, 0, (i+1)*512, 512)).(*ebiten.Image)
+		}
+		enemyAtlas := strikeArt["enemies"]
+		obstacleAtlas := strikeArt["obstacles"]
+		for i := range strikeEnemies {
+			strikeEnemies[i] = enemyAtlas.SubImage(image.Rect(i*512, 0, (i+1)*512, 512)).(*ebiten.Image)
+			strikeObstacles[i] = obstacleAtlas.SubImage(image.Rect(i*512, 0, (i+1)*512, 512)).(*ebiten.Image)
+		}
+		strikeFace14, _ = uilab.Face("en", 14)
+		strikeFace16, _ = uilab.Face("en", 16)
+		strikeFace20, _ = uilab.Face("en", 20)
+	})
+}
+
+func drawStrikeCover(dst, img *ebiten.Image, x, y, w, h float64) {
+	b := img.Bounds()
+	scale := math.Max(w/float64(b.Dx()), h/float64(b.Dy()))
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(-float64(b.Min.X), -float64(b.Min.Y))
+	op.GeoM.Scale(scale, scale)
+	op.GeoM.Translate(x+(w-float64(b.Dx())*scale)/2, y+(h-float64(b.Dy())*scale)/2)
+	op.Filter = ebiten.FilterLinear
+	dst.DrawImage(img, op)
+}
+
+func drawStrikeSprite(dst, img *ebiten.Image, centerX, centerY, size, angle float64, alpha float32, flash bool) {
+	b := img.Bounds()
+	scale := size / float64(max(b.Dx(), b.Dy()))
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(-float64(b.Min.X)-float64(b.Dx())/2, -float64(b.Min.Y)-float64(b.Dy())/2)
+	op.GeoM.Scale(scale, scale)
+	op.GeoM.Rotate(angle)
+	op.GeoM.Translate(centerX, centerY)
+	if flash {
+		op.ColorScale.Scale(1, .25, .25, alpha)
+	} else {
+		op.ColorScale.ScaleAlpha(alpha)
+	}
+	op.Filter = ebiten.FilterLinear
+	dst.DrawImage(img, op)
+}
+
+func drawStrikeLabel(dst *ebiten.Image, label string, x, y float64, face *text.GoTextFace, c color.Color) {
+	if face == nil {
+		ebitenutil.DebugPrintAt(dst, label, int(x), int(y))
 		return
 	}
-	ebitenutil.DebugPrintAt(screen, label, 149, 21)
+	op := &text.DrawOptions{}
+	op.GeoM.Translate(x, y)
+	op.ColorScale.ScaleWithColor(c)
+	text.Draw(dst, label, face, op)
+}
+
+func drawCenteredStrikeLabel(dst *ebiten.Image, label string, centerX, y float64, face *text.GoTextFace, c color.Color) {
+	if face == nil {
+		ebitenutil.DebugPrintAt(dst, label, int(centerX)-len(label)*3, int(y))
+		return
+	}
+	w, _ := text.Measure(label, face, 0)
+	drawStrikeLabel(dst, label, centerX-w/2, y, face, c)
+}
+
+func (g *game) drawTitle(screen *ebiten.Image) {
+	const label = "EBI STRIKE / REEF RESCUE"
+	drawCenteredStrikeLabel(screen, label, 240, 13, strikeFace16, color.RGBA{255, 234, 188, 255})
 }
 
 func (g *game) drawEffectBadge(screen *ebiten.Image) {

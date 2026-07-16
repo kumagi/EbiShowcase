@@ -45,6 +45,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ACTIVE INDEX</p><h2>Keep every party member and change only “who fights now.”</h2><p class="lesson-lead">All three remain in the party slice and keep their own HP. The front is not a second copy; it is an <code>active</code> index. Switching changes that index to a reserve, but a <strong>planned switch</strong> and a <strong>replacement after fainting</strong> spend turns differently.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Point to the front by index</h3><p>Only <code>party[active]</code> attacks and receives counters. Reserve HP stays stored and continues where it left off when that member returns.</p><code>front := &amp;party[active]</code></article><article><span class="concept-number">2</span><h3>A planned switch spends an action</h3><p>Selecting a healthy reserve changes <code>active</code>, increments turn, and lets the enemy counter. A better matchup has a time cost.</p><code>active = reserve; turn++; enemyAttack()</code></article><article><span class="concept-number">3</span><h3>HP zero enters forced-switch state</h3><p>When the front faints, stop attacks and set <code>mustSwitch</code>. Normal turns cannot continue until a living reserve is selected.</p><code>if front.hp == 0 { mustSwitch = true }</code></article></div>
@@ -101,6 +117,14 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

@@ -55,7 +55,6 @@ type Game struct {
 	lastDelta                int
 	gradeTimer, shake, frame int
 	parts                    []particle
-	scene                    *ebiten.Image
 	audioContext             *audio.Context
 	audioPlayer              *audio.Player
 	offset                   int
@@ -98,7 +97,7 @@ func New(cfg Config) *Game {
 	if lang == "ja" {
 		state = "音声準備完了"
 	}
-	g := &Game{cfg: cfg, menu: true, best: map[string]int{}, scene: ebiten.NewImage(W, H), audioContext: audio.NewContext(48000), offset: storedInt("ebiShowcase.rhythm.offset"), lang: lang, audioState: state}
+	g := &Game{cfg: cfg, menu: true, best: map[string]int{}, audioContext: audio.NewContext(48000), offset: storedInt("ebiShowcase.rhythm.offset"), lang: lang, audioState: state}
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{ViewW: W, ViewH: H}
 	g.badge = ebiten.NewImage(20, 20)
@@ -323,19 +322,19 @@ func (g *Game) burst(lane, n int, c color.RGBA) {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.cam.ViewW, g.cam.ViewH = float64(screen.Bounds().Dx()), float64(screen.Bounds().Dy())
-	g.drawEffectBadge(screen)
 	if g.menu {
 		g.drawMenu(screen)
+		g.drawEffectBadge(screen)
 		return
 	}
-	g.scene.Clear()
-	g.drawPlay(g.scene)
+	scene := ebiten.NewImage(W, H)
+	g.drawPlay(scene)
 	op := &ebiten.DrawImageOptions{}
 	if g.shake > 0 {
 		op.GeoM.Translate(float64((g.frame%3-1)*3), float64(((g.frame/2)%3-1)*2))
 	}
-	screen.DrawImage(g.scene, op)
+	screen.DrawImage(scene, op)
+	g.drawEffectBadge(screen)
 }
 
 func (g *Game) drawEffectBadge(screen *ebiten.Image) {
@@ -353,6 +352,19 @@ func (g *Game) drawEffectBadge(screen *ebiten.Image) {
 
 func (g *Game) drawMenu(s *ebiten.Image) {
 	s.Fill(color.RGBA{9, 17, 35, 255})
+	// Animated concert rig behind the menu: the capstone looks alive before
+	// audio permission or the first tap, while no song state advances in Draw.
+	for i := 0; i < 4; i++ {
+		x := float32(58 + i*122)
+		beam := color.RGBA{46 + uint8(i*18), 150, 210, 42}
+		vector.StrokeLine(s, x, 95, 240+float32((i-2)*35), 690, 18, beam, true)
+	}
+	for i := 0; i < 18; i++ {
+		x := float32(12 + i*27)
+		h := float32(12 + (i*31+g.frame*2)%62)
+		vector.DrawFilledRect(s, x, 690-h, 16, h, color.RGBA{39, 210, 191, 55}, true)
+	}
+	vector.DrawFilledCircle(s, 240, 105, 76+float32(math.Sin(float64(g.frame)*.06)*6), color.RGBA{224, 74, 153, 30}, true)
 	rhythmLabel(s, g.cfg.Title, 118, 42, color.RGBA{46, 230, 200, 255}, 21)
 	rhythmLabel(s, g.cfg.Subtitle, 48, 76, color.RGBA{210, 220, 238, 255}, 14)
 	rhythmLabel(s, g.tr("CHOOSE SONG  [LEFT / RIGHT]", "曲を選ぶ  [← / →]"), 106, 132, color.RGBA{255, 211, 112, 255}, 15)

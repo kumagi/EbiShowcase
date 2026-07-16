@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	_ "embed"
 	"fmt"
+	"image"
 	"image/color"
 	"math"
 	"math/rand"
@@ -15,9 +18,60 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/cameralab"
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
-	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
+
+//go:embed assets/pearl-nursery-v2.png
+var nurseryPNG []byte
+
+//go:embed assets/merge-creatures.png
+var creaturesPNG []byte
+
+var nurseryArt, creaturesArt *ebiten.Image
+var creatureRects []image.Rectangle
+
+func loadGeneratedArt() {
+	decode := func(data []byte) image.Image {
+		im, _, err := image.Decode(bytes.NewReader(data))
+		if err != nil {
+			panic(err)
+		}
+		return im
+	}
+	nursery := decode(nurseryPNG)
+	creatures := decode(creaturesPNG)
+	nurseryArt, creaturesArt = ebiten.NewImageFromImage(nursery), ebiten.NewImageFromImage(creatures)
+	creatureRects = opaqueCells(creatures, 7)
+}
+
+// opaqueCells removes the generous transparent staging area around each
+// generated atlas pose. Physics still uses radii; this only makes the artwork
+// occupy the same readable diameter on screen.
+func opaqueCells(atlas image.Image, cells int) []image.Rectangle {
+	bounds := atlas.Bounds()
+	cellW := bounds.Dx() / cells
+	result := make([]image.Rectangle, cells)
+	for cell := 0; cell < cells; cell++ {
+		base := image.Rect(bounds.Min.X+cell*cellW, bounds.Min.Y, bounds.Min.X+(cell+1)*cellW, bounds.Max.Y)
+		minX, minY, maxX, maxY := base.Max.X, base.Max.Y, base.Min.X, base.Min.Y
+		for y := base.Min.Y; y < base.Max.Y; y++ {
+			for x := base.Min.X; x < base.Max.X; x++ {
+				_, _, _, a := atlas.At(x, y).RGBA()
+				if a < 0x0800 {
+					continue
+				}
+				minX, minY = min(minX, x), min(minY, y)
+				maxX, maxY = max(maxX, x+1), max(maxY, y+1)
+			}
+		}
+		if minX >= maxX || minY >= maxY {
+			result[cell] = base
+		} else {
+			result[cell] = image.Rect(minX, minY, maxX, maxY)
+		}
+	}
+	return result
+}
 
 const width, height = 480, 720
 
@@ -48,11 +102,16 @@ type game struct {
 }
 
 func newGame() *game {
+	if nurseryArt == nil {
+		loadGeneratedArt()
+	}
 	b := ebiten.NewImage(20, 20)
 	b.Fill(color.RGBA{255, 130, 80, 255})
 	g := &game{rng: rand.New(rand.NewSource(4806)), cursor: 240, level: 1, audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), cam: cameralab.State{Pos: cameralab.Vec{240, 360}, ViewW: width, ViewH: height}, badge: b}
 	g.next = g.rng.Intn(3)
 	g.after = g.rng.Intn(3)
+	// A prepared opening board communicates the merge goal immediately.
+	g.fruits = []fruit{{x: 130, y: 642, tier: 1}, {x: 175, y: 638, tier: 1}, {x: 310, y: 632, tier: 2}, {x: 368, y: 640, tier: 0}}
 	return g
 }
 func (g *game) Update() error {
@@ -220,13 +279,19 @@ func (g *game) Draw(s *ebiten.Image) {
 			s.DrawImage(fx, op)
 		}
 	}
-	bgs := []color.RGBA{{18, 28, 44, 255}, {39, 28, 55, 255}, {52, 29, 31, 255}}
-	s.Fill(bgs[g.level-1])
+	drawCover(s, nurseryArt)
+	vector.DrawFilledRect(s, 0, 0, width, height, color.RGBA{2, 13, 35, 50}, false)
 	ox := 0.0
 	if g.shake > 0 {
 		ox = math.Sin(float64(g.cooldown+g.comboTimer)*2) * 5
 	}
-	vector.DrawFilledRect(s, 20+float32(ox), 70, 440, 615, color.RGBA{35, 44, 61, 255}, false)
+	// The tank is glass, not an opaque debug rectangle: keep the generated
+	// nursery visible while a restrained tint preserves sprite contrast.
+	vector.DrawFilledRect(s, 20+float32(ox), 70, 440, 615, color.RGBA{10, 28, 56, 128}, false)
+	vector.StrokeRect(s, 20+float32(ox), 70, 440, 615, 5, color.RGBA{245, 184, 84, 180}, false)
+	// Glass shine and bin lip sell the physical toy-box presentation.
+	vector.DrawFilledRect(s, 30+float32(ox), 82, 18, 570, color.RGBA{255, 255, 255, 18}, false)
+	vector.DrawFilledRect(s, 30+float32(ox), 650, 420, 25, color.RGBA{91, 65, 73, 230}, false)
 	line := color.RGBA{240, 90, 95, 90}
 	if g.danger > 0 {
 		line = color.RGBA{255, 70, 75, 220}
@@ -238,15 +303,19 @@ func (g *game) Draw(s *ebiten.Image) {
 		if g.comboTimer > 90 {
 			pulse = 1.08
 		}
-		trackatlas.DrawCentered(s, trackatlas.Merge(f.tier+1), f.x+ox, f.y, r*2*pulse)
-		ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d", f.tier+1), int(f.x)-3, int(f.y)-5)
+		drawCreature(s, f.tier, f.x+ox, f.y, r*2*pulse)
 	}
 	for _, p := range g.sparks {
 		vector.DrawFilledCircle(s, float32(p.x+ox), float32(p.y), float32(2+p.life/15), p.c, true)
 	}
 	vector.StrokeLine(s, float32(g.cursor), 75, float32(g.cursor), 135, 2, color.RGBA{255, 255, 255, 130}, false)
-	trackatlas.DrawCentered(s, trackatlas.Merge(g.next+1), g.cursor, 92, radii[g.next]*2)
+	drawCreature(s, g.next, g.cursor, 92, radii[g.next]*2)
+	vector.DrawFilledRect(s, 340, 82, 96, 70, color.RGBA{7, 13, 28, 210}, false)
+	ebitenutil.DebugPrintAt(s, "UP NEXT", 355, 91)
+	drawCreature(s, g.after, 390, 126, radii[g.after]*1.2)
 	target := []int{5, 6, 7}[g.level-1]
+	vector.DrawFilledRect(s, 12, 10, 456, 50, color.RGBA{5, 12, 27, 225}, false)
+	drawCreature(s, target-1, 34, 35, 40)
 	if f, e := uilab.Face("en", 16); e == nil {
 		op := &text.DrawOptions{}
 		op.GeoM.Translate(55, 25)
@@ -254,7 +323,7 @@ func (g *game) Draw(s *ebiten.Image) {
 	} else {
 		ebitenutil.DebugPrintAt(s, fmt.Sprintf("STAGE %d/3 SCORE %05d BEST %05d COMBO x%d", g.level, g.score, g.best, g.combo), 55, 25)
 	}
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("NEXT %d AFTER %d DANGER %03d/180 TARGET TIER %d", g.next+1, g.after+1, g.danger, target), 65, 48)
+	ebitenutil.DebugPrintAt(s, fmt.Sprintf("MERGE TWINS → TIER %d      DANGER %03d/180", target, g.danger), 86, 48)
 	ebitenutil.DebugPrintAt(s, "MOVE POINTER, TAP TO DROP — BUILD THE TARGET", 65, 700)
 	if g.clear {
 		msg := "STAGE CLEAR!\n\nTAP / SPACE FOR NEXT STAGE"
@@ -265,6 +334,29 @@ func (g *game) Draw(s *ebiten.Image) {
 	} else if g.over {
 		overlay(s, "STACK CROSSED THE LINE!\n\nTAP / SPACE TO RETRY")
 	}
+}
+
+func drawCreature(dst *ebiten.Image, tier int, cx, cy, size float64) {
+	if tier < 0 || tier >= len(radii) || creaturesArt == nil {
+		return
+	}
+	r := creatureRects[tier]
+	w, h := r.Dx(), r.Dy()
+	src := creaturesArt.SubImage(r).(*ebiten.Image)
+	op := &ebiten.DrawImageOptions{}
+	scale := size / float64(max(w, h))
+	op.GeoM.Scale(scale, scale)
+	op.GeoM.Translate(cx-float64(w)*scale/2, cy-float64(h)*scale/2)
+	dst.DrawImage(src, op)
+}
+
+func drawCover(dst, src *ebiten.Image) {
+	w, h := float64(src.Bounds().Dx()), float64(src.Bounds().Dy())
+	scale := math.Max(width/w, height/h)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(scale, scale)
+	op.GeoM.Translate((width-w*scale)/2, (height-h*scale)/2)
+	dst.DrawImage(src, op)
 }
 func pointerX() (int, bool) {
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {

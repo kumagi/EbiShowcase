@@ -45,6 +45,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SEEDED VALUE NOISE</p><h2>Rebuild a large world from a number and coordinates.</h2><p class="lesson-lead">Choosing an unrelated height in every column makes needle-like ground. This game makes the same random value from seed and coordinates, then smoothly connects neighboring values with <strong>value noise</strong>. Once height is known, depth selects grass, dirt, or stone.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Mix seed and coordinates</h3><p><code>hash(seed, x, y)</code> returns the same value whenever those three numbers match. It does not depend on generation order, so a distant location can be built directly.</p><code>n := hash(seed, x, y)</code></article><article><span class="concept-number">2</span><h3>Smooth between samples</h3><p>Use a random marker every eight columns, then change gradually between them with <code>smooth</code>. Heights are less likely to jump many blocks at once.</p><code>height := 3 + int(valueNoise(seed, x/8)*6)</code></article><article><span class="concept-number">3</span><h3>Choose layers by depth</h3><p>The surface cell is grass, the next three are dirt, and deeper cells are stone. Turning stone with cave noise above 0.70 back into air makes caverns.</p><code>if y &gt; surface+3 { tile = Stone }</code></article></div>
@@ -99,6 +115,14 @@ for y := surfaceY; y &lt; worldH; y++ {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

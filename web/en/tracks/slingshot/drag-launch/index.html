@@ -73,6 +73,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / OPPOSITE VECTOR</p><h2>Flip the pull arrow with a minus sign.</h2><p class="lesson-lead">Store the difference from the pearl's center to the pointer as a <strong>drag vector</strong>. On release, put a minus sign on both X and Y. That makes launch velocity point exactly opposite the pull.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Subtract two points</h3><p>Subtract the pearl position from the pointer. Pulling right makes dragX positive; pulling down makes dragY positive.</p><code>dragX = pointerX - ballX</code></article><article><span class="concept-number">2</span><h3>Limit long pulls</h3><p>If length exceeds 160, shrink the vector without changing its direction. Pulling beyond the screen cannot create wild speed.</p><code>dx *= 160 / length</code></article><p class="lab-hint">Multiply by 160/length to keep direction while capping length at 160.</p><article><span class="concept-number">3</span><h3>Launch oppositely</h3><p>Only on release, negate dragX and dragY to make velocity. A pearl pulled downward launches upward.</p><code>velocity = -drag * power</code></article></div>
 <div class="motion-lab" data-lab="sling-drag"><div class="lab-copy"><p class="eyebrow">TRY IT / VECTOR LENGTH</p><h3>How does combining directions change length?</h3><p>Compare a horizontal vector with a diagonal one. The game measures length and caps it so an overlong pull stays controlled.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-cardinal data-go-focus="drag len">Pull sideways</button><button type="button" class="lab-button" data-lab-diag data-go-focus="drag len clamp">Pull diagonally</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Raw length</span><strong data-lab-raw>—</strong></div><div><span>Normalized length</span><strong data-lab-norm>—</strong></div></div></div>
@@ -121,6 +137,14 @@ if released {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

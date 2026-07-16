@@ -22,7 +22,13 @@
   <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
   <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
   <!-- favicon:end -->
-</head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/topdown-adventure/ebi-adventure/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Top-down Action Adventure</a><span>STEP 08 / 08</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Relic Dungeon</h1><p>Clear one four-room dungeon combining a key gate, sealed battle, three-tool puzzle, and three-phase boss.</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Relic Dungeon</h2><p>Move with arrows/WASD or screen buttons. Attack with X/Space/ATTACK and change tools with Q/TOOL.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-adventure/?lang=en" title="Ebi Relic Dungeon" allow="autoplay; fullscreen"></iframe></div></section>
+</head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/topdown-adventure/ebi-adventure/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Top-down Action Adventure</a><span>STEP 08 / 08</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Relic Dungeon</h1><p>Clear one four-room dungeon combining a key gate, sealed battle, three-tool puzzle, and three-phase boss.</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- showcase-final:start -->
+<section class="showcase-final-bridge" aria-label="Showcase final step">
+  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>Now take the leap to a finished game.</h2><p>This final step connects the small mechanics, then makes a deliberate leap in art, motion, light, sound, UI, and replay value. You do not need to write it all at once—play first and see what Ebitengine can grow into.</p></div>
+  <ul><li>a painted relic shrine</li><li>a four-room quest</li><li>a three-phase boss</li></ul>
+</section>
+<!-- showcase-final:end -->
+<section class="play-panel"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Relic Dungeon</h2><p>Move with arrows/WASD or screen buttons. Attack with X/Space/ATTACK and change tools with Q/TOOL.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-adventure/?lang=en" title="Ebi Relic Dungeon" allow="autoplay; fullscreen"></iframe></div></section>
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Ebi Relic Dungeon</h2><p>The final game does not update every room at once. It loads only the data and rules for the current stage. Attack, hurt, keys, puzzles, and boss pass one game state through win, loss, score, and BEST.</p><div class="concept-row"><article><span class="concept-number">1</span><h3>DATA</h3><p>This step entry passes only its lesson number. The shared game selects room data and rules.</p><code>Run(8)</code></article><article><span class="concept-number">2</span><h3>UPDATE</h3><p>Update resolves input, movement, attacks, and room rules in order.</p><code>Update → resolve room</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>Draw turns the current room and state into a picture; it does not change state.</p><code>Draw(state)</code></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM DIAGRAM / TRY IT</p><h2>Resolve attack, hurt, locks, and puzzles in one update order</h2><p>The final game does not update every room at once. It loads only the data and rules for the current stage. Attack, hurt, keys, puzzles, and boss pass one game state through win, loss, score, and BEST.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">INPUT</p><button type="button" class="lab-action">NEXT</button></div></section><section class="formula"><p class="eyebrow">STATE FLOW</p><div class="formula-lines"><code>input</code><span>→</span><code>update state</code><span>→</span><code>resolve result</code><span>→</span><code>draw feedback</code></div><p>Replay against score and BEST after the boss</p></section><!-- update-draw-contract:start -->
@@ -106,4 +112,39 @@ func main() { topdownadventuregame.Run(8) }</code></pre>
         </form>
       </div>
     </section>
+<!-- capstone-renderers:start -->
+<section class="capstone-renderers" aria-label="Draw-only renderer bonus">
+  <div class="capstone-renderers-copy">
+    <p class="eyebrow">BONUS / DRAW ONLY</p>
+    <h2>Same game. Different ways to make the picture.</h2>
+    <p>This WASM is built from the same package as the finished game above. It delegates to the original <code>Update</code> and <code>Layout</code> unchanged. One Draw snapshot is projected simultaneously as polished art, edge lines, and a rectangle mosaic. Position, score, enemies, collision, and time exist only once.</p>
+  </div>
+  <div class="capstone-renderers-facts">
+    <article><b>01</b><h3>UPDATE</h3><p>Advances input and game facts once for every view.</p></article>
+    <article><b>02</b><h3>LAYOUT</h3><p>Returns the original game's size unchanged.</p></article>
+    <article><b>03</b><h3>DRAW</h3><p>Only changes how one snapshot is presented.</p></article>
+  </div>
+  <div class="capstone-renderers-demo">
+    <iframe data-shared-demo="capstone-renderers" src="../../../../play/ebi-adventure-renderer/" loading="lazy" title="The same finished game shown through three Draw styles" allow="autoplay; fullscreen"></iframe>
+  </div>
+  <div class="capstone-renderers-code">
+    <div><p class="eyebrow">THE ONLY BOUNDARY</p><h3>Update and Layout pass straight to the original game.</h3><p>The rectangle view shrinks the snapshot to a small grid and restores it with nearest filtering. The wire view turns neighboring-pixel differences into lines with a Kage shader. Neither reads or writes game state.</p></div>
+    <pre><code>func (g *gallery) Update() error {
+    return g.inner.Update()
+}
+
+func (g *gallery) Layout(w, h int) (int, int) {
+    return g.inner.Layout(w, h)
+}
+
+func (g *gallery) Draw(screen *ebiten.Image) {
+    snapshot := ebiten.NewImage(width, height)
+    g.inner.Draw(snapshot)
+    drawPolished(screen, snapshot)
+    drawWireframe(screen, snapshot)
+    drawRectangles(screen, snapshot)
+}</code></pre>
+  </div>
+</section>
+<!-- capstone-renderers:end -->
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

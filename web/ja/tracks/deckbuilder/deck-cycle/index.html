@@ -42,6 +42,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK CYCLE</p><h2>使ったカードは、どうやってもう一度手札に戻るの？</h2><p class="lesson-lead">カードを消さずに、<strong>山札 → 手札 → 捨て札</strong>と居場所だけ変えます。山札が空なら捨て札を山札へ移し、順番を混ぜてから続きを引きます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>山札から引く</h3><p>山札の最後の1枚を手札へ移します。1枚のカードが同時に2か所へ入らないよう、元の山札からは取り除きます。</p><code>hand = append(hand, draw[last])</code></article><article><span class="concept-number">2</span><h3>使ったら捨て札へ</h3><p>攻撃や防御を計算したあと、そのカードを手札から抜いて捨て札へ入れます。「捨てる」は削除ではなく次の出番待ちです。</p><code>discard = append(discard, played)</code></article><article><span class="concept-number">3</span><h3>空なら混ぜ直す</h3><p>山札が0枚になった瞬間だけ、捨て札を全部戻してシャッフルします。まだ山札がある間は混ぜません。</p><code>if len(draw) == 0 { reshuffle() }</code></article></div><div class="motion-lab" data-lab="energy-turn" data-max="5" data-empty="手札がない" data-spend="1枚プレイ" data-refill="ドローして手札回復" aria-labelledby="lab-title-deck-cycle">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / DRAW CYCLE</p>
@@ -87,6 +103,14 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

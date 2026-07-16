@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"image/color"
 	"math"
-	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
@@ -14,6 +13,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/cameralab"
+	"github.com/kumagi/EbiShowcase/internal/mobileart"
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
@@ -59,7 +59,6 @@ type game struct {
 	enter                                                        float64
 	ended                                                        bool
 	particles                                                    []particle
-	rng                                                          *rand.Rand
 	audio                                                        *audio.Context
 	gate                                                         audiolab.Gate
 	pulse                                                        *shaderlab.Pulse
@@ -70,7 +69,8 @@ type game struct {
 var collectedEndings int
 
 func newGame() *game {
-	g := &game{endingMask: collectedEndings, enter: 0, rng: rand.New(rand.NewSource(81))}
+	mobileart.Preload()
+	g := &game{endingMask: collectedEndings, enter: 0}
 	g.audio = audio.NewContext(audiolab.SampleRate)
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: W / 2, Y: H / 2}, ViewW: W, ViewH: H}
@@ -183,11 +183,17 @@ func (g *game) updateParticles() {
 }
 func (g *game) Draw(screen *ebiten.Image) {
 	s := story[g.node]
-	background(screen, s.chapter, g.frames)
+	backgrounds := [...]string{"visual-novel-harbor", "visual-novel-clock", "visual-novel-observatory"}
+	mobileart.DrawCover(screen, backgrounds[s.chapter-1], 0, 0, W, H)
+	// Chapter grading changes the mood without changing the shared location.
+	// It is a Draw-only interpretation of the story state.
+	chapterTint(screen, s.chapter)
 	dx, dy := 0, 0
 	if g.shake > 0 {
-		dx = g.rng.Intn(9) - 4
-		dy = g.rng.Intn(9) - 4
+		// Camera shake is derived only from Update-owned state. Draw never
+		// consumes randomness, so skipped Draw calls cannot change the story.
+		dx = (g.frames*17%9 - 4) * min(1, g.shake)
+		dy = (g.frames*29%7 - 3) * min(1, g.shake)
 	}
 	stage := ebiten.NewImage(W, H)
 	g.drawTitle(stage)
@@ -196,20 +202,26 @@ func (g *game) Draw(screen *ebiten.Image) {
 	for _, p := range g.particles {
 		vector.DrawFilledCircle(stage, float32(p.x), float32(p.y), 3, p.c, false)
 	}
-	vector.DrawFilledRect(stage, 18, 438, 444, 264, color.RGBA{5, 12, 29, 238}, false)
-	vector.StrokeRect(stage, 18, 438, 444, 264, 3, color.RGBA{244, 188, 78, 255}, false)
-	ebitenutil.DebugPrintAt(stage, fmt.Sprintf("CHAPTER %d / 3", s.chapter), 350, 454)
-	ebitenutil.DebugPrintAt(stage, s.speaker, 40, 466)
-	drawWrapped(stage, string([]rune(s.text)[:min(g.shown, len([]rune(s.text)))]), 40, 494, 49)
+	// Contemporary mobile dialogue UI: a glass panel, bright speaker tab and
+	// generous touch targets. The artwork remains visible above the panel.
+	vector.DrawFilledRect(stage, 16, 442, 448, 260, color.RGBA{3, 11, 27, 228}, false)
+	vector.StrokeRect(stage, 16, 442, 448, 260, 2, color.RGBA{115, 220, 225, 210}, false)
+	vector.DrawFilledRect(stage, 30, 426, 148, 42, color.RGBA{12, 76, 91, 245}, false)
+	vector.StrokeRect(stage, 30, 426, 148, 42, 2, color.RGBA{246, 206, 121, 255}, false)
+	drawLabel(stage, s.speaker, 46, 436, 18, color.White)
+	drawLabel(stage, fmt.Sprintf("CHAPTER %d / 3", s.chapter), 344, 452, 11, color.RGBA{176, 229, 234, 255})
+	drawWrappedFace(stage, string([]rune(s.text)[:min(g.shown, len([]rune(s.text)))]), 38, 486, 405, 17)
 	if g.shown >= len([]rune(s.text)) {
 		for i, ch := range s.choices {
 			y := 555 + i*62
-			vector.DrawFilledRect(stage, 36, float32(y), 408, 50, color.RGBA{54, 72 + uint8(i*10), 112, 255}, false)
-			vector.StrokeRect(stage, 36, float32(y), 408, 50, 2, color.RGBA{155, 190, 230, 255}, false)
-			ebitenutil.DebugPrintAt(stage, fmt.Sprintf("[%d] %s", i+1, ch.text), 52, y+19)
+			vector.DrawFilledRect(stage, 34, float32(y), 412, 50, color.RGBA{18, 67 + uint8(i*8), 88, 245}, false)
+			vector.StrokeRect(stage, 34, float32(y), 412, 50, 2, color.RGBA{120, 224, 225, 230}, false)
+			vector.DrawFilledCircle(stage, 56, float32(y+25), 14, color.RGBA{237, 190, 100, 255}, true)
+			drawLabel(stage, fmt.Sprintf("%d", i+1), 52, float64(y+16), 13, color.RGBA{18, 36, 48, 255})
+			drawLabel(stage, ch.text, 82, float64(y+15), 14, color.White)
 		}
 	} else {
-		ebitenutil.DebugPrintAt(stage, "SPACE / TAP: show the whole line", 123, 672)
+		drawLabel(stage, "TAP TO REVEAL  ◆", 304, 672, 10, color.RGBA{157, 220, 224, 255})
 	}
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(float64(dx), float64(dy))
@@ -242,62 +254,47 @@ func (g *game) drawEffectBadge(s *ebiten.Image) {
 	op.GeoM.Translate(W-34, 10)
 	s.DrawImage(fx, op)
 }
-func background(s *ebiten.Image, chapter, frames int) {
-	colors := []color.RGBA{{32, 39, 78, 255}, {42, 29, 68, 255}, {18, 31, 61, 255}}
-	s.Fill(colors[chapter-1])
-	for i := 0; i < 22; i++ {
-		x := float32((i*73 + chapter*31) % W)
-		y := float32((i*41 + frames/5) % 410)
-		a := uint8(100 + (i*7)%120)
-		vector.DrawFilledCircle(s, x, y, float32(1+i%3), color.RGBA{255, 230, 170, a}, false)
-	}
-	if chapter == 1 {
-		vector.DrawFilledRect(s, 0, 350, W, 88, color.RGBA{22, 65, 87, 255}, false)
-	} else if chapter == 2 {
-		vector.DrawFilledCircle(s, 240, 230, 120, color.RGBA{67, 57, 104, 255}, false)
-	} else {
-		vector.StrokeCircle(s, 240, 230, 125, 8, color.RGBA{141, 187, 229, 130}, false)
-	}
+func chapterTint(s *ebiten.Image, chapter int) {
+	tints := []color.RGBA{{8, 33, 57, 34}, {58, 23, 72, 38}, {6, 28, 65, 18}}
+	vector.DrawFilledRect(s, 0, 0, W, H, tints[chapter-1], false)
+	vector.DrawFilledRect(s, 0, 0, W, 54, color.RGBA{2, 10, 25, 145}, false)
 }
 func drawPortrait(s *ebiten.Image, sc scene, t float64, frames int) {
-	x := 240.0
+	x := 36.0
 	if sc.entrance == "slide" {
-		x = 540 - 300*t
-	} else if sc.speaker == "REN" || sc.speaker == "KEEPER" {
-		x = 120
+		x = 310 - 274*t
 	}
-	y := 260.0 + math.Sin(float64(frames)*.08)*3
+	y := 48.0 + math.Sin(float64(frames)*.08)*2
 	scale := 1.0
 	if sc.entrance == "pop" {
 		scale = .7 + .3*ease(t)
 	}
 	if sc.entrance == "bounce" {
-		y -= math.Sin(t*math.Pi) * 35
+		y -= math.Sin(t*math.Pi) * 22
 	}
-	alpha := uint8(min(255, int(t*255)))
-	body := color.RGBA{225, 104, 143, alpha}
-	if sc.speaker == "REN" {
-		body = color.RGBA{86, 155, 190, alpha}
+	name := "navigator"
+	if sc.speaker == "MIO" {
+		switch sc.expression {
+		case "worried":
+			name = "navigator-worried"
+		case "surprised", "thinking":
+			name = "navigator-surprised"
+		case "joy", "smile":
+			name = "navigator-joy"
+		}
+	} else if sc.speaker == "REN" {
+		name = "researcher"
 	} else if sc.speaker == "KEEPER" {
-		body = color.RGBA{151, 116, 190, alpha}
+		name = "keeper"
 	}
-	vector.DrawFilledRect(s, float32(x-72*scale), float32(y-10), float32(144*scale), float32(190*scale), body, false)
-	vector.DrawFilledCircle(s, float32(x), float32(y-45), float32(66*scale), color.RGBA{247, 204, 170, alpha}, false)
-	eyeY := float32(y - 54)
-	blink := frames%170 > 160
-	if blink {
-		vector.StrokeLine(s, float32(x-28), eyeY, float32(x-16), eyeY, 3, color.RGBA{35, 31, 50, alpha}, false)
-		vector.StrokeLine(s, float32(x+16), eyeY, float32(x+28), eyeY, 3, color.RGBA{35, 31, 50, alpha}, false)
-	} else {
-		vector.DrawFilledCircle(s, float32(x-22), eyeY, 4, color.RGBA{35, 31, 50, alpha}, false)
-		vector.DrawFilledCircle(s, float32(x+22), eyeY, 4, color.RGBA{35, 31, 50, alpha}, false)
+	w, h := 410*scale, 450*scale
+	mobileart.DrawContainAlpha(s, name, x+(410-w)/2, y+(450-h), w, h, sc.speaker == "REN", float32(min(1, t)))
+	// Non-MIO cast members currently use a single premium pose, so a restrained
+	// thought mark supports their state without pretending the portrait changed.
+	if sc.speaker != "MIO" && (sc.expression == "worried" || sc.expression == "thinking") {
+		vector.DrawFilledCircle(s, 412, 93, 27, color.RGBA{5, 22, 42, 210}, true)
+		drawLabel(s, "…", 400, 76, 24, color.RGBA{182, 234, 238, 255})
 	}
-	mouth := float32(8)
-	if sc.expression == "worried" {
-		mouth = -6
-	}
-	vector.StrokeLine(s, float32(x-10), float32(y-22), float32(x+10), float32(y-22+float64(mouth)), 3, color.RGBA{100, 43, 61, alpha}, false)
-	ebitenutil.DebugPrintAt(s, sc.speaker+" / "+sc.expression, int(x)-50, int(y+120))
 }
 func (g *game) drawEnding(s *ebiten.Image) {
 	vector.DrawFilledRect(s, 25, 175, 430, 370, color.RGBA{4, 10, 25, 248}, false)
@@ -315,13 +312,38 @@ func (g *game) drawEnding(s *ebiten.Image) {
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d / 4 endings found", bitCount(g.endingMask)), 169, 480)
 	ebitenutil.DebugPrintAt(s, "TAP / ENTER: TRY ANOTHER ROUTE", 116, 520)
 }
-func drawWrapped(s *ebiten.Image, t string, x, y, w int) {
-	r := []rune(t)
-	for len(r) > 0 {
-		n := min(w, len(r))
-		ebitenutil.DebugPrintAt(s, string(r[:n]), x, y)
-		r = r[n:]
-		y += 20
+func drawLabel(s *ebiten.Image, value string, x, y float64, size float64, clr color.Color) {
+	face, err := uilab.Face("en", size)
+	if err != nil {
+		ebitenutil.DebugPrintAt(s, value, int(x), int(y))
+		return
+	}
+	op := &text.DrawOptions{}
+	op.GeoM.Translate(x, y)
+	op.ColorScale.ScaleWithColor(clr)
+	text.Draw(s, value, face, op)
+}
+func drawWrappedFace(s *ebiten.Image, value string, x, y, maxWidth, size float64) {
+	face, err := uilab.Face("en", size)
+	if err != nil {
+		ebitenutil.DebugPrintAt(s, value, int(x), int(y))
+		return
+	}
+	words, line := []rune(value), []rune{}
+	for len(words) > 0 {
+		line = append(line, words[0])
+		words = words[1:]
+		width, _ := text.Measure(string(line), face, 0)
+		if width > maxWidth && len(line) > 1 {
+			last := line[len(line)-1]
+			line = line[:len(line)-1]
+			drawLabel(s, string(line), x, y, size, color.White)
+			line = []rune{last}
+			y += size + 8
+		}
+	}
+	if len(line) > 0 {
+		drawLabel(s, string(line), x, y, size, color.White)
 	}
 }
 func ease(t float64) float64 { return 1 - math.Pow(1-t, 3) }

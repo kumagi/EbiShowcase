@@ -20,6 +20,53 @@ file count alone is not enough.
 - Japanese and English lessons explain the added systems and link to the correct
   WASM.
 
+## Definition of “showcase final quality”
+
+The final game is also the promise shown on the home page. It must survive a
+much harsher test than “the mechanics work”:
+
+- Judge the capstone against a polished 2D commercial mobile game released in
+  roughly the last three years, not against an early arcade cabinet or a
+  decorated programming exercise. Procedural primitives remain useful for
+  teaching hitboxes and rules, but they are not a substitute for readable
+  human characters, environments, creatures, props, cards, and effects in the
+  final showcase scene.
+- High-resolution original raster artwork is welcome when it is embedded in the
+  WASM, licensed for the repository, and driven by real gameplay state. Use it
+  repeatedly: chapter/course/encounter changes, character entrances, enemies,
+  cards, rewards, and action feedback—not as one detached splash illustration.
+- At card size, a real WASM capture still reveals the genre, protagonist or
+  main play piece, immediate danger or goal, and the most important action.
+- The opening two seconds already contain a composed scene. Do not begin with
+  a tiny actor in an empty field, an unpopulated board, or debug text floating
+  over a flat fill.
+- The scene has intentional depth: foreground framing, play field, and distant
+  environment, or an equally deliberate board/table/stage composition.
+- Inspect a real browser screenshot after integration. Legacy circles, clouds,
+  bubbles, debug markers, and procedural overlays must not become giant opaque
+  shapes that cover the new art or HUD at the actual WASM canvas size.
+- Main actors are large enough to read, important states have intermediate
+  poses, and impact/success/failure change silhouette as well as color.
+- HUD information has a clear hierarchy and uses the bundled readable font;
+  debug print is never the primary finished-game presentation.
+- A human-facing genre must depict humans as humans at gameplay size: face,
+  silhouette, pose, hands or held prop, and role must be readable without the
+  name label. Likewise, cards and enemies must not collapse into interchangeable
+  colored rectangles or circles.
+- The final lesson explicitly labels the quality leap. Intermediate lessons may
+  remain small and teachable; the capstone is allowed to combine art direction,
+  animation, light, sound, UI, and replay systems non-linearly.
+- The home thumbnail is recaptured from the improved running WASM at a meaningful
+  moment. A title card, illustration, idle frame, or old capture does not pass.
+- Visual polish never weakens the game-loop contract. `Draw` derives pixels
+  from state and does not consume random state, update a retained render cache,
+  or mutate camera/gameplay fields.
+- [x] All 25 genre capstones include a synchronized renderer-freedom bonus:
+  the build overlay delegates the original `Update` and `Layout` unchanged,
+  calls its `Draw` once, then presents that one snapshot as the finished art,
+  edge lines, and rectangle mosaic. These are examples, not a closed list of
+  allowed renderers.
+
 ## Track pass
 
 - [x] A Platform action — eight playable steps; the final game has four distinct
@@ -85,6 +132,72 @@ file count alone is not enough.
 - [x] W Rhythm games — seven playable lessons progress from one timing pulse to four lanes, holds, rolls, chart difficulty, and a three-song tour; every song has EASY/HARD, a visible signed timing calibration, pulse/particles/shake/miss feedback, sound-ready and silent-practice states, per-chart browser BEST, language-aware UI, and keyboard/pointer/touch replay.
 - [x] X Tower defense — eight playable lessons progress from routes and range through targeting, shots, placement, waves, and upgrades; COAST WATCH, REEF CAVE, and PEARL GATE provide distinct routes/resources/traits/boss rules, while intent text, target rings, projectiles/particles/shake, per-scenario grades and BEST, and language-aware keyboard/pointer/touch controls complete the replay loop.
 - [x] Y Top-down adventure — eight playable lessons culminate in a four-room data route (key gate, crawler seal, tool seals, guardian); readable sword timing, hit recovery, DASH/STORM tells, persistent mobile HUD/controls, S/A/B/C results, locally saved BEST, and localized Japanese/English UI make the dungeon replayable.
+
+## Contemporary mobile-art pass
+
+The checked Track pass above records mechanics, teaching steps, and replay
+quality. This second list is deliberately separate and stricter: it records the
+2026-07 pass against the contemporary mobile-art definition above. Never infer
+these checks from compilation or from an asset existing on disk; inspect a real
+WASM screenshot and reject mixed-quality legacy primitives.
+
+- [x] A Platform action — generated floating-reef world, runner, slug, and
+  collision-matched terrain atlas, with objective HUD and a real opening capture.
+- [x] B Arena survivors — generated arena, hero, mixed opening swarm and boss,
+  transparent aura rings, survival objective, and a real opening capture.
+- [x] C Idle/clicker — generated palace patisserie, chef, pastry target and
+  three production-line illustrations, state-driven purchase/target feedback,
+  and a real opening capture.
+- [x] D Command RPG — the playable WASM opens on a legible pearl-kingdom map
+  with distinct village, bridge, tower, party art, and generated battle cast.
+- [x] E Platform fighter — two full human fighters, the moon-tide arena, and
+  transparent hurt/attack outlines make both the fantasy and the lesson readable.
+- [x] F Merge physics — the pearl nursery and seven cropped creature tiers are
+  used by the live physics board, NEXT preview, target HUD, and opening layout.
+- [x] G Deckbuilder — generated environment, five generated enemies, three
+  distinct card illustrations, integrated combat UI, and a real opening capture.
+- [x] H Slingshot battle — the reef coliseum, launch heroes, three target
+  families, and stage obstacles are all present in the live trajectory game.
+- [x] I Falling blocks — generated cargo-tower stage, seven material-distinct
+  block faces, seeded challenge board, HOLD/NEXT previews, and a real opening
+  capture that shows an immediate placement problem.
+- [x] J Match-three puzzle — generated royal vault, five silhouette-distinct
+  relic pieces, state-driven swap/clear/goal effects, and a real opening capture
+  with no legacy overlay obscuring the HUD.
+- [x] K Sandbox — three generated islands and the hero, resources, tools,
+  workshop, crawler, and tide beacon all communicate the craft loop in WASM.
+- [x] L Monster collection — the live expedition opens with a human navigator,
+  party roster, three illustrated habitats, encounter species, orb, and badges.
+- [x] M Falling pairs — the live duel uses a polished reef arena, readable
+  creature pairs, a visible human rival, seeded chains, and stage-specific goals.
+- [x] N Maze chase — a generated pearl labyrinth, readable large cast portraits,
+  tile-scale pursuers, shell pearls, and decorated walls all ship in the WASM.
+- [x] O Bomb maze — the coral forge, hero, scout, bombs, flames, walls, items,
+  and an opening chain-reaction problem are all visible and state-driven.
+- [x] P Tactical RPG — generated coastal battlefield, readable human blade,
+  bow, and legion units, terrain-cost overlays, move/attack ranges, and a real
+  opening capture.
+- [x] Q Active-gauge RPG — generated moonlit arena and a unified generated cast
+  for every ally, normal enemy, and boss, with gauge/impact feedback and a real
+  battle capture.
+- [x] R Branching dialogue — three generated chapter backgrounds, three readable
+  human cast members, MIO expression poses, integrated dialogue UI, and a real
+  opening/choice capture.
+- [x] S Top-down racing — three generated coastal courses, generated player and
+  rival vehicles, unobtrusive route/gate guidance, touch controls, and a real
+  opening race capture.
+- [x] T Metroidvania — three generated regions, generated hero/enemies/guardians,
+  region-matched collision platforms, combat gates, and a real opening capture.
+- [x] U Reversi — the CPU match now ships as a readable portrait board inside
+  a generated pearl-observatory tournament scene, with live score-map teaching UI.
+- [x] V Ray-cast maze FPS — three generated wall materials are sampled by the
+  live ray columns, while generated guardian, key, and exit sprites retain depth.
+- [x] W Rhythm games — three illustrated venues, a clearly human performer,
+  distinct tap/hold/roll art, difficulty crests, rail, and results ship in WASM.
+- [x] X Tower defense — the pearl-gate battlefield, three tower families, three
+  enemy classes, base, and projectile art preserve path/range teaching overlays.
+- [x] Y Top-down adventure — the shipped WASM uses the relic-temple scene,
+  cropped hero, key, treasure chest, and guardian artwork at readable play sizes.
 
 ## Verification commands
 

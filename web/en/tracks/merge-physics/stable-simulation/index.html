@@ -46,6 +46,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / STABILITY</p><h2>Why does a circle stack stop trembling?</h2><p class="lesson-lead">Solve contacts <strong>seven times</strong> per tick, sleep quiet circles, and divide the screen into cells so only neighbors are compared.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Iterations</h3><p>Seven correction passes reduce error.</p><code>for pass := 0; pass &lt; 7; pass++</code></article><article><span class="concept-number">2</span><h3>Sleep</h3><p>Stop updates after ninety quiet frames.</p><code>if quiet &gt; 90 { sleep = true }</code></article><article><span class="concept-number">3</span><h3>Spatial grid</h3><p>Group circle indices into 80px cells.</p><code>buckets[cell] = append(...)</code></article></div><div class="motion-lab" data-lab="bounce" data-wall="wall" data-paddle="floor"><div class="lab-copy"><p class="eyebrow">TRY IT / SETTLE</p><h3>Follow bouncing velocity</h3><p>Velocity reverses at surfaces and can eventually become quiet.</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="Advance position">Step one tick</button><button class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-ball style="position:absolute;border-radius:50%"></div></div><div class="lab-values"><div><span>vx</span><strong data-lab-vx>6.0</strong></div><div><span>vy</span><strong data-lab-vy>4.0</strong></div><div><span>Contact</span><strong data-lab-note>—</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -78,6 +94,14 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

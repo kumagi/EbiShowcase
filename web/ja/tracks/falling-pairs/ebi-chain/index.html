@@ -28,6 +28,12 @@
 <div class="lesson-breadcrumb"><a href="../">← 落下ペア連鎖パズル</a><span>STEP 08 / 08</span></div>
 <section class="overview-hero"><p class="eyebrow">★★★★★ / PLAYABLE</p><h1>Ebi Chain</h1><p>落下ペア、回転、同色探索、同時消去、重力、再探索、連鎖得点、全消し、おじゃま対戦を一つにします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>解決フェーズと対戦結果の統合</strong></div></section>
 
+<!-- showcase-final:start -->
+<section class="showcase-final-bridge" aria-label="ショーケース最終ステップ">
+  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>ここから先は、完成品へのジャンプ。</h2><p>ここまでの小さな仕組みを全部つなぎ、アート、動き、光、音、UI、リプレイ性まで一気に磨いた最終ステップです。すべてを今すぐ書けなくても大丈夫。Ebitengineで到達できる景色を、まず遊んで確かめてください。</p></div>
+  <ul><li>ライバル対戦</li><li>連鎖の渦</li><li>おじゃま予告</li></ul>
+</section>
+<!-- showcase-final:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>ルールの違う3つの海底デュエルを勝ち抜こう。</h2></div><p>LEFT/TURN/RIGHT/DROPをタップ。PCでは←・↑・→/A・W・DとSpace。白枠を同時消去し、重力後に再探索します。不発の上限は海ごとに変わるので、画面上のMISSESを確認します。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Chain 連鎖おじゃま対戦" src="../../../../play/ebi-chain/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>完成形はinput→fall→lock→findGroup→clear→gravityをphaseで一つずつ進めます。最初はこの一列を復習地図として読みます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>updateInput(); updateFall(); resolveBoard()</code></pre></div></section>
@@ -35,6 +41,22 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -241,4 +263,47 @@ spawn()</code></pre></div>
 
 
 
+
+
+
+
+
+
+
+
+<!-- capstone-renderers:start -->
+<section class="capstone-renderers" aria-label="Drawだけを替えるおまけ">
+  <div class="capstone-renderers-copy">
+    <p class="eyebrow">BONUS / DRAW ONLY</p>
+    <h2>ゲームは同じ。絵だけを、別の作り方にする。</h2>
+    <p>これは上の完成ゲームと同じパッケージから作ったWASMです。<code>Update</code>と<code>Layout</code>には手を加えず、そのまま呼びます。1回のDrawが作った同じ瞬間を、通常、輪郭線、矩形モザイクへ同時に投影します。位置、得点、敵、当たり判定、時間は1つしかありません。</p>
+  </div>
+  <div class="capstone-renderers-facts">
+    <article><b>01</b><h3>UPDATE</h3><p>入力とゲームの事実を進める。3画面で共通。</p></article>
+    <article><b>02</b><h3>LAYOUT</h3><p>元ゲームの大きさをそのまま返す。</p></article>
+    <article><b>03</b><h3>DRAW</h3><p>同じsnapshotの見せ方だけを替える。</p></article>
+  </div>
+  <div class="capstone-renderers-demo">
+    <iframe data-shared-demo="capstone-renderers" src="../../../../play/ebi-chain-renderer/" loading="lazy" title="同じ完成ゲームを3種類のDrawで同時表示" allow="autoplay; fullscreen"></iframe>
+  </div>
+  <div class="capstone-renderers-code">
+    <div><p class="eyebrow">THE ONLY BOUNDARY</p><h3>UpdateとLayoutは、元のゲームへそのまま渡す。</h3><p>矩形版はsnapshotを小さな格子へ縮め、nearestで戻します。ワイヤ版は隣の画素との差をKageシェーダーで線にします。どちらもゲーム状態を読み書きしません。</p></div>
+    <pre><code>func (g *gallery) Update() error {
+    return g.inner.Update()
+}
+
+func (g *gallery) Layout(w, h int) (int, int) {
+    return g.inner.Layout(w, h)
+}
+
+func (g *gallery) Draw(screen *ebiten.Image) {
+    snapshot := ebiten.NewImage(width, height)
+    g.inner.Draw(snapshot)
+    drawPolished(screen, snapshot)
+    drawWireframe(screen, snapshot)
+    drawRectangles(screen, snapshot)
+}</code></pre>
+  </div>
+</section>
+<!-- capstone-renderers:end -->
 </main><script src="../../../../learn.js"></script></body></html>

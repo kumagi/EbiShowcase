@@ -13,8 +13,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/cameralab"
-	"github.com/kumagi/EbiShowcase/internal/shaderlab"
-	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
@@ -54,21 +52,20 @@ type game struct {
 	enemyAlive, exitOpen, won, lost                      bool
 	message                                              string
 	stage, totalFrames, bestFrames, requiredBreak, shake int
+	chainFlash, chainCount                               int
 	sparks                                               []spark
 	audio                                                *audio.Context
 	gate                                                 audiolab.Gate
-	pulse                                                *shaderlab.Pulse
 	cam                                                  cameralab.State
-	badge                                                *ebiten.Image
+	titleFace                                            *text.GoTextFace
 }
 
 func newGame() *game {
+	loadBomberArt()
 	g := &game{stage: 1}
 	g.audio = audio.NewContext(audiolab.SampleRate)
-	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: screenW / 2, Y: screenH / 2}, ViewW: screenW, ViewH: screenH}
-	g.badge = ebiten.NewImage(20, 20)
-	g.badge.Fill(color.RGBA{255, 180, 70, 255})
+	g.titleFace, _ = uilab.Face("en", 16)
 	g.loadStage()
 	return g
 }
@@ -90,6 +87,12 @@ func (g *game) loadStage() {
 	g.enemyAlive = true
 	g.requiredBreak = []int{6, 8, 10}[g.stage-1]
 	g.bombs = nil
+	if g.stage == 1 {
+		// The opening demonstrates the capstone's signature mechanic before the
+		// player must reproduce it: bomb A reaches and ignites bomb B.
+		delete(g.soft, point{5, 7})
+		g.bombs = []bomb{{point{4, 7}, 100}, {point{6, 7}, 130}}
+	}
 	g.flames = nil
 	g.items = nil
 	g.broken = 0
@@ -98,6 +101,9 @@ func (g *game) loadStage() {
 	g.won = false
 	g.lost = false
 	g.message = "Break walls, collect upgrades, defeat the scout, then reach EXIT."
+	if g.stage == 1 {
+		g.message = "ESCAPE! The armed bomb will ignite its neighbor in a chain blast."
+	}
 }
 func hard(p point) bool {
 	return p.x < 0 || p.x >= cols || p.y < 0 || p.y >= rows || p.x == 0 || p.y == 0 || p.x == cols-1 || p.y == rows-1 || (p.x%2 == 0 && p.y%2 == 0)
@@ -127,6 +133,9 @@ func (g *game) Update() error {
 	g.frames++
 	if g.shake > 0 {
 		g.shake--
+	}
+	if g.chainFlash > 0 {
+		g.chainFlash--
 	}
 	for i := len(g.sparks) - 1; i >= 0; i-- {
 		p := &g.sparks[i]
@@ -170,28 +179,70 @@ func (g *game) Update() error {
 	return nil
 }
 func (g *game) updateBombs() {
-	next := g.bombs[:0]
-	for _, b := range g.bombs {
-		b.timer--
-		if b.timer <= 0 {
-			g.play(110)
-			g.shake = 6
-			g.burst(tileCX(b.at), tileCY(b.at), 18)
-			for _, p := range g.blast(b.at) {
-				g.flames = append(g.flames, flame{p, blastLife})
-				if g.soft[p] {
-					delete(g.soft, p)
-					g.broken++
-					if (p.x*7+p.y*11)%3 == 0 {
-						g.items = append(g.items, item{p, (p.x + p.y) % 3})
-					}
-				}
+	for i := range g.bombs {
+		g.bombs[i].timer--
+	}
+	for {
+		index := -1
+		for i, b := range g.bombs {
+			if b.timer <= 0 {
+				index = i
+				break
 			}
-		} else {
-			next = append(next, b)
+		}
+		if index < 0 {
+			break
+		}
+		b := g.bombs[index]
+		g.bombs = append(g.bombs[:index], g.bombs[index+1:]...)
+		blast := g.detonate(b)
+		triggered := triggerBombs(blast, g.bombs)
+		if triggered > 0 {
+			g.chainCount += triggered
+			g.chainFlash = 48
+			g.message = fmt.Sprintf("CHAIN x%d! One blast can ignite another bomb.", g.chainCount+1)
 		}
 	}
-	g.bombs = next
+}
+
+func (g *game) detonate(b bomb) []point {
+	g.play(110)
+	g.shake = 6
+	g.burst(tileCX(b.at), tileCY(b.at), 18)
+	blast := g.blast(b.at)
+	for _, p := range blast {
+		g.flames = append(g.flames, flame{p, blastLife})
+		if g.soft[p] {
+			delete(g.soft, p)
+			g.broken++
+			if (p.x*7+p.y*11)%3 == 0 {
+				g.items = append(g.items, item{p, (p.x + p.y) % 3})
+			}
+		}
+	}
+	return blast
+}
+
+func pointIn(points []point, target point) bool {
+	for _, p := range points {
+		if p == target {
+			return true
+		}
+	}
+	return false
+}
+
+// triggerBombs is deliberately independent from Ebitengine.  It is the pure
+// rule behind chain reactions and can be unit-tested without opening a window.
+func triggerBombs(blast []point, bombs []bomb) int {
+	triggered := 0
+	for i := range bombs {
+		if bombs[i].timer > 0 && pointIn(blast, bombs[i].at) {
+			bombs[i].timer = 0
+			triggered++
+		}
+	}
+	return triggered
 }
 func (g *game) updateFlames() {
 	next := g.flames[:0]
@@ -301,57 +352,78 @@ func (g *game) bombAt(p point) bool {
 	return false
 }
 func (g *game) Draw(s *ebiten.Image) {
-	bgs := []color.RGBA{{7, 15, 29, 255}, {30, 20, 48, 255}, {53, 20, 29, 255}}
-	s.Fill(bgs[g.stage-1])
+	drawBomberCover(s)
+	vector.DrawFilledRect(s, 0, 0, screenW, 100, color.RGBA{3, 12, 30, 220}, false)
+	vector.DrawFilledRect(s, 0, 570, screenW, 150, color.RGBA{3, 12, 30, 225}, false)
 	ox := 0.0
 	if g.shake > 0 {
 		ox = math.Sin(float64(g.frames)*2) * 5
 	}
 	g.drawTitle(s)
-	g.drawEffectBadge(s)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("STAGE %d/3 WALLS %d/%d POWER %d BOMBS %d TIME %02d BEST %02d", g.stage, g.broken, g.requiredBreak, g.power, g.capacity, max(0, 90-g.frames/60), g.bestFrames/60), 35, 43)
-	ebitenutil.DebugPrintAt(s, g.message, 28, 72)
+	ebitenutil.DebugPrintAt(s, fmt.Sprintf("STAGE %d/3  WALLS %d/%d  BLAST %d  BOMBS %d  TIME %02d", g.stage, g.broken, g.requiredBreak, g.power, g.capacity, max(0, 90-g.frames/60)), 24, 42)
+	ebitenutil.DebugPrintAt(s, g.message, 24, 72)
+	vector.DrawFilledRect(s, boardX-8, boardY-8, cols*cell+16, rows*cell+16, color.RGBA{3, 20, 35, 112}, false)
+	vector.StrokeRect(s, boardX-6, boardY-6, cols*cell+12, rows*cell+12, 3, color.RGBA{91, 224, 236, 180}, false)
 	for y := 0; y < rows; y++ {
 		for x := 0; x < cols; x++ {
 			p := point{x, y}
 			px, py := float32(boardX+x*cell)+float32(ox), float32(boardY+y*cell)
-			c := color.RGBA{25, 47, 51, 255}
-			vector.DrawFilledRect(s, px+1, py+1, cell-2, cell-2, c, false)
+			vector.StrokeRect(s, px+1, py+1, cell-2, cell-2, 1, color.RGBA{157, 239, 242, 45}, false)
 			if hard(p) {
-				trackatlas.Draw(s, "tile-wall", float64(px+1), float64(py+1), float64(cell-2))
+				drawBomberSprite(s, bomberWalls[0], tileCX(p)+ox, tileCY(p), 55)
 			} else if g.soft[p] {
-				trackatlas.Draw(s, "tile-crate", float64(px+1), float64(py+1), float64(cell-2))
+				drawBomberSprite(s, bomberWalls[1], tileCX(p)+ox, tileCY(p), 54)
 			}
 		}
 	}
+	portalAlpha := uint8(90)
 	if g.exitOpen {
-		trackatlas.DrawTinted(s, "tile-exit", tileCX(g.exit), tileCY(g.exit), cell-2, 1, 1, 1, 1)
-		ebitenutil.DebugPrintAt(s, "EXIT", int(tileCX(g.exit))-12, int(tileCY(g.exit))-5)
-	} else {
-		trackatlas.DrawTinted(s, "tile-exit", tileCX(g.exit), tileCY(g.exit), cell-2, 0.5, 0.5, 0.5, 1)
-		ebitenutil.DebugPrintAt(s, "LOCK", int(tileCX(g.exit))-12, int(tileCY(g.exit))-5)
+		portalAlpha = 230
 	}
-	upgradeSprites := []string{"upgrade-blast", "upgrade-cap", "upgrade-spd"}
+	vector.DrawFilledCircle(s, float32(tileCX(g.exit)+ox), float32(tileCY(g.exit)), 20, color.RGBA{45, 239, 226, portalAlpha / 3}, true)
+	vector.StrokeCircle(s, float32(tileCX(g.exit)+ox), float32(tileCY(g.exit)), 17+float32(math.Sin(float64(g.frames)*.08))*2, 4, color.RGBA{89, 255, 238, portalAlpha}, true)
+	exitLabel := "LOCK"
+	if g.exitOpen {
+		exitLabel = "EXIT"
+	}
+	ebitenutil.DebugPrintAt(s, exitLabel, int(tileCX(g.exit)+ox)-12, int(tileCY(g.exit))-5)
 	for _, it := range g.items {
-		trackatlas.DrawCentered(s, upgradeSprites[it.kind], tileCX(it.at), tileCY(it.at), 30)
+		drawBomberSprite(s, bomberItems[it.kind], tileCX(it.at)+ox, tileCY(it.at)-2+math.Sin(float64(g.frames)*.08)*2, 38)
 	}
 	for _, b := range g.bombs {
-		trackatlas.DrawCentered(s, "bomb", tileCX(b.at), tileCY(b.at), 30)
-		ebitenutil.DebugPrintAt(s, fmt.Sprintf("%.1f", float64(b.timer)/60), int(tileCX(b.at))-12, int(tileCY(b.at))-5)
+		fuseProgress := float32(b.timer) / fuse
+		vector.DrawFilledCircle(s, float32(tileCX(b.at)+ox), float32(tileCY(b.at)+15), 18, color.RGBA{0, 5, 15, 80}, true)
+		vector.StrokeCircle(s, float32(tileCX(b.at)+ox), float32(tileCY(b.at)), 22, 3, color.RGBA{255, uint8(80 + 140*fuseProgress), 70, 225}, true)
+		drawBomberSprite(s, bomberEffects[0], tileCX(b.at)+ox, tileCY(b.at), 42)
+		ebitenutil.DebugPrintAt(s, fmt.Sprintf("%.1f", float64(b.timer)/60), int(tileCX(b.at)+ox)-12, int(tileCY(b.at))+14)
 	}
 	for _, f := range g.flames {
-		trackatlas.DrawCentered(s, "flame", tileCX(f.at)+ox, tileCY(f.at), 34+math.Sin(float64(f.timer)*.7)*5)
+		vector.DrawFilledCircle(s, float32(tileCX(f.at)+ox), float32(tileCY(f.at)), 30, color.RGBA{255, 102, 42, 35}, true)
+		drawBomberSprite(s, bomberEffects[1], tileCX(f.at)+ox, tileCY(f.at), 58+math.Sin(float64(f.timer)*.7)*5)
 	}
 	for _, p := range g.sparks {
 		vector.DrawFilledCircle(s, float32(p.x+ox), float32(p.y), float32(2+p.life/14), color.RGBA{255, 180, 70, 255}, true)
 	}
-	trackatlas.DrawCentered(s, "hero", tileCX(g.player)+ox, tileCY(g.player), 34)
+	vector.DrawFilledCircle(s, float32(tileCX(g.player)+ox), float32(tileCY(g.player)+17), 18, color.RGBA{0, 5, 15, 100}, true)
+	drawBomberSprite(s, bomberCharacters[0], tileCX(g.player)+ox, tileCY(g.player)-3+math.Sin(float64(g.frames)*.12)*2, 52)
+	vector.StrokeCircle(s, float32(tileCX(g.player)+ox), float32(tileCY(g.player)), 22+float32(math.Sin(float64(g.frames)*.1))*2, 2, color.RGBA{101, 230, 238, 150}, true)
 	if g.enemyAlive {
-		trackatlas.DrawCentered(s, "scout", tileCX(g.enemy), tileCY(g.enemy), 34)
+		vector.DrawFilledCircle(s, float32(tileCX(g.enemy)+ox), float32(tileCY(g.enemy)+17), 18, color.RGBA{0, 5, 15, 100}, true)
+		drawBomberSprite(s, bomberCharacters[1], tileCX(g.enemy)+ox, tileCY(g.enemy)-2, 56)
+	}
+	if g.chainFlash > 0 {
+		vector.DrawFilledRect(s, 92, 260, 296, 64, color.RGBA{23, 9, 18, 218}, false)
+		vector.StrokeRect(s, 92, 260, 296, 64, 3, color.RGBA{255, 136, 49, 235}, false)
+		ebitenutil.DebugPrintAt(s, fmt.Sprintf("CHAIN x%d!  BLAST LINKS IGNITED", g.chainCount+1), 126, 289)
 	}
 	labels := [...]string{"LEFT", "UP", "DOWN", "RIGHT", "BOMB"}
 	for i, l := range labels {
-		vector.DrawFilledRect(s, float32(i*96+3), 600, 90, 62, color.RGBA{46, 78, 114, 255}, false)
+		fill := color.RGBA{18, 63, 86, 238}
+		if i == 4 {
+			fill = color.RGBA{160, 58, 38, 245}
+		}
+		vector.DrawFilledRect(s, float32(i*96+3), 600, 90, 62, fill, false)
+		vector.StrokeRect(s, float32(i*96+3), 600, 90, 62, 2, color.RGBA{111, 228, 233, 145}, false)
 		ebitenutil.DebugPrintAt(s, l, i*96+27, 627)
 	}
 	ebitenutil.DebugPrintAt(s, "Arrows/WASD + Space | tap controls", 107, 688)
@@ -367,25 +439,13 @@ func (g *game) Draw(s *ebiten.Image) {
 	}
 }
 func (g *game) drawTitle(s *ebiten.Image) {
-	if face, err := uilab.Face("en", 16); err == nil {
+	if g.titleFace != nil {
 		op := &text.DrawOptions{}
 		op.GeoM.Translate(203, 5)
-		text.Draw(s, "EBI BOMBER", face, op)
+		text.Draw(s, "EBI BOMBER", g.titleFace, op)
 		return
 	}
 	ebitenutil.DebugPrintAt(s, "EBI BOMBER", 203, 17)
-}
-func (g *game) drawEffectBadge(s *ebiten.Image) {
-	if g.pulse == nil || !g.pulse.Available() {
-		return
-	}
-	fx := ebiten.NewImage(20, 20)
-	if !g.pulse.Draw(fx, g.badge, float32(g.frames)*.08) {
-		return
-	}
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(screenW-34, 10)
-	s.DrawImage(fx, op)
 }
 func tileCX(p point) float64 { return float64(boardX + p.x*cell + cell/2) }
 func tileCY(p point) float64 { return float64(boardY + p.y*cell + cell/2) }

@@ -1,10 +1,15 @@
 package main
 
 import (
+	"bytes"
+	"embed"
 	"fmt"
+	"image"
 	"image/color"
+	_ "image/png"
 	"math"
 	"strconv"
+	"sync"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
@@ -14,18 +19,30 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/cameralab"
-	"github.com/kumagi/EbiShowcase/internal/hero"
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
-	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const width, height, tile = 480, 720, 48
 const saveKey = "ebiShowcaseQuest."
 
+//go:embed assets/quest-pearl-kingdom.png assets/quest-moon-arena.png assets/quest-party-atlas.png assets/quest-enemy-atlas.png
+var questArtFS embed.FS
+
+var (
+	questArtOnce sync.Once
+	questArt     map[string]*ebiten.Image
+	questParty   [2]*ebiten.Image
+	questEnemies [3]*ebiten.Image
+	questFace14  *text.GoTextFace
+	questFace16  *text.GoTextFace
+	questFace20  *text.GoTextFace
+)
+
 type game struct {
 	x, y, quest, hp, enemyHP, enemyMax, enemy, scene int
 	turn, tick, shake, flash                         int
+	action, actionTick                               int
 	companion, clear                                 bool
 	defend                                           bool
 	message                                          string
@@ -37,6 +54,7 @@ type game struct {
 }
 
 func newGame() *game {
+	loadQuestArt()
 	b := ebiten.NewImage(20, 20)
 	b.Fill(color.RGBA{255, 210, 80, 255})
 	g := &game{x: 1, y: 10, hp: 60, message: "Meet Momo in the southwest village.", audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: b}
@@ -66,6 +84,12 @@ func (g *game) save() {
 }
 func (g *game) Update() error {
 	g.tick++
+	if g.actionTick > 0 {
+		g.actionTick--
+		if g.actionTick == 0 {
+			g.action = 0
+		}
+	}
 	g.cam.Pos = cameralab.Vec{X: float64(g.x * tile), Y: float64(g.y * tile)}
 	if g.shake > 0 {
 		g.shake--
@@ -172,14 +196,9 @@ func (g *game) battle() error {
 	if choice < 0 {
 		return nil
 	}
+	g.action, g.actionTick = choice+1, 30
 	if choice == 0 {
-		d := 10
-		if g.companion {
-			d += 5
-		}
-		if g.enemy == 1 && g.turn%3 == 0 {
-			d /= 2
-		}
+		d := partyAttackDamage(g.enemy, g.turn, g.companion)
 		g.enemyHP -= d
 		g.play(720)
 		g.flash = 7
@@ -208,18 +227,9 @@ func (g *game) battle() error {
 		g.save()
 		return nil
 	}
-	damage := []int{7, 11, 15}[g.enemy]
 	intent := g.turn % 3
-	if intent == 1 {
-		damage += 6
-	}
-	if intent == 2 {
-		damage -= 3
-	}
-	if g.defend {
-		damage = (damage + 1) / 2
-		g.defend = false
-	}
+	damage := enemyAttackDamage(g.enemy, intent, g.defend)
+	g.defend = false
 	g.hp -= damage
 	g.play(180)
 	g.turn++
@@ -261,85 +271,285 @@ func (g *game) setMessage() {
 	}
 }
 func (g *game) Draw(s *ebiten.Image) {
-	if g.pulse.Available() {
-		fx := ebiten.NewImage(20, 20)
-		if g.pulse.Draw(fx, g.badge, float32(g.tick)*.08) {
-			op := &ebiten.DrawImageOptions{}
-			op.GeoM.Translate(440, 12)
-			s.DrawImage(fx, op)
-		}
-	}
 	if g.scene == 1 {
 		g.drawBattle(s)
 		return
 	}
-	s.Fill(color.RGBA{12, 28, 40, 255})
-	oy := 74
-	for y := 0; y < 12; y++ {
-		for x := 0; x < 10; x++ {
-			t := "tile-grass"
-			if x > 5 {
-				t = "tile-cobble"
-			}
-			trackatlas.Draw(s, t, float64(x*tile), float64(oy+y*tile), tile)
-		}
+	drawQuestCover(s, questArt["world"], 0, 0, width, height)
+	vector.DrawFilledRect(s, 0, 0, width, height, color.RGBA{3, 20, 35, 14}, false)
+
+	// The painted landmarks are the actual quest graph, not detached key art.
+	drawMapLabel(s, "PEARL VILLAGE", 14, 548)
+	drawMapLabel(s, "CRYSTAL TOWER", 328, 118)
+	drawMapLabel(s, "OLD BRIDGE", 200, 405)
+
+	// Momo is visibly waiting at the first destination, then follows Ebi.
+	if !g.companion {
+		drawQuestContain(s, questParty[1], 82, 497, 78, 84, false, 1, false)
+		vector.StrokeCircle(s, 121, 540, 34+float32(math.Sin(float64(g.tick)*.1)*3), 2, color.RGBA{255, 211, 232, 205}, true)
 	}
-	trackatlas.DrawCentered(s, "npc", 2*tile+24, float64(oy+9*tile+24), 32)
 	if g.quest == 1 {
-		vector.DrawFilledCircle(s, 8*tile+24, float32(oy+2*tile+24), 11, color.RGBA{72, 205, 255, 255}, false)
+		drawQuestContain(s, questEnemies[0], 373, 145, 72, 72, false, .92, false)
 	}
-	vector.DrawFilledRect(s, 8*tile+7, float32(oy+tile+7), 34, 34, color.RGBA{55, 45, 75, 255}, false)
 	if g.quest == 3 {
-		vector.StrokeCircle(s, 5*tile+24, float32(oy+6*tile+24), 18, 3, color.RGBA{255, 90, 90, 220}, true)
+		drawQuestContain(s, questEnemies[2], 223, 337, 86, 70, false, .78, false)
 	}
-	hero.DrawCentered(s, float64(g.x*tile+24), float64(oy+g.y*tile+24), 34)
+
+	px, py := float64(g.x*tile+24), float64(74+g.y*tile+24)
+	stepBob := math.Abs(math.Sin(float64(g.tick)*.16)) * 2
+	vector.DrawFilledCircle(s, float32(px), float32(py+19), 24, color.RGBA{2, 12, 24, 100}, true)
+	drawQuestContain(s, questParty[0], px-38, py-52-stepBob, 76, 80, false, 1, false)
 	if g.companion {
-		trackatlas.DrawCentered(s, "ally", float64(g.x*tile+10), float64(oy+g.y*tile+38), 22)
+		drawQuestContain(s, questParty[1], px-58, py-23-stepBob, 48, 52, false, 1, false)
 	}
-	if f, e := uilab.Face("en", 16); e == nil {
-		op := &text.DrawOptions{}
-		op.GeoM.Translate(120, 25)
-		text.Draw(s, fmt.Sprintf("EBI QUEST  HP %02d/60  QUEST %d/5", g.hp, g.quest), f, op)
-	} else {
-		ebitenutil.DebugPrintAt(s, fmt.Sprintf("EBI QUEST  HP %02d/60  QUEST %d/5", g.hp, g.quest), 120, 25)
+
+	tx, ty := g.targetPosition()
+	marker := 24 + float32(math.Sin(float64(g.tick)*.12)*4)
+	vector.StrokeCircle(s, float32(tx), float32(ty), marker, 4, color.RGBA{255, 224, 105, 230}, true)
+	vector.StrokeCircle(s, float32(tx), float32(ty), marker+7, 1, color.RGBA{117, 242, 255, 150}, true)
+	for i := 0; i < 3; i++ {
+		a := float64(g.tick)*.035 + float64(i)*math.Pi*2/3
+		vector.DrawFilledCircle(s, float32(float64(tx)+math.Cos(a)*float64(marker+10)), float32(float64(ty)+math.Sin(a)*float64(marker+10)), 3, color.RGBA{255, 240, 159, 230}, true)
 	}
-	ebitenutil.DebugPrintAt(s, g.message, 60, 50)
-	ebitenutil.DebugPrintAt(s, "AUTOSAVED IN THIS BROWSER   R: DELETE SAVE", 85, 690)
+
+	vector.DrawFilledRect(s, 10, 10, 460, 82, color.RGBA{4, 15, 31, 226}, true)
+	vector.StrokeRect(s, 10, 10, 460, 82, 2, color.RGBA{107, 225, 238, 170}, true)
+	drawCenteredQuestLabel(s, fmt.Sprintf("EBI QUEST   •   HP %02d/60   •   QUEST %d/5", g.hp, g.quest), 240, 22, questFace16, color.White)
+	drawCenteredQuestLabel(s, g.message, 240, 52, questFace14, color.RGBA{255, 232, 177, 255})
+	drawCenteredQuestLabel(s, "MOVE: ARROWS / WASD / TAP TOWARD A TILE", 240, 101, questFace14, color.RGBA{221, 241, 245, 255})
+	drawCenteredQuestLabel(s, "AUTOSAVED   •   R: DELETE SAVE", 240, 692, questFace14, color.RGBA{221, 231, 238, 255})
+	g.drawBadge(s)
 	if g.clear {
 		overlay(s, "EBI QUEST COMPLETE!\n\nTAP / SPACE TO PLAY AGAIN")
 	}
 }
 func (g *game) drawBattle(s *ebiten.Image) {
-	colors := []color.RGBA{{20, 48, 58, 255}, {44, 36, 67, 255}, {52, 24, 35, 255}}
-	s.Fill(colors[g.enemy])
+	drawQuestCover(s, questArt["battle"], 0, 0, width, height)
+	washes := []color.RGBA{{16, 102, 119, 16}, {81, 43, 126, 28}, {139, 24, 58, 35}}
+	vector.DrawFilledRect(s, 0, 0, width, height, washes[g.enemy], false)
 	ox := 0.0
 	if g.shake > 0 {
 		ox = float64((g.tick%3)-1) * 5
 	}
-	sprites := []string{"species-1", "knight", "king-crab"}
-	sprite := sprites[g.enemy]
-	if g.enemy == 1 {
-		sprite = "boss-crab"
+	enemyW := []float64{150, 178, 235}[g.enemy]
+	enemyH := []float64{145, 220, 205}[g.enemy]
+	enemyX := 285.0 + ox - enemyW/2
+	enemyY := []float64{148, 115, 128}[g.enemy] + math.Sin(float64(g.tick)*.08)*3
+	vector.DrawFilledCircle(s, float32(285+ox), float32(enemyY+enemyH*.78), float32(enemyW*.34), color.RGBA{2, 10, 25, 100}, true)
+	drawQuestContain(s, questEnemies[g.enemy], enemyX, enemyY, enemyW, enemyH, false, 1, g.flash > 0)
+
+	// One party atlas supports all actions: Update records the chosen action,
+	// while Draw changes pose, position and effects without changing the rules.
+	ebiX, ebiY := 30.0, 330.0
+	momoX, momoY := 132.0, 354.0
+	if g.action == 1 {
+		ebiX += float64(30 - g.actionTick)
+		vector.StrokeLine(s, float32(ebiX+94), 387, 274, 270, 7, color.RGBA{115, 244, 255, 205}, true)
 	}
-	size := []float64{100, 130, 160}[g.enemy]
-	if g.flash > 0 {
-		trackatlas.DrawTinted(s, sprite, 240+ox, 210, size, 1, 1, .35, 1)
-	} else {
-		trackatlas.DrawCentered(s, sprite, 240+ox, 210+math.Sin(float64(g.tick)*.12)*3, size)
+	partyShake := 0.0
+	if g.shake > 0 && g.flash == 0 {
+		partyShake = -ox
 	}
+	drawQuestContain(s, questParty[0], ebiX+partyShake, ebiY, 145, 180, false, 1, false)
+	if g.companion {
+		drawQuestContain(s, questParty[1], momoX+partyShake, momoY, 122, 155, false, 1, false)
+	}
+	if g.action == 2 {
+		for i := 0; i < 3; i++ {
+			vector.StrokeCircle(s, 105, 412, float32(50+i*8), float32(5-i), color.RGBA{121, 209, 255, uint8(210 - i*45)}, true)
+		}
+	}
+	if g.action == 3 && g.companion {
+		for i := 0; i < 8; i++ {
+			a := float64(i)*math.Pi/4 + float64(g.tick)*.05
+			x := 192 + math.Cos(a)*float64(42+i%3*5)
+			y := 405 + math.Sin(a)*float64(58+i%2*5)
+			vector.DrawFilledCircle(s, float32(x), float32(y), 5, color.RGBA{255, 163, 224, 210}, true)
+			vector.StrokeLine(s, float32(x+4), float32(y), float32(x+4), float32(y-12), 2, color.RGBA{255, 236, 170, 230}, true)
+		}
+	}
+
 	names := []string{"CRYSTAL SLIME", "TOWER KNIGHT", "SHADOW CRAB"}
 	intent := []string{"NORMAL ATTACK", "HEAVY ATTACK — GUARD!", "QUICK ATTACK"}[g.turn%3]
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("%s HP %02d/%02d", names[g.enemy], max(0, g.enemyHP), g.enemyMax), 145, 105)
-	ebitenutil.DebugPrintAt(s, "NEXT: "+intent, 150, 350)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("PARTY HP %02d/60", g.hp), 185, 415)
-	ebitenutil.DebugPrintAt(s, g.message, 60, 480)
-	vector.DrawFilledRect(s, 12, 550, 145, 80, color.RGBA{45, 225, 194, 255}, false)
-	vector.DrawFilledRect(s, 167, 550, 145, 80, color.RGBA{80, 145, 225, 255}, false)
-	vector.DrawFilledRect(s, 322, 550, 145, 80, color.RGBA{255, 190, 75, 255}, false)
-	ebitenutil.DebugPrintAt(s, "1 ATTACK", 50, 585)
-	ebitenutil.DebugPrintAt(s, "2 GUARD", 207, 585)
-	ebitenutil.DebugPrintAt(s, "3 SONG", 362, 585)
+	vector.DrawFilledRect(s, 42, 12, 396, 105, color.RGBA{4, 13, 29, 226}, true)
+	vector.StrokeRect(s, 42, 12, 396, 105, 2, color.RGBA{255, 220, 144, 170}, true)
+	drawCenteredQuestLabel(s, fmt.Sprintf("%s   HP %02d/%02d", names[g.enemy], max(0, g.enemyHP), g.enemyMax), 240, 27, questFace16, color.White)
+	vector.DrawFilledRect(s, 72, 57, 336, 12, color.RGBA{40, 42, 62, 255}, true)
+	vector.DrawFilledRect(s, 75, 60, float32(330*max(0, g.enemyHP)/g.enemyMax), 6, color.RGBA{244, 83, 103, 255}, true)
+	intentColor := color.RGBA{126, 242, 255, 255}
+	if g.turn%3 == 1 {
+		intentColor = color.RGBA{255, 154, 115, 255}
+	}
+	drawCenteredQuestLabel(s, "NEXT  •  "+intent, 240, 79, questFace14, intentColor)
+
+	vector.DrawFilledRect(s, 20, 467, 440, 72, color.RGBA{4, 14, 29, 226}, true)
+	vector.StrokeRect(s, 20, 467, 440, 72, 2, color.RGBA{112, 225, 238, 150}, true)
+	drawQuestLabel(s, fmt.Sprintf("PARTY HP %02d/60", g.hp), 36, 481, questFace16, color.RGBA{160, 246, 218, 255})
+	drawCenteredQuestLabel(s, g.message, 240, 510, questFace14, color.White)
+	drawBattleButton(s, 0, 12, "1  ATTACK", color.RGBA{27, 127, 133, 245})
+	drawBattleButton(s, 1, 167, "2  GUARD", color.RGBA{45, 77, 137, 245})
+	drawBattleButton(s, 2, 322, "3  SONG", color.RGBA{133, 72, 119, 245})
+	drawCenteredQuestLabel(s, "TAP A COMMAND   •   ENEMY INTENT IS SHOWN ABOVE", 240, 654, questFace14, color.RGBA{231, 238, 245, 255})
+	g.drawBadge(s)
 }
+
+func (g *game) drawBadge(dst *ebiten.Image) {
+	if !g.pulse.Available() {
+		return
+	}
+	fx := ebiten.NewImage(20, 20)
+	if g.pulse.Draw(fx, g.badge, float32(g.tick)*.08) {
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(442, 16)
+		dst.DrawImage(fx, op)
+	}
+}
+
+func loadQuestArt() {
+	questArtOnce.Do(func() {
+		questArt = make(map[string]*ebiten.Image, 4)
+		for key, filename := range map[string]string{
+			"world":   "quest-pearl-kingdom.png",
+			"battle":  "quest-moon-arena.png",
+			"party":   "quest-party-atlas.png",
+			"enemies": "quest-enemy-atlas.png",
+		} {
+			data, err := questArtFS.ReadFile("assets/" + filename)
+			if err != nil {
+				panic(err)
+			}
+			decoded, _, err := image.Decode(bytes.NewReader(data))
+			if err != nil {
+				panic(err)
+			}
+			questArt[key] = ebiten.NewImageFromImage(decoded)
+		}
+		partyAtlas := questArt["party"]
+		for i := range questParty {
+			questParty[i] = partyAtlas.SubImage(image.Rect(i*512, 0, (i+1)*512, 512)).(*ebiten.Image)
+		}
+		enemyAtlas := questArt["enemies"]
+		for i := range questEnemies {
+			questEnemies[i] = enemyAtlas.SubImage(image.Rect(i*512, 0, (i+1)*512, 512)).(*ebiten.Image)
+		}
+		questFace14, _ = uilab.Face("en", 14)
+		questFace16, _ = uilab.Face("en", 16)
+		questFace20, _ = uilab.Face("en", 20)
+	})
+}
+
+func drawQuestCover(dst, img *ebiten.Image, x, y, w, h float64) {
+	b := img.Bounds()
+	scale := math.Max(w/float64(b.Dx()), h/float64(b.Dy()))
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(-float64(b.Min.X), -float64(b.Min.Y))
+	op.GeoM.Scale(scale, scale)
+	op.GeoM.Translate(x+(w-float64(b.Dx())*scale)/2, y+(h-float64(b.Dy())*scale)/2)
+	op.Filter = ebiten.FilterLinear
+	dst.DrawImage(img, op)
+}
+
+func drawQuestContain(dst, img *ebiten.Image, x, y, w, h float64, mirror bool, alpha float32, flash bool) {
+	b := img.Bounds()
+	scale := math.Min(w/float64(b.Dx()), h/float64(b.Dy()))
+	dw, dh := float64(b.Dx())*scale, float64(b.Dy())*scale
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(-float64(b.Min.X), -float64(b.Min.Y))
+	if mirror {
+		op.GeoM.Scale(-scale, scale)
+		op.GeoM.Translate(x+(w+dw)/2, y+(h-dh)/2)
+	} else {
+		op.GeoM.Scale(scale, scale)
+		op.GeoM.Translate(x+(w-dw)/2, y+(h-dh)/2)
+	}
+	if flash {
+		op.ColorScale.Scale(1, .28, .28, alpha)
+	} else {
+		op.ColorScale.ScaleAlpha(alpha)
+	}
+	op.Filter = ebiten.FilterLinear
+	dst.DrawImage(img, op)
+}
+
+func drawQuestLabel(dst *ebiten.Image, label string, x, y float64, face *text.GoTextFace, c color.Color) {
+	if face == nil {
+		ebitenutil.DebugPrintAt(dst, label, int(x), int(y))
+		return
+	}
+	op := &text.DrawOptions{}
+	op.GeoM.Translate(x, y)
+	op.ColorScale.ScaleWithColor(c)
+	text.Draw(dst, label, face, op)
+}
+
+func drawCenteredQuestLabel(dst *ebiten.Image, label string, centerX, y float64, face *text.GoTextFace, c color.Color) {
+	if face == nil {
+		ebitenutil.DebugPrintAt(dst, label, int(centerX)-len(label)*3, int(y))
+		return
+	}
+	w, _ := text.Measure(label, face, 0)
+	drawQuestLabel(dst, label, centerX-w/2, y, face, c)
+}
+
+func drawMapLabel(dst *ebiten.Image, label string, x, y float64) {
+	w, _ := text.Measure(label, questFace14, 0)
+	vector.DrawFilledRect(dst, float32(x), float32(y), float32(w+16), 25, color.RGBA{4, 17, 31, 205}, true)
+	vector.StrokeRect(dst, float32(x), float32(y), float32(w+16), 25, 1, color.RGBA{255, 224, 145, 155}, true)
+	drawQuestLabel(dst, label, x+8, y+4, questFace14, color.RGBA{255, 242, 209, 255})
+}
+
+func drawBattleButton(dst *ebiten.Image, action int, x float64, label string, fill color.RGBA) {
+	vector.DrawFilledRect(dst, float32(x), 550, 145, 88, fill, true)
+	vector.StrokeRect(dst, float32(x), 550, 145, 88, 3, color.RGBA{255, 235, 190, 175}, true)
+	if action == 0 {
+		drawQuestContain(dst, questParty[0], x+6, 555, 52, 52, false, 1, false)
+	} else if action == 1 {
+		vector.StrokeCircle(dst, float32(x+32), 579, 20, 5, color.RGBA{164, 225, 255, 235}, true)
+		vector.StrokeCircle(dst, float32(x+32), 579, 13, 2, color.RGBA{255, 244, 202, 220}, true)
+	} else {
+		drawQuestContain(dst, questParty[1], x+6, 555, 52, 52, false, 1, false)
+	}
+	drawQuestLabel(dst, label, x+52, 568, questFace14, color.White)
+	drawQuestLabel(dst, []string{"15 DMG", "1/2 HURT", "+15 HP"}[action], x+52, 595, questFace14, color.RGBA{205, 243, 240, 255})
+}
+
+func (g *game) targetPosition() (int, int) {
+	switch {
+	case g.quest == 0:
+		return 2*tile + 24, 74 + 9*tile + 24
+	case g.quest == 1 || g.quest == 2:
+		return 8*tile + 24, 74 + 2*tile + 24
+	case g.quest == 3:
+		return 5*tile + 24, 74 + 6*tile + 24
+	default:
+		return tile + 24, 74 + 10*tile + 24
+	}
+}
+
+func partyAttackDamage(enemy, turn int, companion bool) int {
+	damage := 10
+	if companion {
+		damage += 5
+	}
+	if enemy == 1 && turn%3 == 0 {
+		damage /= 2
+	}
+	return damage
+}
+
+func enemyAttackDamage(enemy, intent int, defend bool) int {
+	damage := []int{7, 11, 15}[enemy]
+	if intent == 1 {
+		damage += 6
+	} else if intent == 2 {
+		damage -= 3
+	}
+	if defend {
+		damage = (damage + 1) / 2
+	}
+	return damage
+}
+
 func press() (int, int, bool) {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		x, y := ebiten.CursorPosition()

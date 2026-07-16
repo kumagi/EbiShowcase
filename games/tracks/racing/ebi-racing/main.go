@@ -37,7 +37,7 @@ type course struct {
 	bg      color.RGBA
 }
 
-var courses = []course{{175, 265, .42, 2.8, 1, "SUNNY OVAL", color.RGBA{42, 112, 67, 255}}, {150, 245, .34, 3.15, 2, "NARROW REEF", color.RGBA{39, 75, 94, 255}}, {195, 225, .30, 3.45, 2, "STORM RING", color.RGBA{77, 54, 70, 255}}}
+var courses = []course{{175, 265, .42, 2.8, 1, "CORAL COAST", color.RGBA{18, 93, 105, 255}}, {150, 245, .34, 3.15, 2, "PEARL REEF", color.RGBA{20, 42, 83, 255}}, {195, 225, .30, 3.45, 2, "STORM CITADEL", color.RGBA{26, 31, 50, 255}}}
 
 type spark struct{ x, y, vx, vy, life float64 }
 
@@ -57,6 +57,7 @@ type game struct {
 }
 
 func newGame() *game {
+	prepareRacingArt()
 	g := &game{stage: 1}
 	g.audio = audio.NewContext(audiolab.SampleRate)
 	g.pulse = shaderlab.NewPulse()
@@ -74,7 +75,9 @@ func (g *game) loadCourse() {
 		g.gates = append(g.gates, [2]float64{240 + math.Cos(a)*c.rx, 355 + math.Sin(a)*c.ry})
 	}
 	start := g.gates[0]
-	g.cars = []car{{start[0], start[1] + 35, 0, 0, 0, 1, false}, {start[0] - 25, start[1] + 55, 0, 0, 0, 1, true}}
+	// Begin in motion: the first thumbnail already shows a race, not two parked
+	// rectangles waiting for the learner to discover the accelerator.
+	g.cars = []car{{start[0] + 28, start[1] + 36, 0, 2.6, 0, 1, false}, {start[0] - 28, start[1] + 58, 0, c.aiSpeed * .82, 0, 1, true}}
 	g.frames = 0
 	g.won = false
 	g.lost = false
@@ -195,26 +198,42 @@ func angleDiff(a, b float64) float64 { d := math.Mod(a-b+math.Pi, 2*math.Pi) - m
 func (g *game) Draw(s *ebiten.Image) {
 	course := courses[g.stage-1]
 	s.Fill(course.bg)
+	drawCourseArt(s, g.stage)
 	ox := 0.0
 	if g.shake > 0 {
 		ox = math.Sin(float64(g.frames)*2) * 5
 	}
-	drawEllipse(s, 240+float32(ox), 355, float32(course.rx), float32(course.ry), 90, color.RGBA{68, 72, 84, 255})
-	drawEllipse(s, 240+float32(ox), 355, float32(course.rx), float32(course.ry), 3, color.RGBA{255, 255, 255, 255})
-	q := g.gates[g.cars[0].next]
-	vector.StrokeCircle(s, float32(q[0]), float32(q[1]), 32, 6, color.RGBA{246, 198, 72, 255}, false)
-	for i, c := range g.cars {
-		col := color.RGBA{235, 91, 76, 255}
-		if i == 1 {
-			col = color.RGBA{76, 166, 232, 255}
+	roadColors := []color.RGBA{{35, 45, 52, 205}, {19, 31, 54, 205}, {18, 22, 33, 212}}
+	laneColors := []color.RGBA{{255, 239, 191, 230}, {137, 235, 255, 230}, {95, 224, 255, 230}}
+	drawEllipse(s, 240+float32(ox), 355, float32(course.rx), float32(course.ry), 82, roadColors[g.stage-1])
+	drawEllipse(s, 240+float32(ox), 355, float32(course.rx), float32(course.ry), 3, laneColors[g.stage-1])
+	// Kerbs and lane markers sell speed without changing the simple oval math.
+	for i := 0; i < 32; i++ {
+		a := float64(i) * math.Pi / 16
+		x := float32(240 + math.Cos(a)*course.rx)
+		y := float32(355 + math.Sin(a)*course.ry)
+		c := color.RGBA{245, 238, 215, 255}
+		if i%2 == 0 {
+			c = color.RGBA{232, 72, 72, 255}
 		}
-		op := &ebiten.DrawImageOptions{}
-		img := ebiten.NewImage(26, 40)
-		img.Fill(col)
-		op.GeoM.Translate(-13, -20)
-		op.GeoM.Rotate(c.angle)
-		op.GeoM.Translate(c.x+ox, c.y)
-		s.DrawImage(img, op)
+		vector.DrawFilledCircle(s, x, y, 6, c, true)
+	}
+	q := g.gates[g.cars[0].next]
+	gatePulse := float32(22 + math.Sin(float64(g.frames)*.13)*2)
+	// Two thin rings and one directional chevron keep the target legible while
+	// leaving the generated course art visible through the center.
+	vector.StrokeCircle(s, float32(q[0]), float32(q[1]), gatePulse, 4, color.RGBA{255, 218, 95, 245}, true)
+	vector.StrokeCircle(s, float32(q[0]), float32(q[1]), gatePulse-6, 2, color.RGBA{92, 231, 255, 210}, true)
+	dx, dy := q[0]-g.cars[0].x, q[1]-g.cars[0].y
+	d := math.Max(1, math.Hypot(dx, dy))
+	ux, uy := dx/d, dy/d
+	vx, vy := -uy, ux
+	tipX, tipY := q[0]-ux*float64(gatePulse+3), q[1]-uy*float64(gatePulse+3)
+	baseX, baseY := q[0]-ux*float64(gatePulse+14), q[1]-uy*float64(gatePulse+14)
+	vector.StrokeLine(s, float32(baseX+vx*7), float32(baseY+vy*7), float32(tipX), float32(tipY), 4, color.RGBA{92, 231, 255, 235}, true)
+	vector.StrokeLine(s, float32(baseX-vx*7), float32(baseY-vy*7), float32(tipX), float32(tipY), 4, color.RGBA{92, 231, 255, 235}, true)
+	for i, c := range g.cars {
+		drawCar(s, c.x+ox, c.y, c.angle, i == 0, g.frames)
 	}
 	for _, p := range g.sparks {
 		vector.DrawFilledCircle(s, float32(p.x+ox), float32(p.y), float32(2+p.life/14), color.RGBA{255, 211, 62, 255}, true)
@@ -238,8 +257,36 @@ func (g *game) Draw(s *ebiten.Image) {
 		overlay(s, "RACE LOST\n\nTAP / ENTER TO RETRY")
 	}
 }
+
+func drawCar(s *ebiten.Image, x, y, angle float64, player bool, frame int) {
+	// Exhaust light and shadow are derived from the current car state. Neither
+	// changes speed or position; the generated vehicle is only a projection.
+	rearX := x - math.Sin(angle)*30
+	rearY := y + math.Cos(angle)*30
+	glow := color.RGBA{85, 225, 255, 175}
+	if player {
+		glow = color.RGBA{255, 203, 91, 185}
+	}
+	vector.DrawFilledCircle(s, float32(x+3), float32(y+5), 23, color.RGBA{2, 7, 15, 105}, true)
+	vector.DrawFilledCircle(s, float32(rearX), float32(rearY), float32(7+math.Sin(float64(frame)*.3)*2), glow, true)
+	name := "rival"
+	if player {
+		name = "player"
+	}
+	drawRaceCar(s, name, x, y, angle, 82)
+	if player {
+		pulse := float32(34 + math.Sin(float64(frame)*.16)*3)
+		vector.StrokeCircle(s, float32(x), float32(y), pulse, 2, color.RGBA{255, 226, 112, 190}, true)
+	}
+}
 func (g *game) drawHUD(s *ebiten.Image, c course) {
-	label := fmt.Sprintf("COURSE %d/3 %s LAP %d/%d SPEED %.1f BEST %.2f", g.stage, c.name, g.cars[0].lap+1, c.laps, math.Abs(g.cars[0].speed), float64(g.bestFrames)/60)
+	place := 2
+	playerProgress := g.cars[0].lap*len(g.gates) + g.cars[0].next
+	rivalProgress := g.cars[1].lap*len(g.gates) + g.cars[1].next
+	if playerProgress >= rivalProgress {
+		place = 1
+	}
+	label := fmt.Sprintf("YOU %d/2  COURSE %d/3 %s  LAP %d/%d  SPEED %.1f", place, g.stage, c.name, g.cars[0].lap+1, c.laps, math.Abs(g.cars[0].speed))
 	if face, err := uilab.Face("en", 14); err == nil {
 		op := &text.DrawOptions{}
 		op.GeoM.Translate(25, 8)
@@ -283,14 +330,13 @@ func controls() (bool, bool, bool, bool) {
 			right = x >= 360
 		}
 	}
-	ids := ebiten.AppendTouchIDs(nil)
-	if len(ids) > 0 {
-		x, y := ebiten.TouchPosition(ids[0])
+	for _, id := range ebiten.AppendTouchIDs(nil) {
+		x, y := ebiten.TouchPosition(id)
 		if y >= 640 {
-			left = x < 120
-			gas = x >= 120 && x < 240
-			brake = x >= 240 && x < 360
-			right = x >= 360
+			left = left || x < 120
+			gas = gas || x >= 120 && x < 240
+			brake = brake || x >= 240 && x < 360
+			right = right || x >= 360
 		}
 	}
 	return gas, brake, left, right

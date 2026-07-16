@@ -42,6 +42,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FALL TWEEN</p><h2>配列はすぐ落とす。絵は progress で追いかける。</h2><p class="lesson-lead">マッチ3の落下でいちばん大事なのは、<strong>論理盤面</strong>と<strong>見た目のy</strong>を分けることです。<code>Update</code>で列を圧縮して「最終のマス」を決め、<code>fromY→toY</code>と<code>progress</code>（0→1）を覚えます。移動中は入力を無視し、<code>Draw</code>だけが途中の高さを描きます。物理エンジンは使いません。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>まず論理を確定</h3><p>消したマスをemptyにし、列を下から詰めます。この瞬間、次の連鎖判定に使う正しい盤面ができます。</p><code>compactColumns()</code></article><article><span class="concept-number">2</span><h3>progressだけ進める</h3><p>falling中はSpaceを読まず、<code>progress += 0.07</code>。1になったら初めて次の段階（補充）へ進みます。</p><code>if falling { progress += …; return }</code></article><article><span class="concept-number">3</span><h3>Drawが補間する</h3><p>最終マスの色を、<code>fromY+(toY-fromY)*progress</code>の位置へ描きます。論理座標は動かさないのがコツです。</p><code>y = lerp(fromY, toY, progress)</code></article></div><div class="motion-lab" data-lab="match-scan" data-found="消せる！" data-none="まだそろっていない" data-cleared="落下した" aria-labelledby="lab-title-clear-and-fall">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / GRAVITY</p>
@@ -98,6 +114,14 @@ if g.falling {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

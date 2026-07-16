@@ -73,6 +73,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / MUTABLE TILE MAP</p><h2>Change a cell's number and the world changes shape.</h2><p class="lesson-lead">The board is a table of numbers called <strong>board[y][x]</strong>. Zero is air, one is dirt, and two is stone. Placing spends one item and writes its number; breaking writes zero and returns the material to inventory.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Turn screen into cell</h3><p>Subtract the board's top-left from the pointer, then divide by cell width. This gives integer column x and row y.</p><code>x = (pointerX - boardX) / cell</code></article><article><span class="concept-number">2</span><h3>Check reach and stock</h3><p>Place only within three steps of the builder and when at least one selected block remains. Invalid input changes no data.</p><code>if inReach(x,y) &amp;&amp; stock[kind] &gt; 0</code></article><article><span class="concept-number">3</span><h3>Pair place and break</h3><p>Placing moves material from inventory to board. Breaking moves it from board to inventory. Material does not appear from nowhere.</p><code>board[y][x] = kind; stock[kind]--</code></article></div>
 <div class="motion-lab" data-lab="tile" data-blocked="That cell is a wall"><div class="lab-copy"><p class="eyebrow">TRY IT / GRID POSITION</p><h3>Move one row or column at a time</h3><p>A cell uses integer x,y, not a loose continuous position. Rejecting a wall cell follows the same pattern as rejecting a place action.</p><div class="lab-controls"><button type="button" class="lab-button" data-lab-up data-go-focus="try go">↑</button><button type="button" class="lab-button" data-lab-left data-go-focus="try go">←</button><button type="button" class="lab-button" data-lab-right data-go-focus="try go">→</button><button type="button" class="lab-button" data-lab-down data-go-focus="try go">↓</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>Cell x,y</span><strong data-lab-pos>1,1</strong></div><div><span>Facing</span><strong data-lab-face>S</strong></div><div><span>Result</span><strong data-lab-note>—</strong></div></div></div>
@@ -122,6 +138,14 @@ board[y][x] = empty</code></pre></div>
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

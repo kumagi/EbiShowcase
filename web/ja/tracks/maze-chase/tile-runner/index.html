@@ -42,6 +42,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CENTER TO CENTER</p><h2>自由な座標を、迷路のマスへ結びつける。</h2><p class="lesson-lead">迷路データはmaze[y][x]の文字表です。#なら壁、.なら通路。走者は現在タイルを覚え、方向を足した<strong>候補タイル</strong>が通路のときだけ、その中心へ移動を始めます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>タイルから中心座標を作る</h3><p>列xへタイル幅を掛け、盤面左と半マスを足します。行yも同じ式なので、どの通路にも中心があります。</p><code>centerX = mazeX + tileX*tileSize + tileSize/2</code></article><article><span class="concept-number">2</span><h3>次タイルが通れるか調べる</h3><p>現在タイルへ方向(-1,0)などを足します。範囲内でmaze[nextY][nextX]が#でなければ進めます。</p><code>passable := maze[next.y][next.x] != '#'</code></article><article><span class="concept-number">3</span><h3>中心から中心へ補間する</h3><p>progressを0から1へ増やし、fromとtoの間を描きます。1になったら現在タイルをtargetへそろえます。</p><code>screenX = fromX + (toX-fromX)*progress</code></article></div><div class="motion-lab" data-lab="tile" data-blocked="その方向は壁" aria-labelledby="lab-title-tile-runner">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / LEGAL TILE</p>
@@ -91,6 +107,14 @@ if passable(next) {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

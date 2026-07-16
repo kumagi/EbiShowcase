@@ -45,6 +45,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / TOOL DATA AND TILE LIGHT</p><h2>「何で掘るか」と「見えるか」を、マスを変える前に調べる。</h2><p class="lesson-lead">前のステップで作った道具には、得意素材・威力・耐久値を持たせます。採掘する前に道具と素材の組を調べ、さらにそのマスの光量を調べます。松明は周りを一度に明るくする絵ではなく、各マスが<strong>光源までの距離</strong>から明るさを計算します。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>道具と素材を照合</h3><p>斧は木、ツルハシは石なら威力3・耐久消費1です。相性が違うと威力1・消費2になり、同じ仕事でも道具が早く壊れます。</p><code>if tool.preferred == block.material { power = 3 }</code></article><article><span class="concept-number">2</span><h3>耐久値も状態として減らす</h3><p>採掘したときだけ耐久値を引き、0ならそれ以上使えません。必要な素材を集める前に対応道具が0になると失敗です。</p><code>durability[selected] -= cost</code></article><article><span class="concept-number">3</span><h3>いちばん強い光を選ぶ</h3><p>昼夜の光と各松明の光を比べ、最大値をそのマスの光量にします。松明は1マス離れるごとに2ずつ暗くなります。</p><code>light = max(daylight, 9-distance*2)</code></article></div>
@@ -99,6 +115,14 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

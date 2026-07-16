@@ -22,7 +22,13 @@
   <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
   <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
   <!-- favicon:end -->
-</head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/rhythm/ebi-rhythm/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← リズムゲーム</a><span>STEP 07 / 07</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Rhythm Tour</h1><p>3曲の自作譜面を選び、EASY/HARD、タップ、長押し、連打を通してハイスコアを狙います。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Rhythm Tour</h2><p>D/F/J/Kまたは4つの画面レーン。 START後はGoコードで合成した拍音が鳴ります。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-rhythm/?lang=ja" title="Ebi Rhythm Tour" allow="autoplay; fullscreen"></iframe></div></section>
+</head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/rhythm/ebi-rhythm/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← リズムゲーム</a><span>STEP 07 / 07</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Rhythm Tour</h1><p>3曲の自作譜面を選び、EASY/HARD、タップ、長押し、連打を通してハイスコアを狙います。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- showcase-final:start -->
+<section class="showcase-final-bridge" aria-label="ショーケース最終ステップ">
+  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>ここから先は、完成品へのジャンプ。</h2><p>ここまでの小さな仕組みを全部つなぎ、アート、動き、光、音、UI、リプレイ性まで一気に磨いた最終ステップです。すべてを今すぐ書けなくても大丈夫。Ebitengineで到達できる景色を、まず遊んで確かめてください。</p></div>
+  <ul><li>ライブステージ</li><li>4レーン譜面</li><li>3曲×2難度</li></ul>
+</section>
+<!-- showcase-final:end -->
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Rhythm Tour</h2><p>D/F/J/Kまたは4つの画面レーン。 START後はGoコードで合成した拍音が鳴ります。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-rhythm/?lang=ja" title="Ebi Rhythm Tour" allow="autoplay; fullscreen"></iframe></div></section>
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end --><section class="lesson-section" id="learn"><p class="eyebrow">DEEP DIVE</p><h2>譜面・判定・入力・演出を一つのツアーへ</h2><p>純Goの譜面データを共有判定器へ渡し、結果イベントから粒子と画面揺れを出します。借用音源は使わず、Goコードで拍音と低音を合成します。</p><div class="concept-row"><article><b>01</b><h3>見る</h3><p>3曲の自作譜面を選び、EASY/HARD、タップ、長押し、連打を通してハイスコアを狙います。</p></article><article><b>02</b><h3>状態</h3><p>純Goの譜面データを共有判定器へ渡し、結果イベントから粒子と画面揺れを出します。借用音源は使わず、Goコードで拍音と低音を合成します。</p></article><article><b>03</b><h3>結果</h3><p>判定イベントから点数、コンボ、粒子を更新します。</p></article></div></section><section class="motion-lab" data-lab="pipeline" data-steps="chart,time,input,judge,feedback" data-loop="next note"><div class="lab-copy"><p class="eyebrow">SYSTEM LAB</p><h3>譜面・判定・入力・演出を一つのツアーへ</h3><p>純Goの譜面データを共有判定器へ渡し、結果イベントから粒子と画面揺れを出します。借用音源は使わず、Goコードで拍音と低音を合成します。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next>NEXT</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>RESET</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board></div><div class="lab-values"><div><span>step</span><strong data-lab-stepn>0/5</strong></div><div><span>note</span><strong data-lab-note>—</strong></div></div></div></section><div class="concept-row"><article><span class="concept-number">1</span><h3>DATA</h3><p>譜面の配列・Cueが、いつどのlaneを押すかを持つ。</p><code>Chart / Cue / Taps</code></article><article><span class="concept-number">2</span><h3>UPDATE</h3><p>共有判定器が入力と現在時刻を順に照合する。</p><code>session.Step(inputs)</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>残り時間と判定結果をノートと文字へ写す。</p><code>time → y / grade → pixels</code></article></div><!-- update-draw-contract:start -->
@@ -54,7 +60,7 @@ func chart(name string, bpm int, pattern []int, hard bool) rhythmcore.Chart {
 }
 func main() {
 	songs := []rhythmplay.Song{{Name: "SUNRISE HARBOR", Tone: 220, Easy: chart("SUNRISE EASY", 100, []int{0, 1, 2, 3, 0, 2, 1, 3, 0, 1, 2, 3}, false), Hard: chart("SUNRISE HARD", 132, []int{0, 1, 2, 3, 0, 2, 1, 3, 0, 3, 2, 1, 0, 2, 3, 1, 0, 1, 3, 2}, true)}, {Name: "NEON REEF", Tone: 294, Easy: chart("NEON EASY", 116, []int{0, 2, 1, 3, 0, 1, 2, 3, 1, 2, 0, 3}, false), Hard: chart("NEON HARD", 148, []int{0, 2, 1, 3, 0, 1, 3, 2, 0, 3, 1, 2, 0, 2, 3, 1, 0, 1, 2, 3}, true)}, {Name: "TEMPEST PARADE", Tone: 370, Easy: chart("TEMPEST EASY", 126, []int{0, 1, 3, 2, 0, 2, 1, 3, 0, 3, 2, 1}, false), Hard: chart("TEMPEST HARD", 160, []int{0, 1, 3, 2, 0, 2, 1, 3, 0, 3, 1, 2, 0, 1, 2, 3, 0, 2, 3, 1, 0, 3, 2, 1}, true)}}
-	rhythmplay.Run(rhythmplay.Config{Title: "EBI RHYTHM TOUR", Subtitle: "Three visual songs, two charts, taps, holds, and rolls.", Difficulty: true, Songs: songs})
+	run(config{Title: "EBI RHYTHM TOUR", Subtitle: "Three stages. Four lanes. One ocean encore.", Songs: songs})
 }</code></pre>
 </section>
 <section class="code-lesson">
@@ -84,4 +90,39 @@ session := NewSession(chart)</code></pre>
         </form>
       </div>
     </section>
+<!-- capstone-renderers:start -->
+<section class="capstone-renderers" aria-label="Drawだけを替えるおまけ">
+  <div class="capstone-renderers-copy">
+    <p class="eyebrow">BONUS / DRAW ONLY</p>
+    <h2>ゲームは同じ。絵だけを、別の作り方にする。</h2>
+    <p>これは上の完成ゲームと同じパッケージから作ったWASMです。<code>Update</code>と<code>Layout</code>には手を加えず、そのまま呼びます。1回のDrawが作った同じ瞬間を、通常、輪郭線、矩形モザイクへ同時に投影します。位置、得点、敵、当たり判定、時間は1つしかありません。</p>
+  </div>
+  <div class="capstone-renderers-facts">
+    <article><b>01</b><h3>UPDATE</h3><p>入力とゲームの事実を進める。3画面で共通。</p></article>
+    <article><b>02</b><h3>LAYOUT</h3><p>元ゲームの大きさをそのまま返す。</p></article>
+    <article><b>03</b><h3>DRAW</h3><p>同じsnapshotの見せ方だけを替える。</p></article>
+  </div>
+  <div class="capstone-renderers-demo">
+    <iframe data-shared-demo="capstone-renderers" src="../../../../play/ebi-rhythm-renderer/" loading="lazy" title="同じ完成ゲームを3種類のDrawで同時表示" allow="autoplay; fullscreen"></iframe>
+  </div>
+  <div class="capstone-renderers-code">
+    <div><p class="eyebrow">THE ONLY BOUNDARY</p><h3>UpdateとLayoutは、元のゲームへそのまま渡す。</h3><p>矩形版はsnapshotを小さな格子へ縮め、nearestで戻します。ワイヤ版は隣の画素との差をKageシェーダーで線にします。どちらもゲーム状態を読み書きしません。</p></div>
+    <pre><code>func (g *gallery) Update() error {
+    return g.inner.Update()
+}
+
+func (g *gallery) Layout(w, h int) (int, int) {
+    return g.inner.Layout(w, h)
+}
+
+func (g *gallery) Draw(screen *ebiten.Image) {
+    snapshot := ebiten.NewImage(width, height)
+    g.inner.Draw(snapshot)
+    drawPolished(screen, snapshot)
+    drawWireframe(screen, snapshot)
+    drawRectangles(screen, snapshot)
+}</code></pre>
+  </div>
+</section>
+<!-- capstone-renderers:end -->
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

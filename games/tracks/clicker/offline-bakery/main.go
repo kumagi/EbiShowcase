@@ -1,21 +1,41 @@
 package main
 
 import (
+	"bytes"
+	"embed"
 	"fmt"
+	"image"
 	"image/color"
+	_ "image/png"
 	"math"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	text "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
-	"github.com/kumagi/EbiShowcase/internal/trackatlas"
+	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const width, height = 480, 720
 const prefix = "ebiShowcaseBakery."
+
+// Only this capstone's local generated artwork enters its WASM binary.
+//
+//go:embed assets/bakery-pearl-palace.png assets/bakery-chef.png assets/bakery-equipment-atlas.png
+var bakeryArtFS embed.FS
+
+var (
+	bakeryArtOnce sync.Once
+	bakeryArt     map[string]*ebiten.Image
+	bakeryGear    [3]*ebiten.Image
+	bakeryFace14  *text.GoTextFace
+	bakeryFace16  *text.GoTextFace
+	bakeryFace20  *text.GoTextFace
+)
 
 type game struct {
 	sweets                              float64
@@ -27,12 +47,17 @@ type game struct {
 	clear                               bool
 	particles                           []crumb
 	milestone                           int
+	previousMilestone, milestoneFlash   int
+	tapFlash, buyFlash, buyLine         int
 }
 type crumb struct{ x, y, vx, vy, life float64 }
 
 func newGame() *game {
+	loadBakeryArt()
 	g := &game{cost: 20, mixerCost: 180, shopCost: 1600, last: time.Now()}
 	g.load()
+	g.milestone = milestoneFor(g.total)
+	g.previousMilestone = g.milestone
 	return g
 }
 func (g *game) rate() float64     { return float64(g.ovens)*2 + float64(g.mixers)*15 + float64(g.shops)*80 }
@@ -77,6 +102,15 @@ func (g *game) Update() error {
 	dt := math.Min(.25, now.Sub(g.last).Seconds())
 	g.last = now
 	g.frame++
+	if g.tapFlash > 0 {
+		g.tapFlash--
+	}
+	if g.buyFlash > 0 {
+		g.buyFlash--
+	}
+	if g.milestoneFlash > 0 {
+		g.milestoneFlash--
+	}
 	if !g.clear {
 		made := g.rate() * dt
 		g.sweets += made
@@ -92,15 +126,11 @@ func (g *game) Update() error {
 			g.particles = append(g.particles[:i], g.particles[i+1:]...)
 		}
 	}
-	g.milestone = 0
-	if g.total >= 500 {
-		g.milestone = 1
-	}
-	if g.total >= 5000 {
-		g.milestone = 2
-	}
-	if g.total >= 25000 {
-		g.milestone = 3
+	g.milestone = milestoneFor(g.total)
+	if g.milestone > g.previousMilestone {
+		g.previousMilestone = g.milestone
+		g.milestoneFlash = 150
+		g.burst(240, 315, 30)
 	}
 	if g.lastSave > 0 {
 		g.lastSave -= dt
@@ -147,21 +177,25 @@ func (g *game) Update() error {
 			g.sweets += made
 			g.total += made
 			g.burst(240, 280, 12)
+			g.tapFlash = 12
 		} else if x < 160 && g.sweets >= g.cost {
 			g.sweets -= g.cost
 			g.ovens++
 			g.cost = 20 * math.Pow(1.25, float64(g.ovens))
 			g.burst(80, 540, 16)
+			g.buyLine, g.buyFlash = 0, 24
 		} else if x < 320 && g.sweets >= g.mixerCost {
 			g.sweets -= g.mixerCost
 			g.mixers++
 			g.mixerCost = 180 * math.Pow(1.32, float64(g.mixers))
 			g.burst(240, 540, 16)
+			g.buyLine, g.buyFlash = 1, 24
 		} else if g.sweets >= g.shopCost {
 			g.sweets -= g.shopCost
 			g.shops++
 			g.shopCost = 1600 * math.Pow(1.38, float64(g.shops))
 			g.burst(400, 540, 18)
+			g.buyLine, g.buyFlash = 2, 24
 		}
 		g.save()
 	}
@@ -178,43 +212,219 @@ func (g *game) burst(x, y float64, n int) {
 	}
 }
 func (g *game) Draw(s *ebiten.Image) {
-	backgrounds := []color.RGBA{{39, 25, 43, 255}, {39, 42, 70, 255}, {45, 65, 64, 255}, {78, 53, 35, 255}}
-	s.Fill(backgrounds[g.milestone])
-	ebitenutil.DebugPrintAt(s, "EBI BAKERY — SAVED IN THIS BROWSER", 110, 40)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("SWEETS %s   TOTAL %s / 25.0K", short(g.sweets), short(g.total)), 120, 85)
-	bob := math.Sin(float64(g.frame)*.12) * 5
-	trackatlas.DrawCentered(s, "bakery", 240, 275+bob, 190+math.Sin(float64(g.frame)*.18)*5)
-	for i := 0; i < min(g.ovens, 6); i++ {
-		phase := math.Mod(float64(g.frame)*1.7+float64(i)*55, 390)
-		trackatlas.DrawCentered(s, "coin", 45+phase, 420+math.Sin(phase*.05)*8, 16)
+	drawBakeryCover(s, bakeryArt["palace"], 0, 0, width, height)
+	grades := []color.RGBA{{7, 28, 48, 20}, {17, 64, 76, 22}, {85, 38, 92, 28}, {135, 77, 22, 34}}
+	vector.DrawFilledRect(s, 0, 0, width, height, grades[g.milestone], false)
+
+	// The HUD turns the artwork into a readable game objective immediately.
+	vector.DrawFilledRect(s, 10, 10, 460, 92, color.RGBA{5, 17, 32, 224}, true)
+	vector.StrokeRect(s, 10, 10, 460, 92, 2, color.RGBA{255, 220, 145, 188}, true)
+	drawCenteredLabel(s, "PEARL PALACE PATISSERIE", 240, 22, bakeryFace16, color.RGBA{255, 235, 188, 255})
+	drawCenteredLabel(s, fmt.Sprintf("SWEETS %s   •   +%s / SEC", short(g.sweets), short(g.rate())), 240, 48, bakeryFace16, color.White)
+	goalName, goalCost := g.nextTarget()
+	drawCenteredLabel(s, fmt.Sprintf("NEXT TARGET  %s  %s", goalName, short(goalCost)), 240, 74, bakeryFace14, color.RGBA{126, 244, 255, 255})
+
+	// The chef and the pastry on the tray are the manual-click product. Tap
+	// feedback is a presentation-only transform driven by tapFlash from Update.
+	bob := math.Sin(float64(g.frame)*.08) * 3
+	chefScale := 1.0
+	if g.tapFlash > 0 {
+		chefScale = 1.035
 	}
+	chefW, chefH := 285*chefScale, 342*chefScale
+	drawBakeryContain(s, bakeryArt["chef"], 98-(chefW-285)/2, 95+bob-(chefH-342)/2, chefW, chefH, false, 1)
+	trayX, trayY := float32(328), float32(246+bob)
+	for i := 0; i < 3; i++ {
+		r := float32(34+i*8) + float32(math.Sin(float64(g.frame)*.12+float64(i))*2)
+		vector.StrokeCircle(s, trayX, trayY, r, float32(4-i), color.RGBA{255, 224, 116, uint8(150 - i*40)}, true)
+	}
+	if g.tapFlash > 0 {
+		vector.StrokeCircle(s, trayX, trayY, float32(52+(12-g.tapFlash)*3), 4, color.RGBA{125, 247, 255, 210}, true)
+	}
+	drawCenteredLabel(s, fmt.Sprintf("TAP THE PEARL TART  +%s", short(g.tapPower())), 240, 422, bakeryFace16, color.RGBA{255, 245, 213, 255})
+
 	for _, p := range g.particles {
-		vector.DrawFilledCircle(s, float32(p.x), float32(p.y), float32(2+p.life/15), color.RGBA{255, 210, 95, 255}, true)
+		vector.DrawFilledCircle(s, float32(p.x), float32(p.y), float32(2+p.life/15), color.RGBA{255, 218, 116, 230}, true)
 	}
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("TAP / SPACE: BAKE +%s", short(g.tapPower())), 150, 445)
-	drawShop(s, 15, "1 OVEN", g.cost, g.ovens, g.sweets >= g.cost)
-	drawShop(s, 170, "2 MIXER", g.mixerCost, g.mixers, g.sweets >= g.mixerCost)
-	drawShop(s, 325, "3 SHOP", g.shopCost, g.shops, g.sweets >= g.shopCost)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("PRODUCTION %s / SEC   DISTRICT %d/3", short(g.rate()), g.milestone), 105, 635)
+
+	// The three generated machines are both visible production lines and the
+	// exact items purchased by the lower cards. Locked lines remain recognizable.
+	drawLine(s, 0, 14, 448, g.ovens, g.frame, g.buyLine == 0 && g.buyFlash > 0)
+	drawLine(s, 1, 170, 448, g.mixers, g.frame, g.buyLine == 1 && g.buyFlash > 0)
+	drawLine(s, 2, 326, 448, g.shops, g.frame, g.buyLine == 2 && g.buyFlash > 0)
+	drawShop(s, 0, 15, "1  OVEN", g.cost, g.ovens, g.sweets >= g.cost, g.buyLine == 0 && g.buyFlash > 0)
+	drawShop(s, 1, 170, "2  MIXER", g.mixerCost, g.mixers, g.sweets >= g.mixerCost, g.buyLine == 1 && g.buyFlash > 0)
+	drawShop(s, 2, 325, "3  BOUTIQUE", g.shopCost, g.shops, g.sweets >= g.shopCost, g.buyLine == 2 && g.buyFlash > 0)
+
+	progress := math.Min(1, g.total/25000)
+	vector.DrawFilledRect(s, 15, 633, 450, 14, color.RGBA{4, 16, 30, 220}, true)
+	vector.DrawFilledRect(s, 18, 636, float32(444*progress), 8, color.RGBA{99, 231, 242, 235}, true)
+	drawCenteredLabel(s, fmt.Sprintf("DISTRICT %d/3   •   TOTAL %s / 25.0K", g.milestone, short(g.total)), 240, 651, bakeryFace14, color.White)
 	if g.offline > 0 {
-		ebitenutil.DebugPrintAt(s, fmt.Sprintf("WELCOME BACK! OFFLINE +%s", short(g.offline)), 120, 655)
+		drawCenteredLabel(s, fmt.Sprintf("WELCOME BACK  •  OFFLINE +%s", short(g.offline)), 240, 674, bakeryFace14, color.RGBA{255, 230, 145, 255})
 	} else if g.lastSave > 0 {
-		ebitenutil.DebugPrintAt(s, "SAVED", 220, 655)
+		drawCenteredLabel(s, "SAVED IN THIS BROWSER", 240, 674, bakeryFace14, color.RGBA{181, 247, 222, 255})
+	} else {
+		drawCenteredLabel(s, "R: DELETE SAVE", 240, 674, bakeryFace14, color.RGBA{205, 214, 225, 255})
 	}
-	ebitenutil.DebugPrintAt(s, "R: DELETE SAVE", 185, 680)
+	if g.frame < 120 {
+		alpha := uint8(235)
+		if g.frame > 82 {
+			alpha = uint8(max(0, 235-(g.frame-82)*6))
+		}
+		vector.DrawFilledRect(s, 54, 350, 372, 58, color.RGBA{4, 17, 34, alpha}, true)
+		vector.StrokeRect(s, 54, 350, 372, 58, 3, color.RGBA{255, 221, 128, alpha}, true)
+		drawCenteredLabel(s, "TAP THE TART  •  BUY AN OVEN AT 20", 240, 368, bakeryFace16, color.RGBA{255, 244, 215, alpha})
+	}
+	if g.milestoneFlash > 0 {
+		alpha := uint8(min(240, 90+g.milestoneFlash))
+		vector.DrawFilledRect(s, 76, 300, 328, 78, color.RGBA{21, 52, 72, alpha}, true)
+		vector.StrokeRect(s, 76, 300, 328, 78, 3, color.RGBA{255, 224, 133, alpha}, true)
+		drawCenteredLabel(s, fmt.Sprintf("DISTRICT %d UNLOCKED", g.milestone), 240, 323, bakeryFace20, color.RGBA{255, 240, 193, alpha})
+		drawCenteredLabel(s, "THE PEARL PALACE SHINES BRIGHTER", 240, 351, bakeryFace14, color.RGBA{133, 242, 255, alpha})
+	}
 	if g.clear {
 		overlay(s, "BAKERY GOAL REACHED!\n\nTAP / SPACE TO CONTINUE")
 	}
 }
-func drawShop(s *ebiten.Image, x float64, label string, cost float64, owned int, ready bool) {
-	c := color.RGBA{55, 86, 105, 255}
-	if ready {
-		c = color.RGBA{45, 205, 181, 255}
+
+func drawLine(s *ebiten.Image, line int, x, y float64, owned, frame int, flash bool) {
+	alpha := float32(.32)
+	if owned > 0 {
+		alpha = .95
 	}
-	vector.DrawFilledRect(s, float32(x), 485, 140, 135, c, false)
-	ebitenutil.DebugPrintAt(s, label, int(x)+35, 500)
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("COST %s\nOWNED %d", short(cost), owned), int(x)+25, 545)
+	bob := 0.0
+	if owned > 0 {
+		bob = math.Sin(float64(frame)*.11+float64(line)) * 2.5
+		vector.DrawFilledCircle(s, float32(x+70), float32(y+42), 42, color.RGBA{80, 225, 244, 25}, true)
+	}
+	if flash {
+		vector.StrokeCircle(s, float32(x+70), float32(y+42), 47, 5, color.RGBA{255, 235, 133, 220}, true)
+	}
+	drawBakeryContain(s, bakeryGear[line], x+9, y-6+bob, 122, 88, false, alpha)
+	vector.DrawFilledRect(s, float32(x+91), float32(y+59), 40, 22, color.RGBA{4, 17, 32, 220}, true)
+	drawCenteredLabel(s, fmt.Sprintf("×%d", owned), x+111, y+61, bakeryFace14, color.White)
 }
+
+func drawShop(s *ebiten.Image, line int, x float64, label string, cost float64, owned int, ready, flash bool) {
+	fill := color.RGBA{8, 27, 45, 236}
+	border := color.RGBA{132, 159, 174, 170}
+	if ready {
+		fill = color.RGBA{11, 68, 78, 242}
+		border = color.RGBA{114, 244, 224, 240}
+	}
+	if flash {
+		border = color.RGBA{255, 226, 124, 255}
+	}
+	vector.DrawFilledRect(s, float32(x), 526, 140, 99, fill, true)
+	vector.StrokeRect(s, float32(x), 526, 140, 99, 3, border, true)
+	drawBakeryContain(s, bakeryGear[line], x+5, 530, 55, 54, false, 1)
+	drawLabel(s, label, x+58, 539, bakeryFace14, color.RGBA{255, 239, 205, 255})
+	drawLabel(s, fmt.Sprintf("COST %s", short(cost)), x+58, 563, bakeryFace14, color.White)
+	drawLabel(s, fmt.Sprintf("OWNED %d", owned), x+58, 588, bakeryFace14, color.RGBA{154, 236, 244, 255})
+}
+
+func loadBakeryArt() {
+	bakeryArtOnce.Do(func() {
+		bakeryArt = make(map[string]*ebiten.Image, 3)
+		for key, filename := range map[string]string{
+			"palace":    "bakery-pearl-palace.png",
+			"chef":      "bakery-chef.png",
+			"equipment": "bakery-equipment-atlas.png",
+		} {
+			data, err := bakeryArtFS.ReadFile("assets/" + filename)
+			if err != nil {
+				panic(err)
+			}
+			decoded, _, err := image.Decode(bytes.NewReader(data))
+			if err != nil {
+				panic(err)
+			}
+			bakeryArt[key] = ebiten.NewImageFromImage(decoded)
+		}
+		atlas := bakeryArt["equipment"]
+		for i := range bakeryGear {
+			bakeryGear[i] = atlas.SubImage(image.Rect(i*512, 0, (i+1)*512, 512)).(*ebiten.Image)
+		}
+		bakeryFace14, _ = uilab.Face("en", 14)
+		bakeryFace16, _ = uilab.Face("en", 16)
+		bakeryFace20, _ = uilab.Face("en", 20)
+	})
+}
+
+func drawBakeryCover(dst, img *ebiten.Image, x, y, w, h float64) {
+	b := img.Bounds()
+	scale := math.Max(w/float64(b.Dx()), h/float64(b.Dy()))
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(-float64(b.Min.X), -float64(b.Min.Y))
+	op.GeoM.Scale(scale, scale)
+	op.GeoM.Translate(x+(w-float64(b.Dx())*scale)/2, y+(h-float64(b.Dy())*scale)/2)
+	op.Filter = ebiten.FilterLinear
+	dst.DrawImage(img, op)
+}
+
+func drawBakeryContain(dst, img *ebiten.Image, x, y, w, h float64, mirror bool, alpha float32) {
+	b := img.Bounds()
+	scale := math.Min(w/float64(b.Dx()), h/float64(b.Dy()))
+	dw, dh := float64(b.Dx())*scale, float64(b.Dy())*scale
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(-float64(b.Min.X), -float64(b.Min.Y))
+	if mirror {
+		op.GeoM.Scale(-scale, scale)
+		op.GeoM.Translate(x+(w+dw)/2, y+(h-dh)/2)
+	} else {
+		op.GeoM.Scale(scale, scale)
+		op.GeoM.Translate(x+(w-dw)/2, y+(h-dh)/2)
+	}
+	op.ColorScale.ScaleAlpha(alpha)
+	op.Filter = ebiten.FilterLinear
+	dst.DrawImage(img, op)
+}
+
+func drawLabel(dst *ebiten.Image, label string, x, y float64, face *text.GoTextFace, c color.Color) {
+	if face == nil {
+		ebitenutil.DebugPrintAt(dst, label, int(x), int(y))
+		return
+	}
+	op := &text.DrawOptions{}
+	op.GeoM.Translate(x, y)
+	op.ColorScale.ScaleWithColor(c)
+	text.Draw(dst, label, face, op)
+}
+
+func drawCenteredLabel(dst *ebiten.Image, label string, centerX, y float64, face *text.GoTextFace, c color.Color) {
+	if face == nil {
+		ebitenutil.DebugPrintAt(dst, label, int(centerX)-len(label)*3, int(y))
+		return
+	}
+	w, _ := text.Measure(label, face, 0)
+	drawLabel(dst, label, centerX-w/2, y, face, c)
+}
+
+func milestoneFor(total float64) int {
+	switch {
+	case total >= 25000:
+		return 3
+	case total >= 5000:
+		return 2
+	case total >= 500:
+		return 1
+	default:
+		return 0
+	}
+}
+
+func (g *game) nextTarget() (string, float64) {
+	name, cost := "OVEN", g.cost
+	if g.mixerCost < cost {
+		name, cost = "MIXER", g.mixerCost
+	}
+	if g.shopCost < cost {
+		name, cost = "BOUTIQUE", g.shopCost
+	}
+	return name, cost
+}
+
 func short(v float64) string {
 	if v >= 1e6 {
 		return fmt.Sprintf("%.2fM", v/1e6)

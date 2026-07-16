@@ -5,8 +5,12 @@
 package reversiui
 
 import (
+	"bytes"
+	_ "embed"
 	"fmt"
+	"image"
 	"image/color"
+	_ "image/png"
 	"math"
 	"sync"
 
@@ -89,7 +93,22 @@ var (
 	fontBase *opentype.Font
 	fontErr  error
 	faces    = map[float64]font.Face{}
+	artOnce  sync.Once
+	backdrop *ebiten.Image
 )
+
+//go:embed assets/reversi-championship.png
+var backdropPNG []byte
+
+func loadBackdrop() {
+	artOnce.Do(func() {
+		decoded, _, err := image.Decode(bytes.NewReader(backdropPNG))
+		if err != nil {
+			panic(err)
+		}
+		backdrop = ebiten.NewImageFromImage(decoded)
+	})
+}
 
 func uiFace(size float64) font.Face {
 	fontOnce.Do(func() { fontBase, fontErr = opentype.Parse(ogfont.NotoSansJP) })
@@ -108,6 +127,7 @@ func uiFace(size float64) font.Face {
 }
 
 func New(variant Variant) *Game {
+	loadBackdrop()
 	g := &Game{variant: variant, difficulty: Positional, lang: browserLanguage()}
 	g.audio = audio.NewContext(audiolab.SampleRate)
 	g.pulse = shaderlab.NewPulse()
@@ -377,17 +397,23 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{12, 20, 37, 255})
 	v := g.view()
 	w, h := g.dimensions()
-	g.cam.ViewW, g.cam.ViewH = float64(w), float64(h)
+	g.drawBackdrop(screen, w, h, v)
 	g.drawEffectBadge(screen)
 	cell := v.size / reversi.Size
 
 	g.drawTop(screen, w, v)
-	vector.DrawFilledRect(screen, v.x-7, v.y-7, v.size+14, v.size+14, color.RGBA{28, 93, 74, 255}, false)
+	vector.DrawFilledRect(screen, v.x-17, v.y-11, v.size+34, v.size+34, color.NRGBA{3, 8, 18, 205}, false)
+	vector.DrawFilledRect(screen, v.x-9, v.y-9, v.size+18, v.size+18, color.RGBA{172, 113, 43, 255}, false)
+	vector.DrawFilledRect(screen, v.x-5, v.y-5, v.size+10, v.size+10, color.RGBA{13, 51, 65, 255}, false)
 	for y := 0; y < reversi.Size; y++ {
 		for x := 0; x < reversi.Size; x++ {
 			cx, cy := v.x+float32(x)*cell, v.y+float32(y)*cell
-			vector.DrawFilledRect(screen, cx, cy, cell, cell, color.RGBA{28, 117, 82, 255}, false)
-			vector.StrokeRect(screen, cx, cy, cell, cell, maxf(1, cell*.018), color.RGBA{142, 211, 154, 190}, false)
+			shade := uint8(38)
+			if (x+y)%2 == 0 {
+				shade = 48
+			}
+			vector.DrawFilledRect(screen, cx, cy, cell, cell, color.RGBA{10, shade, 61, 255}, false)
+			vector.StrokeRect(screen, cx, cy, cell, cell, maxf(1, cell*.018), color.NRGBA{129, 220, 213, 135}, false)
 			move := reversi.Move{X: x, Y: y}
 			if containsMove(g.legal, move) && !g.over && g.variant != BoardGrid {
 				vector.DrawFilledCircle(screen, cx+cell/2, cy+cell/2, maxf(5, cell*.13), color.RGBA{76, 213, 239, 180}, false)
@@ -397,8 +423,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			}
 			if stone := g.board[y][x]; stone != reversi.Empty {
 				stoneColor, radius := g.stoneFrame(move, stone, cell*.39)
+				vector.DrawFilledCircle(screen, cx+cell/2+cell*.035, cy+cell/2+cell*.09, radius*.91, color.RGBA{3, 9, 14, 105}, true)
 				vector.DrawFilledCircle(screen, cx+cell/2, cy+cell/2, radius, stoneColor, false)
 				vector.StrokeCircle(screen, cx+cell/2, cy+cell/2, radius, maxf(1, cell*.025), color.RGBA{255, 255, 255, 125}, false)
+				vector.DrawFilledCircle(screen, cx+cell*.39, cy+cell*.36, maxf(1.5, radius*.12), color.RGBA{255, 255, 255, 95}, true)
 			}
 			if g.lastMove == move && g.lastPulse > 0 {
 				pulse := cell*.33 + float32(22-g.lastPulse)*cell*.014
@@ -410,6 +438,23 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	g.drawInfo(screen, w, h, v)
 	if g.over {
 		g.drawResult(screen, v)
+	}
+}
+
+func (g *Game) drawBackdrop(screen *ebiten.Image, w, h int, v boardView) {
+	if backdrop != nil {
+		b := backdrop.Bounds()
+		sx, sy := float64(w)/float64(b.Dx()), float64(h)/float64(b.Dy())
+		scale := math.Max(sx, sy)
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Scale(scale, scale)
+		op.GeoM.Translate((float64(w)-float64(b.Dx())*scale)/2, (float64(h)-float64(b.Dy())*scale)/2)
+		op.Filter = ebiten.FilterLinear
+		screen.DrawImage(backdrop, op)
+	}
+	vector.DrawFilledRect(screen, 0, 0, float32(w), 106, color.NRGBA{2, 9, 23, 208}, false)
+	if g.variant == CPUEvaluation {
+		drawLabel(screen, g.tr("CHAMPIONSHIP TABLE", "チャンピオンシップ"), max(18, w-230), h-24, 10, color.RGBA{255, 211, 112, 110})
 	}
 }
 
@@ -560,8 +605,8 @@ func (g *Game) view() boardView {
 		size := minf(float32(h-165), float32(w)*.60)
 		return boardView{x: 34, y: 108, size: size}
 	}
-	size := minf(float32(w-28), float32(h-292))
-	return boardView{x: (float32(w) - size) / 2, y: 142, size: size, portrait: true}
+	size := minf(float32(w-80), float32(h-320))
+	return boardView{x: (float32(w) - size) / 2, y: 128, size: size, portrait: true}
 }
 
 func (g *Game) dimensions() (int, int) {
@@ -675,8 +720,8 @@ func minf(a, b float32) float32 {
 }
 
 func (g *Game) Layout(outsideW, outsideH int) (int, int) {
-	g.viewW, g.viewH = outsideW, outsideH
-	return outsideW, outsideH
+	g.viewW, g.viewH = 480, 720
+	return g.viewW, g.viewH
 }
 
 func Run(variant Variant) {

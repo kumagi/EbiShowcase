@@ -42,6 +42,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CREATURE STATE MACHINE</p><h2>Separate “when and where” from “what it does.”</h2><p class="lesson-lead">Spawning decides how a creature enters the world; a state machine decides its life afterward. Day plus meadow creates grazers, while night plus rock creates prowlers. Each creature then changes its own <strong>state</strong> from distance, food, and torch events.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Spawn from time and terrain</h3><p>Check the day phase on a timer. Add grazers only in the left meadow by day and prowlers only in the right rocks at night.</p><code>if isDay() { spawnGrazer(meadow) }</code></article><article><span class="concept-number">2</span><h3>Select behavior from state</h3><p>WANDER picks random directions. A nearby grazer becomes CURIOUS, a prowler becomes CHASE, and torch light changes it to FLEE.</p><code>switch creature.state { ... }</code></article><article><span class="concept-number">3</span><h3>Let actions cause transitions</h3><p>Feeding a CURIOUS grazer changes it to FRIEND and follow. A CHASE contact costs HP, then sends that prowler into FLEE.</p><code>curious + feed → friend</code></article></div><div class="motion-lab" data-lab="ai" data-patrol="WANDER" data-chase="CURIOUS" aria-labelledby="creature-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / DISTANCE TRANSITION</p><h3 id="creature-lab-title">Switch WANDER and CURIOUS by distance</h3><p>Below 120 pixels the creature becomes interested in the player. Move away and it wanders again.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-closer data-go-focus="dist chase">Move closer</button><button type="button" class="lab-button" data-lab-farther data-go-focus="dist chase">Move farther</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board role="img" aria-label="Creature state changing with distance"></div><div class="lab-values"><div><span>State</span><strong data-lab-state>WANDER</strong></div><div><span>Distance</span><strong data-lab-dist>180</strong></div><div><span>Threshold</span><strong>120</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -85,6 +101,14 @@ case curious:
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

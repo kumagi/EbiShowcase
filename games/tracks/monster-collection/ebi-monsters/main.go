@@ -16,7 +16,6 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/cameralab"
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
-	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
@@ -113,7 +112,6 @@ type game struct {
 	pendingCapture      bool
 	bestFrames          int
 	sparkles            []sparkle
-	scene               *ebiten.Image
 	audio               *audio.Context
 	gate                audiolab.Gate
 	pulse               *shaderlab.Pulse
@@ -122,12 +120,12 @@ type game struct {
 }
 
 func newGame() *game {
+	prepareMonsterArt()
 	g := &game{
 		party:   []monster{{speciesID: 0, hp: speciesBook[0].maxHP}},
 		orbs:    8,
 		rng:     rand.New(rand.NewSource(8707)),
 		message: "Start at EMBER COVE: regional tables decide who appears.",
-		scene:   ebiten.NewImage(width, height),
 	}
 	g.dex[0] = true
 	g.audio = audio.NewContext(audiolab.SampleRate)
@@ -469,13 +467,13 @@ func (g *game) save() {
 }
 
 func (g *game) Draw(screen *ebiten.Image) {
-	g.scene.Clear()
-	g.drawScene(g.scene)
+	scene := ebiten.NewImage(width, height)
+	g.drawScene(scene)
 	op := &ebiten.DrawImageOptions{}
 	if g.shake > 0 {
 		op.GeoM.Translate(float64((g.frames%3-1)*3), float64(((g.frames/2)%3-1)*2))
 	}
-	screen.DrawImage(g.scene, op)
+	screen.DrawImage(scene, op)
 }
 
 func (g *game) drawScene(screen *ebiten.Image) {
@@ -486,7 +484,8 @@ func (g *game) drawScene(screen *ebiten.Image) {
 	if g.bestFrames > 0 {
 		best = fmt.Sprintf("%02d", g.bestFrames/60)
 	}
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("BADGES %d/3 DEX %d/4 PARTY %d/3 ORBS %d TIME %02d BEST %s", g.badgeCount(), g.dexCount(), len(g.party), g.orbs, max(0, 100-g.frames/60), best), 42, 44)
+	drawMonsterSprite(screen, "capture-orb", 27, 48, 34)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("BADGES %d/3 DEX %d/4 PARTY %d/3 ORBS %d TIME %02d BEST %s", g.badgeCount(), g.dexCount(), len(g.party), g.orbs, max(0, 100-g.frames/60), best), 49, 44)
 	g.drawRoster(screen)
 	if g.mode == modeMap {
 		g.drawMap(screen)
@@ -537,13 +536,13 @@ func (g *game) drawEffectBadge(screen *ebiten.Image) {
 func (g *game) drawRoster(screen *ebiten.Image) {
 	for i := 0; i < partyLimit; i++ {
 		x := 8 + i*158
-		fill := color.RGBA{34, 55, 75, 255}
+		fill := color.RGBA{10, 24, 43, 215}
 		label := "EMPTY PARTY SLOT"
 		detail := "—"
 		if i < len(g.party) {
 			m := g.party[i]
 			s := speciesBook[m.speciesID]
-			fill = color.RGBA{s.color.R / 2, s.color.G / 2, s.color.B / 2, 255}
+			fill = color.RGBA{s.color.R / 4, s.color.G / 4, s.color.B / 4, 225}
 			label = s.name
 			detail = fmt.Sprintf("%s HP%d LV%d", typeNames[s.kind], m.hp, level(m.exp))
 			if i == g.active && g.mode == modeBattle {
@@ -551,36 +550,54 @@ func (g *game) drawRoster(screen *ebiten.Image) {
 			}
 		}
 		vector.DrawFilledRect(screen, float32(x), 70, 148, 62, fill, false)
-		ebitenutil.DebugPrintAt(screen, label, x+8, 82)
-		ebitenutil.DebugPrintAt(screen, detail, x+8, 108)
+		vector.StrokeRect(screen, float32(x), 70, 148, 62, 2, color.RGBA{157, 222, 224, 95}, false)
+		if i < len(g.party) {
+			drawMonsterSprite(screen, speciesArt(g.party[i].speciesID), float64(x+27), 101, 52)
+		}
+		ebitenutil.DebugPrintAt(screen, label, x+51, 82)
+		ebitenutil.DebugPrintAt(screen, detail, x+51, 108)
 	}
 }
 
 func (g *game) drawMap(screen *ebiten.Image) {
+	drawMonsterBackground(screen, "expedition-map", 0, 140, width, 390)
 	ebitenutil.DebugPrintAt(screen, "REGIONAL ENCOUNTER TABLES", 166, 158)
 	for i, name := range regionNames {
 		x := 12 + i*156
-		vector.DrawFilledRect(screen, float32(x), 190, 144, 250, color.RGBA{28, 53, 70, 255}, false)
+		regionTint := [...]color.RGBA{{31, 82, 110, 255}, {105, 54, 48, 255}, {42, 91, 61, 255}}[i]
+		vector.DrawFilledRect(screen, float32(x), 190, 144, 250, color.RGBA{4, 13, 28, 178}, false)
+		vector.StrokeRect(screen, float32(x), 190, 144, 250, 3, color.RGBA{regionTint.R, regionTint.G, regionTint.B, 225}, false)
 		ebitenutil.DebugPrintAt(screen, name, x+34, 209)
 		first := speciesBook[encounterTables[i][0]].name
 		second := speciesBook[encounterTables[i][1]].name
+		// The map must advertise actual creatures rather than a wall of text.
+		drawMonsterSprite(screen, speciesArt(encounterTables[i][0]), float64(x+46), 272, 74)
+		drawMonsterSprite(screen, speciesArt(encounterTables[i][1]), float64(x+102), 272, 66)
 		ebitenutil.DebugPrintAt(screen, "TABLE", x+54, 247)
-		ebitenutil.DebugPrintAt(screen, "A: "+first, x+13, 278)
-		ebitenutil.DebugPrintAt(screen, "B: "+second, x+13, 306)
+		ebitenutil.DebugPrintAt(screen, "A "+first, x+13, 306)
+		ebitenutil.DebugPrintAt(screen, "B "+second, x+13, 326)
 		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("VISITS %d", g.visits[i]), x+39, 344)
 		badge := "BADGE: --"
 		if g.badges[i] {
 			badge = "BADGE: STAR"
 		}
 		ebitenutil.DebugPrintAt(screen, badge, x+33, 362)
+		brightness, alpha := 0.25, 0.45
+		if g.badges[i] {
+			brightness, alpha = 1, 1
+		}
+		drawMonsterSpriteTone(screen, []string{"badge-tide", "badge-ember", "badge-kelp"}[i], float64(x+118), 378, 48, brightness, alpha)
 		next := encounterTables[i][g.visits[i]%2]
 		ebitenutil.DebugPrintAt(screen, "NEXT", x+55, 386)
 		ebitenutil.DebugPrintAt(screen, speciesBook[next].name, x+34, 411)
 	}
-	ebitenutil.DebugPrintAt(screen, g.message, 43, 477)
+	drawMonsterSprite(screen, "navigator", 60, 488, 126)
+	vector.DrawFilledRect(screen, 105, 456, 360, 67, color.RGBA{3, 11, 25, 195}, false)
+	ebitenutil.DebugPrintAt(screen, g.message, 119, 477)
 	for i, name := range regionNames {
 		x := i * 160
-		vector.DrawFilledRect(screen, float32(x+8), 540, 144, 75, color.RGBA{52, 91, 122, 255}, false)
+		vector.DrawFilledRect(screen, float32(x+8), 540, 144, 75, color.RGBA{20, 48, 77, 235}, false)
+		vector.StrokeRect(screen, float32(x+8), 540, 144, 75, 2, color.RGBA{119, 224, 224, 125}, false)
 		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%d %s", i+1, name), x+25, 572)
 	}
 	ready := g.badgeCount() == 3 && g.starterEvolved()
@@ -599,19 +616,27 @@ func (g *game) drawBattle(screen *ebiten.Image) {
 	wild := speciesBook[g.wildSpecies]
 	front := g.party[g.active]
 	frontSpecies := speciesBook[front.speciesID]
-	regionColors := [...]color.RGBA{{28, 70, 91, 255}, {83, 45, 46, 255}, {33, 76, 55, 255}}
-	vector.DrawFilledRect(screen, 20, 150, 440, 305, regionColors[g.currentRegion], false)
+	drawMonsterBackground(screen, []string{"battle-tidepool", "battle-ember", "battle-kelp"}[g.currentRegion], 20, 150, 440, 305)
+	vector.StrokeRect(screen, 20, 150, 440, 305, 3, color.RGBA{172, 231, 223, 125}, false)
+	vector.DrawFilledCircle(screen, 125, 302, 39, color.RGBA{2, 9, 20, 75}, true)
+	vector.DrawFilledCircle(screen, 355, 283, 42, color.RGBA{2, 9, 20, 75}, true)
 	bob := math.Sin(float64(g.frames)*0.12) * 4
 	frontX, wildX := 125.0, 355.0
 	if g.actionKind == 1 && g.actionFrame > 10 {
 		frontX += float64(24-g.actionFrame) * 4
 	}
-	trackatlas.DrawCentered(screen, trackatlas.Species(front.speciesID), frontX, 260+bob, 108)
-	wildSize := 124.0
+	drawMonsterSprite(screen, speciesArt(front.speciesID), frontX, 270+bob, 158)
+	wildSize := 170.0
 	if g.hitFlash > 0 && g.hitFlash%4 < 2 {
-		wildSize = 136
+		wildSize = 184
 	}
-	trackatlas.DrawCentered(screen, trackatlas.Species(g.wildSpecies), wildX, 235-bob, wildSize)
+	drawMonsterSprite(screen, speciesArt(g.wildSpecies), wildX, 245-bob, wildSize)
+	if g.actionKind == 1 && g.actionFrame > 6 {
+		for i := 0; i < 5; i++ {
+			x := float32(210 + i*27)
+			vector.StrokeLine(screen, x, 205+float32(i*11), x+42, 225+float32(i*11), 4, color.RGBA{255, 227, 132, 150}, true)
+		}
+	}
 	if g.actionKind == 2 && g.actionFrame > 0 {
 		progress := 1 - float64(g.actionFrame)/54
 		if progress < 0 {
@@ -619,13 +644,14 @@ func (g *game) drawBattle(screen *ebiten.Image) {
 		}
 		orbX := 130 + (355-130)*progress
 		orbY := 260 - math.Sin(progress*math.Pi)*125
-		vector.DrawFilledCircle(screen, float32(orbX), float32(orbY), 12, color.RGBA{250, 196, 70, 255}, false)
-		vector.StrokeCircle(screen, float32(orbX), float32(orbY), 12, 3, color.RGBA{255, 245, 195, 255}, false)
+		drawMonsterSprite(screen, "capture-orb", orbX, orbY, 34)
 	}
 	ebitenutil.DebugPrintAt(screen, "FRONT "+frontSpecies.name, 75, 327)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%s HP%d LV%d", typeNames[frontSpecies.kind], front.hp, level(front.exp)), 82, 351)
 	ebitenutil.DebugPrintAt(screen, "WILD "+wild.name, 313, 315)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%s HP%d/40", typeNames[wild.kind], g.wildHP), 320, 341)
+	drawHPBar(screen, 68, 363, 132, front.hp, frontSpecies.maxHP, color.RGBA{80, 220, 141, 255})
+	drawHPBar(screen, 300, 353, 132, g.wildHP, 40, color.RGBA{248, 113, 102, 255})
 	chance := min(95, 25+(40-g.wildHP)*2)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("CAPTURE %d%%   TURN %d   ORBS %d", chance, g.turns, g.orbs), 142, 390)
 	ebitenutil.DebugPrintAt(screen, g.message, 43, 426)
@@ -645,8 +671,30 @@ func (g *game) drawBattle(screen *ebiten.Image) {
 		if g.mustSwitch && i != 3 {
 			fill = color.RGBA{53, 55, 66, 255}
 		}
+		fill.A = 232
 		vector.DrawFilledRect(screen, float32(x), float32(y), 228, 68, fill, false)
-		ebitenutil.DebugPrintAt(screen, label, x+35, y+28)
+		vector.StrokeRect(screen, float32(x), float32(y), 228, 68, 2, color.RGBA{163, 224, 226, 105}, false)
+		labelX := x + 35
+		if i == 2 {
+			drawMonsterSprite(screen, "capture-orb", float64(x+34), float64(y+34), 46)
+			labelX = x + 62
+		}
+		ebitenutil.DebugPrintAt(screen, label, labelX, y+28)
+	}
+}
+
+func speciesArt(id int) string {
+	return []string{"reeflet", "mosshell", "cinderfin", "cloudray", "reef-lord"}[id]
+}
+
+func drawHPBar(screen *ebiten.Image, x, y, w float32, value, maximum int, fill color.RGBA) {
+	vector.DrawFilledRect(screen, x, y, w, 9, color.RGBA{4, 13, 26, 210}, false)
+	if maximum > 0 {
+		fraction := float32(max(0, value)) / float32(maximum)
+		if fraction > 1 {
+			fraction = 1
+		}
+		vector.DrawFilledRect(screen, x+2, y+2, (w-4)*fraction, 5, fill, false)
 	}
 }
 

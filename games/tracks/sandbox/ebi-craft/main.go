@@ -15,7 +15,6 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/cameralab"
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
-	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
@@ -40,9 +39,9 @@ type island struct {
 }
 
 var islands = []island{
-	{"MOSS CAMP", "Learn the recipe before sunset.", color.RGBA{31, 76, 91, 255}, color.RGBA{55, 102, 76, 255}, [][3]int{{1, 1, wood}, {2, 3, wood}, {4, 5, stone}, {7, 2, stone}, {8, 6, crystal}}, [3]int{1, 1, 1}, 1},
-	{"CRYSTAL CAVE", "Mine two crystals while crawlers patrol.", color.RGBA{27, 35, 76, 255}, color.RGBA{55, 61, 95, 255}, [][3]int{{1, 6, wood}, {3, 2, wood}, {5, 5, stone}, {8, 1, stone}, {6, 3, crystal}, {9, 7, crystal}}, [3]int{1, 1, 2}, 2},
-	{"EMBER ISLE", "Build two lanterns before the long night.", color.RGBA{92, 43, 46, 255}, color.RGBA{104, 68, 55, 255}, [][3]int{{0, 1, wood}, {2, 6, wood}, {3, 3, wood}, {5, 1, stone}, {7, 6, stone}, {9, 2, stone}, {4, 7, crystal}, {8, 4, crystal}}, [3]int{2, 2, 2}, 3},
+	{"MOSS CAMP", "Gather wood + stone, craft a pickaxe, mine crystal,\nthen build the tide beacon.", color.RGBA{31, 76, 91, 255}, color.RGBA{55, 102, 76, 255}, [][3]int{{1, 1, wood}, {2, 3, wood}, {4, 5, stone}, {7, 2, stone}, {8, 6, crystal}}, [3]int{1, 1, 1}, 1},
+	{"CRYSTAL CAVE", "Build the tide beacon while two armored crawlers\npatrol the crystal clearing.", color.RGBA{27, 35, 76, 255}, color.RGBA{55, 61, 95, 255}, [][3]int{{1, 6, wood}, {3, 2, wood}, {5, 5, stone}, {8, 1, stone}, {6, 3, crystal}, {9, 7, crystal}}, [3]int{1, 1, 2}, 2},
+	{"EMBER ISLE", "Gather enough material and raise two tide beacons\nbefore the long night.", color.RGBA{92, 43, 46, 255}, color.RGBA{104, 68, 55, 255}, [][3]int{{0, 1, wood}, {2, 6, wood}, {3, 3, wood}, {5, 1, stone}, {7, 6, stone}, {9, 2, stone}, {4, 7, crystal}, {8, 4, crystal}}, [3]int{2, 2, 2}, 3},
 }
 
 type particle struct {
@@ -76,6 +75,7 @@ type game struct {
 }
 
 func newGame() *game {
+	prepareCraftArt()
 	g := &game{hp: 5, rng: rand.New(rand.NewSource(44)), best: sessionBest}
 	g.audio = audio.NewContext(audiolab.SampleRate)
 	g.pulse = shaderlab.NewPulse()
@@ -327,40 +327,50 @@ func (g *game) Draw(screen *ebiten.Image) {
 	screen.Fill(d.sky)
 	dx, dy := 0, 0
 	if g.shake > 0 {
-		dx = g.rng.Intn(5) - 2
-		dy = g.rng.Intn(5) - 2
+		// Deterministic screen shake: Draw never consumes gameplay randomness.
+		dx = (g.frames%5 - 2)
+		dy = ((g.frames/2)%5 - 2)
 	}
 	world := ebiten.NewImage(width, height)
 	world.Fill(color.RGBA{0, 0, 0, 0})
+	drawIslandArt(world, g.stage)
+	vector.DrawFilledRect(world, 0, 0, width, 96, color.RGBA{3, 10, 23, 190}, false)
 	g.drawTitle(world, d.name)
 	g.drawEffectBadge(world)
-	ebitenutil.DebugPrintAt(world, fmt.Sprintf("HP %d  SCORE %05d  LIGHT %d/%d", g.hp, g.score, g.placed, g.goalLanterns), 112, 43)
+	toolSprite := "workshop"
+	if g.pickaxe {
+		toolSprite = "pickaxe"
+	}
+	drawCraftSprite(world, toolSprite, 72, 62, 46)
+	drawCraftSprite(world, "beacon", 432, 61, 52)
+	ebitenutil.DebugPrintAt(world, fmt.Sprintf("HP %d  SCORE %05d  TIDE BEACON %d/%d", g.hp, g.score, g.placed, g.goalLanterns), 98, 43)
 	ebitenutil.DebugPrintAt(world, fmt.Sprintf("BAG W%d S%d C%d  TOOL:%v", g.bag[0], g.bag[1], g.bag[2], map[bool]string{false: "HAND", true: "PICK"}[g.pickaxe]), 108, 68)
 	for y := 0; y < rows; y++ {
 		for x := 0; x < cols; x++ {
 			px, py := float32(ox+x*cell), float32(oy+y*cell)
-			shade := uint8((x + y + g.stage) % 3 * 5)
-			c := d.soil
-			c.R += shade
-			c.G += shade
-			vector.DrawFilledRect(world, px+1, py+1, cell-2, cell-2, c, false)
+			vector.StrokeRect(world, px+1, py+1, cell-2, cell-2, 1, color.RGBA{220, 244, 238, 42}, false)
 			if k := g.tiles[y][x]; k != ground {
-				trackatlas.Draw(world, tileSprite(k), float64(px+4), float64(py+4), cell-8)
+				if k == lantern {
+					vector.DrawFilledCircle(world, px+cell/2, py+cell/2, 32+float32(math.Sin(float64(g.frames)*.09))*3, color.RGBA{255, 211, 91, 34}, true)
+				}
+				drawCraftSprite(world, craftSprite(k), float64(px+cell/2), float64(py+cell/2), cell+6)
 			}
 		}
 	}
+	vector.StrokeRect(world, ox-5, oy-5, cols*cell+10, rows*cell+10, 3, color.RGBA{207, 238, 199, 115}, false)
 	for _, c := range g.crawlers {
 		bounce := math.Sin(c.phase) * 3
-		trackatlas.DrawCentered(world, "slug", float64(ox+c.x*cell+21), float64(oy+c.y*cell+21)+bounce, 29)
+		drawCraftSprite(world, "crawler", float64(ox+c.x*cell+21), float64(oy+c.y*cell+21)+bounce, 48)
 	}
 	py := float64(oy + g.py*cell + 21)
 	if g.harvestPhase > 0 {
 		py -= math.Sin(float64(g.harvestPhase)/18*math.Pi) * 8
 	}
-	trackatlas.DrawCentered(world, "hero", float64(ox+g.px*cell+21), py, 32)
-	if g.harvestPhase > 8 {
-		vector.StrokeLine(world, float32(ox+g.px*cell+25), float32(py), float32(ox+g.px*cell+36), float32(py-15), 4, color.White, false)
+	heroSprite := "hero-idle"
+	if g.harvestPhase > 0 {
+		heroSprite = "hero-mine"
 	}
+	drawCraftSprite(world, heroSprite, float64(ox+g.px*cell+21), py, 58)
 	for _, p := range g.particles {
 		vector.DrawFilledCircle(world, float32(p.x), float32(p.y), float32(2+p.life%3), p.c, false)
 	}
@@ -387,6 +397,7 @@ func (g *game) Draw(screen *ebiten.Image) {
 		ebitenutil.DebugPrintAt(screen, "TAP / ENTER TO EXPLORE AGAIN", 125, 409)
 	}
 }
+
 func (g *game) drawTitle(screen *ebiten.Image, island string) {
 	label := fmt.Sprintf("EBI CRAFT  ISLAND %d/3  %s", g.stage+1, island)
 	if face, err := uilab.Face("en", 16); err == nil {
@@ -410,16 +421,16 @@ func (g *game) drawEffectBadge(screen *ebiten.Image) {
 	screen.DrawImage(fx, op)
 }
 
-func tileSprite(k int) string {
+func craftSprite(k int) string {
 	switch k {
 	case wood:
-		return "tile-wood"
+		return "wood"
 	case stone:
-		return "tile-stone"
+		return "stone"
 	case crystal:
-		return "tile-glass"
+		return "crystal"
 	default:
-		return "tile-lantern"
+		return "beacon"
 	}
 }
 func button(s *ebiten.Image, x int, label string, c color.RGBA) {

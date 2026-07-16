@@ -41,6 +41,14 @@
 
 
 
+
+
+
+
+
+
+
+
 <section class="learn"><p class="eyebrow">ONE TRUTH</p><h2>Put the true position<br>inside <code>game</code>.</h2><p class="lesson-lead">The screen is not where an answer is stored. <code>game.x</code> and <code>game.y</code> are the answer; Draw projects that answer into pixels whenever it is called.</p><div class="concept-row"><article><span class="concept-number">1</span><h3>STATE</h3><p><code>x, y</code> are numbers inside the game's box.</p><code>type game struct { x, y int }</code></article><article><span class="concept-number">2</span><h3>DRAW</h3><p>Draw reads the numbers, then paints a square there.</p><code>DrawFilledRect(... g.x, g.y ...)</code></article><article><span class="concept-number">3</span><h3>SAME STATE</h3><p>The same <code>game</code> produces the same picture.</p><code>game → pixels</code></article></div><div class="code-lesson"><div><p class="eyebrow">THE AXIOM</p><h3>Draw does not<br>advance state.</h3><p>“Move a little every time you draw” looks handy, but changes rules when draw frequency changes. Advance numbers in Update instead.</p></div><pre><code>// ❌ Never do this in Draw
 g.x++
 
@@ -117,6 +125,14 @@ func main() {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

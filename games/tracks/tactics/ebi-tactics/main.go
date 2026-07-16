@@ -82,7 +82,6 @@ type game struct {
 	attackFrom, attackTo     pt
 	sparks                   []spark
 	rng                      *rand.Rand
-	scene                    *ebiten.Image
 	audio                    *audio.Context
 	gate                     audiolab.Gate
 	pulse                    *shaderlab.Pulse
@@ -91,7 +90,8 @@ type game struct {
 }
 
 func newGame() *game {
-	g := &game{selected: 0, cursor: pt{0, 7}, rng: rand.New(rand.NewSource(1601)), scene: ebiten.NewImage(W, H)}
+	prepareTacticsArt()
+	g := &game{selected: 0, cursor: pt{0, 7}, rng: rand.New(rand.NewSource(1601))}
 	g.audio = audio.NewContext(audiolab.SampleRate)
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: W / 2, Y: H / 2}, ViewW: W, ViewH: H}
@@ -360,29 +360,51 @@ func abs(x int) int {
 	return x
 }
 func (g *game) Draw(s *ebiten.Image) {
-	g.scene.Clear()
-	g.drawScene(g.scene)
+	scene := ebiten.NewImage(W, H)
+	g.drawScene(scene)
 	op := &ebiten.DrawImageOptions{}
 	if g.shake > 0 {
 		op.GeoM.Translate(float64((g.frame%3-1)*3), float64(((g.frame/2)%3-1)*2))
 	}
-	s.DrawImage(g.scene, op)
+	s.DrawImage(scene, op)
 }
 func (g *game) drawScene(s *ebiten.Image) {
-	s.Fill([]color.RGBA{{14, 24, 35, 255}, {28, 20, 39, 255}, {10, 37, 43, 255}}[g.mission])
+	drawTacticsCover(s, "field", 0, 0, W, H)
+	missionTint := []color.RGBA{{8, 33, 46, 30}, {49, 21, 70, 62}, {4, 58, 63, 55}}[g.mission]
+	vector.DrawFilledRect(s, 0, 0, W, H, missionTint, false)
+	vector.DrawFilledRect(s, 0, 0, W, 108, color.RGBA{3, 10, 21, 220}, false)
+	vector.DrawFilledRect(s, 0, 545, W, 175, color.RGBA{3, 10, 21, 210}, false)
 	g.drawTitle(s)
 	g.drawEffectBadge(s)
+	vector.DrawFilledRect(s, 22, 34, 436, 63, color.RGBA{4, 12, 24, 205}, false)
+	vector.StrokeRect(s, 22, 34, 436, 63, 2, color.RGBA{219, 188, 112, 130}, false)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("MISSION %d/3 %-13s TURN %d/%d TOTAL %d BEST %d", g.mission+1, missions[g.mission].name, g.turn+1, missions[g.mission].turnLimit, g.totalTurns, g.bestTurns), 38, 42)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("SELECT %s  MOVE %d  RANGE %d", g.units[g.selected].name, g.units[g.selected].move, g.units[g.selected].reach), 135, 61)
 	ebitenutil.DebugPrintAt(s, g.message, 32, 82)
 	for y := 0; y < rows; y++ {
 		for x := 0; x < cols; x++ {
 			p := pt{x, y}
-			c := []color.RGBA{{102, 151, 78, 255}, {54, 112, 70, 255}, {94, 92, 104, 255}}[terrain[y][x]]
+			c := []color.RGBA{{119, 157, 83, 135}, {35, 104, 62, 180}, {91, 87, 105, 185}}[terrain[y][x]]
 			if _, ok := g.reach[p]; ok {
-				c = color.RGBA{76, 139, 158, 255}
+				c = color.RGBA{39, 171, 210, 165}
+			}
+			// Once movement is committed, the overlay changes from blue movement
+			// tiles to gold weapon range. Forest/mountain art remains visible below.
+			if g.units[g.selected].moved && dist(g.units[g.selected].p, p) <= g.units[g.selected].reach {
+				c = color.RGBA{238, 166, 54, 145}
 			}
 			vector.DrawFilledRect(s, float32(ox+x*tile+1), float32(oy+y*tile+1), tile-2, tile-2, c, false)
+			// Tiny terrain silhouettes make movement cost visible before reading it.
+			cx, cy := float32(ox+x*tile+tile/2), float32(oy+y*tile+tile/2)
+			switch terrain[y][x] {
+			case 1: // forest canopy
+				vector.DrawFilledCircle(s, cx-9, cy+4, 9, color.RGBA{31, 84, 55, 180}, false)
+				vector.DrawFilledCircle(s, cx+2, cy-2, 12, color.RGBA{38, 96, 61, 210}, false)
+				vector.DrawFilledCircle(s, cx+11, cy+6, 8, color.RGBA{27, 76, 51, 200}, false)
+			case 2: // mountain ridge
+				vector.StrokeLine(s, cx-18, cy+14, cx-4, cy-13, 5, color.RGBA{184, 178, 180, 150}, false)
+				vector.StrokeLine(s, cx-4, cy-13, cx+18, cy+14, 5, color.RGBA{216, 211, 208, 170}, false)
+			}
 			ebitenutil.DebugPrintAt(s, fmt.Sprint(cost(p)), ox+x*tile+4, oy+y*tile+4)
 		}
 	}
@@ -402,18 +424,48 @@ func (g *game) drawScene(s *ebiten.Image) {
 			y += float32(g.attackTo.y-g.attackFrom.y) * tile * progress * .55
 		}
 		y += float32(math.Sin(float64(g.frame+i*9)*.12)) * 2
-		vector.DrawFilledCircle(s, x, y, 18, c, false)
+		vector.DrawFilledCircle(s, x, y+15, 21, color.RGBA{3, 7, 15, 145}, true)
+		sprite := "blade"
+		if u.enemy {
+			sprite = "enemy"
+		} else if u.name == "BOW" {
+			sprite = "bow"
+		}
+		drawTacticsUnit(s, sprite, float64(x), float64(y-5), 62, 78)
+		vector.StrokeCircle(s, x, y, 19, 3, c, false)
 		if i == g.selected {
 			vector.StrokeCircle(s, x, y, 22, 3, color.White, false)
 		}
-		ebitenutil.DebugPrintAt(s, fmt.Sprintf("%s%d", u.name[:1], u.hp), int(x)-12, int(y)-5)
+		vector.DrawFilledRect(s, x-20, y+21, 40, 7, color.RGBA{15, 18, 26, 230}, false)
+		vector.DrawFilledRect(s, x-20, y+21, float32(max(0, u.hp))*4, 7, c, false)
+		ebitenutil.DebugPrintAt(s, u.name[:1], int(x)-3, int(y)-5)
 	}
 	for _, p := range g.sparks {
 		vector.DrawFilledCircle(s, float32(p.x), float32(p.y), 3, color.RGBA{255, 211, 83, uint8(min(255, p.life*10))}, false)
 	}
-	vector.DrawFilledRect(s, 150, 600, 180, 38, color.RGBA{52, 82, 118, 255}, false)
-	ebitenutil.DebugPrintAt(s, "WAIT [W]", 210, 615)
-	ebitenutil.DebugPrintAt(s, "Tap unit → tile → enemy | TAB switches ally", 74, 662)
+	// The grid needs small pieces; this selected-unit dossier lets the same
+	// generated human art remain readable at phone and home-card size.
+	selected := g.units[g.selected]
+	vector.DrawFilledRect(s, 18, 558, 444, 118, color.RGBA{4, 13, 28, 225}, false)
+	vector.StrokeRect(s, 18, 558, 444, 118, 2, color.RGBA{112, 210, 220, 155}, false)
+	sprite := "blade"
+	if selected.enemy {
+		sprite = "enemy"
+	} else if selected.name == "BOW" {
+		sprite = "bow"
+	}
+	drawTacticsUnit(s, sprite, 72, 617, 102, 126)
+	ebitenutil.DebugPrintAt(s, selected.name+"  SELECTED", 128, 574)
+	ebitenutil.DebugPrintAt(s, fmt.Sprintf("HP %d/10   MOVE %d   RANGE %d", max(0, selected.hp), selected.move, selected.reach), 128, 596)
+	role := "Front-line sword / hold the route"
+	if selected.name == "BOW" {
+		role = "Long bow / attack two tiles away"
+	}
+	ebitenutil.DebugPrintAt(s, role, 128, 615)
+	vector.DrawFilledRect(s, 278, 634, 158, 30, color.RGBA{52, 82, 118, 255}, false)
+	vector.StrokeRect(s, 278, 634, 158, 30, 2, color.RGBA{181, 221, 235, 150}, false)
+	ebitenutil.DebugPrintAt(s, "WAIT [W]", 329, 645)
+	ebitenutil.DebugPrintAt(s, "Tap unit → tile → enemy | TAB switches ally", 74, 692)
 	if g.won {
 		overlay(s, fmt.Sprintf("3 MISSIONS CLEARED!\nTOTAL TURNS %d  BEST %d\nTAP / ENTER TO REPLAY", g.totalTurns, g.bestTurns))
 	}

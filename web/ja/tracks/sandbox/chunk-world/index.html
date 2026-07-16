@@ -42,6 +42,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CHUNK CACHE</p><h2>大きな世界を、小さな地図カードに分ける。</h2><p class="lesson-lead">世界の全マスを一度に持つ代わりに、8×8マスを一つの<strong>チャンク</strong>として扱います。プレイヤーが新しい区画へ近づいたときだけ生成してmapへ保存し、画面外のチャンクは保存したまま描きません。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>世界のマスをチャンクへ割る</h3><p>世界タイルxを8で割った商がチャンクx、余りがチャンク内xです。負の座標では床方向に割る関数を使います。</p><code>chunkX = floorDiv(tileX, 8)</code></article><article><span class="concept-number">2</span><h3>なければ生成して保存</h3><p>カメラ中央の周囲5×5を調べ、mapにないキーだけ同じシードで生成します。戻ってきたときは同じデータを再利用します。</p><code>chunks[key] = generateChunk(key)</code></article><article><span class="concept-number">3</span><h3>画面と重なる区画だけ描く</h3><p>カメラの左上と右下をチャンク番号へ直し、その間だけDrawします。キャッシュ数が増えても描画数はほぼ一定です。</p><code>for cy := minCY; cy &lt;= maxCY; cy++</code></article></div><div class="motion-lab" data-lab="camera" aria-labelledby="chunk-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / CAMERA WINDOW</p><h3 id="chunk-lab-title">世界とカメラを別々に動かそう</h3><p>プレイヤーを動かし、カメラを追従させます。実ゲームではこのカメラ位置を8マス幅で割り、必要チャンクを決めます。</p><div class="lab-controls"><button type="button" class="lab-button" data-lab-left data-go-focus="target">左へ</button><button type="button" class="lab-button lab-button-primary" data-lab-right data-go-focus="target">右へ</button><button type="button" class="lab-button" data-lab-step data-go-focus="lerp draw" data-go-caption="1枚引く">カメラ追従</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button></div></div><div class="lab-visual"><div class="lab-board" role="img" aria-label="ワールド内のプレイヤーとカメラ"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-actor style="top:50%"></div></div></div><div class="lab-values"><div><span>camera</span><strong data-lab-cam>0</strong></div><div><span>player</span><strong data-lab-player>200</strong></div><div><span>screen X</span><strong data-lab-screen>200</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -82,6 +98,14 @@ for cy := center.y-2; cy &lt;= center.y+2; cy++ {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

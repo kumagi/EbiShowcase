@@ -2,8 +2,12 @@
 package raycasterui
 
 import (
+	"bytes"
+	_ "embed"
 	"fmt"
+	"image"
 	"image/color"
+	_ "image/png"
 	"math"
 	"sort"
 	"sync"
@@ -14,7 +18,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/audiolab"
-	"github.com/kumagi/EbiShowcase/internal/cameralab"
 	"github.com/kumagi/EbiShowcase/internal/ogfont"
 	"github.com/kumagi/EbiShowcase/internal/raycastlogic"
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
@@ -73,7 +76,58 @@ var (
 	rayFontBase *opentype.Font
 	rayFontErr  error
 	rayFaces    = map[float64]font.Face{}
+	rayArtOnce  sync.Once
+	wallArt     *ebiten.Image
+	actorArt    *ebiten.Image
+	actorRects  []image.Rectangle
 )
+
+//go:embed assets/wall-textures.png
+var wallTexturePNG []byte
+
+//go:embed assets/raycast-actors.png
+var raycastActorsPNG []byte
+
+func loadRaycastArt() {
+	rayArtOnce.Do(func() {
+		decode := func(data []byte) image.Image {
+			decoded, _, err := image.Decode(bytes.NewReader(data))
+			if err != nil {
+				panic(err)
+			}
+			return decoded
+		}
+		walls, actors := decode(wallTexturePNG), decode(raycastActorsPNG)
+		wallArt, actorArt = ebiten.NewImageFromImage(walls), ebiten.NewImageFromImage(actors)
+		actorRects = opaqueRaycastCells(actors, 3)
+	})
+}
+
+func opaqueRaycastCells(atlas image.Image, cells int) []image.Rectangle {
+	bounds := atlas.Bounds()
+	cellW := bounds.Dx() / cells
+	result := make([]image.Rectangle, cells)
+	for cell := 0; cell < cells; cell++ {
+		base := image.Rect(bounds.Min.X+cell*cellW, bounds.Min.Y, bounds.Min.X+(cell+1)*cellW, bounds.Max.Y)
+		minX, minY, maxX, maxY := base.Max.X, base.Max.Y, base.Min.X, base.Min.Y
+		for y := base.Min.Y; y < base.Max.Y; y++ {
+			for x := base.Min.X; x < base.Max.X; x++ {
+				_, _, _, a := atlas.At(x, y).RGBA()
+				if a < 0x0800 {
+					continue
+				}
+				minX, minY = min(minX, x), min(minY, y)
+				maxX, maxY = max(maxX, x+1), max(maxY, y+1)
+			}
+		}
+		if minX >= maxX || minY >= maxY {
+			result[cell] = base
+		} else {
+			result[cell] = image.Rect(minX, minY, maxX, maxY)
+		}
+	}
+	return result
+}
 
 func rayFace(size float64) font.Face {
 	rayFontOnce.Do(func() { rayFontBase, rayFontErr = opentype.Parse(ogfont.NotoSansJP) })
@@ -102,7 +156,6 @@ type Game struct {
 	win        bool
 	message    string
 	actors     []actor
-	zbuf       []float64
 	mission    int
 	grid       [][]int
 	hp         int
@@ -110,22 +163,20 @@ type Game struct {
 	flash      int
 	ticks      int
 	best       int
-	canvas     *ebiten.Image
 	viewW      int
 	viewH      int
 	lang       string
 	audio      *audio.Context
 	gate       audiolab.Gate
 	pulse      *shaderlab.Pulse
-	cam        cameralab.State
 	badge      *ebiten.Image
 }
 
 func New(variant Variant) *Game {
-	g := &Game{variant: variant, zbuf: make([]float64, W), canvas: ebiten.NewImage(W, H), viewW: W, viewH: H, lang: browserLanguage(), message: "TURN, MOVE, AND READ THE RAYS"}
+	loadRaycastArt()
+	g := &Game{variant: variant, viewW: W, viewH: H, lang: browserLanguage(), message: "TURN, MOVE, AND READ THE RAYS"}
 	g.audio = audio.NewContext(audiolab.SampleRate)
 	g.pulse = shaderlab.NewPulse()
-	g.cam = cameralab.State{ViewW: W, ViewH: H}
 	g.badge = ebiten.NewImage(20, 20)
 	g.badge.Fill(color.RGBA{46, 230, 200, 255})
 	g.reset()
@@ -403,22 +454,48 @@ func wallColor(hit raycastlogic.Hit, textured bool, column int) color.RGBA {
 
 func (g *Game) draw3D(screen *ebiten.Image, textured bool) {
 	top, bottom := 42, 414
+	zbuf := make([]float64, W)
 	fill(screen, 0, float32(top), W, float32((bottom-top)/2), color.RGBA{18, 29, 63, 255})
 	fill(screen, 0, float32((top+bottom)/2), W, float32((bottom-top)/2), color.RGBA{20, 30, 34, 255})
+	// Horizon glow and perspective floor lines make the spatial illusion read
+	// at thumbnail scale before a single ray column is inspected.
+	fill(screen, 0, float32((top+bottom)/2-8), W, 16, color.RGBA{46, 230, 200, 22})
+	for i := 1; i <= 8; i++ {
+		t := float64(i) / 8
+		y := float32((top+bottom)/2) + float32(math.Pow(t, 1.8))*float32((bottom-top)/2)
+		vector.StrokeLine(screen, 0, y, W, y, 1, color.RGBA{86, 143, 151, uint8(18 + i*4)}, false)
+	}
 	for x := 0; x < W; x += 2 {
 		a := g.angle - FOV/2 + (float64(x)+1)/W*FOV
 		hit := raycastlogic.Cast(g.grid, g.x, g.y, a)
 		d := raycastlogic.CorrectDistance(hit.Distance, a, g.angle)
-		g.zbuf[x], g.zbuf[min(x+1, W-1)] = d, d
+		zbuf[x], zbuf[min(x+1, W-1)] = d, d
 		h := raycastlogic.ProjectHeight(bottom-top, d)
 		y := (top + bottom - h) / 2
 		c := wallColor(hit, textured, x)
 		fog := math.Min(1, .35+4/(d+3))
 		c.R, c.G, c.B = uint8(float64(c.R)*fog), uint8(float64(c.G)*fog), uint8(float64(c.B)*fog)
-		fill(screen, float32(x), float32(y), 2, float32(h), c)
+		if textured && wallArt != nil {
+			panelW := wallArt.Bounds().Dx() / 3
+			panel := g.mission % 3
+			u := min(panelW-1, max(0, int(hit.WallU*float64(panelW))))
+			src := wallArt.SubImage(image.Rect(panel*panelW+u, 0, panel*panelW+u+1, wallArt.Bounds().Dy())).(*ebiten.Image)
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Scale(2, float64(h)/float64(src.Bounds().Dy()))
+			op.GeoM.Translate(float64(x), float64(y))
+			light := float32(fog)
+			if hit.Side == 1 {
+				light *= .72
+			}
+			op.ColorScale.Scale(light, light, light, 1)
+			op.Filter = ebiten.FilterLinear
+			screen.DrawImage(src, op)
+		} else {
+			fill(screen, float32(x), float32(y), 2, float32(h), c)
+		}
 	}
 	if g.variant == EbiRaycaster {
-		g.drawActors(screen, top, bottom)
+		g.drawActors(screen, top, bottom, zbuf)
 	}
 	if g.shots > 0 {
 		centerY := float32((top + bottom) / 2)
@@ -429,7 +506,7 @@ func (g *Game) draw3D(screen *ebiten.Image, textured bool) {
 	}
 }
 
-func (g *Game) drawActors(screen *ebiten.Image, top, bottom int) {
+func (g *Game) drawActors(screen *ebiten.Image, top, bottom int, zbuf []float64) {
 	type visible struct {
 		i int
 		p raycastlogic.Projection
@@ -451,20 +528,22 @@ func (g *Game) drawActors(screen *ebiten.Image, top, bottom int) {
 			size = 240
 		}
 		cx := float64(W)/2 + p.ScreenX*float64(W)/2
-		col := color.RGBA{247, 84, 104, 255}
-		if a.kind == 1 {
-			col = color.RGBA{255, 205, 70, 255}
+		centerColumn := min(W-1, max(0, int(cx)))
+		if p.Depth >= zbuf[centerColumn] {
+			continue
 		}
-		if a.kind == 2 {
-			col = color.RGBA{46, 230, 200, 255}
-		}
-		left, right := int(cx-size/2), int(cx+size/2)
-		for x := left; x < right; x += 2 {
-			if x < 0 || x >= W || p.Depth >= g.zbuf[x] {
-				continue
-			}
-			half := size / 2
-			fill(screen, float32(x), float32(float64(top+bottom)/2-half), 2, float32(size), col)
+		if actorArt != nil && a.kind >= 0 && a.kind < len(actorRects) {
+			r := actorRects[a.kind]
+			src := actorArt.SubImage(r).(*ebiten.Image)
+			scale := size / float64(max(r.Dx(), r.Dy()))
+			center := float64(top+bottom)/2 + size*.10
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Scale(scale, scale)
+			op.GeoM.Translate(cx-float64(r.Dx())*scale/2, center-float64(r.Dy())*scale/2)
+			fog := float32(math.Min(1, .5+3/(p.Depth+3)))
+			op.ColorScale.Scale(fog, fog, fog, 1)
+			op.Filter = ebiten.FilterLinear
+			screen.DrawImage(src, op)
 		}
 		if cx > 20 && cx < W-20 {
 			icon := "ENEMY"
@@ -537,17 +616,18 @@ func (g *Game) drawVirtual(screen *ebiten.Image) {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.cam.ViewW, g.cam.ViewH = float64(screen.Bounds().Dx()), float64(screen.Bounds().Dy())
-	g.drawEffectBadge(screen)
+	canvas := ebiten.NewImage(W, H)
 	if g.portrait() {
-		g.drawPortrait(screen)
+		g.drawPortrait(screen, canvas)
+		g.drawEffectBadge(screen)
 		return
 	}
-	g.drawVirtual(g.canvas)
+	g.drawVirtual(canvas)
 	sw, sh := screen.Bounds().Dx(), screen.Bounds().Dy()
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Scale(float64(sw)/W, float64(sh)/H)
-	screen.DrawImage(g.canvas, op)
+	screen.DrawImage(canvas, op)
+	g.drawEffectBadge(screen)
 }
 
 func (g *Game) drawEffectBadge(screen *ebiten.Image) {
@@ -563,12 +643,12 @@ func (g *Game) drawEffectBadge(screen *ebiten.Image) {
 	screen.DrawImage(fx, op)
 }
 
-func (g *Game) drawPortrait(screen *ebiten.Image) {
+func (g *Game) drawPortrait(screen, canvas *ebiten.Image) {
 	screen.Fill(color.RGBA{10, 17, 40, 255})
-	g.drawVirtual(g.canvas)
+	g.drawVirtual(canvas)
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Scale(float64(screen.Bounds().Dx())/W, 280.0/H)
-	screen.DrawImage(g.canvas, op)
+	screen.DrawImage(canvas, op)
 	fill(screen, 0, 280, float32(screen.Bounds().Dx()), float32(screen.Bounds().Dy()-280), color.RGBA{10, 17, 40, 255})
 	mission := missions[g.mission]
 	label(screen, g.tr("MISSION ", "ミッション ")+fmt.Sprint(g.mission+1)+": "+mission.Name, 18, 310, color.RGBA{46, 230, 200, 255})

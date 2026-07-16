@@ -1,8 +1,12 @@
 package main
 
 import (
+	"bytes"
+	_ "embed"
 	"fmt"
+	"image"
 	"image/color"
+	_ "image/png"
 	"math"
 	"math/rand"
 
@@ -15,7 +19,6 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/cameralab"
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
-	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
@@ -39,6 +42,12 @@ var pieceColors = []color.RGBA{
 	{239, 93, 87, 255}, {73, 161, 230, 255}, {244, 184, 64, 255},
 	{105, 194, 119, 255}, {177, 94, 218, 255},
 }
+
+//go:embed assets/match3-treasure-vault.png
+var treasureVaultPNG []byte
+
+//go:embed assets/match3-relic-atlas.png
+var relicAtlasPNG []byte
 
 type point struct{ x, y int }
 
@@ -115,27 +124,30 @@ type game struct {
 
 	// Juice: animate swaps, flash matched cells, then lerp falls. Input is
 	// ignored while one of these visual states is active.
-	busy      bool
-	swapping  bool
-	swapBack  bool
-	swapFrom  point
-	swapTo    point
-	swapT     float64
-	flash     map[point]bool
-	flashLeft int
-	falling   bool
-	progress  float64
-	fallers   []faller
-	pending   bool // continue cascade after anim
-	audio     *audio.Context
-	gate      audiolab.Gate
-	pulse     *shaderlab.Pulse
-	cam       cameralab.State
-	badge     *ebiten.Image
+	busy       bool
+	swapping   bool
+	swapBack   bool
+	swapFrom   point
+	swapTo     point
+	swapT      float64
+	flash      map[point]bool
+	flashLeft  int
+	falling    bool
+	progress   float64
+	fallers    []faller
+	pending    bool // continue cascade after anim
+	audio      *audio.Context
+	gate       audiolab.Gate
+	pulse      *shaderlab.Pulse
+	cam        cameralab.State
+	badge      *ebiten.Image
+	background *ebiten.Image
+	relicArt   [5]*ebiten.Image
 }
 
 func newGame(level stage) *game {
 	g := &game{level: level, rng: rand.New(rand.NewSource(level.seed))}
+	g.loadGeneratedArt()
 	g.audio = audio.NewContext(audiolab.SampleRate)
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: screenWidth / 2, Y: screenHeight / 2}, ViewW: screenWidth, ViewH: screenHeight}
@@ -146,6 +158,27 @@ func newGame(level stage) *game {
 	g.cursor = point{2, 3}
 	g.message = "Swap neighbors. Match 3 or more!"
 	return g
+}
+
+func mustDecodePNG(data []byte) *ebiten.Image {
+	source, _, err := image.Decode(bytes.NewReader(data))
+	if err != nil {
+		panic(err)
+	}
+	return ebiten.NewImageFromImage(source)
+}
+
+func (g *game) loadGeneratedArt() {
+	g.background = mustDecodePNG(treasureVaultPNG)
+	atlas := mustDecodePNG(relicAtlasPNG)
+	panelW := atlas.Bounds().Dx() / len(g.relicArt)
+	// The generated panels intentionally include generous vertical padding.
+	// Cropping it here keeps each silhouette large inside a 64px board cell.
+	const cropTop, cropBottom = 140, 510
+	for i := range g.relicArt {
+		panel := atlas.SubImage(image.Rect(i*panelW, cropTop, (i+1)*panelW, cropBottom))
+		g.relicArt[i] = ebiten.NewImageFromImage(panel)
+	}
 }
 
 func newRun(best int) *game {
@@ -633,11 +666,12 @@ func hasValidSwap(board [rows][cols]int) bool {
 func (g *game) Draw(screen *ebiten.Image) {
 	backgrounds := []color.RGBA{{15, 25, 45, 255}, {13, 42, 55, 255}, {30, 18, 57, 255}}
 	screen.Fill(backgrounds[g.stageIndex])
+	g.drawGeneratedBackground(screen)
+	drawReefBackdrop(screen, g.stageIndex, g.tick)
 	ox := 0.0
 	if g.shake > 0 {
 		ox = math.Sin(float64(g.tick)*2.4) * float64(g.shake)
 	}
-	vector.DrawFilledCircle(screen, float32(70+g.stageIndex*155), 80, 95, color.RGBA{40, 100, 120, 35}, true)
 	g.drawHUD(screen)
 	g.drawEffectBadge(screen)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("REEF %d/3  MOVES %02d  SCORE %04d/%04d", g.stageIndex+1, g.moves, g.score, g.level.targetScore), 75, 67)
@@ -650,6 +684,11 @@ func (g *game) Draw(screen *ebiten.Image) {
 	vector.DrawFilledRect(screen, 60, 94, 360, 14, color.RGBA{45, 61, 86, 255}, false)
 	vector.DrawFilledRect(screen, 60, 94, barWidth, 14, color.RGBA{245, 190, 69, 255}, false)
 	ebitenutil.DebugPrintAt(screen, g.message, 112, 132)
+	// A deep frame keeps the whole puzzle readable when this game is shown as
+	// a small home-page card.
+	vector.DrawFilledRect(screen, boardX-13, boardY-13, cols*cell+26, rows*cell+26, color.RGBA{4, 10, 26, 155}, false)
+	vector.DrawFilledRect(screen, boardX-8, boardY-8, cols*cell+16, rows*cell+16, color.RGBA{4, 19, 38, 135}, false)
+	vector.StrokeRect(screen, boardX-8, boardY-8, cols*cell+16, rows*cell+16, 4, color.RGBA{234, 198, 104, 205}, false)
 
 	animating := map[point]bool{}
 	if g.swapping {
@@ -661,7 +700,7 @@ func (g *game) Draw(screen *ebiten.Image) {
 			animating[point{f.x, f.toY}] = true
 			py := float32(boardY) + float32(float64(f.fromY)+float64(f.toY-f.fromY)*g.progress)*cell
 			px := float64(boardX+f.x*cell+cell/2) + ox
-			drawPiece(screen, f.kind, f.special, px, float64(py)+cell/2, cell-6, 1)
+			g.drawPiece(screen, f.kind, f.special, px, float64(py)+cell/2, cell-6, 1)
 		}
 	}
 	for y := 0; y < rows; y++ {
@@ -677,10 +716,10 @@ func (g *game) Draw(screen *ebiten.Image) {
 			}
 			if g.flashLeft > 0 && g.flash[point{x, y}] {
 				pulse := 1 + math.Sin(float64(g.tick)*.5)*.12
-				trackatlas.DrawTinted(screen, trackatlas.Gem(g.board[y][x]), float64(px+cell/2)+ox, float64(py+cell/2), float64(cell-6)*pulse, 2.4, 2.4, 2.4, 1)
+				g.drawRelic(screen, g.board[y][x], float64(px+cell/2)+ox, float64(py+cell/2), float64(cell-6)*pulse, float64(cell-6)*pulse, 1, true)
 			} else {
 				bob := math.Sin(float64(g.tick)*.06+float64(x+y)) * .8
-				trackatlas.Draw(screen, trackatlas.Gem(g.board[y][x]), float64(px+3)+ox, float64(py+3)+bob, float64(cell-6))
+				g.drawRelic(screen, g.board[y][x], float64(px+cell/2)+ox, float64(py+cell/2)+bob, cell-8, cell-6, 1, false)
 			}
 			special := g.specials[y][x]
 			if forged, ok := g.forge[point{x, y}]; ok {
@@ -688,7 +727,11 @@ func (g *game) Draw(screen *ebiten.Image) {
 			}
 			drawSpecial(screen, special, float64(px+cell/2)+ox, float64(py+cell/2), cell-6, 1)
 			if g.hasSelection && g.selected == (point{x, y}) {
-				vector.StrokeRect(screen, px+2, py+2, cell-4, cell-4, 6, color.White, false)
+				r := float32(27 + math.Sin(float64(g.tick)*.18)*3)
+				vector.StrokeCircle(screen, px+cell/2+float32(ox), py+cell/2, r, 5, color.RGBA{255, 244, 190, 245}, true)
+			}
+			if g.level.bonusKind == g.board[y][x] {
+				vector.StrokeCircle(screen, px+cell/2+float32(ox), py+cell/2, 25, 2, color.RGBA{255, 210, 82, 180}, true)
 			}
 			if !g.busy && g.cursor == (point{x, y}) {
 				vector.StrokeRect(screen, px+7, py+7, cell-14, cell-14, 3, color.RGBA{25, 32, 48, 255}, false)
@@ -703,12 +746,13 @@ func (g *game) Draw(screen *ebiten.Image) {
 		a, b := g.swapFrom, g.swapTo
 		ax, ay := cellCenter(a)
 		bx, by := cellCenter(b)
-		drawPiece(screen, g.board[a.y][a.x], g.specials[a.y][a.x], ax+(bx-ax)*t+ox, ay+(by-ay)*t, cell-6, 1)
-		drawPiece(screen, g.board[b.y][b.x], g.specials[b.y][b.x], bx+(ax-bx)*t+ox, by+(ay-by)*t, cell-6, 1)
+		g.drawPiece(screen, g.board[a.y][a.x], g.specials[a.y][a.x], ax+(bx-ax)*t+ox, ay+(by-ay)*t, cell-6, 1)
+		g.drawPiece(screen, g.board[b.y][b.x], g.specials[b.y][b.x], bx+(ax-bx)*t+ox, by+(ay-by)*t, cell-6, 1)
 	}
 	for _, p := range g.particles {
 		c := pieceColors[p.kind%len(pieceColors)]
-		vector.DrawFilledCircle(screen, float32(p.x+ox), float32(p.y), float32(2+p.life/10), c, true)
+		vector.StrokeLine(screen, float32(p.x+ox), float32(p.y), float32(p.x-p.vx*4+ox), float32(p.y-p.vy*4), float32(2+p.life/16), c, true)
+		vector.DrawFilledCircle(screen, float32(p.x+ox), float32(p.y), float32(1.5+p.life/18), color.RGBA{255, 244, 197, 220}, true)
 	}
 	ebitenutil.DebugPrintAt(screen, "4: ROCKET   5: WAVE   L/T: BOMB", 91, 615)
 	ebitenutil.DebugPrintAt(screen, "Tap two neighbors  |  Arrows + Space", 90, 641)
@@ -722,6 +766,38 @@ func (g *game) Draw(screen *ebiten.Image) {
 	}
 	if g.lost {
 		overlay(screen, "OUT OF MOVES\n\nTAP / SPACE TO RETRY")
+	}
+}
+
+func (g *game) drawGeneratedBackground(screen *ebiten.Image) {
+	op := &ebiten.DrawImageOptions{}
+	tints := [...]struct{ r, gr, b float32 }{{.86, .94, 1}, {.72, 1, .92}, {.95, .76, 1}}
+	t := tints[g.stageIndex]
+	op.ColorScale.Scale(t.r, t.gr, t.b, .96)
+	screen.DrawImage(g.background, op)
+	vector.DrawFilledRect(screen, 0, 0, screenWidth, 145, color.RGBA{2, 9, 25, 125}, false)
+	vector.DrawFilledRect(screen, 0, 600, screenWidth, 120, color.RGBA{2, 9, 25, 155}, false)
+}
+
+func drawReefBackdrop(screen *ebiten.Image, stage, tick int) {
+	// Three transparent depth bands make the reef feel much larger than the
+	// board while leaving the gems as the highest-contrast objects.
+	for i := 0; i < 7; i++ {
+		y := float32(40 + i*105)
+		shade := uint8(16 + i*5)
+		vector.DrawFilledRect(screen, 0, y, screenWidth, 105, color.RGBA{8, shade + 18, shade + 30, 30}, false)
+	}
+	// Keep the HUD clear: depth comes from small drifting bubbles, never a
+	// screen-sized opaque decorative disc.
+	for i := 0; i < 18; i++ {
+		x := float32((i*83 + stage*31) % screenWidth)
+		y := float32((i*47+tick/4)%560 + 90)
+		r := float32(2 + i%4)
+		vector.StrokeCircle(screen, x, y, r, 1, color.RGBA{128, 231, 239, 75}, true)
+	}
+	// Foreground coral silhouettes frame the touch controls.
+	for _, x := range []float32{18, 43, 437, 462} {
+		vector.StrokeLine(screen, x, 720, x+float32(math.Sin(float64(x)))*17, 585, 10, color.RGBA{20, 72, 79, 210}, true)
 	}
 }
 
@@ -763,8 +839,21 @@ func smoothstep(t float64) float64 {
 	return t * t * (3 - 2*t)
 }
 
-func drawPiece(screen *ebiten.Image, kind, special int, x, y, size, alpha float64) {
-	trackatlas.DrawCentered(screen, trackatlas.Gem(kind), x, y, float64(size))
+func (g *game) drawRelic(screen *ebiten.Image, kind int, x, y, drawW, drawH, alpha float64, flash bool) {
+	art := g.relicArt[kind%len(g.relicArt)]
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(drawW/float64(art.Bounds().Dx()), drawH/float64(art.Bounds().Dy()))
+	op.GeoM.Translate(x-drawW/2, y-drawH/2)
+	if flash {
+		op.ColorScale.Scale(2.2, 2.2, 2.2, float32(alpha))
+	} else {
+		op.ColorScale.ScaleAlpha(float32(alpha))
+	}
+	screen.DrawImage(art, op)
+}
+
+func (g *game) drawPiece(screen *ebiten.Image, kind, special int, x, y, size, alpha float64) {
+	g.drawRelic(screen, kind, x, y, size-2, size, alpha, false)
 	drawSpecial(screen, special, x, y, size, alpha)
 }
 

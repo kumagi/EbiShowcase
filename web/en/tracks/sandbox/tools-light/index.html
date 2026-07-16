@@ -45,6 +45,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / TOOL DATA AND TILE LIGHT</p><h2>Check “what mines it?” and “can I see it?” before changing a tile.</h2><p class="lesson-lead">The tools crafted in the previous step now store preferred material, power, and durability. Before mining, compare tool with material and inspect that tile's light. A torch is not one big bright picture: every tile calculates brightness from its <strong>distance to the source</strong>.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Match tool and material</h3><p>Axe on wood or pick on stone gives power 3 for one durability. A mismatch gives power 1 and costs two, wearing out faster for the same job.</p><code>if tool.preferred == block.material { power = 3 }</code></article><article><span class="concept-number">2</span><h3>Store durability as state</h3><p>Subtract durability only when mining. At zero that tool cannot work. If a needed tool breaks before its material goal, the run fails.</p><code>durability[selected] -= cost</code></article><article><span class="concept-number">3</span><h3>Choose the strongest light</h3><p>Compare daylight with every torch and keep the maximum. Torch light loses two units for each tile of distance.</p><code>light = max(daylight, 9-distance*2)</code></article></div>
@@ -99,6 +115,14 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

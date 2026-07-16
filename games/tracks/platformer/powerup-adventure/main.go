@@ -1,7 +1,15 @@
 package main
 
 import (
+	"bytes"
+	"embed"
 	"fmt"
+	"image"
+	"image/color"
+	_ "image/png"
+	"math"
+	"sync"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -13,11 +21,28 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
-	"image/color"
-	"math"
 )
 
 const width, height = 480, 720
+
+// Only this capstone's four generated images enter its WASM binary. Importing
+// the shared mobile-art bundle would also embed unrelated genre artwork.
+//
+//go:embed assets/platformer-sunrise-archipelago.png assets/platformer-ebi-runner.png assets/platformer-reef-slug.png assets/platformer-reef-platform.png
+var platformerArtFS embed.FS
+
+var (
+	platformerArtOnce sync.Once
+	platformerArt     map[string]*ebiten.Image
+	platformerTerrain terrainAtlas
+)
+
+// terrainAtlas turns the generated reef plate into purpose-built rendering
+// pieces. Collision still uses the plain rect values in game.grounds; these
+// images are only a replaceable presentation of that state.
+type terrainAtlas struct {
+	whole, left, middle, right *ebiten.Image
+}
 
 type rect struct{ x, y, w, h float64 }
 type foe struct {
@@ -48,6 +73,7 @@ type game struct {
 }
 
 func newGame() *game {
+	loadPlatformerArt()
 	badge := ebiten.NewImage(32, 32)
 	badge.Fill(color.RGBA{255, 220, 72, 255})
 	g := &game{stage: 1, life: 3, audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), camState: cameralab.State{ViewW: width, ViewH: height}, shaderBadge: badge}
@@ -70,7 +96,7 @@ func (g *game) load() {
 		g.coins = append(g.coins, rect{x, 380 - float64((i+g.stage)%3)*55, 14, 14})
 	}
 	foeSets := [][]foe{
-		{{rect{470, 542, 28, 28}, 1.2, true}, {rect{780, 612, 28, 28}, -1.3, true}, {rect{1420, 612, 28, 28}, 1.4, true}},
+		{{rect{285, 612, 28, 28}, 1.2, true}, {rect{780, 612, 28, 28}, -1.3, true}, {rect{1420, 612, 28, 28}, 1.4, true}},
 		{{rect{320, 532, 28, 28}, 1.4, true}, {rect{840, 562, 28, 28}, -1.5, true}, {rect{1160, 452, 28, 28}, 1.3, true}},
 		{{rect{380, 612, 28, 28}, 1.7, true}, {rect{640, 612, 28, 28}, -1.7, true}, {rect{900, 612, 28, 28}, 1.8, true}, {rect{1410, 612, 28, 28}, -1.6, true}},
 		{{rect{290, 512, 28, 28}, 1.8, true}, {rect{550, 402, 28, 28}, -1.8, true}, {rect{810, 292, 28, 28}, 2, true}, {rect{1070, 402, 28, 28}, -1.9, true}, {rect{1330, 512, 28, 28}, 2, true}},
@@ -94,7 +120,7 @@ func (g *game) Update() error {
 	}
 	if g.clear {
 		if restart() {
-			*g = *newGame()
+			g.resetRun()
 		}
 		return nil
 	}
@@ -182,7 +208,7 @@ func (g *game) Update() error {
 			} else {
 				g.life--
 				if g.life <= 0 {
-					*g = *newGame()
+					g.resetRun()
 				} else {
 					g.load()
 				}
@@ -193,7 +219,7 @@ func (g *game) Update() error {
 	if g.p.y > height {
 		g.life--
 		if g.life <= 0 {
-			*g = *newGame()
+			g.resetRun()
 		} else {
 			g.load()
 		}
@@ -212,6 +238,19 @@ func (g *game) Update() error {
 	g.camState.Pos.X = g.camera + width*.4
 	return nil
 }
+
+func (g *game) resetRun() {
+	audioContext, pulse, camera, badge := g.audio, g.pulse, g.camState, g.shaderBadge
+	*g = game{
+		stage:       1,
+		life:        3,
+		audio:       audioContext,
+		pulse:       pulse,
+		camState:    camera,
+		shaderBadge: badge,
+	}
+	g.load()
+}
 func (g *game) burst(x, y float64, c color.RGBA, n int) {
 	for i := 0; i < n; i++ {
 		a := float64(i) * math.Pi * 2 / float64(n)
@@ -219,9 +258,11 @@ func (g *game) burst(x, y float64, c color.RGBA, n int) {
 	}
 }
 func (g *game) Draw(s *ebiten.Image) {
-	skies := []color.RGBA{{102, 189, 231, 255}, {99, 91, 173, 255}, {241, 151, 98, 255}, {28, 40, 88, 255}}
-	sky := skies[g.stage-1]
-	s.Fill(sky)
+	// Generated key art supplies the far, middle and near scenery in one
+	// production-quality plate. Gameplay geometry is still drawn independently.
+	drawArtCover(s, "platformer-sunrise-archipelago", 0, 0, width, height)
+	stageWash := []color.RGBA{{25, 112, 126, 10}, {73, 39, 126, 42}, {213, 77, 43, 30}, {8, 18, 62, 105}}[g.stage-1]
+	vector.DrawFilledRect(s, 0, 0, width, height, stageWash, false)
 	if g.pulse.Available() {
 		fx := ebiten.NewImage(32, 32)
 		if g.pulse.Draw(fx, g.shaderBadge, float32(g.tick)*.08) {
@@ -235,11 +276,7 @@ func (g *game) Draw(s *ebiten.Image) {
 		if x+b.w < 0 || x > width {
 			continue
 		}
-		vector.DrawFilledRect(s, float32(x), float32(b.y), float32(b.w), float32(b.h), color.RGBA{55, 101, 66, 255}, false)
-		for tx := 0.0; tx < b.w; tx += 40 {
-			w := math.Min(40, b.w-tx)
-			trackatlas.Draw(s, "tile-platform", x+tx, b.y, w)
-		}
+		drawTerrain(s, x, b.y, b.w, b.h)
 	}
 	for _, c := range g.coins {
 		pulse := 20 + math.Sin(float64(g.tick)*.12+c.x)*3
@@ -251,7 +288,9 @@ func (g *game) Draw(s *ebiten.Image) {
 	for _, e := range g.foes {
 		if e.alive {
 			bob := math.Sin(float64(g.tick)*.16+e.x) * 2
-			trackatlas.DrawCentered(s, "slug", e.x-g.camera+14, e.y+14+bob, 30)
+			x := e.x - g.camera + 14
+			vector.DrawFilledCircle(s, float32(x), float32(e.y+27), 28, color.RGBA{6, 22, 32, 70}, true)
+			drawArtContain(s, "platformer-reef-slug", x-43, e.y-29+bob, 86, 70, e.vx > 0)
 		}
 	}
 	for _, p := range g.sparks {
@@ -261,10 +300,19 @@ func (g *game) Draw(s *ebiten.Image) {
 	if g.grounded && math.Abs(g.vx) > .3 {
 		runBob = math.Abs(math.Sin(float64(g.tick)*.32)) * 4
 	}
-	heroSize := g.p.h - runBob
-	trackatlas.DrawCentered(s, "hero", g.p.x-g.camera+g.p.w/2, g.p.y+g.p.h-heroSize/2, heroSize)
+	heroSize := 82.0
+	if g.big {
+		heroSize = 112
+	}
+	heroX := g.p.x - g.camera + g.p.w/2
+	heroBottom := g.p.y + g.p.h - runBob
+	vector.DrawFilledCircle(s, float32(heroX), float32(g.p.y+g.p.h+3), float32(heroSize*.32), color.RGBA{4, 18, 32, 75}, true)
+	drawArtContain(s, "platformer-ebi-runner", heroX-heroSize*.42, heroBottom-heroSize, heroSize*.84, heroSize, g.vx < -.1)
 	flag := 1650 - g.camera
+	vector.DrawFilledCircle(s, float32(flag+26), 500, 40+float32(math.Sin(float64(g.tick)*.08)*4), color.RGBA{255, 220, 72, 42}, true)
 	trackatlas.Draw(s, "flag", flag, 480, 140)
+	vector.DrawFilledRect(s, 16, 12, 448, 60, color.RGBA{7, 19, 38, 210}, false)
+	vector.StrokeRect(s, 16, 12, 448, 60, 2, color.RGBA{255, 224, 120, 150}, false)
 	if face, err := uilab.Face("en", 16); err == nil {
 		op := &text.DrawOptions{}
 		op.GeoM.Translate(45, 22)
@@ -272,13 +320,116 @@ func (g *game) Draw(s *ebiten.Image) {
 	} else {
 		ebitenutil.DebugPrintAt(s, fmt.Sprintf("STAGE %d/4   LIFE %d   SCORE %05d   COINS %d", g.stage, g.life, g.score, len(g.coins)), 45, 22)
 	}
-	ebitenutil.DebugPrintAt(s, "GREEN ORB MAKES EBI BIG", 150, 48)
+	ebitenutil.DebugPrintAt(s, "QUEST: POWER UP • STOMP SLUGS • REACH THE BEACON", 62, 48)
 	ebitenutil.DebugPrintAt(s, "MOVE: A/D OR LOWER TOUCH    JUMP: SPACE OR UPPER TOUCH", 50, 685)
+	if g.tick < 220 && g.stage == 1 {
+		alpha := uint8(225)
+		if g.tick > 160 {
+			alpha = uint8(max(0, 225-(g.tick-160)*4))
+		}
+		vector.DrawFilledRect(s, 52, 105, 376, 84, color.RGBA{5, 17, 36, alpha}, false)
+		vector.StrokeRect(s, 52, 105, 376, 84, 3, color.RGBA{255, 224, 126, alpha}, false)
+		ebitenutil.DebugPrintAt(s, "SUNRISE ISLAND", 178, 127)
+		ebitenutil.DebugPrintAt(s, "RUN • LEAP • POWER UP • REACH THE SKY GATE", 82, 158)
+	}
 	if g.clear {
 		vector.DrawFilledRect(s, 55, 280, 370, 150, color.RGBA{6, 18, 37, 235}, false)
 		ebitenutil.DebugPrintAt(s, "EBI ADVENTURE COMPLETE!\n\nTAP / SPACE TO PLAY AGAIN", 125, 330)
 	}
 }
+
+func loadPlatformerArt() {
+	platformerArtOnce.Do(func() {
+		platformerArt = map[string]*ebiten.Image{}
+		for _, name := range []string{"platformer-sunrise-archipelago", "platformer-ebi-runner", "platformer-reef-slug", "platformer-reef-platform"} {
+			data, err := platformerArtFS.ReadFile("assets/" + name + ".png")
+			if err != nil {
+				panic(err)
+			}
+			decoded, _, err := image.Decode(bytes.NewReader(data))
+			if err != nil {
+				panic(err)
+			}
+			platformerArt[name] = ebiten.NewImageFromImage(decoded)
+		}
+		// The platform source is a wide 1024x341 generated reef. Its end caps
+		// retain flowers and foliage while the center can stretch between them.
+		// A compact ledge uses the complete tapered island silhouette.
+		terrain := platformerArt["platformer-reef-platform"]
+		platformerTerrain = terrainAtlas{
+			whole:  terrain,
+			left:   terrain.SubImage(image.Rect(0, 0, 250, 341)).(*ebiten.Image),
+			middle: terrain.SubImage(image.Rect(250, 0, 774, 341)).(*ebiten.Image),
+			right:  terrain.SubImage(image.Rect(774, 0, 1024, 341)).(*ebiten.Image),
+		}
+	})
+}
+
+func platformerImage(name string) *ebiten.Image {
+	return platformerArt[name]
+}
+
+func drawTerrain(dst *ebiten.Image, x, walkY, w, collisionH float64) {
+	if w <= 132 {
+		// The whole source has naturally tapered ends, which reads better than
+		// clipping two large caps together for the track's narrow bonus ledges.
+		h := clamp(w*.42, 60, 82)
+		drawImageFit(dst, platformerTerrain.whole, x-7, walkY-h*.38, w+14, h, false)
+		return
+	}
+
+	// Taller collision blocks receive deeper reef silhouettes, while the top
+	// of every image remains aligned with the same walkable collision edge.
+	h := clamp(84+collisionH*.22, 92, 132)
+	capW := clamp(h*.54, 50, math.Min(78, w*.32))
+	y := walkY - h*.37
+	drawImageStretch(dst, platformerTerrain.left, x-7, y, capW+7, h)
+	drawImageStretch(dst, platformerTerrain.middle, x+capW, y, math.Max(1, w-capW*2), h)
+	drawImageStretch(dst, platformerTerrain.right, x+w-capW, y, capW+7, h)
+}
+
+func drawImageStretch(dst, img *ebiten.Image, x, y, w, h float64) {
+	b := img.Bounds()
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(-float64(b.Min.X), -float64(b.Min.Y))
+	op.GeoM.Scale(w/float64(b.Dx()), h/float64(b.Dy()))
+	op.GeoM.Translate(x, y)
+	op.Filter = ebiten.FilterLinear
+	dst.DrawImage(img, op)
+}
+
+func drawImageFit(dst, img *ebiten.Image, x, y, w, h float64, mirror bool) {
+	b := img.Bounds()
+	scale := math.Min(w/float64(b.Dx()), h/float64(b.Dy()))
+	dw, dh := float64(b.Dx())*scale, float64(b.Dy())*scale
+	op := &ebiten.DrawImageOptions{}
+	if mirror {
+		op.GeoM.Scale(-scale, scale)
+		op.GeoM.Translate(x+(w+dw)/2, y+(h-dh)/2)
+	} else {
+		op.GeoM.Scale(scale, scale)
+		op.GeoM.Translate(x+(w-dw)/2, y+(h-dh)/2)
+	}
+	op.Filter = ebiten.FilterLinear
+	dst.DrawImage(img, op)
+}
+
+func drawArtCover(dst *ebiten.Image, name string, x, y, w, h float64) {
+	img := platformerImage(name)
+	b := img.Bounds()
+	scale := math.Max(w/float64(b.Dx()), h/float64(b.Dy()))
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(scale, scale)
+	op.GeoM.Translate(x+(w-float64(b.Dx())*scale)/2, y+(h-float64(b.Dy())*scale)/2)
+	op.Filter = ebiten.FilterLinear
+	dst.DrawImage(img, op)
+}
+
+func drawArtContain(dst *ebiten.Image, name string, x, y, w, h float64, mirror bool) {
+	img := platformerImage(name)
+	drawImageFit(dst, img, x, y, w, h, mirror)
+}
+
 func (g *game) playSE(w audiolab.Wave, hz float64) {
 	if !g.gate.Arm(true) {
 		return

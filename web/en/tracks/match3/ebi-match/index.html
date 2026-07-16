@@ -26,6 +26,12 @@
   <!-- favicon:end -->
 </head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/match3/ebi-match/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Match-three Puzzle</a><span>STEP 08 / 08</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Match</h1><p>The complete game combines animated swaps, matches, falling, cascades, and special pieces before moves run out.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Swap motion, specials, and level data</strong></div></section>
 
+<!-- showcase-final:start -->
+<section class="showcase-final-bridge" aria-label="Showcase final step">
+  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>Now take the leap to a finished game.</h2><p>This final step connects the small mechanics, then makes a deliberate leap in art, motion, light, sound, UI, and replay value. You do not need to write it all at once—play first and see what Ebitengine can grow into.</p></div>
+  <ul><li>a luminous reef board</li><li>animated swaps</li><li>three chain rules</li></ul>
+</section>
+<!-- showcase-final:end -->
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Clear three reefs and improve your best run.</h2></div><p>Tap two neighbors to swap. Four forge a rocket, five forge a color wave, and an L or T forges a 3×3 bomb. Specials can trigger one another.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Match" src="../../../../play/ebi-match/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>stage := stages[stageIndex]</code></pre></div></section>
@@ -33,6 +39,22 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -266,7 +288,50 @@ func newGame(level stage) *game {
 
 
 
+
+
+
+
+
+
+
+
 <!-- match3-authoring:start -->
 <section class="next-lines core-authoring-links"><p class="eyebrow">YOUR FIRST RULE</p><h3>Add one real board rule</h3><p>Open <code>games/tracks/match3/ebi-match/main.go</code> and change one color, clear count, or cascade condition. Run <code>go test ./games/tracks/match3/ebi-match</code>, then check the board result.</p></section>
 <!-- match3-authoring:end -->
+<!-- capstone-renderers:start -->
+<section class="capstone-renderers" aria-label="Draw-only renderer bonus">
+  <div class="capstone-renderers-copy">
+    <p class="eyebrow">BONUS / DRAW ONLY</p>
+    <h2>Same game. Different ways to make the picture.</h2>
+    <p>This WASM is built from the same package as the finished game above. It delegates to the original <code>Update</code> and <code>Layout</code> unchanged. One Draw snapshot is projected simultaneously as polished art, edge lines, and a rectangle mosaic. Position, score, enemies, collision, and time exist only once.</p>
+  </div>
+  <div class="capstone-renderers-facts">
+    <article><b>01</b><h3>UPDATE</h3><p>Advances input and game facts once for every view.</p></article>
+    <article><b>02</b><h3>LAYOUT</h3><p>Returns the original game's size unchanged.</p></article>
+    <article><b>03</b><h3>DRAW</h3><p>Only changes how one snapshot is presented.</p></article>
+  </div>
+  <div class="capstone-renderers-demo">
+    <iframe data-shared-demo="capstone-renderers" src="../../../../play/ebi-match-renderer/" loading="lazy" title="The same finished game shown through three Draw styles" allow="autoplay; fullscreen"></iframe>
+  </div>
+  <div class="capstone-renderers-code">
+    <div><p class="eyebrow">THE ONLY BOUNDARY</p><h3>Update and Layout pass straight to the original game.</h3><p>The rectangle view shrinks the snapshot to a small grid and restores it with nearest filtering. The wire view turns neighboring-pixel differences into lines with a Kage shader. Neither reads or writes game state.</p></div>
+    <pre><code>func (g *gallery) Update() error {
+    return g.inner.Update()
+}
+
+func (g *gallery) Layout(w, h int) (int, int) {
+    return g.inner.Layout(w, h)
+}
+
+func (g *gallery) Draw(screen *ebiten.Image) {
+    snapshot := ebiten.NewImage(width, height)
+    g.inner.Draw(snapshot)
+    drawPolished(screen, snapshot)
+    drawWireframe(screen, snapshot)
+    drawRectangles(screen, snapshot)
+}</code></pre>
+  </div>
+</section>
+<!-- capstone-renderers:end -->
 </main><script src="../../../../learn.js"></script></body></html>

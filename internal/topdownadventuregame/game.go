@@ -3,10 +3,13 @@
 package topdownadventuregame
 
 import (
+	"bytes"
+	"embed"
 	"fmt"
+	"image"
 	"image/color"
+	_ "image/png"
 	"math"
-	"math/rand"
 	"sync"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -16,7 +19,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/audiolab"
-	"github.com/kumagi/EbiShowcase/internal/cameralab"
 	"github.com/kumagi/EbiShowcase/internal/ogfont"
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/topdownadventurelogic"
@@ -56,13 +58,19 @@ type game struct {
 	message                                                                                string
 	lang                                                                                   string
 	particles                                                                              []particle
-	rng                                                                                    *rand.Rand
 	audio                                                                                  *audio.Context
 	gate                                                                                   audiolab.Gate
 	pulse                                                                                  *shaderlab.Pulse
-	cam                                                                                    cameralab.State
 	badge                                                                                  *ebiten.Image
+	background                                                                             *ebiten.Image
+	art                                                                                    map[string]*ebiten.Image
 }
+
+//go:embed relic-shrine.png
+var relicShrinePNG []byte
+
+//go:embed assets/*.png
+var adventureArtFS embed.FS
 
 var sessionBest [9]int
 var titles = [9]string{"", "EIGHT-WAY RELIC RUN", "SWORD REACH TRIAL", "HURT & RECOVERY", "THREE SEALED ROOMS", "KEY AND TREASURE", "RELIC TOOL PUZZLES", "THREE-PHASE GUARDIAN", "EBI RELIC DUNGEON"}
@@ -107,14 +115,52 @@ func Run(lesson int) {
 	}
 }
 func newGame(lesson int) *game {
-	g := &game{lesson: lesson, face: topdownadventurelogic.Vec{X: 1}, player: topdownadventurelogic.Fighter{Pos: topdownadventurelogic.Vec{X: 75, Y: 320}, HP: 5}, best: max(sessionBest[lesson], storedBest(gBestKey(lesson))), lang: browserLanguage(), rng: rand.New(rand.NewSource(int64(100 + lesson)))}
+	g := &game{lesson: lesson, face: topdownadventurelogic.Vec{X: 1}, player: topdownadventurelogic.Fighter{Pos: topdownadventurelogic.Vec{X: 75, Y: 320}, HP: 5}, best: max(sessionBest[lesson], storedBest(gBestKey(lesson))), lang: browserLanguage(), background: loadRelicShrine(), art: loadAdventureArt()}
 	g.audio = audio.NewContext(audiolab.SampleRate)
 	g.pulse = shaderlab.NewPulse()
-	g.cam = cameralab.State{ViewW: W, ViewH: H}
 	g.badge = ebiten.NewImage(20, 20)
 	g.badge.Fill(color.RGBA{255, 211, 112, 255})
 	g.setup()
 	return g
+}
+
+func loadAdventureArt() map[string]*ebiten.Image {
+	result := map[string]*ebiten.Image{}
+	for _, name := range []string{"hero", "key", "chest", "guardian"} {
+		data, err := adventureArtFS.ReadFile("assets/" + name + ".png")
+		if err != nil {
+			panic(err)
+		}
+		decoded, _, err := image.Decode(bytes.NewReader(data))
+		if err != nil {
+			panic(err)
+		}
+		result[name] = ebiten.NewImageFromImage(decoded)
+	}
+	return result
+}
+
+func drawAdventureArt(dst *ebiten.Image, img *ebiten.Image, cx, cy, w, h float64, alpha float32) {
+	if img == nil {
+		return
+	}
+	b := img.Bounds()
+	scale := min(w/float64(b.Dx()), h/float64(b.Dy()))
+	dw, dh := float64(b.Dx())*scale, float64(b.Dy())*scale
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(scale, scale)
+	op.GeoM.Translate(cx-dw/2, cy-dh/2)
+	op.ColorScale.ScaleAlpha(alpha)
+	op.Filter = ebiten.FilterLinear
+	dst.DrawImage(img, op)
+}
+
+func loadRelicShrine() *ebiten.Image {
+	img, _, err := image.Decode(bytes.NewReader(relicShrinePNG))
+	if err != nil {
+		panic(err)
+	}
+	return ebiten.NewImageFromImage(img)
 }
 func gBestKey(lesson int) string { return fmt.Sprintf("ebiShowcase.adventure.best.%d", lesson) }
 func (g *game) tr(en, ja string) string {
@@ -514,14 +560,21 @@ func (g *game) updateParticles() {
 	}
 }
 func (g *game) Draw(screen *ebiten.Image) {
-	g.cam.ViewW, g.cam.ViewH = float64(screen.Bounds().Dx()), float64(screen.Bounds().Dy())
-	g.drawEffectBadge(screen)
 	palette := []color.RGBA{{}, {18, 55, 65, 255}, {46, 42, 71, 255}, {70, 38, 53, 255}, {33, 56, 78, 255}, {52, 54, 43, 255}, {35, 48, 75, 255}, {65, 31, 52, 255}, {23, 48, 62, 255}}
 	screen.Fill(palette[g.lesson])
+	if g.background != nil {
+		op := &ebiten.DrawImageOptions{}
+		b := g.background.Bounds()
+		op.GeoM.Scale(float64(W)/float64(b.Dx()), float64(H)/float64(b.Dy()))
+		screen.DrawImage(g.background, op)
+	}
+	g.drawAtmosphere(screen)
+	g.drawEffectBadge(screen)
 	dx, dy := 0, 0
 	if g.shake > 0 {
-		dx = g.rng.Intn(7) - 3
-		dy = g.rng.Intn(7) - 3
+		// Shake is derived from game state; Draw never consumes random state.
+		dx = int(math.Sin(float64(g.frames)*2.7) * 4)
+		dy = int(math.Cos(float64(g.frames)*3.1) * 3)
 	}
 	world := ebiten.NewImage(W, H)
 	g.drawArena(world)
@@ -545,6 +598,18 @@ func (g *game) Draw(screen *ebiten.Image) {
 		advLabel(screen, g.tr("TAP / ENTER TO PLAY AGAIN", "タップ / ENTER で もう一ど"), 115, 416, color.White, 14)
 	}
 }
+
+func (g *game) drawAtmosphere(s *ebiten.Image) {
+	// Keep the painted shrine readable. Earlier wide cyan shafts covered the
+	// coral, shell altar, and stone path—the very details this layer exists to
+	// show. Small bubbles add motion without repainting the environment.
+	for i := 0; i < 18; i++ {
+		phase := float64(g.frames+i*43) * .35
+		x := float32(18 + (i*83)%450)
+		y := float32(560 - math.Mod(phase+float64(i*59), 610))
+		vector.StrokeCircle(s, x, y, float32(1+i%3), 1, color.RGBA{170, 245, 241, 95}, true)
+	}
+}
 func (g *game) drawEffectBadge(screen *ebiten.Image) {
 	if g.lesson != 8 || g.pulse == nil || !g.pulse.Available() {
 		return
@@ -558,23 +623,34 @@ func (g *game) drawEffectBadge(screen *ebiten.Image) {
 	screen.DrawImage(fx, op)
 }
 func (g *game) drawArena(s *ebiten.Image) {
-	vector.DrawFilledRect(s, 30, 90, 420, 450, color.RGBA{12, 25, 40, 210}, false)
+	vector.DrawFilledRect(s, 22, 86, 436, 466, color.RGBA{5, 18, 31, 24}, false)
+	vector.StrokeRect(s, 22, 86, 436, 466, 2, color.RGBA{126, 226, 214, 90}, false)
 	for x := 48; x < 450; x += 48 {
-		vector.StrokeLine(s, float32(x), 90, float32(x), 540, 1, color.RGBA{255, 255, 255, 14}, false)
+		vector.StrokeLine(s, float32(x), 90, float32(x), 540, 1, color.RGBA{190, 238, 229, 7}, false)
 	}
 	for y := 108; y < 540; y += 48 {
-		vector.StrokeLine(s, 30, float32(y), 450, float32(y), 1, color.RGBA{255, 255, 255, 14}, false)
+		vector.StrokeLine(s, 30, float32(y), 450, float32(y), 1, color.RGBA{190, 238, 229, 7}, false)
 	}
 	for _, p := range g.gems {
-		trackatlas.DrawCentered(s, "power-star", p.X, p.Y, 26)
+		glow := float32(22 + math.Sin(float64(g.frames)*.13+p.X)*3)
+		vector.StrokeCircle(s, float32(p.X), float32(p.Y), glow, 2, color.RGBA{255, 220, 88, 145}, true)
+		if (g.lesson == 5 || g.lesson == 8) && g.stage == 0 {
+			drawAdventureArt(s, g.art["key"], p.X, p.Y, 54, 68, 1)
+		} else {
+			trackatlas.DrawCentered(s, "power-star", p.X, p.Y, 34)
+		}
 	}
 	if g.lesson == 5 || (g.lesson == 8 && g.stage == 0) {
 		c := color.RGBA{63, 104, 165, 255}
 		if g.door > 0 {
 			c = color.RGBA{45, 73, 91, 90}
 		}
-		vector.DrawFilledRect(s, 300, 90, 24, 450, c, false)
-		trackatlas.DrawCentered(s, "tile-crate", 410, 320, 44)
+		vector.DrawFilledRect(s, 300, 90, 24, 450, color.RGBA{5, 20, 39, 150}, false)
+		for x := float32(302); x < 324; x += 7 {
+			vector.StrokeLine(s, x, 92, x, 538, 2, c, false)
+		}
+		vector.StrokeCircle(s, 410, 320, 46, 2, color.RGBA{255, 213, 96, 145}, true)
+		drawAdventureArt(s, g.art["chest"], 410, 320, 84, 84, 1)
 	}
 	for _, n := range g.nodes {
 		c := []color.RGBA{{224, 91, 91, 255}, {87, 202, 214, 255}, {242, 203, 79, 255}}[n.kind]
@@ -592,25 +668,36 @@ func (g *game) drawActors(s *ebiten.Image) {
 	if g.attack > 0 {
 		b := topdownadventurelogic.AttackBox(g.player.Pos, g.face, 58, 44)
 		vector.DrawFilledRect(s, float32(b.X), float32(b.Y), float32(b.W), float32(b.H), color.RGBA{255, 220, 105, 90}, false)
+		progress := 1 - math.Abs(float64(g.attack-9))/9
+		if progress < 0 {
+			progress = 0
+		}
+		vector.StrokeCircle(s, float32(g.player.Pos.X), float32(g.player.Pos.Y), float32(34+progress*30), 5, color.RGBA{255, 226, 117, uint8(90 + progress*150)}, true)
 	}
 	bob := math.Sin(float64(g.frames)*.2) * 2
 	alpha := float32(1)
 	if g.player.Invulnerable > 0 && g.player.Invulnerable%10 < 5 {
 		alpha = .25
 	}
-	trackatlas.DrawTinted(s, "hero", g.player.Pos.X, g.player.Pos.Y+bob, 34, 1, 1, 1, alpha)
+	vector.DrawFilledCircle(s, float32(g.player.Pos.X), float32(g.player.Pos.Y+21), 13, color.RGBA{0, 8, 18, 105}, true)
+	drawAdventureArt(s, g.art["hero"], g.player.Pos.X, g.player.Pos.Y+bob, 72, 82, alpha)
 	for _, e := range g.enemies {
 		if e.hp <= 0 {
 			continue
 		}
-		sprite := "slug"
-		size := 34.0
+		size := 56.0
 		if e.boss {
-			sprite = "boss-crab"
-			size = 66
+			size = 104
 		}
-		trackatlas.DrawCentered(s, sprite, e.pos.X, e.pos.Y+math.Sin(float64(g.frames)*.15+e.pos.X)*3, size)
-		ebitenutil.DebugPrintAt(s, fmt.Sprintf("HP%d", e.hp), int(e.pos.X)-12, int(e.pos.Y)-35)
+		vector.DrawFilledCircle(s, float32(e.pos.X), float32(e.pos.Y+size*.32), float32(size*.2), color.RGBA{0, 7, 16, 100}, true)
+		drawAdventureArt(s, g.art["guardian"], e.pos.X, e.pos.Y+math.Sin(float64(g.frames)*.15+e.pos.X)*3, size, size, 1)
+		barW := float32(44)
+		maxHP := 2
+		if e.boss {
+			barW, maxHP = 82, 12
+		}
+		vector.DrawFilledRect(s, float32(e.pos.X)-barW/2, float32(e.pos.Y)-float32(size*.62), barW, 6, color.RGBA{8, 13, 25, 220}, true)
+		vector.DrawFilledRect(s, float32(e.pos.X)-barW/2+1, float32(e.pos.Y)-float32(size*.62)+1, (barW-2)*float32(e.hp)/float32(maxHP), 4, color.RGBA{255, 91, 111, 255}, true)
 		if e.boss {
 			phase := topdownadventurelogic.PhaseForHP(e.hp, 12)
 			if phase == topdownadventurelogic.BossDash && g.frames%110 < 26 {
@@ -627,13 +714,16 @@ func (g *game) drawActors(s *ebiten.Image) {
 	}
 }
 func (g *game) drawUI(s *ebiten.Image) {
-	advLabel(s, g.tr(titles[g.lesson], []string{"", "8ほうこう レリックラン", "けんの とどくばしょ", "ダメージと かいふく", "3つの封印の部屋", "カギと たからばこ", "レリック道具パズル", "3だんかいの守護者", "エビ レリック ダンジョン"}[g.lesson]), 72, 27, color.White, 17)
+	vector.DrawFilledRect(s, 14, 10, 452, 68, color.RGBA{4, 13, 29, 218}, true)
+	vector.StrokeRect(s, 14, 10, 452, 68, 2, color.RGBA{88, 224, 210, 165}, true)
+	advLabel(s, g.tr(titles[g.lesson], []string{"", "8ほうこう レリックラン", "けんの とどくばしょ", "ダメージと かいふく", "3つの封印の部屋", "カギと たからばこ", "レリック道具パズル", "3だんかいの守護者", "エビ レリック ダンジョン"}[g.lesson]), 30, 34, color.RGBA{243, 220, 144, 255}, 18)
 	room := g.stage + 1
 	if g.lesson < 4 {
 		room = 1
 	}
-	advLabel(s, fmt.Sprintf("HP %d  SCORE %05d  %s %d  %s %s", g.player.HP, g.score, g.tr("ROOM", "へや"), room, g.tr("TOOL", "どうぐ"), g.toolName()), 48, 54, color.White, 14)
-	advLabel(s, g.message, 34, 78, color.RGBA{222, 235, 255, 255}, 13)
+	advLabel(s, fmt.Sprintf("HP %d  SCORE %05d  %s %d/4  %s %s", g.player.HP, g.score, g.tr("ROOM", "へや"), room, g.tr("TOOL", "どうぐ"), g.toolName()), 30, 58, color.White, 13)
+	vector.DrawFilledRect(s, 22, 555, 436, 30, color.RGBA{4, 13, 29, 220}, true)
+	advLabel(s, g.message, 32, 576, color.RGBA{222, 242, 255, 255}, 12)
 	labels := []string{"LEFT", "UP", "DOWN", "RIGHT", "ATTACK", "TOOL"}
 	if g.lang == "ja" {
 		labels = []string{"ひだり", "うえ", "した", "みぎ", "こうげき", "どうぐ"}
@@ -645,7 +735,8 @@ func (g *game) drawUI(s *ebiten.Image) {
 		} else if i == 5 {
 			c = color.RGBA{178, 137, 50, 255}
 		}
-		vector.DrawFilledRect(s, float32(i*80+3), 590, 74, 70, c, false)
+		vector.DrawFilledRect(s, float32(i*80+4), 596, 72, 64, c, true)
+		vector.StrokeRect(s, float32(i*80+4), 596, 72, 64, 2, color.RGBA{174, 224, 244, 150}, true)
 		advLabel(s, l, i*80+12, 631, color.White, 13)
 	}
 	advLabel(s, g.tr("WASD/arrows move · X/Space attack · Q changes tool", "WASD/矢印で移動 · X/Spaceで攻撃 · Qで道具"), 35, 690, color.RGBA{220, 230, 255, 255}, 12)

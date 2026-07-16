@@ -85,6 +85,16 @@
       "sources": ["AGENTS.md#game-loop-axioms-for-authoring", "docs/Glossary.md", "docs/AUTHORING_CHECKLIST.md"]
     },
     {
+      "id": "loop.capstone-renderer-gallery",
+      "family": "loop",
+      "severity": "fail",
+      "check": "human",
+      "applies_to": ["track"],
+      "summary": "Every genre capstone visibly proves renderer freedom with synchronized projections of one live game state.",
+      "prompt_hint": "On a capstone, verify the renderer bonus runs the original game package, delegates Update and Layout unchanged, and derives every displayed view from one Draw snapshot. Fail duplicate gameplay simulations, unsynchronized mock images, or prose that implies the shown styles are exhaustive.",
+      "sources": ["AGENTS.md#game-loop-axioms-for-authoring", "scripts/render-freedom-overlays.mjs", "scripts/inject-capstone-renderer-extras.mjs"]
+    },
+    {
       "id": "loop.axiom-visible-early",
       "family": "loop",
       "severity": "fail",
@@ -407,6 +417,36 @@
       "applies_to": ["track"],
       "summary": "Final games have score/time/grade/unlock or similar replay hook.",
       "sources": ["docs/ADVANCED_QUALITY_CHECKLIST.md"]
+    },
+    {
+      "id": "playable.showcase-keyframe",
+      "family": "playable",
+      "severity": "warn",
+      "check": "human",
+      "applies_to": ["track"],
+      "summary": "A final game's opening and captured key frame read as an exciting finished game at home-card size.",
+      "prompt_hint": "At thumbnail size, can you identify the genre, main actor or play piece, immediate goal or danger, and action without relying on the card label? Reject empty fields, idle boards, title cards, and debug-first UI.",
+      "sources": ["docs/ADVANCED_QUALITY_CHECKLIST.md", "AGENTS.md"]
+    },
+    {
+      "id": "playable.showcase-composition",
+      "family": "playable",
+      "severity": "warn",
+      "check": "human",
+      "applies_to": ["track"],
+      "summary": "A capstone uses deliberate depth, readable actor scale, hierarchical HUD, and state-driven animation/feedback.",
+      "prompt_hint": "Inspect a real screenshot from the first two seconds and an action peak. Is the scene composed in layers, are important actors readable, and do anticipation/impact/recovery change shape rather than only color? Reject oversized opaque circles, placeholder clouds/bubbles, or legacy primitives that cover authored art or HUD.",
+      "sources": ["docs/ADVANCED_QUALITY_CHECKLIST.md"]
+    },
+    {
+      "id": "playable.contemporary-mobile-art",
+      "family": "playable",
+      "severity": "warn",
+      "check": "human",
+      "applies_to": ["track"],
+      "summary": "Capstone art is judged against a polished contemporary 2D mobile game, with readable people, creatures, props, cards, and environments rather than interchangeable primitives.",
+      "prompt_hint": "Inspect the running WASM, not an asset folder or title image. Does original high-resolution art appear throughout real play, change with chapter/course/encounter and action state, and remain readable at thumbnail size? Reject unused showcase images, one-off splash art, retro/debug-first presentation, and humans that cannot be recognized as people without a label.",
+      "sources": ["docs/ADVANCED_QUALITY_CHECKLIST.md", "AGENTS.md", "internal/mobileart/README.md"]
     },
     {
       "id": "vfx.play-vs-fx-split",

@@ -52,6 +52,12 @@
 
 
 
+<!-- showcase-final:start -->
+<section class="showcase-final-bridge" aria-label="ショーケース最終ステップ">
+  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>ここから先は、完成品へのジャンプ。</h2><p>ここまでの小さな仕組みを全部つなぎ、アート、動き、光、音、UI、リプレイ性まで一気に磨いた最終ステップです。すべてを今すぐ書けなくても大丈夫。Ebitengineで到達できる景色を、まず遊んで確かめてください。</p></div>
+  <ul><li>ネオン港のリング</li><li>間合いを読むAI</li><li>ヒットストップ</li></ul>
+</section>
+<!-- showcase-final:end -->
 <section class="play lesson-play" id="play">
       <div class="section-head">
         <div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>2ラウンド先取で勝利。</h2></div>
@@ -68,6 +74,22 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -398,6 +420,49 @@
 
 
 
+
+
+
+
+
+
+
+
+<!-- capstone-renderers:start -->
+<section class="capstone-renderers" aria-label="Drawだけを替えるおまけ">
+  <div class="capstone-renderers-copy">
+    <p class="eyebrow">BONUS / DRAW ONLY</p>
+    <h2>ゲームは同じ。絵だけを、別の作り方にする。</h2>
+    <p>これは上の完成ゲームと同じパッケージから作ったWASMです。<code>Update</code>と<code>Layout</code>には手を加えず、そのまま呼びます。1回のDrawが作った同じ瞬間を、通常、輪郭線、矩形モザイクへ同時に投影します。位置、得点、敵、当たり判定、時間は1つしかありません。</p>
+  </div>
+  <div class="capstone-renderers-facts">
+    <article><b>01</b><h3>UPDATE</h3><p>入力とゲームの事実を進める。3画面で共通。</p></article>
+    <article><b>02</b><h3>LAYOUT</h3><p>元ゲームの大きさをそのまま返す。</p></article>
+    <article><b>03</b><h3>DRAW</h3><p>同じsnapshotの見せ方だけを替える。</p></article>
+  </div>
+  <div class="capstone-renderers-demo">
+    <iframe data-shared-demo="capstone-renderers" src="../../../../play/ebi-fighters-renderer/" loading="lazy" title="同じ完成ゲームを3種類のDrawで同時表示" allow="autoplay; fullscreen"></iframe>
+  </div>
+  <div class="capstone-renderers-code">
+    <div><p class="eyebrow">THE ONLY BOUNDARY</p><h3>UpdateとLayoutは、元のゲームへそのまま渡す。</h3><p>矩形版はsnapshotを小さな格子へ縮め、nearestで戻します。ワイヤ版は隣の画素との差をKageシェーダーで線にします。どちらもゲーム状態を読み書きしません。</p></div>
+    <pre><code>func (g *gallery) Update() error {
+    return g.inner.Update()
+}
+
+func (g *gallery) Layout(w, h int) (int, int) {
+    return g.inner.Layout(w, h)
+}
+
+func (g *gallery) Draw(screen *ebiten.Image) {
+    snapshot := ebiten.NewImage(width, height)
+    g.inner.Draw(snapshot)
+    drawPolished(screen, snapshot)
+    drawWireframe(screen, snapshot)
+    drawRectangles(screen, snapshot)
+}</code></pre>
+  </div>
+</section>
+<!-- capstone-renderers:end -->
 </main>
   <footer><div class="brand"><span>EBI</span> SHOWCASE</div><p>Made with Go + Ebitengine.</p><a href="https://github.com/kumagi/EbiShowcase">VIEW SOURCE ↗</a></footer>
   <script src="../../../../learn.js"></script>

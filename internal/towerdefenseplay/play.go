@@ -1,7 +1,9 @@
 package towerdefenseplay
 
 import (
+	"bytes"
 	"fmt"
+	"image"
 	"image/color"
 	"math"
 	"strings"
@@ -26,8 +28,9 @@ import (
 const W, H = 480, 720
 
 type Config struct {
-	Step  int
-	Title string
+	Step                                int
+	Title                               string
+	BackgroundPNG, TowersPNG, BattlePNG []byte
 }
 type enemy struct {
 	id                               int
@@ -64,6 +67,7 @@ type game struct {
 	pulse                                                                                 *shaderlab.Pulse
 	cam                                                                                   cameralab.State
 	badge                                                                                 *ebiten.Image
+	background, towerArt, battleArt                                                       *ebiten.Image
 }
 
 var (
@@ -111,17 +115,36 @@ func newGame(cfg Config) *game {
 	g.cam = cameralab.State{ViewW: W, ViewH: H}
 	g.badge = ebiten.NewImage(20, 20)
 	g.badge.Fill(color.RGBA{46, 230, 200, 255})
+	if len(cfg.BackgroundPNG) > 0 {
+		g.background, g.towerArt, g.battleArt = decodeArt(cfg.BackgroundPNG), decodeArt(cfg.TowersPNG), decodeArt(cfg.BattlePNG)
+	}
 	g.message = g.tr("Press SPACE or START to launch the wave.", "SPACEかSTARTでウェーブを始めよう。")
 	g.path = towerdefense.NewPath(s.Route)
 	g.best = storedBest(g.bestKey())
 	if cfg.Step >= 2 && cfg.Step <= 4 {
 		g.towers = []tower{{towerdefense.Vec{240, 375}, 0, 1, 0}}
 	}
+	if cfg.Step == 8 {
+		// The capstone opens on an active, readable defense line. Learners can
+		// still sell nothing and freely add/upgrade towers with the remaining
+		// budget, but the first thumbnail is already a battle.
+		g.towers = []tower{{towerdefense.Vec{82, 238}, 0, 1, 12}, {towerdefense.Vec{245, 385}, 1, 1, 26}}
+		g.coins -= 100
+		g.beginWave()
+	}
 	if cfg.Step <= 4 {
 		g.running = true
 		g.beginWave()
 	}
 	return g
+}
+
+func decodeArt(data []byte) *ebiten.Image {
+	im, _, err := image.Decode(bytes.NewReader(data))
+	if err != nil {
+		panic(err)
+	}
+	return ebiten.NewImageFromImage(im)
 }
 func (g *game) tr(en, ja string) string {
 	if g.lang == "ja" {
@@ -454,13 +477,31 @@ func (g *game) burst(pos towerdefense.Vec, c color.RGBA) {
 	}
 }
 func (g *game) Draw(s *ebiten.Image) {
-	g.cam.ViewW, g.cam.ViewH = float64(s.Bounds().Dx()), float64(s.Bounds().Dy())
-	g.drawEffectBadge(s)
 	bg := color.RGBA{12, 29, 44, 255}
 	if g.cfg.Step == 8 && g.wave >= 3 {
 		bg = color.RGBA{31, 22, 49, 255}
 	}
-	s.Fill(bg)
+	if g.background != nil {
+		drawCover(s, g.background)
+	} else {
+		s.Fill(bg)
+	}
+	vector.DrawFilledRect(s, 0, 0, W, H, color.RGBA{2, 10, 26, 42}, false)
+	// Underwater depth layers: bubbles, reef silhouettes and a soft vignette.
+	for i := 0; i < 24; i++ {
+		x := float32((i*83 + g.tick/4) % W)
+		y := float32(130 + (i*57-g.tick/3+720)%430)
+		vector.StrokeCircle(s, x, y, float32(2+i%5), 1, color.RGBA{116, 218, 226, 65}, true)
+	}
+	if g.background == nil {
+		for i := 0; i < 9; i++ {
+			x := float32(i*65 - 18)
+			h := float32(32 + (i*37)%75)
+			vector.DrawFilledRect(s, x, 558-h, 32, h, color.RGBA{18, 62, 66, 180}, false)
+			vector.DrawFilledCircle(s, x+16, 558-h, 19, color.RGBA{26, 86, 79, 190}, false)
+		}
+	}
+	g.drawEffectBadge(s)
 	ox := 0.0
 	if g.shake > 0 {
 		ox = math.Sin(float64(g.tick)*2.2) * float64(g.shake)
@@ -492,8 +533,11 @@ func (g *game) Draw(s *ebiten.Image) {
 		if g.cfg.Step == 2 || g.cfg.Step == 3 || i == len(g.towers)-1 {
 			vector.StrokeCircle(s, float32(t.pos.X+ox), float32(t.pos.Y), float32(r), 2, color.RGBA{95, 185, 225, 100}, true)
 		}
-		sprite := []string{"scout", "species-2", "king-crab"}[t.kind]
-		trackatlas.DrawCentered(s, sprite, t.pos.X+ox, t.pos.Y, 50+float64(t.level*4))
+		if g.towerArt != nil {
+			drawAtlas(s, g.towerArt, 3, t.kind, t.pos.X+ox, t.pos.Y, 58+float64(t.level*5))
+		} else {
+			trackatlas.DrawCentered(s, []string{"scout", "species-2", "king-crab"}[t.kind], t.pos.X+ox, t.pos.Y, 50+float64(t.level*4))
+		}
 		ebitenutil.DebugPrintAt(s, fmt.Sprintf("L%d", t.level), int(t.pos.X+ox)-7, int(t.pos.Y)+24)
 	}
 	targetIdx := -1
@@ -510,7 +554,18 @@ func (g *game) Draw(s *ebiten.Image) {
 		if e.boss {
 			size = 78
 		}
-		trackatlas.DrawCentered(s, map[bool]string{true: "boss-crab", false: "slug"}[e.boss], p.X+ox, p.Y, size)
+		unit := 0
+		if g.wave >= 3 {
+			unit = 1
+		}
+		if e.boss {
+			unit = 2
+		}
+		if g.battleArt != nil {
+			drawAtlas(s, g.battleArt, 7, unit, p.X+ox, p.Y, size)
+		} else {
+			trackatlas.DrawCentered(s, map[bool]string{true: "boss-crab", false: "slug"}[e.boss], p.X+ox, p.Y, size)
+		}
 		vector.DrawFilledRect(s, float32(p.X-22+ox), float32(p.Y-30), 44, 5, color.RGBA{40, 45, 55, 255}, false)
 		vector.DrawFilledRect(s, float32(p.X-22+ox), float32(p.Y-30), float32(44*e.hp/e.maxHP), 5, color.RGBA{235, 85, 80, 255}, false)
 		if i == targetIdx {
@@ -518,7 +573,11 @@ func (g *game) Draw(s *ebiten.Image) {
 		}
 	}
 	for _, p := range g.shots {
-		vector.DrawFilledCircle(s, float32(p.pos.X+ox), float32(p.pos.Y), 6, color.RGBA{255, 205, 65, 255}, true)
+		if g.battleArt != nil {
+			drawAtlas(s, g.battleArt, 7, 4+p.kind, p.pos.X+ox, p.pos.Y, 22)
+		} else {
+			vector.DrawFilledCircle(s, float32(p.pos.X+ox), float32(p.pos.Y), 6, color.RGBA{255, 205, 65, 255}, true)
+		}
 	}
 	for _, p := range g.particles {
 		vector.DrawFilledCircle(s, float32(p.x+ox), float32(p.y), float32(2+p.life/10), p.c, true)
@@ -564,8 +623,31 @@ func (g *game) drawPath(s *ebiten.Image, ox float64) {
 		a, b := g.path.Points[i-1], g.path.Points[i]
 		vector.StrokeLine(s, float32(a.X+ox), float32(a.Y), float32(b.X+ox), float32(b.Y), 46, color.RGBA{70, 76, 82, 255}, true)
 		vector.StrokeLine(s, float32(a.X+ox), float32(a.Y), float32(b.X+ox), float32(b.Y), 3, color.RGBA{215, 183, 105, 255}, true)
+		vector.StrokeLine(s, float32(a.X+ox), float32(a.Y-16), float32(b.X+ox), float32(b.Y-16), 2, color.RGBA{116, 218, 226, 80}, true)
 	}
-	trackatlas.DrawCentered(s, "pearl", 455+ox, g.path.Points[len(g.path.Points)-1].Y, 45)
+	if g.battleArt != nil {
+		drawAtlas(s, g.battleArt, 7, 3, 455+ox, g.path.Points[len(g.path.Points)-1].Y, 58)
+	} else {
+		trackatlas.DrawCentered(s, "pearl", 455+ox, g.path.Points[len(g.path.Points)-1].Y, 45)
+	}
+}
+
+func drawAtlas(dst, atlas *ebiten.Image, columns, index int, cx, cy, size float64) {
+	w, h := atlas.Bounds().Dx()/columns, atlas.Bounds().Dy()
+	src := atlas.SubImage(image.Rect(index*w, 0, (index+1)*w, h)).(*ebiten.Image)
+	scale := size / float64(max(w, h))
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(scale, scale)
+	op.GeoM.Translate(cx-float64(w)*scale/2, cy-float64(h)*scale/2)
+	dst.DrawImage(src, op)
+}
+func drawCover(dst, src *ebiten.Image) {
+	w, h := float64(src.Bounds().Dx()), float64(src.Bounds().Dy())
+	scale := math.Max(W/w, H/h)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(scale, scale)
+	op.GeoM.Translate((W-w*scale)/2, (H-h*scale)/2)
+	dst.DrawImage(src, op)
 }
 func press() (int, int, bool) {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {

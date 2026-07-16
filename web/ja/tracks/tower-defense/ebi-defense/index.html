@@ -22,7 +22,13 @@
   <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
   <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
   <!-- favicon:end -->
-</head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/tower-defense/ebi-defense/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← タワーディフェンス</a><span>STEP 08 / 08</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Pearl Defense</h1><p>2つの経路、6ウェーブ、塔3種類、強化、通貨、最終ボスをつなぎ、真珠の門を守ります。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>複数マップとボスを統合する完成版</strong></div></section><section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Ebi Pearl Defense</h2></div><p>空き地をタップして配置。SpaceまたはSTARTで開始。後半はQ/W/Eか画面ボタンで塔を選びます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Pearl Defense" src="../../../../play/ebi-defense/?lang=ja" allow="autoplay; fullscreen"></iframe></div></div></section>
+</head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/tower-defense/ebi-defense/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← タワーディフェンス</a><span>STEP 08 / 08</span></div><section class="overview-hero"><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>Ebi Pearl Defense</h1><p>2つの経路、6ウェーブ、塔3種類、強化、通貨、最終ボスをつなぎ、真珠の門を守ります。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>複数マップとボスを統合する完成版</strong></div></section><!-- showcase-final:start -->
+<section class="showcase-final-bridge" aria-label="ショーケース最終ステップ">
+  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>ここから先は、完成品へのジャンプ。</h2><p>ここまでの小さな仕組みを全部つなぎ、アート、動き、光、音、UI、リプレイ性まで一気に磨いた最終ステップです。すべてを今すぐ書けなくても大丈夫。Ebitengineで到達できる景色を、まず遊んで確かめてください。</p></div>
+  <ul><li>開戦済みの防衛線</li><li>海底3戦場</li><li>敵の意図表示</li></ul>
+</section>
+<!-- showcase-final:end -->
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Ebi Pearl Defense</h2></div><p>空き地をタップして配置。SpaceまたはSTARTで開始。後半はQ/W/Eか画面ボタンで塔を選びます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 08</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Ebi Pearl Defense" src="../../../../play/ebi-defense/?lang=ja" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end --><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE</p><h2>複数マップとボスを統合する完成版</h2><p class="lesson-lead">前半3ウェーブを越えると経路が変わり、塔を建て直します。後半は敵が速くなり、最後は大きなHPを持つボス。残りライフと通貨を成績にして何度でも挑戦できます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>DATA</h3><p>経路・塔・敵・ウェーブの表が世界の真実。</p><code>Path / Tower / Wave</code></article><article><span class="concept-number">2</span><h3>UPDATE</h3><p>敵の進行、標的、弾、ダメージを順に更新する。</p><code>move → target → hit</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>状態を道、円、HP、通貨へ写す。</p><code>state → board</code></article></div><div class="motion-lab" data-lab="turn"><div class="lab-copy"><p class="eyebrow">SYSTEM LAB</p><h3>複数マップとボスを統合する完成版</h3><p>前半3ウェーブを越えると経路が変わり、塔を建て直します。後半は敵が速くなり、最後は大きなHPを持つボス。残りライフと通貨を成績にして何度でも挑戦できます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></div><!-- update-draw-contract:start -->
@@ -40,9 +46,24 @@
   <div><p class="eyebrow">編集する入口</p><h3>games/tracks/tower-defense/ebi-defense/main.go</h3><p>この短い入口が、実際に学習者が開いて変更する Go ファイルです。</p></div>
   <pre><code>package main
 
-import "github.com/kumagi/EbiShowcase/internal/towerdefenseplay"
+import (
+	_ "embed"
 
-func main() { towerdefenseplay.Run(towerdefenseplay.Config{Step: 8, Title: "EBI PEARL DEFENSE"}) }</code></pre>
+	"github.com/kumagi/EbiShowcase/internal/towerdefenseplay"
+)
+
+//go:embed assets/pearl-gate-battlefield.png
+var battlefieldPNG []byte
+
+//go:embed assets/defense-towers.png
+var towersPNG []byte
+
+//go:embed assets/defense-battle.png
+var battlePNG []byte
+
+func main() {
+	towerdefenseplay.Run(towerdefenseplay.Config{Step: 8, Title: "EBI PEARL DEFENSE", BackgroundPNG: battlefieldPNG, TowersPNG: towersPNG, BattlePNG: battlePNG})
+}</code></pre>
 </section>
 <section class="code-lesson">
   <div><p class="eyebrow">仕組みの抜粋</p><h3>internal/towerdefense (shared engine)</h3><p>入口が呼ぶ本物の仕組みです。入口と内部を混同せず、両方の場所をたどれます。</p></div>
@@ -71,4 +92,39 @@ world.Update(inputs)</code></pre>
         </form>
       </div>
     </section>
+<!-- capstone-renderers:start -->
+<section class="capstone-renderers" aria-label="Drawだけを替えるおまけ">
+  <div class="capstone-renderers-copy">
+    <p class="eyebrow">BONUS / DRAW ONLY</p>
+    <h2>ゲームは同じ。絵だけを、別の作り方にする。</h2>
+    <p>これは上の完成ゲームと同じパッケージから作ったWASMです。<code>Update</code>と<code>Layout</code>には手を加えず、そのまま呼びます。1回のDrawが作った同じ瞬間を、通常、輪郭線、矩形モザイクへ同時に投影します。位置、得点、敵、当たり判定、時間は1つしかありません。</p>
+  </div>
+  <div class="capstone-renderers-facts">
+    <article><b>01</b><h3>UPDATE</h3><p>入力とゲームの事実を進める。3画面で共通。</p></article>
+    <article><b>02</b><h3>LAYOUT</h3><p>元ゲームの大きさをそのまま返す。</p></article>
+    <article><b>03</b><h3>DRAW</h3><p>同じsnapshotの見せ方だけを替える。</p></article>
+  </div>
+  <div class="capstone-renderers-demo">
+    <iframe data-shared-demo="capstone-renderers" src="../../../../play/ebi-defense-renderer/" loading="lazy" title="同じ完成ゲームを3種類のDrawで同時表示" allow="autoplay; fullscreen"></iframe>
+  </div>
+  <div class="capstone-renderers-code">
+    <div><p class="eyebrow">THE ONLY BOUNDARY</p><h3>UpdateとLayoutは、元のゲームへそのまま渡す。</h3><p>矩形版はsnapshotを小さな格子へ縮め、nearestで戻します。ワイヤ版は隣の画素との差をKageシェーダーで線にします。どちらもゲーム状態を読み書きしません。</p></div>
+    <pre><code>func (g *gallery) Update() error {
+    return g.inner.Update()
+}
+
+func (g *gallery) Layout(w, h int) (int, int) {
+    return g.inner.Layout(w, h)
+}
+
+func (g *gallery) Draw(screen *ebiten.Image) {
+    snapshot := ebiten.NewImage(width, height)
+    g.inner.Draw(snapshot)
+    drawPolished(screen, snapshot)
+    drawWireframe(screen, snapshot)
+    drawRectangles(screen, snapshot)
+}</code></pre>
+  </div>
+</section>
+<!-- capstone-renderers:end -->
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

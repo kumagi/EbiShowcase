@@ -1,8 +1,12 @@
 package main
 
 import (
+	"bytes"
+	_ "embed"
 	"fmt"
+	"image"
 	"image/color"
+	_ "image/png"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -30,6 +34,22 @@ type card struct {
 	damage, block int
 	color         color.RGBA
 }
+
+// These original, Apache-2.0 assets are generated specifically for Ebi
+// Ascent. They are decoded when a run is created, never lazily from Draw.
+//
+//go:embed assets/deckbuilder-abyss-background.png
+var backgroundPNG []byte
+
+//go:embed assets/deckbuilder-abyss-king.png
+var bossPNG []byte
+
+//go:embed assets/deckbuilder-card-atlas.png
+var cardAtlasPNG []byte
+
+//go:embed assets/deckbuilder-enemy-atlas.png
+var enemyAtlasPNG []byte
+
 type enemy struct {
 	name       string
 	hp, attack int
@@ -50,19 +70,50 @@ type game struct {
 	pulse                                           *shaderlab.Pulse
 	cam                                             cameralab.State
 	badge                                           *ebiten.Image
+	background, boss                                *ebiten.Image
+	cardArt                                         [3]*ebiten.Image
+	enemyArt                                        [4]*ebiten.Image
 }
 type spark struct{ x, y, vx, vy, life float64 }
 
 func newGame() *game {
 	g := &game{hp: 46, phase: phaseBattle, message: "Play cards, then end the turn."}
+	g.loadGeneratedArt()
 	g.audio = audio.NewContext(audiolab.SampleRate)
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: width / 2, Y: height / 2}, ViewW: width, ViewH: height}
 	g.badge = ebiten.NewImage(20, 20)
 	g.badge.Fill(color.RGBA{253, 200, 70, 255})
-	g.deck = []card{{"JAB", 7, 0, color.RGBA{215, 92, 77, 255}}, {"SHELL", 0, 8, color.RGBA{71, 147, 224, 255}}, {"JAB", 7, 0, color.RGBA{215, 92, 77, 255}}}
+	// The opening hand deliberately shows all three visual verbs immediately:
+	// red impact attacks, blue shell defense, and the violet-gold finisher.
+	g.deck = []card{{"JAB", 7, 0, color.RGBA{215, 92, 77, 255}}, {"SHELL", 0, 8, color.RGBA{71, 147, 224, 255}}, rewards[2]}
 	g.startBattle()
 	return g
+}
+
+func mustDecodePNG(data []byte) *ebiten.Image {
+	source, _, err := image.Decode(bytes.NewReader(data))
+	if err != nil {
+		panic(err)
+	}
+	return ebiten.NewImageFromImage(source)
+}
+
+func (g *game) loadGeneratedArt() {
+	g.background = mustDecodePNG(backgroundPNG)
+	g.boss = mustDecodePNG(bossPNG)
+	atlas := mustDecodePNG(cardAtlasPNG)
+	panelW := atlas.Bounds().Dx() / len(g.cardArt)
+	for i := range g.cardArt {
+		panel := atlas.SubImage(image.Rect(i*panelW, 0, (i+1)*panelW, atlas.Bounds().Dy()))
+		g.cardArt[i] = ebiten.NewImageFromImage(panel)
+	}
+	enemyAtlas := mustDecodePNG(enemyAtlasPNG)
+	enemyW := enemyAtlas.Bounds().Dx() / len(g.enemyArt)
+	for i := range g.enemyArt {
+		panel := enemyAtlas.SubImage(image.Rect(i*enemyW, 0, (i+1)*enemyW, enemyAtlas.Bounds().Dy()))
+		g.enemyArt[i] = ebiten.NewImageFromImage(panel)
+	}
 }
 func (g *game) startBattle() {
 	g.enemyHP = encounters[g.floor].hp
@@ -217,6 +268,19 @@ func (g *game) burst(x, y float64, n int) {
 func (g *game) Draw(s *ebiten.Image) {
 	bgs := []color.RGBA{{18, 27, 45, 255}, {30, 43, 58, 255}, {45, 31, 55, 255}, {54, 39, 31, 255}, {45, 20, 32, 255}}
 	s.Fill(bgs[min(g.floor, 4)])
+	g.drawGeneratedBackground(s)
+	vector.DrawFilledRect(s, 10, 10, 460, 48, color.RGBA{5, 11, 25, 220}, false)
+	vector.StrokeRect(s, 10, 10, 460, 48, 2, color.RGBA{253, 200, 70, 130}, false)
+	for i := 0; i < 5; i++ {
+		c := color.RGBA{80, 91, 111, 180}
+		if i <= g.floor {
+			c = color.RGBA{253, 200, 70, 230}
+		}
+		vector.DrawFilledCircle(s, float32(182+i*30), 66, 5, c, true)
+		if i < 4 {
+			vector.StrokeLine(s, float32(187+i*30), 66, float32(207+i*30), 66, 2, c, false)
+		}
+	}
 	g.drawHUD(s)
 	g.drawEffectBadge(s)
 	switch g.phase {
@@ -232,6 +296,19 @@ func (g *game) Draw(s *ebiten.Image) {
 	} else if g.over {
 		overlay(s, "THE RUN ENDED!\n\nTAP / SPACE TO RETRY")
 	}
+}
+
+func (g *game) drawGeneratedBackground(s *ebiten.Image) {
+	op := &ebiten.DrawImageOptions{}
+	// The embedded image already matches the logical canvas. A slight floor
+	// tint differentiates the climb while preserving the authored lighting.
+	tints := [...]struct{ r, gr, b float32 }{{.78, .90, 1}, {.72, 1, .93}, {.90, .76, 1}, {1, .83, .68}, {1, .68, .76}}
+	t := tints[min(g.floor, len(tints)-1)]
+	op.ColorScale.Scale(t.r, t.gr, t.b, .86)
+	s.DrawImage(g.background, op)
+	// Cards need a quiet landing zone but the illustrated stairs remain visible.
+	vector.DrawFilledRect(s, 0, 350, width, 370, color.RGBA{3, 8, 20, 155}, false)
+	vector.DrawFilledRect(s, 0, 0, width, 82, color.RGBA{3, 8, 20, 115}, false)
 }
 func (g *game) drawHUD(s *ebiten.Image) {
 	label := fmt.Sprintf("EBI ASCENT  FLOOR %d/5  HP %02d/46  DECK %d  BEST %04d", g.floor+1, max(0, g.hp), len(g.deck), g.best)
@@ -265,23 +342,65 @@ func cardSprite(c card) string {
 		return "card-block"
 	}
 }
+
+func cardArtIndex(c card) int {
+	if c.name == "EBI COMET" {
+		return 2
+	}
+	if c.block > 0 {
+		return 1
+	}
+	return 0
+}
+
+func (g *game) drawCardArt(s *ebiten.Image, c card, x, y, w, h float64) {
+	art := g.cardArt[cardArtIndex(c)]
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(w/float64(art.Bounds().Dx()), h/float64(art.Bounds().Dy()))
+	op.GeoM.Translate(x, y)
+	s.DrawImage(art, op)
+	// A bright lower edge connects the illustration to its rules text.
+	vector.DrawFilledRect(s, float32(x), float32(y+h-3), float32(w), 3, c.color, false)
+}
+
+func (g *game) drawBoss(s *ebiten.Image, x, y, size float64, hit bool) {
+	g.drawEnemyPortrait(s, g.boss, x, y, size, size, 1, hit)
+}
+
+func (g *game) drawEnemyPortrait(s *ebiten.Image, art *ebiten.Image, x, y, drawW, drawH, alpha float64, hit bool) {
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(drawW/float64(art.Bounds().Dx()), drawH/float64(art.Bounds().Dy()))
+	op.GeoM.Translate(x-drawW/2, y-drawH/2)
+	if hit {
+		op.ColorScale.Scale(1.35, .42, .42, float32(alpha))
+	} else {
+		op.ColorScale.ScaleAlpha(float32(alpha))
+	}
+	s.DrawImage(art, op)
+}
+
 func (g *game) drawBattle(s *ebiten.Image) {
 	e := encounters[g.floor]
 	ox := 0.0
 	if g.shake > 0 {
 		ox = math.Sin(float64(g.tick)*2) * 5
 	}
-	sprites := []string{"swarm", "slug", "boss-crab", "species-3", "king-crab"}
-	sprite := sprites[g.floor]
-	size := 110 + float64(g.floor)*10
-	if g.flash > 0 {
-		trackatlas.DrawTinted(s, sprite, 240+ox, 150, size, 1, 1, .3, 1)
+	// Shadow and danger aura are shared by all five generated portraits.
+	vector.DrawFilledCircle(s, float32(240+ox), 282, 66, color.RGBA{1, 5, 14, 105}, true)
+	vector.DrawFilledCircle(s, float32(240+ox), 190, float32(94+math.Sin(float64(g.tick)*.09)*6), color.RGBA{255, 93, 108, 18}, true)
+	if g.floor == len(encounters)-1 {
+		g.drawBoss(s, 240+ox, 205+math.Sin(float64(g.tick)*.05)*2, 286, g.flash > 0)
 	} else {
-		trackatlas.DrawCentered(s, sprite, 240+ox, 150+math.Sin(float64(g.tick)*.13)*3, size)
+		widths := [...]float64{190, 194, 208, 184}
+		heights := [...]float64{278, 282, 278, 290}
+		g.drawEnemyPortrait(s, g.enemyArt[g.floor], 240+ox, 205+math.Sin(float64(g.tick)*.08)*3, widths[g.floor], heights[g.floor], 1, g.flash > 0)
 	}
 	intent := e.attack + []int{0, 4, -2}[g.turn%3]
 	intentName := []string{"STRIKE", "HEAVY", "FEINT"}[g.turn%3]
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("%s HP %02d/%02d NEXT %s %d", e.name, max(0, g.enemyHP), e.hp, intentName, intent), 95, 75)
+	vector.DrawFilledRect(s, 70, 76, 340, 42, color.RGBA{5, 12, 27, 205}, false)
+	vector.DrawFilledRect(s, 95, 107, 290, 7, color.RGBA{55, 55, 75, 255}, false)
+	vector.DrawFilledRect(s, 95, 107, float32(290*max(0, g.enemyHP)/e.hp), 7, color.RGBA{240, 79, 100, 255}, false)
+	ebitenutil.DebugPrintAt(s, fmt.Sprintf("%s  HP %02d/%02d  NEXT %s %d", e.name, max(0, g.enemyHP), e.hp, intentName, intent), 95, 88)
 	for _, p := range g.sparks {
 		vector.DrawFilledCircle(s, float32(p.x+ox), float32(p.y), float32(2+p.life/14), color.RGBA{255, 211, 62, 255}, true)
 	}
@@ -295,28 +414,40 @@ func (g *game) drawBattle(s *ebiten.Image) {
 			if i%2 == 0 {
 				y -= float32(math.Sin(float64(g.tick)*.08)) * 3
 			}
-			vector.DrawFilledRect(s, x, y, w-6, 155, c.color, false)
-			trackatlas.DrawCentered(s, cardSprite(c), float64(x+w/2-3), 505, 40)
-			ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d %s\nDMG %d\nBLK %d", i+1, c.name, c.damage, c.block), int(x)+8, 550)
+			vector.DrawFilledRect(s, x+4, y+7, w-6, 155, color.RGBA{1, 5, 14, 150}, false)
+			vector.DrawFilledRect(s, x, y, w-6, 155, color.RGBA{11, 18, 34, 248}, false)
+			vector.StrokeRect(s, x, y, w-6, 155, 3, c.color, false)
+			g.drawCardArt(s, c, float64(x+6), float64(y+7), float64(w-18), 74)
+			vector.DrawFilledCircle(s, x+16, y+16, 12, color.RGBA{35, 223, 235, 255}, true)
+			ebitenutil.DebugPrintAt(s, "1", int(x)+13, int(y)+11)
+			ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d %s\nDMG %d  BLK %d", i+1, c.name, c.damage, c.block), int(x)+8, int(y)+91)
 		}
 	}
 	vector.DrawFilledRect(s, 55, 642, 370, 55, color.RGBA{240, 177, 65, 255}, false)
 	ebitenutil.DebugPrintAt(s, "END TURN [E]", 185, 665)
 }
 func (g *game) drawReward(s *ebiten.Image) {
+	vector.DrawFilledCircle(s, 240, 400, 210, color.RGBA{255, 211, 90, 13}, true)
 	ebitenutil.DebugPrintAt(s, "CHOOSE ONE CARD REWARD", 145, 320)
 	for i, c := range rewards {
 		x := float32(i*160 + 5)
-		vector.DrawFilledRect(s, x, 390, 150, 200, c.color, false)
-		trackatlas.DrawCentered(s, cardSprite(c), float64(x+75), 440, 48)
-		ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d %s\n\nDMG %d\nBLOCK %d", i+1, c.name, c.damage, c.block), int(x)+10, 500)
+		vector.DrawFilledRect(s, x+6, 398, 150, 200, color.RGBA{1, 5, 14, 160}, false)
+		vector.DrawFilledRect(s, x, 390, 150, 200, color.RGBA{11, 18, 34, 250}, false)
+		vector.StrokeRect(s, x, 390, 150, 200, 4, c.color, false)
+		g.drawCardArt(s, c, float64(x+8), 400, 134, 105)
+		ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d %s\n\nDMG %d  BLOCK %d", i+1, c.name, c.damage, c.block), int(x)+10, 520)
 	}
 	ebitenutil.DebugPrintAt(s, g.message, 70, 630)
 }
 func (g *game) drawRoute(s *ebiten.Image) {
+	for i := 0; i < 9; i++ {
+		vector.DrawFilledCircle(s, float32(35+i*55), float32(350+(i%2)*230), 20, color.RGBA{71, 168, 145, 28}, true)
+	}
 	ebitenutil.DebugPrintAt(s, "CHOOSE THE NEXT ROUTE", 145, 280)
 	vector.DrawFilledRect(s, 20, 400, 210, 170, color.RGBA{66, 158, 129, 255}, false)
 	vector.DrawFilledRect(s, 250, 400, 210, 170, color.RGBA{178, 113, 58, 255}, false)
+	vector.StrokeRect(s, 20, 400, 210, 170, 4, color.RGBA{180, 255, 218, 150}, false)
+	vector.StrokeRect(s, 250, 400, 210, 170, 4, color.RGBA{255, 224, 156, 160}, false)
 	trackatlas.DrawCentered(s, "route-rest", 125, 445, 56)
 	trackatlas.DrawCentered(s, "route-treasure", 355, 445, 56)
 	ebitenutil.DebugPrintAt(s, "1  REST\n\nHEAL 9 HP", 75, 490)

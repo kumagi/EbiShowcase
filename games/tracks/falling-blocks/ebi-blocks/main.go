@@ -1,8 +1,12 @@
 package main
 
 import (
+	"bytes"
+	_ "embed"
 	"fmt"
+	"image"
 	"image/color"
+	_ "image/png"
 	"math"
 	"math/rand"
 
@@ -15,7 +19,6 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/cameralab"
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
-	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
@@ -61,6 +64,12 @@ var shapeColors = [...]color.RGBA{
 	{65, 190, 207, 255}, {239, 190, 62, 255}, {174, 97, 205, 255},
 	{232, 142, 56, 255}, {71, 118, 209, 255}, {90, 181, 101, 255}, {224, 82, 86, 255},
 }
+
+//go:embed assets/falling-blocks-cargo-tower.png
+var cargoTowerPNG []byte
+
+//go:embed assets/falling-blocks-tile-atlas.png
+var tileAtlasPNG []byte
 var bases = [7][4]point{
 	{{-1, 0}, {0, 0}, {1, 0}, {2, 0}},
 	{{0, 0}, {1, 0}, {0, 1}, {1, 1}},
@@ -86,7 +95,6 @@ type game struct {
 	clearFlash, shake         int
 	frame                     int
 	sparks                    []spark
-	scene                     *ebiten.Image
 	message                   string
 	won, lost                 bool
 	audio                     *audio.Context
@@ -94,10 +102,13 @@ type game struct {
 	pulse                     *shaderlab.Pulse
 	cam                       cameralab.State
 	badge                     *ebiten.Image
+	background                *ebiten.Image
+	tileArt                   [7]*ebiten.Image
 }
 
 func newGame() *game {
-	g := &game{rng: rand.New(rand.NewSource(6606)), hold: noPiece, level: 1, combo: -1, scene: ebiten.NewImage(screenW, screenH)}
+	g := &game{rng: rand.New(rand.NewSource(6606)), hold: noPiece, level: 1, combo: -1}
+	g.loadGeneratedArt()
 	g.audio = audio.NewContext(audiolab.SampleRate)
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: screenW / 2, Y: screenH / 2}, ViewW: screenW, ViewH: screenH}
@@ -108,10 +119,48 @@ func newGame() *game {
 			g.board[y][x] = noPiece
 		}
 	}
+	g.seedBoard(0)
 	g.fillQueue()
 	g.spawn(g.takeNext())
 	g.message = "Clear 2 lines to cross the sunset dock!"
 	return g
+}
+
+// seedBoard makes each stage begin as a small, readable recovery puzzle instead
+// of an empty waiting room. The holes never form a completed row by themselves.
+func (g *game) seedBoard(stage int) {
+	patterns := [][]string{
+		{"111111....", "..22..333."},
+		{"44..555.66", "4...5...6."},
+		{"777.11.222", ".7..1...2."},
+	}
+	for dy, row := range patterns[stage%len(patterns)] {
+		y := rows - 1 - dy
+		for x, ch := range row {
+			if ch != '.' {
+				g.board[y][x] = int(ch-'1') % len(bases)
+			}
+		}
+	}
+}
+
+func mustDecodePNG(data []byte) *ebiten.Image {
+	source, _, err := image.Decode(bytes.NewReader(data))
+	if err != nil {
+		panic(err)
+	}
+	return ebiten.NewImageFromImage(source)
+}
+
+func (g *game) loadGeneratedArt() {
+	g.background = mustDecodePNG(cargoTowerPNG)
+	atlas := mustDecodePNG(tileAtlasPNG)
+	panelW := atlas.Bounds().Dx() / len(g.tileArt)
+	const cropTop, cropBottom = 115, 320
+	for i := range g.tileArt {
+		panel := atlas.SubImage(image.Rect(i*panelW, cropTop, (i+1)*panelW, cropBottom))
+		g.tileArt[i] = ebiten.NewImageFromImage(panel)
+	}
 }
 
 func (g *game) refillBag() {
@@ -363,6 +412,7 @@ func (g *game) lock() {
 				g.board[y][x] = noPiece
 			}
 		}
+		g.seedBoard(g.stage)
 		g.message = fmt.Sprintf("STAGE %d! %s: clear %d lines.", g.stage+1, stages[g.stage].name, stages[g.stage].goal)
 		g.clearFlash = 45
 	}
@@ -410,44 +460,50 @@ func (g *game) clearLines() int {
 }
 
 func (g *game) Draw(screen *ebiten.Image) {
-	g.scene.Clear()
-	g.drawScene(g.scene)
+	// The presentation buffer is local: Draw projects game state but never
+	// mutates a cache stored in game.
+	scene := ebiten.NewImage(screenW, screenH)
+	g.drawScene(scene)
 	op := &ebiten.DrawImageOptions{}
 	if g.shake > 0 {
 		op.GeoM.Translate(float64((g.frame%3-1)*3), float64(((g.frame/2)%3-1)*2))
 	}
-	screen.DrawImage(g.scene, op)
+	screen.DrawImage(scene, op)
 }
 
 func (g *game) drawScene(screen *ebiten.Image) {
 	screen.Fill(stages[g.stage].background)
+	g.drawGeneratedBackground(screen)
+	drawBlockBackdrop(screen, g.stage, g.frame)
 	g.drawTitle(screen)
 	g.drawEffectBadge(screen)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("STAGE %d/3 %-11s  LINES %d/%d", g.stage+1, stages[g.stage].name, g.stageLines, stages[g.stage].goal), 98, 42)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %05d  BEST %05d  LEVEL %d", g.score, g.best, g.level), 120, 58)
 	ebitenutil.DebugPrintAt(screen, g.message, 76, 76)
 
-	vector.DrawFilledRect(screen, boardX-3, boardY-3, cols*cell+6, rows*cell+6, color.RGBA{35, 48, 70, 255}, false)
+	vector.DrawFilledRect(screen, boardX-12, boardY-12, cols*cell+24, rows*cell+24, color.RGBA{3, 8, 20, 175}, false)
+	vector.DrawFilledRect(screen, boardX-5, boardY-5, cols*cell+10, rows*cell+10, color.RGBA{35, 48, 70, 255}, false)
+	vector.StrokeRect(screen, boardX-5, boardY-5, cols*cell+10, rows*cell+10, 3, color.RGBA{113, 219, 226, 170}, false)
 	for y := 0; y < rows; y++ {
 		for x := 0; x < cols; x++ {
 			px, py := float32(boardX+x*cell), float32(boardY+y*cell)
 			vector.StrokeRect(screen, px, py, cell, cell, 1, color.RGBA{57, 72, 97, 255}, false)
 			if g.board[y][x] != noPiece {
-				drawCell(screen, x, y, shapeColors[g.board[y][x]], 255)
+				g.drawCell(screen, x, y, g.board[y][x], 255, false)
 			}
 		}
 	}
 	if !g.won && !g.lost {
 		for _, b := range g.blocks(g.ghost()) {
-			drawCell(screen, b.x, b.y, shapeColors[g.active.kind], 55)
+			g.drawCell(screen, b.x, b.y, g.active.kind, 55, false)
 		}
 		for _, b := range g.blocks(g.active) {
-			drawCell(screen, b.x, b.y, shapeColors[g.active.kind], 255)
+			g.drawCell(screen, b.x, b.y, g.active.kind, 255, false)
 		}
 		// A breathing highlight provides in-between frames even while the piece waits.
 		pulse := uint8(25 + 20*(1+math.Sin(float64(g.frame)*.14)))
 		for _, b := range g.blocks(g.active) {
-			drawCell(screen, b.x, b.y, color.RGBA{255, 255, 255, 255}, pulse)
+			g.drawCell(screen, b.x, b.y, g.active.kind, pulse, true)
 		}
 	}
 	for _, p := range g.sparks {
@@ -462,12 +518,12 @@ func (g *game) drawScene(screen *ebiten.Image) {
 		vector.DrawFilledRect(screen, boardX, boardY, cols*cell, rows*cell, color.RGBA{255, 245, 180, a}, false)
 	}
 
-	drawSide(screen, 8, 110, "HOLD", g.hold)
+	g.drawSide(screen, 8, 110, "HOLD", g.hold)
 	next := noPiece
 	if len(g.queue) > 0 {
 		next = g.queue[0]
 	}
-	drawSide(screen, 382, 110, "NEXT", next)
+	g.drawSide(screen, 382, 110, "NEXT", next)
 	ebitenutil.DebugPrintAt(screen, "7-BAG", 399, 205)
 	for i := 0; i < min(4, len(g.queue)); i++ {
 		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%d  %s", i+1, shapeNames[g.queue[i]]), 404, 229+i*22)
@@ -488,6 +544,25 @@ func (g *game) drawScene(screen *ebiten.Image) {
 	if g.lost {
 		overlay(screen, "STACK REACHED THE TOP\n\nTAP / ENTER TO RETRY")
 	}
+}
+
+func (g *game) drawGeneratedBackground(screen *ebiten.Image) {
+	op := &ebiten.DrawImageOptions{}
+	tints := [...]struct{ r, gr, b float32 }{{.88, .94, 1}, {.92, .76, 1}, {.72, 1, .92}}
+	t := tints[g.stage]
+	op.ColorScale.Scale(t.r, t.gr, t.b, .94)
+	screen.DrawImage(g.background, op)
+	vector.DrawFilledRect(screen, 0, 0, screenW, 86, color.RGBA{2, 8, 22, 120}, false)
+	vector.DrawFilledRect(screen, 0, 604, screenW, 116, color.RGBA{2, 8, 22, 145}, false)
+}
+
+func drawBlockBackdrop(screen *ebiten.Image, stage, frame int) {
+	// Only subtle live scan lines sit on top of the generated cargo tower.
+	for y := 90; y < 590; y += 28 {
+		vector.DrawFilledRect(screen, 0, float32(y), screenW, 1, color.RGBA{103, 202, 220, 18}, false)
+	}
+	beamX := float32((frame*2+stage*43)%620 - 70)
+	vector.StrokeLine(screen, beamX, 80, beamX-120, 590, 10, color.RGBA{78, 196, 221, 14}, true)
 }
 
 func (g *game) drawTitle(screen *ebiten.Image) {
@@ -513,21 +588,36 @@ func (g *game) drawEffectBadge(screen *ebiten.Image) {
 	screen.DrawImage(fx, op)
 }
 
-func drawCell(screen *ebiten.Image, x, y int, c color.RGBA, alpha uint8) {
+func (g *game) drawCell(screen *ebiten.Image, x, y, kind int, alpha uint8, highlight bool) {
 	px, py := float32(boardX+x*cell), float32(boardY+y*cell)
+	art := g.tileArt[kind%len(g.tileArt)]
+	op := &ebiten.DrawImageOptions{}
+	drawSize := float64(cell - 3)
+	op.GeoM.Scale(drawSize/float64(art.Bounds().Dx()), drawSize/float64(art.Bounds().Dy()))
+	op.GeoM.Translate(float64(px)+(float64(cell)-drawSize)/2, float64(py)+(float64(cell)-drawSize)/2)
 	a := float32(alpha) / 255
-	r, g, b := float32(c.R)/255, float32(c.G)/255, float32(c.B)/255
-	trackatlas.DrawTinted(screen, "block-cell", float64(px+cell/2), float64(py+cell/2), float64(cell-4), r, g, b, a)
+	if highlight {
+		op.ColorScale.Scale(2, 2, 2, a)
+	} else {
+		op.ColorScale.ScaleAlpha(a)
+	}
+	screen.DrawImage(art, op)
 }
 
-func drawSide(screen *ebiten.Image, x, y int, title string, kind int) {
-	vector.DrawFilledRect(screen, float32(x), float32(y), 90, 78, color.RGBA{31, 45, 68, 255}, false)
+func (g *game) drawSide(screen *ebiten.Image, x, y int, title string, kind int) {
+	vector.DrawFilledRect(screen, float32(x), float32(y), 90, 92, color.RGBA{5, 15, 34, 215}, false)
+	vector.StrokeRect(screen, float32(x), float32(y), 90, 92, 2, color.RGBA{102, 211, 230, 120}, false)
 	ebitenutil.DebugPrintAt(screen, title, x+26, y+12)
-	value := "—"
 	if kind != noPiece {
-		value = shapeNames[kind]
+		art := g.tileArt[kind%len(g.tileArt)]
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Scale(44/float64(art.Bounds().Dx()), 44/float64(art.Bounds().Dy()))
+		op.GeoM.Translate(float64(x+23), float64(y+34))
+		screen.DrawImage(art, op)
+		ebitenutil.DebugPrintAt(screen, shapeNames[kind], x+69, y+68)
+	} else {
+		ebitenutil.DebugPrintAt(screen, "—", x+40, y+52)
 	}
-	ebitenutil.DebugPrintAt(screen, value, x+40, y+45)
 }
 
 func pointerPress() (int, int, bool) {

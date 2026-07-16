@@ -42,6 +42,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / LINE SCAN</p><h2>Compare one by one to count how long a color continues.</h2><p class="lesson-lead">Move from a row's left edge and remember the section until its type changes. If its length is at least three, add every coordinate to <strong>a set named marked</strong>. Then repeat for columns.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Remember the run start</h3><p>Keep start at the first matching color. When the type changes at x, the run length is x-start.</p><code>runLength := x - start</code></article><article><span class="concept-number">2</span><h3>Mark every cell in 3+</h3><p>If the run is long enough, add start through the cell before x. The same rule handles runs of four and five.</p><code>for i := start; i &lt; x; i++ { mark(i,y) }</code></article><article><span class="concept-number">3</span><h3>Count crossings once</h3><p>A center cell found both horizontally and vertically uses the same map key, so it remains one unique cell.</p><code>marked[point{x,y}] = true</code></article></div><div class="motion-lab" data-lab="match-scan" data-found="match found" data-none="no match" data-cleared="cleared + gravity" aria-labelledby="lab-title-find-matches">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / SCAN</p>
@@ -83,6 +99,14 @@ for x := 0; x &lt; cols; x++ {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

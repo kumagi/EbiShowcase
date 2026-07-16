@@ -42,6 +42,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / INTENT &amp; STATUS</p><h2>When you see “18 damage next,” you can change your plan.</h2><p class="lesson-lead">Before the enemy acts, <strong>Draw displays its intent data</strong>. Poison and Weak store remaining time as integers; use their effect at turn end, then subtract one.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Make actions data</h3><p>Keep a name, attack, and block together. Use the same data for drawing and acting so the promise always matches the real move.</p><code>type intent struct { damage, block int }</code></article><article><span class="concept-number">2</span><h3>Count a status</h3><p>Poison 4 hurts, then becomes 3. Weak 2 reduces enemy attacks for two turns and then ends.</p><code>enemyHP -= poison; poison--</code></article><article><span class="concept-number">3</span><h3>Fix the update order</h3><p>Resolve poison, enemy attack, duration, then next intent in one function so every turn follows the same rules.</p><code>resolveEnemyTurn()</code></article></div><div class="motion-lab" data-lab="status-ticks" data-status="POISON" data-added="applied" data-ticked="turn passed" data-none="no status" aria-labelledby="lab-title-intent-status">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / STATUS TURNS</p>
@@ -92,6 +108,14 @@ intentIndex = (intentIndex+1) % len(intents)</code></pre></div><div class="why-g
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

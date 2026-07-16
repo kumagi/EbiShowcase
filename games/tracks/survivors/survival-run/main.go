@@ -1,10 +1,15 @@
 package main
 
 import (
+	"bytes"
+	"embed"
 	"fmt"
+	"image"
 	"image/color"
+	_ "image/png"
 	"math"
 	"math/rand"
+	"sync"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/audio"
@@ -14,13 +19,20 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/cameralab"
-	"github.com/kumagi/EbiShowcase/internal/hero"
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
 const width, height = 480, 720
+
+//go:embed assets/survivors-reef-arena.png assets/survivors-ebi-spellblade.png assets/survivors-reef-hound.png assets/survivors-crown-crab.png
+var survivorArtFS embed.FS
+
+var (
+	survivorArtOnce sync.Once
+	survivorArt     map[string]*ebiten.Image
+)
 
 type mob struct {
 	x, y, hp, r float64
@@ -55,22 +67,46 @@ type game struct {
 }
 
 func newGame() *game {
+	loadSurvivorArt()
 	badge := ebiten.NewImage(24, 24)
 	badge.Fill(color.RGBA{255, 211, 62, 255})
-	return &game{
+	g := &game{
 		px: 240, py: 360,
 		rng:  rand.New(rand.NewSource(2306)),
 		life: 4, speed: 3.6, aura: 46, auraTick: 18,
 		level: 1, need: 4, audio: audio.NewContext(audiolab.SampleRate), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: badge,
 	}
+	// Begin in the middle of a recognizable encounter instead of an empty room.
+	g.seedOpeningMobs()
+	return g
+}
+
+func (g *game) seedOpeningMobs() {
+	for i := 0; i < 6; i++ {
+		a := float64(i) * math.Pi / 3
+		kind := i % 3
+		hp := []float64{1, 2, 3}[kind]
+		r := []float64{14, 17, 12}[kind]
+		g.mobs = append(g.mobs, mob{x: 240 + math.Cos(a)*190, y: 370 + math.Sin(a)*230, hp: hp, r: r, kind: kind})
+	}
+}
+
+func (g *game) resetRun() {
+	best, audioContext, pulse, camera, badge := g.bestKills, g.audio, g.pulse, g.cam, g.badge
+	*g = game{
+		px: 240, py: 360,
+		rng:  rand.New(rand.NewSource(2306)),
+		life: 4, speed: 3.6, aura: 46, auraTick: 18,
+		level: 1, need: 4, bestKills: best,
+		audio: audioContext, pulse: pulse, cam: camera, badge: badge,
+	}
+	g.seedOpeningMobs()
 }
 
 func (g *game) Update() error {
 	if g.clear || g.over {
 		if restart() {
-			best := g.bestKills
-			*g = *newGame()
-			g.bestKills = best
+			g.resetRun()
 		}
 		return nil
 	}
@@ -292,8 +328,11 @@ func (g *game) updateDraft() error {
 }
 
 func (g *game) Draw(s *ebiten.Image) {
-	backgrounds := []color.RGBA{{10, 24, 39, 255}, {38, 22, 58, 255}, {58, 26, 24, 255}}
-	s.Fill(backgrounds[g.area])
+	drawSurvivorCover(s, "survivors-reef-arena", 0, 0, width, height)
+	// One generated arena remains recognizable throughout the run. These very
+	// light phase grades communicate escalation without replacing its detail.
+	phaseWash := []color.RGBA{{15, 102, 116, 8}, {77, 34, 128, 24}, {150, 31, 67, 32}}[g.area]
+	vector.DrawFilledRect(s, 0, 0, width, height, phaseWash, false)
 	if g.pulse.Available() {
 		fx := ebiten.NewImage(24, 24)
 		if g.pulse.Draw(fx, g.badge, float32(g.frame)*.09) {
@@ -306,52 +345,69 @@ func (g *game) Draw(s *ebiten.Image) {
 	if g.shake > 0 {
 		offsetX = math.Sin(float64(g.frame)*2.4) * 4
 	}
-	// Landmarks make each fifteen-second arena phase visually distinct.
-	for i := 0; i < 8; i++ {
-		x := float32((i*83 + g.area*31) % width)
-		y := float32(100 + (i*71)%560)
-		vector.DrawFilledCircle(s, x+float32(offsetX), y, float32(3+g.area*2), color.RGBA{130, 180, 190, 45}, true)
-	}
 	for _, gem := range g.gems {
+		vector.StrokeCircle(s, float32(gem.x+offsetX), float32(gem.y), 13, 2, color.RGBA{116, 255, 226, 185}, true)
 		trackatlas.DrawCentered(s, "xp-gem", gem.x+offsetX, gem.y, 18+math.Sin(float64(g.frame)*.15+gem.x)*2)
 	}
 	for _, m := range g.mobs {
-		sprite := "swarm"
-		size := m.r * 2
+		asset := "survivors-reef-hound"
+		size := m.r*3.3 + 12
 		if m.boss {
-			sprite = "boss-crab"
+			asset = "survivors-crown-crab"
+			size = 142
 		}
 		if m.kind == 1 {
-			sprite = "slug"
+			size *= 1.12
 		}
 		if m.kind == 2 {
-			size *= .72
+			size *= .82
 		}
 		bob := math.Sin(float64(g.frame)*.16+m.x) * 2
-		if m.flash > 0 {
-			trackatlas.DrawTinted(s, sprite, m.x+offsetX, m.y+bob, size, 1, 1, .35, 1)
-		} else {
-			trackatlas.DrawCentered(s, sprite, m.x+offsetX, m.y+bob, size)
-		}
+		vector.DrawFilledCircle(s, float32(m.x+offsetX), float32(m.y+m.r*.55), float32(size*.33), color.RGBA{3, 10, 25, 95}, true)
+		drawSurvivorContain(s, asset, m.x+offsetX-size/2, m.y+bob-size/2, size, size, m.x < g.px, 1, m.flash > 0)
 		if m.boss {
 			if g.frame%240 > 150 && g.frame%240 <= 185 {
 				vector.StrokeCircle(s, float32(m.x+offsetX), float32(m.y), float32(55+(g.frame%12)*2), 3, color.RGBA{255, 100, 80, 210}, true)
 			}
 			vector.DrawFilledRect(s, float32(m.x-45), float32(m.y-52), 90, 7, color.RGBA{50, 48, 70, 255}, false)
-			vector.DrawFilledRect(s, float32(m.x-45), float32(m.y-52), float32(90*m.hp/80), 7, color.RGBA{255, 211, 62, 255}, false)
+			vector.DrawFilledRect(s, float32(m.x-45), float32(m.y-52), float32(90*m.hp/70), 7, color.RGBA{255, 211, 62, 255}, false)
 		}
 	}
 	for _, p := range g.sparks {
 		vector.DrawFilledCircle(s, float32(p.x+offsetX), float32(p.y), float32(2+p.life/15), p.c, true)
 	}
 	pulse := g.aura + math.Sin(float64(g.frame)*.22)*4
-	vector.DrawFilledCircle(s, float32(g.px+offsetX), float32(g.py), float32(pulse), color.RGBA{255, 211, 62, 28}, false)
-	vector.StrokeCircle(s, float32(g.px+offsetX), float32(g.py), float32(pulse), 2, color.RGBA{255, 211, 62, 170}, false)
-	if g.inv%10 < 5 {
-		hero.DrawCentered(s, g.px+offsetX, g.py+math.Sin(float64(g.frame)*.18)*2, 34)
+	for i := 0; i < 10; i++ {
+		a := float64(i)*math.Pi/4 + float64(g.frame)*.035
+		if i >= 8 {
+			a += math.Pi / 8
+		}
+		x := g.px + offsetX + math.Cos(a)*pulse
+		y := g.py + math.Sin(a)*pulse
+		vector.DrawFilledCircle(s, float32(x), float32(y), 4, color.RGBA{255, 235, 113, 210}, true)
+		if g.frame%g.auraTick < 5 {
+			vector.StrokeLine(s, float32(g.px+offsetX), float32(g.py), float32(x), float32(y), 3, color.RGBA{113, 246, 255, 180}, true)
+		}
+	}
+	// The aura is an edge effect, not an opaque gameplay disc: the arena and
+	// spellblade must remain readable through its center at thumbnail size.
+	vector.StrokeCircle(s, float32(g.px+offsetX), float32(g.py), float32(pulse-7), 1, color.RGBA{95, 234, 255, 72}, true)
+	vector.StrokeCircle(s, float32(g.px+offsetX), float32(g.py), float32(pulse-2), 3, color.RGBA{255, 221, 91, 78}, true)
+	vector.StrokeCircle(s, float32(g.px+offsetX), float32(g.py), float32(pulse+3), 1, color.RGBA{255, 247, 176, 190}, true)
+	heroBob := math.Sin(float64(g.frame)*.18) * 2
+	vector.DrawFilledCircle(s, float32(g.px+offsetX), float32(g.py+17), 24, color.RGBA{3, 10, 25, 95}, true)
+	heroAlpha := float32(1)
+	if g.inv > 0 && g.inv%10 >= 5 {
+		heroAlpha = .32
+	}
+	drawSurvivorContain(s, "survivors-ebi-spellblade", g.px+offsetX-38, g.py+heroBob-42, 76, 84, false, heroAlpha, false)
+	if g.inv > 40 {
+		vector.StrokeRect(s, 5, 5, 470, 710, 9, color.RGBA{255, 75, 91, 180}, false)
 	}
 	sec := g.frame / 60
 	wave := min(3, sec/15+1)
+	vector.DrawFilledRect(s, 14, 12, 452, 65, color.RGBA{5, 13, 29, 220}, false)
+	vector.StrokeRect(s, 14, 12, 452, 65, 2, color.RGBA{255, 211, 62, 130}, false)
 	if face, err := uilab.Face("en", 16); err == nil {
 		op := &text.DrawOptions{}
 		op.GeoM.Translate(28, 24)
@@ -368,7 +424,26 @@ func (g *game) Draw(s *ebiten.Image) {
 	}
 	ebitenutil.DebugPrintAt(s, msg, 120, 52)
 	ebitenutil.DebugPrintAt(s, "MOVE: WASD / DRAG    GEMS → LEVEL UP PICK", 55, 685)
+	if g.frame < 150 {
+		alpha := uint8(232)
+		if g.frame > 105 {
+			alpha = uint8(max(0, 232-(g.frame-105)*5))
+		}
+		vector.DrawFilledRect(s, 53, 96, 374, 82, color.RGBA{4, 14, 31, alpha}, false)
+		vector.StrokeRect(s, 53, 96, 374, 82, 3, color.RGBA{117, 242, 255, alpha}, false)
+		ebitenutil.DebugPrintAt(s, "ABYSSAL REEF — SURVIVE 55 SECONDS", 105, 119)
+		ebitenutil.DebugPrintAt(s, "KEEP MOVING • THE PEARL AURA ATTACKS", 89, 148)
+	} else if !g.bossSpawned && sec >= 35 {
+		pulseAlpha := uint8(150 + int(70*math.Abs(math.Sin(float64(g.frame)*.08))))
+		vector.DrawFilledRect(s, 92, 96, 296, 46, color.RGBA{72, 8, 29, pulseAlpha}, false)
+		vector.StrokeRect(s, 92, 96, 296, 46, 2, color.RGBA{255, 126, 108, pulseAlpha}, false)
+		ebitenutil.DebugPrintAt(s, "CROWN CRAB APPROACHING", 156, 114)
+	}
 	if g.drafting {
+		for i := 0; i < 9; i++ {
+			x := float32(55 + i*46)
+			vector.StrokeLine(s, 240, 360, x, 215, 4, color.RGBA{105, 240, 255, 110}, true)
+		}
 		vector.DrawFilledRect(s, 40, 250, 400, 180, color.RGBA{6, 18, 37, 235}, false)
 		ebitenutil.DebugPrintAt(s, "LEVEL UP — PICK ONE", 150, 270)
 		drawPick(s, 55, 310, g.pickA)
@@ -381,6 +456,60 @@ func (g *game) Draw(s *ebiten.Image) {
 	} else if g.over {
 		overlay(s, "RUN ENDED!\n\nTAP / SPACE TO RETRY")
 	}
+}
+
+func loadSurvivorArt() {
+	survivorArtOnce.Do(func() {
+		survivorArt = map[string]*ebiten.Image{}
+		for _, name := range []string{"survivors-reef-arena", "survivors-ebi-spellblade", "survivors-reef-hound", "survivors-crown-crab"} {
+			data, err := survivorArtFS.ReadFile("assets/" + name + ".png")
+			if err != nil {
+				panic(err)
+			}
+			decoded, _, err := image.Decode(bytes.NewReader(data))
+			if err != nil {
+				panic(err)
+			}
+			survivorArt[name] = ebiten.NewImageFromImage(decoded)
+		}
+	})
+}
+
+func survivorImage(name string) *ebiten.Image {
+	return survivorArt[name]
+}
+
+func drawSurvivorCover(dst *ebiten.Image, name string, x, y, w, h float64) {
+	img := survivorImage(name)
+	b := img.Bounds()
+	scale := math.Max(w/float64(b.Dx()), h/float64(b.Dy()))
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(scale, scale)
+	op.GeoM.Translate(x+(w-float64(b.Dx())*scale)/2, y+(h-float64(b.Dy())*scale)/2)
+	op.Filter = ebiten.FilterLinear
+	dst.DrawImage(img, op)
+}
+
+func drawSurvivorContain(dst *ebiten.Image, name string, x, y, w, h float64, mirror bool, alpha float32, flash bool) {
+	img := survivorImage(name)
+	b := img.Bounds()
+	scale := math.Min(w/float64(b.Dx()), h/float64(b.Dy()))
+	dw, dh := float64(b.Dx())*scale, float64(b.Dy())*scale
+	op := &ebiten.DrawImageOptions{}
+	if mirror {
+		op.GeoM.Scale(-scale, scale)
+		op.GeoM.Translate(x+(w+dw)/2, y+(h-dh)/2)
+	} else {
+		op.GeoM.Scale(scale, scale)
+		op.GeoM.Translate(x+(w-dw)/2, y+(h-dh)/2)
+	}
+	op.Filter = ebiten.FilterLinear
+	if flash {
+		op.ColorScale.Scale(1, .28, .28, alpha)
+	} else {
+		op.ColorScale.ScaleAlpha(alpha)
+	}
+	dst.DrawImage(img, op)
 }
 func (g *game) play(hz float64) {
 	g.gate.Arm(true)

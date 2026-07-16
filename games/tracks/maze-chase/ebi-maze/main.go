@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	_ "embed"
 	"fmt"
+	"image"
 	"image/color"
 	"math"
 	"math/rand"
@@ -15,9 +18,56 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/cameralab"
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
-	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
+
+//go:embed assets/pearl-labyrinth.png
+var labyrinthPNG []byte
+
+//go:embed assets/maze-cast.png
+var mazeCastPNG []byte
+
+var labyrinthArt, mazeCastArt *ebiten.Image
+var mazeCastRects []image.Rectangle
+
+func loadGeneratedArt() {
+	decode := func(data []byte) image.Image {
+		im, _, err := image.Decode(bytes.NewReader(data))
+		if err != nil {
+			panic(err)
+		}
+		return im
+	}
+	labyrinth, cast := decode(labyrinthPNG), decode(mazeCastPNG)
+	labyrinthArt, mazeCastArt = ebiten.NewImageFromImage(labyrinth), ebiten.NewImageFromImage(cast)
+	mazeCastRects = opaqueAtlasCells(cast, 5)
+}
+
+func opaqueAtlasCells(atlas image.Image, cells int) []image.Rectangle {
+	bounds := atlas.Bounds()
+	cellW := bounds.Dx() / cells
+	result := make([]image.Rectangle, cells)
+	for cell := 0; cell < cells; cell++ {
+		base := image.Rect(bounds.Min.X+cell*cellW, bounds.Min.Y, bounds.Min.X+(cell+1)*cellW, bounds.Max.Y)
+		minX, minY, maxX, maxY := base.Max.X, base.Max.Y, base.Min.X, base.Min.Y
+		for y := base.Min.Y; y < base.Max.Y; y++ {
+			for x := base.Min.X; x < base.Max.X; x++ {
+				_, _, _, a := atlas.At(x, y).RGBA()
+				if a < 0x0800 {
+					continue
+				}
+				minX, minY = min(minX, x), min(minY, y)
+				maxX, maxY = max(maxX, x+1), max(maxY, y+1)
+			}
+		}
+		if minX >= maxX || minY >= maxY {
+			result[cell] = base
+		} else {
+			result[cell] = image.Rect(minX, minY, maxX, maxY)
+		}
+	}
+	return result
+}
 
 const (
 	screenW  = 480
@@ -94,6 +144,9 @@ type game struct {
 var sessionBest int
 
 func newGame() *game {
+	if labyrinthArt == nil {
+		loadGeneratedArt()
+	}
 	g := &game{lives: 3, best: sessionBest, rng: rand.New(rand.NewSource(70))}
 	g.audio = audio.NewContext(audiolab.SampleRate)
 	g.pulse = shaderlab.NewPulse()
@@ -367,27 +420,38 @@ func (g *game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{7, 15, 31, 255})
 	dx, dy := 0, 0
 	if g.shake > 0 {
-		dx = g.rng.Intn(7) - 3
-		dy = g.rng.Intn(7) - 3
+		// Draw is a pure projection; shake comes from the tick, not RNG.
+		dx = g.frames%7 - 3
+		dy = (g.frames/2)%7 - 3
 	}
 	world := ebiten.NewImage(screenW, screenH)
 	d := stages[g.stage]
+	drawCover(world, labyrinthArt)
+	vector.DrawFilledRect(world, 0, 0, screenW, screenH, color.RGBA{1, 9, 25, 65}, false)
+	drawMazeBackdrop(world, g.stage, g.frames)
+	// Large translucent cast portraits make the pursuit fantasy readable even
+	// when the playable sprites must remain inside one maze tile.
+	drawCast(world, 0, 42, 48, 92, .88)
+	drawCast(world, 1+g.stage%3, 438, 48, 92, .88)
 	g.drawTitle(world, d.name)
 	g.drawEffectBadge(world)
 	ebitenutil.DebugPrintAt(world, fmt.Sprintf("PEARLS %02d/%02d  LIFE %d  SCORE %05d  %s>%s", g.collected, g.total, g.lives, g.score, dirNames[g.player.dir], dirNames[g.player.wanted]), 35, 44)
 	ebitenutil.DebugPrintAt(world, g.message, 35, 69)
+	vector.DrawFilledRect(world, mazeX-12, mazeY-12, cols*tileSize+24, rows*tileSize+24, color.NRGBA{1, 6, 18, 112}, false)
+	vector.StrokeRect(world, mazeX-7, mazeY-7, cols*tileSize+14, rows*tileSize+14, 4, color.RGBA{121, 218, 227, 125}, false)
 	for y := 0; y < rows; y++ {
 		for x := 0; x < cols; x++ {
 			px, py := float32(mazeX+x*tileSize), float32(mazeY+y*tileSize)
 			if d.maze[y][x] == '#' {
-				vector.DrawFilledRect(world, px+1, py+1, tileSize-2, tileSize-2, d.wall, false)
-				vector.StrokeRect(world, px+4, py+4, tileSize-8, tileSize-8, 2, color.RGBA{190, 220, 235, 80}, false)
+				vector.DrawFilledRect(world, px+1, py+1, tileSize-2, tileSize-2, color.RGBA{10, 32, 59, 238}, false)
+				vector.StrokeRect(world, px+3, py+3, tileSize-6, tileSize-6, 2, d.wall, false)
+				vector.StrokeLine(world, px+7, py+8, px+tileSize-7, py+8, 1, color.RGBA{232, 203, 121, 110}, false)
 			} else {
-				vector.DrawFilledRect(world, px+1, py+1, tileSize-2, tileSize-2, color.RGBA{16, 29, 49, 255}, false)
+				vector.DrawFilledRect(world, px+1, py+1, tileSize-2, tileSize-2, color.NRGBA{5, 21, 43, 98}, false)
 			}
 			if g.pellets[point{x, y}] {
 				pulse := float64(13) + math.Sin(float64(g.frames)*.14+float64(x+y))*2
-				trackatlas.DrawCentered(world, "pearl", float64(px+18), float64(py+18), pulse)
+				drawCast(world, 4, float64(px+18), float64(py+18), pulse+5, 1)
 			}
 		}
 	}
@@ -397,16 +461,21 @@ func (g *game) Draw(screen *ebiten.Image) {
 	if g.invuln > 0 && g.invuln%10 < 5 {
 		alpha = .3
 	}
-	trackatlas.DrawTinted(world, "hero", float64(px), float64(py)+bob, 30+math.Sin(float64(g.frames)*.22)*2, 1, 1, 1, alpha)
+	drawCast(world, 0, float64(px), float64(py)+bob, 34+math.Sin(float64(g.frames)*.22)*2, alpha)
 	for i, e := range g.guards {
 		ex, ey := tileCenter(e.tile)
-		sprite := "ghost-patrol"
+		sprite := 1
 		if e.mode == chase || e.mode == ambush {
-			sprite = "ghost-chase"
+			sprite = 2
 		} else if e.mode == search {
-			sprite = "ghost-search"
+			sprite = 3
 		}
-		trackatlas.DrawCentered(world, sprite, float64(ex), float64(ey)+math.Sin(float64(g.frames)*.18+float64(i))*3, 30)
+		drawCast(world, sprite, float64(ex), float64(ey)+math.Sin(float64(g.frames)*.18+float64(i))*3, 35, 1)
+		if e.mode == chase || e.mode == ambush {
+			// Alert rings turn guard state into a visual event at card size.
+			r := float32(20 + (g.frames+i*7)%18)
+			vector.StrokeCircle(world, ex, ey, r, 2, color.RGBA{255, 93, 91, uint8(190 - (g.frames+i*7)%18*8)}, true)
+		}
 		ebitenutil.DebugPrintAt(world, modeNames[e.mode], int(ex)-22, int(ey)-28)
 	}
 	for _, p := range g.particles {
@@ -429,6 +498,44 @@ func (g *game) Draw(screen *ebiten.Image) {
 	}
 	if g.lost {
 		overlay(screen, fmt.Sprintf("MAZE RUN ENDED\n\nSCORE %05d  BEST %05d\n\nTAP / ENTER TO RETRY", g.score, sessionBest))
+	}
+}
+
+func drawCast(dst *ebiten.Image, index int, cx, cy, size float64, alpha float32) {
+	if index < 0 || index >= 5 || mazeCastArt == nil {
+		return
+	}
+	r := mazeCastRects[index]
+	w, h := r.Dx(), r.Dy()
+	src := mazeCastArt.SubImage(r).(*ebiten.Image)
+	op := &ebiten.DrawImageOptions{}
+	scale := size / float64(max(w, h))
+	op.GeoM.Scale(scale, scale)
+	op.GeoM.Translate(cx-float64(w)*scale/2, cy-float64(h)*scale/2)
+	op.ColorScale.ScaleAlpha(alpha)
+	dst.DrawImage(src, op)
+}
+
+func drawCover(dst, src *ebiten.Image) {
+	w, h := float64(src.Bounds().Dx()), float64(src.Bounds().Dy())
+	scale := math.Max(screenW/w, screenH/h)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(scale, scale)
+	op.GeoM.Translate((screenW-w*scale)/2, (screenH-h*scale)/2)
+	dst.DrawImage(src, op)
+}
+
+func drawMazeBackdrop(screen *ebiten.Image, stage, frames int) {
+	// Submerged temple arches and drifting motes frame the chase board.
+	for i := 0; i < 6; i++ {
+		x := float32(i*96 - 18)
+		vector.StrokeCircle(screen, x+44, 560, 58, 12, color.RGBA{33, 79, 104, 75}, true)
+		vector.DrawFilledRect(screen, x, 560, 12, 150, color.RGBA{21, 52, 72, 105}, false)
+	}
+	for i := 0; i < 25; i++ {
+		x := float32((i*71 + stage*43) % screenW)
+		y := float32((i*41+frames/4)%600 + 40)
+		vector.DrawFilledCircle(screen, x, y, float32(1+i%3), color.RGBA{139, 229, 230, 44}, true)
 	}
 }
 func (g *game) drawTitle(screen *ebiten.Image, name string) {

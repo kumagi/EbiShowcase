@@ -22,7 +22,13 @@
   <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
   <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
   <!-- favicon:end -->
-</head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/active-rpg/ebi-active-battle/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Active Gauge RPG</a><span>STEP 06 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">Let speed create the action order</p><h1>Ebi Active Battle</h1><p>Fight three distinct enemy formations by combining gauges, command roles, action animation, and a run grade.</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Active Battle</h2><p>When READY, use 1–3 or the on-screen buttons. Win three battles and improve the BEST grade made from time and remaining HP.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-active-battle/" title="Ebi Active Battle" allow="autoplay; fullscreen"></iframe></div></section>
+</head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../ja/tracks/active-rpg/ebi-active-battle/">JA</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← Active Gauge RPG</a><span>STEP 06 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">Let speed create the action order</p><h1>Ebi Active Battle</h1><p>Fight three distinct enemy formations by combining gauges, command roles, action animation, and a run grade.</p><div class="lesson-meta"><span>★★★★☆</span><strong>PLAYABLE</strong></div></div></section><!-- showcase-final:start -->
+<section class="showcase-final-bridge" aria-label="Showcase final step">
+  <div><p class="eyebrow">SHOWCASE FINAL / QUALITY LEAP</p><h2>Now take the leap to a finished game.</h2><p>This final step connects the small mechanics, then makes a deliberate leap in art, motion, light, sound, UI, and replay value. You do not need to write it all at once—play first and see what Ebitengine can grow into.</p></div>
+  <ul><li>always-moving gauges</li><li>party roles</li><li>attack trails</li></ul>
+</section>
+<!-- showcase-final:end -->
+<section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Active Battle</h2><p>When READY, use 1–3 or the on-screen buttons. Win three battles and improve the BEST grade made from time and remaining HP.</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/ebi-active-battle/" title="Ebi Active Battle" allow="autoplay; fullscreen"></iframe></div></section>
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Gauges, roles, and a three-battle run</h2><p>Resolve the READY queue, three command roles, contact ticks, and enemy formations in order. After a win, recover a little HP and carry the party into the next formation.</p><div class="concept-row"><article><b>01</b><h3>Add every tick</h3><p>gauge += speed advances waiting time.</p></article><article><b>02</b><h3>Full means READY</h3><p>Only actors at the limit can act.</p></article><article><b>03</b><h3>Reset after action</h3><p>The acting character returns to zero.</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="GAUGE,READY,COMMAND,RESOLVE"><div><p class="eyebrow">SYSTEM LAB</p><h2>Speed, action gauges, and waiting</h2><p>Step through the system and follow data into the next operation.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
@@ -63,4 +69,39 @@ actor.gauge = 0</code></pre></section><section class="why-grid"><article><h3>Why
         </form>
       </div>
     </section>
+<!-- capstone-renderers:start -->
+<section class="capstone-renderers" aria-label="Draw-only renderer bonus">
+  <div class="capstone-renderers-copy">
+    <p class="eyebrow">BONUS / DRAW ONLY</p>
+    <h2>Same game. Different ways to make the picture.</h2>
+    <p>This WASM is built from the same package as the finished game above. It delegates to the original <code>Update</code> and <code>Layout</code> unchanged. One Draw snapshot is projected simultaneously as polished art, edge lines, and a rectangle mosaic. Position, score, enemies, collision, and time exist only once.</p>
+  </div>
+  <div class="capstone-renderers-facts">
+    <article><b>01</b><h3>UPDATE</h3><p>Advances input and game facts once for every view.</p></article>
+    <article><b>02</b><h3>LAYOUT</h3><p>Returns the original game's size unchanged.</p></article>
+    <article><b>03</b><h3>DRAW</h3><p>Only changes how one snapshot is presented.</p></article>
+  </div>
+  <div class="capstone-renderers-demo">
+    <iframe data-shared-demo="capstone-renderers" src="../../../../play/ebi-active-battle-renderer/" loading="lazy" title="The same finished game shown through three Draw styles" allow="autoplay; fullscreen"></iframe>
+  </div>
+  <div class="capstone-renderers-code">
+    <div><p class="eyebrow">THE ONLY BOUNDARY</p><h3>Update and Layout pass straight to the original game.</h3><p>The rectangle view shrinks the snapshot to a small grid and restores it with nearest filtering. The wire view turns neighboring-pixel differences into lines with a Kage shader. Neither reads or writes game state.</p></div>
+    <pre><code>func (g *gallery) Update() error {
+    return g.inner.Update()
+}
+
+func (g *gallery) Layout(w, h int) (int, int) {
+    return g.inner.Layout(w, h)
+}
+
+func (g *gallery) Draw(screen *ebiten.Image) {
+    snapshot := ebiten.NewImage(width, height)
+    g.inner.Draw(snapshot)
+    drawPolished(screen, snapshot)
+    drawWireframe(screen, snapshot)
+    drawRectangles(screen, snapshot)
+}</code></pre>
+  </div>
+</section>
+<!-- capstone-renderers:end -->
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><script src="../../../../learn.js"></script></body></html>

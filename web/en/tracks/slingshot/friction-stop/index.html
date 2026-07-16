@@ -46,6 +46,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DAMP AND SNAP</p><h2>Reduce motion gently, then end at a firm zero.</h2><p class="lesson-lead">With friction 0.978, speed becomes 97.8% of the previous tick. Multiplying forever only approaches zero, so when speed falls below a <strong>stop threshold</strong>, assign zero and finish the turn.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Move by current velocity</h3><p>Change position by velocity first. If the puck reaches a wall, reverse that direction before continuing.</p><code>pos.x += velocity.x</code></article><article><span class="concept-number">2</span><h3>Multiply by friction</h3><p>0.990 slides far while 0.960 slows quickly. Multiply x and y equally to keep the direction while shrinking motion.</p><code>velocity.x *= friction</code></article><article><span class="concept-number">3</span><h3>Snap tiny speeds to zero</h3><p>When total speed is below the threshold, set both parts to zero. Now score the resting place and advance the turn.</p><code>if speed &lt; stop { velocity = vec{} }</code></article></div><div class="motion-lab" data-lab="friction" data-friction="0.92" data-stop="0.35" data-moving="moving" data-stopped="stopped" aria-labelledby="friction-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / FRICTION</p><h3 id="friction-lab-title">Step frames and watch speed decay</h3><p>Each step advances position, multiplies velocity by friction, then snaps to zero below the stop threshold.</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="move damp snap" data-go-caption="Advance position → Multiply by friction → Snap tiny speed to zero">Advance one tick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div><p class="lab-hint">The real game ends the turn the moment speed hits the threshold.</p></div><div class="lab-visual"><div class="lab-board" role="img" aria-label="Puck slowing from friction"></div><div class="lab-values" aria-live="polite"><div><span>Position X</span><strong data-lab-x>40</strong></div><div><span>Speed</span><strong data-lab-speed>8.00</strong></div><div><span>State</span><strong data-lab-state>moving</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -86,6 +102,14 @@ if math.Hypot(velocity.x, velocity.y) &lt; stopThreshold {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

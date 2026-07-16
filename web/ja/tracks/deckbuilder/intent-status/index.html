@@ -42,6 +42,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / INTENT &amp; STATUS</p><h2>「次に18ダメージ」と見えたら、作戦を変えられる。</h2><p class="lesson-lead">敵が行動する前に<strong>予告データをDrawで表示</strong>します。毒や弱体は残り回数を整数で覚え、ターン終了時に効果を使ってから1減らします。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>行動をデータにする</h3><p>名前、攻撃力、防御力をひとまとめにします。同じデータを表示と実行の両方で使えば、予告と本当の行動がずれません。</p><code>type intent struct { damage, block int }</code></article><article><span class="concept-number">2</span><h3>状態を数で覚える</h3><p>毒4なら毎ターン傷つけたあと3へ。弱体2なら2ターンの間だけ敵の攻撃を小さくします。</p><code>enemyHP -= poison; poison--</code></article><article><span class="concept-number">3</span><h3>更新順を固定する</h3><p>毒、敵の攻撃、残り時間を減らす、次の予告、という順番を関数にまとめます。</p><code>resolveEnemyTurn()</code></article></div><div class="motion-lab" data-lab="status-ticks" data-status="POISON" data-added="付与" data-ticked="ターン経過" data-none="状態なし" aria-labelledby="lab-title-intent-status">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / STATUS TURNS</p>
@@ -92,6 +108,14 @@ intentIndex = (intentIndex+1) % len(intents)</code></pre></div><div class="why-g
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

@@ -59,6 +59,8 @@ node "$ROOT/scripts/inject-platformer-authoring.mjs"
 node "$ROOT/scripts/inject-match3-authoring.mjs"
 node "$ROOT/scripts/inject-update-draw-contract.mjs"
 node "$ROOT/scripts/inject-renderer-freedom.mjs"
+node "$ROOT/scripts/inject-showcase-finals.mjs"
+node "$ROOT/scripts/inject-capstone-renderer-extras.mjs"
 node "$ROOT/scripts/normalize-loop-language.mjs"
 node "$ROOT/scripts/normalize-tick-language.mjs"
 node "$ROOT/scripts/inject-feedback-code-examples.mjs"
@@ -114,6 +116,18 @@ while IFS= read -r main; do
   id="$(basename "$package")"
   build_game "$id" "$package"
 done < <(find "$ROOT/games/tracks" -mindepth 3 -maxdepth 3 -name main.go -print 2>/dev/null | sort)
+
+# Build a synchronized renderer gallery for every genre capstone. The overlay
+# replaces only ebiten.RunGame(...); original Update and Layout source stays
+# byte-for-byte unchanged.
+RENDER_OVERLAY="$(node "$ROOT/scripts/render-freedom-overlays.mjs" prepare)"
+while IFS=$'\t' read -r id package; do
+  out="$ROOT/dist/play/${id}-renderer"
+  mkdir -p "$out"
+  GOOS=js GOARCH=wasm go build -overlay="$RENDER_OVERLAY" -trimpath -ldflags="-s -w" -o "$out/game.wasm" "$package"
+  cp "$WASM_EXEC" "$out/wasm_exec.js"
+  cp "$ROOT/web/game.html" "$out/index.html"
+done < <(node "$ROOT/scripts/render-freedom-overlays.mjs" capstones)
 
 # Keep legacy URLs working for the first published game.
 cp "$ROOT/dist/play/flappy/game.wasm" "$ROOT/dist/game.wasm"

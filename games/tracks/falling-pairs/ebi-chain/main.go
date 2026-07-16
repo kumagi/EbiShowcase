@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	_ "embed"
 	"fmt"
+	"image"
 	"image/color"
 	"math"
 
@@ -17,6 +20,27 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
+
+//go:embed assets/chain-reef-arena-v2.png
+var arenaPNG []byte
+
+//go:embed assets/chain-spirits.png
+var spiritsPNG []byte
+
+//go:embed assets/reef-rival.png
+var rivalPNG []byte
+var arenaArt, spiritsArt, rivalArt *ebiten.Image
+
+func loadArt() {
+	decode := func(b []byte) *ebiten.Image {
+		im, _, e := image.Decode(bytes.NewReader(b))
+		if e != nil {
+			panic(e)
+		}
+		return ebiten.NewImageFromImage(im)
+	}
+	arenaArt, spiritsArt, rivalArt = decode(arenaPNG), decode(spiritsPNG), decode(rivalPNG)
+}
 
 const (
 	width, height  = 480, 720
@@ -74,6 +98,9 @@ type game struct {
 }
 
 func newGame() *game {
+	if arenaArt == nil {
+		loadArt()
+	}
 	g := &game{}
 	g.audio = audio.NewContext(audiolab.SampleRate)
 	g.pulse = shaderlab.NewPulse()
@@ -427,17 +454,24 @@ func (g *game) dropIncomingGarbage() {
 
 func (g *game) Draw(screen *ebiten.Image) {
 	rule := duels[g.duel]
-	screen.Fill(rule.bg)
+	drawCover(screen, arenaArt)
+	vector.DrawFilledRect(screen, 0, 0, width, height, color.RGBA{2, 11, 34, 58}, false)
+	drawChainBackdrop(screen, g.duel, g.tick, g.chain)
+	// Keep the generated moonbeams atmospheric rather than competing with UI.
+	vector.DrawFilledRect(screen, 0, 0, width, 98, color.RGBA{2, 9, 26, 205}, false)
 	ox := 0.0
 	if g.shake > 0 {
 		ox = math.Sin(float64(g.tick)*2.1) * float64(g.shake)
 	}
-	vector.DrawFilledCircle(screen, float32(65+g.duel*160), 75, 85, color.RGBA{60, 120, 130, 35}, true)
 	g.drawTitle(screen, rule.name)
 	g.drawEffectBadge(screen)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %05d CHAIN %d SENT %d MISSES %d/%d BEST %d", g.score, g.chain, g.sent, g.misses, rule.missLimit, g.best), 55, 44)
 	ebitenutil.DebugPrintAt(screen, g.message, 48, 70)
-	vector.DrawFilledRect(screen, boardX-4, boardY-4, cols*cell+8, rows*cell+8, color.RGBA{32, 47, 69, 255}, false)
+	vector.DrawFilledRect(screen, boardX-14, boardY-14, cols*cell+28, rows*cell+28, color.RGBA{2, 8, 20, 165}, false)
+	// Preserve the sense that the puzzle board is magical glass suspended in
+	// the arena. The grid remains readable without erasing the environment.
+	vector.DrawFilledRect(screen, boardX-5, boardY-5, cols*cell+10, rows*cell+10, color.RGBA{14, 35, 66, 188}, false)
+	vector.StrokeRect(screen, boardX-5, boardY-5, cols*cell+10, rows*cell+10, 3, color.RGBA{119, 225, 226, 155}, false)
 	for y := 0; y < rows; y++ {
 		for x := 0; x < cols; x++ {
 			px, py := float32(boardX+x*cell), float32(boardY+y*cell)
@@ -462,8 +496,8 @@ func (g *game) Draw(screen *ebiten.Image) {
 
 	vector.DrawFilledRect(screen, 330, 110, 120, 88, color.RGBA{30, 52, 73, 255}, false)
 	ebitenutil.DebugPrintAt(screen, "NEXT PAIR", 354, 124)
-	trackatlas.DrawCentered(screen, trackatlas.Gem(g.nextPivotKind), 365, 166, 26)
-	trackatlas.DrawCentered(screen, trackatlas.Gem(g.nextChildKind), 410, 166, 26)
+	drawSpirit(screen, g.nextPivotKind, 365, 166, 38)
+	drawSpirit(screen, g.nextChildKind, 410, 166, 38)
 	ebitenutil.DebugPrintAt(screen, "RIVAL GARBAGE", 343, 225)
 	for i := 0; i < rule.goal; i++ {
 		row, col := i/3, i%3
@@ -471,9 +505,11 @@ func (g *game) Draw(screen *ebiten.Image) {
 		if i < g.opponentGarbage {
 			trackatlas.DrawCentered(screen, "gem-trash", float64(cx), float64(cy), 26)
 		} else {
-			vector.DrawFilledCircle(screen, cx, cy, 14, color.RGBA{45, 56, 70, 255}, false)
+			vector.StrokeCircle(screen, cx, cy, 8, 1, color.RGBA{144, 209, 220, 75}, false)
 		}
 	}
+	// Portrait is deliberately last in this panel so progress markers never mask it.
+	drawContain(screen, rivalArt, 326, 205, 130, 210)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%02d/%02d", min(g.opponentGarbage, rule.goal), rule.goal), 370, 421)
 	ebitenutil.DebugPrintAt(screen, "2 per chain + ALL CLEAR 2", 324, 458)
 	phaseNames := []string{"AIM", "CLEAR ALL", "GRAVITY + RESCAN"}
@@ -495,6 +531,24 @@ func (g *game) Draw(screen *ebiten.Image) {
 		overlay(screen, fmt.Sprintf("DUEL %d CLEAR! BEST %d\n\nTAP / ENTER: NEXT REEF", g.duel+1, g.best))
 	} else if g.over {
 		overlay(screen, "YOUR REEF LOST THE DUEL\n\nTAP / ENTER TO RETRY")
+	}
+}
+
+func drawChainBackdrop(screen *ebiten.Image, duel, tick, chain int) {
+	vector.DrawFilledCircle(screen, float32(70+duel*165), 82, 88, color.RGBA{74, 207, 204, 30}, true)
+	for i := 0; i < 15; i++ {
+		x := float32((i*79 + tick/5) % width)
+		y := float32((i*113 + tick/3) % 580)
+		vector.StrokeCircle(screen, x, y, float32(3+i%6), 1, color.RGBA{133, 231, 229, 55}, true)
+	}
+	if chain > 1 {
+		for i := 0; i < chain*3 && i < 30; i++ {
+			a := float64(i)*.7 + float64(tick)*.035
+			r := float64(52 + i*3)
+			x := float32(175 + math.Cos(a)*r)
+			y := float32(310 + math.Sin(a)*r)
+			vector.DrawFilledCircle(screen, x, y, 3, color.RGBA{255, 217, 92, 95}, true)
+		}
 	}
 }
 
@@ -528,16 +582,41 @@ func drawPiece(screen *ebiten.Image, x, y, kind int, label string) {
 func drawPieceAt(screen *ebiten.Image, x, y, kind int, label string, ox, oy float64) {
 	cx := float32(boardX + x*cell + cell/2)
 	cy := float32(boardY + y*cell + cell/2)
-	sprite := trackatlas.Gem(kind)
-	if kind == garbage {
-		sprite = "gem-trash"
-	}
-	trackatlas.DrawCentered(screen, sprite, float64(cx)+ox, float64(cy)+oy, float64(cell-6))
+	drawSpirit(screen, kind, float64(cx)+ox, float64(cy)+oy, cell-3)
 	if kind == garbage {
 		ebitenutil.DebugPrintAt(screen, "X", int(cx)-3, int(cy)-5)
 	} else if label != "" {
 		ebitenutil.DebugPrintAt(screen, label, int(cx)-3, int(cy)-5)
 	}
+}
+
+func drawSpirit(dst *ebiten.Image, kind int, cx, cy, size float64) {
+	if kind < 0 || kind > garbage || spiritsArt == nil {
+		return
+	}
+	w, h := spiritsArt.Bounds().Dx()/5, spiritsArt.Bounds().Dy()
+	src := spiritsArt.SubImage(image.Rect(kind*w, 0, (kind+1)*w, h)).(*ebiten.Image)
+	op := &ebiten.DrawImageOptions{}
+	s := size / float64(max(w, h))
+	op.GeoM.Scale(s, s)
+	op.GeoM.Translate(cx-float64(w)*s/2, cy-float64(h)*s/2)
+	dst.DrawImage(src, op)
+}
+func drawCover(dst, src *ebiten.Image) {
+	w, h := float64(src.Bounds().Dx()), float64(src.Bounds().Dy())
+	s := math.Max(width/w, height/h)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(s, s)
+	op.GeoM.Translate((width-w*s)/2, (height-h*s)/2)
+	dst.DrawImage(src, op)
+}
+func drawContain(dst, src *ebiten.Image, x, y, w, h float64) {
+	sw, sh := float64(src.Bounds().Dx()), float64(src.Bounds().Dy())
+	s := math.Min(w/sw, h/sh)
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(s, s)
+	op.GeoM.Translate(x+(w-sw*s)/2, y+(h-sh*s)/2)
+	dst.DrawImage(src, op)
 }
 
 func pressPosition() (int, int, bool) {

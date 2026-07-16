@@ -45,6 +45,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ACTIVE INDEX</p><h2>パーティ全員を消さず、「今戦う番号」だけを変える。</h2><p class="lesson-lead">3体はずっとsliceの中に残り、それぞれのHPを持ち続けます。前衛は別のコピーではなく<code>active</code>という番号です。交代はこの番号を控えの番号へ変える状態遷移で、<strong>自分から交代する時</strong>と<strong>倒れて選び直す時</strong>ではターンの扱いが違います。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>前衛を番号で指す</h3><p><code>party[active]</code>だけが攻撃し、反撃を受けます。控えのHPはそのまま残り、あとで前衛になった時に続きから使えます。</p><code>front := &amp;party[active]</code></article><article><span class="concept-number">2</span><h3>予定交代は1手を使う</h3><p>元気な控えを選ぶと<code>active</code>を変え、turnを1増やして敵の反撃を受けます。強い相性を得る代わりに時間を払います。</p><code>active = reserve; turn++; enemyAttack()</code></article><article><span class="concept-number">3</span><h3>HP0なら強制交代状態</h3><p>前衛が倒れたら攻撃を止め、<code>mustSwitch</code>をtrueにします。生きている控えを選ぶまで次の通常ターンへ進めません。</p><code>if front.hp == 0 { mustSwitch = true }</code></article></div>
@@ -101,6 +117,14 @@
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 

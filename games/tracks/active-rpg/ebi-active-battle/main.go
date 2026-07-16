@@ -14,7 +14,6 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/cameralab"
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
-	"github.com/kumagi/EbiShowcase/internal/trackatlas"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
@@ -63,6 +62,7 @@ func party() []actor {
 	return []actor{{"TENJIROH", "hero", 54, 54, 9, 0, 0, 0, false}, {"MAGE", "ally", 38, 38, 13, 0, 0, 1, false}, {"SHELL", "pet", 72, 72, 6, 0, 0, 2, false}}
 }
 func newGame() *game {
+	prepareActiveRPGArt()
 	g := &game{ready: -1, best: 0, flashTarget: -1}
 	g.audio = audio.NewContext(audiolab.SampleRate)
 	g.pulse = shaderlab.NewPulse()
@@ -324,12 +324,23 @@ func (g *game) actorPos(i int) (float64, float64) {
 	return x, 155 + float64(slot)*135
 }
 func (g *game) Draw(s *ebiten.Image) {
-	s.Fill(encounters[g.stage].bg)
+	drawActiveRPGCover(s, "arena", 0, 0, W, 590)
 	ox := 0.0
 	if g.shake > 0 {
 		ox = math.Sin(float64(g.totalFrames)*2.3) * float64(g.shake)
 	}
-	vector.DrawFilledCircle(s, float32(80+g.stage*150), 90, 90, color.RGBA{50, 120, 140, 35}, true)
+	// A stage tint reuses one premium environment without hiding its painted
+	// detail. Animated caustics make the opening battle feel alive immediately.
+	tint := []color.RGBA{{4, 22, 39, 20}, {52, 18, 72, 52}, {79, 7, 39, 65}}[g.stage]
+	vector.DrawFilledRect(s, 0, 0, W, 590, tint, false)
+	vector.DrawFilledRect(s, 0, 0, W, 86, color.RGBA{3, 8, 20, 205}, false)
+	vector.DrawFilledRect(s, 0, 470, W, 120, color.RGBA{3, 10, 21, 120}, false)
+	for i := 0; i < 8; i++ {
+		y := float32(455 + i*13)
+		travel := float32(math.Mod(float64(g.totalFrames)*.35+float64(i*41), 95))
+		vector.StrokeLine(s, 35-travel, y, 220-travel, y, 2, color.RGBA{92, 226, 229, 42}, true)
+		vector.StrokeLine(s, 285+travel, y, 465+travel, y, 2, color.RGBA{92, 226, 229, 34}, true)
+	}
 	g.drawTitle(s)
 	g.drawEffectBadge(s)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("TIME %02d  BEST %d", g.totalFrames/60, g.best), 170, 43)
@@ -348,11 +359,20 @@ func (g *game) Draw(s *ebiten.Image) {
 			}
 		}
 		bob := math.Sin(float64(g.totalFrames)*.08+float64(i)) * 2
-		scale := 78.0
-		if i == g.flashTarget {
-			scale = 88
+		aura := color.RGBA{73, 210, 222, 35}
+		if a.side == 1 {
+			aura = color.RGBA{245, 92, 117, 35}
 		}
-		trackatlas.DrawCentered(s, a.sprite, x+lunge+ox, y+bob, scale)
+		if a.ready {
+			pulse := float32(37 + math.Sin(float64(g.totalFrames)*.18)*5)
+			vector.DrawFilledCircle(s, float32(x+lunge+ox), float32(y+bob), pulse, aura, true)
+			vector.StrokeCircle(s, float32(x+lunge+ox), float32(y+bob), pulse, 3, color.RGBA{255, 218, 102, 190}, true)
+		}
+		g.drawPremiumActor(s, a, x+lunge+ox, y+bob, i == g.flashTarget)
+		if g.motion.active && g.motion.source == i {
+			progress := float32(34-g.motion.timer) / 34
+			vector.StrokeCircle(s, float32(x+lunge+ox), float32(y+bob), 42+progress*35, 5, color.RGBA{92, 239, 226, uint8(220 * (1 - progress))}, true)
+		}
 		ebitenutil.DebugPrintAt(s, fmt.Sprintf("%s HP %d/%d", a.name, max(0, a.hp), a.maxHP), int(x)-58, int(y)+45)
 		vector.DrawFilledRect(s, float32(x-58), float32(y+62), 116, 11, color.RGBA{20, 28, 42, 255}, false)
 		vector.DrawFilledRect(s, float32(x-58), float32(y+62), float32(116*a.gauge/maxGauge), 11, color.RGBA{245, 187, 65, 255}, false)
@@ -382,6 +402,31 @@ func (g *game) Draw(s *ebiten.Image) {
 	if g.lost {
 		overlay(s, "PARTY DEFEATED\n\nTAP / ENTER TO RETRY")
 	}
+}
+
+func (g *game) drawPremiumActor(s *ebiten.Image, a actor, x, y float64, hit bool) {
+	pulse := 1 + math.Sin(float64(g.totalFrames)*.08)*.018
+	name, w, h := "scout", 138.0, 138.0
+	switch a.name {
+	case "TENJIROH":
+		name, w, h = "tenjiroh", 158, 158
+	case "MAGE":
+		name, w, h = "mage", 145, 145
+	case "SHELL":
+		name, w, h = "shell", 142, 128
+	case "WISP", "SPARK":
+		name, w, h = "wisp", 135, 135
+	case "CRAB":
+		name, w, h = "storm", 155, 126
+	case "STORM KING":
+		name, w, h = "storm", 235, 172
+	}
+	if hit {
+		pulse *= 1.1
+		vector.DrawFilledCircle(s, float32(x), float32(y), float32(w*.31), color.RGBA{255, 244, 205, 85}, true)
+	}
+	vector.DrawFilledCircle(s, float32(x), float32(y+h*.31), float32(w*.27), color.RGBA{2, 5, 14, 105}, true)
+	drawActiveRPGContain(s, name, x-w/2, y-h/2, w, h, pulse)
 }
 func (g *game) drawTitle(s *ebiten.Image) {
 	label := fmt.Sprintf("ACTIVE BATTLE %d/3 / %s", g.stage+1, encounters[g.stage].name)

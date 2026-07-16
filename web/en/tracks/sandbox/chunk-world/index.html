@@ -42,6 +42,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CHUNK CACHE</p><h2>Cut one huge world into small map cards.</h2><p class="lesson-lead">Instead of holding every world cell at once, treat each 8×8 region as a <strong>chunk</strong>. Generate a region only when the player approaches, store it in a map, and keep off-screen chunks cached without drawing them.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Split a world cell into chunk parts</h3><p>World tile x divided by 8 gives chunk x; the remainder gives local x. A floor-division helper handles negative coordinates correctly.</p><code>chunkX = floorDiv(tileX, 8)</code></article><article><span class="concept-number">2</span><h3>Generate once, then cache</h3><p>Check the 5×5 area around the camera center and generate only keys missing from the map. Returning reuses the same data.</p><code>chunks[key] = generateChunk(key)</code></article><article><span class="concept-number">3</span><h3>Draw only overlapping regions</h3><p>Convert the camera's top-left and bottom-right to chunk numbers and draw only between them. Draw cost stays steady as the cache grows.</p><code>for cy := minCY; cy &lt;= maxCY; cy++</code></article></div><div class="motion-lab" data-lab="camera" aria-labelledby="chunk-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / CAMERA WINDOW</p><h3 id="chunk-lab-title">Move the world position and camera separately</h3><p>Move the player, then make the camera follow. The real game divides this camera position by eight tiles to choose needed chunks.</p><div class="lab-controls"><button type="button" class="lab-button" data-lab-left data-go-focus="target">Move left</button><button type="button" class="lab-button lab-button-primary" data-lab-right data-go-focus="target">Move right</button><button type="button" class="lab-button" data-lab-step data-go-focus="lerp draw" data-go-caption="Draw paints the frame">Follow camera</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="lab-board" role="img" aria-label="Player and camera in a world"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-actor style="top:50%"></div></div></div><div class="lab-values"><div><span>camera</span><strong data-lab-cam>0</strong></div><div><span>player</span><strong data-lab-player>200</strong></div><div><span>screen X</span><strong data-lab-screen>200</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -82,6 +98,14 @@ for cy := center.y-2; cy &lt;= center.y+2; cy++ {
         </form>
       </div>
     </section>
+
+
+
+
+
+
+
+
 
 
 
