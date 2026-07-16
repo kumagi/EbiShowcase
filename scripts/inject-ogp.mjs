@@ -210,6 +210,21 @@ function ensureDescription(html, description) {
   return html.replace(/<meta\s+charset="[^"]*"\s*\/?\s*>/i, (match) => `${match}\n  ${tag}`);
 }
 
+function faviconHref(file) {
+  return relative(dirname(file), join(webRoot, "assets", "favicon.png")).replace(/\\/g, "/");
+}
+
+function ensureFavicon(html, href) {
+  const block = [
+    "  <!-- favicon:start -->",
+    `  <link rel="icon" type="image/png" href="${escAttr(href)}">`,
+    `  <link rel="apple-touch-icon" href="${escAttr(href)}">`,
+    "  <!-- favicon:end -->",
+  ].join("\n");
+  const clean = html.replace(/\n?[ \t]*<!-- favicon:start -->[\s\S]*?<!-- favicon:end -->\n?/g, "\n");
+  return clean.replace(/<\/head>/i, `${block}\n</head>`);
+}
+
 function ensurePagerRelations(html) {
   return html.replace(/<nav\s+class="lesson-pager"[^>]*>([\s\S]*?)<\/nav>/gi, (whole, body) => {
     const nextBody = body.replace(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi, (anchor, attrs, content) => {
@@ -265,6 +280,7 @@ for (const file of files) {
   next = inject(next, block);
   next = ensureCanonical(next, pageURL);
   next = ensurePagerRelations(next);
+  next = ensureFavicon(next, faviconHref(file));
   if (next !== html) {
     writeFileSync(file, next);
     updated++;

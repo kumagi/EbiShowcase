@@ -19,7 +19,12 @@
     <meta name="twitter:image:alt" content="Playable, shareable, and explainable.">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/release/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../en/"><span>EBI</span> SHOWCASE</a><nav><a class="lang" href="../../../ja/guides/release/">JA</a></nav></header><main><section class="test-hero"><p class="eyebrow">SYSTEM GUIDE / RELEASE</p><h1>Playable, shareable,<br><em>and explainable.</em></h1><p>Before publishing, check more than behavior: WASM, GitHub Pages, asset rights, and the steps needed to build it again.</p></section><section class="test-course"><h2>Five checks before release</h2><div class="test-course-grid"><article class="test-course-card"><span>01</span><h3>Local</h3><p>Run `go test ./...`. Try desktop and phone widths, keyboard, pointer, and touch once each.</p></article><article class="test-course-card"><span>02</span><h3>WASM</h3><p>Run `GOOS=js GOARCH=wasm go build`. HTML hosts; the game itself is Go/Ebitengine WASM.</p></article><article class="test-course-card"><span>03</span><h3>Pages</h3><p>Check the Actions artifact and Settings → Pages. Open both `/ja/` and `/en/` after deployment.</p></article><article class="test-course-card"><span>04</span><h3>License</h3><p>Your code is Apache-2.0. Record original rights for fonts, dependencies, and assets in `THIRD_PARTY_NOTICES.md`.</p></article><article class="test-course-card"><span>05</span><h3>Release</h3><p>Review title, description, OGP, language links, feedback form, and README instructions.</p></article></div></section><section class="test-terminal"><code>go test ./...<br>bash scripts/build.sh --fast<br>node scripts/check-metadata.mjs</code><strong>test → build → metadata → deploy</strong></section>
+<link rel="stylesheet" href="../../../style.css">
+  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body><header class="nav"><a class="brand" href="../../../en/"><span>EBI</span> SHOWCASE</a><nav><a class="lang" href="../../../ja/guides/release/">JA</a></nav></header><main><section class="test-hero"><p class="eyebrow">SYSTEM GUIDE / RELEASE</p><h1>Playable, shareable,<br><em>and explainable.</em></h1><p>Before publishing, check more than behavior: WASM, GitHub Pages, asset rights, and the steps needed to build it again.</p></section><section class="test-course"><h2>Five checks before release</h2><div class="test-course-grid"><article class="test-course-card"><span>01</span><h3>Local</h3><p>Run `go test ./...`. Try desktop and phone widths, keyboard, pointer, and touch once each.</p></article><article class="test-course-card"><span>02</span><h3>WASM</h3><p>Run `GOOS=js GOARCH=wasm go build`. HTML hosts; the game itself is Go/Ebitengine WASM.</p></article><article class="test-course-card"><span>03</span><h3>Pages</h3><p>Check the Actions artifact and Settings → Pages. Open both `/ja/` and `/en/` after deployment.</p></article><article class="test-course-card"><span>04</span><h3>License</h3><p>Your code is Apache-2.0. Record original rights for fonts, dependencies, and assets in `THIRD_PARTY_NOTICES.md`.</p></article><article class="test-course-card"><span>05</span><h3>Release</h3><p>Review title, description, OGP, language links, feedback form, and README instructions.</p></article></div></section><section class="test-terminal"><code>go test ./...<br>bash scripts/build.sh --fast<br>node scripts/check-metadata.mjs</code><strong>test → build → metadata → deploy</strong></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -43,6 +48,7 @@
         </form>
       </div>
     </section>
+
 
 
 

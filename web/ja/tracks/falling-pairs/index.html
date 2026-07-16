@@ -19,7 +19,12 @@
     <meta name="twitter:image:alt" content="落下ペア連鎖パズル">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/falling-pairs/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/falling-pairs/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>8 STEPS</span></div><section class="track-hero track-falling-pairs"><span class="track-letter">M</span><div><p class="eyebrow">ぷよぷよ型の連鎖を作る</p><h1>落下ペア連鎖パズル</h1><p>ぷよぷよのような、同じ色を4つ以上つなげて消す連鎖パズルを作ります。2個組の落下から、同色の連結探索、消去、重力、再探索、連鎖得点へ進みます。</p></div></section>
+<link rel="stylesheet" href="../../../style.css">
+  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/falling-pairs/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>8 STEPS</span></div><section class="track-hero track-falling-pairs"><span class="track-letter">M</span><div><p class="eyebrow">ぷよぷよ型の連鎖を作る</p><h1>落下ペア連鎖パズル</h1><p>ぷよぷよのような、同じ色を4つ以上つなげて消す連鎖パズルを作ります。2個組の落下から、同色の連結探索、消去、重力、再探索、連鎖得点へ進みます。</p></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>二個組→回転→同色探索→落下→連鎖の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。 このページの1本はコース全体で共通するgame状態の境界です。ルールはUpdateへ足し、Drawの順番や見た目は自由に差し替えられます。下の01から順に、その中へ各仕組みを実装していきます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="コースの学習順"><span>01 二個組</span><b aria-hidden="true">→</b><span>02 回転</span><b aria-hidden="true">→</b><span>03 同色探索</span><b aria-hidden="true">→</b><span>04 落下</span><b aria-hidden="true">→</b><span>05 連鎖</span></div></section>
 <!-- END BEGINNER BRIDGE -->
@@ -58,6 +63,7 @@
         </form>
       </div>
     </section>
+
 
 
 

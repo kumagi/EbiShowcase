@@ -19,7 +19,12 @@
     <meta name="twitter:image:alt" content="Swap Neighboring Cells">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/match3/grid-swap/">
-<link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/match3/grid-swap/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Match-three Puzzle</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Swap Neighboring Cells</h1><p>Store a board as rows and columns, then swap only two cells sharing an edge.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Two-dimensional grids and adjacency</strong></div></section>
+<link rel="stylesheet" href="../../../../style.css">
+  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/match3/grid-swap/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Match-three Puzzle</a><span>STEP 01 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★☆☆☆ / PLAYABLE</p><h1>Swap Neighboring Cells</h1><p>Store a board as rows and columns, then swap only two cells sharing an edge.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Two-dimensional grids and adjacency</strong></div></section>
 
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Make ten legal neighboring swaps.</h2></div><p>Tap the first and second piece. Diagonal and distant cells are rejected. Mouse clicks work on PC.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Swap Neighboring Cells" src="../../../../play/grid-swap/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -29,6 +34,8 @@
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_puzzle-rotation.svg" alt="Puzzle rotation pivot" loading="lazy" decoding="async"><figcaption>A visual map of Puzzle rotation pivot. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_match3-cascade.svg" alt="Match-3 cascade" loading="lazy" decoding="async"><figcaption>A visual map of Match-3 cascade. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
+
+
 
 
 
@@ -70,6 +77,7 @@ if distance == 1 {
         </form>
       </div>
     </section>
+
 
 
 

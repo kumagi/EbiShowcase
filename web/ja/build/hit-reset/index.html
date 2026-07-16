@@ -19,11 +19,17 @@
     <meta name="twitter:image:alt" content="当たったら、次の場所へ移そう">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/build/hit-reset/">
-<link rel="stylesheet" href="../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a href="../tap-score/">BUILD 03</a><a class="lang" href="../../../en/build/hit-reset/" lang="en">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../tap-score/">← BUILD 03</a><span>BUILD TRACK / STEP 04</span></div><section class="overview-hero"><p class="eyebrow">BUILD TRACK / COLLISION RULE</p><h1>当たったら、次の場所へ移そう</h1><p>押した点と丸の中心の距離が半径以内なら命中です。判定、得点、再配置はすべて Update が決めます。</p><div class="overview-concept"><small>このステップで書く RULE</small><strong>math.Hypot → hit → score + move</strong></div></section>
+<link rel="stylesheet" href="../../../style.css">
+  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body class="overview-page"><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a href="../tap-score/">BUILD 03</a><a class="lang" href="../../../en/build/hit-reset/" lang="en">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../tap-score/">← BUILD 03</a><span>BUILD TRACK / STEP 04</span></div><section class="overview-hero"><p class="eyebrow">BUILD TRACK / COLLISION RULE</p><h1>当たったら、次の場所へ移そう</h1><p>押した点と丸の中心の距離が半径以内なら命中です。判定、得点、再配置はすべて Update が決めます。</p><div class="overview-concept"><small>このステップで書く RULE</small><strong>math.Hypot → hit → score + move</strong></div></section>
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>丸に当てると、<br>次の丸が出る。</h2></div><p>丸の中をクリック／タップすると得点が増え、決まった順番の次の場所へ移ります。外したら何も変わりません。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="当たったら移す" src="../../../play/hit-reset/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
+
 
 
 <section class="learn"><p class="eyebrow">COLLISION IN UPDATE</p><h2>距離を比べてから、<br>状態を変える。</h2><div class="concept-row"><article><span class="concept-number">1</span><h3>MEASURE</h3><p>横と縦の差から、点どうしの距離を出します。</p><code>math.Hypot(px-cx, py-cy)</code></article><article><span class="concept-number">2</span><h3>DECIDE</h3><p>距離が半径以下なら hit。純粋関数ならテストできます。</p><code>dist &lt;= radius</code></article><article><span class="concept-number">3</span><h3>UPDATE</h3><p>命中時だけ得点と次の位置を変えます。</p><code>score++; moveTarget()</code></article></div><div class="code-lesson"><div><p class="eyebrow">YOUR HYPOT LINE</p><h3>この距離判定は<br>Draw に書かない。</h3><p>同じゲーム状態なら同じ絵にするため、押した座標を読むことも、当たった答えを決めることも Update の中で終えます。</p></div><pre><code>func (g *game) Update() error {
@@ -141,6 +147,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

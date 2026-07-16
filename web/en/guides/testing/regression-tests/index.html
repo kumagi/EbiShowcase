@@ -17,7 +17,11 @@
     <meta name="twitter:description" content="Match-three special pieces are hard to reproduce by hand. Freeze the failing board as small data and keep a test that fails before the fix.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--regression-tests.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Never reintroduce a fixed bug">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/regression-tests/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">STEP 04 / 05</p><h1>Never reintroduce a fixed bug</h1><p>Match-three special pieces are hard to reproduce by hand. Freeze the failing board as small data and keep a test that fails before the fix.</p></section>
+    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/regression-tests/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">STEP 04 / 05</p><h1>Never reintroduce a fixed bug</h1><p>Match-three special pieces are hard to reproduce by hand. Freeze the failing board as small data and keep a test that fails before the fix.</p></section>
 <!-- feedback-note:guides/testing/regression-tests:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-guides-testing-regression-tests"><div><p class="eyebrow">See the reproduction board</p><h2 id="feedback-note-guides-testing-regression-tests">Make the small board the test input</h2><p>A board made from simple symbols shows exactly which arrangement caused the bug. Pass the same board data to the rule and check the same answer every time without opening the game.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="match-three reproduction board">A B C A B
 B C C C A

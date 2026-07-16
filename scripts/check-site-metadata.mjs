@@ -6,8 +6,8 @@
  *
  * Usage: node scripts/check-site-metadata.mjs [--json]
  */
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { dirname, join, relative } from "node:path";
 import { curriculum, gated } from "./curriculum.mjs";
 import { collectHomeThumbnails } from "./home-thumbnails.mjs";
 
@@ -37,6 +37,26 @@ function isWebP(file) {
   if (!existsSync(file)) return false;
   const bytes = readFileSync(file);
   return bytes.length >= 12 && bytes.subarray(0, 4).toString("ascii") === "RIFF" && bytes.subarray(8, 12).toString("ascii") === "WEBP";
+}
+
+function walkHTML(dir, files = []) {
+  for (const name of readdirSync(dir)) {
+    if (name === "play" || name === "node_modules") continue;
+    const file = join(dir, name);
+    if (statSync(file).isDirectory()) walkHTML(file, files);
+    else if (name.endsWith(".html") && name !== "game.html") files.push(file);
+  }
+  return files;
+}
+
+const faviconPath = join(root, "web/assets/favicon.png");
+if (!existsSync(faviconPath)) fail("shared favicon is missing at web/assets/favicon.png");
+for (const file of walkHTML(join(root, "web"))) {
+  const href = relative(dirname(file), faviconPath).replace(/\\/g, "/");
+  const html = readFileSync(file, "utf8");
+  if (!html.includes(`<link rel="icon" type="image/png" href="${href}">`)) {
+    fail(`${relative(root, file)}: missing shared favicon link ${href}`);
+  }
 }
 
 const vfx = curriculum.filter((entry) => entry.group === "vfx");

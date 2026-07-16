@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+go run ./cmd/gen-favicon "$ROOT"
 FAST_BUILD=0
 if [[ "${1:-}" == "--fast" ]]; then
   FAST_BUILD=1

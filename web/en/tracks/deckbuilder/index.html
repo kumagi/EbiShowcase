@@ -19,7 +19,12 @@
     <meta name="twitter:image:alt" content="Deck-building Card Game">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/deckbuilder/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/deckbuilder/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>9 STEPS</span></div><section class="track-hero track-deckbuilder"><span class="track-letter">G</span><div><p class="eyebrow">Build a Slay the Spire-style game</p><h1>Deck-building Card Game</h1><p>Build a Slay the Spire-style game where you choose cards to build your deck as you climb. Start by playing one card, then add deck circulation (draw → play → discard → reshuffle), enemy intents, status effects like poison or strength that last over turns, rewards, and a branching map.</p></div></section>
+<link rel="stylesheet" href="../../../style.css">
+  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/deckbuilder/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>9 STEPS</span></div><section class="track-hero track-deckbuilder"><span class="track-letter">G</span><div><p class="eyebrow">Build a Slay the Spire-style game</p><h1>Deck-building Card Game</h1><p>Build a Slay the Spire-style game where you choose cards to build your deck as you climb. Start by playing one card, then add deck circulation (draw → play → discard → reshuffle), enemy intents, status effects like poison or strength that last over turns, rewards, and a branching map.</p></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="Course learning order"><span>01 引く</span><b aria-hidden="true">→</b><span>02 コスト</span><b aria-hidden="true">→</b><span>03 効果</span><b aria-hidden="true">→</b><span>04 敵予告</span></div></section>
 <!-- END BEGINNER BRIDGE -->
@@ -59,6 +64,7 @@
         </form>
       </div>
     </section>
+
 
 
 

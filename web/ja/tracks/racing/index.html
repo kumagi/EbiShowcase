@@ -18,7 +18,11 @@
     <meta name="twitter:description" content="アクセルで速度を増やし、速度に応じた旋回で楕円コースを2周します。チェックポイントを順番に通ることで周回を判定します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--racing.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="見下ろし型2Dレーシング">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">全コース</a><a class="lang" href="../../../en/tracks/racing/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>5 PLAYABLE GAMES</span></div><section class="track-hero track-racing"><span class="track-letter">S</span><div><p class="eyebrow">加速・旋回・コース順を組み立てる</p><h1>見下ろし型2Dレーシング</h1><p>アクセルで速度を増やし、速度に応じた旋回で楕円コースを2周します。チェックポイントを順番に通ることで周回を判定します。</p></div></section>
+    <!-- ogp:end --><link rel="stylesheet" href="../../../style.css">  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">全コース</a><a class="lang" href="../../../en/tracks/racing/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>5 PLAYABLE GAMES</span></div><section class="track-hero track-racing"><span class="track-letter">S</span><div><p class="eyebrow">加速・旋回・コース順を組み立てる</p><h1>見下ろし型2Dレーシング</h1><p>アクセルで速度を増やし、速度に応じた旋回で楕円コースを2周します。チェックポイントを順番に通ることで周回を判定します。</p></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>加速→旋回→ゲート→ライバル→コースの順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。 このページの1本はコース全体で共通するgame状態の境界です。ルールはUpdateへ足し、Drawの順番や見た目は自由に差し替えられます。下の01から順に、その中へ各仕組みを実装していきます。 各ステップは前の状態を引き継ぎ、加速→旋回→ゲート→ライバルの順で同じ車へ重ねます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="コースの学習順"><span>01 加速</span><b aria-hidden="true">→</b><span>02 旋回</span><b aria-hidden="true">→</b><span>03 ゲート</span><b aria-hidden="true">→</b><span>04 ライバル</span><b aria-hidden="true">→</b><span>05 コース</span></div></section>
 <!-- END BEGINNER BRIDGE -->

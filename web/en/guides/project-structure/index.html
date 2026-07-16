@@ -19,7 +19,12 @@
     <meta name="twitter:image:alt" content="When a game grows, give each job its own room.">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/project-structure/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../en/"><span>EBI</span> SHOWCASE</a><nav><a class="lang" href="../../../ja/guides/project-structure/">JA</a></nav></header><main><section class="test-hero"><p class="eyebrow">SYSTEM GUIDE / PROJECT STRUCTURE</p><h1>When a game grows,<br><em>give each job its own room.</em></h1><p>`cmd` starts the game, `internal` holds its machinery, and `assets` holds images, sounds, and maps.</p></section><section class="test-terminal"><code>examples/project-structure/<br>├── cmd/reef-run/main.go<br>├── internal/game/game.go<br>├── internal/rules/score.go<br>└── assets/</code><strong>entry / presentation / pure rules / assets</strong></section><section class="test-course"><h2>A real split sample</h2><p>A tiny Space-to-collect-gem game is actually split this way. `rules.Collect` imports no Ebitengine, so `go test ./examples/project-structure/internal/rules` checks it without opening a window.</p><p>Keep `cmd` thin. Let `internal/game` connect input, update, and drawing. Move calculations into `internal/rules`. Put assets in `assets`, with their licenses beside them.</p></section>
+<link rel="stylesheet" href="../../../style.css">
+  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body><header class="nav"><a class="brand" href="../../../en/"><span>EBI</span> SHOWCASE</a><nav><a class="lang" href="../../../ja/guides/project-structure/">JA</a></nav></header><main><section class="test-hero"><p class="eyebrow">SYSTEM GUIDE / PROJECT STRUCTURE</p><h1>When a game grows,<br><em>give each job its own room.</em></h1><p>`cmd` starts the game, `internal` holds its machinery, and `assets` holds images, sounds, and maps.</p></section><section class="test-terminal"><code>examples/project-structure/<br>├── cmd/reef-run/main.go<br>├── internal/game/game.go<br>├── internal/rules/score.go<br>└── assets/</code><strong>entry / presentation / pure rules / assets</strong></section><section class="test-course"><h2>A real split sample</h2><p>A tiny Space-to-collect-gem game is actually split this way. `rules.Collect` imports no Ebitengine, so `go test ./examples/project-structure/internal/rules` checks it without opening a window.</p><p>Keep `cmd` thin. Let `internal/game` connect input, update, and drawing. Move calculations into `internal/rules`. Put assets in `assets`, with their licenses beside them.</p></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -43,6 +48,7 @@
         </form>
       </div>
     </section>
+
 
 
 

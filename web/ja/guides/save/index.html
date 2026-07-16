@@ -19,7 +19,12 @@
     <meta name="twitter:image:alt" content="続きから遊べるゲームを、 こわれにくく作る。">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/save/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="./">SAVE</a><a class="lang" href="../../../en/guides/save/">EN</a></nav></header><main><section class="test-hero"><p class="eyebrow">SYSTEM GUIDE / SAVE</p><h1>続きから遊べるゲームを、<br><em>こわれにくく作る。</em></h1><p>セーブは「今の状態をJSONにして置く」だけではありません。版番号を付け、自動保存の場所を決め、読めないデータから安全に戻り、場面をまたいで状態を渡す設計です。</p></section><section class="test-course"><p class="eyebrow">FOUR PROMISES</p><h2>保存の4つの約束</h2><div class="test-course-grid"><article class="test-course-card"><span>01</span><h3>version を最初に書く</h3><p>ルールを変えた未来の自分が、古いデータを見分けられます。知らない版は無理に読むより新しいゲームを始めます。</p></article><article class="test-course-card"><span>02</span><h3>大事な変化の直後に保存</h3><p>宝箱を開けた、部屋を出た、設定を変えた。その直後にAutosaveします。tickごとに保存はしません。</p></article><article class="test-course-card"><span>03</span><h3>読めなければ安全な初期状態へ</h3><p>JSONが壊れていたら、遊べなくする代わりに初期状態へ戻し、「セーブを読み直せなかった」と知らせます。</p></article><article class="test-course-card"><span>04</span><h3>画面は状態を持ち運ばない</h3><p>sceneは見せ方、save modelは事実です。次の部屋へはモデルを渡し、新しいsceneを作ります。</p></article></div></section><section class="test-terminal"><code>savegame.Autosave(store, "adventure.slot", state, time.Now())</code><strong>version + updated_at + data</strong></section><section class="test-course"><h2>復旧の順番</h2><p><b>Load → Decode → versionを確認 → payloadを読む → 新しいsceneを作る。</b> どこかで失敗したら、初期状態に戻して遊べるままにします。`internal/savegame` はWASMではlocalStorage、ローカルテストではメモリストアを同じ形で使えます。</p></section>
+<link rel="stylesheet" href="../../../style.css">
+  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body><header class="nav"><a class="brand" href="../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="./">SAVE</a><a class="lang" href="../../../en/guides/save/">EN</a></nav></header><main><section class="test-hero"><p class="eyebrow">SYSTEM GUIDE / SAVE</p><h1>続きから遊べるゲームを、<br><em>こわれにくく作る。</em></h1><p>セーブは「今の状態をJSONにして置く」だけではありません。版番号を付け、自動保存の場所を決め、読めないデータから安全に戻り、場面をまたいで状態を渡す設計です。</p></section><section class="test-course"><p class="eyebrow">FOUR PROMISES</p><h2>保存の4つの約束</h2><div class="test-course-grid"><article class="test-course-card"><span>01</span><h3>version を最初に書く</h3><p>ルールを変えた未来の自分が、古いデータを見分けられます。知らない版は無理に読むより新しいゲームを始めます。</p></article><article class="test-course-card"><span>02</span><h3>大事な変化の直後に保存</h3><p>宝箱を開けた、部屋を出た、設定を変えた。その直後にAutosaveします。tickごとに保存はしません。</p></article><article class="test-course-card"><span>03</span><h3>読めなければ安全な初期状態へ</h3><p>JSONが壊れていたら、遊べなくする代わりに初期状態へ戻し、「セーブを読み直せなかった」と知らせます。</p></article><article class="test-course-card"><span>04</span><h3>画面は状態を持ち運ばない</h3><p>sceneは見せ方、save modelは事実です。次の部屋へはモデルを渡し、新しいsceneを作ります。</p></article></div></section><section class="test-terminal"><code>savegame.Autosave(store, "adventure.slot", state, time.Now())</code><strong>version + updated_at + data</strong></section><section class="test-course"><h2>復旧の順番</h2><p><b>Load → Decode → versionを確認 → payloadを読む → 新しいsceneを作る。</b> どこかで失敗したら、初期状態に戻して遊べるままにします。`internal/savegame` はWASMではlocalStorage、ローカルテストではメモリストアを同じ形で使えます。</p></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -43,6 +48,7 @@
         </form>
       </div>
     </section>
+
 
 
 

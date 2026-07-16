@@ -19,7 +19,12 @@
     <meta name="twitter:image:alt" content="Horde Survival">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/survivors/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/survivors/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-survivors"><span class="track-letter">B</span><div><p class="eyebrow">Build a Vampire Survivors-style game</p><h1>Horde Survival</h1><p>Build a Vampire Survivors-style game where you auto-attack swarms of enemies to survive. Begin with auto-attacks, then scale up to hundreds of enemies, experience, upgrades, and weapon evolution.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 state boundary</a>. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section>
+<link rel="stylesheet" href="../../../style.css">
+  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/survivors/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>8 STEPS</span></div><section class="track-hero track-survivors"><span class="track-letter">B</span><div><p class="eyebrow">Build a Vampire Survivors-style game</p><h1>Horde Survival</h1><p>Build a Vampire Survivors-style game where you auto-attack swarms of enemies to survive. Begin with auto-attacks, then scale up to hundreds of enemies, experience, upgrades, and weapon evolution.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 state boundary</a>. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="Course learning order"><span>01 移動</span><b aria-hidden="true">→</b><span>02 敵</span><b aria-hidden="true">→</b><span>03 自動攻撃</span><b aria-hidden="true">→</b><span>04 経験値</span><b aria-hidden="true">→</b><span>05 強化</span></div></section>
 <!-- END BEGINNER BRIDGE -->
@@ -57,6 +62,7 @@
         </form>
       </div>
     </section>
+
 
 
 

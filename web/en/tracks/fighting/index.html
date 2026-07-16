@@ -19,7 +19,12 @@
     <meta name="twitter:image:alt" content="2D Fighting Game">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/fighting/">
-<link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/fighting/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>9 STEPS</span></div><section class="track-hero track-fighting"><span class="track-letter">E</span><div><p class="eyebrow">Build a fighter from collision boxes</p><h1>2D Fighting Game</h1><p>Build a one-on-one arcade-style fighting game where you and an opponent trade moves. Start with pushboxes (boxes that keep characters from overlapping), hurtboxes (boxes that can get hit), and hitboxes, then add move frames, hitstop (freezing time for an instant on impact), and combos.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 state boundary</a>. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section>
+<link rel="stylesheet" href="../../../style.css">
+  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">CURRICULUM</a><a class="lang" href="../../../ja/tracks/fighting/">日本語</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← ALL PATHS</a><span>9 STEPS</span></div><section class="track-hero track-fighting"><span class="track-letter">E</span><div><p class="eyebrow">Build a fighter from collision boxes</p><h1>2D Fighting Game</h1><p>Build a one-on-one arcade-style fighting game where you and an opponent trade moves. Start with pushboxes (boxes that keep characters from overlapping), hurtboxes (boxes that can get hit), and hitboxes, then add move frames, hitstop (freezing time for an instant on impact), and combos.</p></div><p class="curriculum-bridge">This continues the shared foundation. Each step adds one genre piece on top of the <a href="../../games/tap-target/#basics">LEVEL 01 state boundary</a>. The hero is the original Ebi Tenjiroh (海老・天次郎).</p></section>
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="Course learning order"><span>01 攻撃矩形</span><b aria-hidden="true">→</b><span>02 フレーム</span><b aria-hidden="true">→</b><span>03 反応</span><b aria-hidden="true">→</b><span>04 防御</span><b aria-hidden="true">→</b><span>05 連続技</span></div></section>
 <!-- END BEGINNER BRIDGE -->
@@ -58,6 +63,7 @@
         </form>
       </div>
     </section>
+
 
 
 

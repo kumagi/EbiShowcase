@@ -19,7 +19,12 @@
     <meta name="twitter:image:alt" content="Chunked World">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/sandbox/chunk-world/">
-<link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/sandbox/chunk-world/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D Block Sandbox</a><span>STEP 03 / 07</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Chunked World</h1><p>Split the world into 8×8-cell regions, generating, loading, and drawing only those near the camera.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Chunk coordinates, caching, and draw ranges</strong></div></section>
+<link rel="stylesheet" href="../../../../style.css">
+  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/sandbox/chunk-world/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 2D Block Sandbox</a><span>STEP 03 / 07</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Chunked World</h1><p>Split the world into 8×8-cell regions, generating, loading, and drawing only those near the camera.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Chunk coordinates, caching, and draw ranges</strong></div></section>
 
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Visit 12 chunks and collect 5 beacons in 75 seconds.</h2></div><p>Explore with arrows/WASD or the bottom direction buttons. Thick gold lines mark chunk borders. The top shows coordinates, cached chunks, and chunks drawn now.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Chunked World" src="../../../../play/chunk-world/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -28,6 +33,8 @@
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_sandbox-seed.svg" alt="Build a world from a seed" loading="lazy" decoding="async"><figcaption>A visual map of Build a world from a seed. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
+
+
 
 
 
@@ -73,6 +80,7 @@ for cy := center.y-2; cy &lt;= center.y+2; cy++ {
         </form>
       </div>
     </section>
+
 
 
 
