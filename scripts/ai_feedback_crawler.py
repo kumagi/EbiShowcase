@@ -80,6 +80,7 @@ def format_lens_instruction(lenses: list[dict], extra: str = "") -> str:
         "Review ONLY against the following quality-gate lenses from docs/quality-gates/catalog.json.",
         "Return JSON with keys: gate_id, verdict (fail|warn|pass), evidence, fix.",
         "Pick the single most important failing lens; if all pass, verdict=pass and gate_id of the closest lens.",
+        "A pass is audit evidence, not a feedback suggestion: it must never be submitted to the page form.",
         "",
     ]
     for lens in lenses[:8]:
@@ -717,6 +718,13 @@ def run_batch(args: argparse.Namespace, store: StateStore, model: ChatClient) ->
                 continue
             store.save(page, suggestion, content_hash=review_hash)
             generated += 1
+        if re.match(r"(?i)^\[pass\](?:\s|$)", suggestion):
+            # Keep the audit result in local state so unchanged pages are not
+            # reviewed again, but never pollute the public feedback sheet with
+            # a non-actionable pass record.
+            store.mark_submitted(page.url)
+            print(f"\n[{page.language}] {page.title}\n{page.url}\n→ pass (not submitted)")
+            continue
         print(f"\n[{page.language}] {page.title}\n{page.url}\n→ {suggestion}")
         if args.submit:
             try:

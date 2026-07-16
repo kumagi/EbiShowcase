@@ -53,6 +53,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / XP AND LEVEL-UP</p>
@@ -61,7 +64,7 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>ジェム引き寄せ</h3><p>自機の90ピクセル以内のジェムは毎フレーム自機に向かって引き寄せられます。18ピクセル以内で取得、XPに加算します。</p><code>if d &lt; 90 { gem に近づける }</code></article>
+        <article><span class="concept-number">1</span><h3>ジェム引き寄せ</h3><p>自機の90ピクセル以内のジェムはtickごとに自機に向かって引き寄せられます。18ピクセル以内で取得、XPに加算します。</p><code>if d &lt; 90 { gem に近づける }</code></article>
         <article><span class="concept-number">2</span><h3>レベルアップ判定</h3><p><code>xp &gt;= need</code> になった瞬間に <code>draft = true</code> を立てます。Updateは別関数 <code>updateDraft</code> に切り替わり、ゲームが一時停止します。</p><code>if g.xp &gt;= g.need { g.draft = true }</code></article>
         <article><span class="concept-number">3</span><h3>ドラフト選択</h3><p>3枚のカードからキーまたはタッチで選択。選んだ能力値が書き変わり、<code>need</code> を3増やして次のレベルアップをより遠くします。</p><code>g.speed += .65 など</code></article>
       </div>
@@ -157,6 +160,7 @@
         </form>
       </div>
     </section>
+
 
 
 

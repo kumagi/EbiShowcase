@@ -73,6 +73,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / STATE MACHINE</p>
@@ -96,7 +99,7 @@
         <article>
           <span class="concept-number">3</span>
           <h3>タイマーで演出を作る</h3>
-          <p>行動後に <code>timer = 35</code> をセットし、毎フレーム1ずつ減らします。タイマーがゼロになったとき次の状態へ移ります。待ち時間の数字を変えるだけで演出の長さを調整できます。</p>
+          <p>行動後に <code>timer = 35</code> をセットし、tickごとに1ずつ減らします。タイマーがゼロになったとき次の状態へ移ります。待ち時間の数字を変えるだけで演出の長さを調整できます。</p>
           <code>g.timer--; if g.timer &lt;= 0 { ... }</code>
         </article>
       </div>
@@ -146,7 +149,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>ダメージは演出の「始まり」で入れる</h3>
-          <p>Update() は毎フレーム呼ばれます。コマンドを選んだ瞬間に味方の効果を入れ、<code>playerTurn</code> のタイマーは演出用です。敵のダメージも <code>enemyTurn</code> に入った瞬間（攻撃モーション開始）に入れ、残りタイマーは余韻だけにします。タイマーが0になってから初めて HP を減らすと、モーションと数字のタイミングがずれて不自然になります。</p>
+          <p>Update() はtickごとに呼ばれます。コマンドを選んだ瞬間に味方の効果を入れ、<code>playerTurn</code> のタイマーは演出用です。敵のダメージも <code>enemyTurn</code> に入った瞬間（攻撃モーション開始）に入れ、残りタイマーは余韻だけにします。タイマーが0になってから初めて HP を減らすと、モーションと数字のタイミングがずれて不自然になります。</p>
         </div>
         <pre><code><span>const</span> (
     command = iota // 0
@@ -225,6 +228,7 @@
         </form>
       </div>
     </section>
+
 
 
 

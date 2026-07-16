@@ -30,6 +30,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GAME COMPOSITION</p><h2>大きなゲームも、小さな画面を順番につないだもの。</h2><p class="lesson-lead">戦闘、報酬、経路選択を<strong>phaseという現在の場面</strong>で切り替えます。デッキ、HP、階数は場面を越えて同じgame構造体に残るため、一つの旅になります。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>場面を分ける</h3><p>Battleではカード入力、Rewardでは3択、Routeでは2択だけを読みます。同じタップでも場面ごとに意味が決まります。</p><code>switch phase { case Battle: ... }</code></article><article><span class="concept-number">2</span><h3>共有するデータを決める</h3><p>HP、deck、floorはラン全体のデータ。energyやblockは戦闘ごとに戻す一時データです。</p><code>type game struct { deck []card; floor int }</code></article><article><span class="concept-number">3</span><h3>出口を次の入口へ</h3><p>敵を倒したらReward、報酬を選んだらRoute、道を選んだら次のBattleへ進めます。</p><code>phase = phaseReward</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="map,battle,reward,rest" data-loop="次のフロアへ" aria-labelledby="lab-title-ebi-ascent">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / RUN LOOP</p>
@@ -44,9 +47,9 @@
 </div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each tick:</span>
 <span data-go-line="step">input → sim → resolve → draw</span>
-<span data-go-line="loop">// then next frame</span></pre>
+<span data-go-line="loop">// then next tick</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">SCENE PIPE</p><div class="formula-lines"><code>currentScene.Update()</code><span>つぎに</span><code>on exit → next scene</code></div><p>全部を1つの巨大 Update に書かない。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Updateを現在の場面へ渡す</h3><p>一つのUpdateを巨大にせず、場面ごとの小さな処理へ分けます。</p></div><pre><code>switch phase {
@@ -80,6 +83,7 @@ case phaseRoute:
         </form>
       </div>
     </section>
+
 
 
 

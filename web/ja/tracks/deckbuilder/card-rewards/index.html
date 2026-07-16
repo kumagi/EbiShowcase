@@ -30,6 +30,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DECK EDITING</p><h2>報酬は「数字を増やす」だけでなく、次の遊び方を変える。</h2><p class="lesson-lead">候補をカードデータのリストとして作り、選ばれた<strong>たった1枚だけをdeckへappend</strong>します。レア度は色や出やすさを表すデータで、強さそのものとは分けて考えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>候補を作る</h3><p>戦闘番号に合う報酬表から3枚を表示します。画面に見えるカードと選択時に追加するカードは同じデータです。</p><code>rewards := rewardTable[stage]</code></article><article><span class="concept-number">2</span><h3>1枚だけ追加</h3><p>選ばれた番号のカードをデッキの末尾へ入れます。ほかの2枚は追加しないので選択に意味が生まれます。</p><code>deck = append(deck, rewards[choice])</code></article><article><span class="concept-number">3</span><h3>編集は元データを変える</h3><p>強化はdamageを増やし、削除はスライスから要素を抜きます。次の戦闘は編集後のdeckを読みます。</p><code>deck[i].damage += 3</code></article></div><div class="motion-lab" data-lab="deck-pick" data-cards="Strike,Guard,Rare Heal" data-picked="{c} を追加" aria-labelledby="lab-title-card-rewards">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / REWARD PICK</p>
@@ -77,6 +80,7 @@
         </form>
       </div>
     </section>
+
 
 
 

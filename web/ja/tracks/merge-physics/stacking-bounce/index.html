@@ -30,7 +30,14 @@
 <!-- diagram-lesson:end -->
 
 
-<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / IMPULSE</p><h2>重い円と軽い円は、同じように跳ねる？</h2><p class="lesson-lead">大きな円ほど質量を大きくします。衝突の勢いを表す<strong>インパルス</strong>を質量に合わせて分けると、軽い円が多く動きます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>めり込み修正</h3><p>重なった距離を質量に合わせて分けます。</p><code>overlap := radii-distance</code></article><article><span class="concept-number">2</span><h3>質量</h3><p>半径の2乗を円の重さとして使います。</p><code>mass = radius * radius</code></article><article><span class="concept-number">3</span><h3>インパルス</h3><p>接触方向の速度だけを反発させます。</p><code>velocity += impulse / mass</code></article></div><div class="motion-lab" data-lab="bounce" data-wall="壁" data-paddle="床"><div class="lab-copy"><p class="eyebrow">TRY IT / BOUNCE</p><h3>速度の向きを反転しよう</h3><p>1フレームずつ進め、壁と床でどちらの速度が変わるか見ます。</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="位置を進める">1フレーム進める</button><button class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div></div><div class="lab-visual"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-ball style="position:absolute;border-radius:50%"></div></div><div class="lab-values"><div><span>vx</span><strong data-lab-vx>6.0</strong></div><div><span>vy</span><strong data-lab-vy>4.0</strong></div><div><span>接触</span><strong data-lab-note>—</strong></div></div></div>
+
+
+
+
+
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / IMPULSE</p><h2>重い円と軽い円は、同じように跳ねる？</h2><p class="lesson-lead">大きな円ほど質量を大きくします。衝突の勢いを表す<strong>インパルス</strong>を質量に合わせて分けると、軽い円が多く動きます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>めり込み修正</h3><p>重なった距離を質量に合わせて分けます。</p><code>overlap := radii-distance</code></article><article><span class="concept-number">2</span><h3>質量</h3><p>半径の2乗を円の重さとして使います。</p><code>mass = radius * radius</code></article><article><span class="concept-number">3</span><h3>インパルス</h3><p>接触方向の速度だけを反発させます。</p><code>velocity += impulse / mass</code></article></div><div class="motion-lab" data-lab="bounce" data-wall="壁" data-paddle="床"><div class="lab-copy"><p class="eyebrow">TRY IT / BOUNCE</p><h3>速度の向きを反転しよう</h3><p>1 tickずつ進め、壁と床でどちらの速度が変わるか見ます。</p><div class="lab-controls"><button class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="位置を進める">1 tick進める</button><button class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div></div><div class="lab-visual"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-ball style="position:absolute;border-radius:50%"></div></div><div class="lab-values"><div><span>vx</span><strong data-lab-vx>6.0</strong></div><div><span>vy</span><strong data-lab-vy>4.0</strong></div><div><span>接触</span><strong data-lab-note>—</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
 <pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="move">x += vx; y += vy</span>
@@ -62,6 +69,7 @@
         </form>
       </div>
     </section>
+
 
 
 

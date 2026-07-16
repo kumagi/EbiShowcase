@@ -70,7 +70,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / DARK</p>
         <h2>闇は<br>内側へ向かう力</h2>
-        <p class="lesson-lead">螺旋上に dark.png を配置し、毎フレーム中心方向＋接線方向の力を足す。縁には紫の spark を加算で散らし、リングで衝撃波。暗い核は通常合成、紫の縁は加算——同じテクスチャでも合成モードで「穴」と「オーラ」を分けます。</p>
+        <p class="lesson-lead">螺旋上に dark.png を配置し、tickごとに中心方向＋接線方向の力を足す。縁には紫の spark を加算で散らし、リングで衝撃波。暗い核は通常合成、紫の縁は加算——同じテクスチャでも合成モードで「穴」と「オーラ」を分けます。</p>
       </div>
 
       <div class="concept-row">
@@ -113,10 +113,12 @@
           <h3>螺旋＋求心力</h3>
           <p>初期は螺旋、更新で中心へ引っ張ります。</p>
         </div>
-        <pre><code>dx, dy := SpiralOffset(t, arms, 160, 4.5)
-// each frame: pull + swirl
-p.VX += (cx-p.X)*0.004 - (cy-p.Y)*0.0025
-p.VY += (cy-p.Y)*0.004 + (cx-p.X)*0.0025
+        <pre><code>dx, dy := cx-p.X, cy-p.Y
+pull, swirl := 0.004, 0.0025 // tune independently
+pullX, pullY := dx*pull, dy*pull
+swirlX, swirlY := -dy*swirl, dx*swirl
+p.VX += pullX + swirlX
+p.VY += pullY + swirlY
 DrawImage(DarkPNG) // core normal, fringe additive</code></pre>
       </div>
 

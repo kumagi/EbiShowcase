@@ -38,7 +38,7 @@
       <div class="overview-concept"><small>In this step</small><strong>Tile change & chance drops</strong></div>
       <p class="cast-note">The frame math sits in the same <a href="../../../games/tap-target/#basics">LEVEL 01 state boundary</a>.</p>
     </section>
-<p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
+<p class="curriculum-bridge">This continues the shared basics. If the game loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
 
 
 <section class="play lesson-play" id="play">
@@ -55,11 +55,14 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE</p>
         <h2>A cell is state, not just a picture</h2>
-        <p class="lesson-lead">Breaking a wall does not merely erase its picture. It changes a value in a two-dimensional array from <code>softWall</code> to <code>floor</code>. From the next frame onward, movement and drawing both read the new floor value.</p>
+        <p class="lesson-lead">Breaking a wall does not merely erase its picture. It changes a value in a two-dimensional array from <code>softWall</code> to <code>floor</code>. From the next tick onward, movement and drawing both read the new floor value.</p>
       </div>
 
       <div class="concept-row">
@@ -86,9 +89,9 @@
   </div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each tick:</span>
 <span data-go-line="step">input → sim → resolve → draw</span>
-<span data-go-line="loop">// then next frame</span></pre>
+<span data-go-line="loop">// then next tick</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>
@@ -131,6 +134,7 @@
         </form>
       </div>
     </section>
+
 
 
 

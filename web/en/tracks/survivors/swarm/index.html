@@ -34,7 +34,7 @@
     <section class="overview-hero">
       <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
       <h1>100-Enemy Swarm</h1>
-      <p>Exactly 100 enemies are always on screen. Defeat one and it instantly respawns elsewhere. A fixed-size array keeps all 100 updated every frame without extra allocation.</p>
+      <p>Exactly 100 enemies are always on screen. Defeat one and it instantly respawns elsewhere. A fixed-size array keeps all 100 updated every tick without extra allocation.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Object pool with a fixed array</strong></div>
       <p class="cast-note">On screen you see original hero <strong>Ebi Tenjiroh</strong>; hits still use simple shapes. Movement math still lives in the same <a href="../../../games/tap-target/#basics">LEVEL 01 state boundary</a>.</p>
     </section>
@@ -53,10 +53,13 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / OBJECT POOL</p>
-        <h2>How can 100 enemies update<br>every frame without slowdown?</h2>
+        <h2>How can 100 enemies update<br>every tick without slowdown?</h2>
         <p class="lesson-lead">Appending and removing from a slice allocates memory dynamically, which costs time. A <strong>fixed-size array</strong> declared upfront never allocates during the game loop. When an enemy is defeated, overwrite its slot immediately — the pool always stays at exactly 100 and allocation cost is zero.</p>
       </div>
 
@@ -97,7 +100,7 @@
       <div class="formula">
         <p class="eyebrow">THE POOL RULE</p>
         <div class="formula-lines"><code>mobs [100]mob  // fixed, never grows</code><span>on defeat</span><code>g.mobs[i] = newMob()  // overwrite the slot</code></div>
-        <p>A second benefit is cache efficiency. One hundred structs packed contiguously in memory let the CPU load many at once. Iterating the same array every frame is much faster than chasing pointers scattered across the heap.</p>
+        <p>A second benefit is cache efficiency. One hundred structs packed contiguously in memory let the CPU load many at once. Iterating the same array every tick is much faster than chasing pointers scattered across the heap.</p>
       </div>
 
       <div class="code-lesson">
@@ -154,6 +157,7 @@
         </form>
       </div>
     </section>
+
 
 
 

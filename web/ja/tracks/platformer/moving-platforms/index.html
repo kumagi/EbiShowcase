@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="動く足場に乗る仕組みを学ぶEbitengineレッスン。前フレームの位置との差をプレイヤーに加えることで、足場の動きに追従します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+  <meta name="description" content="動く足場に乗る仕組みを学ぶEbitengineレッスン。前のtickの位置との差をプレイヤーに加えることで、足場の動きに追従します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
   <title>Ebi Showcase – STEP 02 — 動く足場の谷</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – STEP 02 — 動く足場の谷">
-    <meta property="og:description" content="動く足場に乗る仕組みを学ぶEbitengineレッスン。前フレームの位置との差をプレイヤーに加えることで、足場の動きに追従します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:description" content="動く足場に乗る仕組みを学ぶEbitengineレッスン。前のtickの位置との差をプレイヤーに加えることで、足場の動きに追従します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/platformer/moving-platforms/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--platformer--moving-platforms.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – STEP 02 — 動く足場の谷">
-    <meta name="twitter:description" content="動く足場に乗る仕組みを学ぶEbitengineレッスン。前フレームの位置との差をプレイヤーに加えることで、足場の動きに追従します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:description" content="動く足場に乗る仕組みを学ぶEbitengineレッスン。前のtickの位置との差をプレイヤーに加えることで、足場の動きに追従します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--platformer--moving-platforms.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="動く足場の谷">
     <!-- ogp:end -->
@@ -41,7 +41,7 @@
     <section class="overview-hero">
       <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
       <h1>動く足場の谷</h1>
-      <p>上下左右に動く足場へ乗り、足場の移動量をプレイヤーへ伝えます。前フレームの位置を覚えておくだけで、複雑な動きにも追従できます。</p>
+      <p>上下左右に動く足場へ乗り、足場の移動量をプレイヤーへ伝えます。前のtickの位置を覚えておくだけで、複雑な動きにも追従できます。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>相対移動</strong></div>
       <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01</a>と同じく、位置や得点などゲームの中身はUpdateで進めます。Drawは中身を変えず、画面への見せ方だけを担当します。</p>
     </section>
@@ -67,6 +67,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / MOVING PLATFORMS</p>
@@ -84,7 +87,7 @@
         <article>
           <span class="concept-number">2</span>
           <h3>古い位置を保存</h3>
-          <p>足場を動かす直前に <code>oldX, oldY</code> へ座標を保存します。動かしたあとに現在位置から引くと、このフレームの移動量が求まります。</p>
+          <p>足場を動かす直前に <code>oldX, oldY</code> へ座標を保存します。動かしたあとに現在位置から引くと、このtickの移動量が求まります。</p>
           <code>p.oldX, p.oldY = p.x, p.y</code>
         </article>
         <article>
@@ -174,7 +177,7 @@
         <article class="challenge">
           <p class="eyebrow">YOUR FIRST TUNING</p>
           <h3>足場の速さと振れ幅を変えよう</h3>
-          <p>フレーム係数 <code>.025</code> を大きくすると足場が速くなり、<code>rangeX / rangeY</code> を大きくすると移動幅が広くなります。どこまで難しくできますか？</p>
+          <p>tick係数 <code>.025</code> を大きくすると足場が速くなり、<code>rangeX / rangeY</code> を大きくすると移動幅が広くなります。どこまで難しくできますか？</p>
         </article>
       </div>
     </section>
@@ -206,6 +209,7 @@
         </form>
       </div>
     </section>
+
 
 
 

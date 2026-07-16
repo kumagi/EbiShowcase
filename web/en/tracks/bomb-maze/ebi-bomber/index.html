@@ -38,7 +38,7 @@
       <div class="overview-concept"><small>In this step</small><strong>ONE PROGRESSION FROM SIX SYSTEMS</strong></div>
       <p class="cast-note">The frame math sits in the same <a href="../../../games/tap-target/#basics">LEVEL 01 state boundary</a>.</p>
     </section>
-<p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
+<p class="curriculum-bridge">This continues the shared basics. If the game loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
 
 
 <section class="play lesson-play" id="play">
@@ -55,6 +55,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE</p>
@@ -66,7 +69,7 @@
 <article><span class="concept-number">1</span><h3>Change the world first</h3><p>Blasts turn soft walls into floor and may create items.</p></article><article><span class="concept-number">2</span><h3>Feed abilities into rules</h3><p>Range, bomb capacity, and movement are data consumed by existing systems.</p></article><article><span class="concept-number">3</span><h3>Check progression last</h3><p>Enemy defeat plus eight broken walls opens the exit; reaching it wins.</p></article>
 </div>
 
-      <div class="motion-lab" data-lab="pipeline" data-steps="input,move,fuse,blast,walls,ai,draw" data-loop="next frame" aria-labelledby="lab-title-ebi-bomber">
+      <div class="motion-lab" data-lab="pipeline" data-steps="input,move,fuse,blast,walls,ai,draw" data-loop="next tick" aria-labelledby="lab-title-ebi-bomber">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / FRAME ORDER</p>
 <h3 id="lab-title-ebi-bomber">Order one bomber frame</h3>
@@ -80,9 +83,9 @@
 </div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each tick:</span>
 <span data-go-line="step">input → sim → resolve → draw</span>
-<span data-go-line="loop">// then next frame</span></pre>
+<span data-go-line="loop">// then next tick</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>
@@ -124,6 +127,7 @@ checkWinOrLoss()</code></pre></div>
         </form>
       </div>
     </section>
+
 
 
 

@@ -23,7 +23,7 @@ const (
 
 type game struct {
 	markerX float64 // 動く線の位置
-	speed   float64 // 1フレームで動く量（マイナスなら左へ）
+	speed   float64 // 1 tickで動く量（マイナスなら左へ）
 	score   int
 	round   int
 	stopped bool // 止めた直後か

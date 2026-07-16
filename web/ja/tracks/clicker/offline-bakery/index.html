@@ -55,6 +55,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / SAVE &amp; OFFLINE</p>
@@ -65,7 +68,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>localStorage でセーブ</h3><p>WebAssembly からは <code>syscall/js</code> でブラウザのJSを呼べます。<code>js.Global().Get("localStorage")</code> で localStorage を取得し、setItem / getItem でキーと値を読み書きします。</p><code>s.Call("setItem", prefix+"sweets", value)</code></article>
         <article><span class="concept-number">2</span><h3>オフライン経過時間の計算</h3><p>保存時の Unix タイムスタンプを読み出し、現在時刻との差を秒で求めます。上限は8時間（28800秒）。あまり長くしすぎると、久しぶりに戻った瞬間の「ボーナス」が大きすぎてバランスを壊します。</p><code>away := math.Min(8*3600, float64(now-stamp))</code></article>
-        <article><span class="concept-number">3</span><h3>120フレームごとの自動セーブ</h3><p>毎フレームセーブすると localStorage の書き込みが多すぎます。フレームカウンターが 120 の倍数のときだけ save() を呼ぶことで、約2秒ごとに定期セーブします。</p><code>if g.frame%120 == 0 { g.save() }</code></article>
+        <article><span class="concept-number">3</span><h3>120tickごとの自動セーブ</h3><p>tickごとにセーブすると localStorage の書き込みが多すぎます。フレームカウンターが 120 の倍数のときだけ save() を呼ぶことで、約2秒ごとに定期セーブします。</p><code>if g.frame%120 == 0 { g.save() }</code></article>
       </div>
 
 
@@ -158,6 +161,7 @@
         </form>
       </div>
     </section>
+
 
 
 

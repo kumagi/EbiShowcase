@@ -125,7 +125,7 @@
 g.stars = next</code></pre>
         <details class="basics-extra">
           <summary>Bonus: what <code>g.stars[:0]</code> means (fine to skip)</summary>
-          <p>The code writes <code>next := g.stars[:0]</code>, which is not "a fresh empty list" — it <strong>reuses the same underlying array memory at length 0</strong>. A plain <code>var next []star</code> gives the same result; the slice trick just avoids allocating new memory every frame.</p>
+          <p>The code writes <code>next := g.stars[:0]</code>, which is not "a fresh empty list" — it <strong>reuses the same underlying array memory at length 0</strong>. A plain <code>var next []star</code> gives the same result; the slice trick just avoids allocating new memory every tick.</p>
         </details>
         <p>The Y band <code>625–675</code> is a catchable thickness around the basket near y≈640. Retry uses <code>*g = *newGame()</code>: same pointer, brand-new contents.</p>
       </div>
@@ -245,7 +245,7 @@ func (g *game) Update() error {
 	g.moveBasket()
 
 	g.frame++
-	// 45フレームごとに星を1つ出す
+	// 45 tickごとに星を1つ出す
 	if g.frame%45 == 0 {
 		g.stars = append(g.stars, star{
 			x:     25 + g.rng.Float64()*(screenWidth-50),
@@ -357,6 +357,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

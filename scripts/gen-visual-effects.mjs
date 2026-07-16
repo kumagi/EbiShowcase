@@ -206,7 +206,7 @@ screen.DrawImage(sprite, op)`,
       whys: [
         { eyebrow: "WHY MULTIPLY?", h: "色は倍率で決まる", p: "各チャンネルの掛け算だから、暗くも明るくもできます。" },
         { eyebrow: "WHY DRAIN?", h: "影は色抜きコピー", p: "色を0にして半透明で下に敷けば、それだけで影です。" },
-        { eyebrow: "TRY NEXT", h: "点滅させる", p: "フレームごとに倍率を上下させ、無敵時間を表現しよう。" },
+        { eyebrow: "TRY NEXT", h: "点滅させる", p: "tickごとに倍率を上下させ、無敵時間を表現しよう。" },
       ],
     },
     en: {
@@ -226,11 +226,11 @@ screen.DrawImage(sprite, op)`,
         title: "Switch the modes",
         p: "Flip between NORMAL, TINT, FLASH, and SHADOW and only the color of the same square changes. The code shown is the ColorScale in use.",
       },
-      codeHead: { eyebrow: "IN THE REAL GAME", h: "The hit flash", p: "Boost the factor for one frame on a hit and the sprite flashes white with impact." },
+      codeHead: { eyebrow: "IN THE REAL GAME", h: "The hit flash", p: "Boost the factor for one tick on a hit and the sprite flashes white with impact." },
       whys: [
         { eyebrow: "WHY MULTIPLY?", h: "Color is a factor", p: "Per-channel multiply can darken or brighten." },
         { eyebrow: "WHY DRAIN?", h: "A shadow is a drained copy", p: "Zero the color, go translucent, lay it under: instant shadow." },
-        { eyebrow: "TRY NEXT", h: "Make it blink", p: "Raise and lower the factor each frame for invincibility frames." },
+        { eyebrow: "TRY NEXT", h: "Make it blink", p: "Raise and lower the factor each tick during invincibility." },
       ],
     },
     code: `op := &ebiten.DrawImageOptions{}
@@ -475,7 +475,7 @@ screen.DrawImage(frame, op)`,
     ja: {
       navConcept: "粒をばらまく",
       title: "粒をばらまく（パーティクル）",
-      lead: "火花・煙・キラキラは、小さな粒のあつまり。粒の配列を持ち、毎フレーム「位置を進めて、寿命を減らして、薄くする」だけで、いろんな演出になります。",
+      lead: "火花・煙・キラキラは、小さな粒のあつまり。粒の配列を持ち、tickごとに「位置を進めて、寿命を減らして、薄くする」だけで、いろんな演出になります。",
       deepEyebrow: "DEEP DIVE / PARTICLES",
       deepH: "煙や火花は<br>どう作る？",
       deepLead: "1個の粒はとても単純：位置と速度と寿命を持つだけ。それを配列(スライス)にたくさん持ち、Update で動かし、寿命が0になったら消します。加算合成と拡大縮小を混ぜれば、火花にも煙にもなります。",
@@ -499,7 +499,7 @@ screen.DrawImage(frame, op)`,
     en: {
       navConcept: "Particle system",
       title: "Scatter Particles",
-      lead: "Sparks, smoke, and sparkle are crowds of tiny dots. Hold an array of particles and each frame just move them, age them, and fade them for many effects.",
+      lead: "Sparks, smoke, and sparkle are crowds of tiny dots. Hold an array of particles and each tick just move them, age them, and fade them for many effects.",
       deepEyebrow: "DEEP DIVE / PARTICLES",
       deepH: "How do you build<br>smoke and sparks?",
       deepLead: "One particle is simple: position, velocity, lifetime. Keep many in a slice, move them in Update, and remove them at life zero. Mix in additive blending and scaling for sparks or smoke.",
@@ -779,7 +779,7 @@ spawn(Ring) // bloom on break`,
       deepLead: "メインの太線を数セグメントに分け、各点をランダムにずらす。途中で確率的に再帰呼び出しして細い枝を生やす。その上にボルトPNGと火花を重ね、画面を白くフラッシュ。外側の青グロー→本体→白い芯の3本線で「太い稲妻」に見せます。",
       concepts: [
         { h: "ジグザグ", p: "中間点をランダムにずらす。", code: "nx += (rand-0.5)*wobble" },
-        { h: "枝分かれ", p: "depth 付きで再帰生成。", code: "addBolt(..., depth+1)" },
+        { h: "枝分かれ", p: "depth は枝の世代。呼ぶたび1増やし、2で止めて無限再帰を防ぐ。", code: "if depth < 2 { addBolt(..., depth+1) }" },
         { h: "三重線", p: "グロー・本体・白い芯。", code: "StrokeLine × 3 widths" },
       ],
       lab: {
@@ -807,7 +807,7 @@ spawn(Ring) // bloom on break`,
       deepLead: "Split the main stroke into segments, jitter midpoints, and recursively spawn thinner branches. Layer bolt PNGs and sparks, then white-flash the screen. Three strokes (blue glow → body → white core) sell thickness.",
       concepts: [
         { h: "Jagged path", p: "Jitter midpoints randomly.", code: "nx += (rand-0.5)*wobble" },
-        { h: "Branches", p: "Recurse with a depth limit.", code: "addBolt(..., depth+1)" },
+        { h: "Branches", p: "depth counts branch generations. Increment it per call and stop at 2 to prevent endless recursion.", code: "if depth < 2 { addBolt(..., depth+1) }" },
         { h: "Triple stroke", p: "Glow, body, and white core.", code: "StrokeLine × 3 widths" },
       ],
       lab: {
@@ -925,7 +925,7 @@ DrawImage(RingPNG)  // expanding ring`,
       lead: "ショーケース最終弾。粒が螺旋を描いて中心へ吸い込まれます。炎や光が「外へ」なのに対し、闇は「内へ」。向きを反転するだけで属性が変わります。",
       deepEyebrow: "DEEP DIVE / DARK",
       deepH: "闇は<br>内側へ向かう力",
-      deepLead: "螺旋上に dark.png を配置し、毎フレーム中心方向＋接線方向の力を足す。縁には紫の spark を加算で散らし、リングで衝撃波。暗い核は通常合成、紫の縁は加算——同じテクスチャでも合成モードで「穴」と「オーラ」を分けます。",
+      deepLead: "螺旋上に dark.png を配置し、tickごとに中心方向＋接線方向の力を足す。縁には紫の spark を加算で散らし、リングで衝撃波。暗い核は通常合成、紫の縁は加算——同じテクスチャでも合成モードで「穴」と「オーラ」を分けます。",
       concepts: [
         { h: "螺旋配置", p: "極座標で初期位置を決める。", code: "SpiralOffset(t, arms, r)" },
         { h: "吸い込み", p: "中心への加速度＋接線。", code: "vx += dx*0.004" },
@@ -953,7 +953,7 @@ DrawImage(RingPNG)  // expanding ring`,
       lead: "Showcase finale. Particles spiral into a void. Fire and light push out; dark pulls in—flip direction to flip the element.",
       deepEyebrow: "DEEP DIVE / DARK",
       deepH: "Dark is<br>a force inward",
-      deepLead: "Place dark.png on a spiral, then each frame add centripetal + tangential force. Rim purple sparks with additive blend, plus a ring shockwave. Dark core uses normal blend; purple fringe uses additive—same texture, two jobs.",
+      deepLead: "Place dark.png on a spiral, then each tick add centripetal + tangential force. Rim purple sparks with additive blend, plus a ring shockwave. Dark core uses normal blend; purple fringe uses additive—same texture, two jobs.",
       concepts: [
         { h: "Spiral seed", p: "Polar coords for spawn points.", code: "SpiralOffset(t, arms, r)" },
         { h: "Absorb", p: "Pull to center + swirl.", code: "vx += dx*0.004" },
@@ -968,17 +968,19 @@ DrawImage(RingPNG)  // expanding ring`,
         title: "Open a void vortex",
         p: "Tap CAST DARK (or Space). Watch particles wind into the core.",
       },
-      codeHead: { eyebrow: "IN THE SHOWCASE", h: "Spiral + centripetal pull", p: "Seed on a spiral, then yank toward the center each frame." },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "Spiral + centripetal pull", p: "Seed on a spiral, then yank toward the center each tick." },
       whys: [
         { eyebrow: "WHY INWARD?", h: "Element is direction", p: "Same particles: outward reads as light/fire, inward as dark." },
         { eyebrow: "WHY PURPLE?", h: "Black alone collapses", p: "A saturated fringe keeps the silhouette readable." },
         { eyebrow: "TRY NEXT", h: "Advanced track", p: "Next: dress up LEVEL 01–12 games and split play from fx." },
       ],
     },
-    code: `dx, dy := SpiralOffset(t, arms, 160, 4.5)
-// each frame: pull + swirl
-p.VX += (cx-p.X)*0.004 - (cy-p.Y)*0.0025
-p.VY += (cy-p.Y)*0.004 + (cx-p.X)*0.0025
+    code: `dx, dy := cx-p.X, cy-p.Y
+pull, swirl := 0.004, 0.0025 // tune independently
+pullX, pullY := dx*pull, dy*pull
+swirlX, swirlY := -dy*swirl, dx*swirl
+p.VX += pullX + swirlX
+p.VY += pullY + swirlY
 DrawImage(DarkPNG) // core normal, fringe additive`,
   },
 ].map((l) => ({ ...l, tier: l.tier || "basic" }));
@@ -1103,7 +1105,7 @@ function labParts(kind, lang) {
       return {
         controls:
           btn("data-lab-fx-ping", lang === "ja" ? "命中！（play+fx）" : "Hit! (play+fx)", "lab-button-primary") +
-          btn("data-lab-fx-tick", lang === "ja" ? "fx だけ 1F進める" : "Tick FX 1 frame") +
+          btn("data-lab-fx-tick", lang === "ja" ? "fx だけ 1 tick進める" : "Advance FX 1 tick") +
           R,
         board: `<div class="lab-board lab-fx-split" data-lab-board>
           <div class="lab-fx-col" data-lab-play><h4>${lang === "ja" ? "play（ルール・点数）" : "play (rules / score)"}</h4><ul data-lab-play-list></ul></div>
@@ -1143,7 +1145,7 @@ function labParts(kind, lang) {
       return {
         controls:
           btn("data-lab-breakout-hit", lang === "ja" ? "ボールを当てる" : "Hit a brick", "lab-button-primary") +
-          btn("data-lab-breakout-tick", lang === "ja" ? "破片だけ 1F進める" : "Tick shards 1 frame") +
+          btn("data-lab-breakout-tick", lang === "ja" ? "破片だけ 1 tick進める" : "Advance shards 1 tick") +
           R,
         board: `<div class="lab-board lab-fx-split" data-lab-board>
           <div class="lab-fx-col"><h4>${lang === "ja" ? "play（当たり判定あり）" : "play (collidable)"}</h4>
@@ -1160,7 +1162,7 @@ function labParts(kind, lang) {
       return {
         controls:
           btn("data-lab-snake-step", lang === "ja" ? "進んでエサを食べる" : "Move and eat", "lab-button-primary") +
-          btn("data-lab-snake-tick", lang === "ja" ? "キラキラだけ 1F進める" : "Tick sparkles 1 frame") + R,
+          btn("data-lab-snake-tick", lang === "ja" ? "キラキラだけ 1 tick進める" : "Advance sparkles 1 tick") + R,
         board: `<div class="lab-board lab-fx-split" data-lab-board>
           <div class="lab-fx-col"><h4>${lang === "ja" ? "play（体とエサ）" : "play (body and food)"}</h4>
             <p data-lab-snake-grid></p><ul data-lab-snake-body></ul></div>

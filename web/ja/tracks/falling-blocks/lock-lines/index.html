@@ -61,6 +61,9 @@
 
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / LOCK AND COMPACT</p><h2>動くピースを盤面へ写してから、満員の行を取り除く。</h2><p class="lesson-lead">接地した瞬間、落下中の2マスを<strong>boardへ固定</strong>します。次に各行を調べ、全部埋まった行は飛ばし、それ以外を下から順にコピーします。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>接地を調べる</h3><p>1マス下が床か使用中なら、もう落下できません。見た目だけでなく盤面配列へ書き込みます。</p><code>board[y][x] = true</code></article><article><span class="concept-number">2</span><h3>満員の行を探す</h3><p>左から右まで1個でも空きがあれば残します。8マスすべてtrueの行だけを消去数へ足します。</p><code>full = full &amp;&amp; board[y][x]</code></article><article><span class="concept-number">3</span><h3>残す行を下へ詰める</h3><p>readで読む行、writeで書く行を分けます。満員の行はコピーせず、残った行だけを下へ移します。</p><code>board[write] = board[read]</code></article></div>
 <div class="motion-lab" data-lab="line-clear" data-cleared="消した！" data-none="埋まっていない" aria-labelledby="lab-title-lock-lines">
@@ -112,6 +115,7 @@ for write &gt;= 0 { board[write] = emptyRow; write-- }</code></pre></div>
         </form>
       </div>
     </section>
+
 
 
 

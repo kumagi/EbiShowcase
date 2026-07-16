@@ -167,7 +167,7 @@ const diagrams = [
     nodes: [
       { id: "bpm", ja: "BPM\n120拍/分", en: "BPM\n120 beats/min" },
       { id: "seconds", ja: "60 ÷ BPM\n0.5秒/拍", en: "60 ÷ BPM\n0.5 sec/beat" },
-      { id: "frames", ja: "0.5 × 60\n30フレーム", en: "0.5 × 60\n30 frames" },
+      { id: "frames", ja: "0.5 × 60\n30 tick", en: "0.5 × 60\n30 ticks" },
       { id: "meter", ja: "メーター\n同期して動く", en: "meter\nmove in sync" },
     ],
     edges: [["bpm", "seconds"], ["seconds", "frames"], ["frames", "meter"]],
@@ -201,7 +201,7 @@ const diagrams = [
     title: { ja: "パイプを一定間隔で出す", en: "Spawn pipes on a rhythm" },
     description: { ja: "タイマー、すき間、スクロール、得点を一つの流れで見る", en: "Connect the timer, gap, scrolling, and score" },
     nodes: [
-      { id: "timer", ja: "spawnTimer\n毎フレーム減る", en: "spawnTimer\ndecrease each frame" },
+      { id: "timer", ja: "spawnTimer\n1 tickごとに減る", en: "spawnTimer\ndecrease each tick" },
       { id: "gap", ja: "すき間を決める\n乱数 + clamp", en: "choose the gap\nrandom + clamp" },
       { id: "spawn", ja: "上下のパイプ\n同時に追加", en: "top + bottom pipes\nadd together" },
       { id: "scroll", ja: "左へ流す\nx -= speed", en: "scroll left\nx -= speed" },
@@ -756,7 +756,7 @@ function spritesheetSvg(def, lang) {
 function jumpSvg(def, lang) {
   const title = def.title[lang]; const description = def.description[lang];
   const labels = lang === "ja" ? ["初速度", "重力", "なめらかな放物線"] : ["initial speed", "gravity", "smooth arc"];
-  const content = `<rect width="920" height="300" rx="28" fill="#f4f6ff"/><path d="M90 235 C240 235 220 55 460 55 S690 235 830 235" fill="none" stroke="#6a58e6" stroke-width="8"/><path d="M90 235 L830 235" stroke="#9aa6ce" stroke-width="3" stroke-dasharray="8 8"/>${multilineText([labels[0]], 115, 210, {size: 17, anchor: "start"})}${multilineText([labels[1]], 440, 78, {size: 17})}${multilineText([labels[2]], 700, 210, {size: 19, color: "#6a58e6"})}<text x="55" y="40" font-family="monospace" font-size="15" fill="#6a58e6">y += vy   /   vy += gravity</text>`;
+  const content = `<rect width="920" height="300" rx="28" fill="#f4f6ff"/><path d="M90 235 C240 235 220 55 460 55 S690 235 830 235" fill="none" stroke="#6a58e6" stroke-width="8"/><path d="M90 235 L830 235" stroke="#9aa6ce" stroke-width="3" stroke-dasharray="8 8"/>${multilineText([labels[0]], 115, 210, {size: 17, anchor: "start"})}${multilineText([labels[1]], 440, 78, {size: 17})}${multilineText([labels[2]], 700, 210, {size: 19, color: "#6a58e6"})}<text x="55" y="28" font-family="monospace" font-size="15" fill="#6a58e6"><tspan x="55" dy="0">y += vy</tspan><tspan x="55" dy="19">vy += gravity</tspan></text>`;
   return svgShell(920, 300, title, description, content);
 }
 

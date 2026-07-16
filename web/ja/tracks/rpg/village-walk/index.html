@@ -64,11 +64,14 @@
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>タイル衝突は移動先の地図番号が壁か調べること、向きは天次郎が上下左右のどちらを見ているか。map[y][x]を読み、通路なら座標と向きを更新します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if map[ny][nx]!=Wall { x,y,dir=nx,ny,inputDir }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>タイル衝突は移動先の地図文字が壁か調べること、向きは天次郎が上下左右のどちらを見ているか。rows[y][x]を読み、通路なら座標と向きを更新します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if rows[ny][nx]!='#' { x,y,dir=nx,ny,inputDir }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
+
+
+
 
 
 
@@ -213,6 +216,7 @@
         </form>
       </div>
     </section>
+
 
 
 

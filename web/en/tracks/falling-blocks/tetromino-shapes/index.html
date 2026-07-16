@@ -35,6 +35,9 @@
 
 
 
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RELATIVE COORDINATES</p><h2>A shape can move as “one origin plus four offsets.”</h2><p class="lesson-lead">Moving four screen positions separately could pull the cells apart. Instead give the piece one origin <code>(x, y)</code>. Each cell remembers only its <strong>offset</strong> from that origin. Move the origin one cell and all four move together.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Write a shape as data</h3><p>An O stores the origin, right, down, and down-right positions. Because these are numbers rather than a picture, every shape can share drawing and collision code.</p><code>{{0,0}, {1,0}, {0,1}, {1,1}}</code></article><article><span class="concept-number">2</span><h3>Add the origin</h3><p>A board cell is <code>x + offset.x</code>. To move left, decrease only the piece's origin x by one.</p><code>cellX := piece.x + offset.x</code></article><article><span class="concept-number">3</span><h3>Check all four cells</h3><p>If even one cell would leave the board, reject the move. Change the origin only after everyone fits.</p><code>for _, p := range shape.blocks { check(x+p.x) }</code></article></div>
@@ -90,6 +93,7 @@ for _, offset := range shape.blocks {
         </form>
       </div>
     </section>
+
 
 
 

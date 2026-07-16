@@ -30,6 +30,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ENEMY MODE MACHINE</p><h2>Change an enemy's destination to change its personality.</h2><p class="lesson-lead">The enemy owns mode and target. PATROL targets the next tile in a route, CHASE targets the current player, and SEARCH targets the last seen tile. Distance and <strong>line of sight</strong> switch modes.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>PATROL follows a stored route</h3><p>patrolRoute stores corner tiles in order. On arrival, increment index and wrap to zero at the end.</p><code>target = patrolRoute[patrolIndex]</code></article><article><span class="concept-number">2</span><h3>Straight sight starts CHASE</h3><p>The enemy sees when x or y matches, no # lies between, and distance is at most seven. Then player becomes the target.</p><code>if lineOfSight &amp;&amp; distance &lt;= 7 { mode = chase }</code></article><article><span class="concept-number">3</span><h3>Losing sight starts SEARCH</h3><p>Update lastSeen while visible. After a corner breaks sight, head there, then return to patrol on arrival or timeout.</p><code>target = lastSeen</code></article></div><section class="motion-lab" data-lab="junction-pick" data-chase="toward player" data-scatter="toward corner" aria-labelledby="lab-title-patrol-chase">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / AI MODE</p>
@@ -85,6 +88,7 @@ case search: target = lastSeen
         </form>
       </div>
     </section>
+
 
 
 

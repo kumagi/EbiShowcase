@@ -68,6 +68,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / CAMERA SCROLL</p>
@@ -85,7 +88,7 @@
         <article>
           <span class="concept-number">2</span>
           <h3>カメラの追従</h3>
-          <p>目標カメラ位置（プレイヤーより少し前）に対して、毎フレーム差の 8% だけ近づきます。一定速度でなく割合で動くので、自然な滑らかさが出ます。</p>
+          <p>目標カメラ位置（プレイヤーより少し前）に対して、tickごとに差の 8% だけ近づきます。一定速度でなく割合で動くので、自然な滑らかさが出ます。</p>
           <code>camera += (target-camera)*.08</code>
         </article>
         <article>
@@ -203,6 +206,7 @@ g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
         </form>
       </div>
     </section>
+
 
 
 

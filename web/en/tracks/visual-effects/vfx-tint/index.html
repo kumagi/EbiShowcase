@@ -115,7 +115,7 @@ alpha 0.5 = half visible</pre></div></section>
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>The hit flash</h3>
-          <p>Boost the factor for one frame on a hit and the sprite flashes white with impact.</p>
+          <p>Boost the factor for one tick on a hit and the sprite flashes white with impact.</p>
         </div>
         <pre><code>op := &amp;ebiten.DrawImageOptions{}
 // 赤く染める（色のかけ算）
@@ -139,7 +139,7 @@ screen.DrawImage(sprite, op)</code></pre>
         <article class="challenge">
           <p class="eyebrow">TRY NEXT</p>
           <h3>Make it blink</h3>
-          <p>Raise and lower the factor each frame for invincibility frames.</p>
+          <p>Raise and lower the factor each tick during invincibility.</p>
         </article>
       </div>
     </section>

@@ -53,6 +53,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / WAVES AND DIFFICULTY</p>
@@ -105,7 +108,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>Time → interval → speed → boss spawn</h3>
-          <p>Each frame, compute elapsed seconds, derive interval and speed, then apply them. Regular mobs stop spawning at 35 seconds. The boss is slower (0.65) but has 60 HP and a proportional health bar drawn with two rects.</p>
+          <p>Each tick, compute elapsed seconds, derive interval and speed, then apply them. Regular mobs stop spawning at 35 seconds. The boss is slower (0.65) but has 60 HP and a proportional health bar drawn with two rects.</p>
         </div>
         <pre><code>sec := g.frame / 60
 interval := max(10, 34-sec/2)
@@ -156,6 +159,7 @@ speed := 1.15 + float64(sec)*.028
         </form>
       </div>
     </section>
+
 
 
 

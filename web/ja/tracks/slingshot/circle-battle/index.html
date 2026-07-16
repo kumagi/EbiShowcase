@@ -61,8 +61,11 @@
 
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CIRCLE CONTACT</p><h2>中心の距離を測り、重なった分だけ外へ戻す。</h2><p class="lesson-lead">2つの円は、中心間の距離が<strong>半径の合計より短い</strong>と重なっています。判定したら真珠を円のふちまで押し戻し、十分な速さで初めてダメージを与えます。</p></div>
-<div class="concept-row"><article><span class="concept-number">1</span><h3>円の重なりを探す</h3><p>XとYの差から中心間の距離を計算します。半径20と30なら、距離50未満が接触です。</p><code>distance &lt; playerR + enemyR</code></article><article><span class="concept-number">2</span><h3>ふちまで押し戻す</h3><p>敵から真珠へ向かう方向を長さ1にそろえ、半径の合計だけ離れた位置へ置きます。</p><code>player = enemy + normal * minDistance</code></article><article><span class="concept-number">3</span><h3>1接触を1回にする</h3><p>命中後24フレームはcooldownを残します。重なりが続いてもHPを毎フレーム減らしません。</p><code>if cooldown == 0 { hp--; cooldown = 24 }</code></article></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>円の重なりを探す</h3><p>XとYの差から中心間の距離を計算します。半径20と30なら、距離50未満が接触です。</p><code>distance &lt; playerR + enemyR</code></article><article><span class="concept-number">2</span><h3>ふちまで押し戻す</h3><p>敵から真珠へ向かう方向を長さ1にそろえ、半径の合計だけ離れた位置へ置きます。</p><code>player = enemy + normal * minDistance</code></article><article><span class="concept-number">3</span><h3>1接触を1回にする</h3><p>命中後24フレームはcooldownを残します。重なりが続いてもHPをtickごとに減らしません。</p><code>if cooldown == 0 { hp--; cooldown = 24 }</code></article></div>
 <div class="motion-lab" data-lab="hit-test" data-hit="接触!" data-miss="離れている" data-wait="ボードを押してね"><div class="lab-copy"><p class="eyebrow">TRY IT / CENTER DISTANCE</p><h3>円の中心との距離を測ろう</h3><p>右のボードを押して、X差、Y差、距離を比べます。実ゲームも色ではなく数で接触を判断します。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-sample-hit data-go-focus="dxdy hypot hit" data-go-caption="押した点と中心の差 → 距離を求める → 半径以下ならヒット">当たる位置</button><button type="button" class="lab-button" data-lab-sample-miss data-go-focus="dxdy hypot miss" data-go-caption="押した点と中心の差 → 距離を求める → 遠いのではずれる">離れた位置</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board data-state="wait" role="img" aria-label="円の距離判定"><div class="lab-circle" aria-hidden="true"></div><div class="lab-tap" data-lab-tap hidden aria-hidden="true"></div></div><div class="lab-values"><div><span>dx</span><strong data-lab-dx>—</strong></div><div><span>dy</span><strong data-lab-dy>—</strong></div><div><span>距離</span><strong data-lab-dist>—</strong><small data-lab-result data-state="wait">ボードを押してね</small></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -81,7 +84,7 @@
         hp--; cooldown = 24
     }
 }</code></pre></div>
-<div class="why-grid"><article><p class="eyebrow">WHY PUSH OUT?</p><h3>円がくっつかない</h3><p>速度だけ反転しても重なりが残ると、次のフレームでも衝突します。</p></article><article><p class="eyebrow">WHY SPEED?</p><h3>そっと触るのと攻撃を分ける</h3><p>接触方向の速さを使えば、勢いをつける遊びになります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>大きい敵を重くする</h3><p>半径ごとに押し戻す割合を変えたら、手ごたえはどう変わる？</p></article></div></section>
+<div class="why-grid"><article><p class="eyebrow">WHY PUSH OUT?</p><h3>円がくっつかない</h3><p>速度だけ反転しても重なりが残ると、次のtickでも衝突します。</p></article><article><p class="eyebrow">WHY SPEED?</p><h3>そっと触るのと攻撃を分ける</h3><p>接触方向の速さを使えば、勢いをつける遊びになります。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>大きい敵を重くする</h3><p>半径ごとに押し戻す割合を変えたら、手ごたえはどう変わる？</p></article></div></section>
 <nav class="lesson-pager">
 <a href="../wall-bounce/" rel="prev">← STEP 02<strong>壁で跳ね返るボール</strong>
 </a>
@@ -111,6 +114,7 @@
         </form>
       </div>
     </section>
+
 
 
 

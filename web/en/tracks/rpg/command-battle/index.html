@@ -73,6 +73,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / STATE MACHINE</p>
@@ -89,14 +92,14 @@
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>Branch on state every frame</h3>
+          <h3>Branch on state every tick</h3>
           <p>A <code>switch g.state</code> at the top of <code>Update()</code> separates input handling (command state) from animation waiting (playerTurn / enemyTurn states).</p>
           <code>switch g.state { case command: ... }</code>
         </article>
         <article>
           <span class="concept-number">3</span>
           <h3>Use a timer for animation gaps</h3>
-          <p>After acting, set <code>timer = 35</code> and decrement each frame. When the timer hits zero, advance to the next state. Changing the number changes how long the pause lasts.</p>
+          <p>After acting, set <code>timer = 35</code> and decrement each tick. When the timer hits zero, advance to the next state. Changing the number changes how long the pause lasts.</p>
           <code>g.timer--; if g.timer &lt;= 0 { ... }</code>
         </article>
       </div>
@@ -146,7 +149,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>Damage lands when the motion starts</h3>
-          <p>Update() runs every frame. Apply the player's effect the moment a command is chosen; the <code>playerTurn</code> timer is follow-through only. Enemy damage also lands on the frame you enter <code>enemyTurn</code> (attack pose starts). Waiting until the timer hits zero to change HP desyncs numbers from the animation.</p>
+          <p>Update() runs every tick. Apply the player's effect the moment a command is chosen; the <code>playerTurn</code> timer is follow-through only. Enemy damage also lands on the frame you enter <code>enemyTurn</code> (attack pose starts). Waiting until the timer hits zero to change HP desyncs numbers from the animation.</p>
         </div>
         <pre><code><span>const</span> (
     command = iota // 0
@@ -225,6 +228,7 @@
         </form>
       </div>
     </section>
+
 
 
 

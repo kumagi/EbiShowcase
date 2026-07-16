@@ -33,9 +33,12 @@
 
 
 
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / STATIC AND MUTABLE LAYERS</p><h2>Separate “can I walk here?” from “is it still here?”</h2><p class="lesson-lead">Maze walls never change during this run, but a pellet disappears when collected. Instead of forcing both facts into one character, overlay equal-sized <code>walls</code> and <code>pellets</code> arrays. They share position <code>[y][x]</code> while fixed data and <strong>mutable state</strong> have different jobs.</p></div>
-<div class="concept-row"><article><span class="concept-number">1</span><h3>Parse text into two layers</h3><p>A <code>#</code> sets walls true and a <code>.</code> sets pellets true. Draw paints walls first, then only pellets that remain.</p><code>walls[y][x] = tile == '#'; pellets[y][x] = tile == '.'</code></article><article><span class="concept-number">2</span><h3>Collection changes pellets only</h3><p>When the player enters a tile, change a true pellet to false. Passing through again cannot score twice.</p><code>if pellets[y][x] { pellets[y][x] = false }</code></article><article><span class="concept-number">3</span><h3>Decrease remaining at the same time</h3><p>Do not recount the whole map every frame. Decrement remaining in the successful collection operation. Zero means stage clear immediately.</p><code>remaining--; if remaining == 0 { clear = true }</code></article></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>Parse text into two layers</h3><p>A <code>#</code> sets walls true and a <code>.</code> sets pellets true. Draw paints walls first, then only pellets that remain.</p><code>walls[y][x] = tile == '#'; pellets[y][x] = tile == '.'</code></article><article><span class="concept-number">2</span><h3>Collection changes pellets only</h3><p>When the player enters a tile, change a true pellet to false. Passing through again cannot score twice.</p><code>if pellets[y][x] { pellets[y][x] = false }</code></article><article><span class="concept-number">3</span><h3>Decrease remaining at the same time</h3><p>Do not recount the whole map every tick. Decrement remaining in the successful collection operation. Zero means stage clear immediately.</p><code>remaining--; if remaining == 0 { clear = true }</code></article></div>
 <div class="motion-lab" data-lab="pellet-count" data-ate="ate" data-clear="all clear!" aria-labelledby="lab-title-pellet-map">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / PELLET LAYER</p>
@@ -88,6 +91,7 @@ if remaining == 0 { clear = true }</code></pre></div>
         </form>
       </div>
     </section>
+
 
 
 

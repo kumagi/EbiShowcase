@@ -36,7 +36,7 @@
     <section class="hero">
       <div class="hero-copy"><p class="eyebrow">LEVEL 04 / ACCELERATION IN MOTION</p><h1>One tap makes<br><em>Tenjiroh fly.</em></h1><p class="lead">Tap to rise; do nothing and he falls. Play with that feeling first, then unpack why changing speed a little at a time creates a natural arc.</p><a class="cta" href="#play">PLAY FIRST <b>↓</b></a></div>
       <div class="code-card" aria-hidden="true"><div class="dots">● ● ●</div><pre><span>func</span> (g *Game) Update() error {
-  <i>// every frame, keep it simple.</i>
+  <i>// every tick, keep it simple.</i>
   g.bird.velocity += gravity
   g.bird.y += g.bird.velocity
   <span>return</span> nil
@@ -140,7 +140,7 @@ const (
 	screenWidth  = 480
 	screenHeight = 720
 	groundY      = 650
-	gravity      = 0.42 // 毎フレーム、速さに足す量（加速度）
+	gravity      = 0.42 // 1 tickごとに、速さに足す量（加速度）
 	flapSpeed    = -7.4 // はばたいたときの上向きの速さ
 	birdX        = 128.0
 	birdRadius   = 15.0
@@ -390,6 +390,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

@@ -62,6 +62,9 @@
 
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / OPPOSITE VECTOR</p><h2>引いた矢印を、マイナスでひっくり返す。</h2><p class="lesson-lead">真珠の中心から指までの差を<strong>ドラッグベクトル</strong>として保存します。離した瞬間、XとYの両方にマイナスを付けると、引っぱった向きと正反対の発射速度になります。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>2点の差を取る</h3><p>指の座標から真珠の座標を引きます。右へ引けばdragXは正、下へ引けばdragYは正です。</p><code>dragX = pointerX - ballX</code></article><article><span class="concept-number">2</span><h3>長すぎる引きを制限</h3><p>長さが160を超えたら、<code>160/length</code> を掛けて同じ向きのまま縮めます（長さの比でスケール）。例: 長さ320なら半分にして最大160にそろえます。</p><code>dx *= 160 / length</code></article><article><span class="concept-number">3</span><h3>反対向きへ発射</h3><p>指を離した時だけ、dragXとdragYをマイナスにして速度へ変えます。下へ引いた真珠は上へ飛びます。</p><code>velocity = -drag * power</code></article></div>
 <div class="motion-lab" data-lab="sling-drag"><div class="lab-copy"><p class="eyebrow">TRY IT / VECTOR LENGTH</p><h3>向きの組み合わせで長さはどう変わる？</h3><p>横だけのベクトルと斜めのベクトルを比べます。ゲームでは長さを測って最大値をそろえ、引きすぎを防ぎます。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-cardinal data-go-focus="drag len">横へ引く</button><button type="button" class="lab-button" data-lab-diag data-go-focus="drag len clamp">斜めへ引く</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div></div><div class="lab-visual"><div class="lab-values"><div><span>そのままの長さ</span><strong data-lab-raw>—</strong></div><div><span>そろえた長さ</span><strong data-lab-norm>—</strong></div></div></div>
@@ -73,7 +76,7 @@
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>
-<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>離した1回だけ速度を決める</h3><p>引いている間は照準を更新し、リリースされたフレームで速度へ変換します。</p></div><pre><code>dragX := pointerX - ballX
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>離した1回だけ速度を決める</h3><p>引いている間は照準を更新し、リリースを検出したtickで速度へ変換します。</p></div><pre><code>dragX := pointerX - ballX
 dragY := pointerY - ballY
 if released {
     vx = -dragX * 0.092
@@ -110,6 +113,7 @@ if released {
         </form>
       </div>
     </section>
+
 
 
 

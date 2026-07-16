@@ -32,7 +32,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;overflow-x:hidden;-webkit-text-size-adjust:100%}
 body{margin:0;min-width:0;overflow-x:hidden;background:var(--paper);color:var(--ink);font-family:var(--font-round);line-height:1.6}
-button,a{-webkit-tap-highlight-color:transparent}
+button,a,[role="button"],input[type="button"],input[type="submit"]{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 ::selection{background:rgba(141,123,255,.3)}
 
 /* ---------- Navigation ---------- */
@@ -203,6 +203,11 @@ footer p{color:#67719c}
 .lab-board{position:relative;min-height:530px;overflow:hidden;background:linear-gradient(180deg,#1a2a5e,#101736);border-right:1px solid var(--space-line);cursor:crosshair;touch-action:none}
 .lab-board[data-state="hit"]{box-shadow:inset 0 0 0 3px rgba(46,230,200,.6)}
 .lab-board[data-state="miss"]{box-shadow:inset 0 0 0 3px rgba(255,122,107,.6)}
+.camera-world-board{background:linear-gradient(180deg,#1a2a5e 0 62%,#101736 62%)}
+.camera-world-ruler{position:absolute;left:0;bottom:18%;width:200%;height:44px;border-top:2px solid rgba(255,255,255,.65);transition:transform .18s ease;will-change:transform}
+.camera-world-ruler::before{content:"WORLD X";position:absolute;left:12px;top:14px;color:#70f0db;font:700 11px/1 var(--font-mono);letter-spacing:.12em}
+.camera-world-ruler span{position:absolute;top:-25px;translate:-50% 0;color:#fff;font:700 12px/1 var(--font-mono)}
+.camera-world-ruler span::after{content:"";position:absolute;left:50%;top:18px;width:1px;height:25px;background:rgba(255,255,255,.55)}
 .lab-circle{position:absolute;left:50%;top:50%;width:140px;height:140px;margin:-70px 0 0 -70px;border-radius:50%;background:rgba(46,230,200,.92);box-shadow:0 0 0 14px rgba(46,230,200,.18),0 0 40px rgba(46,230,200,.4)}
 .lab-tap{position:absolute;z-index:2;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:var(--orange);border:2px solid white;transform:translate(0,0)}
 .lab-result[data-state="hit"]{color:var(--cyan)}

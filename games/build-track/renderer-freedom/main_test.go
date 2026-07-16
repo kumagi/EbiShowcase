@@ -24,3 +24,18 @@ func TestBlockedCellsIncludeOuterWall(t *testing.T) {
 		}
 	}
 }
+
+func TestCompletedMoveDoesNotDrawPreviousCellDuringPause(t *testing.T) {
+	g := newGame()
+	g.pause = 0
+	g.beginMove(move{1, 0})
+	for g.moveFrame > 0 {
+		if err := g.Update(); err != nil {
+			t.Fatal(err)
+		}
+	}
+	px, py, _, _ := g.positions()
+	if px != float64(g.player.x) || py != float64(g.player.y) {
+		t.Fatalf("draw position after move = (%.1f, %.1f), state = %#v", px, py, g.player)
+	}
+}

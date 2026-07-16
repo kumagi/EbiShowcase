@@ -67,7 +67,7 @@ for i := range enemies {
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / LISTS BY KIND</p>
         <h2>Why doesn't the code grow<br>when bullets multiply?</h2>
-        <p class="lesson-lead"><strong>Lists by kind</strong> is the answer. Put objects of the same kind in a slice and run the same loop over all of them every frame. One bullet or a hundred bullets, the code is identical. When an object is gone, remove it safely by iterating backward.</p>
+        <p class="lesson-lead"><strong>Lists by kind</strong> is the answer. Put objects of the same kind in a slice and run the same loop over all of them every tick. One bullet or a hundred bullets, the code is identical. When an object is gone, remove it safely by iterating backward.</p>
       </div>
 
       <div class="concept-row">
@@ -82,7 +82,7 @@ for i := range enemies {
 <p class="eyebrow">TRY IT / BULLET LIST</p>
 <h3 id="lab-title-space-shooter">Spawn, move, cull bullets</h3>
 <p>Fire appends to a slice; Step moves every bullet and drops off-screen ones. Separate lists per kind keep updates simple.</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fire data-go-focus="fire" data-go-caption="Append a shot">Fire</button><button type="button" class="lab-button" data-lab-step data-go-focus="fly cull" data-go-caption="Move shots → Drop off-screen shots">Advance 1 frame</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fire data-go-focus="fire" data-go-caption="Append a shot">Fire</button><button type="button" class="lab-button" data-lab-step data-go-focus="fly cull" data-go-caption="Move shots → Drop off-screen shots">Advance 1 tick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
 <p class="lab-hint">Real games loop append → move → filter the same way.</p>
 </div>
 <div class="lab-visual">
@@ -514,6 +514,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

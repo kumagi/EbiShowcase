@@ -68,7 +68,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>X collision</h3><p>After moving horizontally, if the player overlaps a platform, push them back to the edge in the direction they came from. Y stays untouched.</p><code>player.x = p.x - player.w</code></article>
         <article><span class="concept-number">2</span><h3>Y collision</h3><p>After moving vertically, check again. Landing from above sets <code>onGround = true</code> and zeros vertical velocity. Hitting a ceiling from below also zeros velocity.</p><code>onGround = true</code></article>
-        <article><span class="concept-number">3</span><h3>Smooth camera</h3><p>Every frame, the camera edges a little closer to its target — specifically, <strong>about 9% of the remaining distance</strong>. Jumping straight to 100% would snap the camera onto every tiny wiggle the player makes, which looks jerky and dizzying. Closing the gap gradually instead keeps the motion smooth and easy on the eyes. This gradual catch-up is called "lerp" (linear interpolation), or easing.</p><code>camera += (target - camera) * .09</code></article>
+        <article><span class="concept-number">3</span><h3>Smooth camera</h3><p>Every tick, the camera edges a little closer to its target — specifically, <strong>about 9% of the remaining distance</strong>. Jumping straight to 100% would snap the camera onto every tiny wiggle the player makes, which looks jerky and dizzying. Closing the gap gradually instead keeps the motion smooth and easy on the eyes. This gradual catch-up is called "lerp" (linear interpolation), or easing.</p><code>camera += (target - camera) * .09</code></article>
       </div>
 
 
@@ -76,7 +76,7 @@
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / LAB</p>
           <h3 id="lab-title-platformer">Camera eases toward the player</h3>
-          <p>Move the player, then ease the camera. Screen X = world − camera.</p>
+          <p>The ruler below shows <strong>world coordinates</strong>, which never move inside the stage. As the camera moves right, the ruler slides left while the player's world X stays unchanged. Screen X = world − camera.</p>
           <div class="lab-controls">
             <button type="button" class="lab-button" data-lab-left data-go-focus="target">Left</button>
             <button type="button" class="lab-button lab-button-primary" data-lab-right data-go-focus="target">Right</button>
@@ -89,7 +89,7 @@
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
         </div>
         <div class="lab-visual">
-          <div class="lab-board" role="img" aria-label="lab"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-actor style="top:50%"></div></div></div>
+          <div class="lab-board camera-world-board" role="img" aria-label="World-coordinate ruler sliding left as the camera moves"><div class="camera-world-ruler" data-camera-ruler aria-hidden="true"><span style="left:0%">0</span><span style="left:8.333%">80</span><span style="left:16.667%">160</span><span style="left:25%">240</span><span style="left:33.333%">320</span><span style="left:41.667%">400</span><span style="left:50%">480</span></div><div class="lab-actor" data-lab-actor style="top:50%"></div></div>
           <div class="lab-values" aria-live="polite">
             <div><span>camera</span><strong data-lab-cam>0</strong><small></small></div>
             <div><span>player</span><strong data-lab-player>200</strong><small></small></div>
@@ -108,8 +108,8 @@
 
       <div class="formula">
         <p class="eyebrow">THE CAMERA LERP</p>
-        <div class="formula-lines"><code>target = player.x - width * 0.38</code><span>then every frame</span><code>camera += (target - camera) * 0.09</code></div>
-        <p>The target keeps the player at 38% of the screen width. Each frame the camera moves 9% closer. Big gaps close quickly; small gaps close gently, giving a natural feel. This follow rate is easing: each frame closes a fraction of the gap. Using 100% instead of 9% would snap the camera to the target every frame, reacting jarringly to every small player movement.</p>
+        <div class="formula-lines"><code>target = player.x - width * 0.38</code><span>then every tick</span><code>camera += (target - camera) * 0.09</code></div>
+        <p>The target keeps the player at 38% of the screen width. Each tick the camera moves 9% closer. Big gaps close quickly; small gaps close gently, giving a natural feel. This follow rate is easing: each tick closes a fraction of the gap. Using 100% instead of 9% would snap the camera to the target every tick, reacting jarringly to every small player movement.</p>
       </div>
 
       <div class="code-lesson">
@@ -460,6 +460,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

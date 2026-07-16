@@ -30,6 +30,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / MOVE DATA AND ORDER</p><h2>「技を選ぶ」と「効果を起こす」の間に、順番を作る。</h2><p class="lesson-lead">技は名前だけではなく、威力power、命中accuracy、残り回数uses、先に動きやすいpriorityを持つデータです。両者の選択を<strong>actionキュー</strong>へ入れ、並べてから一つずつ取り出すと、表示とHP変化が混ざりません。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>技をデータで比べる</h3><p>REEF BURSTは威力42でも命中70%、JET PINCHは威力18で必ず命中。回数も違うため、いつ使うかが選択になります。</p><code>moveData{power:42, accuracy:70, maxUses:3}</code></article><article><span class="concept-number">2</span><h3>2行動を順番へ並べる</h3><p>priorityが大きい技を先へ。同じなら素早さ12と10を比べます。SHELL GUARDはpriority 3なので攻撃前に守れます。</p><code>sort.SliceStable(actions, byPriorityThenSpeed)</code></article><article><span class="concept-number">3</span><h3>命中してから効果を出す</h3><p>0〜99の乱数がaccuracy未満なら命中。攻撃はHPを減らし、ガードは次のダメージを半分、回復はHPを戻します。</p><code>hit := rng.Intn(100) &lt; move.accuracy</code></article></div><div class="motion-lab" data-lab="turn" data-states="技選択,順番作成,1番目の行動,2番目の行動,勝敗確認" aria-labelledby="move-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / ACTION QUEUE</p><h3 id="move-lab-title">ターンを一段階ずつ進めよう</h3><p>技を選んだ直後にHPを変えません。順番を作り、1番目、2番目、勝敗の順に進めます。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="next act">次の段階</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board role="img" aria-label="技選択から勝敗確認までの順番"></div><div class="lab-values"><div><span>現在</span><strong data-lab-state>技選択</strong></div><div><span>データ</span><strong>action queue</strong></div><div><span>進め方</span><strong>1つずつ</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -71,6 +74,7 @@ func resolveNext() {
         </form>
       </div>
     </section>
+
 
 
 

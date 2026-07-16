@@ -61,6 +61,9 @@
 
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / RECIPE TRANSACTION</p><h2>Check ingredients, consume them together, then add the output.</h2><p class="lesson-lead">Identical materials are stacked as a <strong>kind and quantity pair</strong>. A recipe is a table of required counts. Check every count first; only a successful match subtracts ingredients and creates the result.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Add gathering to stacks</h3><p>Picking up two wood adds two to wood count instead of creating two separate objects. Display and saving stay small.</p><code>inventory[Wood] += 2</code></article><article><span class="concept-number">2</span><h3>Match the whole recipe</h3><p>Compare required wood, stone, fiber, and rope. If even one kind is short, consume nothing.</p><code>if haveWood &amp;&amp; haveStone &amp;&amp; haveRope</code></article><article><span class="concept-number">3</span><h3>Pair consumption and output</h3><p>After the check passes, subtract every cost and add the pickaxe or other output. Never stop halfway through.</p><code>wood -= 2; stone -= 2; pickaxe = true</code></article></div>
 <div class="motion-lab" data-lab="craft-recipe" data-need="need materials" data-made="crafted bow" aria-labelledby="lab-title-inventory-crafting">
@@ -119,6 +122,7 @@ addOutput(r.name)</code></pre></div>
         </form>
       </div>
     </section>
+
 
 
 

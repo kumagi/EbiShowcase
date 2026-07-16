@@ -34,7 +34,7 @@
     <section class="overview-hero">
       <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
       <h1>自動砲台サバイバル</h1>
-      <p>プレイヤーは動くだけ。砲台が28フレームごとに最も近い敵を探して自動で弾を放ちます。30体倒すとクリアです。</p>
+      <p>プレイヤーは動くだけ。砲台が28tickごとに最も近い敵を探して自動で弾を放ちます。30体倒すとクリアです。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>最近傍探索とクールダウン発射</strong></div>
       <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01</a>と同じく、位置や得点などゲームの中身はUpdateで進めます。Drawは中身を変えず、画面への見せ方だけを担当します。</p>
     </section>
@@ -54,6 +54,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / AUTO AIMING</p>
@@ -63,7 +66,7 @@
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>最近傍探索</h3><p>ボタン1回で「次の発射」まで進めます。毎回いちばん近い敵（距離が小さい B）へ PEW が出ます。</p><code>if d &lt; dist { best = i }</code></article>
-        <article><span class="concept-number">2</span><h3>クールダウン</h3><p>毎フレーム発射すると多すぎます。<code>frame%28==0</code> で28フレームに1回だけ照準・発射します。間隔を変えると連射速度が変わります。</p><code>if g.frame%28 == 0</code></article>
+        <article><span class="concept-number">2</span><h3>クールダウン</h3><p>tickごとに発射すると多すぎます。<code>frame%28==0</code> で28 tickに1回だけ照準・発射します。間隔を変えると連射速度が変わります。</p><code>if g.frame%28 == 0</code></article>
         <article><span class="concept-number">3</span><h3>弾の速度計算</h3><p>「敵の位置 − 自機の位置」を距離で割って正規化し、速さ7を掛けます。これで敵に向かうちょうど良い速度ベクトルになります。</p><code>vx = (e.x - g.px) / dist * 7</code></article>
       </div>
 
@@ -72,12 +75,12 @@
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / AIM + COOLDOWN</p>
           <h3 id="lab-title-auto-turret">一番近い敵へ、クールダウンで撃つ</h3>
-          <p>毎フレームいちばん近い敵を選び、クールダウン間隔でのみ弾を出します。</p>
+          <p>tickごとにいちばん近い敵を選び、クールダウン間隔でのみ弾を出します。</p>
           <div class="lab-controls">
             <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="scan cd shot">次の発射まで進める</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
-          <p class="lab-hint">本物は毎フレーム距離を測り、28フレームごとに弾を足します。ラボは体感しやすい8フレームです。</p>
+          <p class="lab-hint">本物はtickごとに距離を測り、28tickごとに弾を足します。ラボは体感しやすい8フレームです。</p>
         </div>
         <div class="lab-visual">
           <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
@@ -106,7 +109,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>探す → 待つ → 狙って撃つ</h3>
-          <p>28フレームごとに最近傍ループを走らせ、その敵への正規化ベクトルに速さを掛けた弾をスライスに追加します。弾は毎フレーム進み、画面外か敵に当たれば削除します。</p>
+          <p>28tickごとに最近傍ループを走らせ、その敵への正規化ベクトルに速さを掛けた弾をスライスに追加します。弾はtickごとに進み、画面外か敵に当たれば削除します。</p>
         </div>
         <pre><code><span>if</span> g.frame%28 == 0 &amp;&amp; len(g.enemies) &gt; 0 {
     best, dist := 0, math.MaxFloat64
@@ -155,6 +158,7 @@
         </form>
       </div>
     </section>
+
 
 
 

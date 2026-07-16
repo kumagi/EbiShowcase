@@ -30,6 +30,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ROTATE THEN TEST</p><h2>回してから、「ここに置ける？」を調べる。</h2><p class="lesson-lead">ブロックの中心を原点(0, 0)と考えると、マス(x, y)を右へ90度回した場所は(-y, x)です。ただし回転後に壁へめり込むことがあります。そこで<strong>ずらす候補</strong>を小さい順に試します。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>4マスを同じ式で回す</h3><p>T字もL字も「中心から何マス離れたか」の4座標です。それぞれへ同じ変換を使います。</p><code>rotated = point{-p.y, p.x}</code></article><article><span class="concept-number">2</span><h3>候補を順番に試す</h3><p>まず移動なし。だめなら左1、右1、左2、右2、上1。最初に衝突しない候補を採用します。</p><code>kicks := []point{{0,0}, {-1,0}, {1,0}}</code></article><article><span class="concept-number">3</span><h3>全部だめなら回さない</h3><p>候補を全部調べても壁・床・積んだマスに重なるなら、位置も向きも元のままにします。</p><code>if noCandidate { return }</code></article></div><div class="motion-lab" data-lab="kick-try" data-kicks="0,0;1,0;-1,0;0,-1" data-ok="kick ({dx},{dy}) OK" data-blocked="kick ({dx},{dy}) 壁" data-fail="全部失敗→キャンセル" aria-labelledby="lab-title-rotation-kicks">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / WALL KICKS</p>
@@ -81,6 +84,7 @@ for _, kick := range kickTests {
         </form>
       </div>
     </section>
+
 
 
 

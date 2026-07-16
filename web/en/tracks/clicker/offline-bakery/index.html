@@ -55,6 +55,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / SAVE &amp; OFFLINE</p>
@@ -65,7 +68,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>localStorage via syscall/js</h3><p>WebAssembly code can call browser APIs through Go's <code>syscall/js</code> package. <code>js.Global().Get("localStorage")</code> returns the storage object, and <code>Call("setItem", key, value)</code> / <code>Call("getItem", key)</code> read and write string values.</p><code>s.Call("setItem", prefix+"sweets", value)</code></article>
         <article><span class="concept-number">2</span><h3>Offline elapsed time</h3><p>The saved timestamp is a Unix second count. Subtracting it from <code>time.Now().Unix()</code> gives the seconds the page was closed. That duration is capped at 8 hours (28 800 s) to prevent returning after weeks and instantly winning.</p><code>away := math.Min(8*3600, float64(now-stamp))</code></article>
-        <article><span class="concept-number">3</span><h3>Autosave every 120 frames</h3><p>Saving on every frame would hammer localStorage unnecessarily. A frame counter modulo 120 triggers a save roughly every two seconds — frequent enough that a browser crash loses little progress, rare enough to be cheap.</p><code>if g.frame%120 == 0 { g.save() }</code></article>
+        <article><span class="concept-number">3</span><h3>Autosave every 120 frames</h3><p>Saving on every tick would hammer localStorage unnecessarily. A frame counter modulo 120 triggers a save roughly every two seconds — frequent enough that a browser crash loses little progress, rare enough to be cheap.</p><code>if g.frame%120 == 0 { g.save() }</code></article>
       </div>
 
 
@@ -99,7 +102,7 @@
       <div class="formula">
         <p class="eyebrow">THE OFFLINE RULE</p>
         <div class="formula-lines"><code>offline = min(away_seconds, 28800) × rate()</code><span>on load</span><code>g.sweets += offline</code></div>
-        <p><code>rate()</code> returns ovens × 5 sweets per second. The offline bonus is a single multiplication applied once at startup, not spread across frames.</p>
+        <p><code>rate()</code> returns ovens × 5 sweets per second. The offline bonus is a single multiplication applied once at startup, not spread across ticks.</p>
       </div>
 
       <div class="code-lesson">
@@ -158,6 +161,7 @@
         </form>
       </div>
     </section>
+
 
 
 

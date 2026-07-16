@@ -33,6 +33,9 @@
 
 
 
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SEEDED VALUE NOISE</p><h2>大きな世界を保存せず、数字と座標から作り直す。</h2><p class="lesson-lead">マスごとに完全にばらばらな高さを選ぶと、針のような地面になります。このゲームはseedと座標から同じ乱数を作り、となりの値との間をなめらかにつなぐ<strong>値ノイズ</strong>を使います。高さが決まったら、深さで草・土・石へ分けます。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>seedと座標を混ぜる</h3><p><code>hash(seed, x, y)</code>は、同じ3つの数字なら毎回同じ値を返します。実行する順番に左右されないので、遠い場所も直接作れます。</p><code>n := hash(seed, x, y)</code></article><article><span class="concept-number">2</span><h3>点の間をなめらかにつなぐ</h3><p>8列ごとの乱数を目印にし、その間を<code>smooth</code>で少しずつ変えます。高さが急に何段も飛びにくくなります。</p><code>height := 3 + int(valueNoise(seed, x/8)*6)</code></article><article><span class="concept-number">3</span><h3>表面からの深さで地層</h3><p>高さと同じyは草、その下3マスは土、さらに下は石です。地下ノイズが0.70より大きい石だけを空へ戻すと空洞になります。</p><code>if y &gt; surface+3 { tile = Stone }</code></article></div>
@@ -87,6 +90,7 @@ for y := surfaceY; y &lt; worldH; y++ {
         </form>
       </div>
     </section>
+
 
 
 

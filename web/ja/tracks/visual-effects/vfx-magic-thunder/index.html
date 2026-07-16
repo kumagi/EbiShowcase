@@ -83,8 +83,8 @@
         <article>
           <span class="concept-number">2</span>
           <h3>枝分かれ</h3>
-          <p>depth 付きで再帰生成。</p>
-          <code>addBolt(..., depth+1)</code>
+          <p>depth は枝の世代。呼ぶたび1増やし、2で止めて無限再帰を防ぐ。</p>
+          <code>if depth &lt; 2 { addBolt(..., depth+1) }</code>
         </article>
         <article>
           <span class="concept-number">3</span>

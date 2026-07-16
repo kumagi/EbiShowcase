@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="description" content="A bomb is game data with a position and time remaining. Decrease it every frame and switch to the blast state at zero. Play the demo, read a short Go example, c">
+  <meta name="description" content="A bomb is game data with a position and time remaining. Decrease it every tick and switch to the blast state at zero. Play the demo, read a short Go example, c">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Ebi Showcase – Place a Timed Bomb</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – Place a Timed Bomb">
-    <meta property="og:description" content="A bomb is game data with a position and time remaining. Decrease it every frame and switch to the blast state at zero. Play the demo, read a short Go example, c">
+    <meta property="og:description" content="A bomb is game data with a position and time remaining. Decrease it every tick and switch to the blast state at zero. Play the demo, read a short Go example, c">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/bomb-maze/timed-bomb/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--bomb-maze--timed-bomb.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – Place a Timed Bomb">
-    <meta name="twitter:description" content="A bomb is game data with a position and time remaining. Decrease it every frame and switch to the blast state at zero. Play the demo, read a short Go example, c">
+    <meta name="twitter:description" content="A bomb is game data with a position and time remaining. Decrease it every tick and switch to the blast state at zero. Play the demo, read a short Go example, c">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--bomb-maze--timed-bomb.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Place a Timed Bomb">
     <!-- ogp:end -->
@@ -34,11 +34,11 @@
     <section class="overview-hero">
       <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
       <h1>Place a Timed Bomb</h1>
-      <p>A bomb is game data with a position and time remaining. Decrease it every frame and switch to the blast state at zero.</p>
+      <p>A bomb is game data with a position and time remaining. Decrease it every tick and switch to the blast state at zero.</p>
       <div class="overview-concept"><small>In this step</small><strong>AN OBJECT CHANGES WITH TIME</strong></div>
       <p class="cast-note">The frame math sits in the same <a href="../../../games/tap-target/#basics">LEVEL 01 state boundary</a>.</p>
     </section>
-<p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
+<p class="curriculum-bridge">This continues the shared basics. If the game loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
 
 
 <section class="play lesson-play" id="play">
@@ -51,6 +51,9 @@
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_bomb-chain.svg" alt="Bomb chain reaction" loading="lazy" decoding="async"><figcaption>A visual map of Bomb chain reaction. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
+
+
+
 
 
 
@@ -87,7 +90,7 @@
 </div>
 </div>
 
-      <div class="formula"><p class="eyebrow">THE FUSE STATE MACHINE</p><div class="formula-lines"><code>timer-- each frame</code><span>then</span><code>timer<=0 → blasting → remove</code></div><p>Not a drawn circle—position, timer, and state in one struct.</p></div>
+      <div class="formula"><p class="eyebrow">THE FUSE STATE MACHINE</p><div class="formula-lines"><code>timer-- each tick</code><span>then</span><code>timer<=0 → blasting → remove</code></div><p>Not a drawn circle—position, timer, and state in one struct.</p></div>
 
       <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>One timer, two meanings</h3><p>While armed it counts down to boom. At 0, set blasting and <strong>reuse the same field</strong> as blast lifetime. One variable, two jobs — watch the flag.</p></div><pre><code>for i := range bombs {
     bombs[i].timer--
@@ -124,6 +127,7 @@
         </form>
       </div>
     </section>
+
 
 
 

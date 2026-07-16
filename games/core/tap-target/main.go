@@ -85,7 +85,7 @@ func (g *game) Update() error {
 		return nil
 	}
 
-	// タイマーを1フレーム減らす
+	// タイマーを1 tick減らす
 	g.framesLeft--
 
 	// 押した瞬間だけ、丸との距離を調べる

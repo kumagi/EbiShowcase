@@ -38,7 +38,7 @@
       <div class="overview-concept"><small>In this step</small><strong>Danger map & safe path</strong></div>
       <p class="cast-note">The frame math sits in the same <a href="../../../games/tap-target/#basics">LEVEL 01 state boundary</a>.</p>
     </section>
-<p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
+<p class="curriculum-bridge">This continues the shared basics. If the game loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
 
 
 <section class="play lesson-play" id="play">
@@ -51,6 +51,9 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
+
+
+
 
 
 
@@ -72,7 +75,7 @@
 <h3 id="lab-title-escape-ai">Compare arrival time to the fuse</h3>
 <p>AI checks not only open cells, but whether the fuse outlasts the arrival. ETA+margin < fuse means the route is allowed.</p>
 <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-tick data-go-focus="eta ok">Advance time</button><button type="button" class="lab-button" data-lab-far data-go-focus="eta ok">Take a longer path</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div>
-<p class="lab-hint">Safe paths go deadly as time passes—replan every frame.</p>
+<p class="lab-hint">Safe paths go deadly as time passes—replan every tick.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
@@ -124,6 +127,7 @@ if safe {
         </form>
       </div>
     </section>
+
 
 
 

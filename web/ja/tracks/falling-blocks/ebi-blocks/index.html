@@ -30,11 +30,18 @@
 <!-- diagram-lesson:end -->
 
 
-<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SYSTEM PIPELINE</p><h2>たくさんの仕組みを、「今すること」の順番でつなぐ。</h2><p class="lesson-lead">完成ゲームは大きな一枚のルールではありません。入力、移動、衝突、固定、ライン検査、得点、次の形という<strong>小さな仕事の列</strong>です。一つのpieceとboardを順番に受け渡すと、機能が増えても迷子になりません。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>落下中の形を操作</h3><p>activeには種類、向き、位置があります。移動や回転の候補がboardと重ならないときだけ値を更新します。</p><code>if !collides(next) { active = next }</code></article><article><span class="concept-number">2</span><h3>動けなければ盤面へ固定</h3><p>下へ進めなくなった4マスをboardへ書き、完成行を消し、得点とレベルを更新します。この順番が大切です。</p><code>lock(); clearLines(); addScore()</code></article><article><span class="concept-number">3</span><h3>次の形を準備</h3><p>7バッグからqueueを補充して次を取り出します。HOLDは落下中1回だけ、ゴーストは衝突直前まで位置を試します。</p><code>spawn(takeNext())</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="input,fall,lock,clear,spawn" data-loop="次フレーム" aria-labelledby="lab-title-ebi-blocks">
+
+
+
+
+
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SYSTEM PIPELINE</p><h2>たくさんの仕組みを、「今すること」の順番でつなぐ。</h2><p class="lesson-lead">完成ゲームは大きな一枚のルールではありません。入力、移動、衝突、固定、ライン検査、得点、次の形という<strong>小さな仕事の列</strong>です。一つのpieceとboardを順番に受け渡すと、機能が増えても迷子になりません。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>落下中の形を操作</h3><p>activeには種類、向き、位置があります。移動や回転の候補がboardと重ならないときだけ値を更新します。</p><code>if !collides(next) { active = next }</code></article><article><span class="concept-number">2</span><h3>動けなければ盤面へ固定</h3><p>下へ進めなくなった4マスをboardへ書き、完成行を消し、得点とレベルを更新します。この順番が大切です。</p><code>lock(); clearLines(); addScore()</code></article><article><span class="concept-number">3</span><h3>次の形を準備</h3><p>7バッグからqueueを補充して次を取り出します。HOLDは落下中1回だけ、ゴーストは衝突直前まで位置を試します。</p><code>spawn(takeNext())</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="input,fall,lock,clear,spawn" data-loop="次のtick" aria-labelledby="lab-title-ebi-blocks">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / FRAME JOBS</p>
 <h3 id="lab-title-ebi-blocks">1入力が通る仕事を順番に並べる</h3>
-<p>落下ブロック全体はパイプです。入力→移動→固定→ライン消し→次ピース。同じフレームで順番を守るとバグが減ります。</p>
+<p>落下ブロック全体はパイプです。入力→移動→固定→ライン消し→次ピース。同じtickで順番を守るとバグが減ります。</p>
 <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">次の工程</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>フレーム先頭へ</button></div>
 <p class="lab-hint">ゴースト表示は描画専用で、このパイプの外に置けます。</p>
 </div>
@@ -44,9 +51,9 @@
 </div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each tick:</span>
 <span data-go-line="step">input → sim → resolve → draw</span>
-<span data-go-line="loop">// then next frame</span></pre>
+<span data-go-line="loop">// then next tick</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">ORDERED PIPE</p><div class="formula-lines"><code>do jobs in fixed order</code><span>つぎに</span><code>never skip ahead</code></div><p>消す前に固定、固定前に移動。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>固定を境目に一連の処理を完了する</h3><p>activeの4マスを盤面へ移した後は、行・得点・次の形までまとめて処理し、それから入力へ戻ります。</p></div><pre><code>func (g *game) lock() {
@@ -82,6 +89,7 @@
         </form>
       </div>
     </section>
+
 
 
 

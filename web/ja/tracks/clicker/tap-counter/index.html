@@ -54,17 +54,20 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / INPUT</p>
         <h2>なぜタップした瞬間だけ、<br>数が増えるの？</h2>
-        <p class="lesson-lead">Ebitengine の <strong>inpututil.IsMouseButtonJustPressed</strong> は、そのフレームで初めてボタンが押されたときだけ <code>true</code> を返します。長押しでも毎フレーム増えない理由はここにあります。</p>
+        <p class="lesson-lead">Ebitengine の <strong>inpututil.IsMouseButtonJustPressed</strong> は、そのフレームで初めてボタンが押されたときだけ <code>true</code> を返します。長押しでもtickごとに増えない理由はここにあります。</p>
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>「押した瞬間」を見つける</h3><p>IsPressed は押し続けている間ずっと true ですが、JustPressed は押し始めた1フレームだけ true です。クリッカーでは JustPressed を使わないと、ボタンを押しっぱなしにするだけで数が増え続けてしまいます。</p><code>inpututil.IsMouseButtonJustPressed(...)</code></article>
+        <article><span class="concept-number">1</span><h3>「押した瞬間」を見つける</h3><p>IsPressed は押し続けている間ずっと true ですが、JustPressed は押し始めた1 tickだけ true です。クリッカーでは JustPressed を使わないと、ボタンを押しっぱなしにするだけで数が増え続けてしまいます。</p><code>inpututil.IsMouseButtonJustPressed(...)</code></article>
         <article><span class="concept-number">2</span><h3>カウンター変数</h3><p>「今何個か」を表す整数変数 <code>count</code> に 1 を足すだけです。表示のときは <code>fmt.Sprintf("%03d", g.count)</code> で 3桁ゼロ埋めにすると、数字の位置がずれず読みやすくなります。</p><code>g.count++</code></article>
-        <article><span class="concept-number">3</span><h3>パルスで視覚フィードバック</h3><p>押した瞬間に <code>pulse = 10</code> をセットし、毎フレーム 1 ずつ減らします。その値で円の半径を少し大きくすると「ぷにっ」と膨らむアニメになります。</p><code>scale := 1 + float64(g.pulse)*.012</code></article>
+        <article><span class="concept-number">3</span><h3>パルスで視覚フィードバック</h3><p>押した瞬間に <code>pulse = 10</code> をセットし、tickごとに 1 ずつ減らします。その値で円の半径を少し大きくすると「ぷにっ」と膨らむアニメになります。</p><code>scale := 1 + float64(g.pulse)*.012</code></article>
       </div>
 
 
@@ -97,7 +100,7 @@
 
       <div class="formula">
         <p class="eyebrow">THE INPUT RULE</p>
-        <div class="formula-lines"><code>IsPressed     → 押している間ずっと true</code><span>vs</span><code>IsJustPressed → 押し始めた1フレームだけ true</code></div>
+        <div class="formula-lines"><code>IsPressed     → 押している間ずっと true</code><span>vs</span><code>IsJustPressed → 押し始めた1 tickだけ true</code></div>
         <p>タッチ対応は <code>inpututil.AppendJustPressedTouchIDs(nil)</code> で取得します。スマホでも同じ「瞬間」ルールが使えます。</p>
       </div>
 
@@ -124,7 +127,7 @@
 
       <div class="why-grid">
         <article><p class="eyebrow">WITHOUT JUSTPRESSED</p><h3>押しっぱなしで∞カウント</h3><p>IsPressed を使ってしまうと、ボタンを1秒握るだけで60回カウントされ、ゲームにならなくなります。</p></article>
-        <article><p class="eyebrow">WITH JUSTPRESSED</p><h3>1タップ = 1個の保証</h3><p>JustPressed は同じフレームには2度目が来ません。どんな入力デバイスでも「1操作 = 1イベント」が成立します。</p></article>
+        <article><p class="eyebrow">WITH JUSTPRESSED</p><h3>1タップ = 1個の保証</h3><p>JustPressed は同じtickには2度目が来ません。どんな入力デバイスでも「1操作 = 1イベント」が成立します。</p></article>
         <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>目標数と光り方を変えよう</h3><p>クリア条件 <code>30</code> を増やしたり、pulse の初期値や係数 <code>.012</code> を変えると、もっと大きく弾むボタンにできます。</p></article>
       </div>
     </section>
@@ -153,6 +156,7 @@
         </form>
       </div>
     </section>
+
 
 
 

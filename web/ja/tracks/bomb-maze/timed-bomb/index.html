@@ -2,14 +2,14 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="description" content="爆弾は「場所」と「残り時間」を持つゲームデータです。毎フレーム数を減らし、0になったら爆発状態へ切り替えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+  <meta name="description" content="爆弾は「場所」と「残り時間」を持つゲームデータです。tickごとに数を減らし、0になったら爆発状態へ切り替えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Ebi Showcase – 時限爆弾を置く</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – 時限爆弾を置く">
-    <meta property="og:description" content="爆弾は「場所」と「残り時間」を持つゲームデータです。毎フレーム数を減らし、0になったら爆発状態へ切り替えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:description" content="爆弾は「場所」と「残り時間」を持つゲームデータです。tickごとに数を減らし、0になったら爆発状態へ切り替えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/bomb-maze/timed-bomb/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--bomb-maze--timed-bomb.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – 時限爆弾を置く">
-    <meta name="twitter:description" content="爆弾は「場所」と「残り時間」を持つゲームデータです。毎フレーム数を減らし、0になったら爆発状態へ切り替えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:description" content="爆弾は「場所」と「残り時間」を持つゲームデータです。tickごとに数を減らし、0になったら爆発状態へ切り替えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--bomb-maze--timed-bomb.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="時限爆弾を置く">
     <!-- ogp:end -->
@@ -34,7 +34,7 @@
     <section class="overview-hero">
       <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
       <h1>時限爆弾を置く</h1>
-      <p>爆弾は「場所」と「残り時間」を持つゲームデータです。毎フレーム数を減らし、0になったら爆発状態へ切り替えます。</p>
+      <p>爆弾は「場所」と「残り時間」を持つゲームデータです。tickごとに数を減らし、0になったら爆発状態へ切り替えます。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>床に置いたものが時間で変わる</strong></div>
       <p class="cast-note">動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01</a>と同じく、位置や得点などゲームの中身はUpdateで進めます。Drawは中身を変えず、画面への見せ方だけを担当します。</p>
     </section>
@@ -55,6 +55,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE</p>
@@ -70,7 +73,7 @@
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / FUSE</p>
 <h3 id="lab-title-timed-bomb">設置→カウント→爆発→削除</h3>
-<p>「設置」で爆弾を出し、「1F進める」でタイマーを減らします。0で BLAST、もう一度で削除。状態機械の基本です。</p>
+<p>「設置」で爆弾を出し、「1 tick進める」でタイマーを減らします。0で BLAST、もう一度で削除。状態機械の基本です。</p>
 <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-place data-go-focus="place">爆弾を置く</button><button type="button" class="lab-button" data-lab-tick data-go-focus="tick">1ステップ進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>消す</button></div>
 <p class="lab-hint">本物は約90フレーム点火。ラボは8で体感しやすくしています。</p>
 </div>
@@ -87,7 +90,7 @@
 </div>
 </div>
 
-      <div class="formula"><p class="eyebrow">THE FUSE STATE MACHINE</p><div class="formula-lines"><code>timer-- each frame</code><span>つぎに</span><code>timer<=0 → blasting → remove</code></div><p>見た目の丸ではなく、座標・timer・状態を1つの構造体にします。</p></div>
+      <div class="formula"><p class="eyebrow">THE FUSE STATE MACHINE</p><div class="formula-lines"><code>timer-- each tick</code><span>つぎに</span><code>timer<=0 → blasting → remove</code></div><p>見た目の丸ではなく、座標・timer・状態を1つの構造体にします。</p></div>
 
       <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>同じ timer を2役で使い回す</h3><p>点火中は「爆発までの残り」。0になったら <code>blasting=true</code> にして、<strong>同じフィールドへ爆風の寿命</strong>を入れ直します。変数は1つでも、状態フラグで意味が切り替わる点に注意。</p></div><pre><code>for i := range bombs {
     bombs[i].timer--
@@ -124,6 +127,7 @@
         </form>
       </div>
     </section>
+
 
 
 

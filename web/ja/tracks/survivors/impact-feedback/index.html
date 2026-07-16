@@ -25,7 +25,7 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>1回の命中を3つの時間表現へ分ける</h2><p>点滅は敵、粒子は命中地点、揺れは画面全体へ作用します。同じhitイベントから寿命の違う演出を始めると、短い攻撃にも始まりと余韻が生まれます。</p><div class="concept-row"><article><b>01</b><h3>点滅</h3><p>敵を数フレームだけ明るく描きます。</p></article><article><b>02</b><h3>粒子</h3><p>命中地点から小さな円を飛ばします。</p></article><article><b>03</b><h3>画面揺れ</h3><p>大きな撃破だけ全体を短くずらします。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>1回の命中を3つの時間表現へ分ける</h2><p>点滅は敵、粒子は命中地点、揺れは画面全体へ作用します。同じhitイベントから寿命の違う演出を始めると、短い攻撃にも始まりと余韻が生まれます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>1回の命中を3つの時間表現へ分ける</h2><p>点滅は敵、粒子は命中地点、揺れは画面全体へ作用します。同じhitイベントから寿命の違う演出を始めると、短い攻撃にも始まりと余韻が生まれます。</p><div class="concept-row"><article><b>01</b><h3>点滅</h3><p>敵を数tickだけ明るく描きます。</p></article><article><b>02</b><h3>粒子</h3><p>命中地点から小さな円を飛ばします。</p></article><article><b>03</b><h3>画面揺れ</h3><p>大きな撃破だけ全体を短くずらします。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>1回の命中を3つの時間表現へ分ける</h2><p>点滅は敵、粒子は命中地点、揺れは画面全体へ作用します。同じhitイベントから寿命の違う演出を始めると、短い攻撃にも始まりと余韻が生まれます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
   <h2>数字を決める場所と、絵にする場所を分けよう</h2>
@@ -38,7 +38,7 @@
 <!-- update-draw-contract:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>1回の命中を3つの時間表現へ分ける</h2><p>中心ルールを短く読みます。</p></div><pre><code>enemy.flashFrames = 6
 spawnParticles(hitX, hitY)
-if defeated { shakeFrames = 5 }</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>敵を数フレームだけ明るく描きます。</p></article><article><h3>CHANGE</h3><p>命中地点から小さな円を飛ばします。</p></article><article><h3>CHALLENGE</h3><p>大きな撃破だけ全体を短くずらします。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>大量敵サバイバル</strong></a><a href="../survival-run/" rel="next">FINAL →<strong>Ebi Survivors</strong></a></nav>
+if defeated { shakeFrames = 5 }</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>敵を数tickだけ明るく描きます。</p></article><article><h3>CHANGE</h3><p>命中地点から小さな円を飛ばします。</p></article><article><h3>CHALLENGE</h3><p>大きな撃破だけ全体を短くずらします。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>大量敵サバイバル</strong></a><a href="../survival-run/" rel="next">FINAL →<strong>Ebi Survivors</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">

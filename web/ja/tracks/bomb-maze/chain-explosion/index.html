@@ -55,6 +55,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE</p>
@@ -72,7 +75,7 @@
 <h3 id="lab-title-chain-explosion">爆風が隣の爆弾に燃え移る</h3>
 <p>「点火」で最初の爆弾が BLAST になり、隣の爆弾へ連鎖します。「消去」で炎を片付けます。キューや再帰で同じことができます。</p>
 <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-ignite data-go-focus="ignite chain">点火</button><button type="button" class="lab-button" data-lab-clear data-go-focus="ignite">炎を消す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>配置を戻す</button></div>
-<p class="lab-hint">同じフレームで連鎖を最後まで解決するか、次フレームに延ばすかを選べます。</p>
+<p class="lab-hint">同じtickで連鎖を最後まで解決するか、次のtickに延ばすかを選べます。</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
@@ -132,6 +135,7 @@ for len(queue) &gt; 0 {
         </form>
       </div>
     </section>
+
 
 
 

@@ -34,7 +34,7 @@
     <section class="overview-hero">
       <p class="eyebrow">★☆☆☆☆ / PLAYABLE</p>
       <h1>Sweet Counter</h1>
-      <p>Press the large sweet and the count rises by one. The key is detecting only the instant of a press, not every frame it is held. This is the smallest complete clicker.</p>
+      <p>Press the large sweet and the count rises by one. The key is detecting only the instant of a press, not every tick it is held. This is the smallest complete clicker.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Click input and counter</strong></div>
     </section>
 <p class="curriculum-bridge">This track shares the <a href="../../../games/tap-target/#basics">LEVEL 01</a> state boundary: rules advance in Update, while Draw is a replaceable projection—each step adds one new piece.</p>
@@ -54,17 +54,20 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / INPUT</p>
         <h2>Why does the count rise<br>only at the instant of a press?</h2>
-        <p class="lesson-lead">Ebitengine's <strong>inpututil.IsMouseButtonJustPressed</strong> returns <code>true</code> only on the first frame a button becomes pressed. Hold the button for ten frames and it still fires exactly once. That is why one tap means one sweet.</p>
+        <p class="lesson-lead">Ebitengine's <strong>inpututil.IsMouseButtonJustPressed</strong> returns <code>true</code> only on the first tick a button becomes pressed. Hold the button for ten ticks and it still fires exactly once. That is why one tap means one sweet.</p>
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>Detect the press instant</h3><p>IsPressed is true on every frame the button is held. IsJustPressed is true only on the very first frame. Clickers need JustPressed; using IsPressed lets players hold the button to score infinitely fast.</p><code>inpututil.IsMouseButtonJustPressed(...)</code></article>
+        <article><span class="concept-number">1</span><h3>Detect the press instant</h3><p>IsPressed is true on every tick the button is held. IsJustPressed is true only on the very first tick. Clickers need JustPressed; using IsPressed lets players hold the button to score infinitely fast.</p><code>inpututil.IsMouseButtonJustPressed(...)</code></article>
         <article><span class="concept-number">2</span><h3>Counter variable</h3><p>A single integer <code>count</code> tracks the total. Each confirmed press adds one. Displaying it with <code>fmt.Sprintf("%03d", g.count)</code> pads to three digits so the number stays in place as it grows.</p><code>g.count++</code></article>
-        <article><span class="concept-number">3</span><h3>Pulse for visual feedback</h3><p>On each press, set <code>pulse = 10</code> and decrement it by one every frame. Use that value to scale the circle radius slightly outward. The result is a quick expand-and-shrink animation.</p><code>scale := 1 + float64(g.pulse)*.012</code></article>
+        <article><span class="concept-number">3</span><h3>Pulse for visual feedback</h3><p>On each press, set <code>pulse = 10</code> and decrement it by one every tick. Use that value to scale the circle radius slightly outward. The result is a quick expand-and-shrink animation.</p><code>scale := 1 + float64(g.pulse)*.012</code></article>
       </div>
 
 
@@ -97,8 +100,8 @@
 
       <div class="formula">
         <p class="eyebrow">THE INPUT RULE</p>
-        <div class="formula-lines"><code>IsPressed     → true every frame while held</code><span>vs</span><code>IsJustPressed → true on the first frame only</code></div>
-        <p>Touch input uses <code>inpututil.AppendJustPressedTouchIDs(nil)</code>. The same single-frame rule applies on mobile, so one finger tap equals one event.</p>
+        <div class="formula-lines"><code>IsPressed     → true every tick while held</code><span>vs</span><code>IsJustPressed → true on the first tick only</code></div>
+        <p>Touch input uses <code>inpututil.AppendJustPressedTouchIDs(nil)</code>. The same single-tick rule applies on mobile, so one finger tap equals one event.</p>
       </div>
 
       <div class="code-lesson">
@@ -153,6 +156,7 @@
         </form>
       </div>
     </section>
+
 
 
 

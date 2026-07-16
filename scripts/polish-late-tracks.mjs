@@ -163,7 +163,7 @@ const specs = {
     ja: {
       eye: "TRY IT / FUSE",
       title: "設置→カウント→爆発→削除",
-      body: "「設置」で爆弾を出し、「1F進める」でタイマーを減らします。0で BLAST、もう一度で削除。状態機械の基本です。",
+      body: "「設置」で爆弾を出し、「1 tick進める」でタイマーを減らします。0で BLAST、もう一度で削除。状態機械の基本です。",
       hint: "本物は約90フレーム点火。ラボは8で体感しやすくしています。",
       controls: [
         ["data-lab-place", "爆弾を置く", "lab-button-primary"],
@@ -178,7 +178,7 @@ const specs = {
       data: 'data-fuse="8" data-placed="設置" data-tick="カウント" data-boom="爆発！" data-gone="削除" data-none="先に設置"',
       formula: {
         eye: "THE FUSE STATE MACHINE",
-        lines: ["timer-- each frame", "timer<=0 → blasting → remove"],
+        lines: ["timer-- each tick", "timer<=0 → blasting → remove"],
         p: "見た目の丸ではなく、座標・timer・状態を1つの構造体にします。",
       },
     },
@@ -200,7 +200,7 @@ const specs = {
       data: 'data-fuse="8" data-placed="placed" data-tick="tick" data-boom="BOOM" data-gone="removed" data-none="place first"',
       formula: {
         eye: "THE FUSE STATE MACHINE",
-        lines: ["timer-- each frame", "timer<=0 → blasting → remove"],
+        lines: ["timer-- each tick", "timer<=0 → blasting → remove"],
         p: "Not a drawn circle—position, timer, and state in one struct.",
       },
     },
@@ -277,7 +277,7 @@ const specs = {
       eye: "TRY IT / CHAIN",
       title: "Let blasts ignite neighbor bombs",
       body: "Ignite turns the first bomb into BLAST and spreads to neighbors. Clear removes flames. Queue or recursion both work.",
-      hint: "Resolve the whole chain in one frame, or stretch it across frames.",
+      hint: "Resolve the whole chain in one tick, or stretch it across ticks.",
       controls: [
         ["data-lab-ignite", "Ignite", "lab-button-primary"],
         ["data-lab-clear", "Clear flames"],
@@ -302,7 +302,7 @@ const specs = {
       eye: "TRY IT / TIME MAP",
       title: "到着時刻と導火線を比べる",
       body: "AIは「今どのマスが空いているか」だけでなく、「到着までに導火線が残るか」を見ます。ETA+余裕 < 導火線なら通れる経路です。",
-      hint: "時間が進むと安全だった道が危険になります。だから毎フレーム張り直します。",
+      hint: "時間が進むと安全だった道が危険になります。だからtickごとに張り直します。",
       controls: [
         ["data-lab-tick", "時間を進める", "lab-button-primary"],
         ["data-lab-far", "遠回りにする"],
@@ -324,7 +324,7 @@ const specs = {
       eye: "TRY IT / TIME MAP",
       title: "Compare arrival time to the fuse",
       body: "AI checks not only open cells, but whether the fuse outlasts the arrival. ETA+margin < fuse means the route is allowed.",
-      hint: "Safe paths go deadly as time passes—replan every frame.",
+      hint: "Safe paths go deadly as time passes—replan every tick.",
       controls: [
         ["data-lab-tick", "Advance time", "lab-button-primary"],
         ["data-lab-far", "Take a longer path"],
@@ -348,7 +348,7 @@ const specs = {
     route: "tracks/bomb-maze/ebi-bomber",
     ja: {
       eye: "TRY IT / FRAME ORDER",
-      title: "爆弾ゲームの1フレームを並べる",
+      title: "爆弾ゲームの1 tickを並べる",
       body: "総合はパイプです。入力→移動→爆弾タイマー→爆風→壁/連鎖→敵AI→描画。順番を固定すると「爆風中に歩けるか」が説明できます。",
       hint: "描画は最後。AIは爆風更新のあとに置くことが多いです。",
       controls: [
@@ -379,7 +379,7 @@ const specs = {
         ["data-lab-stepn", "step"],
         ["data-lab-note", "now"],
       ],
-      data: 'data-steps="input,move,fuse,blast,walls,ai,draw" data-loop="next frame"',
+      data: 'data-steps="input,move,fuse,blast,walls,ai,draw" data-loop="next tick"',
       formula: {
         eye: "FIXED SYSTEMS ORDER",
         lines: ["update bombs before AI", "draw last"],

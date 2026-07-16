@@ -30,6 +30,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / LEVEL DATA</p><h2>Separate game rules from level numbers.</h2><p class="lesson-lead">“Three pieces clear” and “four or more leave a special” are shared <strong>rules</strong>. “Score 650 in 12 moves” is this level's <strong>data</strong>. A 0→1 ratio draws the swap first; the board rules resolve at contact.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Make a level record</h3><p>Put the name, move limit, target score, and starting board in one stage value. Think of it as an order sheet for the game.</p><code>stage{moves: 12, targetScore: 650}</code></article><article><span class="concept-number">2</span><h3>Show, then resolve a swap</h3><p>Move both pieces smoothly, inspect the board at contact, and retrace an invalid swap. Only a useful swap costs a move.</p><code>swapT += 0.12; resolveOrReturn()</code></article><article><span class="concept-number">3</span><h3>Turn long matches into power</h3><p>Four make row or column rockets, five make a color wave, and L/T shapes make a 3×3 bomb. A blast that reaches another special triggers it too.</p><code>special = specialForMatch(board, anchor)</code></article></div><div class="motion-lab" data-lab="stage-goals" data-goal="30" data-moves="10" data-hit="+8" data-clear="CLEAR" data-out="no moves" aria-labelledby="lab-title-ebi-match">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / STAGE DATA</p>
@@ -82,6 +85,7 @@ func newGame(level stage) *game {
         </form>
       </div>
     </section>
+
 
 
 

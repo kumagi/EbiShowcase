@@ -147,7 +147,7 @@ if lessonlogic.PointInCircle(px, py, g.circleX, g.circleY, g.radius) {
   {
     slug: "state-transitions",
     ja: {
-      step: "STEP 03", title: "1フレーム後の状態を比べる", lead: "アクティブ戦闘RPGでは、毎フレーム『ゲージ + 素早さ』を計算します。1000に届いた瞬間だけREADYになる状態遷移を、1歩ずつテストします。",
+      step: "STEP 03", title: "1 tick後の状態を比べる", lead: "アクティブ戦闘RPGでは、tickごとに『ゲージ + 素早さ』を計算します。1000に届いた瞬間だけREADYになる状態遷移を、1歩ずつテストします。",
       idea: "長い戦闘を最後まで再生する代わりに、987→999、988→READYという大事な1コマだけを直接作ります。",
       before: `func (g *game) Update() error {
   for i := range g.runners {

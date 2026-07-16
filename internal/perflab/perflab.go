@@ -10,7 +10,7 @@ func (r Rect) Contains(p Point) bool {
 }
 
 // Cull appends only visible points into dst so a caller can reuse its backing
-// array every frame.
+// array every tick.
 func Cull(dst []Point, all []Point, view Rect) []Point {
 	dst = dst[:0]
 	for _, p := range all {

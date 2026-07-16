@@ -58,16 +58,20 @@
 
 
 
+
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / ENEMY AI AND STATE TRANSITIONS</p>
         <h2>How does the enemy<br>know when to chase?</h2>
-        <p class="lesson-lead">With a <strong>state machine</strong> — in plain words, one number that remembers the enemy's current "mood." Each enemy holds an integer that says what it is doing right now: 0 means <strong>patrol</strong> (walk a loose route while the player is far away), 1 means <strong>chase</strong> (head straight for the player once they get close). Every frame the game measures the distance to the player and flips that integer when a threshold is crossed. One <code>if / else</code> then picks the right movement rule for that state. A single integer, two rules — and the enemy feels alive.</p>
+        <p class="lesson-lead">With a <strong>state machine</strong> — in plain words, one number that remembers the enemy's current "mood." Each enemy holds an integer that says what it is doing right now: 0 means <strong>patrol</strong> (walk a loose route while the player is far away), 1 means <strong>chase</strong> (head straight for the player once they get close). Every tick the game measures the distance to the player and flips that integer when a threshold is crossed. One <code>if / else</code> then picks the right movement rule for that state. A single integer, two rules — and the enemy feels alive.</p>
       </div>
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>state field</h3><p>The enemy struct stores <code>state int</code>. Zero is patrol; one is chase. That one integer is the entire "mind" of the enemy.</p><code>state, timer int</code></article>
-        <article><span class="concept-number">2</span><h3>Distance triggers</h3><p>Every frame, compute the distance to the player. Once they come within <strong>165 pixels — close enough to be noticed</strong> — switch to chase. Once they get past <strong>230 pixels — far enough to lose interest</strong> — return to patrol. These two numbers are just tuning knobs for "how close counts as close," and the gap between them prevents jittery switching.</p><code>if dist &lt; 165 { e.state = 1 }</code></article>
+        <article><span class="concept-number">2</span><h3>Distance triggers</h3><p>Every tick, compute the distance to the player. Once they come within <strong>165 pixels — close enough to be noticed</strong> — switch to chase. Once they get past <strong>230 pixels — far enough to lose interest</strong> — return to patrol. These two numbers are just tuning knobs for "how close counts as close," and the gap between them prevents jittery switching.</p><code>if dist &lt; 165 { e.state = 1 }</code></article>
         <article><span class="concept-number">3</span><h3>One rule per state</h3><p>Patrol rotates velocity by 90 degrees on a timer. Chase normalizes the vector toward the player and applies a constant speed.</p><code>if e.state == 0 { … } else { … }</code></article>
       </div>
 
@@ -113,7 +117,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>Measure distance, update state,<br>apply the matching rule</h3>
-          <p>Every living enemy goes through this sequence once per frame: check distance, maybe change state, then move according to the current state.</p>
+          <p>Every living enemy goes through this sequence once per tick: check distance, maybe change state, then move according to the current state.</p>
         </div>
         <pre><code><span>for</span> i := range g.enemies {
     e := &amp;g.enemies[i]
@@ -513,6 +517,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

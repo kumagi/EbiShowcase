@@ -93,6 +93,11 @@ func (g *game) Update() error {
 			if g.movingBox {
 				g.box = g.boxTo
 			}
+			// Commit both interpolation endpoints. Leaving playerFrom at the
+			// previous cell would make the following pause draw one step back,
+			// then appear to teleport when the next move begins.
+			g.playerFrom, g.playerTo = g.player, g.player
+			g.boxFrom, g.boxTo = g.box, g.box
 			g.moveFrame = 0
 			g.step++
 			g.pause = 8

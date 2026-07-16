@@ -150,9 +150,9 @@ g.fx.Ring(x, y, 1.2, tint)`,
       ],
     },
     code: `switch grade(pos) {
-case perfect: g.fx.Burst(...); g.fx.FlashScreen(0.8, ...)
-case ok:      g.fx.Burst(...smaller)
-case miss:    g.fx.Burst(...gray)
+case perfect: g.fx.Burst(x, y, 48, 5.0, gold, true); g.fx.FlashScreen(0.8, white)
+case ok:      g.fx.Burst(x, y, 20, 2.8, cyan, true)
+case miss:    g.fx.Burst(x, y, 8, 1.2, gray, false)
 }
 g.fx.Update()`,
   },
@@ -318,7 +318,7 @@ g.fx.Update()`,
     ja: {
       navConcept: "衝突と残像",
       title: "ボールに火花とトレイルを足す",
-      lead: "パドルや壁に当たったフレームだけ Burst。毎フレーム少しトレイルを足すのも fx。ボール自体の vx,vy は play のままです。",
+      lead: "パドルや壁に当たったtickだけ Burst。tickごとに少しトレイルを足すのも fx。ボール自体の vx,vy は play のままです。",
       deepEyebrow: "DEEP DIVE / IMPACT + TRAIL",
       deepH: "一瞬の火花と、<br>続く残像",
       deepLead: "衝突はイベント、トレイルは継続スポーン。どちらも fx に寄せると、ボール構造体が汚れません。",
@@ -335,7 +335,7 @@ g.fx.Update()`,
       codeHead: { eyebrow: "IN THE DEMO", h: "ball は薄く", p: "演出フィールドを ball に追加したくなったら fx へ。" },
       whys: [
         { eyebrow: "WHY TRAIL IN FX?", h: "履歴は fx に持つ", p: "残像の履歴スライスは fx.System に置きます。ball は位置と速度だけなので、物理コードを読みやすく保てます。" },
-        { eyebrow: "WHY BURST ON HIT?", h: "イベント駆動", p: "毎フレーム火花を出すと散らかる。" },
+        { eyebrow: "WHY BURST ON HIT?", h: "イベント駆動", p: "tickごとに火花を出すと散らかる。" },
         { eyebrow: "TRY NEXT", h: "ブロック崩しへ", p: "壊れるブロックと飛び散る破片の役割分担。" },
       ],
     },
@@ -359,7 +359,7 @@ g.fx.Update()`,
       codeHead: { eyebrow: "IN THE DEMO", h: "Keep ball thin", p: "If you want an FX field on ball—put it in fx instead." },
       whys: [
         { eyebrow: "WHY TRAIL IN FX?", h: "FX owns the history", p: "Keep the trail history slice in fx.System. Ball retains only position and velocity, so physics remains readable." },
-        { eyebrow: "WHY BURST ON HIT?", h: "Event-driven", p: "Sparks every frame become noise." },
+        { eyebrow: "WHY BURST ON HIT?", h: "Event-driven", p: "Sparks every tick become noise." },
         { eyebrow: "TRY NEXT", h: "Breakout", p: "Bricks vs flying shards." },
       ],
     },

@@ -30,6 +30,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GAME COMPOSITION</p><h2>A large game is still a chain of small screens.</h2><p class="lesson-lead">Switch battle, reward, and route selection with a <strong>phase that names the current scene</strong>. Deck, HP, and floor remain in one game struct across scenes, turning them into one journey.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Separate scenes</h3><p>Battle reads card input, Reward reads three choices, and Route reads two. The phase gives the same tap one clear meaning.</p><code>switch phase { case Battle: ... }</code></article><article><span class="concept-number">2</span><h3>Choose shared data</h3><p>HP, deck, and floor belong to the whole run. Energy and block reset for each battle.</p><code>type game struct { deck []card; floor int }</code></article><article><span class="concept-number">3</span><h3>Join exits to entrances</h3><p>Winning opens Reward, choosing a reward opens Route, and choosing a route starts the next Battle.</p><code>phase = phaseReward</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="map,battle,reward,rest" data-loop="next floor" aria-labelledby="lab-title-ebi-ascent">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / RUN LOOP</p>
@@ -44,9 +47,9 @@
 </div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each tick:</span>
 <span data-go-line="step">input → sim → resolve → draw</span>
-<span data-go-line="loop">// then next frame</span></pre>
+<span data-go-line="loop">// then next tick</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">SCENE PIPE</p><div class="formula-lines"><code>currentScene.Update()</code><span>then</span><code>on exit → next scene</code></div><p>Don’t cram every mode into one Update.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Delegate Update to the current scene</h3><p>Keep one Update readable by splitting it into small scene-specific operations.</p></div><pre><code>switch phase {
@@ -80,6 +83,7 @@ case phaseRoute:
         </form>
       </div>
     </section>
+
 
 
 

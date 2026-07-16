@@ -66,6 +66,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / PATROL &amp; STOMP</p>
@@ -77,13 +80,13 @@
         <article>
           <span class="concept-number">1</span>
           <h3>巡回（パトロール）</h3>
-          <p>敵は毎フレーム <code>vx</code> だけ動きます。足場の端（左端・右端）に達したら <code>vx = -vx</code> で向きを反転。足場の外に出ると支えがなくなるので、その前に折り返します。</p>
+          <p>敵はtickごとに <code>vx</code> だけ動きます。足場の端（左端・右端）に達したら <code>vx = -vx</code> で向きを反転。足場の外に出ると支えがなくなるので、その前に折り返します。</p>
           <code>e.vx = -e.vx // 折り返し</code>
         </article>
         <article>
           <span class="concept-number">2</span>
           <h3>踏み判定</h3>
-          <p>重なりを検知したとき、落下中（vy &gt; 1）かつ前フレームの足が敵の頭付近より上なら「踏んだ」。<code>alive = false</code> にして敵を消します。</p>
+          <p>重なりを検知したとき、落下中（vy &gt; 1）かつ前のtickの足が敵の頭付近より上なら「踏んだ」。<code>alive = false</code> にして敵を消します。</p>
           <code>if vy &gt; 1 &amp;&amp; oldBottom &lt;= e.y+8</code>
         </article>
         <article>
@@ -131,14 +134,14 @@
           <span>それ以外</span>
           <code>else { ダメージ }</code>
         </div>
-        <p>「上から」という条件を oldBottom（前フレームの足の位置）と敵の頭（e.y+8）を比較して判断します。重なり判定より少し余裕を持たせることで、ギリギリの踏みも気持ちよく成立します。</p>
+        <p>「上から」という条件を oldBottom（前のtickの足の位置）と敵の頭（e.y+8）を比較して判断します。重なり判定より少し余裕を持たせることで、ギリギリの踏みも気持ちよく成立します。</p>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>接触の種類を<br>ひとつの if-else で分ける</h3>
-          <p>重なりが確認できてから、落下速度と前フレームの足位置で踏んだか否かを判断します。踏んだら跳ね返り（vy = -8）で連続踏みも可能です。</p>
+          <p>重なりが確認できてから、落下速度と前のtickの足位置で踏んだか否かを判断します。踏んだら跳ね返り（vy = -8）で連続踏みも可能です。</p>
         </div>
         <pre><code><span>if</span> overlap(g.player, e.rect) {
     <span>if</span> g.vy > 1 &amp;&amp; oldBottom &lt;= e.y+8 {
@@ -205,6 +208,7 @@
         </form>
       </div>
     </section>
+
 
 
 

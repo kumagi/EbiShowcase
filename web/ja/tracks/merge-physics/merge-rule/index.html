@@ -30,6 +30,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / REPLACE</p><h2>2個が1個になる時、配列では何が起きる？</h2><p class="lesson-lead">衝突中にすぐ配列を切ると番号がずれます。まず2個へ<strong>削除予定</strong>の印を付け、新しい1個を予約し、最後にまとめて置き換えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>同種判定</h3><p>触れた2個のtierが同じか調べます。</p><code>a.tier == b.tier</code></article><article><span class="concept-number">2</span><h3>中点</h3><p>2つの位置を足して2で割ります。</p><code>(a.position+b.position)/2</code></article><article><span class="concept-number">3</span><h3>置き換え</h3><p>古い2個を除き、tier+1を追加します。</p><code>spawn(tier + 1)</code></article></div><div class="motion-lab" data-lab="merge-same" data-mismatch="段が違うので合体しない" data-merge="合体して T{n} に！" aria-labelledby="lab-title-merge-rule">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / SAME TIER</p>
@@ -42,7 +45,7 @@
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>段</span><strong data-lab-tier>1 + 1</strong></div><div><span>結果</span><strong data-lab-note>—</strong></div></div>
 </div>
-</div><div class="formula"><p class="eyebrow">THE ONE-LINE RULE</p><div class="formula-lines"><code>同じ段なら</code><span>つぎに</span><code>次の段の1個にする</code></div><p>接触していても段が違えば無視。条件を1か所にまとめると、バランス調整が楽です。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>走査中は印だけ付ける</h3><p>同じフレームで同じ実が2回合体しないようdeadを使います。</p></div><pre><code>if a.tier == b.tier { a.dead, b.dead = true, true; spawned = append(spawned, nextFruit(a, b)) } / fruits = append(removeDead(fruits), spawned...)</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY MARK?</p><h3>番号ずれを防ぐ</h3><p>ループ中に要素を消す危険を避けます。</p></article><article><p class="eyebrow">WHY MIDPOINT?</p><h3>合体位置が自然</h3><p>2個のちょうど間から次の実が生まれます。</p></article><article class="challenge"><p class="eyebrow">EVENT RULE</p><h3>得点も同時に作る</h3><p>新しいtierに応じて加点を変えてみよう。</p></article></div></section><nav class="lesson-pager"><a href="../stable-simulation/" rel="prev">← STEP 04<strong>安定する物理世界</strong></a><a href="../ebi-merge/" rel="next">STEP 06 →<strong>Ebi Merge</strong></a></nav>
+</div><div class="formula"><p class="eyebrow">THE ONE-LINE RULE</p><div class="formula-lines"><code>同じ段なら</code><span>つぎに</span><code>次の段の1個にする</code></div><p>接触していても段が違えば無視。条件を1か所にまとめると、バランス調整が楽です。</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>走査中は印だけ付ける</h3><p>同じtickで同じ実が2回合体しないようdeadを使います。</p></div><pre><code>if a.tier == b.tier { a.dead, b.dead = true, true; spawned = append(spawned, nextFruit(a, b)) } / fruits = append(removeDead(fruits), spawned...)</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY MARK?</p><h3>番号ずれを防ぐ</h3><p>ループ中に要素を消す危険を避けます。</p></article><article><p class="eyebrow">WHY MIDPOINT?</p><h3>合体位置が自然</h3><p>2個のちょうど間から次の実が生まれます。</p></article><article class="challenge"><p class="eyebrow">EVENT RULE</p><h3>得点も同時に作る</h3><p>新しいtierに応じて加点を変えてみよう。</p></article></div></section><nav class="lesson-pager"><a href="../stable-simulation/" rel="prev">← STEP 04<strong>安定する物理世界</strong></a><a href="../ebi-merge/" rel="next">STEP 06 →<strong>Ebi Merge</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -66,6 +69,7 @@
         </form>
       </div>
     </section>
+
 
 
 

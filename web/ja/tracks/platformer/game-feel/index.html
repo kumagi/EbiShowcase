@@ -25,7 +25,7 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>反応と記録がもう一度を作る</h2><p>当たり判定が正しくても、何が起きたか伝わらなければ気持ちよくありません。取得した瞬間へ粒子と小さな揺れを足し、結果を自己ベストとして残します。</p><div class="concept-row"><article><b>01</b><h3>その場で反応</h3><p>コイン位置から短命な粒を飛ばします。</p></article><article><b>02</b><h3>全体へ伝える</h3><p>数フレームだけ画面座標をずらします。</p></article><article><b>03</b><h3>次の目標を残す</h3><p>今回のタイムと自己ベストを並べます。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>反応と記録がもう一度を作る</h2><p>当たり判定が正しくても、何が起きたか伝わらなければ気持ちよくありません。取得した瞬間へ粒子と小さな揺れを足し、結果を自己ベストとして残します。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>反応と記録がもう一度を作る</h2><p>当たり判定が正しくても、何が起きたか伝わらなければ気持ちよくありません。取得した瞬間へ粒子と小さな揺れを足し、結果を自己ベストとして残します。</p><div class="concept-row"><article><b>01</b><h3>その場で反応</h3><p>コイン位置から短命な粒を飛ばします。</p></article><article><b>02</b><h3>全体へ伝える</h3><p>数tickだけ画面座標をずらします。</p></article><article><b>03</b><h3>次の目標を残す</h3><p>今回のタイムと自己ベストを並べます。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>反応と記録がもう一度を作る</h2><p>当たり判定が正しくても、何が起きたか伝わらなければ気持ちよくありません。取得した瞬間へ粒子と小さな揺れを足し、結果を自己ベストとして残します。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
   <h2>数字を決める場所と、絵にする場所を分けよう</h2>
@@ -38,7 +38,7 @@
 <!-- update-draw-contract:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>反応と記録がもう一度を作る</h2><p>遊べるゲームから中心部分だけを抜き出します。</p></div><pre><code>spawnParticles(coinX, coinY)
 shakeFrames = 5
-if best == 0 || time &lt; best { best = time }</code></pre></section><section class="why-grid"><article><h3>試してみよう</h3><p>数値を1つ変えて、見え方や難しさを比べよう。</p></article><article><h3>観察しよう</h3><p>数フレームだけ画面座標をずらします。</p></article><article><h3>CHALLENGE</h3><p>今回のタイムと自己ベストを並べます。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>横スクロールアクション</strong></a><a href="../powerup-adventure/" rel="next">FINAL →<strong>Ebi Adventure</strong></a></nav>
+if best == 0 || time &lt; best { best = time }</code></pre></section><section class="why-grid"><article><h3>試してみよう</h3><p>数値を1つ変えて、見え方や難しさを比べよう。</p></article><article><h3>観察しよう</h3><p>数tickだけ画面座標をずらします。</p></article><article><h3>CHALLENGE</h3><p>今回のタイムと自己ベストを並べます。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>横スクロールアクション</strong></a><a href="../powerup-adventure/" rel="next">FINAL →<strong>Ebi Adventure</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">

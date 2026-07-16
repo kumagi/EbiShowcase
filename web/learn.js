@@ -583,6 +583,7 @@ document.querySelectorAll(".motion-lab[data-lab='camera']").forEach((lab) => {
   const screenOut = bind(lab, "[data-lab-screen]");
   const factorOut = bind(lab, "[data-lab-factor]");
   const actor = bind(lab, "[data-lab-actor]");
+  const ruler = bind(lab, "[data-camera-ruler]");
   if (!camOut || !playerOut || !screenOut) return;
   let player = 200, cam = 0, factor = Number(lab.dataset.factor || 0.09);
   const render = () => {
@@ -593,6 +594,7 @@ document.querySelectorAll(".motion-lab[data-lab='camera']").forEach((lab) => {
     setText(screenOut, (player - cam).toFixed(0));
     setText(factorOut, factor.toFixed(2));
     if (actor) actor.style.left = `${((player - cam) / 480) * 100}%`;
+    if (ruler) ruler.style.transform = `translateX(-${(cam / 960) * 100}%)`;
   };
   bind(lab, "[data-lab-right]")?.addEventListener("click", () => { player += 40; render(); });
   bind(lab, "[data-lab-left]")?.addEventListener("click", () => { player = Math.max(40, player - 40); render(); });

@@ -67,12 +67,12 @@ for i := range enemies {
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / LISTS BY KIND</p>
         <h2>弾が増えても<br>コードが増えないのはなぜ？</h2>
-        <p class="lesson-lead">答えは<strong>種類ごとのリスト</strong>です。「同じ種類のものを1つのスライスにまとめ、毎フレーム同じ処理をかける」という考え方です。弾が1発でも100発でも、ループは1つ。不要になったら後ろから安全に削除します。</p>
+        <p class="lesson-lead">答えは<strong>種類ごとのリスト</strong>です。「同じ種類のものを1つのスライスにまとめ、tickごとに同じ処理をかける」という考え方です。弾が1発でも100発でも、ループは1つ。不要になったら後ろから安全に削除します。</p>
       </div>
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>種類ごとにスライス／埋め込み</h3><p>弾は <code>[]body</code>。敵は <code>type enemy struct { body; hp int }</code> のように <code>body</code> を埋め込み、<code>e.x</code> へ直接触れます（Composition）。</p><code>type enemy struct { body; hp int }</code></article>
-        <article><span class="concept-number">2</span><h3>毎フレーム一括更新</h3><p>スライスを <code>range</code> でループし、全員を動かします。特定の1発だけ別扱いにする必要はありません。</p><code>for i := range g.bullets</code></article>
+        <article><span class="concept-number">2</span><h3>tickごとに一括更新</h3><p>スライスを <code>range</code> でループし、全員を動かします。特定の1発だけ別扱いにする必要はありません。</p><code>for i := range g.bullets</code></article>
         <article><span class="concept-number">3</span><h3>後ろから削除</h3><p>画面外に出た弾や倒した敵はリストから削除します。<strong>リストの後ろ（大きい番号）から順に消すと、まだ調べていない前の番号がずれにくい</strong>のがポイントです。</p><code>bullets[:i], bullets[i+1:]</code></article>
       </div>
 
@@ -82,7 +82,7 @@ for i := range enemies {
 <p class="eyebrow">TRY IT / BULLET LIST</p>
 <h3 id="lab-title-space-shooter">弾を撃って、進めて、消そう</h3>
 <p>「発射」で弾を配列へ追加し、「1フレーム」で全部の y を減らし、画面外を消します。敵も自機も、種類ごとのリストで同じ型を管理します。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fire data-go-focus="fire">発射</button><button type="button" class="lab-button" data-lab-step data-go-focus="fly cull">1フレーム進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fire data-go-focus="fire">発射</button><button type="button" class="lab-button" data-lab-step data-go-focus="fly cull">1 tick進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div>
 <p class="lab-hint">本物のゲームも bullets = append / 移動 / フィルタ のくり返しです。</p>
 </div>
 <div class="lab-visual">
@@ -513,6 +513,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

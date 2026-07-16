@@ -67,6 +67,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / HITBOXES</p>
@@ -143,7 +146,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>Separate → Spawn box → Test overlap</h3>
-          <p>Each frame: first resolve push-box overlap so bodies stay apart. Then, when the attack reaches the right frame, spawn a hit box and run the AABB test against the opponent's hurt box.</p>
+          <p>Each tick: first resolve push-box overlap so bodies stay apart. Then, when the attack reaches the right frame, spawn a hit box and run the AABB test against the opponent's hurt box.</p>
         </div>
         <pre><code>push1 := rect{g.p1 - 18, 510, 36, 100}
 push2 := rect{g.p2 - 18, 510, 36, 100}
@@ -211,6 +214,7 @@ func overlap(a, b rect) bool {
         </form>
       </div>
     </section>
+
 
 
 

@@ -67,11 +67,14 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / FIXED TIMESTEP</p>
         <h2>どうして円は<br>だんだん速く落ちるの？</h2>
-        <p class="lesson-lead">毎フレーム <strong>同じ重力</strong> を速度へ足すからです。Flappy と同じく、速度→位置の順。床では位置を戻し、速度を反転して小さくします。</p>
+        <p class="lesson-lead">tickごとに <strong>同じ重力</strong> を速度へ足すからです。Flappy と同じく、速度→位置の順。床では位置を戻し、速度を反転して小さくします。</p>
       </div>
 
       <div class="concept-row">
@@ -98,10 +101,10 @@
       <div class="motion-lab" data-lab="gravity" aria-labelledby="lab-title-gravity">
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / FIXED STEP</p>
-          <h3 id="lab-title-gravity">毎フレーム同じ重力を足そう</h3>
+          <h3 id="lab-title-gravity">tickごとに同じ重力を足そう</h3>
           <p>「進める」で vy に重力を足し、位置を更新します。床で跳ねて小さくなり、やがて静止します。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="v y floor">1フレーム進める</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="v y floor">1 tick進める</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">Update が 1/60 秒ごとに呼ばれる前提の固定時間ステップです。</p>
@@ -114,7 +117,7 @@
           <div class="lab-values" aria-live="polite">
             <div><span>Y</span><strong data-lab-y>40</strong><small>位置</small></div>
             <div><span>vy</span><strong data-lab-v>0.00</strong><small>速度</small></div>
-            <div><span>g</span><strong>+0.55</strong><small>毎フレーム</small></div>
+            <div><span>g</span><strong>+0.55</strong><small>tickごとに</small></div>
           </div>
         </div>
 <div class="lab-go-block">
@@ -199,6 +202,7 @@ b.y += b.vy
         </form>
       </div>
     </section>
+
 
 
 

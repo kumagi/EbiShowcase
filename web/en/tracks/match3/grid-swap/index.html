@@ -31,6 +31,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GRID &amp; ADJACENCY</p><h2>Turn screen coordinates into a board row and column.</h2><p class="lesson-lead">Store pieces in <strong>board[row][column]</strong>. Subtract the board's top-left from a tap and divide by cell size to get integer coordinates.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>A two-dimensional box</h3><p>A 7×6 array remembers type numbers in the same arrangement as the screen. board[2][4] is row three, column five.</p><code>var board [7][6]int</code></article><article><span class="concept-number">2</span><h3>Position to cell</h3><p>Subtract the board origin and divide by 64. Dropping the fraction maps every point inside a cell to one number.</p><code>col := (x - originX) / cellSize</code></article><article><span class="concept-number">3</span><h3>Distance one is adjacent</h3><p>Add the absolute row and column differences. One means up, down, left, or right; two means diagonal or farther.</p><code>abs(ax-bx) + abs(ay-by) == 1</code></article></div><div class="motion-lab" data-lab="hitbox"><div class="lab-copy"><p class="eyebrow">TRY IT / CELL HIT TEST</p><h3>Move a cell hitbox</h3><p>Move the rectangle and observe overlap. The game also treats each board cell as an equal rectangle for taps.</p><div class="lab-controls"><button class="lab-button" data-lab-left>← Left</button><button class="lab-button" data-lab-right>Right →</button><button class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button></div></div><div class="lab-visual"><div class="hitbox-stage"><div class="hitbox-box hitbox-a" data-lab-a>A</div><div class="hitbox-box hitbox-b" data-lab-b>B</div></div><div class="lab-values"><div><span>Result</span><strong data-lab-result>apart</strong></div><div><span>A position</span><strong data-lab-x>0</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -67,6 +70,7 @@ if distance == 1 {
         </form>
       </div>
     </section>
+
 
 
 

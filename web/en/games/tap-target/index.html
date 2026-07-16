@@ -65,6 +65,11 @@
         <article><b>02</b><h3>DRAW</h3><p>Paint circles and text from the current numbers. Do not read input, run game math, or mutate state here.</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
         <article><b>03</b><h3>LAYOUT</h3><p>Return the game's logical size. Let the engine scale it for the real screen.</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article>
       </div>
+      <div class="formula" id="tick">
+        <p class="eyebrow">NEW WORD / TICK</p>
+        <div class="formula-lines"><code>1 tick = one Update call</code><span>different from</span><code>1 frame = one picture</code></div>
+        <p>A <strong>tick</strong> is one call to Update: one step of the game's numbers. The default is commonly about 60 ticks per second, but it is configurable. A <strong>frame</strong> is one picture produced by Draw. Draw may be delayed or skipped while Update ticks continue, so this course uses “tick” for that operation and reserves “frame” for a picture.</p>
+      </div>
 
       <div class="motion-lab" data-lab="loop" data-update="UPDATE" data-draw="DRAW" data-update-note="Change numbers (score, positions, timers)" data-draw-note="Paint the current numbers on screen" aria-labelledby="loop-lab-title">
         <div class="lab-copy">
@@ -112,6 +117,8 @@
         </div>
       </details>
     </section>
+
+
 
 
 
@@ -316,7 +323,7 @@ func (g *game) Update() error {
 		return nil
 	}
 
-	// タイマーを1フレーム減らす
+	// タイマーを1 tick減らす
 	g.framesLeft--
 
 	// 押した瞬間だけ、丸との距離を調べる
@@ -409,6 +416,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

@@ -30,6 +30,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / LEVEL DATA</p><h2>ゲームのルールと、ステージの数字を分けよう。</h2><p class="lesson-lead">「3個なら消える」「4個以上なら特殊ピースを残す」は全ステージで使う<strong>ルール</strong>です。「12手で650点」はこの面だけの<strong>データ</strong>です。交換中の見た目は0→1の割合で動かし、接触してから盤面のルールを解決します。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>ステージを表にする</h3><p>名前、手数、目標点、最初の盤面を一つのstageに入れます。これはゲームへの注文票です。</p><code>stage{moves: 12, targetScore: 650}</code></article><article><span class="concept-number">2</span><h3>交換を見せてから解決</h3><p>2個をなめらかに移動させ、接触後に並びを検査します。3個にならない交換は同じ道を戻り、正しい交換だけ手数を1減らします。</p><code>swapT += 0.12; resolveOrReturn()</code></article><article><span class="concept-number">3</span><h3>長い並びを力へ変える</h3><p>4個は縦横ロケット、5個は同じ色を消すウェーブ、L字・T字は3×3爆弾になります。爆風が別の特殊ピースへ届くと、続けて発動します。</p><code>special = specialForMatch(board, anchor)</code></article></div><div class="motion-lab" data-lab="stage-goals" data-goal="30" data-moves="10" data-hit="+8点" data-clear="クリア！" data-out="手数切れ" aria-labelledby="lab-title-ebi-match">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / STAGE DATA</p>
@@ -82,6 +85,7 @@ func newGame(level stage) *game {
         </form>
       </div>
     </section>
+
 
 
 

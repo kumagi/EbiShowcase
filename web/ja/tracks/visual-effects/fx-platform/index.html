@@ -69,7 +69,7 @@
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / EDGE TRIGGER</p>
-        <h2>毎フレームではなく、<br>切り替わった瞬間</h2>
+        <h2>tickごとではなく、<br>切り替わった瞬間</h2>
         <p class="lesson-lead">着地中ずっと Burst すると煙モクモク。エッジ（立ち上がり）で一回だけ呼ぶのもイベント駆動です。</p>
       </div>
 
@@ -99,7 +99,7 @@
           <p class="eyebrow">TRY IT / SPLIT</p>
           <h3 id="lab-title-vfx-fx-platform">エッジで一回</h3>
           <p>押しっぱなし＝連発、ではない。</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>命中！（play+fx）</button><button type="button" class="lab-button" data-lab-fx-tick>fx だけ 1F進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>命中！（play+fx）</button><button type="button" class="lab-button" data-lab-fx-tick>fx だけ 1 tick進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-fx-split" data-lab-board>
@@ -115,7 +115,7 @@
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>前フレームと比較</h3>
+          <h3>前のtickと比較</h3>
           <p>状態の差分がイベントになる。</p>
         </div>
         <pre><code>landed := !g.wasGround &amp;&amp; g.onGround
@@ -127,7 +127,7 @@ if landed { g.fx.Burst(g.x, g.y+h, 20, 2.5, dust, true) }</code></pre>
         <article>
           <p class="eyebrow">WHY EDGE?</p>
           <h3>連打防止</h3>
-          <p>接地中は毎フレームイベントにしない。</p>
+          <p>接地中はtickごとにイベントにしない。</p>
         </article>
         <article>
           <p class="eyebrow">WHY?</p>

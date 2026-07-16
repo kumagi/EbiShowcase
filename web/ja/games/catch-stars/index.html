@@ -63,7 +63,7 @@
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>移動</h3><p>星はUpdateごとに Y へ速さを足して落ちます。カゴはキーやポインタで X だけ動かします。</p><code>star.y += speed</code></article>
-        <article><span class="concept-number">2</span><h3>たくさんの星</h3><p>星は1個ではなくスライス（リスト）で持ちます。一定フレームごとに新しい星を追加します。</p><code>stars []star</code></article>
+        <article><span class="concept-number">2</span><h3>たくさんの星</h3><p>星は1個ではなくスライス（リスト）で持ちます。一定tickごとに新しい星を追加します。</p><code>stars []star</code></article>
         <article><span class="concept-number">3</span><h3>重なり</h3><p>左右と上下、どちらも食い込んでいればヒット。1辺でも離れていたらはずれです。</p><code>overlaps(a, b)</code></article>
       </div>
 
@@ -111,7 +111,7 @@
           <p>やっていることはシンプルです。星を1つずつ見て、キャッチした星と画面外に落ちた星をリストから外し、<strong>残す星だけを新しいリストに移す</strong>だけです。</p>
           <details class="basics-extra">
             <summary>発展：<code>g.stars[:0]</code> の意味（読まなくても大丈夫）</summary>
-            <p>コードでは <code>next := g.stars[:0]</code> と書いていますが、これは「中身を捨てた新しいリスト」ではなく、<strong>同じ配列メモリを長さ0から再利用</strong>する書き方です。普通の <code>var next []star</code> でも同じ結果になりますが、毎フレームのメモリ確保を減らせます。</p>
+            <p>コードでは <code>next := g.stars[:0]</code> と書いていますが、これは「中身を捨てた新しいリスト」ではなく、<strong>同じ配列メモリを長さ0から再利用</strong>する書き方です。普通の <code>var next []star</code> でも同じ結果になりますが、tickごとのメモリ確保を減らせます。</p>
           </details>
           <p>コードの <code>basketY = 640</code> はカゴ矩形の上端です。描画も <code>basketY</code> から高さ38pxで始まるので、見た目の中心は約Y=659。星の中心を受け止める <code>625〜675</code> は、その上端付近から中心までを含む少し広い帯です。</p>
           <p>リトライの <code>*g = *newGame()</code> は、「ゲーム箱 <code>g</code> の中身を、新品の箱の中身で丸ごと入れ替え」です。ポインタ <code>g</code> 自体は同じまま、スコアや星リストなど全部が初期値に戻ります。</p>
@@ -246,7 +246,7 @@ func (g *game) Update() error {
 	g.moveBasket()
 
 	g.frame++
-	// 45フレームごとに星を1つ出す
+	// 45 tickごとに星を1つ出す
 	if g.frame%45 == 0 {
 		g.stars = append(g.stars, star{
 			x:     25 + g.rng.Float64()*(screenWidth-50),
@@ -358,6 +358,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

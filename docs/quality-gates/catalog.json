@@ -11,7 +11,7 @@
     "update": "Update owns input, rules, and state transitions at the engine's configured update cadence; never assume a universal 60Hz value.",
     "draw": "Draw is a side-effect-free projection of the latest state. Its frequency, timing, order relative to Update, and visual style are independent implementation details.",
     "multiple_renderers": "One state may be projected in any number of visual forms. Changing Draw does not change Update, input, physics, or rules; learner-facing pages demonstrate that freedom visually instead of prescribing a list of styles.",
-    "language_to_avoid": ["Update is always immediately followed by Draw", "one Update equals one Draw", "the game runs at exactly 60 FPS"]
+    "language_to_avoid": ["Update is always immediately followed by Draw", "one Update equals one Draw", "the game runs at exactly 60 FPS", "advance one frame when the operation is one Update", "1フレーム進める"]
   },
   "gates": [
     {
@@ -63,6 +63,16 @@
       "summary": "Gameplay advances in Update at the engine's configured tick; it does not depend on Draw frequency.",
       "prompt_hint": "Does the lesson distinguish the engine's Update cadence from rendering cadence and state that gameplay must not depend on Draw? Ebitengine commonly uses a 60-tick-per-second default, but do not present 60Hz as a universal promise or require a fixed number. Flag wording that teaches Update and Draw as alternating equal phases, immediately paired calls, or puts progression in Draw.",
       "sources": ["AGENTS.md#game-loop-axioms-for-authoring", "docs/Glossary.md", "docs/AUTHORING_CHECKLIST.md"]
+    },
+    {
+      "id": "loop.tick-not-frame",
+      "family": "loop",
+      "severity": "fail",
+      "check": "llm",
+      "applies_to": ["core", "track", "build", "graduation", "vfx"],
+      "summary": "One Update call is one tick; frame is reserved for a rendered picture or sprite-animation cell.",
+      "prompt_hint": "Flag learner-facing wording such as 'advance one frame', 'every frame', px/frame, or 60 FPS when it actually means Update cadence. Require 'one tick (one Update call)' and px/tick. Allow frame only for a picture produced by Draw, a sprite-sheet cell, or an explicitly named genre term that is distinguished from Update ticks.",
+      "sources": ["docs/Glossary.md", "scripts/check-tick-language.mjs"]
     },
     {
       "id": "loop.renderer-independent",
@@ -121,7 +131,7 @@
       "check": "llm",
       "applies_to": ["core", "track", "build", "graduation"],
       "summary": "RULE lives in Update or a pure helper Update calls—never as Draw mutation.",
-      "prompt_hint": "Does the challenge tell the learner to change Draw to implement the rule?",
+      "prompt_hint": "Fail only when a gameplay rule or persistent state change is implemented in Draw, or when the learner is told to do so. Pass when the rule lives in Update, in a pure helper called by Update, or in data that Update consumes. A rendering-only exercise may edit Draw provided Draw remains a state-read-only projection. Never require a learner to change Draw merely to satisfy this gate.",
       "sources": ["docs/AUTHORING_CHECKLIST.md"]
     },
     {
@@ -161,7 +171,7 @@
       "check": "llm",
       "applies_to": ["core", "track", "vfx", "build"],
       "summary": "One main idea (plus at most one supporting idea) per step.",
-      "prompt_hint": "Does the page try to teach several unrelated systems at once without ordering them?",
+      "prompt_hint": "On an individual step page, flag several unrelated systems only when the page gives no learning order or dominant goal. Do not count the recurring Update/Draw boundary reminder as a separate lesson topic. Track hubs intentionally preview many ordered steps, and capstones intentionally integrate previously taught systems; do not ask either kind of page to remove that overview or integration.",
       "sources": ["AGENTS.md#teaching-and-writing-contract"]
     },
     {

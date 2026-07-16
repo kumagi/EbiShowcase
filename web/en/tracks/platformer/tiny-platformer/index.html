@@ -67,18 +67,21 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / GROUNDED JUMP</p>
         <h2>Why can't you jump<br>while in the air?</h2>
-        <p class="lesson-lead">The player carries a boolean flag called <strong>grounded</strong>. It is set to <code>true</code> only when the player lands on solid ground and reset to <code>false</code> every single frame before collisions are checked. Jump input is ignored unless <code>grounded</code> is <code>true</code>, so double-jumping is impossible without extra code. Gravity is simulated by adding a small constant to <code>vy</code> each frame — just one line.</p>
+        <p class="lesson-lead">The player carries a boolean flag called <strong>grounded</strong>. It is set to <code>true</code> only when the player lands on solid ground and reset to <code>false</code> every single frame before collisions are checked. Jump input is ignored unless <code>grounded</code> is <code>true</code>, so double-jumping is impossible without extra code. Gravity is simulated by adding a small constant to <code>vy</code> each tick — just one line.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
           <h3>Gravity</h3>
-          <p>Add +0.65 to <code>vy</code> every frame. Without any input the player accelerates downward naturally. A cap of 14 prevents infinite speed.</p>
+          <p>Add +0.65 to <code>vy</code> every tick. Without any input the player accelerates downward naturally. A cap of 14 prevents infinite speed.</p>
           <code>vy = min(vy+.65, 14)</code>
         </article>
         <article>
@@ -99,13 +102,13 @@
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / GROUNDED JUMP</p>
           <h3 id="jump-lab-title">Jump only while grounded</h3>
-          <p>“Jump” works only when grounded. Pressing again in the air does nothing. “Next frame” applies gravity; landing sets grounded again.</p>
+          <p>“Jump” works only when grounded. Pressing again in the air does nothing. “Next tick” applies gravity; landing sets grounded again.</p>
           <div class="lab-controls">
             <button type="button" class="lab-button lab-button-primary" data-lab-jump data-go-focus="jump">Jump</button>
-            <button type="button" class="lab-button" data-lab-step data-go-focus="grav land" data-go-caption="Add acceleration">Next frame</button>
+            <button type="button" class="lab-button" data-lab-step data-go-focus="grav land" data-go-caption="Add acceleration">Next tick</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
-          <p class="lab-hint">The real game advances every frame automatically. This lab is slow motion.</p>
+          <p class="lab-hint">The real game advances every tick automatically. This lab is slow motion.</p>
         </div>
         <div class="lab-visual">
           <div class="lab-board" role="img" aria-label="Grounded jump experiment board">
@@ -131,10 +134,10 @@
         <p class="eyebrow">THE ONE-LINE RULE</p>
         <div class="formula-lines">
           <code>if jump &amp;&amp; grounded { vy = -12 }</code>
-          <span>every frame</span>
+          <span>every tick</span>
           <code>grounded = false → collision check sets it back</code>
         </div>
-        <p>Reset <code>grounded</code> to <code>false</code> at the top of each frame, then let the collision loop set it back to <code>true</code> when a landing is detected. Being on the ground must be proved anew every frame.</p>
+        <p>Reset <code>grounded</code> to <code>false</code> at the top of each tick, then let the collision loop set it back to <code>true</code> when a landing is detected. Being on the ground must be proved anew every tick.</p>
       </div>
 
       <div class="code-lesson">
@@ -204,6 +207,7 @@ g.grounded = <span>false</span>
         </form>
       </div>
     </section>
+
 
 
 

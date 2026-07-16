@@ -30,11 +30,18 @@
 <!-- diagram-lesson:end -->
 
 
-<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SYSTEM PIPELINE</p><h2>Connect many systems in “what happens now” order.</h2><p class="lesson-lead">A complete game is not one giant rule. It is a line of small jobs: input, movement, collision, locking, line checks, scoring, and the next shape. Pass one piece and board through this <strong>pipeline</strong> so added features do not get lost.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Control the falling piece</h3><p>active stores a kind, rotation, and position. Update those values only when the candidate does not overlap the board.</p><code>if !collides(next) { active = next }</code></article><article><span class="concept-number">2</span><h3>Lock when movement ends</h3><p>Write the four cells into board, clear complete rows, then update score and level. This order matters.</p><code>lock(); clearLines(); addScore()</code></article><article><span class="concept-number">3</span><h3>Prepare the next piece</h3><p>Refill queue from a seven-piece bag. HOLD works once per falling piece, while the ghost tests positions down to the final safe row.</p><code>spawn(takeNext())</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="input,fall,lock,clear,spawn" data-loop="next frame" aria-labelledby="lab-title-ebi-blocks">
+
+
+
+
+
+
+
+<section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / SYSTEM PIPELINE</p><h2>Connect many systems in “what happens now” order.</h2><p class="lesson-lead">A complete game is not one giant rule. It is a line of small jobs: input, movement, collision, locking, line checks, scoring, and the next shape. Pass one piece and board through this <strong>pipeline</strong> so added features do not get lost.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Control the falling piece</h3><p>active stores a kind, rotation, and position. Update those values only when the candidate does not overlap the board.</p><code>if !collides(next) { active = next }</code></article><article><span class="concept-number">2</span><h3>Lock when movement ends</h3><p>Write the four cells into board, clear complete rows, then update score and level. This order matters.</p><code>lock(); clearLines(); addScore()</code></article><article><span class="concept-number">3</span><h3>Prepare the next piece</h3><p>Refill queue from a seven-piece bag. HOLD works once per falling piece, while the ghost tests positions down to the final safe row.</p><code>spawn(takeNext())</code></article></div><div class="motion-lab" data-lab="pipeline" data-steps="input,fall,lock,clear,spawn" data-loop="next tick" aria-labelledby="lab-title-ebi-blocks">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / FRAME JOBS</p>
 <h3 id="lab-title-ebi-blocks">Order the jobs one input travels</h3>
-<p>A full stacker is a pipe: input → fall → lock → clear → spawn. Keep that order inside one frame.</p>
+<p>A full stacker is a pipe: input → fall → lock → clear → spawn. Keep that order inside one tick.</p>
 <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-next data-go-focus="order step">Next job</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Frame start</button></div>
 <p class="lab-hint">Ghost piece can stay draw-only, outside the pipe.</p>
 </div>
@@ -44,9 +51,9 @@
 </div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each tick:</span>
 <span data-go-line="step">input → sim → resolve → draw</span>
-<span data-go-line="loop">// then next frame</span></pre>
+<span data-go-line="loop">// then next tick</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div><div class="formula"><p class="eyebrow">ORDERED PIPE</p><div class="formula-lines"><code>do jobs in fixed order</code><span>then</span><code>never skip ahead</code></div><p>Lock before clear; move before lock.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Finish the pipeline at the lock boundary</h3><p>After active becomes board cells, finish lines, score, and next-piece work before returning control.</p></div><pre><code>func (g *game) lock() {
@@ -82,6 +89,7 @@
         </form>
       </div>
     </section>
+
 
 
 

@@ -21,7 +21,7 @@
     <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css"></head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/sandbox/block-feedback/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← 学習コース</a><span>POLISH 1/2</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>ブロックが壊れる一瞬を作る</h1><p>道具を振りかぶり、当て、破片が飛び、元の姿勢へ戻るまでを時間に分けます。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">まず遊ぶ</p><h2>ブロックが壊れる一瞬を作る</h2><p>道具を振りかぶり、当て、破片が飛び、元の姿勢へ戻るまでを時間に分けます。</p></div><div class="game-frame"><iframe class="lesson-game-frame" src="../../../../play/block-feedback/" title="ブロックが壊れる一瞬を作る" allow="autoplay; fullscreen"></iframe></div></section>
 <!-- diagram-lesson:start -->
 
-<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ブロックが壊れる一瞬を作る</h2><p>数字をすぐ減らすだけでは、何が起きたか目で追えません。攻撃を「予備動作・接触・戻り」に分け、接触した1フレームだけでHP、破片、揺れ、得点を同時に変えます。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>予備動作で次の出来事を知らせる</p></article><article><b>02</b><h3>UPDATE</h3><p>接触フレームで結果を一度だけ決める</p></article><article><b>03</b><h3>FEEDBACK</h3><p>破片とつぶれで素材の重さを伝える</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>ブロックが壊れる一瞬を作る</h2><p>数字をすぐ減らすだけでは、何が起きたか目で追えません。攻撃を「予備動作・接触・戻り」に分け、接触した1フレームだけでHP、破片、揺れ、得点を同時に変えます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ブロックが壊れる一瞬を作る</h2><p>数字をすぐ減らすだけでは、何が起きたか目で追えません。攻撃を「予備動作・接触・戻り」に分け、接触した1 tickだけでHP、破片、揺れ、得点を同時に変えます。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>予備動作で次の出来事を知らせる</p></article><article><b>02</b><h3>UPDATE</h3><p>接触tickで結果を一度だけ決める</p></article><article><b>03</b><h3>FEEDBACK</h3><p>破片とつぶれで素材の重さを伝える</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>ブロックが壊れる一瞬を作る</h2><p>数字をすぐ減らすだけでは、何が起きたか目で追えません。攻撃を「予備動作・接触・戻り」に分け、接触した1 tickだけでHP、破片、揺れ、得点を同時に変えます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
   <h2>数字を決める場所と、絵にする場所を分けよう</h2>
@@ -32,12 +32,12 @@
   <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
 </section>
 <!-- update-draw-contract:end -->
-<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>接触フレームで結果を一度だけ決める</h2><p>道具を振りかぶり、当て、破片が飛び、元の姿勢へ戻るまでを時間に分けます。</p></div><pre><code>phase--
+<section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>接触tickで結果を一度だけ決める</h2><p>道具を振りかぶり、当て、破片が飛び、元の姿勢へ戻るまでを時間に分けます。</p></div><pre><code>phase--
 if phase == contactFrame {
     block.HP--
     spawnChips()
     shake = 8
-}</code></pre></section><section class="why-grid"><article><h3>観察</h3><p>数字をすぐ減らすだけでは、何が起きたか目で追えません。攻撃を「予備動作・接触・戻り」に分け、接触した1フレームだけでHP、破片、揺れ、得点を同時に変えます。</p></article><article><h3>変える</h3><p>破片とつぶれで素材の重さを伝える</p></article><article><h3>CHALLENGE</h3><p>石と木で破片の飛び方を変えてみよう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>2Dブロックサンドボックス</strong></a><a href="../island-director/" rel="next">次へ →<strong>島データから3つの冒険を作る</strong></a></nav>
+}</code></pre></section><section class="why-grid"><article><h3>観察</h3><p>数字をすぐ減らすだけでは、何が起きたか目で追えません。攻撃を「予備動作・接触・戻り」に分け、接触した1 tickだけでHP、破片、揺れ、得点を同時に変えます。</p></article><article><h3>変える</h3><p>破片とつぶれで素材の重さを伝える</p></article><article><h3>CHALLENGE</h3><p>石と木で破片の飛び方を変えてみよう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>2Dブロックサンドボックス</strong></a><a href="../island-director/" rel="next">次へ →<strong>島データから3つの冒険を作る</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">

@@ -18,7 +18,7 @@ const (
 	screenWidth  = 480
 	screenHeight = 720
 	groundY      = 650
-	gravity      = 0.42 // 毎フレーム、速さに足す量（加速度）
+	gravity      = 0.42 // 1 tickごとに、速さに足す量（加速度）
 	flapSpeed    = -7.4 // はばたいたときの上向きの速さ
 	birdX        = 128.0
 	birdRadius   = 15.0

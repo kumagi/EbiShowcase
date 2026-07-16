@@ -81,6 +81,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / PIVOT ROTATION</p><h2>Keep the pivot; change only partner direction.</h2><p class="lesson-lead">Store the partner as one of <strong>four offsets</strong>. If rotation hits a wall, test small pivot corrections.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Direction table</h3><p>Store up, right, down, left offsets.</p><code>dirs={{0,-1},{1,0},{0,1},{-1,0}}</code></article><article><span class="concept-number">2</span><h3>Next direction</h3><p>Modulo four wraps around.</p><code>next=(dir+1)%4</code></article><article><span class="concept-number">3</span><h3>Wall correction</h3><p>Try normal, left, right, then up.</p><code>kicks := []point{{0,0},{-1,0},{1,0},{0,-1}}</code></article></div><div class="motion-lab" data-lab="kick-try" data-kicks="0,0;1,0;-1,0;0,1" data-ok="kick ({dx},{dy}) OK" data-blocked="({dx},{dy}) blocked" data-fail="cancel rotate" aria-labelledby="lab-title-pair-rotation">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / PAIR KICKS</p>
@@ -135,6 +138,7 @@ for _, k := range kicks {
         </form>
       </div>
     </section>
+
 
 
 

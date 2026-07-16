@@ -46,11 +46,14 @@
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="曲がり角の先行入力を遊ぶ" src="../../../../play/buffered-turn/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>毎フレーム入力を見てwantedDirへ予約し、次の交差点で通れる時に採用します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>wantedDir = pressedDir</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>tickごとに入力を見てwantedDirへ予約し、次の交差点で通れる時に採用します。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>wantedDir = pressedDir</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
+
+
+
 
 
 
@@ -88,7 +91,7 @@
 
       <div class="formula"><p class="eyebrow">THE BUFFER RULE</p><div class="formula-lines"><code>input → queued</code><span>つぎに</span><code>at center: current = queued if passable</code></div><p>入力の瞬間と向きの確定を分けます。</p></div>
 
-      <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>中心に着いた瞬間だけ向きを決める</h3><p><code>Update</code>は毎フレーム入力を保存できますが、方向変更はタイル到着時だけにします。<code>add(tile, queued)</code> はマス座標に向き（例: 右なら x+1）を足して「次のマス」を求めます。</p></div><pre><code>if dir, ok := directionInput(); ok {
+      <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>中心に着いた瞬間だけ向きを決める</h3><p><code>Update</code>はtickごとに入力を保存できますが、方向変更はタイル到着時だけにします。<code>add(tile, queued)</code> はマス座標に向き（例: 右なら x+1）を足して「次のマス」を求めます。</p></div><pre><code>if dir, ok := directionInput(); ok {
     queued = dir
 }
 if reachedTileCenter {
@@ -100,7 +103,7 @@ if reachedTileCenter {
     target = add(tile, current)
 }</code></pre></div>
 
-      <div class="why-grid"><article><p class="eyebrow">WHY BUFFER?</p><h3>なぜ操作しやすくなる？</h3><p>ぴったり1フレームで押さなくてもよくなり、プレイヤーの「曲がりたい」をゲームが少し待てるからです。</p></article><article><p class="eyebrow">WHEN TO CLEAR?</p><h3>予約はいつ消す？</h3><p>このゲームでは成功するまで残します。短い時間で消す方式もあり、操作感を調整できます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>チャレンジ</h3><p>予約を10フレームだけ有効にして、永久保存との遊びやすさを比べてみよう。</p></article></div>
+      <div class="why-grid"><article><p class="eyebrow">WHY BUFFER?</p><h3>なぜ操作しやすくなる？</h3><p>ぴったり1 tickで押さなくてもよくなり、プレイヤーの「曲がりたい」をゲームが少し待てるからです。</p></article><article><p class="eyebrow">WHEN TO CLEAR?</p><h3>予約はいつ消す？</h3><p>このゲームでは成功するまで残します。短い時間で消す方式もあり、操作感を調整できます。</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>チャレンジ</h3><p>予約を10フレームだけ有効にして、永久保存との遊びやすさを比べてみよう。</p></article></div>
     </section>
 
     <nav class="lesson-pager"><a href="../tile-runner/" rel="prev">← STEP 01<strong>迷路を走る</strong></a><a href="../pellet-map/" rel="next">STEP 03 →<strong>ドットを食べる迷路</strong></a></nav>
@@ -127,6 +130,7 @@ if reachedTileCenter {
         </form>
       </div>
     </section>
+
 
 
 

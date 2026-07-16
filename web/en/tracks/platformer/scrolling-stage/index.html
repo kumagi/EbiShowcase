@@ -68,6 +68,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / CAMERA SCROLL</p>
@@ -85,7 +88,7 @@
         <article>
           <span class="concept-number">2</span>
           <h3>Smooth camera follow</h3>
-          <p>Each frame the camera moves 8% of the distance toward its target (a point slightly behind the player). The percentage approach produces natural easing with no extra math.</p>
+          <p>Each tick the camera moves 8% of the distance toward its target (a point slightly behind the player). The percentage approach produces natural easing with no extra math.</p>
           <code>camera += (target-camera)*.08</code>
         </article>
         <article>
@@ -166,7 +169,7 @@ g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
         <article>
           <p class="eyebrow">WITH SMOOTH CAMERA</p>
           <h3>Easing feels natural, not robotic</h3>
-          <p>Moving 8% of the gap each frame means the camera slows as it catches up. Fast movements keep the player on screen; direction changes don't snap the view.</p>
+          <p>Moving 8% of the gap each tick means the camera slows as it catches up. Fast movements keep the player on screen; direction changes don't snap the view.</p>
         </article>
         <article class="challenge">
           <p class="eyebrow">YOUR FIRST TUNING</p>
@@ -203,6 +206,7 @@ g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
         </form>
       </div>
     </section>
+
 
 
 

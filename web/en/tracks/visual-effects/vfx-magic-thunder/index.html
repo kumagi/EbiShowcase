@@ -83,8 +83,8 @@
         <article>
           <span class="concept-number">2</span>
           <h3>Branches</h3>
-          <p>Recurse with a depth limit.</p>
-          <code>addBolt(..., depth+1)</code>
+          <p>depth counts branch generations. Increment it per call and stop at 2 to prevent endless recursion.</p>
+          <code>if depth &lt; 2 { addBolt(..., depth+1) }</code>
         </article>
         <article>
           <span class="concept-number">3</span>

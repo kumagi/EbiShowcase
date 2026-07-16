@@ -166,7 +166,7 @@ func (g *game) updateDrag() {
 		g.velocity = vec{pull.x * 0.095, pull.y * 0.095}
 		g.moving = true
 		g.shots++
-		g.message = "Moving: velocity shrinks every frame."
+		g.message = "Moving: velocity shrinks every tick."
 	}
 }
 

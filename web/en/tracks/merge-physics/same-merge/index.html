@@ -29,6 +29,10 @@
 
 <!-- diagram-lesson:end -->
 
+
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / REPLACE</p><h2>What happens in the slice when two become one?</h2><p class="lesson-lead">Removing during a loop shifts indices. First mark two as <strong>pending deletion</strong>, queue one new fruit, then replace everything at the end.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Same type</h3><p>Compare the tier of both touching circles.</p><code>a.tier == b.tier</code></article><article><span class="concept-number">2</span><h3>Midpoint</h3><p>Add both positions and divide by two.</p><code>(a.position+b.position)/2</code></article><article><span class="concept-number">3</span><h3>Replace</h3><p>Remove two old and add tier+1.</p><code>spawn(tier + 1)</code></article></div><div class="motion-lab" data-lab="merge-same" data-mismatch="tiers differ — no merge" data-merge="merged → T{n}" aria-labelledby="lab-title-merge-rule">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / SAME TIER</p>
@@ -41,7 +45,7 @@
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
 <div class="lab-values" aria-live="polite"><div><span>tiers</span><strong data-lab-tier>1 + 1</strong></div><div><span>result</span><strong data-lab-note>—</strong></div></div>
 </div>
-</div><div class="formula"><p class="eyebrow">THE ONE-LINE RULE</p><div class="formula-lines"><code>if tiers match</code><span>then</span><code>spawn next tier</code></div><p>Contact alone is not enough—equal tiers unlock the merge. One rule keeps balancing simple.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Mark during iteration</h3><p>dead prevents the same fruit merging twice in one frame.</p></div><pre><code>if a.tier == b.tier { a.dead, b.dead = true, true; spawned = append(spawned, nextFruit(a, b)) } / fruits = append(removeDead(fruits), spawned...)</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY MARK?</p><h3>Avoid index shifts</h3><p>Do not delete slice entries inside the pair loop.</p></article><article><p class="eyebrow">WHY MIDPOINT?</p><h3>Natural spawn position</h3><p>The next fruit appears between its parents.</p></article><article class="challenge"><p class="eyebrow">EVENT RULE</p><h3>Add score too</h3><p>Change points according to the new tier.</p></article></div></section><nav class="lesson-pager"><a href="../stable-simulation/" rel="prev">← STEP 04<strong>Stable Simulation</strong></a><a href="../ebi-merge/" rel="next">STEP 06 →<strong>Ebi Merge</strong></a></nav>
+</div><div class="formula"><p class="eyebrow">THE ONE-LINE RULE</p><div class="formula-lines"><code>if tiers match</code><span>then</span><code>spawn next tier</code></div><p>Contact alone is not enough—equal tiers unlock the merge. One rule keeps balancing simple.</p></div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>Mark during iteration</h3><p>dead prevents the same fruit merging twice in one tick.</p></div><pre><code>if a.tier == b.tier { a.dead, b.dead = true, true; spawned = append(spawned, nextFruit(a, b)) } / fruits = append(removeDead(fruits), spawned...)</code></pre></div><div class="why-grid"><article><p class="eyebrow">WHY MARK?</p><h3>Avoid index shifts</h3><p>Do not delete slice entries inside the pair loop.</p></article><article><p class="eyebrow">WHY MIDPOINT?</p><h3>Natural spawn position</h3><p>The next fruit appears between its parents.</p></article><article class="challenge"><p class="eyebrow">EVENT RULE</p><h3>Add score too</h3><p>Change points according to the new tier.</p></article></div></section><nav class="lesson-pager"><a href="../stable-simulation/" rel="prev">← STEP 04<strong>Stable Simulation</strong></a><a href="../ebi-merge/" rel="next">STEP 06 →<strong>Ebi Merge</strong></a></nav>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -65,6 +69,7 @@
         </form>
       </div>
     </section>
+
 
 
 

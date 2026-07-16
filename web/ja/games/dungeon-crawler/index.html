@@ -58,16 +58,20 @@
 
 
 
+
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / ENEMY AI AND STATE TRANSITIONS</p>
         <h2>敵は、どうやって<br>プレイヤーを追いかけるの？</h2>
-        <p class="lesson-lead">答えは、敵の「今の気分」を1つの数字で覚えておく仕組みです——これを<strong>状態遷移（じょうたいせんい）</strong>と呼びます。敵は常に「今どの状態か」を整数で持っています。状態0は<strong>巡回（じゅんかい）</strong>＝プレイヤーが遠いときに決まったルートを歩き回ること、状態1は<strong>追跡（ついせき）</strong>＝プレイヤーが近いときにまっすぐ追いかけることです。プレイヤーとの距離を毎フレーム測り、近ければ状態を1に切り替えます。状態によって動き方のルールを変えるだけで、まるで生きているような敵の動きが生まれます。</p>
+        <p class="lesson-lead">答えは、敵の「今の気分」を1つの数字で覚えておく仕組みです——これを<strong>状態遷移（じょうたいせんい）</strong>と呼びます。敵は常に「今どの状態か」を整数で持っています。状態0は<strong>巡回（じゅんかい）</strong>＝プレイヤーが遠いときに決まったルートを歩き回ること、状態1は<strong>追跡（ついせき）</strong>＝プレイヤーが近いときにまっすぐ追いかけることです。プレイヤーとの距離をtickごとに測り、近ければ状態を1に切り替えます。状態によって動き方のルールを変えるだけで、まるで生きているような敵の動きが生まれます。</p>
       </div>
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>stateフィールド</h3><p>敵の構造体に <code>state int</code> を持たせます。0 = 巡回、1 = 追跡。たった1つの整数が敵の「気持ち」を表します。</p><code>state, timer int</code></article>
-        <article><span class="concept-number">2</span><h3>距離で切り替え</h3><p>毎フレーム、プレイヤーとの距離を計算します。<strong>「見え始める」距離（165ピクセル）</strong>より近づいたら追跡モードへ、<strong>「遠すぎて見失う」距離（230ピクセル）</strong>まで離れたら巡回モードに戻ります。この2つの数字は「どのくらい近づいたら気づくか」を決めるつまみ（調整用の数値）です。</p><code>if dist &lt; 165 { e.state = 1 }</code></article>
+        <article><span class="concept-number">2</span><h3>距離で切り替え</h3><p>tickごとに、プレイヤーとの距離を計算します。<strong>「見え始める」距離（165ピクセル）</strong>より近づいたら追跡モードへ、<strong>「遠すぎて見失う」距離（230ピクセル）</strong>まで離れたら巡回モードに戻ります。この2つの数字は「どのくらい近づいたら気づくか」を決めるつまみ（調整用の数値）です。</p><code>if dist &lt; 165 { e.state = 1 }</code></article>
         <article><span class="concept-number">3</span><h3>状態ごとの動き</h3><p>state == 0（巡回）ではタイマーで向きを変えてランダムに動きます。state == 1（追跡）ではプレイヤーの方向へ一定速度で向かいます。</p><code>if e.state == 0 { … } else { … }</code></article>
       </div>
 
@@ -113,7 +117,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>距離で状態を切り替え、<br>状態で動きを変える</h3>
-          <p>毎フレーム、生きている敵全員について距離を測り、状態を更新し、状態に応じた動きをします。</p>
+          <p>tickごとに、生きている敵全員について距離を測り、状態を更新し、状態に応じた動きをします。</p>
         </div>
         <pre><code><span>for</span> i := range g.enemies {
     e := &amp;g.enemies[i]
@@ -512,6 +516,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

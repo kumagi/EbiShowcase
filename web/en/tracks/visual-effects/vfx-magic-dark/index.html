@@ -70,7 +70,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / DARK</p>
         <h2>Dark is<br>a force inward</h2>
-        <p class="lesson-lead">Place dark.png on a spiral, then each frame add centripetal + tangential force. Rim purple sparks with additive blend, plus a ring shockwave. Dark core uses normal blend; purple fringe uses additive—same texture, two jobs.</p>
+        <p class="lesson-lead">Place dark.png on a spiral, then each tick add centripetal + tangential force. Rim purple sparks with additive blend, plus a ring shockwave. Dark core uses normal blend; purple fringe uses additive—same texture, two jobs.</p>
       </div>
 
       <div class="concept-row">
@@ -111,12 +111,14 @@
         <div>
           <p class="eyebrow">IN THE SHOWCASE</p>
           <h3>Spiral + centripetal pull</h3>
-          <p>Seed on a spiral, then yank toward the center each frame.</p>
+          <p>Seed on a spiral, then yank toward the center each tick.</p>
         </div>
-        <pre><code>dx, dy := SpiralOffset(t, arms, 160, 4.5)
-// each frame: pull + swirl
-p.VX += (cx-p.X)*0.004 - (cy-p.Y)*0.0025
-p.VY += (cy-p.Y)*0.004 + (cx-p.X)*0.0025
+        <pre><code>dx, dy := cx-p.X, cy-p.Y
+pull, swirl := 0.004, 0.0025 // tune independently
+pullX, pullY := dx*pull, dy*pull
+swirlX, swirlY := -dy*swirl, dx*swirl
+p.VX += pullX + swirlX
+p.VY += pullY + swirlY
 DrawImage(DarkPNG) // core normal, fringe additive</code></pre>
       </div>
 

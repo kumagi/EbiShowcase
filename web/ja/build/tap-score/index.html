@@ -24,6 +24,8 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
+
+
 <section class="learn"><p class="eyebrow">INPUT → UPDATE</p><h2>「押した？」を聞いて、<br>答えを数字にする。</h2><div class="concept-row"><article><span class="concept-number">1</span><h3>INPUT</h3><p>マウスとタッチを、同じ <code>pressed</code> にそろえます。</p><code>pressed := justPressed()</code></article><article><span class="concept-number">2</span><h3>RULE</h3><p>押した瞬間だけ、得点に1を足します。</p><code>if pressed { score++ }</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>Draw は決まった得点を文字にします。</p><code>fmt.Sprintf(... g.score)</code></article></div><div class="code-lesson"><div><p class="eyebrow">THE AXIOM</p><h3>入力も RULE も<br>Update へ。</h3><p>Draw でマウスを読んだり <code>g.score++</code> したりすると、絵を描く回数で得点が変わります。先に Update が答えを決めます。</p></div><pre><code>func (g *game) Update() error {
     if justPressed() {
         g.score = addScore(g.score) // ← YOUR FIRST RULE
@@ -112,6 +114,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

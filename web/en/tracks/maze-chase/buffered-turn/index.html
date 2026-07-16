@@ -38,7 +38,7 @@
       <div class="overview-concept"><small>In this step</small><strong>QUEUE THE NEXT CORNER</strong></div>
       <p class="cast-note">The frame math sits in the same <a href="../../../games/tap-target/#basics">LEVEL 01 state boundary</a>.</p>
     </section>
-<p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
+<p class="curriculum-bridge">This continues the shared basics. If the game loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
 
 
 <section class="play lesson-play" id="play">
@@ -51,6 +51,9 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
+
+
+
 
 
 
@@ -88,7 +91,7 @@
 
       <div class="formula"><p class="eyebrow">THE BUFFER RULE</p><div class="formula-lines"><code>input → queued</code><span>then</span><code>at center: current = queued if passable</code></div><p>Split the press moment from the facing commit.</p></div>
 
-      <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>Choose direction only at tile centers</h3><p><code>Update</code> may remember input every frame, but it changes direction only when a tile is reached.</p></div><pre><code>if dir, ok := directionInput(); ok {
+      <div class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h3>Choose direction only at tile centers</h3><p><code>Update</code> may remember input every tick, but it changes direction only when a tile is reached.</p></div><pre><code>if dir, ok := directionInput(); ok {
     queued = dir
 }
 if reachedTileCenter {
@@ -100,7 +103,7 @@ if reachedTileCenter {
     target = add(tile, current)
 }</code></pre></div>
 
-      <div class="why-grid"><article><p class="eyebrow">WHY BUFFER?</p><h3>Why does this feel better?</h3><p>The player need not hit one exact frame; the game waits briefly for their intention to become legal. <code>add(tile, queued)</code> adds a direction (e.g. right = +1 on x) to the tile to get the next cell.</p></article><article><p class="eyebrow">WHEN TO CLEAR?</p><h3>When does the queue expire?</h3><p>This game keeps it until success. Other games use a short timer to tune the feel.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Challenge</h3><p>Expire the queue after ten frames and compare it with the persistent version.</p></article></div>
+      <div class="why-grid"><article><p class="eyebrow">WHY BUFFER?</p><h3>Why does this feel better?</h3><p>The player need not hit one exact frame; the game waits briefly for their intention to become legal. <code>add(tile, queued)</code> adds a direction (e.g. right = +1 on x) to the tile to get the next cell.</p></article><article><p class="eyebrow">WHEN TO CLEAR?</p><h3>When does the queue expire?</h3><p>This game keeps it until success. Other games use a short timer to tune the feel.</p></article><article class="challenge"><p class="eyebrow">TRY NEXT</p><h3>Challenge</h3><p>Expire the queue after ten ticks and compare it with the persistent version.</p></article></div>
     </section>
 
     <nav class="lesson-pager"><a href="../tile-runner/" rel="prev">← STEP 01<strong>Run the Maze</strong></a><a href="../pellet-map/" rel="next">STEP 03 →<strong>Pellet Maze</strong></a></nav>
@@ -127,6 +130,7 @@ if reachedTileCenter {
         </form>
       </div>
     </section>
+
 
 
 

@@ -79,10 +79,13 @@
 
 
 
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro">
 <p class="eyebrow">DEEP DIVE / DROP TIMER</p>
-<h2>毎フレーム動かさず、「時計」が満ちた時だけ落とす。</h2>
+<h2>tickごとに動かさず、「時計」が満ちた時だけ落とす。</h2>
 <p class="lesson-lead">EbitengineのUpdateは1秒におよそ60回呼ばれます。でもブロックを毎回1マス落とすと一瞬で床へ着きます。そこで<strong>何回待ったかをtimerで数え</strong>、決めた回数で1マスだけ進めます。</p>
 </div>
 <div class="concept-row">
@@ -109,8 +112,8 @@
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / DROP CLOCK</p>
 <h3 id="lab-title-falling-cell">時計が満ちたときだけ1マス落とす</h3>
-<p>「1フレーム進める」たびにタイマーが増えます。満タンになると1マス落下。下にブロックがあると LOCK して上から再開。毎フレーム落とすと一瞬で床へ着くので、時計で間引きます。</p>
-<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>1フレーム進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>時計を0へ</button></div>
+<p>「1 tick進める」たびにタイマーが増えます。満タンになると1マス落下。下にブロックがあると LOCK して上から再開。tickごとに落とすと一瞬で床へ着くので、時計で間引きます。</p>
+<div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step>1 tick進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>時計を0へ</button></div>
 <p class="lab-hint">本番は 38 フレームで1マス。ラボはわかりやすく 8 で再現しています。</p>
 </div>
 <div class="lab-visual">
@@ -183,6 +186,7 @@ if timer &gt;= dropFrames {
         </form>
       </div>
     </section>
+
 
 
 

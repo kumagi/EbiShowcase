@@ -16,8 +16,8 @@ const labs = {
     ja: {
       eye: "TRY IT / BOUNCE",
       title: "壁とパドルではね返してみよう",
-      body: "「1フレーム進める」でボールが動きます。左右の壁では vx、パドルでは vy の符号が反転します。",
-      step: "1フレーム進める",
+      body: "「1 tick進める」でボールが動きます。左右の壁では vx、パドルでは vy の符号が反転します。",
+      step: "1 tick進める",
       reset: "もとに戻す",
       hint: "速さの大きさはそのまま、向きだけ変わります。",
       values: [
@@ -36,8 +36,8 @@ const labs = {
     en: {
       eye: "TRY IT / BOUNCE",
       title: "Bounce off walls and paddles",
-      body: "“Next frame” moves the ball. Side walls flip vx; the paddle flips vy.",
-      step: "Next frame",
+      body: "“Next tick” moves the ball. Side walls flip vx; the paddle flips vy.",
+      step: "Next tick",
       reset: "Reset",
       hint: "Keep the speed magnitude; only the sign changes.",
       values: [
@@ -414,7 +414,7 @@ function compactLabHtml(slug, kind, titleJa, titleEn, lang) {
     aim: {
       attrs: "",
       buttons: [
-        ["data-lab-step", isJa ? "1フレーム" : "Next frame", "primary"],
+        ["data-lab-step", isJa ? "1 tick" : "Next tick", "primary"],
         ["data-lab-reset", reset, "quiet"],
       ],
       values: [
@@ -424,8 +424,8 @@ function compactLabHtml(slug, kind, titleJa, titleEn, lang) {
       ],
       board: `<div class="lab-mono-board">${isJa ? "最短距離の敵へ" : "nearest enemy"}</div>`,
       body: isJa
-        ? "毎フレームいちばん近い敵を選び、クールダウン間隔でのみ弾を出します。"
-        : "Each frame pick the nearest foe; fire only when the cooldown hits zero.",
+        ? "tickごとにいちばん近い敵を選び、クールダウン間隔でのみ弾を出します。"
+        : "Each tick, pick the nearest foe; fire only when the cooldown hits zero.",
     },
     pool: {
       attrs: "",
@@ -683,7 +683,7 @@ function compactLabHtml(slug, kind, titleJa, titleEn, lang) {
     frames: {
       attrs: `data-startup="${isJa ? "発生" : "startup"}" data-active="${isJa ? "持続" : "active"}" data-recovery="${isJa ? "硬直" : "recovery"}"`,
       buttons: [
-        ["data-lab-step", isJa ? "1F進める" : "Next frame", "primary"],
+        ["data-lab-step", isJa ? "1 tick進める" : "Next tick", "primary"],
         ["data-lab-reset", reset, "quiet"],
       ],
       values: [
@@ -700,7 +700,7 @@ function compactLabHtml(slug, kind, titleJa, titleEn, lang) {
       attrs: "",
       buttons: [
         ["data-lab-hit", isJa ? "ヒット" : "Hit", "primary"],
-        ["data-lab-step", isJa ? "1F進める" : "Next frame", ""],
+        ["data-lab-step", isJa ? "1 tick進める" : "Next tick", ""],
         ["data-lab-reset", reset, "quiet"],
       ],
       values: [
@@ -738,7 +738,7 @@ function compactLabHtml(slug, kind, titleJa, titleEn, lang) {
       attrs: "",
       buttons: [
         ["data-lab-press", isJa ? "早めに入力" : "Buffer input", "primary"],
-        ["data-lab-step", isJa ? "1F進める" : "Next frame", ""],
+        ["data-lab-step", isJa ? "1 tick進める" : "Next tick", ""],
         ["data-lab-reset", reset, "quiet"],
       ],
       values: [

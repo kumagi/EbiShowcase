@@ -53,6 +53,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / WAVES AND DIFFICULTY</p>
@@ -105,7 +108,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>時間→間隔→速度→ボス出現</h3>
-          <p>毎フレーム経過秒数を計算し、スポーン間隔と移動速度を更新します。35秒に達したらボスを1体追加。ボスはスピードが遅い代わりにHP 60 を持ちます。</p>
+          <p>tickごとに経過秒数を計算し、スポーン間隔と移動速度を更新します。35秒に達したらボスを1体追加。ボスはスピードが遅い代わりにHP 60 を持ちます。</p>
         </div>
         <pre><code>sec := g.frame / 60
 interval := max(10, 34-sec/2)
@@ -156,6 +159,7 @@ speed := .85 + float64(sec)*.018
         </form>
       </div>
     </section>
+
 
 
 

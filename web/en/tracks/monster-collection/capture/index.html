@@ -30,6 +30,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / VISIBLE PROBABILITY</p><h2>Let preparation improve chance instead of relying on luck alone.</h2><p class="lesson-lead">Capture chance is always visible. Start at 15%, add up to 55% from missing HP, 20% for SLEEP, and 15% for a REEF ORB. Finally compare one 0–99 <strong>roll</strong> with that chance.</p><p><strong>Integer division trap:</strong> write <code>(maxHP-wildHP)*55/maxHP</code> (multiply first). <code>(maxHP-wildHP)/maxHP*55</code> becomes 0 in Go int math.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Build chance from current conditions</h3><p>HP 100 gives no bonus; HP 20 gives 44. Add status and tool bonuses, then cap the total at 95%.</p><code>chance = min(95, 15+hpBonus+status+item)</code></article><article><span class="concept-number">2</span><h3>Draw one random number</h3><p>Capture succeeds when roll is below chance. Showing both explains a result such as “79 &lt; 84, so success.”</p><code>captured := rng.Intn(100) &lt; chance</code></article><article><span class="concept-number">3</span><h3>Separate success and failure updates</h3><p>Success appends a name to storage. Failure consumes only the tool, removes SLEEP, and allows a counterattack.</p><code>storage = append(storage, wild.name)</code></article></div><div class="motion-lab" data-lab="capture-roll" data-caught="caught! {r} &lt; {p}%" data-missed="broke free — {r} ≥ {p}%" data-weakened="HP {hp} → rate up" data-slept="SLEEP +20%" data-orbed="ORB +15%" data-rate="35" data-baited="baited" data-caught="caught! ({r})" data-missed="broke free ({r})" aria-labelledby="lab-title-capture">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / CATCH RATE</p>
@@ -81,6 +84,7 @@ if rng.Intn(100) &lt; captureChance() {
         </form>
       </div>
     </section>
+
 
 
 

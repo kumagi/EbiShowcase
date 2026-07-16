@@ -1,10 +1,10 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8">
-  <meta name="description" content="そろったマスを空にし、列を下へ詰める。そのとき配列はすぐ確定し、絵だけを数フレームかけて落とします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 消して落とす</title>
+  <meta name="description" content="そろったマスを空にし、列を下へ詰める。そのとき配列はすぐ確定し、絵だけを数tickかけて落とします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – 消して落とす</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – 消して落とす">
-    <meta property="og:description" content="そろったマスを空にし、列を下へ詰める。そのとき配列はすぐ確定し、絵だけを数フレームかけて落とします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:description" content="そろったマスを空にし、列を下へ詰める。そのとき配列はすぐ確定し、絵だけを数tickかけて落とします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/match3/clear-and-fall/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--match3--clear-and-fall.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -14,12 +14,12 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – 消して落とす">
-    <meta name="twitter:description" content="そろったマスを空にし、列を下へ詰める。そのとき配列はすぐ確定し、絵だけを数フレームかけて落とします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:description" content="そろったマスを空にし、列を下へ詰める。そのとき配列はすぐ確定し、絵だけを数tickかけて落とします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--match3--clear-and-fall.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="消して落とす">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/match3/clear-and-fall/">
-<link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/match3/clear-and-fall/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 3マッチパズル</a><span>STEP 03 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>消して落とす</h1><p>そろったマスを空にし、列を下へ詰める。そのとき配列はすぐ確定し、絵だけを数フレームかけて落とします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>落下アニメ＝Updateのprogress×Drawの補間</strong></div></section>
+<link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">コース</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../en/tracks/match3/clear-and-fall/">EN</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← 3マッチパズル</a><span>STEP 03 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>消して落とす</h1><p>そろったマスを空にし、列を下へ詰める。そのとき配列はすぐ確定し、絵だけを数tickかけて落とします。</p><div class="overview-concept"><small>このステップで学ぶこと</small><strong>落下アニメ＝Updateのprogress×Drawの補間</strong></div></section>
 
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>消す・落とす・補充を1手ずつ見よう。</h2></div><p>下ボタンをタップまたはSpace。3段階を3回完了するとクリアです。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="消して落とす" src="../../../../play/clear-and-fall/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -28,6 +28,9 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
+
+
+
 
 
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FALL TWEEN</p><h2>配列はすぐ落とす。絵は progress で追いかける。</h2><p class="lesson-lead">マッチ3の落下でいちばん大事なのは、<strong>論理盤面</strong>と<strong>見た目のy</strong>を分けることです。<code>Update</code>で列を圧縮して「最終のマス」を決め、<code>fromY→toY</code>と<code>progress</code>（0→1）を覚えます。移動中は入力を無視し、<code>Draw</code>だけが途中の高さを描きます。物理エンジンは使いません。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>まず論理を確定</h3><p>消したマスをemptyにし、列を下から詰めます。この瞬間、次の連鎖判定に使う正しい盤面ができます。</p><code>compactColumns()</code></article><article><span class="concept-number">2</span><h3>progressだけ進める</h3><p>falling中はSpaceを読まず、<code>progress += 0.07</code>。1になったら初めて次の段階（補充）へ進みます。</p><code>if falling { progress += …; return }</code></article><article><span class="concept-number">3</span><h3>Drawが補間する</h3><p>最終マスの色を、<code>fromY+(toY-fromY)*progress</code>の位置へ描きます。論理座標は動かさないのがコツです。</p><code>y = lerp(fromY, toY, progress)</code></article></div><div class="motion-lab" data-lab="match-scan" data-found="消せる！" data-none="まだそろっていない" data-cleared="落下した" aria-labelledby="lab-title-clear-and-fall">
@@ -86,6 +89,7 @@ if g.falling {
         </form>
       </div>
     </section>
+
 
 
 

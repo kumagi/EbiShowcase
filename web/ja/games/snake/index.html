@@ -115,12 +115,12 @@ new head → [●][●][●] → drop tail
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>Updateの中で<br>体を動かす</h3>
-          <p>毎フレームではなく、一定フレームに1回だけ体を動かすことで、スコアに応じてヘビがだんだん速くなります。</p>
+          <p>tickごとではなく、一定フレームに1回だけ体を動かすことで、スコアに応じてヘビがだんだん速くなります。</p>
           <p><strong>コードを読む順番：</strong> ①新しい頭をリストの先頭に足す → ②エサを食べていたら、しっぽは消さずそのまま（＝伸びる） → ③食べていなければしっぽを1個消す。この順番で読むと迷いません。</p>
         </div>
         <pre><code><span>func</span> (g *game) Update() error {
     g.frame++
-    <i>// スコアが上がると待ちフレームが減り、速くなる</i>
+    <i>// スコアが上がると待ちtickが減り、速くなる</i>
     <span>if</span> g.frame%max(4, 10-g.score/3) != 0 {
         <span>return</span> nil
     }
@@ -452,6 +452,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

@@ -126,9 +126,9 @@
           <p>演出関数は「どれだけ派手か」だけ受け取る。</p>
         </div>
         <pre><code>switch grade(pos) {
-case perfect: g.fx.Burst(...); g.fx.FlashScreen(0.8, ...)
-case ok:      g.fx.Burst(...smaller)
-case miss:    g.fx.Burst(...gray)
+case perfect: g.fx.Burst(x, y, 48, 5.0, gold, true); g.fx.FlashScreen(0.8, white)
+case ok:      g.fx.Burst(x, y, 20, 2.8, cyan, true)
+case miss:    g.fx.Burst(x, y, 8, 1.2, gray, false)
 }
 g.fx.Update()</code></pre>
       </div>

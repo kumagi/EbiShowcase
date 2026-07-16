@@ -53,6 +53,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / XP AND LEVEL-UP</p>
@@ -61,7 +64,7 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>Gem magnetism</h3><p>Gems within 90 pixels of the player are pulled toward them every frame. Reaching within 18 pixels picks up the gem and increments <code>xp</code>.</p><code>if d &lt; 90 { pull gem closer }</code></article>
+        <article><span class="concept-number">1</span><h3>Gem magnetism</h3><p>Gems within 90 pixels of the player are pulled toward them every tick. Reaching within 18 pixels picks up the gem and increments <code>xp</code>.</p><code>if d &lt; 90 { pull gem closer }</code></article>
         <article><span class="concept-number">2</span><h3>Level-up trigger</h3><p>The moment <code>xp &gt;= need</code>, set <code>draft = true</code>. The main Update delegates to <code>updateDraft</code>, freezing all game simulation until a card is chosen.</p><code>if g.xp &gt;= g.need { g.draft = true }</code></article>
         <article><span class="concept-number">3</span><h3>Draft choice</h3><p>One of three upgrade cards is selected by key press or tap. The chosen stat field is incremented, <code>need</code> grows by 3, and <code>draft</code> is cleared to resume play.</p><code>g.speed += .65 // etc.</code></article>
       </div>
@@ -157,6 +160,7 @@
         </form>
       </div>
     </section>
+
 
 
 

@@ -115,7 +115,7 @@ $ 箱  . ゴール
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>移動中は入力を無視し、<br>progressだけで絵を動かす</h3>
-          <p>キーを受けたらすぐにタイル座標を書き換えず、<code>from</code>/<code>to</code> と <code>moving=true</code> をセットします。次のフレームから <code>Update</code> は入力を読まず <code>progress</code> だけ増やし、<code>Draw</code> がその途中位置を描きます。1に達したら論理座標を <code>to</code> にそろえて初めて次の入力を受け付けます。</p>
+          <p>キーを受けたらすぐにタイル座標を書き換えず、<code>from</code>/<code>to</code> と <code>moving=true</code> をセットします。次のtickから <code>Update</code> は入力を読まず <code>progress</code> だけ増やし、<code>Draw</code> がその途中位置を描きます。1に達したら論理座標を <code>to</code> にそろえて初めて次の入力を受け付けます。</p>
         </div>
         <pre><code><span>if</span> g.moving {
     g.progress += 0.14
@@ -531,6 +531,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

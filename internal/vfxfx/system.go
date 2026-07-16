@@ -30,7 +30,7 @@ type System struct {
 	FR, FG, FB float64
 }
 
-// Update advances every effect. Call once per frame from Game.Update, after play logic.
+// Update advances every effect. Call once per tick from Game.Update, after play logic.
 func (s *System) Update() {
 	if s.Flash > 0 {
 		s.Flash -= 0.05

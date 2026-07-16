@@ -55,6 +55,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / EXPONENTIAL</p>
@@ -107,7 +110,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>コスト計算 → 生産 → 数値表示</h3>
-          <p>cost() と rate() は毎フレーム計算します。<code>math.Pow</code> は累乗、<code>float64(...)</code> は型合わせ、<code>1e9</code> は10億、<code>%.2f</code> は小数2桁表示の指定です。short() がこれらをまとめて短い文字にします。</p>
+          <p>cost() と rate() はtickごとに計算します。<code>math.Pow</code> は累乗、<code>float64(...)</code> は型合わせ、<code>1e9</code> は10億、<code>%.2f</code> は小数2桁表示の指定です。short() がこれらをまとめて短い文字にします。</p>
         </div>
         <pre><code><span>func</span> (g *game) cost() float64 {
     return 10 * math.Pow(1.18, float64(g.labs))
@@ -157,6 +160,7 @@
         </form>
       </div>
     </section>
+
 
 
 

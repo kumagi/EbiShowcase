@@ -28,11 +28,11 @@ const specs = {
     {
       eye: "TRY IT / BULLET LIST",
       title: "弾を撃って、進めて、消そう",
-      body: "「発射」で弾を配列へ追加し、「1フレーム」で全部の y を減らし、画面外を消します。敵も自機も、種類ごとのリストで同じ型を管理します。",
+      body: "「発射」で弾を配列へ追加し、「1 tick」で全部の y を減らし、画面外を消します。敵も自機も、種類ごとのリストで同じ型を管理します。",
       hint: "本物のゲームも bullets = append / 移動 / フィルタ のくり返しです。",
       controls: [
         ["data-lab-fire", "発射", "lab-button-primary"],
-        ["data-lab-step", "1フレーム進める"],
+        ["data-lab-step", "1 tick進める"],
         ["data-lab-reset", "戻す", "lab-button-quiet"],
       ],
       values: [["data-lab-count", "弾の数"], ["data-lab-note", "結果"]],
@@ -46,7 +46,7 @@ const specs = {
       hint: "Real games loop append → move → filter the same way.",
       controls: [
         ["data-lab-fire", "Fire", "lab-button-primary"],
-        ["data-lab-step", "Advance 1 frame"],
+        ["data-lab-step", "Advance 1 tick"],
         ["data-lab-reset", "Reset", "lab-button-quiet"],
       ],
       values: [["data-lab-count", "bullets"], ["data-lab-note", "result"]],
@@ -349,7 +349,7 @@ const specs = {
     {
       eye: "TRY IT / FRAME JOBS",
       title: "Order the jobs one input travels",
-      body: "A full stacker is a pipe: input → fall → lock → clear → spawn. Keep that order inside one frame.",
+      body: "A full stacker is a pipe: input → fall → lock → clear → spawn. Keep that order inside one tick.",
       hint: "Ghost piece can stay draw-only, outside the pipe.",
       controls: [
         ["data-lab-next", "Next job", "lab-button-primary"],
@@ -357,7 +357,7 @@ const specs = {
       ],
       values: [["data-lab-stepn", "step"], ["data-lab-note", "now"]],
       board: true,
-      data: 'data-steps="input,fall,lock,clear,spawn" data-loop="next frame"',
+      data: 'data-steps="input,fall,lock,clear,spawn" data-loop="next tick"',
     },
     F("ORDERED PIPE", ["do jobs in fixed order", "never skip ahead"], "消す前に固定、固定前に移動。",
       "ORDERED PIPE", ["do jobs in fixed order", "never skip ahead"], "Lock before clear; move before lock."),
@@ -810,7 +810,7 @@ const specs = {
     "pipeline",
     {
       eye: "TRY IT / FRAME ORDER",
-      title: "1フレームの仕事を順番に処理",
+      title: "1 tickの仕事を順番に処理",
       body: "迷路総合はパイプです。入力→移動→敵AI→ドット→描画準備。順序を守ると、食べた直後の敵接触なども説明しやすくなります。",
       hint: "描画は最後。ここより前で画面を触らない。",
       controls: [
@@ -823,7 +823,7 @@ const specs = {
     },
     {
       eye: "TRY IT / FRAME ORDER",
-      title: "Run one frame’s jobs in order",
+      title: "Run one tick’s jobs in order",
       body: "The full maze game is a pipe: input → move → enemy AI → pellets → draw prep. Fixed order makes edge cases explainable.",
       hint: "Draw last—never touch pixels earlier.",
       controls: [
@@ -832,7 +832,7 @@ const specs = {
       ],
       values: [["data-lab-stepn", "step"], ["data-lab-note", "now"]],
       board: true,
-      data: 'data-steps="input,move,enemy,pellets,draw" data-loop="next frame"',
+      data: 'data-steps="input,move,enemy,pellets,draw" data-loop="next tick"',
     },
     F("FIXED ORDER", ["run systems in list order", "draw is last"], "AIが先かドットが先かで勝敗が変わることがあります。",
       "FIXED ORDER", ["run systems in list order", "draw is last"], "AI-before-pellets can change who wins a tie."),

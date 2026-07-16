@@ -38,7 +38,7 @@
       <div class="overview-concept"><small>In this step</small><strong>Pass explosion events to the next bomb</strong></div>
       <p class="cast-note">The frame math sits in the same <a href="../../../games/tap-target/#basics">LEVEL 01 state boundary</a>.</p>
     </section>
-<p class="curriculum-bridge">This continues the shared basics. If the frame loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
+<p class="curriculum-bridge">This continues the shared basics. If the game loop is new, start with <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a>.</p>
 
 
 <section class="play lesson-play" id="play">
@@ -51,6 +51,9 @@
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_bomb-chain.svg" alt="Bomb chain reaction" loading="lazy" decoding="async"><figcaption>A visual map of Bomb chain reaction. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
+
+
+
 
 
 
@@ -72,7 +75,7 @@
 <h3 id="lab-title-chain-explosion">Let blasts ignite neighbor bombs</h3>
 <p>Ignite turns the first bomb into BLAST and spreads to neighbors. Clear removes flames. Queue or recursion both work.</p>
 <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-ignite data-go-focus="ignite chain">Ignite</button><button type="button" class="lab-button" data-lab-clear data-go-focus="ignite">Clear flames</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset layout</button></div>
-<p class="lab-hint">Resolve the whole chain in one frame, or stretch it across frames.</p>
+<p class="lab-hint">Resolve the whole chain in one tick, or stretch it across ticks.</p>
 </div>
 <div class="lab-visual">
 <div class="lab-board" data-lab-board role="img" aria-label="lab"></div>
@@ -132,6 +135,7 @@ for len(queue) &gt; 0 {
         </form>
       </div>
     </section>
+
 
 
 

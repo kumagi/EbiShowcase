@@ -63,7 +63,7 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>速度ベクトル</h3><p>1フレームでどれだけ動くかを、X と Y に分けて持ちます。斜めに見える動きも、実は2つの足し算です。</p><code>ballX += vx</code></article>
+        <article><span class="concept-number">1</span><h3>速度ベクトル</h3><p>1 tickでどれだけ動くかを、X と Y に分けて持ちます。斜めに見える動きも、実は2つの足し算です。</p><code>ballX += vx</code></article>
         <article><span class="concept-number">2</span><h3>面ごとの反射</h3><p>当たった面に垂直な成分だけ反転します。たて壁なら vx、よこパドルなら vy です。</p><code>vx = -vx</code></article>
         <article><span class="concept-number">3</span><h3>ヒット位置</h3><p>パドル中心からのずれ × <code>0.055</code> を vx に足します。端で返すほど横に飛び、中央ならほぼ真上。0.055 は「味付け用の小さめの係数」で、大きくすると曲がりの効きが強くなります。</p><code>vx += offset * 0.055</code></article>
       </div>
@@ -73,9 +73,9 @@
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / BOUNCE</p>
           <h3 id="lab-title-bounce">壁とパドルではね返してみよう</h3>
-          <p>「1フレーム進める」でボールが動きます。左右の壁では vx、パドルでは vy の符号が反転します。</p>
+          <p>「1 tick進める」でボールが動きます。左右の壁では vx、パドルでは vy の符号が反転します。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="位置を進める">1フレーム進める</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="位置を進める">1 tick進める</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">速さの大きさはそのまま、向きだけ変わります。</p>
@@ -107,8 +107,8 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>動かす → 当てる → 向きを変える</h3>
-          <p>毎フレームまず位置を進め、次に壁とパドルを調べます。下のパドルに当たったら上向きにし、当たった位置で左右の成分も少し足します。</p>
-          <p>CPUは <code>ballX</code> へ向かって毎フレーム最大 <code>3.5</code> だけ動きます。ボールより <code>8</code> ピクセル以上離れているときだけ追うので、ぴったり重ならずに「少し遅れ気味の追従」になります。3.5 はプレイヤーより遅めに感じるよう選んだ上限速度です。</p>
+          <p>tickごとにまず位置を進め、次に壁とパドルを調べます。下のパドルに当たったら上向きにし、当たった位置で左右の成分も少し足します。</p>
+          <p>CPUは <code>ballX</code> へ向かってtickごとに最大 <code>3.5</code> だけ動きます。ボールより <code>8</code> ピクセル以上離れているときだけ追うので、ぴったり重ならずに「少し遅れ気味の追従」になります。3.5 はプレイヤーより遅めに感じるよう選んだ上限速度です。</p>
         </div>
         <pre><code>g.ballX += g.vx
 g.ballY += g.vy
@@ -327,6 +327,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

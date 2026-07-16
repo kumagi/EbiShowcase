@@ -64,11 +64,14 @@
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if map[ny][nx]!=Wall { x,y,dir=nx,ny,inputDir }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if rows[ny][nx]!='#' { x,y,dir=nx,ny,inputDir }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
+
+
+
 
 
 
@@ -213,6 +216,7 @@
         </form>
       </div>
     </section>
+
 
 
 

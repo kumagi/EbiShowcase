@@ -33,9 +33,12 @@
 
 
 
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / STATIC AND MUTABLE LAYERS</p><h2>同じマスにある「通れるか」と「まだあるか」を分ける。</h2><p class="lesson-lead">迷路の壁はプレイ中に変わりませんが、ドットは取るたびに消えます。両方を一つの文字へ押し込む代わりに、<code>walls</code>と<code>pellets</code>という2枚の同じ大きさの表を重ねます。位置は同じ<code>[y][x]</code>でも、固定データと<strong>可変状態</strong>の役目が違います。</p></div>
-<div class="concept-row"><article><span class="concept-number">1</span><h3>文字列を2レイヤーへ読む</h3><p><code>#</code>ならwallsをtrue、<code>.</code>ならpelletsをtrueにします。Drawは壁を先に、その上へ残っているドットだけを描きます。</p><code>walls[y][x] = tile == '#'; pellets[y][x] = tile == '.'</code></article><article><span class="concept-number">2</span><h3>取得はドットだけを書き換える</h3><p>プレイヤーが新しいタイルへ入った時、pelletsがtrueならfalseへ変えます。同じ場所をもう一度通っても得点は増えません。</p><code>if pellets[y][x] { pellets[y][x] = false }</code></article><article><span class="concept-number">3</span><h3>残数を同時に1減らす</h3><p>毎フレーム盤面全部を数え直さず、取得成功と同じ場所でremainingを減らします。0になった瞬間がステージクリアです。</p><code>remaining--; if remaining == 0 { clear = true }</code></article></div>
+<div class="concept-row"><article><span class="concept-number">1</span><h3>文字列を2レイヤーへ読む</h3><p><code>#</code>ならwallsをtrue、<code>.</code>ならpelletsをtrueにします。Drawは壁を先に、その上へ残っているドットだけを描きます。</p><code>walls[y][x] = tile == '#'; pellets[y][x] = tile == '.'</code></article><article><span class="concept-number">2</span><h3>取得はドットだけを書き換える</h3><p>プレイヤーが新しいタイルへ入った時、pelletsがtrueならfalseへ変えます。同じ場所をもう一度通っても得点は増えません。</p><code>if pellets[y][x] { pellets[y][x] = false }</code></article><article><span class="concept-number">3</span><h3>残数を同時に1減らす</h3><p>tickごとに盤面全部を数え直さず、取得成功と同じ場所でremainingを減らします。0になった瞬間がステージクリアです。</p><code>remaining--; if remaining == 0 { clear = true }</code></article></div>
 <div class="motion-lab" data-lab="pellet-count" data-ate="取得" data-clear="全消し！" aria-labelledby="lab-title-pellet-map">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / PELLET LAYER</p>
@@ -88,6 +91,7 @@ if remaining == 0 { clear = true }</code></pre></div>
         </form>
       </div>
     </section>
+
 
 
 

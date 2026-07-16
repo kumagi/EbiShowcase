@@ -31,7 +31,7 @@
 
 <section class="composition" id="layers"><div class="guide-heading"><p class="eyebrow">THE SIX LAYERS</p><h2>A game is built<br>from six layers.</h2><p class="lesson-lead" style="max-width:40rem;margin:0.75rem auto 0">Picture a recipe (systems) vs. a grocery list (content): same stir-fry method, different ingredients. Games work the same way.</p></div>
 <div class="composition-flow" role="img" aria-label="Asset data is loaded into a game world, played through Update and Draw, and stored as save state">
-<div class="flow-sources"><span>MAP</span><span>SCENARIO</span><span>EVENT</span><span>IMAGE</span><span>AUDIO</span></div><b>↓ LOAD</b><div class="flow-loader">ASSET LOADER<small>JSON, images, and audio into typed data</small></div><b>↓ COMPOSE</b><div class="flow-world">GAME WORLD<small>Place maps, characters, and events</small></div><b>↓ PLAY EACH FRAME</b><div class="flow-runtime"><span>UPDATE</span><span>DRAW</span><span>SAVE</span></div></div>
+<div class="flow-sources"><span>MAP</span><span>SCENARIO</span><span>EVENT</span><span>IMAGE</span><span>AUDIO</span></div><b>↓ LOAD</b><div class="flow-loader">ASSET LOADER<small>JSON, images, and audio into typed data</small></div><b>↓ RUN THE GAME</b><div class="flow-runtime"><span>UPDATE</span><span>DRAW</span><span>SAVE</span></div></div>
 <div class="layer-grid">
 <article><b>01</b><h3>Game loop</h3><p>Ebitengine <code>Update</code>, <code>Draw</code>, and <code>Layout</code> form the foundation.</p></article>
 <article><b>02</b><h3>Systems</h3><p>Go code defines how movement, combat, dialogue, and collision work.</p></article>
@@ -119,7 +119,7 @@
 <article><b>05</b><h3>Test assets too</h3><p>Load every map, event, and translation key automatically to catch broken references.</p></article>
 </div></section>
 
-<section class="composition-summary"><p class="eyebrow">THE BIG IDEA</p><h2>A game is not one giant program.<br><em>It is a composition of parts, played by systems.</em></h2><p>Ebitengine advances the world each frame. System code defines the rules, and asset data supplies the content. This separation lets more people add maps and stories without rewriting the engine.</p><p class="data-track-lead">This idea helps not only RPGs, but also dialogue, tactics, cards, and exploration games.</p><div class="data-track-links"><a class="cta" href="../../tracks/rpg/">RPG dialogue and events <b>→</b></a><a class="cta" href="../../tracks/visual-novel/">Dialogue scene data <b>→</b></a><a class="cta" href="../../tracks/tactics/">Tactical mission data <b>→</b></a><a class="cta" href="../../tracks/deckbuilder/">Card deck data <b>→</b></a></div></section>
+<section class="composition-summary"><p class="eyebrow">THE BIG IDEA</p><h2>A game is not one giant program.<br><em>It is a composition of parts, played by systems.</em></h2><p>Ebitengine advances the world each tick. System code defines the rules, and asset data supplies the content. This separation lets more people add maps and stories without rewriting the engine.</p><p class="data-track-lead">This idea helps not only RPGs, but also dialogue, tactics, cards, and exploration games.</p><div class="data-track-links"><a class="cta" href="../../tracks/rpg/">RPG dialogue and events <b>→</b></a><a class="cta" href="../../tracks/visual-novel/">Dialogue scene data <b>→</b></a><a class="cta" href="../../tracks/tactics/">Tactical mission data <b>→</b></a><a class="cta" href="../../tracks/deckbuilder/">Card deck data <b>→</b></a></div></section>
 
 
     <section class="feedback-section" aria-labelledby="feedback-title">
@@ -143,6 +143,7 @@
         </form>
       </div>
     </section>
+
 
 
 

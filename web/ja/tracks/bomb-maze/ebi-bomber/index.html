@@ -55,18 +55,21 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE</p>
         <h2>ゲームは「部品」より「更新する順番」でつながる</h2>
-        <p class="lesson-lead">入力、爆弾、爆風、壁とアイテム、敵、勝敗の順に処理すると、同じフレームの出来事が予測しやすくなります。当たり判定はスプライトではなくタイル座標で行います。</p>
+        <p class="lesson-lead">入力、爆弾、爆風、壁とアイテム、敵、勝敗の順に処理すると、同じtickの出来事が予測しやすくなります。当たり判定はスプライトではなくタイル座標で行います。</p>
       </div>
 
       <div class="concept-row">
 <article><span class="concept-number">1</span><h3>世界を先に変える</h3><p>爆風で壁を床へ変え、アイテムを出してから取得を調べます。</p></article><article><span class="concept-number">2</span><h3>能力をデータで反映</h3><p>火力、同時爆弾数、移動量を数値として、同じ処理へ渡します。</p></article><article><span class="concept-number">3</span><h3>最後に進行判定</h3><p>敵撃破と壁8個の条件が揃ったら出口を開き、到着でクリアします。</p></article>
 </div>
 
-      <div class="motion-lab" data-lab="pipeline" data-steps="input,move,fuse,blast,walls,ai,draw" data-loop="次フレーム" aria-labelledby="lab-title-ebi-bomber">
+      <div class="motion-lab" data-lab="pipeline" data-steps="input,move,fuse,blast,walls,ai,draw" data-loop="次のtick" aria-labelledby="lab-title-ebi-bomber">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / FRAME ORDER</p>
 <h3 id="lab-title-ebi-bomber">爆弾ゲームの1フレームを並べる</h3>
@@ -80,9 +83,9 @@
 </div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each tick:</span>
 <span data-go-line="step">input → sim → resolve → draw</span>
-<span data-go-line="loop">// then next frame</span></pre>
+<span data-go-line="loop">// then next tick</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>
@@ -124,6 +127,7 @@ checkWinOrLoss()</code></pre></div>
         </form>
       </div>
     </section>
+
 
 
 

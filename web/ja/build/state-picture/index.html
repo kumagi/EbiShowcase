@@ -25,12 +25,16 @@
 <div class="lesson-breadcrumb"><a href="../empty-loop/">← BUILD 01</a><span>BUILD TRACK / STEP 02</span></div>
 <section class="overview-hero"><p class="eyebrow">BUILD TRACK / STATE FIRST</p><h1>数字を絵に写そう</h1><p>四角の場所は <code>game</code> の <code>x</code> と <code>y</code> が覚えています。Draw はその数字を読むだけで、四角を動かしません。</p><div class="overview-concept"><small>このステップで書くこと</small><strong>state → Draw → pixels</strong></div></section>
 
-<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>静止した四角も、<br>状態を持つゲーム。</h2></div><p>いまは同じ数字を毎フレーム描くので、四角は止まっています。コードの最初の <code>x</code> だけ変えると、別の場所から始まります。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="数字を絵に写す" src="../../../play/state-picture/" allow="autoplay; fullscreen"></iframe></div></div></section>
+<section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAY FIRST / WEBASSEMBLY</p><h2>静止した四角も、<br>状態を持つゲーム。</h2></div><p>いまはDrawが呼ばれるたび同じ数字を描くので、四角は止まっています。コードの最初の <code>x</code> だけ変えると、別の場所から始まります。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>BUILD 02</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="数字を絵に写す" src="../../../play/state-picture/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
 
-<section class="learn"><p class="eyebrow">ONE TRUTH</p><h2>位置の本当の答えは、<br><code>game</code> に置く。</h2><p class="lesson-lead">画面は答えを保存する場所ではありません。<code>game.x</code> と <code>game.y</code> が答えで、Draw は毎フレームその答えをピクセルへ写します。</p><div class="concept-row"><article><span class="concept-number">1</span><h3>STATE</h3><p><code>x, y</code> はゲームの箱に入る数字です。</p><code>type game struct { x, y int }</code></article><article><span class="concept-number">2</span><h3>DRAW</h3><p>Draw は数字を読んで、四角をそこに描きます。</p><code>DrawFilledRect(... g.x, g.y ...)</code></article><article><span class="concept-number">3</span><h3>SAME STATE</h3><p>同じ <code>game</code> なら、毎回同じ絵です。</p><code>game → pixels</code></article></div><div class="code-lesson"><div><p class="eyebrow">THE AXIOM</p><h3>Draw は<br>進めない。</h3><p>「描くたびに少し動かす」は一見便利でも、絵を描く回数でルールが変わってしまいます。数字を進めるなら Update 側です。</p></div><pre><code>// ❌ Draw の中ではしない
+
+
+
+
+<section class="learn"><p class="eyebrow">ONE TRUTH</p><h2>位置の本当の答えは、<br><code>game</code> に置く。</h2><p class="lesson-lead">画面は答えを保存する場所ではありません。<code>game.x</code> と <code>game.y</code> が答えで、Draw は呼ばれるたびその答えをピクセルへ写します。</p><div class="concept-row"><article><span class="concept-number">1</span><h3>STATE</h3><p><code>x, y</code> はゲームの箱に入る数字です。</p><code>type game struct { x, y int }</code></article><article><span class="concept-number">2</span><h3>DRAW</h3><p>Draw は数字を読んで、四角をそこに描きます。</p><code>DrawFilledRect(... g.x, g.y ...)</code></article><article><span class="concept-number">3</span><h3>SAME STATE</h3><p>同じ <code>game</code> なら、毎回同じ絵です。</p><code>game → pixels</code></article></div><div class="code-lesson"><div><p class="eyebrow">THE AXIOM</p><h3>Draw は<br>進めない。</h3><p>「描くたびに少し動かす」は一見便利でも、絵を描く回数でルールが変わってしまいます。数字を進めるなら Update 側です。</p></div><pre><code>// ❌ Draw の中ではしない
 g.x++
 
 // ✅ Draw は読むだけ
@@ -106,6 +110,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

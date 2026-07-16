@@ -52,7 +52,7 @@ func (g *game) Update() error {
 				a := float64(i) * .7
 				g.chips = append(g.chips, chip{240, 350, math.Cos(a) * 3, math.Sin(a)*3 - 1, 32})
 			}
-			g.message = fmt.Sprintf("CONTACT! combo x%d — impact happens on one frame.", g.combo)
+			g.message = fmt.Sprintf("CONTACT! combo x%d — impact happens on one tick.", g.combo)
 			if g.hp == 0 {
 				g.message = "Block cleared! Tap to replay and beat your rhythm."
 			}

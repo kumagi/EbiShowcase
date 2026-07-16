@@ -278,10 +278,10 @@ const specs = {
     ja: {
       eye: "TRY IT / DROP CLOCK",
       title: "時計が満ちたときだけ1マス落とす",
-      body: "「1フレーム進める」たびにタイマーが増えます。満タンになると1マス落下。下にブロックがあると LOCK して上から再開。毎フレーム落とすと一瞬で床へ着くので、時計で間引きます。",
-      hint: "本番は 38 フレームで1マス。ラボはわかりやすく 8 で再現しています。",
+      body: "「1 tick進める」たびにタイマーが増えます。満タンになると1マス落下。下にブロックがあると LOCK して上から再開。tickごとに落とすと一瞬で床へ着くので、時計で間引きます。",
+      hint: "本番は 38 tickで1マス。ラボはわかりやすく 8 tickで再現しています。",
       controls: [
-        ["data-lab-step", "1フレーム進める", "lab-button-primary"],
+        ["data-lab-step", "1 tick進める", "lab-button-primary"],
         ["data-lab-reset", "時計を0へ", "lab-button-quiet"],
       ],
       values: [
@@ -295,10 +295,10 @@ const specs = {
     en: {
       eye: "TRY IT / DROP CLOCK",
       title: "Drop one cell only when the clock fills",
-      body: "Each Step ticks the timer. When it’s full, the cell moves one row. If blocked below, it LOCKs and respawns up top. Dropping every frame would hit the floor instantly—so we throttle with a clock.",
-      hint: "The real game uses 38 frames; this lab uses 8 so you can feel it sooner.",
+      body: "Each Step advances the timer by one tick. When it’s full, the cell moves one row. If blocked below, it LOCKs and respawns up top. Dropping every tick would hit the floor instantly—so we throttle with a clock.",
+      hint: "The real game uses 38 ticks; this lab uses 8 so you can feel it sooner.",
       controls: [
-        ["data-lab-step", "Advance 1 frame", "lab-button-primary"],
+        ["data-lab-step", "Advance 1 tick", "lab-button-primary"],
         ["data-lab-reset", "Reset clock", "lab-button-quiet"],
       ],
       values: [

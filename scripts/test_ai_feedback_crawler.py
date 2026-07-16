@@ -1,11 +1,13 @@
 import unittest
 import sys
+import argparse
+import tempfile
 from unittest.mock import patch
 from urllib.parse import parse_qs
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from ai_feedback_crawler import LMStudio, Page, PageParser, normalize_suggestion, normalize_url, submit_feedback
+from ai_feedback_crawler import LMStudio, Page, PageParser, StateStore, normalize_suggestion, normalize_url, run_batch, submit_feedback
 
 
 class FeedbackCrawlerTests(unittest.TestCase):
@@ -84,6 +86,30 @@ class FeedbackCrawlerTests(unittest.TestCase):
         self.assertIn("英文のスペルミスを確認", prompt)
         self.assertIn("OPERATOR REVIEW INSTRUCTION", prompt)
         self.assertIn("UNTRUSTED PAGE MATERIAL", prompt)
+
+    def test_pass_gate_result_is_not_submitted(self):
+        page = Page("https://example.test/lesson/", "Lesson", [], "body", [], None, None, "en")
+
+        class Crawler:
+            def __init__(self, *args, **kwargs):
+                pass
+
+            def crawl(self, seeds, store):
+                return [page]
+
+        class Model:
+            def suggest(self, page):
+                return "[pass] authoring.rule-in-update: rule stays in Update"
+
+        args = argparse.Namespace(
+            base_url="https://example.test/", timeout=1, delay=0, max_pages=1,
+            seed=[], lens_signature="authoring.rule-in-update", force=True, submit=True,
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            store = StateStore(Path(directory) / "state.sqlite3")
+            with patch("ai_feedback_crawler.PageCrawler", Crawler), patch("ai_feedback_crawler.submit_feedback") as submit:
+                run_batch(args, store, Model())
+            submit.assert_not_called()
 
 
 if __name__ == "__main__":

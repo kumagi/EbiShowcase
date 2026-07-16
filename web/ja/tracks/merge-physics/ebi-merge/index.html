@@ -30,6 +30,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / GAME LOOP</p><h2>物理の実験を、どうやってゲームにする？</h2><p class="lesson-lead">次の実を見せて<strong>考える時間</strong>を作り、合体へ得点を付け、高さへ失敗条件を付けます。物理へ目標と選択を加えるとゲームになります。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>予告</h3><p>nextとafterを表示し、置き場所を考えられるようにします。</p><code>next, after</code></article><article><span class="concept-number">2</span><h3>得点</h3><p>大きなtierほど2乗で高得点にします。</p><code>score += tier*tier*10</code></article><article><span class="concept-number">3</span><h3>危険ライン</h3><p>静かな実が180フレーム上に残ると終了です。</p><code>danger &gt;= 180</code></article></div><div class="motion-lab" data-lab="preview-next" data-enqueued="予告追加" data-dropped="落下 T{n}" data-empty="空" aria-labelledby="lab-title-ebi-merge">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / NEXT QUEUE</p>
@@ -73,6 +76,7 @@
         </form>
       </div>
     </section>
+
 
 
 

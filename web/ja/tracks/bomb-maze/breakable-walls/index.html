@@ -55,11 +55,14 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE</p>
         <h2>マスは絵ではなく「状態」</h2>
-        <p class="lesson-lead">壁が壊れるとは、壁の画像を消すことではありません。二次元配列の値を <code>softWall</code> から <code>floor</code> へ変えることです。次のフレームから移動判定も描画も、新しい床の値を読みます。</p>
+        <p class="lesson-lead">壁が壊れるとは、壁の画像を消すことではありません。二次元配列の値を <code>softWall</code> から <code>floor</code> へ変えることです。次のtickから移動判定も描画も、新しい床の値を読みます。</p>
       </div>
 
       <div class="concept-row">
@@ -86,9 +89,9 @@
   </div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
-<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each frame:</span>
+<pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="order">// fixed order each tick:</span>
 <span data-go-line="step">input → sim → resolve → draw</span>
-<span data-go-line="loop">// then next frame</span></pre>
+<span data-go-line="loop">// then next tick</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>
@@ -131,6 +134,7 @@
         </form>
       </div>
     </section>
+
 
 
 

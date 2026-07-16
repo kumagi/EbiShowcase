@@ -33,6 +33,9 @@
 
 
 
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / DEFINITION VS STATE</p><h2>Separate what the guidebook says once from what each creature remembers.</h2><p class="lesson-lead">Just as <a href="../../../games/tap-target/#basics">LEVEL 01 Update / Draw</a> changed numbers and rendered them, Update changes instance HP and XP here. But the REEFLET species name and maximum HP match for every member. Separate shared <strong>definitions</strong> from changing <strong>state</strong>.</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>Species is a read-only table</h3><p>The species table stores name, maximum HP, attack, and color once. Training never changes its maximum HP of 10.</p><code>speciesTable[0] = Species{"REEFLET", 10, 3}</code></article><article><span class="concept-number">2</span><h3>Instances point with an ID</h3><p>AQUA and BUBBLE both store <code>speciesID: 0</code> and read one definition. The name is not copied, so there is one place to fix it.</p><code>Creature{nickname: "AQUA", speciesID: 0}</code></article><article><span class="concept-number">3</span><h3>Store HP and XP per individual</h3><p>Current HP and experience change during an adventure, so they belong to each creature. Same-species A can start at HP10 while B starts at HP6.</p><code>creature.hp -= 2; creature.xp += 3</code></article></div>
@@ -85,6 +88,7 @@ c.xp += 3</code></pre></div>
         </form>
       </div>
     </section>
+
 
 
 

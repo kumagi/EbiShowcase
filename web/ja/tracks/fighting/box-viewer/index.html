@@ -67,6 +67,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / HITBOXES</p>
@@ -78,7 +81,7 @@
         <article>
           <span class="concept-number">1</span>
           <h3>押し合い判定（Push Box）</h3>
-          <p>青い矩形が重なるとキャラクターを押し戻します。壁と同じように体が通り抜けるのを防ぎます。押し合いは毎フレーム調べ続けます。</p>
+          <p>青い矩形が重なるとキャラクターを押し戻します。壁と同じように体が通り抜けるのを防ぎます。押し合いはtickごとに調べ続けます。</p>
           <code>if overlap(push1, push2) { p1 = p2 - 36 }</code>
         </article>
         <article>
@@ -211,6 +214,7 @@ func overlap(a, b rect) bool {
         </form>
       </div>
     </section>
+
 
 
 

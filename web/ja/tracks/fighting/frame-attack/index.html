@@ -68,6 +68,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / FRAME DATA</p>
@@ -103,7 +106,7 @@
           <h3 id="lab-title-frame-attack">発生・持続・硬直をコマ送り</h3>
           <p>技は発生・持続・硬直の3相。持続のあいだだけ攻撃判定が出ます。</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="tick active rec">1F進める</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="tick active rec">1 tick進める</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
@@ -135,14 +138,14 @@
           <span>↓</span>
           <code>RECOVERY  フレーム 13 〜 30  // 次の行動ができない</code>
         </div>
-        <p>フレームは毎秒60回カウントされます（Ebitengineのデフォルト）。1フレームは約16.7ミリ秒です。フレーム9のときボタンを押しても、この技のカウンターが先に動くため同じフレームでは当たりません。</p>
+        <p>フレームは毎秒60回カウントされます（Ebitengineのデフォルト）。1フレームは約16.7ミリ秒です。フレーム9のときボタンを押しても、この技のカウンターが先に動くため同じtickでは当たりません。</p>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>押す → カウンターを進める → ACTIVE で当たりを調べる</h3>
-          <p>ボタンを押したフレームで <code>g.frame = 1</code> にし、毎フレーム1ずつ増やします。フレーム9〜12のときだけ攻撃判定を作り、相手の喰らい判定と重なるか調べます。</p>
+          <p>ボタンを押したtickで <code>g.frame = 1</code> にし、tickごとに1ずつ増やします。フレーム9〜12のときだけ攻撃判定を作り、相手の喰らい判定と重なるか調べます。</p>
         </div>
         <pre><code><span>if</span> g.frame == 0 &amp;&amp; press() {
     g.frame = 1        // ボタンを押したら開始
@@ -208,6 +211,7 @@
         </form>
       </div>
     </section>
+
 
 
 

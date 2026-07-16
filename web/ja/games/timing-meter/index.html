@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="動くメーターを止めて、フレーム更新とゲーム状態を学ぶEbitengineレッスン。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ">
+  <meta name="description" content="動くメーターを止めて、tick更新とゲーム状態を学ぶEbitengineレッスン。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ">
   <title>Ebi Showcase – LEVEL 02 — ストップ・ザ・メーター</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – LEVEL 02 — ストップ・ザ・メーター">
-    <meta property="og:description" content="動くメーターを止めて、フレーム更新とゲーム状態を学ぶEbitengineレッスン。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ">
+    <meta property="og:description" content="動くメーターを止めて、tick更新とゲーム状態を学ぶEbitengineレッスン。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/games/timing-meter/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--timing-meter.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -19,7 +19,7 @@
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – LEVEL 02 — ストップ・ザ・メーター">
-    <meta name="twitter:description" content="動くメーターを止めて、フレーム更新とゲーム状態を学ぶEbitengineレッスン。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ">
+    <meta name="twitter:description" content="動くメーターを止めて、tick更新とゲーム状態を学ぶEbitengineレッスン。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--games--timing-meter.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="ストップ・ザ・メーター">
     <!-- ogp:end -->
@@ -178,7 +178,7 @@ const (
 
 type game struct {
 	markerX float64 // 動く線の位置
-	speed   float64 // 1フレームで動く量（マイナスなら左へ）
+	speed   float64 // 1 tickで動く量（マイナスなら左へ）
 	score   int
 	round   int
 	stopped bool // 止めた直後か
@@ -303,6 +303,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

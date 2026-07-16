@@ -65,6 +65,11 @@
         <article><b>02</b><h3>DRAW</h3><p>いまの数字どおりに、丸や文字を<strong>画面へ描きます</strong>。入力も計算も状態変更もしません。</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
         <article><b>03</b><h3>LAYOUT</h3><p>ゲーム内の基準サイズを返します。画面の拡大縮小はエンジンに任せます。</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article>
       </div>
+      <div class="formula" id="tick">
+        <p class="eyebrow">NEW WORD / TICK</p>
+        <div class="formula-lines"><code>1 tick = Update 1回分</code><span>別もの</span><code>1 frame = 画面の1コマ</code></div>
+        <p><strong>tick（ティック）</strong>は、EbitengineがUpdateを1回呼び、ゲームの数字を1段進める単位です。初期設定では通常1秒に約60 tickですが変更できます。<strong>frame（フレーム）</strong>はDrawが作る絵の1コマです。Drawが遅れたり省略されたりしてもUpdateのtickは進められるため、この教材ではゲーム状態を進める単位をframeとは呼びません。</p>
+      </div>
 
       <div class="motion-lab" data-lab="loop" data-update="UPDATE" data-draw="DRAW" data-update-note="数字を変える（スコア・位置・タイマー）" data-draw-note="いまの数字どおりに画面を描く" aria-labelledby="loop-lab-title">
         <div class="lab-copy">
@@ -113,6 +118,8 @@
         </div>
       </details>
     </section>
+
+
 
 
 
@@ -316,7 +323,7 @@ func (g *game) Update() error {
 		return nil
 	}
 
-	// タイマーを1フレーム減らす
+	// タイマーを1 tick減らす
 	g.framesLeft--
 
 	// 押した瞬間だけ、丸との距離を調べる
@@ -409,6 +416,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

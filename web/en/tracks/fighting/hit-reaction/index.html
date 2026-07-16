@@ -68,18 +68,21 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / HIT REACTION</p>
         <h2>Why does a hit<br>feel so heavy?</h2>
-        <p class="lesson-lead">The answer is <strong>hitstop</strong>. Freezing the world for a few frames makes the brain register “that connected.” Then <strong>hitstun</strong> locks control and <strong>knockback</strong> slides the foe away.</p>
+        <p class="lesson-lead">The answer is <strong>hitstop</strong>. Freezing the world for a few ticks makes the brain register “that connected.” Then <strong>hitstun</strong> locks control and <strong>knockback</strong> slides the foe away.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
           <h3>Hitstop</h3>
-          <p>Freeze motion for a few frames on hit — but read input first into <code>bufAttack</code> so presses during the freeze still start the next attack.</p>
+          <p>Freeze motion for a few ticks on hit — but read input first into <code>bufAttack</code> so presses during the freeze still start the next attack.</p>
           <code>if start { bufAttack = true }</code>
         </article>
         <article>
@@ -91,7 +94,7 @@
         <article>
           <span class="concept-number">3</span>
           <h3>Knockback</h3>
-          <p>Give push velocity v2, then damp it each frame so the slide eases out.</p>
+          <p>Give push velocity v2, then damp it each tick so the slide eases out.</p>
           <code>v2 = 7; v2 *= .86</code>
         </article>
       </div>
@@ -104,7 +107,7 @@
           <p>On hit, freeze the world, then decay knockback during stun.</p>
           <div class="lab-controls">
             <button type="button" class="lab-button lab-button-primary" data-lab-hit data-go-focus="stop stun" data-go-caption="Input freezes motion">Hit</button>
-            <button type="button" class="lab-button" data-lab-step data-go-focus="slide">Next frame</button>
+            <button type="button" class="lab-button" data-lab-step data-go-focus="slide">Next tick</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">A slow-motion model of the real game rule.</p>
@@ -204,6 +207,7 @@
         </form>
       </div>
     </section>
+
 
 
 

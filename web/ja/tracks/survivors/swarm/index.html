@@ -34,7 +34,7 @@
     <section class="overview-hero">
       <p class="eyebrow">★★☆☆☆ / PLAYABLE</p>
       <h1>100体の群れ</h1>
-      <p>常に100体の敵が画面にいます。倒すとすぐ別の場所に再出現。固定サイズの配列で毎フレーム全員を更新しても速いのはなぜでしょうか？</p>
+      <p>常に100体の敵が画面にいます。倒すとすぐ別の場所に再出現。固定サイズの配列でtickごとに全員を更新しても速いのはなぜでしょうか？</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>オブジェクトプール（固定配列）</strong></div>
       <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01</a>と同じく、位置や得点などゲームの中身はUpdateで進めます。Drawは中身を変えず、画面への見せ方だけを担当します。</p>
     </section>
@@ -53,6 +53,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / OBJECT POOL</p>
@@ -63,7 +66,7 @@
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>固定配列</h3><p><code>[100]mob</code> と宣言すると、ちょうど100個の場所が最初からメモリに確保されます。スライスと違い、要素の追加でサイズが変わりません。</p><code>mobs [100]mob</code></article>
         <article><span class="concept-number">2</span><h3>即時リスポーン</h3><p>「1体倒す」で席0が N1 に書き換わります。配列の長さは増えず、同じ8席を使い回します。</p><code>g.spawn(i)</code></article>
-        <article><span class="concept-number">3</span><h3>オーラ攻撃</h3><p>自機の周囲62ピクセルが攻撃範囲です。18フレームごとに範囲内の敵をキルカウントし、すぐ同じ席に再スポーンします。</p><code>if d &lt; 62 &amp;&amp; frame%18 == 0</code></article>
+        <article><span class="concept-number">3</span><h3>オーラ攻撃</h3><p>自機の周囲62ピクセルが攻撃範囲です。18tickごとに範囲内の敵をキルカウントし、すぐ同じ席に再スポーンします。</p><code>if d &lt; 62 &amp;&amp; frame%18 == 0</code></article>
       </div>
 
 
@@ -154,6 +157,7 @@
         </form>
       </div>
     </section>
+
 
 
 

@@ -97,7 +97,7 @@ func (g *game) Update() error {
 	g.moveBasket()
 
 	g.frame++
-	// 45フレームごとに星を1つ出す
+	// 45 tickごとに星を1つ出す
 	if g.frame%45 == 0 {
 		g.stars = append(g.stars, star{
 			x:     25 + g.rng.Float64()*(screenWidth-50),

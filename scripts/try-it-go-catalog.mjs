@@ -55,7 +55,7 @@ export const catalog = {
   },
   flappy: {
     lines: [
-      { id: "grav", code: "vy += 0.42 // gravity each frame" },
+      { id: "grav", code: "vy += 0.42 // gravity each tick" },
       { id: "pos", code: "y += vy" },
       { id: "flap", code: "if pressed { vy = -7.4 // jump impulse }" },
     ],
@@ -867,9 +867,9 @@ export const catalog = {
   },
   pipeline: {
     lines: [
-      { id: "order", code: "// fixed order each frame:" },
+      { id: "order", code: "// fixed order each tick:" },
       { id: "step", code: "input → sim → resolve → draw" },
-      { id: "loop", code: "// then next frame" },
+      { id: "loop", code: "// then next tick" },
     ],
     buttons: {
       "data-lab-next": { ids: ["order", "step"] },
@@ -1095,7 +1095,7 @@ export const lineCaptions = {
     move: "Advance position",
     stop: "Input freezes motion",
     score: "Score near the center",
-    fall: "Fall each frame",
+    fall: "Fall each tick",
     grav: "Add acceleration",
     pos: "Add velocity to position",
     flap: "Apply upward impulse",

@@ -1,10 +1,10 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
-  <meta name="description" content="Empty matched cells, compact columns, then animate the fall: the array settles immediately; Draw lerps y over a few frames."><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Clear and Fall</title>
+  <meta name="description" content="Empty matched cells, compact columns, then animate the fall: the array settles immediately; Draw lerps y over a few ticks."><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ebi Showcase – Clear and Fall</title>
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ebi Showcase – Clear and Fall">
-    <meta property="og:description" content="Empty matched cells, compact columns, then animate the fall: the array settles immediately; Draw lerps y over a few frames.">
+    <meta property="og:description" content="Empty matched cells, compact columns, then animate the fall: the array settles immediately; Draw lerps y over a few ticks.">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/match3/clear-and-fall/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--match3--clear-and-fall.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
@@ -14,12 +14,12 @@
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Ebi Showcase – Clear and Fall">
-    <meta name="twitter:description" content="Empty matched cells, compact columns, then animate the fall: the array settles immediately; Draw lerps y over a few frames.">
+    <meta name="twitter:description" content="Empty matched cells, compact columns, then animate the fall: the array settles immediately; Draw lerps y over a few ticks.">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--match3--clear-and-fall.png?v=20260713-font1">
     <meta name="twitter:image:alt" content="Clear and Fall">
     <!-- ogp:end -->
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/match3/clear-and-fall/">
-<link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/match3/clear-and-fall/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Match-three Puzzle</a><span>STEP 03 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Clear and Fall</h1><p>Empty matched cells, compact columns, then animate the fall: the array settles immediately; Draw lerps y over a few frames.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Fall tween = Update progress × Draw lerp</strong></div></section>
+<link rel="stylesheet" href="../../../../style.css"></head><body class="overview-page"><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a href="#learn">HOW IT WORKS</a><a class="lang" href="../../../../ja/tracks/match3/clear-and-fall/">日本語</a></nav></header><main class="overview-main"><div class="lesson-breadcrumb"><a href="../">← Match-three Puzzle</a><span>STEP 03 / 06</span></div><section class="overview-hero"><p class="eyebrow">★★★☆☆ / PLAYABLE</p><h1>Clear and Fall</h1><p>Empty matched cells, compact columns, then animate the fall: the array settles immediately; Draw lerps y over a few ticks.</p><div class="overview-concept"><small>NEW CONCEPT</small><strong>Fall tween = Update progress × Draw lerp</strong></div></section>
 
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>Watch clear, fall, and refill one step at a time.</h2></div><p>Tap the bottom button or press Space. Complete three cycles to clear.</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 03</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Clear and Fall" src="../../../../play/clear-and-fall/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -28,6 +28,9 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
+
+
+
 
 
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / FALL TWEEN</p><h2>Settle the array now. Let Draw chase with progress.</h2><p class="lesson-lead">The key to match-3 falls is splitting <strong>logical board</strong> from <strong>drawn y</strong>. Update compacts columns to final cells and stores <code>fromY→toY</code> plus <code>progress</code> (0→1). While falling, ignore input; only Draw paints the in-between height. No physics engine needed.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Commit logic first</h3><p>Mark empties and compact each column. That final board is what cascade checks will read next.</p><code>compactColumns()</code></article><article><span class="concept-number">2</span><h3>Advance progress only</h3><p>While falling, do not read Space—just <code>progress += 0.07</code>. At 1.0, unlock the refill step.</p><code>if falling { progress += …; return }</code></article><article><span class="concept-number">3</span><h3>Draw interpolates</h3><p>Paint each gem at <code>fromY+(toY-fromY)*progress</code>. Keep logical coords still during the tween.</p><code>y = lerp(fromY, toY, progress)</code></article></div>
@@ -81,6 +84,7 @@ for write &gt;= 0 { board[write][x] = empty; write-- }
         </form>
       </div>
     </section>
+
 
 
 

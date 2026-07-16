@@ -61,7 +61,7 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>GeoM は絵の置き場所を覚える道具です。Translate(x,y) の x は右、y は下へ動かす量。& は設定箱そのものを渡す印です。 Go用語メモ：整数型（int）は小数を持たない数、浮動小数点型（float32/float64）は小数を持てる数、typeはデータの箱の種類を決める言葉、funcは処理をひとまとめにする関数の印です。[]TはTを順番に並べるリスト、appendはその末尾へ一つ足す命令です。Updateは数字と状態を進め、Drawはその結果を絵にします。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>op.GeoM.Translate(x, y)</code></pre></div></section>
 <!-- feedback-note:tracks/visual-effects/vfx-stamp:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-stamp"><div><p class="eyebrow">UpdateとDrawを分ける</p><h2 id="feedback-note-tracks-visual-effects-vfx-stamp">画像は一度用意し、Drawで置き場所だけ変える</h2><p>画像を読む処理は初期化で一度だけ。毎フレームはUpdateで座標を決め、DrawでDrawImageOptionsのGeoM.Translateへ渡します。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="画像を読む、座標を決める、描く"><span>初期化：画像を読む</span><b>→ Update：座標</b><b>→ Draw：Translate</b><strong>画面へ描く</strong></div></div></section>
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-tracks-visual-effects-vfx-stamp"><div><p class="eyebrow">UpdateとDrawを分ける</p><h2 id="feedback-note-tracks-visual-effects-vfx-stamp">画像は一度用意し、Drawで置き場所だけ変える</h2><p>画像を読む処理は初期化で一度だけ。tickごとにUpdateで座標を決め、DrawでDrawImageOptionsのGeoM.Translateへ渡します。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="画像を読む、座標を決める、描く"><span>初期化：画像を読む</span><b>→ Update：座標</b><b>→ Draw：Translate</b><strong>画面へ描く</strong></div></div></section>
 <!-- feedback-note:tracks/visual-effects/vfx-stamp:end -->
 <!-- diagram-lesson:start -->
 

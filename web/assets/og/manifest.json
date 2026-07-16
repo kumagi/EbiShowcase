@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-07-15T19:07:20.193Z",
+  "generatedAt": "2026-07-15T20:03:09.350Z",
   "pages": [
     {
       "file": "web/en/build/empty-loop/index.html",
@@ -215,7 +215,7 @@
       "title": "Ebi Showcase – LEVEL 02 — Stop the Meter",
       "h1": "Stop the Meter",
       "eyebrow": "★☆☆☆☆ / PLAYABLE",
-      "description": "Stop a moving meter and learn frame updates plus game state in Ebitengine. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine",
+      "description": "Stop a moving meter and learn tick updates plus game state in Ebitengine. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine",
       "image": "assets/og/en--games--timing-meter.png"
     },
     {
@@ -683,7 +683,7 @@
       "title": "Ebi Showcase – Place a Timed Bomb",
       "h1": "Place a Timed Bomb",
       "eyebrow": "★★☆☆☆ / PLAYABLE",
-      "description": "A bomb is game data with a position and time remaining. Decrease it every frame and switch to the blast state at zero. Play the demo, read a short Go example, c",
+      "description": "A bomb is game data with a position and time remaining. Decrease it every tick and switch to the blast state at zero. Play the demo, read a short Go example, c",
       "image": "assets/og/en--tracks--bomb-maze--timed-bomb.png"
     },
     {
@@ -1283,7 +1283,7 @@
       "title": "Ebi Showcase – Clear and Fall",
       "h1": "Clear and Fall",
       "eyebrow": "★★★☆☆ / PLAYABLE",
-      "description": "Empty matched cells, compact columns, then animate the fall: the array settles immediately; Draw lerps y over a few frames.",
+      "description": "Empty matched cells, compact columns, then animate the fall: the array settles immediately; Draw lerps y over a few ticks.",
       "image": "assets/og/en--tracks--match3--clear-and-fall.png"
     },
     {
@@ -2543,7 +2543,7 @@
       "title": "Ebi Showcase – Slow Down and Stop",
       "h1": "Slow Down and Stop",
       "eyebrow": "★★★☆☆ / PLAYABLE",
-      "description": "Multiply velocity by friction every frame, then snap it to exactly zero once it becomes slow enough. Play the demo, read a short Go example, change a value, and",
+      "description": "Multiply velocity by friction every tick, then snap it to exactly zero once it becomes slow enough. Play the demo, read a short Go example, change a value, and",
       "image": "assets/og/en--tracks--slingshot--friction-stop.png"
     },
     {
@@ -3419,7 +3419,7 @@
       "title": "Ebi Showcase – Scatter Particles",
       "h1": "Scatter Particles",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Sparks, smoke, and sparkle are crowds of tiny dots. Hold an array of particles and each frame just move them, age them, and fade them for ma",
+      "description": "Sparks, smoke, and sparkle are crowds of tiny dots. Hold an array of particles and each tick just move them, age them, and fade them for man",
       "image": "assets/og/en--tracks--visual-effects--vfx-particles.png"
     },
     {
@@ -3791,7 +3791,7 @@
       "title": "Ebi Showcase – LEVEL 02 — ストップ・ザ・メーター",
       "h1": "ストップ・ザ・メーター",
       "eyebrow": "★☆☆☆☆ / PLAYABLE",
-      "description": "動くメーターを止めて、フレーム更新とゲーム状態を学ぶEbitengineレッスン。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ",
+      "description": "動くメーターを止めて、tick更新とゲーム状態を学ぶEbitengineレッスン。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ",
       "image": "assets/og/ja--games--timing-meter.png"
     },
     {
@@ -4004,10 +4004,10 @@
       "key": "ja--guides--testing--state-transitions",
       "lang": "ja",
       "kind": "guide",
-      "title": "Ebi Showcase – 1フレーム後の状態を比べる",
-      "h1": "1フレーム後の状態を比べる",
+      "title": "Ebi Showcase – 1 tick後の状態を比べる",
+      "h1": "1 tick後の状態を比べる",
       "eyebrow": "STEP 03 / 05",
-      "description": "アクティブ戦闘RPGでは、毎フレーム『ゲージ + 素早さ』を計算します。1000に届いた瞬間だけREADYになる状態遷移を、1歩ずつテストします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "アクティブ戦闘RPGでは、tickごとに『ゲージ + 素早さ』を計算します。1000に届いた瞬間だけREADYになる状態遷移を、1歩ずつテストします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja--guides--testing--state-transitions.png"
     },
     {
@@ -4259,7 +4259,7 @@
       "title": "Ebi Showcase – 時限爆弾を置く",
       "h1": "時限爆弾を置く",
       "eyebrow": "★★☆☆☆ / PLAYABLE",
-      "description": "爆弾は「場所」と「残り時間」を持つゲームデータです。毎フレーム数を減らし、0になったら爆発状態へ切り替えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "爆弾は「場所」と「残り時間」を持つゲームデータです。tickごとに数を減らし、0になったら爆発状態へ切り替えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
       "image": "assets/og/ja--tracks--bomb-maze--timed-bomb.png"
     },
     {
@@ -4859,7 +4859,7 @@
       "title": "Ebi Showcase – 消して落とす",
       "h1": "消して落とす",
       "eyebrow": "★★★☆☆ / PLAYABLE",
-      "description": "そろったマスを空にし、列を下へ詰める。そのとき配列はすぐ確定し、絵だけを数フレームかけて落とします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "そろったマスを空にし、列を下へ詰める。そのとき配列はすぐ確定し、絵だけを数tickかけて落とします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
       "image": "assets/og/ja--tracks--match3--clear-and-fall.png"
     },
     {
@@ -5411,7 +5411,7 @@
       "title": "Ebi Showcase – STEP 02 — 動く足場の谷",
       "h1": "動く足場の谷",
       "eyebrow": "★★☆☆☆ / PLAYABLE",
-      "description": "動く足場に乗る仕組みを学ぶEbitengineレッスン。前フレームの位置との差をプレイヤーに加えることで、足場の動きに追従します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "動く足場に乗る仕組みを学ぶEbitengineレッスン。前のtickの位置との差をプレイヤーに加えることで、足場の動きに追従します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
       "image": "assets/og/ja--tracks--platformer--moving-platforms.png"
     },
     {
@@ -6119,7 +6119,7 @@
       "title": "Ebi Showcase – 減速して止まる",
       "h1": "減速して止まる",
       "eyebrow": "★★★☆☆ / PLAYABLE",
-      "description": "速度へ摩擦の数を毎フレーム掛け、十分遅くなった瞬間に速度を0へそろえます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用しま",
+      "description": "速度へ摩擦の数をtickごとに掛け、十分遅くなった瞬間に速度を0へそろえます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用",
       "image": "assets/og/ja--tracks--slingshot--friction-stop.png"
     },
     {
@@ -6659,7 +6659,7 @@
       "title": "Ebi Showcase – ボールに火花とトレイルを足す",
       "h1": "ボールに火花とトレイルを足す",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "パドルや壁に当たったフレームだけ Burst。毎フレーム少しトレイルを足すのも fx。ボール自体の vx,vy は play のままです。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "パドルや壁に当たったtickだけ Burst。tickごとに少しトレイルを足すのも fx。ボール自体の vx,vy は play のままです。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja--tracks--visual-effects--fx-pong.png"
     },
     {
@@ -6851,7 +6851,7 @@
       "title": "Ebi Showcase – ボールに火花とトレイルを足す",
       "h1": "ボールに火花とトレイルを足す",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "パドルや壁に当たったフレームだけ Burst。毎フレーム少しトレイルを足すのも fx。ボール自体の vx,vy は play のままです。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "パドルや壁に当たったtickだけ Burst。tickごとに少しトレイルを足すのも fx。ボール自体の vx,vy は play のままです。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-pong.png"
     },
     {
@@ -6995,7 +6995,7 @@
       "title": "Ebi Showcase – 粒をばらまく（パーティクル）",
       "h1": "粒をばらまく（パーティクル）",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "火花・煙・キラキラは、小さな粒のあつまり。粒の配列を持ち、毎フレーム「位置を進めて、寿命を減らして、薄くする」だけで、いろんな演出になります。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "火花・煙・キラキラは、小さな粒のあつまり。粒の配列を持ち、tickごとに「位置を進めて、寿命を減らして、薄くする」だけで、いろんな演出になります。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja--tracks--visual-effects--vfx-particles.png"
     },
     {

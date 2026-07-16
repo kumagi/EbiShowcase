@@ -67,18 +67,21 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / GROUNDED JUMP</p>
         <h2>どうして、<br>空中でジャンプできないの？</h2>
-        <p class="lesson-lead">ゲームの中の<strong>赤い四角のプレイヤー</strong>は <strong>grounded（地面にいる）</strong> という旗を持っています。地面に着いた瞬間だけ旗を立て、空中では旗を倒します。ジャンプキーは旗が立っているときしか効かないので、二段ジャンプができません。物理の重力は毎フレーム <code>vy</code> に少しずつ足す、たった1行で再現します。これは <a href="../../../games/flappy/#acceleration">LEVEL 04 の加速度</a>の続きです。</p>
+        <p class="lesson-lead">ゲームの中の<strong>赤い四角のプレイヤー</strong>は <strong>grounded（地面にいる）</strong> という旗を持っています。地面に着いた瞬間だけ旗を立て、空中では旗を倒します。ジャンプキーは旗が立っているときしか効かないので、二段ジャンプができません。物理の重力はtickごとに <code>vy</code> に少しずつ足す、たった1行で再現します。これは <a href="../../../games/flappy/#acceleration">LEVEL 04 の加速度</a>の続きです。</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
           <h3>重力</h3>
-          <p>毎フレーム vy に +0.65 を足します。何もしなければ加速しながら落ちていく感覚を生み出します。上限 14 で速度が頭打ちになります。</p>
+          <p>tickごとに vy に +0.65 を足します。何もしなければ加速しながら落ちていく感覚を生み出します。上限 14 で速度が頭打ちになります。</p>
           <code>vy = min(vy+.65, 14)</code>
         </article>
         <article>
@@ -99,13 +102,13 @@
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / GROUNDED JUMP</p>
           <h3 id="jump-lab-title">接地のときだけ跳ばせてみよう</h3>
-          <p>「ジャンプ」は grounded のときだけ効きます。空中でもう一度押しても飛びません。「1フレーム進める」で重力がかかり、床に着くとまた接地します。</p>
+          <p>「ジャンプ」は grounded のときだけ効きます。空中でもう一度押しても飛びません。「1 tick進める」で重力がかかり、床に着くとまた接地します。</p>
           <div class="lab-controls">
             <button type="button" class="lab-button lab-button-primary" data-lab-jump data-go-focus="jump">ジャンプ</button>
-            <button type="button" class="lab-button" data-lab-step data-go-focus="grav land">1フレーム進める</button>
+            <button type="button" class="lab-button" data-lab-step data-go-focus="grav land">1 tick進める</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
-          <p class="lab-hint">本物のゲームでは毎フレーム自動で進みます。ここはスローモーションです。</p>
+          <p class="lab-hint">本物のゲームではtickごとに自動で進みます。ここはスローモーションです。</p>
         </div>
         <div class="lab-visual">
           <div class="lab-board" role="img" aria-label="接地ジャンプの実験ボード">
@@ -131,10 +134,10 @@
         <p class="eyebrow">THE ONE-LINE RULE</p>
         <div class="formula-lines">
           <code>if jump &amp;&amp; grounded { vy = -12 }</code>
-          <span>毎フレーム</span>
+          <span>tickごとに</span>
           <code>grounded = false → 衝突チェックで再び true</code>
         </div>
-        <p>毎フレーム grounded を false にリセットし、その後の衝突チェックで再び true を立てます。「地面にいる」は毎フレーム証明しなければなりません。この仕組みが「地面にいる時だけジャンプ」を実現します。</p>
+        <p>tickごとに grounded を false にリセットし、その後の衝突チェックで再び true を立てます。「地面にいる」はtickごとに証明しなければなりません。この仕組みが「地面にいる時だけジャンプ」を実現します。</p>
       </div>
 
       <div class="code-lesson">
@@ -204,6 +207,7 @@ g.grounded = <span>false</span>
         </form>
       </div>
     </section>
+
 
 
 

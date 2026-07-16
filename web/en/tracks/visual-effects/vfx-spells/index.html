@@ -71,7 +71,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / COMPOSE</p>
         <h2>What is a spell<br>made of?</h2>
-        <p class="lesson-lead">Fire = flame sprites rising with additive blending. Water = droplet sprites falling under gravity with alpha. Lightning = bolt sprites for a few frames + a flash + sparks. Same tools; change the texture, direction, color, blend, and lifetime for wildly different spells. (The on-screen character is original Ebi Tenjiroh; hit tests stay simple shapes.)</p>
+        <p class="lesson-lead">Fire = flame sprites rising with additive blending. Water = droplet sprites falling under gravity with alpha. Lightning = bolt sprites for a few ticks + a flash + sparks. Same tools; change the texture, direction, color, blend, and lifetime for wildly different spells. (The on-screen character is original Ebi Tenjiroh; hit tests stay simple shapes.)</p>
       </div>
 
       <div class="concept-row">
@@ -120,7 +120,7 @@ op.ColorScale.ScaleWithColor(fire)
 // 水: 半透明 + 重力
 op.ColorScale.ScaleAlpha(0.7)
 p.vy += 0.22
-// 雷: 明るい線を数フレームだけ
+// 雷: 明るい線を数tickだけ
 vector.StrokeLine(screen, ax, ay, bx, by, 5, white, false)</code></pre>
       </div>
 

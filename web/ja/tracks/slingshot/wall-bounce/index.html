@@ -33,10 +33,13 @@
 
 
 
+
+
+
 <section class="physics" id="learn">
 <div class="lesson-intro"><p class="eyebrow">DEEP DIVE / WALL NORMAL</p><h2>壁へ向かう速さだけ、反対向きにする。</h2><p class="lesson-lead">速度は横の<code>vx</code>と縦の<code>vy</code>に分かれています。縦の壁へ当たったら横向きだけ、床や天井なら縦向きだけを反転します。壁からまっすぐ外へ向く矢印を<strong>法線</strong>といい、反射は法線方向の速度をひっくり返す計算です。</p></div>
 <div class="concept-row"><article><span class="concept-number">1</span><h3>半径まで含めて接触</h3><p>円の中心が壁へ着いてからでは半分めり込みます。中心から半径を引いた左端が壁を越えたら接触です。</p><code>if x-radius &lt; leftWall</code></article><article><span class="concept-number">2</span><h3>片方の速度を反転</h3><p>左右の壁は<code>vx</code>の符号だけを変えます。<code>vy</code>を残すので、入ってきた角度と同じ角度で出ていきます。</p><code>vx = -vx</code></article><article><span class="concept-number">3</span><h3>少し勢いを失う</h3><p>反転した速さへ0.92を掛けます。この反発係数が1なら同じ速さ、0に近いほど壁へ勢いを渡します。</p><code>vx = -vx * restitution</code></article></div>
-<div class="motion-lab" data-lab="bounce" data-wall="壁" data-paddle="床"><div class="lab-copy"><p class="eyebrow">TRY IT / VELOCITY COMPONENTS</p><h3>どちらの速度が変わるか見よう</h3><p>1フレームずつ進めます。横の壁ではvx、床ではvyだけが反対向きになることを数字で確認してください。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="位置を進める">1フレーム進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div></div><div class="lab-visual"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-ball style="position:absolute;border-radius:50%"></div></div><div class="lab-values"><div><span>vx</span><strong data-lab-vx>6.0</strong></div><div><span>vy</span><strong data-lab-vy>4.0</strong></div><div><span>接触</span><strong data-lab-note>—</strong></div></div></div>
+<div class="motion-lab" data-lab="bounce" data-wall="壁" data-paddle="床"><div class="lab-copy"><p class="eyebrow">TRY IT / VELOCITY COMPONENTS</p><h3>どちらの速度が変わるか見よう</h3><p>1 tickずつ進めます。横の壁ではvx、床ではvyだけが反対向きになることを数字で確認してください。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="位置を進める">1 tick進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>戻す</button></div></div><div class="lab-visual"><div class="lab-board" style="position:relative"><div class="lab-actor" data-lab-ball style="position:absolute;border-radius:50%"></div></div><div class="lab-values"><div><span>vx</span><strong data-lab-vx>6.0</strong></div><div><span>vy</span><strong data-lab-vy>4.0</strong></div><div><span>接触</span><strong data-lab-note>—</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
 <pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="move">x += vx; y += vy</span>
@@ -45,7 +48,7 @@
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>
-<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>位置を壁の内側へ戻してから反転</h3><p>めり込んだままだと次のフレームでも接触し、何度も反転します。まず円を境界へ戻し、必ず内向きの速度へ直します。</p></div><pre><code>if x-radius &lt; leftWall {
+<div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>位置を壁の内側へ戻してから反転</h3><p>めり込んだままだと次のtickでも接触し、何度も反転します。まず円を境界へ戻し、必ず内向きの速度へ直します。</p></div><pre><code>if x-radius &lt; leftWall {
     x = leftWall + radius
     vx = math.Abs(vx) * restitution
     bounces++
@@ -80,6 +83,7 @@ if y-radius &lt; topWall {
         </form>
       </div>
     </section>
+
 
 
 

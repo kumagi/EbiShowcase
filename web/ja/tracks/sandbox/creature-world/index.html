@@ -30,6 +30,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / CREATURE STATE MACHINE</p><h2>「いつ・どこ・どうする」を別々の条件にする。</h2><p class="lesson-lead">スポーンは生まれる条件、状態機械は生まれた後の行動です。昼の草地なら草食生物、夜の岩場なら追跡者を出します。その後は各creatureが持つ<strong>state</strong>を、距離やえさ、松明から切り替えます。</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>時間と地形でスポーン</h3><p>一定時間ごとに昼夜を調べます。昼は左の草地、夜は右の岩場という条件を通った場所へだけ追加します。</p><code>if isDay() { spawnGrazer(meadow) }</code></article><article><span class="concept-number">2</span><h3>状態ごとに行動を選ぶ</h3><p>WANDERはランダム歩行。近づいた草食生物はCURIOUS、夜の生物はCHASE。松明を受けるとFLEEになります。</p><code>switch creature.state { ... }</code></article><article><span class="concept-number">3</span><h3>行動から次の状態へ</h3><p>CURIOUSへベリーを渡すとFRIENDになって追従します。CHASEに触られるとHPが減り、その生物はいったんFLEEします。</p><code>curious + feed → friend</code></article></div><div class="motion-lab" data-lab="ai" data-patrol="WANDER" data-chase="CURIOUS" aria-labelledby="creature-lab-title"><div class="lab-copy"><p class="eyebrow">TRY IT / DISTANCE TRANSITION</p><h3 id="creature-lab-title">距離でWANDERとCURIOUSを切り替えよう</h3><p>プレイヤーとの距離が120より小さければ興味を持ちます。離れればまた自由に歩きます。</p><div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-closer data-go-focus="dist chase">近づける</button><button type="button" class="lab-button" data-lab-farther data-go-focus="dist chase">離す</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button></div></div><div class="lab-visual"><div class="lab-board" data-lab-board role="img" aria-label="距離で変わる生物の状態"></div><div class="lab-values"><div><span>状態</span><strong data-lab-state>WANDER</strong></div><div><span>距離</span><strong data-lab-dist>180</strong></div><div><span>しきい値</span><strong>120</strong></div></div></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
@@ -38,7 +41,7 @@
 <span data-go-line="step">moveToward(target)</span></pre>
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
-</div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>状態を変えてから、その状態の速度を決める</h3><p>まず距離から遷移を判定し、その後に現在state用の方向と速さを使います。1フレームに古い行動と新しい行動を混ぜません。</p></div><pre><code>distance := distance(creature.pos, player)
+</div><div class="code-lesson"><div><p class="eyebrow">IN THE REAL GAME</p><h3>状態を変えてから、その状態の速度を決める</h3><p>まず距離から遷移を判定し、その後に現在state用の方向と速さを使います。1 tickに古い行動と新しい行動を混ぜません。</p></div><pre><code>distance := distance(creature.pos, player)
 switch creature.state {
 case wander:
     if distance &lt; 115 {
@@ -73,6 +76,7 @@ case curious:
         </form>
       </div>
     </section>
+
 
 
 

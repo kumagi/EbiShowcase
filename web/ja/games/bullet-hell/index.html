@@ -46,7 +46,7 @@
       <div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>LEVEL 12</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="Bullet Hell" src="../../../play/bullet-hell/" allow="autoplay; fullscreen"></iframe></div></div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>cos/sinは角度から円周上の横・縦位置を得る道具。ラジアンは角度単位で2πが一周、frame%周期は一定フレームごとに同じ模様を繰り返します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>angle := 2*math.Pi*float64(i)/count</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>cos/sinは角度から円周上の横・縦位置を得る道具。ラジアンは角度単位で2πが一周、tick%周期は一定tickごとに同じ模様を繰り返します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>angle := 2*math.Pi*float64(i)/count</code></pre></div></section>
 <!-- feedback-note:games/bullet-hell:start -->
 <section class="feedback-teaching-note" aria-labelledby="feedback-note-games-bullet-hell"><div><p class="eyebrow">まず1発、次に大量</p><h2 id="feedback-note-games-bullet-hell">弾幕も、1発ずつの円をforで描く</h2><p>最初は弾1個の位置と速度をUpdateし、Drawで円を1つ描きます。動くことを確認してから、forで同じ処理を何十個にも増やし、最後に画面外を削除します。</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="弾を一発ずつ更新して描く">for i := range bullets {
     bullets[i].X += bullets[i].VX
@@ -63,13 +63,13 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / BULLET PATTERNS AND OPTIMIZATION</p>
         <h2>弾を円形に並べるには<br>どうしたらいいの？</h2>
-        <p class="lesson-lead">答えは<strong>三角関数（さんかくかんすう）</strong>です。難しく聞こえますが、「円の上の点の座標は <code>cos(角度)</code> と <code>sin(角度)</code> で求まる」ということだけ覚えれば十分です。全周360度を弾の数で等分し、それぞれの角度に <code>cos</code>・<code>sin</code> をかけて速度にすれば、完全な円形弾幕が生まれます。さらに回転スピンを加えると、フレームごとに角度がずれて渦巻き弾幕になります。</p>
+        <p class="lesson-lead">答えは<strong>三角関数（さんかくかんすう）</strong>です。難しく聞こえますが、「円の上の点の座標は <code>cos(角度)</code> と <code>sin(角度)</code> で求まる」ということだけ覚えれば十分です。全周360度を弾の数で等分し、それぞれの角度に <code>cos</code>・<code>sin</code> をかけて速度にすれば、完全な円形弾幕が生まれます。さらに回転スピンを加えると、tickごとに角度がずれて渦巻き弾幕になります。</p>
       </div>
 
       <div class="concept-row">
         <article><span class="concept-number">1</span><h3>円形弾幕</h3><p>コンピュータの角度は度数法（360度）ではなく<strong>ラジアン</strong>（1周 = 2π ≒ 6.28）が基本です。全周を弾の数で割ると1発ごとの間隔になります。<code>cos</code>/<code>sin</code> が X/Y の向きです。</p><code>a = i * math.Pi * 2 / count</code></article>
         <article><span class="concept-number">2</span><h3>狙い撃ち弾</h3><p><code>Atan2(dy, dx)</code> は<strong>「自分から見て、相手がどの向きにあるか（角度）」を求める関数</strong>です。横の差・縦の差の2つの数字から、その1つの角度を計算します（中学の三角より一歩先）。返ってきた角度を中心に扇形へ広げます。</p><code>base = math.Atan2(py-128, px-240)</code></article>
-        <article><span class="concept-number">3</span><h3>後ろから削除</h3><p>画面外に出た弾は毎フレーム削除します。後ろから（大きい添え字から）ループすることで、削除しても添え字がずれません。</p><code>for i := len-1; i &gt;= 0; i--</code></article>
+        <article><span class="concept-number">3</span><h3>後ろから削除</h3><p>画面外に出た弾はtickごとに削除します。後ろから（大きい添え字から）ループすることで、削除しても添え字がずれません。</p><code>for i := len-1; i &gt;= 0; i--</code></article>
       </div>
 
 
@@ -105,7 +105,7 @@
       <div class="formula">
         <p class="eyebrow">THE CIRCLE SHOT</p>
         <div class="formula-lines"><code>a = spin + i * (2π / count)</code><span>速度へ変換</span><code>vx, vy = cos(a) * speed, sin(a) * speed</code></div>
-        <p><code>spin</code> はフレームごとに少しずつ増えるので、次の波では全体が少し回転します。これだけで螺旋・渦巻きパターンが生まれます。</p>
+        <p><code>spin</code> はtickごとに少しずつ増えるので、次の波では全体が少し回転します。これだけで螺旋・渦巻きパターンが生まれます。</p>
       </div>
 
       <div class="code-lesson">
@@ -115,7 +115,7 @@
           <p>フレーム番号を周期で割った余りを見て、どの弾パターンを発射するか決めます。周期を変えるだけで難易度が変わります。</p>
           <p><code>float64(...)</code> は整数を小数に直す変換です。Goは int と float を混ぜて計算できないので、角度や速さの式では何度も出てきます。意味は「小数として計算したい」だけです。</p>
         </div>
-        <pre><code><i>// 38フレームごとに円形弾幕（スピン付き）</i>
+        <pre><code><i>// 38tickごとに円形弾幕（スピン付き）</i>
 <span>if</span> g.frame%38 == 0 {
     count := 18
     spin := float64(g.frame) * .017 <i>// 回転量</i>
@@ -126,7 +126,7 @@
             bullet{240, 128, math.Cos(a)*speed, math.Sin(a)*speed, 6, true})
     }
 }
-<i>// 91フレームごとに自機狙い扇形弾</i>
+<i>// 91tickごとに自機狙い扇形弾</i>
 <span>if</span> g.frame%91 == 0 {
     base := math.Atan2(g.py-128, g.px-240) <i>// 自機への角度</i>
     <span>for</span> i := -3; i &lt;= 3; i++ {
@@ -451,6 +451,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

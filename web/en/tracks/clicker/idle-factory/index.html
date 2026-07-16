@@ -34,7 +34,7 @@
     <section class="overview-hero">
       <p class="eyebrow">★★★☆☆ / PLAYABLE</p>
       <h1>Idle Factory</h1>
-      <p>Buy an auto-oven and sweets accumulate on their own. Every frame the game measures how much real time has passed and adds a tiny slice of production. That elapsed-time technique is called delta time.</p>
+      <p>Buy an auto-oven and sweets accumulate on their own. Every tick the game measures how much real time has passed and adds a tiny slice of production. That elapsed-time technique is called delta time.</p>
       <div class="overview-concept"><small>NEW CONCEPT</small><strong>Delta time and automatic production (CPS)</strong></div>
     </section>
 <p class="curriculum-bridge">This track shares the <a href="../../../games/tap-target/#basics">LEVEL 01</a> state boundary: rules advance in Update, while Draw is a replaceable projection—each step adds one new piece.</p>
@@ -51,6 +51,9 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
+
+
+
 
 
 
@@ -107,7 +110,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>Record time → compute dt → produce</h3>
-          <p>Grab <code>time.Now()</code> at the top of Update, subtract <code>g.last</code>, cap at 0.25, then multiply by machines. After production, overwrite <code>g.last</code> with now so the next frame gets a fresh dt.</p>
+          <p>Grab <code>time.Now()</code> at the top of Update, subtract <code>g.last</code>, cap at 0.25, then multiply by machines. After production, overwrite <code>g.last</code> with now so the next tick gets a fresh dt.</p>
         </div>
         <pre><code>now := time.Now()
 dt := now.Sub(g.last).Seconds()
@@ -119,7 +122,7 @@ g.sweets += float64(g.machines) * dt</code></pre>
       </div>
 
       <div class="why-grid">
-        <article><p class="eyebrow">WITHOUT DELTA TIME</p><h3>Frame rate changes production rate</h3><p>Adding a fixed amount per frame ties production to fps. A phone running at 30 fps earns half the sweets of a desktop at 60 fps, breaking fairness and feel.</p></article>
+        <article><p class="eyebrow">WITHOUT DELTA TIME</p><h3>Frame rate changes production rate</h3><p>Adding a fixed amount per tick ties production to fps. A phone running at 30 fps earns half the sweets of a desktop at 60 fps, breaking fairness and feel.</p></article>
         <article><p class="eyebrow">WITH DELTA TIME</p><h3>Consistent across all devices</h3><p>Multiplying by elapsed seconds makes production device-agnostic. A slow phone and a fast desktop produce the same number of sweets per real-world second.</p></article>
         <article class="challenge"><p class="eyebrow">YOUR FIRST TUNING</p><h3>Change CPS multiplier and cost growth</h3><p>Replace the implicit CPS of 1 per machine with 2 by writing <code>float64(g.machines) * 2 * dt</code>. Adjust the cost increase <code>+= 10</code> to rebalance.</p></article>
       </div>
@@ -149,6 +152,7 @@ g.sweets += float64(g.machines) * dt</code></pre>
         </form>
       </div>
     </section>
+
 
 
 

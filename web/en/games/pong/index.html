@@ -63,7 +63,7 @@
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>Velocity vector</h3><p>Store how far to move each frame as separate X and Y. Diagonal motion is just both additions together.</p><code>ballX += vx</code></article>
+        <article><span class="concept-number">1</span><h3>Velocity vector</h3><p>Store how far to move each tick as separate X and Y. Diagonal motion is just both additions together.</p><code>ballX += vx</code></article>
         <article><span class="concept-number">2</span><h3>Bounce per face</h3><p>Invert only the component perpendicular to the face you hit. Vertical walls flip vx; horizontal paddles flip vy.</p><code>vx = -vx</code></article>
         <article><span class="concept-number">3</span><h3>Hit offset</h3><p>Hit offset from paddle center × 0.055 is added to vx — a small curve “taste” factor. CPU chases ballX by at most 3.5px/frame when farther than 8px.</p><code>vx += offset * 0.055</code></article>
       </div>
@@ -73,9 +73,9 @@
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / BOUNCE</p>
           <h3 id="lab-title-bounce">Bounce off walls and paddles</h3>
-          <p>“Next frame” moves the ball. Side walls flip vx; the paddle flips vy.</p>
+          <p>“Next tick” moves the ball. Side walls flip vx; the paddle flips vy.</p>
           <div class="lab-controls">
-            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="Advance position">Next frame</button>
+            <button type="button" class="lab-button lab-button-primary" data-lab-step data-go-focus="move" data-go-caption="Advance position">Next tick</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>Reset</button>
           </div>
           <p class="lab-hint">Keep the speed magnitude; only the sign changes.</p>
@@ -107,7 +107,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>Move → collide → flip</h3>
-          <p>Each frame, advance position first, then test walls and paddles. On the player paddle, force an upward vy and nudge vx from the hit offset.</p>
+          <p>Each tick, advance position first, then test walls and paddles. On the player paddle, force an upward vy and nudge vx from the hit offset.</p>
         </div>
         <pre><code>g.ballX += g.vx
 g.ballY += g.vy
@@ -327,6 +327,7 @@ func main() {
         </form>
       </div>
     </section>
+
 
 
 

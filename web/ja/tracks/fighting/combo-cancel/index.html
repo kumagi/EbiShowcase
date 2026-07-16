@@ -68,6 +68,9 @@
 
 
 
+
+
+
     <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / COMBO CANCEL</p>
@@ -79,7 +82,7 @@
         <article>
           <span class="concept-number">1</span>
           <h3>入力バッファ</h3>
-          <p>ボタンを押したフレームに <code>buffer = 技</code> と <code>bufferLife = 8</code> をセットします。毎フレーム残り時間を減らし、0になったら忘れます。</p>
+          <p>ボタンを押したtickに <code>buffer = 技</code> と <code>bufferLife = 8</code> をセットします。tickごとに残り時間を減らし、0になったら忘れます。</p>
           <code>buffer = light; bufferLife = 8</code>
         </article>
         <article>
@@ -101,10 +104,10 @@
         <div class="lab-copy">
           <p class="eyebrow">TRY IT / LAB</p>
           <h3 id="lab-title-combo-cancel">早め入力をバッファしてキャンセル</h3>
-          <p>早めの入力を数フレーム覚え、キャンセル窓で次の技へつなぎます。</p>
+          <p>早めの入力を数tick覚え、キャンセル窓で次の技へつなぎます。</p>
           <div class="lab-controls">
             <button type="button" class="lab-button lab-button-primary" data-lab-press data-go-focus="press">早めに入力</button>
-            <button type="button" class="lab-button" data-lab-step data-go-focus="tick cancel">1F進める</button>
+            <button type="button" class="lab-button" data-lab-step data-go-focus="tick cancel">1 tick進める</button>
             <button type="button" class="lab-button lab-button-quiet" data-lab-reset data-go-clear>もとに戻す</button>
           </div>
           <p class="lab-hint">本物のゲームの公式を、手でゆっくり回す模型です。</p>
@@ -142,7 +145,7 @@
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
           <h3>押す → 覚える → 条件を待つ → つなぐ</h3>
-          <p>ボタンを押したらバッファへ保存し、毎フレーム減らします。キャンセル条件が整ったとき、期待する技と一致すればすぐ開始します。コンボカウンターで進行状況を追います。</p>
+          <p>ボタンを押したらバッファへ保存し、tickごとに減らします。キャンセル条件が整ったとき、期待する技と一致すればすぐ開始します。コンボカウンターで進行状況を追います。</p>
         </div>
         <pre><code>// 入力があればバッファに保存
 <span>if</span> in != none {
@@ -212,6 +215,7 @@ cancel := g.frame &gt;= 8 &amp;&amp; g.frame &lt;= 13
         </form>
       </div>
     </section>
+
 
 
 

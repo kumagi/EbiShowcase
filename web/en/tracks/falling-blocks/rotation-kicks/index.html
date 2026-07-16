@@ -30,6 +30,9 @@
 <!-- diagram-lesson:end -->
 
 
+
+
+
 <section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE / ROTATE THEN TEST</p><h2>Rotate first, then ask, “Does it fit here?”</h2><p class="lesson-lead">Treat a piece's center as (0, 0). A cell at (x, y) moves to (-y, x) after a clockwise quarter turn. The rotated piece may poke through a wall, so test a list of small <strong>kick offsets</strong>.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>Rotate all four cells</h3><p>T and L pieces are four offsets from a center. Apply the same transform to every offset.</p><code>rotated = point{-p.y, p.x}</code></article><article><span class="concept-number">2</span><h3>Test candidates in order</h3><p>Try no shift, left one, right one, left two, right two, then up one. Accept the first position without a collision.</p><code>kicks := []point{{0,0}, {-1,0}, {1,0}}</code></article><article><span class="concept-number">3</span><h3>Keep the old pose if blocked</h3><p>If every candidate overlaps a wall, floor, or locked cell, change neither position nor rotation.</p><code>if noCandidate { return }</code></article></div><div class="motion-lab" data-lab="kick-try" data-kicks="0,0;1,0;-1,0;0,-1" data-ok="kick ({dx},{dy}) OK" data-blocked="kick ({dx},{dy}) blocked" data-fail="all failed → cancel" aria-labelledby="lab-title-rotation-kicks">
 <div class="lab-copy">
 <p class="eyebrow">TRY IT / WALL KICKS</p>
@@ -81,6 +84,7 @@ for _, kick := range kickTests {
         </form>
       </div>
     </section>
+
 
 
 
