@@ -90,6 +90,14 @@ mkdir -p "$ROOT/dist"
 cp -R "$ROOT/web/." "$ROOT/dist/"
 WASM_EXEC="$(go env GOROOT)/lib/wasm/wasm_exec.js"
 
+write_game_loader() {
+  local out="$1"
+  local wasm_hash
+  wasm_hash="$(node -e 'const c=require("node:crypto"),f=require("node:fs"); process.stdout.write(c.createHash("sha256").update(f.readFileSync(process.argv[1])).digest("hex"))' "$out/game.wasm")"
+  sed "s/__WASM_VERSION__/$wasm_hash/g" "$ROOT/web/game.html" > "$out/index.html"
+  grep -q "game.wasm?v=$wasm_hash" "$out/index.html"
+}
+
 build_game() {
   local id="$1"
   local package="$2"
@@ -97,7 +105,7 @@ build_game() {
   mkdir -p "$out"
   GOOS=js GOARCH=wasm go build -trimpath -ldflags="-s -w" -o "$out/game.wasm" "$package"
   cp "$WASM_EXEC" "$out/wasm_exec.js"
-  cp "$ROOT/web/game.html" "$out/index.html"
+  write_game_loader "$out"
 }
 
 build_game "flappy" "$ROOT/game"
@@ -130,7 +138,7 @@ while IFS=$'\t' read -r id package; do
   mkdir -p "$out"
   GOOS=js GOARCH=wasm go build -overlay="$RENDER_OVERLAY" -trimpath -ldflags="-s -w" -o "$out/game.wasm" "$package"
   cp "$WASM_EXEC" "$out/wasm_exec.js"
-  cp "$ROOT/web/game.html" "$out/index.html"
+  write_game_loader "$out"
 done < <(node "$ROOT/scripts/render-freedom-overlays.mjs" capstones)
 
 # Keep legacy URLs working for the first published game.

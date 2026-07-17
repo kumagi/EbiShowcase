@@ -41,7 +41,11 @@
       }, true);
     }
     const go = new Go();
-    WebAssembly.instantiateStreaming(fetch("game.wasm"), go.importObject)
+    // build.sh replaces this token with the SHA-256 of the actual WASM bytes.
+    // A changed game therefore gets a changed URL and cannot silently reuse an
+    // older browser/CDN response (which otherwise looks like a failed fix).
+    const wasmURL = "game.wasm?v=__WASM_VERSION__";
+    WebAssembly.instantiateStreaming(fetch(wasmURL, { cache: "no-cache" }), go.importObject)
       .then((r) => {
         document.querySelector("#loading").remove();
         go.run(r.instance);
