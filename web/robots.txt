@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /EbiShowcase/
+
+Sitemap: https://kumagi.github.io/EbiShowcase/sitemap.xml
