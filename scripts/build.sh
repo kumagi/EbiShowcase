@@ -88,6 +88,17 @@ node "$ROOT/scripts/check-site-metadata.mjs"
 rm -rf "$ROOT/dist"
 mkdir -p "$ROOT/dist"
 cp -R "$ROOT/web/." "$ROOT/dist/"
+
+# Search Console verification files are downloaded into the repository root.
+# Publish them at the GitHub Pages project root without changing their names or
+# contents, for example:
+#   google1234567890abcdef.html
+#   -> https://kumagi.github.io/EbiShowcase/google1234567890abcdef.html
+verification_files=("$ROOT"/google*.html)
+if [[ -e "${verification_files[0]}" ]]; then
+  cp "${verification_files[@]}" "$ROOT/dist/"
+fi
+
 WASM_EXEC="$(go env GOROOT)/lib/wasm/wasm_exec.js"
 
 write_game_loader() {
