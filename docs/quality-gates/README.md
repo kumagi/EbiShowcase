@@ -10,7 +10,7 @@ This directory is the **single catalog** of quality expectations shared by:
 
 | File | Role |
 | --- | --- |
-| `catalog.json` | Machine-readable gates (`id`, family, severity, check type, applies_to, prompt_hint) |
+| `catalog.json` | Machine-readable gates and shared LLM policy (`fail_when`, `do_not_flag`, `evidence_required`) |
 | `README.md` | This overview |
 
 Detailed checklists such as `docs/AUTHORING_CHECKLIST.md` and
@@ -53,8 +53,15 @@ node scripts/check-quality-gates.mjs --family authoring,loop,pedagogy --sample 2
 node scripts/check-quality-gates.mjs --lenses loop,authoring --json
 ```
 
-`ai_feedback_crawler.py` chooses two random `llm` gates when `--lens` is
-omitted. Supplying `--lens loop,authoring` fixes the review to those families.
+`ai_feedback_crawler.py` always audits one gate per run. With no `--lens`, it
+chooses from all LLM gates. A family such as `--lens pedagogy` narrows that
+random choice; an exact id such as `--lens pedagogy.code-matches-impl` fixes it.
+
+Cheap local models receive the catalog's shared `llm_review_policy` plus the
+structured conditions for each selected gate. A fail/warn requires a literal
+quote from the supplied page; missing or ambiguous evidence is a pass. Keep
+`do_not_flag` concrete because it is the main defense against repetitive false
+positives from generic Update/Draw text and inferred repository structure.
 
 Wire-up:
 
@@ -66,5 +73,6 @@ Wire-up:
 
 1. Append an object to `catalog.json` with a stable `id` (`family.topic`).
 2. If it is scriptable, implement it in `check-quality-gates.mjs`.
-3. If it needs judgment, set `"check": "llm"` and write a concrete `prompt_hint`.
+3. If it needs judgment, set `"check": "llm"` and write concrete `fail_when`,
+   `do_not_flag`, and `evidence_required` fields. Keep `prompt_hint` as a short overview.
 4. Link `sources` to the prose doc that explains *why*.

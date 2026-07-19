@@ -1,7 +1,15 @@
 {
-  "version": 1,
+  "version": 2,
   "title": "Ebi Showcase quality gate catalog",
   "description": "Single source of quality expectations for humans, Ralph, deterministic checkers, and LLM review lenses. AGENTS.md points here; detailed pedagogy stays in linked docs.",
+  "llm_review_policy": [
+    "Judge only material explicitly present in the supplied page. Never guess what an unseen main.go, shared package, runtime, screenshot, or earlier/later lesson probably contains.",
+    "Return fail or warn only when short exact quotes or code fragments prove the selected gate is violated. Put multiple non-contiguous quotes in evidence separated by |. A heading, topic, or generic Update/Draw reminder alone is not proof.",
+    "If the required evidence is absent, truncated, ambiguous, or only implied, return pass. Missing evidence is not evidence of a defect.",
+    "Apply the gate's DO NOT FLAG exceptions before deciding. Do not demand material outside the gate or turn a permitted design choice into a defect.",
+    "The fix must directly repair the quoted evidence and preserve correct surrounding content. Never propose a comment, rename, or unrelated feature when it would not resolve the violation.",
+    "Evaluate each selected gate independently and return at most one proven defect. Prefer pass over a speculative or low-confidence suggestion; false-positive feedback wastes maintainer time."
+  ],
   "meters": {
     "playable": "Demo launches and can be played (208/208 gated + VFX side count).",
     "advanced_quality": "Finished genre game has replay, controls, feedback, mobile, bilingual polish.",
@@ -21,7 +29,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "build", "graduation", "vfx"],
       "summary": "Update owns all state mutation and all input reading.",
-      "prompt_hint": "Does the page claim or show input/score/collision updates outside Update (or a pure helper Update calls)? Flag Draw or passive prose that puts rules in Draw.",
+      "prompt_hint": "Check only explicit code or instructions that place input or persistent state mutation outside Update.",
+      "fail_when": "A quoted code fragment or learner instruction reads input or changes persistent gameplay state in Draw or another presentation-only path.",
+      "do_not_flag": "State mutation in Update, a helper called by Update, or data consumed by Update; generic prose saying Update changes state; local rendering calculations.",
+      "evidence_required": "Quote the mutation/input line and the visible context proving it is outside Update.",
       "sources": ["AGENTS.md#update--draw-axiom", "docs/AUTHORING_CHECKLIST.md", "docs/Glossary.md"]
     },
     {
@@ -31,7 +42,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "build", "graduation", "vfx"],
       "summary": "Draw only projects the current game struct to pixels.",
-      "prompt_hint": "Does Draw decide outcomes, read input, roll RNG, or mutate game fields? Quote the offending line or paragraph.",
+      "prompt_hint": "Check whether visible Draw code or instructions make gameplay decisions, read input, use randomness, or mutate state.",
+      "fail_when": "A quoted Draw fragment or instruction decides an outcome, reads input, consumes gameplay randomness, or writes persistent state.",
+      "do_not_flag": "Drawing from current state, derived local coordinates/colors, temporary draw options, text saying Draw reads state, or alternative renderers of the same state.",
+      "evidence_required": "Quote the exact Draw operation and the surrounding text identifying it as Draw.",
       "sources": ["AGENTS.md#update--draw-axiom", "docs/Glossary.md"]
     },
     {
@@ -41,7 +55,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "build", "graduation", "vfx"],
       "summary": "Draw is a referentially transparent projection of game, assets, and viewport.",
-      "prompt_hint": "Does Draw write hidden state, mutate caches or slices, advance time, consume randomness, read input, trigger FX/gameplay transitions, or otherwise change the environment? Local derived values and temporary DrawImageOptions are allowed; persistent changes belong in Update.",
+      "prompt_hint": "Check visible Draw code for hidden writes or side effects; derived locals and disposable drawing options are allowed.",
+      "fail_when": "A quoted Draw fragment writes a field/cache/slice, advances time, reads input, consumes randomness, triggers a transition, or changes an external environment.",
+      "do_not_flag": "Pure helper calls, local variables, temporary image/options allocation, asset reads, and calculations discarded after Draw.",
+      "evidence_required": "Quote the side-effecting Draw statement; a method name alone is insufficient unless its visible body proves the side effect.",
       "sources": ["AGENTS.md#update--draw-axiom", "docs/Glossary.md", "docs/AUTHORING_CHECKLIST.md"]
     },
     {
@@ -51,7 +68,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "build", "graduation"],
       "summary": "Each renderer is a deterministic projection of game state; the state itself is not stored in the screen.",
-      "prompt_hint": "Does the lesson imply Draw invents state or that two draws with the same state and the same renderer may differ without an explicit visual effect? Also allow different renderers to show the same state differently.",
+      "prompt_hint": "Check only explicit claims that the screen owns gameplay state or that one renderer may invent a different outcome from identical state.",
+      "fail_when": "A quoted statement or code path stores authoritative gameplay state only in pixels/presentation, or makes the same renderer produce gameplay-significant differences from identical state.",
+      "do_not_flag": "Highlighting the next gate, drawing a gauge, visual effects derived from state, generic 'Draw projects state' prose, or multiple renderers showing one state differently.",
+      "evidence_required": "Quote the text/code that makes presentation authoritative; visual wording such as highlight/show/color is not enough by itself.",
       "sources": ["docs/ROADMAP_RALPH_LOOP.md", "docs/Glossary.md"]
     },
     {
@@ -61,7 +81,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "build", "graduation", "vfx"],
       "summary": "Gameplay advances in Update at the engine's configured tick; it does not depend on Draw frequency.",
-      "prompt_hint": "Does the lesson distinguish the engine's Update cadence from rendering cadence and state that gameplay must not depend on Draw? Ebitengine commonly uses a 60-tick-per-second default, but do not present 60Hz as a universal promise or require a fixed number. Flag wording that teaches Update and Draw as alternating equal phases, immediately paired calls, or puts progression in Draw.",
+      "prompt_hint": "Check for explicit dependence on Draw cadence or an unconditional fixed-60 promise; do not require every page to restate the full cadence contract.",
+      "fail_when": "A quote says gameplay advances in Draw, one Update is always paired with one Draw, or Ebitengine universally runs exactly 60 updates/frames per second.",
+      "do_not_flag": "Silence about cadence, approximate/default 60-tick explanations with qualification, or ordinary Update/Draw summaries that do not claim immediate pairing.",
+      "evidence_required": "Quote the cadence/pairing claim; absence of a cadence explanation is not a failure for this gate.",
       "sources": ["AGENTS.md#game-loop-axioms-for-authoring", "docs/Glossary.md", "docs/AUTHORING_CHECKLIST.md"]
     },
     {
@@ -71,7 +94,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "build", "graduation", "vfx"],
       "summary": "One Update call is one tick; frame is reserved for a rendered picture or sprite-animation cell.",
-      "prompt_hint": "Flag learner-facing wording such as 'advance one frame', 'every frame', px/frame, or 60 FPS when it actually means Update cadence. Require 'one tick (one Update call)' and px/tick. Allow frame only for a picture produced by Draw, a sprite-sheet cell, or an explicitly named genre term that is distinguished from Update ticks.",
+      "prompt_hint": "Check whether frame terminology explicitly refers to Update-based gameplay time rather than rendered pictures or animation cells.",
+      "fail_when": "A quoted phrase uses frame/FPS/px-per-frame for a value or action clearly advanced by Update, without distinguishing tick from rendered frame.",
+      "do_not_flag": "Sprite frames, animation cells, rendered screenshots, genre terms such as frame data, or qualified text that separately defines Update ticks.",
+      "evidence_required": "Quote both the frame wording and nearby context tying it to Update/gameplay progression.",
       "sources": ["docs/Glossary.md", "scripts/check-tick-language.mjs"]
     },
     {
@@ -81,7 +107,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "build", "graduation", "vfx"],
       "summary": "Update does not depend on Draw's timing, order, or visual representation.",
-      "prompt_hint": "Flag wording that says Update must be immediately followed by Draw, or that gameplay requires a particular renderer. Also flag a learner-facing explanation that teaches renderer freedom only by listing style names: show the same live state or a concrete visual comparison instead. The displayed views are examples, never a required set or a limit.",
+      "prompt_hint": "Check for an explicit gameplay dependency on a renderer or immediate Draw call; evaluate visual-comparison requirements only when the supplied material shows that section.",
+      "fail_when": "A quote requires a particular renderer for gameplay, promises Update is immediately followed by Draw, or explicitly presents a style list as the complete proof of renderer freedom with no visible/live comparison in the supplied section.",
+      "do_not_flag": "Generic Draw descriptions, multiple valid renderers, a live or concrete comparison, or page material too truncated to determine whether a comparison exists.",
+      "evidence_required": "Quote the dependency/exhaustive claim; for a missing comparison, the supplied material must include the complete renderer-freedom section.",
       "sources": ["AGENTS.md#game-loop-axioms-for-authoring", "docs/Glossary.md", "docs/AUTHORING_CHECKLIST.md"]
     },
     {
@@ -141,7 +170,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "build", "graduation"],
       "summary": "RULE lives in Update or a pure helper Update calls—never as Draw mutation.",
-      "prompt_hint": "Fail only when a gameplay rule or persistent state change is implemented in Draw, or when the learner is told to do so. Pass when the rule lives in Update, in a pure helper called by Update, or in data that Update consumes. A rendering-only exercise may edit Draw provided Draw remains a state-read-only projection. Never require a learner to change Draw merely to satisfy this gate.",
+      "prompt_hint": "Check only the named learner RULE: it fails when visible instructions/code put a persistent gameplay change in Draw.",
+      "fail_when": "The quoted primary challenge or its visible code implements a gameplay rule/persistent state write in Draw or tells the learner to do so.",
+      "do_not_flag": "Rules in Update, helpers called by Update, editable configuration/data consumed by Update, rendering-only Draw exercises, generic Update/Draw reminders, or an implementation whose call site is not supplied.",
+      "evidence_required": "Quote the challenge/code and the context proving the mutation belongs to Draw; do not infer a helper's caller.",
       "sources": ["docs/AUTHORING_CHECKLIST.md"]
     },
     {
@@ -161,7 +193,10 @@
       "check": "llm",
       "applies_to": ["build", "graduation", "guide"],
       "summary": "Build Track and graduation do not require cloning this repo as a prerequisite.",
-      "prompt_hint": "Does the page say the learner must clone EbiShowcase before starting?",
+      "prompt_hint": "Check for an explicit clone requirement, not an optional source link or repository-relative map.",
+      "fail_when": "A quote makes cloning EbiShowcase a prerequisite before the learner can begin the Build Track or graduation task.",
+      "do_not_flag": "Optional clone/download instructions, repository-relative paths used as references, individual file downloads, or pages outside Build Track/graduation.",
+      "evidence_required": "Quote the mandatory wording such as must/required/first clone together with the affected task context.",
       "sources": ["AGENTS.md"]
     },
     {
@@ -181,7 +216,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "vfx", "build"],
       "summary": "One main idea (plus at most one supporting idea) per step.",
-      "prompt_hint": "On an individual step page, flag several unrelated systems only when the page gives no learning order or dominant goal. Do not count the recurring Update/Draw boundary reminder as a separate lesson topic. Track hubs intentionally preview many ordered steps, and capstones intentionally integrate previously taught systems; do not ask either kind of page to remove that overview or integration.",
+      "prompt_hint": "Check an individual non-capstone step for several unrelated teaching goals with no dominant mechanic or order.",
+      "fail_when": "The supplied page explicitly teaches three or more unrelated new mechanics as equal goals and provides no dominant goal or learning order.",
+      "do_not_flag": "A main idea plus one support idea, recurring Update/Draw reminders, controls, track hubs that preview ordered steps, capstones integrating prior lessons, or merely mentioning related systems.",
+      "evidence_required": "Quote the unrelated goals and the page title/heading showing this is one ordinary step rather than a hub or capstone.",
       "sources": ["AGENTS.md#teaching-and-writing-contract"]
     },
     {
@@ -191,7 +229,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "vfx"],
       "summary": "Lead with something the learner can see or do before naming abstractions.",
-      "prompt_hint": "Inspect the rendered reading order, not only headings. Does the introduction lead directly to the playable demo before glossary cards, code, diagrams, or an unrelated setup branch? Does every named character appear visually in the same introductory context, or does the copy clearly say that early shape-only levels precede the character?",
+      "prompt_hint": "Check the explicit rendered order: an ordinary playable lesson should reach PLAY FIRST before glossary/code/setup detours.",
+      "fail_when": "The supplied ordered page material clearly places glossary cards, implementation detail, or unrelated setup between the introduction and the playable demo, or introduces a named character while explicitly withholding any visual/context for it.",
+      "do_not_flag": "Title/navigation metadata, a brief goal/control sentence, diagrams/code after PLAY FIRST, non-playable guides, or material whose ordering/visual presence cannot be determined from the supplied text.",
+      "evidence_required": "Quote the ordered headings/text proving the detour occurs before PLAY FIRST; do not infer layout from an unordered heading list alone.",
       "sources": ["AGENTS.md#teaching-and-writing-contract"]
     },
     {
@@ -201,7 +242,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "vfx"],
       "summary": "DEEP DIVE explains the named mechanic, not only controls.",
-      "prompt_hint": "Is DEEP DIVE mostly a control list without data/state explanation?",
+      "prompt_hint": "Check whether the visible DEEP DIVE section explains the named mechanic through state/data/rules rather than only controls.",
+      "fail_when": "The complete supplied DEEP DIVE section contains only button/control instructions and no explanation of the mechanic's state, data, calculation, or rule.",
+      "do_not_flag": "Controls plus any concrete mechanic explanation, a DEEP DIVE truncated from the prompt, or control instructions outside DEEP DIVE.",
+      "evidence_required": "Quote the DEEP DIVE heading and its complete control-only body; if completeness is uncertain, pass.",
       "sources": ["AGENTS.md#teaching-and-writing-contract"]
     },
     {
@@ -211,7 +255,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "vfx", "build"],
       "summary": "REAL GO / code-lesson matches the code learners can open.",
-      "prompt_hint": "Does the snippet invent a standalone loop while main.go only calls a shared Run(Config)?",
+      "prompt_hint": "Compare only code artifacts visibly supplied on the page; never infer the repository implementation from naming or page structure.",
+      "fail_when": "Two visible, path-labelled artifacts directly conflict—for example, REAL GO/main.go visibly only calls Run(Config) while an unlabelled snippet falsely claims to be that same main.go implementation, or names/state transitions disagree with the shown openable source.",
+      "do_not_flag": "Conceptual pseudocode labelled as such, a short entry file followed by a path-labelled shared-engine excerpt, editable Config/data in main.go, generic Update/Draw prose, different abstraction levels that agree, or any case where only one side of the comparison is supplied.",
+      "evidence_required": "Copy both conflicting code fragments and their visible path/section labels into evidence, separating non-contiguous quotes with |. If both implementation sides are not present, return pass.",
       "sources": ["AGENTS.md", "docs/AUTHORING_CHECKLIST.md"]
     },
     {
@@ -220,8 +267,12 @@
       "severity": "warn",
       "check": "llm",
       "applies_to": ["core", "track", "vfx", "build", "guide"],
+      "languages": ["ja"],
       "summary": "Japanese avoids unexplained jargon; uses concrete primary-school-friendly examples.",
-      "prompt_hint": "Are technical terms dumped without a pictureable example?",
+      "prompt_hint": "On Japanese pages only, check for an essential unexplained technical term that blocks the stated task.",
+      "fail_when": "A quoted Japanese instruction relies on a technical term that is neither explained nearby nor made concrete by code, a pictureable example, or earlier named prerequisite in the supplied page.",
+      "do_not_flag": "English pages, standard identifiers shown in code, terms immediately paraphrased in Japanese, one unavoidable term with a concrete example, or uncertainty about earlier lessons.",
+      "evidence_required": "Quote the term and sentence whose meaning/task is blocked; propose a short concrete paraphrase, not removal of useful vocabulary.",
       "sources": ["AGENTS.md"]
     },
     {
@@ -231,7 +282,10 @@
       "check": "llm",
       "applies_to": ["track"],
       "summary": "Genre steps do not re-teach Update/Draw as if LEVEL 01 did not exist.",
-      "prompt_hint": "Does a mid-track page reintroduce the entire game loop from zero?",
+      "prompt_hint": "Check whether a genre step explicitly stops to teach the entire Update/Draw loop as brand-new prerequisite material.",
+      "fail_when": "A quoted mid-track section presents Update, Draw, Layout, and the basic loop as a new beginner lesson instead of applying the genre mechanic.",
+      "do_not_flag": "The recurring compact Update/Draw contract, a reminder that Update owns mutation, code labels, one sentence connecting the genre rule to Update, track hubs, or LEVEL 01 itself.",
+      "evidence_required": "Quote the substantial beginner re-teaching passage; the standard two-card Update/Draw reminder alone must pass.",
       "sources": ["AGENTS.md"]
     },
     {
@@ -358,7 +412,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "vfx", "guide", "build", "graduation"],
       "summary": "In-page links stay relative for GitHub Pages project hosting.",
-      "prompt_hint": "Are there absolute site-root paths that would break under /REPO/?",
+      "prompt_hint": "Check visible href/src values for site-root URLs that omit the GitHub Pages project prefix.",
+      "fail_when": "A quoted internal href/src starts with / and would resolve outside /EbiShowcase/ when deployed as a project site.",
+      "do_not_flag": "Relative paths, full canonical/OGP URLs, external URLs, /EbiShowcase/... URLs, form actions, or prose displaying a path rather than an href/src value.",
+      "evidence_required": "Quote the exact href/src attribute and identify it as an internal navigation or asset URL.",
       "sources": ["AGENTS.md"]
     },
     {
@@ -395,7 +452,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "vfx"],
       "summary": "Famous titles are genre signposts only; no copied names, art, or scenarios.",
-      "prompt_hint": "Does the page present itself as a clone or reuse protected names as the product title?",
+      "prompt_hint": "Check explicit product/title branding or copied scenario/art claims, not ordinary genre comparisons.",
+      "fail_when": "A quote uses a protected game/title/character as this project's own product title, says the lesson is a clone, or directs copying recognizable protected art/scenario.",
+      "do_not_flag": "Genre names, factual comparisons, mechanics references, original Ebi branding, or a famous title clearly identified only as inspiration/context.",
+      "evidence_required": "Quote the branding/copy instruction and explain the specific identity being adopted; similarity of a mechanic alone is insufficient.",
       "sources": ["AGENTS.md"]
     },
     {
@@ -414,7 +474,10 @@
       "check": "llm",
       "applies_to": ["core", "track", "vfx"],
       "summary": "Status is not conveyed by color alone.",
-      "prompt_hint": "Is success/failure only described as a color change with no text or shape?",
+      "prompt_hint": "Check a complete visible status explanation for color as its sole signal.",
+      "fail_when": "The supplied material explicitly says success/failure/status is communicated only by a color change and shows no accompanying text, icon, shape, motion, sound, or position cue.",
+      "do_not_flag": "Color plus another cue, decorative colors, code colors, incomplete/truncated status descriptions, or absence of accessibility discussion.",
+      "evidence_required": "Quote the status/color description and the complete nearby cue list; if other cues cannot be ruled out from supplied material, pass.",
       "sources": ["AGENTS.md"]
     },
     {
@@ -482,7 +545,10 @@
       "check": "llm",
       "applies_to": ["vfx"],
       "summary": "Advanced FX remakes keep play entities separate from fx.System.",
-      "prompt_hint": "Does the lesson mix win/lose rules into the FX-only layer?",
+      "prompt_hint": "On an Advanced VFX page, check visible code/instructions for gameplay outcomes owned by fx.System.",
+      "fail_when": "A quoted fx.System/FX-only fragment decides win, loss, score, collision, or other gameplay state instead of only reacting visually to play state.",
+      "do_not_flag": "Play code emitting FX events, FX timers/particles, visual intensity derived from gameplay, or code whose ownership/call site is not visible.",
+      "evidence_required": "Quote the gameplay mutation and visible context proving it belongs to the FX-only layer.",
       "sources": ["AGENTS.md"]
     },
     {
@@ -492,6 +558,10 @@
       "check": "llm",
       "applies_to": ["vfx"],
       "summary": "Basic VFX steps stay drawing toys; no artificial win/lose only to look like genre lessons.",
+      "prompt_hint": "On a Basic VFX step, check only explicit required win/lose mechanics unrelated to learning the drawing operation.",
+      "fail_when": "A quoted Basic VFX task requires an artificial score, failure, or victory loop that does not help manipulate or observe the named drawing technique.",
+      "do_not_flag": "Hands-on sliders/toggles, reset buttons, visual targets used to demonstrate an effect, Advanced VFX remakes, or ordinary genre lessons.",
+      "evidence_required": "Quote the forced game rule and the Basic VFX context; do not infer gameplay from words such as challenge or goal alone.",
       "sources": ["AGENTS.md"]
     }
   ]

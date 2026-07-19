@@ -54,22 +54,22 @@ func loadGeneratedArt() {
 	}
 }
 
-// alphaColumnCells splits a production atlas only at fully transparent column
-// gutters. A creature may contain disconnected details (a pearl, antenna, or
-// crown), so connected-component detection is not a valid sprite boundary.
-// Requiring transparent gutters makes it impossible for a neighboring animal
-// to leak into the crop. Physics still uses radii; these rectangles affect
-// presentation only.
+// alphaColumnCells finds each creature from its solid core, then expands the
+// crop using every non-zero alpha pixel inside that creature's gutter-bounded
+// cell. The old core-only crop discarded faint antialiasing and glow pixels,
+// which made a hard rectangular cut visible after downscaling. A creature may
+// contain disconnected details (a pearl, antenna, or crown), so connected-
+// component detection is not a valid sprite boundary.
 func alphaColumnCells(atlas image.Image, cells int) []image.Rectangle {
 	bounds := atlas.Bounds()
 	w, h := bounds.Dx(), bounds.Dy()
-	opaque := func(x, y int) bool {
+	alpha := func(x, y int) uint32 {
 		_, _, _, a := atlas.At(bounds.Min.X+x, bounds.Min.Y+y).RGBA()
-		return a >= 0x1000
+		return a
 	}
-	columnHasInk := func(x int) bool {
+	columnHasCoreInk := func(x int) bool {
 		for y := 0; y < h; y++ {
-			if opaque(x, y) {
+			if alpha(x, y) >= 0x1000 {
 				return true
 			}
 		}
@@ -79,7 +79,7 @@ func alphaColumnCells(atlas image.Image, cells int) []image.Rectangle {
 	runs := make([]run, 0, cells)
 	start := -1
 	for x := 0; x <= w; x++ {
-		hasInk := x < w && columnHasInk(x)
+		hasInk := x < w && columnHasCoreInk(x)
 		if hasInk && start < 0 {
 			start = x
 		}
@@ -94,18 +94,31 @@ func alphaColumnCells(atlas image.Image, cells int) []image.Rectangle {
 
 	result := make([]image.Rectangle, cells)
 	for i, r := range runs {
-		minY, maxY := h, 0
-		for x := r.minX; x < r.maxX; x++ {
+		cellMinX, cellMaxX := 0, w
+		if i > 0 {
+			cellMinX = (runs[i-1].maxX + r.minX) / 2
+		}
+		if i+1 < len(runs) {
+			cellMaxX = (r.maxX + runs[i+1].minX) / 2
+		}
+		minX, minY, maxX, maxY := cellMaxX, h, cellMinX, 0
+		for x := cellMinX; x < cellMaxX; x++ {
 			for y := 0; y < h; y++ {
-				if opaque(x, y) {
+				if alpha(x, y) > 0 {
+					minX = min(minX, x)
 					minY = min(minY, y)
+					maxX = max(maxX, x+1)
 					maxY = max(maxY, y+1)
 				}
 			}
 		}
-		// Four transparent pixels prevent linear filtering from shaving bright
-		// antennae or pearl ornaments at the exact alpha edge.
-		result[i] = image.Rect(r.minX-4, minY-4, r.maxX+4, maxY+4).
+		if minX >= maxX || minY >= maxY {
+			panic(fmt.Sprintf("merge-creatures atlas cell %d has no visible pixels", i))
+		}
+		// Keep a generous transparent apron so linear filtering never clamps a
+		// glow, whisker, fin, or shadow against the crop edge.
+		const apron = 12
+		result[i] = image.Rect(max(cellMinX, minX-apron), minY-apron, min(cellMaxX, maxX+apron), maxY+apron).
 			Intersect(image.Rect(0, 0, w, h)).Add(bounds.Min)
 	}
 	return result
@@ -113,7 +126,17 @@ func alphaColumnCells(atlas image.Image, cells int) []image.Rectangle {
 
 const width, height = 480, 720
 
-var radii = []float64{15, 20, 27, 36, 47, 60, 74}
+const (
+	maxTier      = 6
+	dangerLineY  = 120
+	dangerLimit  = 180
+	worldGravity = .48
+)
+
+// Each merge roughly preserves area: the next radius is about sqrt(2) times
+// the previous one. The old late tiers grew too slowly, so two large pieces
+// collapsed into much less occupied area and made the board unusually easy.
+var radii = [...]float64{15, 21, 30, 42, 60, 85, 120}
 
 type fruit struct {
 	x, y, vx, vy float64
@@ -125,18 +148,18 @@ type spark struct {
 	c                  color.RGBA
 }
 type game struct {
-	fruits                                []fruit
-	rng                                   *rand.Rand
-	next, after, score, danger, cooldown  int
-	cursor                                float64
-	clear, over                           bool
-	level, combo, comboTimer, shake, best int
-	sparks                                []spark
-	audio                                 *audio.Context
-	gate                                  audiolab.Gate
-	pulse                                 *shaderlab.Pulse
-	cam                                   cameralab.State
-	badge                                 *ebiten.Image
+	fruits                               []fruit
+	rng                                  *rand.Rand
+	next, after, score, danger, cooldown int
+	cursor                               float64
+	over                                 bool
+	combo, comboTimer, shake, best       int
+	sparks                               []spark
+	audio                                *audio.Context
+	gate                                 audiolab.Gate
+	pulse                                *shaderlab.Pulse
+	cam                                  cameralab.State
+	badge                                *ebiten.Image
 }
 
 func newGame() *game {
@@ -145,7 +168,7 @@ func newGame() *game {
 	}
 	b := ebiten.NewImage(20, 20)
 	b.Fill(color.RGBA{255, 130, 80, 255})
-	g := &game{rng: rand.New(rand.NewSource(4806)), cursor: 240, level: 1, audio: audiolab.Context(), pulse: shaderlab.NewPulse(), cam: cameralab.State{Pos: cameralab.Vec{240, 360}, ViewW: width, ViewH: height}, badge: b}
+	g := &game{rng: rand.New(rand.NewSource(4806)), cursor: 240, audio: audiolab.Context(), pulse: shaderlab.NewPulse(), cam: cameralab.State{Pos: cameralab.Vec{240, 360}, ViewW: width, ViewH: height}, badge: b}
 	g.next = g.rng.Intn(3)
 	g.after = g.rng.Intn(3)
 	// A prepared opening board communicates the merge goal immediately.
@@ -153,20 +176,11 @@ func newGame() *game {
 	return g
 }
 func (g *game) Update() error {
-	if g.clear || g.over {
+	if g.over {
 		if any() {
-			if g.clear && g.level < 3 {
-				g.level++
-				g.fruits = nil
-				g.danger = 0
-				g.clear = false
-				g.next = g.rng.Intn(3)
-				g.after = g.rng.Intn(3)
-			} else {
-				best := g.best
-				*g = *newGame()
-				g.best = best
-			}
+			best := g.best
+			*g = *newGame()
+			g.best = best
 		}
 		return nil
 	}
@@ -202,7 +216,7 @@ func (g *game) Update() error {
 	}
 	for i := range g.fruits {
 		f := &g.fruits[i]
-		f.vy += []float64{.40, .48, .56}[g.level-1]
+		f.vy += worldGravity
 		f.x += f.vx
 		f.y += f.vy
 		r := radii[f.tier]
@@ -241,25 +255,18 @@ func (g *game) Update() error {
 				if d <= 0 || d >= minD {
 					continue
 				}
-				if pass == 0 && a.tier == b.tier && a.tier < 6 {
+				if pass == 0 && a.tier == b.tier && a.tier < maxTier {
 					tier := a.tier + 1
 					a.dead, b.dead = true, true
 					spawn = append(spawn, fruit{x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, vx: (a.vx + b.vx) / 2, vy: -2.5, tier: tier})
-					g.score += (tier + 1) * (tier + 1) * 10
 					g.gate.Arm(true)
 					g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, 420+float64(tier)*80, .09)).Play()
 					g.combo++
 					g.comboTimer = 100
-					g.score += g.combo * 15
+					g.score += mergePoints(tier, g.combo)
+					g.best = max(g.best, g.score)
 					g.shake = min(8, 3+tier)
 					g.burst((a.x+b.x)/2, (a.y+b.y)/2, 8+tier*2)
-					target := []int{4, 5, 6}[g.level-1]
-					if tier == target {
-						g.clear = true
-						if g.score > g.best {
-							g.best = g.score
-						}
-					}
 					break
 				}
 				nx, ny := dx/d, dy/d
@@ -288,7 +295,7 @@ func (g *game) Update() error {
 	g.fruits = append(alive, spawn...)
 	above := false
 	for _, f := range g.fruits {
-		if f.y-radii[f.tier] < 175 && math.Hypot(f.vx, f.vy) < 1.2 {
+		if f.y-radii[f.tier] < dangerLineY && math.Hypot(f.vx, f.vy) < 1.2 {
 			above = true
 		}
 	}
@@ -297,10 +304,14 @@ func (g *game) Update() error {
 	} else {
 		g.danger = max(0, g.danger-3)
 	}
-	if g.danger >= 180 {
+	if g.danger >= dangerLimit {
 		g.over = true
 	}
 	return nil
+}
+
+func mergePoints(tier, combo int) int {
+	return (tier+1)*(tier+1)*10 + combo*15
 }
 func (g *game) burst(x, y float64, n int) {
 	for i := 0; i < n; i++ {
@@ -334,7 +345,7 @@ func (g *game) Draw(s *ebiten.Image) {
 	if g.danger > 0 {
 		line = color.RGBA{255, 70, 75, 220}
 	}
-	vector.StrokeLine(s, 25, 175, 455, 175, 3, line, false)
+	vector.StrokeLine(s, 25, dangerLineY, 455, dangerLineY, 3, line, false)
 	for _, f := range g.fruits {
 		r := radii[f.tier]
 		pulse := 1.0
@@ -351,25 +362,18 @@ func (g *game) Draw(s *ebiten.Image) {
 	vector.DrawFilledRect(s, 340, 82, 96, 70, color.RGBA{7, 13, 28, 210}, false)
 	ebitenutil.DebugPrintAt(s, "UP NEXT", 355, 91)
 	drawCreature(s, g.after, 390, 126, radii[g.after]*1.2)
-	target := []int{5, 6, 7}[g.level-1]
 	vector.DrawFilledRect(s, 12, 10, 456, 50, color.RGBA{5, 12, 27, 225}, false)
-	drawCreature(s, target-1, 34, 35, 40)
+	drawCreature(s, maxTier, 34, 35, 40)
 	if f, e := uilab.Face("en", 16); e == nil {
 		op := &text.DrawOptions{}
 		op.GeoM.Translate(55, 25)
-		text.Draw(s, fmt.Sprintf("STAGE %d/3 SCORE %05d BEST %05d COMBO x%d", g.level, g.score, g.best, g.combo), f, op)
+		text.Draw(s, fmt.Sprintf("SCORE %05d  BEST %05d  COMBO x%d", g.score, g.best, g.combo), f, op)
 	} else {
-		ebitenutil.DebugPrintAt(s, fmt.Sprintf("STAGE %d/3 SCORE %05d BEST %05d COMBO x%d", g.level, g.score, g.best, g.combo), 55, 25)
+		ebitenutil.DebugPrintAt(s, fmt.Sprintf("SCORE %05d  BEST %05d  COMBO x%d", g.score, g.best, g.combo), 55, 25)
 	}
-	ebitenutil.DebugPrintAt(s, fmt.Sprintf("MERGE TWINS → TIER %d      DANGER %03d/180", target, g.danger), 86, 48)
-	ebitenutil.DebugPrintAt(s, "MOVE POINTER, TAP TO DROP — BUILD THE TARGET", 65, 700)
-	if g.clear {
-		msg := "STAGE CLEAR!\n\nTAP / SPACE FOR NEXT STAGE"
-		if g.level == 3 {
-			msg = "EBI MERGE COMPLETE!\n\nTAP / SPACE TO PLAY AGAIN"
-		}
-		overlay(s, msg)
-	} else if g.over {
+	ebitenutil.DebugPrintAt(s, fmt.Sprintf("EVERY MERGE SCORES          DANGER %03d/%03d", g.danger, dangerLimit), 86, 48)
+	ebitenutil.DebugPrintAt(s, "MOVE POINTER, TAP TO DROP — KEEP MERGING", 75, 700)
+	if g.over {
 		overlay(s, "STACK CROSSED THE LINE!\n\nTAP / SPACE TO RETRY")
 	}
 }
@@ -384,6 +388,7 @@ func drawCreature(dst *ebiten.Image, tier int, cx, cy, size float64) {
 	scale := size / float64(max(w, h))
 	op.GeoM.Scale(scale, scale)
 	op.GeoM.Translate(cx-float64(w)*scale/2, cy-float64(h)*scale/2)
+	op.Filter = ebiten.FilterLinear
 	dst.DrawImage(src, op)
 }
 

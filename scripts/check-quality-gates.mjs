@@ -111,7 +111,7 @@ function selectedGates() {
   if (lensesArg) {
     const set = new Set(lensesArg.split(",").map((s) => s.trim()));
     const all = set.has("all") || set.has("*");
-    gates = gates.filter((g) => g.check === "llm" && (all || set.has(g.family)));
+    gates = gates.filter((g) => g.check === "llm" && (all || set.has(g.family) || set.has(g.id)));
   }
   return gates;
 }
@@ -316,7 +316,11 @@ function lensesPayload(gates) {
       severity: g.severity,
       summary: g.summary,
       prompt_hint: g.prompt_hint || g.summary,
+      fail_when: g.fail_when || g.prompt_hint || g.summary,
+      do_not_flag: g.do_not_flag || "",
+      evidence_required: g.evidence_required || "Quote the exact page evidence.",
       applies_to: g.applies_to,
+      languages: g.languages || ["ja", "en"],
     }));
 }
 
@@ -326,6 +330,7 @@ function main() {
     const payload = {
       version: catalog.version,
       meters: catalog.meters,
+      llm_review_policy: catalog.llm_review_policy || [],
       gates: lensesArg
         ? lensesPayload(gates)
         : gates.map((g) => ({
