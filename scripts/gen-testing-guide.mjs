@@ -106,6 +106,114 @@ const lessons = [
   },
 ];
 
+const goldenCases = {
+  "tap-target": { testName: "InitialTarget", fixture: "g := newGame()", file: "tap-target-initial.png", ja: "固定seedで作った最初の的・HUD・開始表示", en: "the initial seeded target, HUD, and start prompt" },
+  "timing-meter": { testName: "StoppedPerfect", fixture: "g := &game{markerX: centerX, speed: 3.2, score: 100, stopped: true}", file: "timing-meter-perfect.png", ja: "中央で止めたPERFECT表示と得点HUD", en: "the PERFECT result and score HUD after stopping at center" },
+  "catch-stars": { testName: "InitialBasket", fixture: "g := newGame()", file: "catch-stars-initial.png", ja: "固定seedの最初のカゴ・星・残機HUD", en: "the initial seeded basket, stars, and lives HUD" },
+  flappy: { testName: "ReadyState", fixture: "g := newGame()", file: "flappy-ready.png", ja: "開始前の鳥・パイプ・操作案内", en: "the bird, pipes, and input prompt before play starts" },
+  pong: { testName: "InitialServe", fixture: "g := newGame()", file: "pong-initial-serve.png", ja: "初期サーブ・パドル・0対0のHUD", en: "the initial serve, paddles, and 0–0 HUD" },
+  "space-shooter": { testName: "FirstWave", fixture: "g := newGame()", file: "space-shooter-wave-one.png", ja: "固定seedの第1ウェーブ・自機・HUD", en: "the seeded first wave, player ship, and HUD" },
+  breakout: { testName: "InitialBricks", fixture: "g := newGame()", file: "breakout-initial.png", ja: "初期ブロック配置・ボール・残機HUD", en: "the initial brick layout, ball, and lives HUD" },
+  snake: { testName: "InitialBoard", fixture: "g := newGame()", file: "snake-initial.png", ja: "固定seedの初期ヘビ・餌・得点HUD", en: "the seeded initial snake, food, and score HUD" },
+  sokoban: { testName: "InitialBoard", fixture: "g := newGame()", file: "sokoban-initial.png", ja: "初期の壁・箱・ゴール・プレイヤー", en: "the initial walls, boxes, goals, and player" },
+  platformer: { testName: "InitialStage", fixture: "g := newGame()", file: "platformer-initial.png", ja: "開始地点の足場・コイン・プレイヤー", en: "the opening platforms, coins, and player" },
+  dungeon: { testName: "InitialRoom", fixture: "g := newGame()", file: "dungeon-initial.png", ja: "最初の部屋・敵・ライフHUD", en: "the initial room, enemies, and life HUD" },
+  "bullet-hell": { testName: "InitialBoss", fixture: "g := newGame()", file: "bullet-hell-initial.png", ja: "開始時のボス・自機・HP表示", en: "the opening boss, player, and HP display" },
+};
+
+if (Object.keys(goldenCases).length !== lessons.length || lessons.some((lesson) => !goldenCases[lesson.slug])) {
+  throw new Error("every testing lesson must include one Draw golden example");
+}
+
+const readableTestExample = `func TestSpendLife(t *testing.T) {
+	testCases := []struct {
+		name         string
+		lives        int
+		wantLives    int
+		wantGameOver bool
+	}{
+		{name: "spending one of three lives continues game", lives: 3, wantLives: 2},
+		{name: "spending last life ends game", lives: 1, wantLives: 0, wantGameOver: true},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			gotLives, gotGameOver := SpendLife(tc.lives)
+
+			if gotLives != tc.wantLives {
+				t.Errorf("lives = %d, want %d", gotLives, tc.wantLives)
+			}
+			if gotGameOver != tc.wantGameOver {
+				t.Errorf("gameOver = %v, want %v", gotGameOver, tc.wantGameOver)
+			}
+		})
+	}
+}`;
+
+const goldenHarnessExample = `package main
+
+import (
+	"bytes"
+	"image/png"
+	"os"
+	"path/filepath"
+	"testing"
+
+	"github.com/hajimehoshi/ebiten/v2"
+)
+
+type testLoop struct {
+	m    *testing.M
+	code int
+}
+
+func (l *testLoop) Update() error {
+	l.code = l.m.Run()
+	return ebiten.Termination
+}
+
+func (*testLoop) Draw(*ebiten.Image) {}
+func (*testLoop) Layout(_, _ int) (int, int) { return 1, 1 }
+
+func TestMain(m *testing.M) {
+	loop := &testLoop{m: m}
+	if err := ebiten.RunGame(loop); err != nil {
+		panic(err)
+	}
+	os.Exit(loop.code)
+}
+
+func assertGolden(t *testing.T, got *ebiten.Image, filename string) {
+	t.Helper()
+
+	var actual bytes.Buffer
+	if err := png.Encode(&actual, got); err != nil {
+		t.Fatal(err)
+	}
+
+	if os.Getenv("UPDATE_GOLDEN") == "1" {
+		if err := os.MkdirAll(filepath.Dir(filename), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filename, actual.Bytes(), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		return
+	}
+
+	want, err := os.ReadFile(filename)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(actual.Bytes(), want) {
+		actualFile := filename + ".actual.png"
+		if err := os.WriteFile(actualFile, actual.Bytes(), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		t.Fatalf("Draw output differs from %s; actual image: %s", filename, actualFile)
+	}
+}`;
+
 if (lessons.length !== 12 || lessons.some((lesson, index) => lesson.level !== String(index + 1).padStart(2, "0"))) {
   throw new Error("testing course must cover LEVEL 01–12 exactly once and in order");
 }
@@ -146,7 +254,8 @@ function goFile(functions, support = "") {
 function testFile(functions) {
   const body = functions.join("\n\n");
   const imports = body.includes("math.") ? 'import (\n\t"math"\n\t"testing"\n)' : 'import "testing"';
-  return `package lessonlogic\n\n${imports}\n\n${body}\n`;
+  const constants = body.includes("floatTolerance") ? "\n\nconst floatTolerance = 1e-9" : "";
+  return `package lessonlogic\n\n${imports}${constants}\n\n${body}\n`;
 }
 
 const esc = (s) => String(s).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
@@ -156,7 +265,7 @@ function shell({ lang, depth, title, desc, body }) {
   const prefix = "../".repeat(depth);
   const other = ja ? "en" : "ja";
   const route = depth === 3 ? "guides/testing/" : `guides/testing/${title.slug}/`;
-  return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="${esc(desc)}"><title>${esc(title.text)} | Ebi Showcase</title><link rel="stylesheet" href="${prefix}style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="${prefix}${lang}/"><span>EBI</span> SHOWCASE</a><nav><a href="${depth === 3 ? "./" : "../"}">TESTING</a><a class="lang" href="${prefix}${other}/${route}" lang="${other}">${ja ? "EN" : "日本語"}</a></nav></header><main>${body}</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="${prefix}learn.js"></script></body></html>`;
+  return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="${esc(desc)}"><title>${esc(title.text)} | Ebi Showcase</title><link rel="icon" type="image/png" href="${prefix}assets/favicon.png"><link rel="stylesheet" href="${prefix}style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="${prefix}${lang}/"><span>EBI</span> SHOWCASE</a><nav><a href="${depth === 3 ? "./" : "../"}">TESTING</a><a class="lang" href="${prefix}${other}/${route}" lang="${other}">${ja ? "EN" : "日本語"}</a></nav></header><main>${body}</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="${prefix}learn.js"></script></body></html>`;
 }
 
 function hub(lang) {
@@ -168,6 +277,14 @@ function hub(lang) {
     input: "Updateが入力を読む", pure: "純粋関数へ普通の値を渡す", state: "Updateがgameへ結果を書く", noDraw: "Drawはgameを読むだけ",
     why: "なぜDraw()は原則テストしない？", whyBody: "同じgame・素材・画面サイズなら同じ絵を出す、という参照透過なDrawを守れば、ルールの正しさはgameの状態で確認できます。ピクセル比較はフォント・GPU・OS差で壊れやすく、当たり判定や得点の答えにもなりません。独自シェーダーや画像生成器を守りたい場合は別枠のゴールデン画像テストを使いますが、それはUpdateのユニットテストとは分けます。",
     update: "Update()をどう構造化する？", updateBody: "①Ebitengineから入力を読む、②普通の数値・小さな構造体へ変換、③純粋関数で次の答えを計算、④gameへ結果を保存、の順にします。純粋関数はEbitengineをimportせず、時刻や乱数も引数で受け取ります。自分のGoプロジェクトにinternal/lessonlogicを作ればよく、このサイトのcloneは不要です。",
+    qualityTitle: "読み返しただけで、前提・操作・期待結果が分かるテストへ。",
+    aaaTitle: "AAAはコメントではなく読み順", aaa: "Arrangeで小さな前提を作り、Actで対象を一度だけ呼び、Assertでgotとwantを比べます。// Arrange、// Act、// Assertとは書きません。三つの段落を空行で分け、コード自身に役割を語らせます。",
+    dampTitle: "DAMPをDRYより優先", damp: "DAMPはDescriptive And Meaningful Phrasesです。テストでは意味が見える名前や値を少し繰り返して構いません。Assertの中に探索用のfor、switch、複雑な分岐を置かず、一つのgotを一つのwantと比べます。",
+    namesTitle: "Goらしい名前", names: "whenFooBar_shouldQuaxはGoの決まりではありません。トップレベルはTestSpendLifeのように対象を名付け、条件と結果はt.Run(\"spending last life ends game\")のようなサブテスト名で表します。これならgo test -runで一件だけ選べます。",
+    tableTitle: "同じ形ならテーブル駆動", tables: "境界値のようにArrange・Act・Assertの形が同じで値だけ違うときは、各行が完全な一件になるテーブル駆動テストにします。準備や操作そのものが違うシナリオまで無理に一つの表へ押し込みません。",
+    sources: "Go公式の命名説明と、t.Runを使うテーブル駆動テスト",
+    goldenTitle: "Drawを自動テストするなら、方法はゴールデン画像比較だけ。",
+    goldenBody: "Drawの呼び出し回数、内部座標、個々の描画命令をテストしません。固定したgame状態・asset・font・viewportを一枚描き、testdataの承認済みPNGと比較します。差分が出たら実画像を人が見てからUPDATE_GOLDEN=1で更新します。描画バックエンド差がある環境では実行環境を固定するか、環境別goldenを持ちます。Ebitengineの画素読み出しはメインループ内で行う必要があるため、下のTestMain harness内でテストを実行します。",
     cards: "12本すべてを、実コードで分解する", cardsLead: "各ページに、現行のUpdate全文、責務の全手順、抽出した関数の完全なGoファイル、完全な_test.go、境界ケース、残すべき手動確認を掲載します。", read: "全文を読む →",
   } : {
     title: "Unit-test Update across LEVEL 01–12", desc: "A complete guide to leaving Draw untested by default and extracting pure rules from every LEVEL 01–12 Update for Go unit tests.",
@@ -176,10 +293,19 @@ function hub(lang) {
     input: "Update reads input", pure: "pass plain values to pure rules", state: "Update writes results to game", noDraw: "Draw only reads game",
     why: "Why not unit-test Draw() by default?", whyBody: "When Draw is a referentially transparent projection, the same game, assets, and viewport produce the same picture; rule correctness is visible in game state. Pixel comparisons are brittle across fonts, GPUs, and operating systems and do not prove collision or scoring. Protect a custom shader or image generator with a separate golden-image suite when needed—not with Update unit tests.",
     update: "How should Update() be structured?", updateBody: "① Read Ebitengine input. ② Convert it to plain values or small structs. ③ Calculate the next answer in pure functions. ④ Store results in game. Pure functions do not import Ebitengine and receive time/random values as arguments. Create internal/lessonlogic in your own Go project; cloning this site is not required.",
+    qualityTitle: "A reader should see the premise, action, and expected result without decoding the test.",
+    aaaTitle: "AAA is reading order, not labels", aaa: "Arrange one small premise, Act by calling the subject once, then Assert by comparing got with want. Do not add // Arrange, // Act, or // Assert comments. Separate the three paragraphs with blank lines and let the code explain itself.",
+    dampTitle: "Prefer DAMP over test DRYness", damp: "DAMP means Descriptive And Meaningful Phrases. Repeating a meaningful name or value in test code is fine. Do not put search loops, switches, or complicated branches in Assert; compare one got value with one want value.",
+    namesTitle: "Idiomatic Go names", names: "whenFooBar_shouldQuax is not a Go rule. Name the top-level subject, such as TestSpendLife, then put premise and outcome in a subtest such as t.Run(\"spending last life ends game\"). go test -run can select that one case.",
+    tableTitle: "Use tables when the shape repeats", tables: "Use a table-driven test when boundary cases share the same Arrange, Act, and Assert and only values change. Each row must be one complete case. Do not force scenarios with different setup or actions into one clever table.",
+    sources: "Official Go naming guidance and table-driven subtests with t.Run",
+    goldenTitle: "When Draw is automated, use only a golden-image comparison.",
+    goldenBody: "Do not test Draw call counts, internal coordinates, or individual drawing commands. Render one fixed game state with pinned assets, fonts, and viewport, then compare it with an approved PNG in testdata. When it changes, inspect the actual image before running UPDATE_GOLDEN=1. Pin the rendering environment or keep backend-specific goldens where GPUs differ. Ebitengine pixel reads must happen inside its main loop, so the TestMain harness below runs the tests there.",
     cards: "Decompose all twelve real games", cardsLead: "Every page includes the full current Update, every responsibility in order, a complete pure Go file, a complete _test.go, boundary cases, and the manual checks that remain.", read: "READ ALL →",
   };
   const cards = lessons.map((lesson) => { const t = lesson[lang]; return `<a class="test-course-card" href="${lesson.slug}/"><span>${lesson.level}</span><h3>${t.title}</h3><p>${t.lead}</p><strong>${c.read}</strong></a>`; }).join("");
-  const body = `<section class="test-hero"><p class="eyebrow">SPECIAL GUIDE / UNIT TESTING</p><h1>${c.h1}</h1><p>${c.lead}</p></section><section class="test-boundary" aria-label="Update and Draw testing boundary"><div><small>01 / INPUT ADAPTER</small><b>${c.input}</b></div><i>→</i><div class="is-pure"><small>02 / TEST HERE</small><b>${c.pure}</b><em>go test / no window</em></div><i>→</i><div><small>03 / STATE</small><b>${c.state}</b><em>${c.noDraw}</em></div></section><section class="test-explain test-principles"><div><p class="eyebrow">THE DEFAULT</p><h2>${c.why}</h2><p>${c.whyBody}</p></div><div><p class="eyebrow">THE STRUCTURE</p><h2>${c.update}</h2><p>${c.updateBody}</p></div></section><section class="test-terminal"><code>$ go test ./internal/lessonlogic</code><strong>✓ rules, not pixels</strong></section><section class="test-course"><p class="eyebrow">LEVEL 01–12 / COMPLETE MAP</p><h2>${c.cards}</h2><p>${c.cardsLead}</p><div class="test-course-grid">${cards}</div></section><nav class="test-guide-links"><a href="tap-target/">${ja ? "LEVEL 01から始める →" : "START LEVEL 01 →"}</a><a href="../../">${ja ? "← ホームへ" : "← HOME"}</a></nav>`;
+  const qualityCards = [[c.aaaTitle, c.aaa], [c.dampTitle, c.damp], [c.namesTitle, c.names], [c.tableTitle, c.tables]].map(([title, body]) => `<article><h3>${title}</h3><p>${body}</p></article>`).join("");
+  const body = `<section class="test-hero"><p class="eyebrow">SPECIAL GUIDE / UNIT TESTING</p><h1>${c.h1}</h1><p>${c.lead}</p></section><section class="test-boundary" aria-label="Update and Draw testing boundary"><div><small>01 / INPUT ADAPTER</small><b>${c.input}</b></div><i>→</i><div class="is-pure"><small>02 / TEST HERE</small><b>${c.pure}</b><em>go test / no window</em></div><i>→</i><div><small>03 / STATE</small><b>${c.state}</b><em>${c.noDraw}</em></div></section><section class="test-explain test-principles"><div><p class="eyebrow">THE DEFAULT</p><h2>${c.why}</h2><p>${c.whyBody}</p></div><div><p class="eyebrow">THE STRUCTURE</p><h2>${c.update}</h2><p>${c.updateBody}</p></div></section><section class="test-quality"><div class="test-quality-copy"><p class="eyebrow">AAA + DAMP + GO STYLE</p><h2>${c.qualityTitle}</h2><div class="test-quality-grid">${qualityCards}</div><p class="test-sources"><a href="https://go.dev/doc/tutorial/add-a-test">${c.sources}</a> · <a href="https://go.dev/blog/subtests">t.Run / subtests</a></p></div><pre><code>${esc(readableTestExample)}</code></pre></section><section class="test-golden"><div><p class="eyebrow">DRAW / VISUAL REGRESSION</p><h2>${c.goldenTitle}</h2><p>${c.goldenBody}</p></div><pre><code>${esc(goldenHarnessExample)}</code></pre></section><section class="test-terminal"><code>$ go test ./internal/lessonlogic</code><strong>✓ rules, not pixels</strong></section><section class="test-course"><p class="eyebrow">LEVEL 01–12 / COMPLETE MAP</p><h2>${c.cards}</h2><p>${c.cardsLead}</p><div class="test-course-grid">${cards}</div></section><nav class="test-guide-links"><a href="tap-target/">${ja ? "LEVEL 01から始める →" : "START LEVEL 01 →"}</a><a href="../../">${ja ? "← ホームへ" : "← HOME"}</a></nav>`;
   return shell({ lang, depth: 3, title: { text: c.title }, desc: c.desc, body });
 }
 
@@ -187,11 +313,20 @@ function lessonPage(lang, index) {
   const lesson = lessons[index];
   const t = lesson[lang];
   const ja = lang === "ja";
+  const golden = goldenCases[lesson.slug];
   const update = updateFunction(lesson.source);
   const pureFunctions = lesson.pure.map((name) => namedFunction(logicFiles, name));
   const tests = lesson.tests.map((name) => namedFunction(testFiles, name));
   const pure = goFile(pureFunctions, supportCode(lesson.support));
   const test = testFile(tests);
+  const goldenTest = `func TestDraw${golden.testName}MatchesGolden(t *testing.T) {
+	${golden.fixture}
+	screen := ebiten.NewImage(screenWidth, screenHeight)
+
+	g.Draw(screen)
+
+	assertGolden(t, screen, "testdata/${golden.file}")
+}`;
   const rows = t.cases.map((r) => `<tr><th>${esc(r[0])}</th><td><code>${esc(r[1])}</code></td><td><code>${esc(r[2])}</code></td></tr>`).join("");
   const phases = lesson.phases[lang].map((phase, i) => `<li><span>${String(i + 1).padStart(2, "0")}</span><p>${phase}</p></li>`).join("");
   const prev = index === 0 ? "../" : `../${lessons[index - 1].slug}/`;
@@ -199,13 +334,24 @@ function lessonPage(lang, index) {
   const c = ja ? {
     complete: "現行Updateの全手順", completeBody: "省略記号はありません。入力から早期return、ループ、勝敗まで、現在ゲームで動く順番です。この中から抽出した純粋関数を直接テストします。",
     update: "REAL GO / Update()全文", pure: "EXTRACTED / 完全な純粋ロジック", test: "TEST / 完全な_test.go", table: "境界を先に決める", manual: "テストのあとも人が確認すること", run: "自分のGoプロジェクトに上のファイルを作って実行", back: "← 前へ", forward: "次へ →",
+    auditTitle: "この章のテストを、同じ品質基準で点検済み。", names: "命名", namesBody: `トップレベルは${lesson.tests.map((name) => `<code>${name}</code>`).join("・")}。各<code>t.Run</code>名が「どういう前提なら何を返すか」を文章で示します。<code>whenFoo_shouldBar</code>形式は使いません。`,
+    aaa: "AAA", aaaBody: "ケースの値で前提を作り、対象関数を一度呼び、その結果だけを比較します。三段落は空行で分け、Arrange / Act / Assertコメントは置きません。",
+    damp: "DAMP", dampBody: "意味のあるケース名とgot / wantを省略しません。Assertには値の探索ループやswitchを置かず、複数戻り値は別々に検証して失敗理由を一つに絞ります。",
+    parameterized: "テーブル駆動", parameterizedBody: "同じ関数へ境界値を渡す反復なので、各行が完全な一件になるテーブル駆動テストを使います。外側のforはケース実行であり、Assertの中の探索ではありません。",
+    goldenTitle: "この章でDrawも守るなら", goldenBody: `${golden.ja}を固定し、<code>testdata/${golden.file}</code>と一枚まるごと比較します。座標や描画命令を個別にAssertしません。`, goldenNote: "このコードはゲーム側のmain_test.goへ置き、ガイド冒頭のTestMain / assertGoldenと組み合わせます。golden更新前には.actual.pngを必ず目で確認します。",
   } : {
     complete: "Every step in the current Update", completeBody: "There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.",
     update: "REAL GO / complete Update()", pure: "EXTRACTED / complete pure logic", test: "TEST / complete _test.go", table: "Choose boundaries first", manual: "What a person still checks", run: "Create these files in your own Go project, then run", back: "← PREVIOUS", forward: "NEXT →",
+    auditTitle: "This chapter's tests pass the same readability review.", names: "Naming", namesBody: `Top-level subjects are ${lesson.tests.map((name) => `<code>${name}</code>`).join(" and ")}. Every <code>t.Run</code> name states the premise and expected result in a sentence; there is no whenFoo_shouldBar convention.`,
+    aaa: "AAA", aaaBody: "Case values arrange the premise, one call acts, and comparisons assert only its result. Blank lines separate the three paragraphs; Arrange / Act / Assert comments do not label them.",
+    damp: "DAMP", dampBody: "Meaningful case names and got / want values stay visible. Assert contains no search loop or switch, and multiple return values are checked separately so each failure says one thing.",
+    parameterized: "Table-driven", parameterizedBody: "These are repeated boundary inputs to the same function, so every row is one complete table-driven case. The outer for runs cases; it is not a search hidden inside Assert.",
+    goldenTitle: "If this chapter protects Draw", goldenBody: `Freeze ${golden.en}, then compare the whole image with <code>testdata/${golden.file}</code>. Do not assert individual coordinates or drawing commands.`, goldenNote: "Put this code in the game's main_test.go and combine it with the TestMain / assertGolden harness from the guide hub. Inspect .actual.png before approving any golden update.",
   };
   const logicPath = index < 2 ? "internal/lessonlogic/rules.go" : "internal/lessonlogic/core_updates.go";
   const testPath = index < 2 ? "internal/lessonlogic/rules_test.go" : "internal/lessonlogic/core_updates_test.go";
-  const body = `<section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL ${lesson.level} / 12</p><h1>${t.title}</h1><p>${t.lead}</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>${t.idea}</h2><p><strong>Draw:</strong> ${t.manual}</p></div><div class="test-case-table"><p class="eyebrow">${c.table}</p><table><tbody>${rows}</tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>${c.complete}</h2><p>${c.completeBody}</p></div><ol>${phases}</ol></section><section class="test-code-full"><div><p class="eyebrow">${c.update}</p><code>${esc(lesson.source)}</code></div><pre><code>${esc(update)}</code></pre></section><section class="test-code-compare"><article><p>${c.pure}</p><code>${logicPath}</code><pre><code>${esc(pure)}</code></pre></article><article class="is-after"><p>${c.test}</p><code>${testPath}</code><pre><code>${esc(test)}</code></pre></article></section><section class="test-run"><p>${c.run}</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>${c.manual}</h2><p>${t.manual}</p></section><nav class="test-pager"><a href="${prev}">${c.back}</a><span>${index + 1} / ${lessons.length}</span><a href="${next}">${c.forward}</a></nav>`;
+  const auditItems = [[c.names, c.namesBody], [c.aaa, c.aaaBody], [c.damp, c.dampBody], [c.parameterized, c.parameterizedBody]].map(([title, body]) => `<article><h3>${title}</h3><p>${body}</p></article>`).join("");
+  const body = `<section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL ${lesson.level} / 12</p><h1>${t.title}</h1><p>${t.lead}</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>${t.idea}</h2><p><strong>Draw:</strong> ${t.manual}</p></div><div class="test-case-table"><p class="eyebrow">${c.table}</p><table><tbody>${rows}</tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>${c.complete}</h2><p>${c.completeBody}</p></div><ol>${phases}</ol></section><section class="test-code-full"><div><p class="eyebrow">${c.update}</p><code>${esc(lesson.source)}</code></div><pre><code>${esc(update)}</code></pre></section><section class="test-code-compare"><article><p>${c.pure}</p><code>${logicPath}</code><pre><code>${esc(pure)}</code></pre></article><article class="is-after"><p>${c.test}</p><code>${testPath}</code><pre><code>${esc(test)}</code></pre></article></section><section class="test-audit"><div><p class="eyebrow">TEST REVIEW / ALL CASES</p><h2>${c.auditTitle}</h2></div><div class="test-quality-grid">${auditItems}</div></section><section class="test-golden test-golden-lesson"><div><p class="eyebrow">DRAW / GOLDEN ONLY</p><h2>${c.goldenTitle}</h2><p>${c.goldenBody}</p><p>${c.goldenNote}</p></div><pre><code>${esc(goldenTest)}</code></pre></section><section class="test-run"><p>${c.run}</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>${c.manual}</h2><p>${t.manual}</p></section><nav class="test-pager"><a href="${prev}">${c.back}</a><span>${index + 1} / ${lessons.length}</span><a href="${next}">${c.forward}</a></nav>`;
   return shell({ lang, depth: 4, title: { text: t.title, slug: lesson.slug }, desc: t.lead, body });
 }
 

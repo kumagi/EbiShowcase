@@ -25,6 +25,12 @@ import (
 
 const width, height = 480, 720
 
+// The generated terrain plate is 1024x341. Pixel row 132 is the top of the
+// grassy shelf, so rendering that row at the collision rectangle's y keeps
+// the artwork and physics on the same walkable surface.
+const terrainSourceHeight = 341.0
+const terrainSurfaceRow = 132.0
+
 // Only this capstone's four generated images enter its WASM binary. Importing
 // the shared mobile-art bundle would also embed unrelated genre artwork.
 //
@@ -159,7 +165,9 @@ func (g *game) Update() error {
 		g.playSE(audiolab.Sine, 520)
 	}
 	g.vy = math.Min(g.vy+.65, 14)
+	oldX := g.p.x
 	g.p.x = clamp(g.p.x+g.vx, 0, 1670)
+	g.p, g.vx = resolveSolidTerrainSides(g.p, oldX, g.vx, g.grounds)
 	old := g.p.y + g.p.h
 	g.p.y += g.vy
 	g.grounded = false
@@ -370,11 +378,21 @@ func platformerImage(name string) *ebiten.Image {
 }
 
 func drawTerrain(dst *ebiten.Image, x, walkY, w, collisionH float64) {
+	// Draw the collision rectangle itself first. The generated reef image has
+	// large transparent and tapered areas, so using that image alone made some
+	// invisible floor solid and some visible overhangs non-solid. This backing
+	// is exactly the same x/y/w/h used by Update.
+	drawTerrainBody(dst, x, walkY, w, collisionH)
+
 	if w <= 132 {
 		// The whole source has naturally tapered ends, which reads better than
 		// clipping two large caps together for the track's narrow bonus ledges.
-		h := clamp(w*.42, 60, 82)
-		drawImageFit(dst, platformerTerrain.whole, x-7, walkY-h*.38, w+14, h, false)
+		// Keep it inside the collision width; no decorative overhang may look
+		// walkable outside the real ledge.
+		renderW := w
+		renderH := renderW * terrainSourceHeight / 1024
+		drawImageStretch(dst, platformerTerrain.whole, x, terrainDrawY(walkY, renderH), renderW, renderH)
+		drawWalkSurface(dst, x, walkY, w)
 		return
 	}
 
@@ -382,10 +400,52 @@ func drawTerrain(dst *ebiten.Image, x, walkY, w, collisionH float64) {
 	// of every image remains aligned with the same walkable collision edge.
 	h := clamp(84+collisionH*.22, 92, 132)
 	capW := clamp(h*.54, 50, math.Min(78, w*.32))
-	y := walkY - h*.37
-	drawImageStretch(dst, platformerTerrain.left, x-7, y, capW+7, h)
+	y := terrainDrawY(walkY, h)
+	drawImageStretch(dst, platformerTerrain.left, x, y, capW, h)
 	drawImageStretch(dst, platformerTerrain.middle, x+capW, y, math.Max(1, w-capW*2), h)
-	drawImageStretch(dst, platformerTerrain.right, x+w-capW, y, capW+7, h)
+	drawImageStretch(dst, platformerTerrain.right, x+w-capW, y, capW, h)
+	drawWalkSurface(dst, x, walkY, w)
+}
+
+func drawTerrainBody(dst *ebiten.Image, x, y, w, h float64) {
+	// A dark reef body and bright grass band make the exact collision bounds
+	// readable even where the decorative PNG is transparent.
+	vector.DrawFilledRect(dst, float32(x), float32(y), float32(w), float32(h), color.RGBA{16, 63, 68, 245}, true)
+	bandH := math.Min(12, h)
+	vector.DrawFilledRect(dst, float32(x), float32(y), float32(w), float32(bandH), color.RGBA{91, 174, 91, 255}, true)
+	vector.DrawFilledRect(dst, float32(x), float32(y+bandH-4), float32(w), 4, color.RGBA{39, 116, 82, 245}, true)
+	vector.StrokeRect(dst, float32(x)+.5, float32(y)+.5, float32(w)-1, float32(h)-1, 1, color.RGBA{207, 247, 173, 180}, true)
+}
+
+func terrainDrawY(walkY, renderedHeight float64) float64 {
+	return walkY - terrainSurfaceRow*renderedHeight/terrainSourceHeight
+}
+
+func drawWalkSurface(dst *ebiten.Image, x, walkY, w float64) {
+	// A subtle foam highlight is drawn on the exact collision edge. Besides
+	// matching the reef style, it makes every genuinely walkable ledge legible.
+	vector.StrokeLine(dst, float32(x+2), float32(walkY), float32(x+w-2), float32(walkY), 2, color.RGBA{211, 250, 224, 215}, true)
+}
+
+func resolveSolidTerrainSides(player rect, oldX, vx float64, grounds []rect) (rect, float64) {
+	for _, ground := range grounds {
+		// Thin bonus ledges are intentionally one-way platforms. Tall terrain is
+		// a solid island whose visible cliff face cannot be walked through.
+		if ground.h <= 24 || player.y+player.h <= ground.y || player.y >= ground.y+ground.h {
+			continue
+		}
+		if player.x+player.w <= ground.x || player.x >= ground.x+ground.w {
+			continue
+		}
+		if vx > 0 && oldX+player.w <= ground.x {
+			player.x = ground.x - player.w
+			vx = 0
+		} else if vx < 0 && oldX >= ground.x+ground.w {
+			player.x = ground.x + ground.w
+			vx = 0
+		}
+	}
+	return player, vx
 }
 
 func drawImageStretch(dst, img *ebiten.Image, x, y, w, h float64) {

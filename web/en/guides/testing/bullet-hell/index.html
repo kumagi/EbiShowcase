@@ -1,27 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Test two-circle overlap and one point outside bounds—not a slice of hundreds of bullets. Play the demo, add one Go rule, verify it, and apply the idea to your o"><title>Ebi Showcase – Bullet Hell: shrink a huge loop to one bullet</title>
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/bullet-hell/">
-    <!-- ogp:start -->
-    <meta property="og:site_name" content="Ebi Showcase">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Bullet Hell: shrink a huge loop to one bullet">
-    <meta property="og:description" content="Test two-circle overlap and one point outside bounds—not a slice of hundreds of bullets. Play the demo, add one Go rule, verify it, and apply the idea to your o">
-    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/bullet-hell/">
-    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--bullet-hell.png?v=20260713-font1">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Bullet Hell: shrink a huge loop to one bullet">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:locale:alternate" content="ja_JP">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Bullet Hell: shrink a huge loop to one bullet">
-    <meta name="twitter:description" content="Test two-circle overlap and one point outside bounds—not a slice of hundreds of bullets. Play the demo, add one Go rule, verify it, and apply the idea to your o">
-    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--bullet-hell.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Bullet Hell: shrink a huge loop to one bullet">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
-  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
-  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
-  <!-- favicon:end -->
-</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/bullet-hell/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 12 / 12</p><h1>Bullet Hell: shrink a huge loop to one bullet</h1><p>Test two-circle overlap and one point outside bounds—not a slice of hundreds of bullets.</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Update owns reverse deletion and HP. Give pure functions one bullet's numbers and freeze contact and the 30 px margin.</h2><p><strong>Draw:</strong> Play-test pattern beauty, dodge gaps, and hit readability.</p></div><div class="test-case-table"><p class="eyebrow">Choose boundaries first</p><table><tbody><tr><th>circles overlap</th><td><code>distance9,sum10</code></td><td><code>true</code></td></tr><tr><th>circles only touch</th><td><code>distance10,sum10</code></td><td><code>false</code></td></tr><tr><th>on margin</th><td><code>x=-30</code></td><td><code>inside</code></td></tr><tr><th>past margin</th><td><code>x=-30.1</code></td><td><code>outside</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>Every step in the current Update</h2><p>There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.</p></div><ol><li><span>01</span><p>When finished, accept restart only</p></li><li><span>02</span><p>Advance tick and invincibility</p></li><li><span>03</span><p>Move player</p></li><li><span>04</span><p>Periodically spawn player, ring, and fan shots</p></li><li><span>05</span><p>Move every bullet backwards</p></li><li><span>06</span><p>Test outside bounds</p></li><li><span>07</span><p>Resolve player shot vs boss and enemy shot vs player</p></li><li><span>08</span><p>Remove bullets and update win/lose</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / complete Update()</p><code>games/core/bullet-hell/main.go</code></div><pre><code>func (g *game) Update() error {
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Test two-circle overlap and one point outside bounds—not a slice of hundreds of bullets."><title>Bullet Hell: shrink a huge loop to one bullet | Ebi Showcase</title><link rel="icon" type="image/png" href="../../../../assets/favicon.png"><link rel="stylesheet" href="../../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/bullet-hell/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 12 / 12</p><h1>Bullet Hell: shrink a huge loop to one bullet</h1><p>Test two-circle overlap and one point outside bounds—not a slice of hundreds of bullets.</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Update owns reverse deletion and HP. Give pure functions one bullet's numbers and freeze contact and the 30 px margin.</h2><p><strong>Draw:</strong> Play-test pattern beauty, dodge gaps, and hit readability.</p></div><div class="test-case-table"><p class="eyebrow">Choose boundaries first</p><table><tbody><tr><th>circles overlap</th><td><code>distance9,sum10</code></td><td><code>true</code></td></tr><tr><th>circles only touch</th><td><code>distance10,sum10</code></td><td><code>false</code></td></tr><tr><th>on margin</th><td><code>x=-30</code></td><td><code>inside</code></td></tr><tr><th>past margin</th><td><code>x=-30.1</code></td><td><code>outside</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>Every step in the current Update</h2><p>There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.</p></div><ol><li><span>01</span><p>When finished, accept restart only</p></li><li><span>02</span><p>Advance tick and invincibility</p></li><li><span>03</span><p>Move player</p></li><li><span>04</span><p>Periodically spawn player, ring, and fan shots</p></li><li><span>05</span><p>Move every bullet backwards</p></li><li><span>06</span><p>Test outside bounds</p></li><li><span>07</span><p>Resolve player shot vs boss and enemy shot vs player</p></li><li><span>08</span><p>Remove bullets and update win/lose</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / complete Update()</p><code>games/core/bullet-hell/main.go</code></div><pre><code>func (g *game) Update() error {
 	if g.cleared || g.gameOver {
 		if restartPressed() {
 			*g = *newGame()
@@ -99,57 +76,53 @@ func Outside(x, y, minX, minY, maxX, maxY, margin float64) bool {
 import "testing"
 
 func TestCircleHit(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name string
 		bx   float64
 		want bool
-	}{{name: "overlap", bx: 9, want: true}, {name: "touch is not overlap", bx: 10}, {name: "separate", bx: 10.1}}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := CircleHit(0, 0, 4, tt.bx, 0, 6); got != tt.want {
-				t.Fatalf("CircleHit() = %v, want %v", got, tt.want)
+	}{
+		{name: "overlapping circles hit", bx: 9, want: true},
+		{name: "circles touching at edges do not hit", bx: 10, want: false},
+		{name: "separated circles do not hit", bx: 10.1, want: false},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := CircleHit(0, 0, 4, tc.bx, 0, 6)
+
+			if got != tc.want {
+				t.Fatalf("hit = %v, want %v", got, tc.want)
 			}
 		})
 	}
 }
 
 func TestOutside(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name string
 		x, y float64
 		want bool
-	}{{name: "inside", x: 240, y: 360}, {name: "on margin", x: -30, y: 100}, {name: "past margin", x: -30.1, y: 100, want: true}}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Outside(tt.x, tt.y, 0, 0, 480, 720, 30); got != tt.want {
-				t.Fatalf("Outside() = %v, want %v", got, tt.want)
+	}{
+		{name: "point inside field is not outside", x: 240, y: 360, want: false},
+		{name: "point on margin is not outside", x: -30, y: 100, want: false},
+		{name: "point beyond margin is outside", x: -30.1, y: 100, want: true},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := Outside(tc.x, tc.y, 0, 0, 480, 720, 30)
+
+			if got != tc.want {
+				t.Fatalf("outside = %v, want %v", got, tc.want)
 			}
 		})
 	}
 }
-</code></pre></article></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Play-test pattern beauty, dodge gaps, and hit readability.</p></section><nav class="test-pager"><a href="../dungeon/">← PREVIOUS</a><span>12 / 12</span><a href="../">NEXT →</a></nav>
-    <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>angle := 2*math.Pi*float64(i)/count</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">Quick feedback</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/en/guides/testing/bullet-hell/">
-          <label class="feedback-field">
-            <span class="sr-only">Feedback</span>
-            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>
+</code></pre></article></section><section class="test-audit"><div><p class="eyebrow">TEST REVIEW / ALL CASES</p><h2>This chapter's tests pass the same readability review.</h2></div><div class="test-quality-grid"><article><h3>Naming</h3><p>Top-level subjects are <code>TestCircleHit</code> and <code>TestOutside</code>. Every <code>t.Run</code> name states the premise and expected result in a sentence; there is no whenFoo_shouldBar convention.</p></article><article><h3>AAA</h3><p>Case values arrange the premise, one call acts, and comparisons assert only its result. Blank lines separate the three paragraphs; Arrange / Act / Assert comments do not label them.</p></article><article><h3>DAMP</h3><p>Meaningful case names and got / want values stay visible. Assert contains no search loop or switch, and multiple return values are checked separately so each failure says one thing.</p></article><article><h3>Table-driven</h3><p>These are repeated boundary inputs to the same function, so every row is one complete table-driven case. The outer for runs cases; it is not a search hidden inside Assert.</p></article></div></section><section class="test-golden test-golden-lesson"><div><p class="eyebrow">DRAW / GOLDEN ONLY</p><h2>If this chapter protects Draw</h2><p>Freeze the opening boss, player, and HP display, then compare the whole image with <code>testdata/bullet-hell-initial.png</code>. Do not assert individual coordinates or drawing commands.</p><p>Put this code in the game's main_test.go and combine it with the TestMain / assertGolden harness from the guide hub. Inspect .actual.png before approving any golden update.</p></div><pre><code>func TestDrawInitialBossMatchesGolden(t *testing.T) {
+	g := newGame()
+	screen := ebiten.NewImage(screenWidth, screenHeight)
+
+	g.Draw(screen)
+
+	assertGolden(t, screen, "testdata/bullet-hell-initial.png")
+}</code></pre></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Play-test pattern beauty, dodge gaps, and hit readability.</p></section><nav class="test-pager"><a href="../dungeon/">← PREVIOUS</a><span>12 / 12</span><a href="../">NEXT →</a></nav></main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

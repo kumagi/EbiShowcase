@@ -73,12 +73,12 @@ for (const entry of curriculum) {
 
 for (const lang of ["ja", "en"]) {
   const hub = readPage(lang, "guides/testing");
-  if (!hub.includes("Draw()") || !hub.includes("Update()") || !hub.includes("internal/lessonlogic")) {
+  if (!hub.includes("Draw()") || !hub.includes("Update()") || !hub.includes("internal/lessonlogic") || !hub.includes("AAA + DAMP + GO STYLE") || !hub.includes("DRAW / VISUAL REGRESSION")) {
     fail(`${lang}/guides/testing: missing Draw/Update testing boundary`);
   }
   for (const slug of testingLessons) {
     const page = readPage(lang, `guides/testing/${slug}`);
-    for (const required of ["func (g *game) Update() error", "package lessonlogic", "func Test", "go test ./internal/lessonlogic"]) {
+    for (const required of ["func (g *game) Update() error", "package lessonlogic", "func Test", "testCases :=", "t.Run(tc.name", "go test ./internal/lessonlogic", "TEST REVIEW / ALL CASES", "DRAW / GOLDEN ONLY", "assertGolden(t, screen, \"testdata/"]) {
       if (!page.includes(required)) fail(`${lang}/guides/testing/${slug}: missing complete testing material ${required}`);
     }
   }

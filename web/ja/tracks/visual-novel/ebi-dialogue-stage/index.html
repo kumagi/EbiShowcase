@@ -72,18 +72,18 @@ endingMask |= 1 &lt;&lt; ending</code></pre></section><section class="why-grid">
   <div class="capstone-renderers-copy">
     <p class="eyebrow">BONUS / DRAW ONLY</p>
     <h2>ゲームは同じ。絵だけを、別の作り方にする。</h2>
-    <p>これは上の完成ゲームと同じパッケージから作ったWASMです。<code>Update</code>と<code>Layout</code>には手を加えず、そのまま呼びます。1回のDrawが作った同じ瞬間を、通常、輪郭線、矩形モザイクへ同時に投影します。位置、得点、敵、当たり判定、時間は1つしかありません。</p>
+    <p>これは上の完成ゲームと同じパッケージから作ったWASMです。<code>Update</code>と<code>Layout</code>には手を加えず、そのまま呼びます。元ゲームを等倍のまま操作でき、右には同じ瞬間の輪郭線と、文字だけでゲームを描くASCII画面のモックを並べます。ゲームのルールと見た目は別々に設計できます。</p>
   </div>
   <div class="capstone-renderers-facts">
     <article><b>01</b><h3>UPDATE</h3><p>入力とゲームの事実を進める。3画面で共通。</p></article>
     <article><b>02</b><h3>LAYOUT</h3><p>元ゲームの大きさをそのまま返す。</p></article>
-    <article><b>03</b><h3>DRAW</h3><p>同じsnapshotの見せ方だけを替える。</p></article>
+    <article><b>03</b><h3>DRAW</h3><p>画像・輪郭線・ASCIIなど、描き方を選ぶ。</p></article>
   </div>
   <div class="capstone-renderers-demo">
     <iframe data-shared-demo="capstone-renderers" src="../../../../play/ebi-dialogue-stage-renderer/" loading="lazy" title="同じ完成ゲームを3種類のDrawで同時表示" allow="autoplay; fullscreen"></iframe>
   </div>
   <div class="capstone-renderers-code">
-    <div><p class="eyebrow">THE ONLY BOUNDARY</p><h3>UpdateとLayoutは、元のゲームへそのまま渡す。</h3><p>矩形版はsnapshotを小さな格子へ縮め、nearestで戻します。ワイヤ版は隣の画素との差をKageシェーダーで線にします。どちらもゲーム状態を読み書きしません。</p></div>
+    <div><p class="eyebrow">THE ONLY BOUNDARY</p><h3>UpdateとLayoutは、元のゲームへそのまま渡す。</h3><p>等倍snapshotが入力と一致するゲーム画面です。輪郭版はKageで隣の画素との差だけを線にします。ASCIIモックは、同じようなゲーム場面を文字だけでも伝えられることを示します。描画はルールを変更しません。</p></div>
     <pre><code>func (g *gallery) Update() error {
     return g.inner.Update()
 }
@@ -95,9 +95,9 @@ func (g *gallery) Layout(w, h int) (int, int) {
 func (g *gallery) Draw(screen *ebiten.Image) {
     snapshot := ebiten.NewImage(width, height)
     g.inner.Draw(snapshot)
-    drawPolished(screen, snapshot)
-    drawWireframe(screen, snapshot)
-    drawRectangles(screen, snapshot)
+    screen.DrawImage(snapshot, nil) // native-size playable input surface
+    drawEdgeInset(screen, snapshot)
+    drawASCIIGameMock(screen)
 }</code></pre>
   </div>
 </section>

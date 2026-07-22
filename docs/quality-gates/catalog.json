@@ -257,7 +257,7 @@
       "summary": "REAL GO / code-lesson matches the code learners can open.",
       "prompt_hint": "Compare only code artifacts visibly supplied on the page; never infer the repository implementation from naming or page structure.",
       "fail_when": "Two visible, path-labelled artifacts directly conflict—for example, REAL GO/main.go visibly only calls Run(Config) while an unlabelled snippet falsely claims to be that same main.go implementation, or names/state transitions disagree with the shown openable source.",
-      "do_not_flag": "Conceptual pseudocode labelled as such, a short entry file followed by a path-labelled shared-engine excerpt, editable Config/data in main.go, generic Update/Draw prose, different abstraction levels that agree, or any case where only one side of the comparison is supplied.",
+      "do_not_flag": "Conceptual pseudocode labelled as such, a short entry file followed by a path-labelled shared-engine excerpt, editable Config/data in main.go, generic Update/Draw prose, different abstraction levels that agree, a CHALLENGE or TRY NEXT instruction that intentionally asks the learner to change the shown current implementation, or any case where only one side of the comparison is supplied.",
       "evidence_required": "Copy both conflicting code fragments and their visible path/section labels into evidence, separating non-contiguous quotes with |. If both implementation sides are not present, return pass.",
       "sources": ["AGENTS.md", "docs/AUTHORING_CHECKLIST.md"]
     },
@@ -274,6 +274,24 @@
       "do_not_flag": "English pages, standard identifiers shown in code, terms immediately paraphrased in Japanese, one unavoidable term with a concrete example, or uncertainty about earlier lessons.",
       "evidence_required": "Quote the term and sentence whose meaning/task is blocked; propose a short concrete paraphrase, not removal of useful vocabulary.",
       "sources": ["AGENTS.md"]
+    },
+    {
+      "id": "pedagogy.testing-aaa-damp",
+      "family": "pedagogy",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["guide"],
+      "summary": "Every unit-testing chapter teaches and demonstrates unlabeled AAA reading order, DAMP assertions, descriptive Go subtest names, and table-driven boundary cases.",
+      "sources": ["scripts/gen-testing-guide.mjs", "scripts/check-site-metadata.mjs"]
+    },
+    {
+      "id": "pedagogy.testing-draw-golden",
+      "family": "pedagogy",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["guide"],
+      "summary": "Every unit-testing chapter presents Draw verification only as a whole-image golden comparison with a deterministic fixture.",
+      "sources": ["scripts/gen-testing-guide.mjs", "scripts/check-site-metadata.mjs"]
     },
     {
       "id": "pedagogy.no-second-beginner-track",

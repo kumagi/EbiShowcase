@@ -9,11 +9,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from ai_feedback_crawler import (
+    ConsensusReviewer,
+    GateReview,
     LMStudio,
     Page,
     PageParser,
     StateStore,
     classify_page,
+    evidence_agrees,
     format_lens_instruction,
     load_gate_review,
     normalize_suggestion,
@@ -53,6 +56,28 @@ class FeedbackCrawlerTests(unittest.TestCase):
             result = model.suggest(page)
         self.assertTrue(result.startswith("[pass]"))
         request.assert_not_called()
+
+    def test_ollama_gate_review_uses_json_schema(self):
+        page = Page("https://example.test/EbiShowcase/en/games/flappy/", "Lesson", [], "body", [], None, None, "en")
+        model = LMStudio(
+            "http://192.168.3.58:11434/v1",
+            "demo",
+            1,
+            provider="ollama",
+            gate_review=True,
+            gate_ids=["pedagogy.scope"],
+        )
+        response = {
+            "message": {
+                "content": json.dumps(
+                    {"gate_id": "pedagogy.scope", "verdict": "pass", "evidence": "No issue.", "fix": ""}
+                )
+            }
+        }
+        with patch.object(model, "_json_request", return_value=response) as request:
+            result = model.review_gate(page)
+        self.assertEqual(result.verdict, "pass")
+        self.assertEqual(request.call_args.args[1]["format"]["required"], ["gate_id", "verdict", "evidence", "fix"])
 
     def test_normalize_suggestion_accepts_json_code_fence(self):
         self.assertEqual(
@@ -188,6 +213,63 @@ class FeedbackCrawlerTests(unittest.TestCase):
         checked = validate_gate_review_response(raw, page, {"pedagogy.code-matches-impl"})
         self.assertEqual(json.loads(checked)["verdict"], "fail")
 
+    def test_consensus_keeps_matching_evidenced_majority(self):
+        class Client:
+            gate_review = True
+
+            def __init__(self):
+                self.votes = iter(
+                    [
+                        GateReview("loop.draw-is-projection", "fail", "score++", "Move it to Update."),
+                        GateReview("loop.draw-is-projection", "warn", "Draw says: score++", "Move score to Update."),
+                        GateReview("loop.draw-is-projection", "pass", "No mutation found.", ""),
+                    ]
+                )
+
+            def review_gate(self, page):
+                return next(self.votes)
+
+        page = Page("https://example.test/lesson/", "Lesson", [], "Draw says: score++", [], None, None, "en")
+        result = ConsensusReviewer(Client(), rounds=3).suggest(page)
+        self.assertTrue(result.startswith("[warn] loop.draw-is-projection:"))
+
+    def test_consensus_rejects_actionable_votes_about_different_evidence(self):
+        class Client:
+            gate_review = True
+
+            def __init__(self):
+                self.votes = iter(
+                    [
+                        GateReview("pedagogy.scope", "fail", "first unrelated quote", "Fix first."),
+                        GateReview("pedagogy.scope", "fail", "second different quote", "Fix second."),
+                        GateReview("pedagogy.scope", "pass", "No issue.", ""),
+                    ]
+                )
+
+            def review_gate(self, page):
+                return next(self.votes)
+
+        page = Page("https://example.test/lesson/", "Lesson", [], "body", [], None, None, "en")
+        result = ConsensusReviewer(Client(), rounds=3).suggest(page)
+        self.assertTrue(result.startswith("[pass] pedagogy.scope:"))
+
+    def test_evidence_agreement_requires_all_quoted_fragments(self):
+        self.assertTrue(evidence_agrees("ENTRY: Run(Config) | EXCERPT: score++", "Run(Config) | score++"))
+        self.assertFalse(evidence_agrees("ENTRY: Run(Config) | EXCERPT: score++", "Run(Config) | lives--"))
+
+    def test_consensus_records_each_round_for_audit(self):
+        class Client:
+            gate_review = True
+
+            def review_gate(self, page):
+                return GateReview("pedagogy.scope", "pass", "No issue.", "")
+
+        page = Page("https://example.test/lesson/", "Lesson", [], "body", [], None, None, "en")
+        reviewer = ConsensusReviewer(Client(), rounds=3)
+        reviewer.suggest(page)
+        self.assertEqual([item["round_number"] for item in reviewer.last_rounds], [1, 2, 3])
+        self.assertTrue(all(item["verdict"] == "pass" for item in reviewer.last_rounds))
+
     def test_pass_gate_result_is_not_submitted(self):
         page = Page("https://example.test/lesson/", "Lesson", [], "body", [], None, None, "en")
 
@@ -253,6 +335,22 @@ class FeedbackCrawlerTests(unittest.TestCase):
             store.save(page, "Changed review", content_hash="review-hash-2")
             self.assertIsNone(store.get(page.url)[2])
 
+    def test_review_votes_are_persisted_for_audit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            store = StateStore(Path(directory) / "state.sqlite3")
+            store.save_review_votes(
+                "https://example.test/lesson/",
+                "review-hash",
+                [
+                    {"round_number": 1, "gate_id": "pedagogy.scope", "verdict": "pass", "evidence": "OK", "fix": ""},
+                    {"round_number": 2, "error": "timeout"},
+                ],
+            )
+            rows = store.db.execute(
+                "SELECT round_number, verdict, error FROM review_votes ORDER BY round_number"
+            ).fetchall()
+        self.assertEqual(rows, [(1, "pass", None), (2, None, "timeout")])
+
     def test_validation_rejects_unbounded_or_large_submissions(self):
         invalid = (
             argparse.Namespace(max_pages=1, submit=True, once=False, force=False),
@@ -262,6 +360,18 @@ class FeedbackCrawlerTests(unittest.TestCase):
         for args in invalid:
             with self.subTest(args=args), self.assertRaises(SystemExit):
                 validate_args(args)
+
+    def test_validation_rejects_even_review_rounds(self):
+        args = argparse.Namespace(
+            max_pages=1,
+            submit=False,
+            once=True,
+            force=False,
+            reviews=2,
+            review_workers=2,
+        )
+        with self.assertRaises(SystemExit):
+            validate_args(args)
 
 
 if __name__ == "__main__":

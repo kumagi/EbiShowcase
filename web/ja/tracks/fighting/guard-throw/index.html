@@ -61,7 +61,7 @@
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>防御状態はガード中というstate、優先順位は同時に起きた判定をどの順で決めるか。投げはガードに勝ち、ガードは打撃に勝ち、打撃は投げの準備に勝つ順で一つだけ選びます。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>switch { case throw: state=Throw; case guard: state=Guard }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>まず技の矩形どうしが重なったかを確かめます。重なった接触の中で、投げはガードに勝ち、ガードは打撃に勝ち、打撃は投げの準備に勝つ優先順位を使います。離れて矩形が重ならなければ、どの技も空振りです。 PLAYABLEは『このページで実際に操作できる』という印です。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if boxesOverlap(attackBox, targetBox) { resolvePriority() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
 
@@ -71,7 +71,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / RPS PRIORITY</p>
         <h2>ガードは万能？<br>投げはどう勝つ？</h2>
-        <p class="lesson-lead">ガードは<strong>打撃に勝ち</strong>、投げは<strong>ガードに勝ち</strong>、打撃は<strong>投げに勝ち</strong>ます。勝ち負けを関数1つにまとめると、あとから技を足してもルールが崩れません。</p>
+        <p class="lesson-lead">最初に技の矩形が相手の矩形へ重なったかを調べます。接触したときだけ、ガードは<strong>打撃に勝ち</strong>、投げは<strong>ガードに勝ち</strong>、打撃は<strong>投げに勝つ</strong>優先順位を使います。離れていれば空振りです。</p>
       </div>
 
       <div class="concept-row">
@@ -83,9 +83,9 @@
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>勝ち表</h3>
-          <p>組み合わせごとの勝敗を関数に書きます。同じ技どうしは相打ちです。</p>
-          <code>wins(a,b) bool</code>
+          <h3>矩形が重なった後の勝ち表</h3>
+          <p><code>boxesOverlap</code>が接触を見つけた後で、技の組み合わせを判定します。同じ技どうしは相打ちです。</p>
+          <code>overlap → wins(a,b)</code>
         </article>
         <article>
           <span class="concept-number">3</span>
@@ -141,10 +141,19 @@
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
-          <h3>勝ち判定は<br>関数に閉じ込める</h3>
-          <p>入力を受け取ったら wins で判定し、得点かダメージを分けます。</p>
+          <h3>矩形の接触から<br>優先順位へ進む</h3>
+          <p>技の矩形が重ならなければ空振り。重なったときだけ <code>wins</code> でガード・投げ・打撃の結果を分けます。</p>
         </div>
-        <pre><code>func wins(a, b int) bool {
+        <pre><code>attackBox := actionBox(g.p1, you, 1)
+targetBox := actionBox(g.p2, enemy, -1)
+
+<span>if</span> !boxesOverlap(attackBox, targetBox) {
+    message = "空振り"
+} <span>else if</span> wins(you, enemy) {
+    score++
+}
+
+func wins(a, b int) bool {
     <span>return</span> (a == strike &amp;&amp; b == throw) ||
            (a == throw &amp;&amp; b == guard) ||
            (a == guard &amp;&amp; b == strike)

@@ -1,177 +1,198 @@
 # Ebi Showcase
 
-Ebitengine で作ったミニゲームを、ブラウザの WebAssembly でその場で遊びながら学べる、日英バイリンガルの静的学習サイトです。ゲーム本体はすべて Go + Ebitengine で実装し、HTML / CSS / JavaScript は展示ページと共有 WASM ローダーだけに使います。
+Go + [Ebitengine](https://ebitengine.org/) で作られたミニゲーム集です。
+リポジトリをcloneしたら、好きなゲームの `main.go` を直接変更し、デスクトップの
+ゲームウィンドウですぐに結果を確認できます。
 
-公開サイト: https://kumagi.github.io/EbiShowcase/
+公開版では、同じゲームをWebAssemblyとしてブラウザから遊べます。
 
-主人公はオリジナルキャラ **海老・天次郎（えび・てんじろう / Ebi Tenjiroh）** です。有名作品はジャンルの目印として触れるだけで、アート・音楽・名称・シナリオはコピーしません。
+- 公開サイト: https://kumagi.github.io/EbiShowcase/
+- 使用言語: Go
+- ゲームエンジン: Ebitengine
+- ライセンス: Apache-2.0
 
-## いまの到達点
+## まず1本動かす
 
-| 区分 | 状態 |
-| --- | --- |
-| プレイ可能ゲート（Core + ジャンルトラック） | **208 / 208** |
-| Visual Effects Lab（ゲート外） | **29 / 29** |
-| Core LEVEL 01–12 | 完成（ゲームループから弾幕まで） |
-| ジャンルトラック | **25** コース（各トラックは中間レッスン + 統合ゲーム） |
-| 高度品質パス（A–T） | `docs/ADVANCED_QUALITY_CHECKLIST.md` 通過済み |
-| 横断ガイド | 環境構築 / ユニットテスト / ゲームデータ構成 |
-
-カリキュラムの集計は次で確認できます。
+必要なものはGitとGo 1.25以降です。
 
 ```sh
-bash scripts/ralph-loop.sh status   # playable / total（VFX は別カウント）
-bash scripts/ralph-loop.sh next     # 未完成の先頭（完了時は complete）
-bash scripts/ralph-loop.sh verify   # 全 WASM 再ビルド + 構造チェック
+git clone https://github.com/kumagi/EbiShowcase.git
+cd EbiShowcase
+go run ./games/core/tap-target
 ```
 
-## 学びの道筋
+初回だけGoが依存パッケージをダウンロードします。ゲームウィンドウが開いたら、
+丸をクリックしてください。終了はターミナルで `Ctrl+C` です。
 
-おすすめの順番は次のとおりです。一覧を全部いっぺんに消化する必要はありません。
+macOSでコンパイラを求められた場合は `xcode-select --install` を実行します。
+Linuxではウィンドウ・OpenGL・音声の開発パッケージが必要です。OS別の正確な手順は
+[Ebitengine公式インストールガイド](https://ebitengine.org/ja/documents/install.html)
+を参照してください。
 
-**はじめに覚えること:** `Update` が入力と状態の更新をすべて行い、`Draw` はいまの `game` を画面へ投影するだけです。画面は常に `game` に追従し、`Draw` の中で `game` を書き換えません。
+## 最初の変更を試す
 
-1. **環境づくり**（任意）— `guides/setup/` で Go を入れ、空の Ebitengine 窓を開く
-2. **Core LEVEL 01–12** — `Update` / `Draw` から衝突、タイル、カメラ、敵 AI、弾幕へ
-3. **ユニットテスト入門** — `guides/testing/` でルールを純粋関数として確かめる
-4. **Visual Effects Lab** — 描画の道具 → 光学トリック → Core への演出載せ直し
-5. **ジャンル専門化** — 25 トラックから興味のあるジャンルへ
-6. **データと構成** — `guides/game-data/` でルールとデータの分け方を学ぶ
+最初に [`games/core/tap-target/main.go`](games/core/tap-target/main.go) を開きます。
+たとえば次のどちらかを変更してみてください。
 
-用語の索引は [`docs/Glossary.md`](docs/Glossary.md) です。貢献・エージェント向けの運用契約は [`AGENTS.md`](AGENTS.md) を正とします。
+```go
+startSeconds = 30 // 10にすると10秒ゲームになる
+```
 
-## ローカルで動かす
+```go
+g.score++ // g.score += 2 にすると1回で2点になる
+```
 
-Go 1.25 以降が必要です。
+保存したら、もう一度実行します。
 
 ```sh
-go mod download
-bash scripts/build.sh
-# ローカルで OGP の入力が変わっていなければ再生成を省く
+go run ./games/core/tap-target
+```
+
+Ebi Showcaseに専用のエディタやプロジェクト生成操作はありません。基本の開発ループは
+「`main.go` を保存 → `go run` を再実行」だけです。
+
+## 遊びたいゲームを選ぶ
+
+各ゲームは独立したGoの `main` パッケージです。実行したいディレクトリを
+`go run` に渡します。
+
+| ゲーム | 実行コマンド | 向いている変更 |
+| --- | --- | --- |
+| タップターゲット | `go run ./games/core/tap-target` | 得点、制限時間、円の大きさ |
+| 小さなプラットフォーマー | `go run ./games/tracks/platformer/tiny-platformer` | 重力、ジャンプ、足場配置 |
+| スプライトアニメーション | `go run ./games/tracks/visual-effects/vfx-walk` | コマ送り、速度、描画位置 |
+| ガード・投げ・打撃 | `go run ./games/tracks/fighting/guard-throw` | 当たり判定、技の優先順位 |
+| Ebi Quest | `go run ./games/tracks/rpg/ebi-quest` | マップ、クエスト、コマンド戦闘 |
+| Ebi Merge | `go run ./games/tracks/merge-physics/ebi-merge` | 円の物理、合成、スコア |
+
+macOSやLinuxで実行可能なゲームを一覧にするには、リポジトリのルートで次を実行します。
+
+```sh
+find games -name main.go -print
+```
+
+PowerShellでは次のコマンドを使えます。
+
+```powershell
+Get-ChildItem games -Recurse -Filter main.go
+```
+
+表示された `main.go` の親ディレクトリが `go run` に渡すパスです。
+
+## 自分用のゲームを作る
+
+既存の小さなゲームをコピーすると、空のプロジェクトから始める必要がありません。
+
+```sh
+cp -R games/core/tap-target games/my-first-game
+go run ./games/my-first-game
+```
+
+まずウィンドウタイトル、色、得点ルールを変更し、その後に新しい状態や入力を
+足していくのがおすすめです。コピー後もリポジトリ内にあるため、`internal/` の
+共有コードや既存アセットをそのまま利用できます。
+
+## コードを読む場所
+
+ほとんどのゲームは、1本の `main.go` に次の5か所があります。
+
+1. `type game struct` — 位置、得点、HPなど、現在のゲーム状態
+2. `newGame()` — 最初の状態とステージデータ
+3. `Update()` — 入力、移動、衝突、得点などのルール
+4. `Draw()` — 現在の状態を画面へ描く処理
+5. `main()` — ウィンドウを作ってゲームを起動する入口
+
+ゲームの状態を変える処理は `Update()` またはそこから呼ぶ関数へ書き、`Draw()` は
+状態を画面へ描くだけにすると、ルールを追いやすくなります。
+
+画像を使うゲームでは、同じディレクトリの `assets/` や `//go:embed` の指定も確認して
+ください。複数ゲームで共有するロジックやアートは [`internal/`](internal/) にあります。
+
+## 変更したゲームを確かめる
+
+まず変更したゲームだけを整形・テストします。
+
+```sh
+gofmt -w games/tracks/rpg/ebi-quest/main.go
+go test ./games/tracks/rpg/ebi-quest
+go run ./games/tracks/rpg/ebi-quest
+```
+
+テストファイルがないゲームでも、`go test` はそのパッケージがコンパイルできることを
+確認します。リポジトリ全体ではなく、編集中のゲームのパスを指定すると短時間で回せます。
+
+ルールを画面や音声から分けた純粋関数には、同じディレクトリへ `main_test.go` を追加できます。
+
+```go
+package main
+
+import "testing"
+
+func TestScoreForHit(t *testing.T) {
+    if got := scoreForHit(3); got != 4 {
+        t.Fatalf("scoreForHit(3) = %d, want 4", got)
+    }
+}
+```
+
+## ブラウザ版も確認する
+
+普段の編集にはデスクトップ版の `go run` が最速です。WebAssembly、タッチ操作、教材ページ
+まで確認したいときだけ、サイト全体をビルドします。追加でNode.jsの現行LTS、Python 3、
+Bashが必要です。
+
+```sh
 bash scripts/build.sh --fast
 python3 -m http.server 8080 --directory dist
 ```
 
-ブラウザで `http://localhost:8080` を開きます。WASM は `file://` では読み込めないため、ローカル HTTP サーバーが必要です。
+ブラウザで <http://localhost:8080/> を開きます。WebAssemblyは `file://` から直接開けないため、
+必ずローカルHTTPサーバーを使ってください。`build.sh` は全ゲームと全教材を生成するので、
+普段の1ゲームの試行より時間がかかります。
 
-SNS 向けの OGP は `node scripts/inject-ogp.mjs` と `go run ./cmd/gen-og-images` で全ページ分を生成します（通常の `build.sh` と CI では常に実行）。ローカルの `build.sh --fast` でもメタデータを必ず再注入し、HTML・OGP生成器・フォント・`SITE_ORIGIN` の入力ハッシュと既存PNGが一致するときだけ重いPNG再生成を省きます。公開 URL のオリジンは環境変数 `SITE_ORIGIN`（省略時 `https://kumagi.github.io/EbiShowcase`）です。
+## よくある問題
 
-## GitHub Pages へ公開する
+### `go run main.go` では動かない
 
-1. このディレクトリを GitHub リポジトリへ push します。
-2. リポジトリの **Settings → Pages → Build and deployment → Source** を **GitHub Actions** にします。
-3. `main` ブランチへ push すると `.github/workflows/pages.yml` がビルド・公開します。
-
-プロジェクトサイト（`https://USER.github.io/REPO/`）でも動くよう、アセットはすべて相対パスです。
-
-## 構成
-
-- `games/core/<slug>/` — Core LEVEL のゲーム実装（Flappy のみ歴史的経緯で `game/main.go`）
-- `games/tracks/<track>/<slug>/` — ジャンル／VFX 各ステップのゲーム実装
-- `internal/` — 共有アトラス、VFX、レッスン用純ロジック、ジャンル固有ヘルパー
-- `web/index.html` — ブラウザ言語を判定する入口
-- `web/ja/`・`web/en/` — 日英の独立した教材ページ（共有しやすい URL）
-- `web/{ja,en}/games/` — Core LEVEL 01–12
-- `web/{ja,en}/tracks/` — Visual Effects Lab + 25 ジャンルトラック
-- `web/{ja,en}/guides/` — setup / testing / game-data
-- `web/game.html` — 共有 WASM ローダー
-- `web/assets/` — サムネ、アトラス、OGP、図解など
-- `examples/data-driven/` — `go:embed` と JSON によるデータ読み込みの実例
-- `docs/Glossary.md` — フレーム、座標、ラジアン、`iota`、スライスなどの用語集
-- `docs/ADVANCED_QUALITY_CHECKLIST.md` — ジャンルトラックの第2品質パス
-- `docs/AUTHORING_CHECKLIST.md` — 学習者が RULE を書いて確かめられるか
-- `docs/quality-gates/` — PLAYABLE / AUTHORING / ADVANCED の機械可読ゲート正本
-- `docs/ROADMAP_RALPH_LOOP.md` — Authoring Pass の順序付きチェックリスト
-- `scripts/build.sh` — `dist/` を生成するビルド（生成 HTML の更新を含む）
-- `scripts/ralph-loop.sh` — カリキュラム進捗と検証
-- `scripts/roadmap-ralph-loop.mjs` — 証跡付きロードマップ進捗と完了判定
-- `scripts/feedback-sheet.mjs` — フォーム回答のトリアージ
-- `scripts/ai_feedback_crawler.py` / `docs/AI_FEEDBACK_AGENT.md` — LM Studio または LAN 上の Ollama で改善提案を巡回生成（送信は明示指定時のみ）
-- `.github/workflows/pages.yml` — GitHub Pages デプロイ
-
-`dist/` は生成物で Git 管理外です。手編集しないでください。
-
-言語ページは検索・共有しやすい独立 URL です。ルートへの初回アクセスではブラウザ言語を判定し、画面上で言語を切り替えた後はその選択をブラウザに保存します。
-
-## 操作の目安
-
-教材デモは、入力を同じゲーム内アクションへ変換します。レッスンごとに画面下や記事内の操作説明が正です。
-
-| 入力 | アクション | 主な用途 |
-| --- | --- | --- |
-| Space / ↑ | ジャンプ・決定・拍のタイミング | フライト、横アクション、会話送り、リズム |
-| ← → ↑ ↓ | 移動・選択 | 迷路、倉庫番、戦略、ダンジョン |
-| クリック / タップ | 決定・配置・カード選択・射撃 | タッチ教材、TD、デッキ構築、レイキャスト |
-| R | リトライ（対応デモ） | 失敗したステージを最初から遊ぶ |
-
-スマホでは、ボタンやタップ判定を最低 48dp（CSS ではおよそ 48px）以上にし、押した瞬間に色や粒で反応を返すのが目安です。キーボード・ポインタ・タッチのすべてで完走できることが、各完成ゲームの品質基準です。
-
-## フィードバックを確認する
-
-各教材ページの末尾には Google Form を埋め込んでいます。回答先のスプレッドシートは、OAuth でログインした Google アカウントから読み書きします。
-
-1. Google Cloud で Sheets API を有効にし、OAuth クライアント（デスクトップアプリ）を作成します。
-2. ダウンロードした JSON を `.secrets/` に保存します（このファイルは Git へ入りません）。
-3. 次のコマンドを初回だけ実行し、ブラウザで Google ログインとアクセス許可を行います。
+ファイル1個ではなくパッケージのディレクトリを指定してください。
 
 ```sh
-node scripts/feedback-sheet.mjs list
+go run ./games/tracks/platformer/tiny-platformer
 ```
 
-4. 次のコマンドで一覧を取得・更新します。
+同じディレクトリの補助ファイルやOS別ファイルも一緒にコンパイルされます。
+
+### ウィンドウが開かない
+
+まずGoのバージョンを確認します。
 
 ```sh
-node scripts/feedback-sheet.mjs list
-node scripts/feedback-sheet.mjs pending  # 未対応だけ
-node scripts/feedback-sheet.mjs check 12   # 12行目を対応済みにする
-node scripts/feedback-sheet.mjs delete 12  # 12行目を削除する
-node scripts/feedback-sheet.mjs archive    # 履歴を別タブへ移し、回答シートを見出しだけに戻す
+go version
 ```
 
-`check` は「対応済み」列がなければ自動追加し、✅を記録します。行番号は一覧表示の番号を使ってください。
-`archive` はフォームの回答シートを削除せず、履歴を `feedback_archive_YYYYMMDDHHMMSS` タブへコピーしてから旧回答行だけを削除します。フォーム連携と見出しは維持されるため、次の投稿は2行目から始まります。
+次に[Ebitengine公式インストールガイド](https://ebitengine.org/ja/documents/install.html)の
+OS別依存パッケージを確認してください。SSHだけのマシンやGUIのないコンテナでは、
+デスクトップウィンドウを表示できません。
 
-## ロードマップ（Authoring Pass）
+### 音が鳴らない
 
-量のゲート（208 + VFX 29）と、技術ラボ／卒業の *器* は到達済みです。いまの正本は **著者が Go を書けるようにする Authoring Pass** です。
+ブラウザ版は、ブラウザの自動再生制限により、最初のクリックやキー入力後に音声を開始します。
+まずゲーム画面を一度操作してください。
 
-実行順・詳細仕様・完了条件は [`docs/ROADMAP_RALPH_LOOP.md`](docs/ROADMAP_RALPH_LOOP.md) だけを見てください（63項目、上から1件ずつ）。
+### どこから学べばよいかわからない
 
-```sh
-node scripts/roadmap-ralph-loop.mjs status       # フェーズ別進捗
-node scripts/roadmap-ralph-loop.mjs next         # 次の1件
-node scripts/roadmap-ralph-loop.mjs evidence ID  # 証跡ファイルを作成
-node scripts/roadmap-ralph-loop.mjs check ID     # 証跡を検査して完了
-node scripts/roadmap-ralph-loop.mjs verify       # 順序と証跡を検証
-```
+公開サイトの[日本語トップページ](https://kumagi.github.io/EbiShowcase/ja/)では、小さなゲームから
+ジャンル別の完成ゲームまで順番に遊べます。コード内の用語は
+[`docs/Glossary.md`](docs/Glossary.md)でも確認できます。
 
-要約:
+## リポジトリ運用に参加する場合
 
-0. **公理** — `Update`＝入力と状態、`Draw`＝投影のみ、画面は `game` に追従
-1. **P0** — 「値を変えて」から「1ルール足す」へ契約を切り替え、不一致ページを棚卸しする
-2. **P1** — Build Track（空の窓→当たり判定）と Core 前半の YOUR FIRST RULE
-3. **P2** — Rhythm ほか U–Y 生成器を二層コードパネル＋RULE 課題へ
-4. **P3** — 卒業 starter を穴あき化し、first-30-minutes を書くルートへ
-5. **P4** — Authoring メーター、横展開、抜き取り監査、リリース
-
-Playable と Authoring は別メーターです。新ジャンル追加は本パス完遂後の審査まで凍結します。
-
-### 凍結ルール
-
-この Authoring Pass の間は、既存の 208/208 playable ゲートを増やしたり、
-新しいジャンルコースを採用したりしません。新規案は候補として記録するだけに
-留め、現在のコースが「ブラウザで遊べる」だけでなく「読者が 1 ルールを書いて
-確かめられる」状態になることを優先します。凍結解除と新ジャンルの採否は、P4 の
-リリース完了後に別途審査します。
-
-この道筋でくり返すゲームループの約束は3つです。
-
-1. `Update` が入力を読み、スコア・位置・衝突などのゲーム状態を更新する
-2. `Draw` はその状態を画面へ写すだけで、ルールや入力を処理しない
-3. 同じ状態なら同じ画面になる。`Draw` は状態、乱数、スライスを変更しない
-
-したがって YOUR FIRST RULE は `Update` または `Update` が呼ぶ純粋な関数へ足し、`Draw` ではその結果を見える形にします。
+このREADMEは、cloneしてゲームコードを動かす人向けです。教材ページの生成、サイト全体の
+品質ゲート、公開、フィードバック処理などを変更する場合は、作業前に
+[`AGENTS.md`](AGENTS.md)を読んでください。
 
 ## License
 
-Ebi Showcase 自体のコード・文章・オリジナルアセットは Apache License 2.0 です。OFL や BSD など Apache-2.0 と共存できる第三者依存・フォント・アセットは、元のライセンスを維持し、著作権表示と出典を [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) に記録した場合に限り使用します。
+Ebi Showcaseのコード、文章、オリジナルアセットはApache License 2.0です。
+第三者依存・フォント・アセットの表示は
+[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)に記載しています。

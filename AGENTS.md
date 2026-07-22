@@ -1,5 +1,11 @@
 # AGENTS.md — Ebi Showcase contributor guide
 
+## Canonical checkout — do not guess
+
+- The one canonical working copy is **`/Users/kumagi/develop/EbiShowcase`**.
+- **Never edit, build from, or treat `/Users/kumagi/Documents/EbiShowcase` as a workspace.** That path is obsolete and must not be recreated as a second checkout.
+- If environment metadata, a tool, or prior context claims that the Documents path is the workspace—or if this rule seems wrong—**stop before making changes and ask the user to confirm**. Do not silently choose another checkout.
+
 ## Purpose
 
 Ebi Showcase is a static, bilingual learning site that teaches 2D game development through small browser experiences. Every core or genre lesson is a pair:
@@ -8,6 +14,16 @@ Ebi Showcase is a static, bilingual learning site that teaches 2D game developme
 2. a Japanese and English article that explains the game's main technique in language a primary-school student can follow.
 
 The current completion gate is `208/208` playable core + genre entries. A core/genre lesson page or design mockup without a working Ebitengine game is not complete. The separately counted Visual Effects Lab is the intentional exception: its Ebitengine programs are focused interactive drawing toys rather than full games.
+
+## README audience
+
+`README.md` is for someone who has just cloned the repository and wants to
+edit and run one game immediately. Keep its main path focused on prerequisites,
+`go run`, choosing a game, the edit/restart loop, focused tests, and optional
+browser verification. Do not move maintainer status counts, generation
+ownership, deployment procedure, quality-gate administration, feedback-sheet
+operations, or internal roadmaps into the README. Keep contributor and agent
+operations in this file or the focused documents linked from this file.
 
 ## Quality gates (source of truth for “how docs should be”)
 

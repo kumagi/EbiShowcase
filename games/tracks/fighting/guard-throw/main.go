@@ -34,6 +34,8 @@ type game struct {
 	chosen          int // -1 none
 }
 
+type hitBox struct{ x, y, w, h float64 }
+
 func newGame() *game {
 	g := &game{p1: 140, p2: 320, life: 3, chosen: -1, rng: rand.New(rand.NewSource(3904))}
 	g.startRound()
@@ -53,6 +55,22 @@ func name(v int) string { return []string{"STRIKE", "GUARD", "THROW"}[v] }
 
 func wins(a, b int) bool {
 	return (a == strike && b == throwAct) || (a == throwAct && b == guard) || (a == guard && b == strike)
+}
+
+func actionBox(x float64, action int, facing float64) hitBox {
+	reach := []float64{80, 55, 65}[action]
+	if facing > 0 {
+		return hitBox{x + 8, 468, reach, 66}
+	}
+	return hitBox{x - 8 - reach, 468, reach, 66}
+}
+
+func boxesOverlap(a, b hitBox) bool {
+	return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y
+}
+
+func exchangeOverlaps(playerX, enemyX float64, playerAct, enemyAct int) bool {
+	return boxesOverlap(actionBox(playerX, playerAct, 1), actionBox(enemyX, enemyAct, -1))
 }
 
 func (g *game) pick() int {
@@ -110,7 +128,10 @@ func (g *game) Update() error {
 				you = g.rng.Intn(3) // panic pick if no input
 				g.msg = "Too slow — random " + name(you)
 			}
-			if you == g.enemyAct {
+			if !exchangeOverlaps(g.p1, g.p2, you, g.enemyAct) {
+				g.msg = "WHIFF! The action boxes did not overlap."
+				g.flash = 0.2
+			} else if you == g.enemyAct {
 				g.msg = "CLASH! Both chose " + name(you)
 				g.flash = 0.4
 			} else if wins(you, g.enemyAct) {
@@ -168,6 +189,11 @@ func (g *game) Draw(s *ebiten.Image) {
 
 	drawFighter(s, g.p1, color.RGBA{45, 225, 194, 255}, true, g.chosen, g.windup == 0 && g.resolve > 30)
 	drawFighter(s, g.p2, color.RGBA{240, 75, 91, 255}, false, g.enemyAct, g.windup == 0 && g.resolve > 30)
+	if g.windup == 0 && g.resolve > 0 && g.chosen >= 0 {
+		drawHitBox(s, actionBox(g.p1, g.chosen, 1), color.RGBA{78, 245, 220, 220})
+		drawHitBox(s, actionBox(g.p2, g.enemyAct, -1), color.RGBA{255, 111, 126, 220})
+		ebitenutil.DebugPrintAt(s, "ACTION BOX OVERLAP -> resolve priority", 115, 225)
+	}
 
 	vector.DrawFilledRect(s, 30, 430, 420, 55, color.RGBA{8, 14, 28, 230}, false)
 	ebitenutil.DebugPrintAt(s, g.msg, 45, 450)
@@ -190,6 +216,10 @@ func (g *game) Draw(s *ebiten.Image) {
 	} else if g.over {
 		overlay(s, "OUTREAD!\n\nTAP TO RETRY")
 	}
+}
+
+func drawHitBox(s *ebiten.Image, box hitBox, c color.RGBA) {
+	vector.StrokeRect(s, float32(box.x), float32(box.y), float32(box.w), float32(box.h), 3, c, false)
 }
 
 func drawFighter(s *ebiten.Image, x float64, c color.RGBA, faceRight bool, act int, striking bool) {

@@ -1,4 +1,5 @@
 // Copyright 2026 Ebi Showcase contributors. Licensed under Apache-2.0.
+//kage:unit pixels
 package main
 
 func luminance(c vec4) float {
@@ -6,15 +7,14 @@ func luminance(c vec4) float {
 }
 
 func Fragment(position vec4, texCoord vec2, color vec4) vec4 {
-	c := imageSrc0At(texCoord)
-	l := luminance(imageSrc0At(texCoord-vec2(1.0, 0.0)))
-	r := luminance(imageSrc0At(texCoord+vec2(1.0, 0.0)))
-	u := luminance(imageSrc0At(texCoord-vec2(0.0, 1.0)))
-	d := luminance(imageSrc0At(texCoord+vec2(0.0, 1.0)))
-	edge := smoothstep(0.002, 0.055, abs(r-l)+abs(d-u))
-	// A faint luminance silhouette keeps large, flat dark forms readable while
-	// the brighter cyan response makes their boundaries unmistakable.
-	line := max(edge, luminance(c)*0.46)
-	ink := mix(vec3(0.012, 0.04, 0.075), vec3(0.18, 1.0, 1.0), line)
-	return vec4(ink, c.a)
+	center := luminance(imageSrc0At(texCoord))
+	right := luminance(imageSrc0At(texCoord+vec2(1.0, 0.0)))
+	down := luminance(imageSrc0At(texCoord+vec2(0.0, 1.0)))
+	// Keep only strong local boundaries. The threshold rejects the painted
+	// texture's tiny color variations so the result reads as lines on darkness.
+	edge := smoothstep(0.055, 0.22, max(abs(center-right), abs(center-down)))
+	// Show only boundaries. Mixing source luminance back into the result reads
+	// as a color filter rather than a genuinely different edge renderer.
+	ink := mix(vec3(0.006, 0.018, 0.04), vec3(0.35, 1.0, 1.0), edge)
+	return vec4(ink, 1.0)
 }

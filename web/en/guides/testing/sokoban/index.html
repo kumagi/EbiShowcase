@@ -1,27 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Extract a function that advances 0..1 progress and reports completion. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game"><title>Ebi Showcase – Sokoban: make tween completion a transition</title>
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/sokoban/">
-    <!-- ogp:start -->
-    <meta property="og:site_name" content="Ebi Showcase">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Sokoban: make tween completion a transition">
-    <meta property="og:description" content="Extract a function that advances 0..1 progress and reports completion. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game">
-    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/sokoban/">
-    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--sokoban.png?v=20260713-font1">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Sokoban: make tween completion a transition">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:locale:alternate" content="ja_JP">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Sokoban: make tween completion a transition">
-    <meta name="twitter:description" content="Extract a function that advances 0..1 progress and reports completion. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game">
-    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--sokoban.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Sokoban: make tween completion a transition">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
-  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
-  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
-  <!-- favicon:end -->
-</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/sokoban/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 09 / 12</p><h1>Sokoban: make tween completion a transition</h1><p>Extract a function that advances 0..1 progress and reports completion.</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Draw only reads progress. Update still commits player and box; the test proves 0.98+0.14 clamps to 1 and completes.</h2><p><strong>Draw:</strong> Play-test smoothness, box weight, and goal readability.</p></div><div class="test-case-table"><p class="eyebrow">Choose boundaries first</p><table><tbody><tr><th>moving</th><td><code>0.28+0.14</code></td><td><code>0.42,false</code></td></tr><tr><th>complete</th><td><code>0.98+0.14</code></td><td><code>1,true</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>Every step in the current Update</h2><p>There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.</p></div><ol><li><span>01</span><p>Reset everything with R</p></li><li><span>02</span><p>Allow undo only while idle</p></li><li><span>03</span><p>After clear, accept restart only</p></li><li><span>04</span><p>While moving, advance tween and ignore input</p></li><li><span>05</span><p>On completion, commit player/box and check clear</p></li><li><span>06</span><p>Only while idle, plan a new move</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / complete Update()</p><code>games/core/sokoban/main.go</code></div><pre><code>func (g *game) Update() error {
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Extract a function that advances 0..1 progress and reports completion."><title>Sokoban: make tween completion a transition | Ebi Showcase</title><link rel="icon" type="image/png" href="../../../../assets/favicon.png"><link rel="stylesheet" href="../../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/sokoban/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 09 / 12</p><h1>Sokoban: make tween completion a transition</h1><p>Extract a function that advances 0..1 progress and reports completion.</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Draw only reads progress. Update still commits player and box; the test proves 0.98+0.14 clamps to 1 and completes.</h2><p><strong>Draw:</strong> Play-test smoothness, box weight, and goal readability.</p></div><div class="test-case-table"><p class="eyebrow">Choose boundaries first</p><table><tbody><tr><th>moving</th><td><code>0.28+0.14</code></td><td><code>0.42,false</code></td></tr><tr><th>complete</th><td><code>0.98+0.14</code></td><td><code>1,true</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>Every step in the current Update</h2><p>There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.</p></div><ol><li><span>01</span><p>Reset everything with R</p></li><li><span>02</span><p>Allow undo only while idle</p></li><li><span>03</span><p>After clear, accept restart only</p></li><li><span>04</span><p>While moving, advance tween and ignore input</p></li><li><span>05</span><p>On completion, commit player/box and check clear</p></li><li><span>06</span><p>Only while idle, plan a new move</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / complete Update()</p><code>games/core/sokoban/main.go</code></div><pre><code>func (g *game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
 		*g = *newGame()
 		return nil
@@ -73,48 +50,37 @@ import (
 	"testing"
 )
 
+const floatTolerance = 1e-9
+
 func TestAdvanceTween(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name         string
 		progress     float64
 		wantProgress float64
 		wantComplete bool
 	}{
-		{name: "in progress", progress: 0.28, wantProgress: 0.42},
-		{name: "reaches end", progress: 0.98, wantProgress: 1, wantComplete: true},
+		{name: "step below end stays incomplete", progress: 0.28, wantProgress: 0.42, wantComplete: false},
+		{name: "step past end clamps and completes", progress: 0.98, wantProgress: 1, wantComplete: true},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, complete := AdvanceTween(tt.progress, 0.14)
-			if math.Abs(got-tt.wantProgress) &gt; 1e-9 || complete != tt.wantComplete {
-				t.Fatalf("AdvanceTween() = (%v, %v), want (%v, %v)", got, complete, tt.wantProgress, tt.wantComplete)
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			gotProgress, gotComplete := AdvanceTween(tc.progress, 0.14)
+
+			if math.Abs(gotProgress-tc.wantProgress) &gt; floatTolerance {
+				t.Errorf("progress = %v, want %v", gotProgress, tc.wantProgress)
+			}
+			if gotComplete != tc.wantComplete {
+				t.Errorf("complete = %v, want %v", gotComplete, tc.wantComplete)
 			}
 		})
 	}
 }
-</code></pre></article></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Play-test smoothness, box weight, and goal readability.</p></section><nav class="test-pager"><a href="../snake/">← PREVIOUS</a><span>9 / 12</span><a href="../platformer/">NEXT →</a></nav>
-    <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if moving { progress++; return nil }</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">Quick feedback</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/en/guides/testing/sokoban/">
-          <label class="feedback-field">
-            <span class="sr-only">Feedback</span>
-            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>
+</code></pre></article></section><section class="test-audit"><div><p class="eyebrow">TEST REVIEW / ALL CASES</p><h2>This chapter's tests pass the same readability review.</h2></div><div class="test-quality-grid"><article><h3>Naming</h3><p>Top-level subjects are <code>TestAdvanceTween</code>. Every <code>t.Run</code> name states the premise and expected result in a sentence; there is no whenFoo_shouldBar convention.</p></article><article><h3>AAA</h3><p>Case values arrange the premise, one call acts, and comparisons assert only its result. Blank lines separate the three paragraphs; Arrange / Act / Assert comments do not label them.</p></article><article><h3>DAMP</h3><p>Meaningful case names and got / want values stay visible. Assert contains no search loop or switch, and multiple return values are checked separately so each failure says one thing.</p></article><article><h3>Table-driven</h3><p>These are repeated boundary inputs to the same function, so every row is one complete table-driven case. The outer for runs cases; it is not a search hidden inside Assert.</p></article></div></section><section class="test-golden test-golden-lesson"><div><p class="eyebrow">DRAW / GOLDEN ONLY</p><h2>If this chapter protects Draw</h2><p>Freeze the initial walls, boxes, goals, and player, then compare the whole image with <code>testdata/sokoban-initial.png</code>. Do not assert individual coordinates or drawing commands.</p><p>Put this code in the game's main_test.go and combine it with the TestMain / assertGolden harness from the guide hub. Inspect .actual.png before approving any golden update.</p></div><pre><code>func TestDrawInitialBoardMatchesGolden(t *testing.T) {
+	g := newGame()
+	screen := ebiten.NewImage(screenWidth, screenHeight)
+
+	g.Draw(screen)
+
+	assertGolden(t, screen, "testdata/sokoban-initial.png")
+}</code></pre></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Play-test smoothness, box weight, and goal readability.</p></section><nav class="test-pager"><a href="../snake/">← PREVIOUS</a><span>9 / 12</span><a href="../platformer/">NEXT →</a></nav></main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

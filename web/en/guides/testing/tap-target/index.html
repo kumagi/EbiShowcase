@@ -1,27 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Split pointer input owned by Ebitengine from a circle rule that only needs numbers. Play the demo, add one Go rule, verify it, and apply the idea to your own Eb"><title>Ebi Showcase – Tap Target: separate input from hit testing</title>
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/tap-target/">
-    <!-- ogp:start -->
-    <meta property="og:site_name" content="Ebi Showcase">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Tap Target: separate input from hit testing">
-    <meta property="og:description" content="Split pointer input owned by Ebitengine from a circle rule that only needs numbers. Play the demo, add one Go rule, verify it, and apply the idea to your own Eb">
-    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/tap-target/">
-    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--tap-target.png?v=20260713-font1">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Tap Target: separate input from hit testing">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:locale:alternate" content="ja_JP">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Tap Target: separate input from hit testing">
-    <meta name="twitter:description" content="Split pointer input owned by Ebitengine from a circle rule that only needs numbers. Play the demo, add one Go rule, verify it, and apply the idea to your own Eb">
-    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--tap-target.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Tap Target: separate input from hit testing">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
-  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
-  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
-  <!-- favicon:end -->
-</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/tap-target/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 01 / 12</p><h1>Tap Target: separate input from hit testing</h1><p>Split pointer input owned by Ebitengine from a circle rule that only needs numbers.</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Do not fake CursorPosition or JustPressed. Let Update read them and pass plain coordinates to PointInCircle, then test the boundary quickly.</h2><p><strong>Draw:</strong> Play-test tap feel, target readability, and timer feel. Do not unit-test the circle drawn by Draw.</p></div><div class="test-case-table"><p class="eyebrow">Choose boundaries first</p><table><tbody><tr><th>center</th><td><code>100,80</code></td><td><code>true</code></td></tr><tr><th>on edge</th><td><code>130,80</code></td><td><code>true</code></td></tr><tr><th>1 px outside</th><td><code>131,80</code></td><td><code>false</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>Every step in the current Update</h2><p>There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.</p></div><ol><li><span>01</span><p>Handle not-started and time-up states first</p></li><li><span>02</span><p>Subtract one tick from the timer</p></li><li><span>03</span><p>Test the circle only on a fresh press</p></li><li><span>04</span><p>On hit, update score, radius, and target position</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / complete Update()</p><code>games/core/tap-target/main.go</code></div><pre><code>func (g *game) Update() error {
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Split pointer input owned by Ebitengine from a circle rule that only needs numbers."><title>Tap Target: separate input from hit testing | Ebi Showcase</title><link rel="icon" type="image/png" href="../../../../assets/favicon.png"><link rel="stylesheet" href="../../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/tap-target/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 01 / 12</p><h1>Tap Target: separate input from hit testing</h1><p>Split pointer input owned by Ebitengine from a circle rule that only needs numbers.</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Do not fake CursorPosition or JustPressed. Let Update read them and pass plain coordinates to PointInCircle, then test the boundary quickly.</h2><p><strong>Draw:</strong> Play-test tap feel, target readability, and timer feel. Do not unit-test the circle drawn by Draw.</p></div><div class="test-case-table"><p class="eyebrow">Choose boundaries first</p><table><tbody><tr><th>center</th><td><code>100,80</code></td><td><code>true</code></td></tr><tr><th>on edge</th><td><code>130,80</code></td><td><code>true</code></td></tr><tr><th>1 px outside</th><td><code>131,80</code></td><td><code>false</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>Every step in the current Update</h2><p>There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.</p></div><ol><li><span>01</span><p>Handle not-started and time-up states first</p></li><li><span>02</span><p>Subtract one tick from the timer</p></li><li><span>03</span><p>Test the circle only on a fresh press</p></li><li><span>04</span><p>On hit, update score, radius, and target position</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / complete Update()</p><code>games/core/tap-target/main.go</code></div><pre><code>func (g *game) Update() error {
 	px, py, pressed := pressedPosition()
 
 	// まだ始まっていない → 押したらスタート
@@ -69,46 +46,32 @@ func PointInCircle(pointX, pointY, centerX, centerY, radius float64) bool {
 import "testing"
 
 func TestPointInCircle(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name       string
 		x, y       float64
 		wantInside bool
 	}{
-		{name: "center", x: 100, y: 80, wantInside: true},
-		{name: "just inside", x: 129, y: 80, wantInside: true},
-		{name: "on the edge", x: 130, y: 80, wantInside: true},
-		{name: "just outside", x: 131, y: 80, wantInside: false},
+		{name: "center is inside", x: 100, y: 80, wantInside: true},
+		{name: "point one pixel inside is inside", x: 129, y: 80, wantInside: true},
+		{name: "point on edge is inside", x: 130, y: 80, wantInside: true},
+		{name: "point one pixel outside is outside", x: 131, y: 80, wantInside: false},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := PointInCircle(tt.x, tt.y, 100, 80, 30)
-			if got != tt.wantInside {
-				t.Fatalf("PointInCircle(%v, %v) = %v, want %v", tt.x, tt.y, got, tt.wantInside)
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			gotInside := PointInCircle(tc.x, tc.y, 100, 80, 30)
+
+			if gotInside != tc.wantInside {
+				t.Fatalf("PointInCircle(%v, %v) = %v, want %v", tc.x, tc.y, gotInside, tc.wantInside)
 			}
 		})
 	}
 }
-</code></pre></article></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Play-test tap feel, target readability, and timer feel. Do not unit-test the circle drawn by Draw.</p></section><nav class="test-pager"><a href="../">← PREVIOUS</a><span>1 / 12</span><a href="../timing-meter/">NEXT →</a></nav>
-    <section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">Quick feedback</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/en/guides/testing/tap-target/">
-          <label class="feedback-field">
-            <span class="sr-only">Feedback</span>
-            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>
+</code></pre></article></section><section class="test-audit"><div><p class="eyebrow">TEST REVIEW / ALL CASES</p><h2>This chapter's tests pass the same readability review.</h2></div><div class="test-quality-grid"><article><h3>Naming</h3><p>Top-level subjects are <code>TestPointInCircle</code>. Every <code>t.Run</code> name states the premise and expected result in a sentence; there is no whenFoo_shouldBar convention.</p></article><article><h3>AAA</h3><p>Case values arrange the premise, one call acts, and comparisons assert only its result. Blank lines separate the three paragraphs; Arrange / Act / Assert comments do not label them.</p></article><article><h3>DAMP</h3><p>Meaningful case names and got / want values stay visible. Assert contains no search loop or switch, and multiple return values are checked separately so each failure says one thing.</p></article><article><h3>Table-driven</h3><p>These are repeated boundary inputs to the same function, so every row is one complete table-driven case. The outer for runs cases; it is not a search hidden inside Assert.</p></article></div></section><section class="test-golden test-golden-lesson"><div><p class="eyebrow">DRAW / GOLDEN ONLY</p><h2>If this chapter protects Draw</h2><p>Freeze the initial seeded target, HUD, and start prompt, then compare the whole image with <code>testdata/tap-target-initial.png</code>. Do not assert individual coordinates or drawing commands.</p><p>Put this code in the game's main_test.go and combine it with the TestMain / assertGolden harness from the guide hub. Inspect .actual.png before approving any golden update.</p></div><pre><code>func TestDrawInitialTargetMatchesGolden(t *testing.T) {
+	g := newGame()
+	screen := ebiten.NewImage(screenWidth, screenHeight)
+
+	g.Draw(screen)
+
+	assertGolden(t, screen, "testdata/tap-target-initial.png")
+}</code></pre></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Play-test tap feel, target readability, and timer feel. Do not unit-test the circle drawn by Draw.</p></section><nav class="test-pager"><a href="../">← PREVIOUS</a><span>1 / 12</span><a href="../timing-meter/">NEXT →</a></nav></main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

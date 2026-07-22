@@ -1,27 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="反射とPERFECT/GREAT/GOOD/MISSの境目を、二つの純粋関数として守ります。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><title>Ebi Showcase – タイミングメーター：境界値を表にする</title>
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/testing/timing-meter/">
-    <!-- ogp:start -->
-    <meta property="og:site_name" content="Ebi Showcase">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – タイミングメーター：境界値を表にする">
-    <meta property="og:description" content="反射とPERFECT/GREAT/GOOD/MISSの境目を、二つの純粋関数として守ります。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
-    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/guides/testing/timing-meter/">
-    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--timing-meter.png?v=20260713-font1">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="タイミングメーター：境界値を表にする">
-    <meta property="og:locale" content="ja_JP">
-    <meta property="og:locale:alternate" content="en_US">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – タイミングメーター：境界値を表にする">
-    <meta name="twitter:description" content="反射とPERFECT/GREAT/GOOD/MISSの境目を、二つの純粋関数として守ります。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
-    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--timing-meter.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="タイミングメーター：境界値を表にする">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
-  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
-  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
-  <!-- favicon:end -->
-</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../en/guides/testing/timing-meter/" lang="en">EN</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 02 / 12</p><h1>タイミングメーター：境界値を表にする</h1><p>反射とPERFECT/GREAT/GOOD/MISSの境目を、二つの純粋関数として守ります。</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>見た目の線を止めるテストではなく、8と8.1、28と28.1のように境目の両側を直接渡します。</h2><p><strong>Draw:</strong> 線の速さが楽しいか、中央が読みやすいかは人が確認します。Drawのピクセル位置は採点ルールではありません。</p></div><div class="test-case-table"><p class="eyebrow">境界を先に決める</p><table><tbody><tr><th>PERFECT最後</th><td><code>8</code></td><td><code>100</code></td></tr><tr><th>GREAT最初</th><td><code>8.1</code></td><td><code>50</code></td></tr><tr><th>右端で反射</th><td><code>99+3</code></td><td><code>100,-3</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>現行Updateの全手順</h2><p>省略記号はありません。入力から早期return、ループ、勝敗まで、現在ゲームで動く順番です。この中から抽出した純粋関数を直接テストします。</p></div><ol><li><span>01</span><p>新しい押下で停止／次ラウンドを切り替える</p></li><li><span>02</span><p>停止時に中心からの距離を採点</p></li><li><span>03</span><p>停止中なら状態を進めず終了</p></li><li><span>04</span><p>移動中だけ位置と速度を反射計算</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / Update()全文</p><code>games/core/timing-meter/main.go</code></div><pre><code>func (g *game) Update() error {
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="反射とPERFECT/GREAT/GOOD/MISSの境目を、二つの純粋関数として守ります。"><title>タイミングメーター：境界値を表にする | Ebi Showcase</title><link rel="icon" type="image/png" href="../../../../assets/favicon.png"><link rel="stylesheet" href="../../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../en/guides/testing/timing-meter/" lang="en">EN</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 02 / 12</p><h1>タイミングメーター：境界値を表にする</h1><p>反射とPERFECT/GREAT/GOOD/MISSの境目を、二つの純粋関数として守ります。</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>見た目の線を止めるテストではなく、8と8.1、28と28.1のように境目の両側を直接渡します。</h2><p><strong>Draw:</strong> 線の速さが楽しいか、中央が読みやすいかは人が確認します。Drawのピクセル位置は採点ルールではありません。</p></div><div class="test-case-table"><p class="eyebrow">境界を先に決める</p><table><tbody><tr><th>PERFECT最後</th><td><code>8</code></td><td><code>100</code></td></tr><tr><th>GREAT最初</th><td><code>8.1</code></td><td><code>50</code></td></tr><tr><th>右端で反射</th><td><code>99+3</code></td><td><code>100,-3</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>現行Updateの全手順</h2><p>省略記号はありません。入力から早期return、ループ、勝敗まで、現在ゲームで動く順番です。この中から抽出した純粋関数を直接テストします。</p></div><ol><li><span>01</span><p>新しい押下で停止／次ラウンドを切り替える</p></li><li><span>02</span><p>停止時に中心からの距離を採点</p></li><li><span>03</span><p>停止中なら状態を進めず終了</p></li><li><span>04</span><p>移動中だけ位置と速度を反射計算</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / Update()全文</p><code>games/core/timing-meter/main.go</code></div><pre><code>func (g *game) Update() error {
 	if justPressed() {
 		if g.stopped {
 			// 次のラウンドを始める
@@ -78,70 +55,63 @@ func TimingScore(distance float64) (points int, label string) {
 import "testing"
 
 func TestBouncedPosition(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name                    string
 		position, speed         float64
 		wantPosition, wantSpeed float64
 	}{
-		{name: "moves right", position: 40, speed: 3, wantPosition: 43, wantSpeed: 3},
-		{name: "bounces at right edge", position: 99, speed: 3, wantPosition: 100, wantSpeed: -3},
-		{name: "bounces at left edge", position: 1, speed: -3, wantPosition: 0, wantSpeed: 3},
+		{name: "movement within bounds keeps direction", position: 40, speed: 3, wantPosition: 43, wantSpeed: 3},
+		{name: "crossing right edge clamps and reverses", position: 99, speed: 3, wantPosition: 100, wantSpeed: -3},
+		{name: "crossing left edge clamps and reverses", position: 1, speed: -3, wantPosition: 0, wantSpeed: 3},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			position, speed := BouncedPosition(tt.position, tt.speed, 0, 100)
-			if position != tt.wantPosition || speed != tt.wantSpeed {
-				t.Fatalf("BouncedPosition() = (%v, %v), want (%v, %v)", position, speed, tt.wantPosition, tt.wantSpeed)
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			gotPosition, gotSpeed := BouncedPosition(tc.position, tc.speed, 0, 100)
+
+			if gotPosition != tc.wantPosition {
+				t.Errorf("position = %v, want %v", gotPosition, tc.wantPosition)
+			}
+			if gotSpeed != tc.wantSpeed {
+				t.Errorf("speed = %v, want %v", gotSpeed, tc.wantSpeed)
 			}
 		})
 	}
 }
 
 func TestTimingScore(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
+		name       string
 		distance   float64
 		wantPoints int
 		wantLabel  string
 	}{
-		{distance: 0, wantPoints: 100, wantLabel: "PERFECT +100"},
-		{distance: 8, wantPoints: 100, wantLabel: "PERFECT +100"},
-		{distance: 8.1, wantPoints: 50, wantLabel: "GREAT +50"},
-		{distance: 28, wantPoints: 50, wantLabel: "GREAT +50"},
-		{distance: 55, wantPoints: 10, wantLabel: "GOOD +10"},
-		{distance: 55.1, wantPoints: 0, wantLabel: "MISS"},
+		{name: "center scores perfect", distance: 0, wantPoints: 100, wantLabel: "PERFECT +100"},
+		{name: "perfect outer edge scores perfect", distance: 8, wantPoints: 100, wantLabel: "PERFECT +100"},
+		{name: "just beyond perfect scores great", distance: 8.1, wantPoints: 50, wantLabel: "GREAT +50"},
+		{name: "great outer edge scores great", distance: 28, wantPoints: 50, wantLabel: "GREAT +50"},
+		{name: "good outer edge scores good", distance: 55, wantPoints: 10, wantLabel: "GOOD +10"},
+		{name: "just beyond good scores miss", distance: 55.1, wantPoints: 0, wantLabel: "MISS"},
 	}
 
-	for _, tt := range tests {
-		points, label := TimingScore(tt.distance)
-		if points != tt.wantPoints || label != tt.wantLabel {
-			t.Errorf("TimingScore(%v) = (%d, %q), want (%d, %q)", tt.distance, points, label, tt.wantPoints, tt.wantLabel)
-		}
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			gotPoints, gotLabel := TimingScore(tc.distance)
+
+			if gotPoints != tc.wantPoints {
+				t.Errorf("points = %d, want %d", gotPoints, tc.wantPoints)
+			}
+			if gotLabel != tc.wantLabel {
+				t.Errorf("label = %q, want %q", gotLabel, tc.wantLabel)
+			}
+		})
 	}
 }
-</code></pre></article></section><section class="test-run"><p>自分のGoプロジェクトに上のファイルを作って実行</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>テストのあとも人が確認すること</h2><p>線の速さが楽しいか、中央が読みやすいかは人が確認します。Drawのピクセル位置は採点ルールではありません。</p></section><nav class="test-pager"><a href="../tap-target/">← 前へ</a><span>2 / 12</span><a href="../catch-stars/">次へ →</a></nav>
-    <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>状態は『狙っている・判定を見ている・再挑戦待ち』のような今の場面。switchは状態ごとの処理をif/elseより読みやすく並べます。%は割り算の余りです。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>phase := frame % 120</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">ひとことフィードバック</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/ja/guides/testing/timing-meter/">
-          <label class="feedback-field">
-            <span class="sr-only">フィードバック</span>
-            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>
+</code></pre></article></section><section class="test-audit"><div><p class="eyebrow">TEST REVIEW / ALL CASES</p><h2>この章のテストを、同じ品質基準で点検済み。</h2></div><div class="test-quality-grid"><article><h3>命名</h3><p>トップレベルは<code>TestBouncedPosition</code>・<code>TestTimingScore</code>。各<code>t.Run</code>名が「どういう前提なら何を返すか」を文章で示します。<code>whenFoo_shouldBar</code>形式は使いません。</p></article><article><h3>AAA</h3><p>ケースの値で前提を作り、対象関数を一度呼び、その結果だけを比較します。三段落は空行で分け、Arrange / Act / Assertコメントは置きません。</p></article><article><h3>DAMP</h3><p>意味のあるケース名とgot / wantを省略しません。Assertには値の探索ループやswitchを置かず、複数戻り値は別々に検証して失敗理由を一つに絞ります。</p></article><article><h3>テーブル駆動</h3><p>同じ関数へ境界値を渡す反復なので、各行が完全な一件になるテーブル駆動テストを使います。外側のforはケース実行であり、Assertの中の探索ではありません。</p></article></div></section><section class="test-golden test-golden-lesson"><div><p class="eyebrow">DRAW / GOLDEN ONLY</p><h2>この章でDrawも守るなら</h2><p>中央で止めたPERFECT表示と得点HUDを固定し、<code>testdata/timing-meter-perfect.png</code>と一枚まるごと比較します。座標や描画命令を個別にAssertしません。</p><p>このコードはゲーム側のmain_test.goへ置き、ガイド冒頭のTestMain / assertGoldenと組み合わせます。golden更新前には.actual.pngを必ず目で確認します。</p></div><pre><code>func TestDrawStoppedPerfectMatchesGolden(t *testing.T) {
+	g := &amp;game{markerX: centerX, speed: 3.2, score: 100, stopped: true}
+	screen := ebiten.NewImage(screenWidth, screenHeight)
+
+	g.Draw(screen)
+
+	assertGolden(t, screen, "testdata/timing-meter-perfect.png")
+}</code></pre></section><section class="test-run"><p>自分のGoプロジェクトに上のファイルを作って実行</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>テストのあとも人が確認すること</h2><p>線の速さが楽しいか、中央が読みやすいかは人が確認します。Drawのピクセル位置は採点ルールではありません。</p></section><nav class="test-pager"><a href="../tap-target/">← 前へ</a><span>2 / 12</span><a href="../catch-stars/">次へ →</a></nav></main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

@@ -1,27 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Extract: chase below 165, return to wander above 230, keep the current mode between them. Play the demo, add one Go rule, verify it, and apply the idea to your "><title>Ebi Showcase – Dungeon: test AI hysteresis</title>
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/dungeon/">
-    <!-- ogp:start -->
-    <meta property="og:site_name" content="Ebi Showcase">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Dungeon: test AI hysteresis">
-    <meta property="og:description" content="Extract: chase below 165, return to wander above 230, keep the current mode between them. Play the demo, add one Go rule, verify it, and apply the idea to your ">
-    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/dungeon/">
-    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--dungeon.png?v=20260713-font1">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Dungeon: test AI hysteresis">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:locale:alternate" content="ja_JP">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Dungeon: test AI hysteresis">
-    <meta name="twitter:description" content="Extract: chase below 165, return to wander above 230, keep the current mode between them. Play the demo, add one Go rule, verify it, and apply the idea to your ">
-    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--dungeon.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Dungeon: test AI hysteresis">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
-  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
-  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
-  <!-- favicon:end -->
-</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/dungeon/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 11 / 12</p><h1>Dungeon: test AI hysteresis</h1><p>Extract: chase below 165, return to wander above 230, keep the current mode between them.</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Without walking an enemy, test that distance 200 preserves its current mode and prevents boundary flicker.</h2><p><strong>Draw:</strong> Play-test enemy threat, sword reach, and maze readability.</p></div><div class="test-case-table"><p class="eyebrow">Choose boundaries first</p><table><tbody><tr><th>near</th><td><code>164.9</code></td><td><code>chase</code></td></tr><tr><th>band while wandering</th><td><code>200,current0</code></td><td><code>wander</code></td></tr><tr><th>band while chasing</th><td><code>200,current1</code></td><td><code>chase</code></td></tr><tr><th>far</th><td><code>230.1</code></td><td><code>wander</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>Every step in the current Update</h2><p>There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.</p></div><ol><li><span>01</span><p>When finished, accept restart only</p></li><li><span>02</span><p>Move player on X then Y</p></li><li><span>03</span><p>Advance attack timer and fresh attack input</p></li><li><span>04</span><p>For each enemy, transition mode from distance</p></li><li><span>05</span><p>Choose wander or chase velocity</p></li><li><span>06</span><p>Move enemy on X then Y</p></li><li><span>07</span><p>Resolve sword hit and contact damage</p></li><li><span>08</span><p>Clear after all enemies and exit</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / complete Update()</p><code>games/core/dungeon/main.go</code></div><pre><code>func (g *game) Update() error {
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Extract: chase below 165, return to wander above 230, keep the current mode between them."><title>Dungeon: test AI hysteresis | Ebi Showcase</title><link rel="icon" type="image/png" href="../../../../assets/favicon.png"><link rel="stylesheet" href="../../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/dungeon/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 11 / 12</p><h1>Dungeon: test AI hysteresis</h1><p>Extract: chase below 165, return to wander above 230, keep the current mode between them.</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Without walking an enemy, test that distance 200 preserves its current mode and prevents boundary flicker.</h2><p><strong>Draw:</strong> Play-test enemy threat, sword reach, and maze readability.</p></div><div class="test-case-table"><p class="eyebrow">Choose boundaries first</p><table><tbody><tr><th>near</th><td><code>164.9</code></td><td><code>chase</code></td></tr><tr><th>band while wandering</th><td><code>200,current0</code></td><td><code>wander</code></td></tr><tr><th>band while chasing</th><td><code>200,current1</code></td><td><code>chase</code></td></tr><tr><th>far</th><td><code>230.1</code></td><td><code>wander</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>Every step in the current Update</h2><p>There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.</p></div><ol><li><span>01</span><p>When finished, accept restart only</p></li><li><span>02</span><p>Move player on X then Y</p></li><li><span>03</span><p>Advance attack timer and fresh attack input</p></li><li><span>04</span><p>For each enemy, transition mode from distance</p></li><li><span>05</span><p>Choose wander or chase velocity</p></li><li><span>06</span><p>Move enemy on X then Y</p></li><li><span>07</span><p>Resolve sword hit and contact damage</p></li><li><span>08</span><p>Clear after all enemies and exit</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / complete Update()</p><code>games/core/dungeon/main.go</code></div><pre><code>func (g *game) Update() error {
 	if g.cleared || g.gameOver {
 		if restartPressed() {
 			*g = *newGame()
@@ -130,68 +107,60 @@ import (
 	"testing"
 )
 
+const floatTolerance = 1e-9
+
 func TestEnemyMode(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name     string
 		current  int
 		distance float64
 		want     int
 	}{
-		{name: "starts chase", distance: 164.9, want: 1},
-		{name: "keeps wander in band", distance: 200, want: 0},
-		{name: "keeps chase in band", current: 1, distance: 200, want: 1},
-		{name: "returns to wander", current: 1, distance: 230.1, want: 0},
+		{name: "distance below chase boundary starts chase", distance: 164.9, want: 1},
+		{name: "middle distance keeps wander mode", distance: 200, want: 0},
+		{name: "middle distance keeps chase mode", current: 1, distance: 200, want: 1},
+		{name: "distance above wander boundary returns to wander", current: 1, distance: 230.1, want: 0},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := EnemyMode(tt.current, tt.distance, 165, 230); got != tt.want {
-				t.Fatalf("EnemyMode() = %d, want %d", got, tt.want)
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := EnemyMode(tc.current, tc.distance, 165, 230)
+
+			if got != tc.want {
+				t.Fatalf("mode = %d, want %d", got, tc.want)
 			}
 		})
 	}
 }
 
 func TestAimVelocity(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name          string
 		dx, dy, speed float64
 		wantX, wantY  float64
 	}{
-		{name: "three four five", dx: 3, dy: 4, speed: 10, wantX: 6, wantY: 8},
-		{name: "zero direction", speed: 10, wantX: 0, wantY: 0},
+		{name: "three four five direction scales to requested speed", dx: 3, dy: 4, speed: 10, wantX: 6, wantY: 8},
+		{name: "zero direction produces stopped bullet", speed: 10, wantX: 0, wantY: 0},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			vx, vy := AimVelocity(tt.dx, tt.dy, tt.speed)
-			if math.Abs(vx-tt.wantX) &gt; 1e-9 || math.Abs(vy-tt.wantY) &gt; 1e-9 {
-				t.Fatalf("AimVelocity() = (%v, %v), want (%v, %v)", vx, vy, tt.wantX, tt.wantY)
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			gotX, gotY := AimVelocity(tc.dx, tc.dy, tc.speed)
+
+			if math.Abs(gotX-tc.wantX) &gt; floatTolerance {
+				t.Errorf("x velocity = %v, want %v", gotX, tc.wantX)
+			}
+			if math.Abs(gotY-tc.wantY) &gt; floatTolerance {
+				t.Errorf("y velocity = %v, want %v", gotY, tc.wantY)
 			}
 		})
 	}
 }
-</code></pre></article></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Play-test enemy threat, sword reach, and maze readability.</p></section><nav class="test-pager"><a href="../platformer/">← PREVIOUS</a><span>11 / 12</span><a href="../bullet-hell/">NEXT →</a></nav>
-    <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if distance &lt; 165 { state = Chase }</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">Quick feedback</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/en/guides/testing/dungeon/">
-          <label class="feedback-field">
-            <span class="sr-only">Feedback</span>
-            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>
+</code></pre></article></section><section class="test-audit"><div><p class="eyebrow">TEST REVIEW / ALL CASES</p><h2>This chapter's tests pass the same readability review.</h2></div><div class="test-quality-grid"><article><h3>Naming</h3><p>Top-level subjects are <code>TestEnemyMode</code> and <code>TestAimVelocity</code>. Every <code>t.Run</code> name states the premise and expected result in a sentence; there is no whenFoo_shouldBar convention.</p></article><article><h3>AAA</h3><p>Case values arrange the premise, one call acts, and comparisons assert only its result. Blank lines separate the three paragraphs; Arrange / Act / Assert comments do not label them.</p></article><article><h3>DAMP</h3><p>Meaningful case names and got / want values stay visible. Assert contains no search loop or switch, and multiple return values are checked separately so each failure says one thing.</p></article><article><h3>Table-driven</h3><p>These are repeated boundary inputs to the same function, so every row is one complete table-driven case. The outer for runs cases; it is not a search hidden inside Assert.</p></article></div></section><section class="test-golden test-golden-lesson"><div><p class="eyebrow">DRAW / GOLDEN ONLY</p><h2>If this chapter protects Draw</h2><p>Freeze the initial room, enemies, and life HUD, then compare the whole image with <code>testdata/dungeon-initial.png</code>. Do not assert individual coordinates or drawing commands.</p><p>Put this code in the game's main_test.go and combine it with the TestMain / assertGolden harness from the guide hub. Inspect .actual.png before approving any golden update.</p></div><pre><code>func TestDrawInitialRoomMatchesGolden(t *testing.T) {
+	g := newGame()
+	screen := ebiten.NewImage(screenWidth, screenHeight)
+
+	g.Draw(screen)
+
+	assertGolden(t, screen, "testdata/dungeon-initial.png")
+}</code></pre></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Play-test enemy threat, sword reach, and maze readability.</p></section><nav class="test-pager"><a href="../platformer/">← PREVIOUS</a><span>11 / 12</span><a href="../bullet-hell/">NEXT →</a></nav></main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

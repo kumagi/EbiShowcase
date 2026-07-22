@@ -61,7 +61,7 @@
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>switch { case throw: state=Throw; case guard: state=Guard }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if boxesOverlap(attackBox, targetBox) { resolvePriority() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
 
@@ -71,7 +71,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / GUARD &amp; THROW</p>
         <h2>How do you build a<br>rock-paper-scissors relationship?</h2>
-        <p class="lesson-lead">The triangle is: <strong>Guard</strong> stops a Strike; <strong>Throw</strong> breaks a Guard; <strong>Strike</strong> stuffs a Throw attempt. Encoding all three win conditions in a single <code>wins(a, b)</code> function means every possible pairing is handled in three readable lines. Same choice? Draw — no special case needed.</p>
+        <p class="lesson-lead">First test whether the two action rectangles overlap. Only on contact does the priority triangle apply: <strong>Guard</strong> stops a Strike; <strong>Throw</strong> breaks a Guard; <strong>Strike</strong> stuffs a Throw attempt. If the rectangles stay apart, the move whiffs.</p>
       </div>
 
       <div class="concept-row">
@@ -83,9 +83,9 @@
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>The wins() function</h3>
-          <p>Three OR conditions cover every winning pair. Putting all win logic in one place means you only need to edit one function when adding options or re-balancing.</p>
-          <code>wins(guard, strike) // guard beats strike</code>
+          <h3>Priority after rectangle contact</h3>
+          <p><code>boxesOverlap</code> proves the moves touched first. Then three OR conditions in <code>wins</code> cover every winning pair.</p>
+          <code>overlap → wins(guard, strike)</code>
         </article>
         <article>
           <span class="concept-number">3</span>
@@ -143,14 +143,11 @@
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
-          <h3>Enemy picks → player sees → wins() decides</h3>
-          <p>The enemy choice is stored in <code>g.enemy</code> and shown on screen. After the player responds, three branches handle draw, win, and loss. The score and life counters stay clean because all logic routes through <code>wins()</code>.</p>
+          <h3>Rectangles touch → wins() decides priority</h3>
+          <p>The action rectangles must overlap before the game considers guard, throw, or strike priority. This keeps range and matchup rules as two separate, visible decisions.</p>
         </div>
-        <pre><code>const (
-    strike = iota  // 0
-    guard          // 1
-    throw          // 2
-)
+        <pre><code>attackBox := actionBox(g.p1, choice, 1)
+targetBox := actionBox(g.p2, enemy, -1)
 
 func wins(a, b int) bool {
     return (a == strike &amp;&amp; b == throw)  ||
@@ -158,15 +155,17 @@ func wins(a, b int) bool {
            (a == guard  &amp;&amp; b == strike)
 }
 
-// resolve the round
-<span>if</span> c == g.enemy {
+// range first, matchup second
+<span>if</span> !boxesOverlap(attackBox, targetBox) {
+    g.message = "Whiff!"
+} <span>else if</span> choice == g.enemy {
     g.message = "Clash!"
-} <span>else if</span> wins(c, g.enemy) {
+} <span>else if</span> wins(choice, g.enemy) {
     g.score++
-    g.message = name(c) + " beats " + name(g.enemy)
+    g.message = name(choice) + " beats " + name(g.enemy)
 } <span>else</span> {
     g.life--
-    g.message = name(g.enemy) + " beats " + name(c)
+    g.message = name(g.enemy) + " beats " + name(choice)
 }</code></pre>
       </div>
 

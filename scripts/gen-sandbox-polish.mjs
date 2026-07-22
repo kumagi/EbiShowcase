@@ -10,14 +10,14 @@ const lessons = [
       title: "ブロックが壊れる一瞬を作る",
       lead: "道具を振りかぶり、当て、破片が飛び、元の姿勢へ戻るまでを時間に分けます。",
       deep: "数字をすぐ減らすだけでは、何が起きたか目で追えません。攻撃を「予備動作・接触・戻り」に分け、接触した1 tickだけでHP、破片、揺れ、得点を同時に変えます。",
-      concept: ["予備動作で次の出来事を知らせる", "接触フレームで結果を一度だけ決める", "破片とつぶれで素材の重さを伝える"],
+      concept: ["予備動作で次の出来事を知らせる", "接触tickで結果を一度だけ決める", "破片とつぶれで素材の重さを伝える"],
       challenge: "石と木で破片の飛び方を変えてみよう。",
     },
     en: {
       title: "Build the Moment a Block Breaks",
       lead: "Split a tool swing into anticipation, contact, flying chips, and recovery.",
-      deep: "If a number changes instantly, the player cannot follow what happened. Divide the action into wind-up, contact, and recovery, then change HP, chips, shake, and score together on exactly one contact frame.",
-      concept: ["Use anticipation to announce what comes next", "Resolve the result once on the contact frame", "Use chips and squash to communicate material weight"],
+      deep: "If a number changes instantly, the player cannot follow what happened. Divide the action into wind-up, contact, and recovery, then change HP, chips, shake, and score together on exactly one contact tick.",
+      concept: ["Use anticipation to announce what comes next", "Resolve the result once on the contact tick", "Use chips and squash to communicate material weight"],
       challenge: "Give stone and wood different chip motion.",
     },
   },
@@ -57,7 +57,7 @@ const finalLesson = {
   },
 };
 
-const esc = (s) => s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+const esc = (s) => s.replaceAll("contactFrame", "contactTick").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 
 function page(item, lang, index) {
   const q = item[lang], other = lang === "ja" ? "en" : "ja";

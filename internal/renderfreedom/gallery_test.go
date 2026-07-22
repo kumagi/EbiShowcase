@@ -7,15 +7,28 @@ import (
 )
 
 type fakeGame struct {
-	updates int
-	w, h    int
+	updates, draws     int
+	w, h, drawW, drawH int
 }
 
-func (f *fakeGame) Update() error      { f.updates++; return nil }
-func (f *fakeGame) Draw(*ebiten.Image) {}
+func (f *fakeGame) Update() error { f.updates++; return nil }
+func (f *fakeGame) Draw(screen *ebiten.Image) {
+	f.draws++
+	f.drawW, f.drawH = screen.Bounds().Dx(), screen.Bounds().Dy()
+}
 func (f *fakeGame) Layout(w, h int) (int, int) {
 	f.w, f.h = w+7, h+9
 	return f.w, f.h
+}
+
+func TestGalleryDrawsOriginalOnceAtNativeSize(t *testing.T) {
+	screen := ebiten.NewImage(480, 720)
+	inner := &fakeGame{}
+	g := &gallery{inner: inner}
+	g.Draw(screen)
+	if inner.draws != 1 || inner.drawW != 480 || inner.drawH != 720 {
+		t.Fatalf("Draw calls/native size = (%d, %d, %d), want (1, 480, 720)", inner.draws, inner.drawW, inner.drawH)
+	}
 }
 
 func TestGalleryDelegatesUpdateAndLayout(t *testing.T) {

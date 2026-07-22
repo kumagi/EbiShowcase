@@ -95,18 +95,18 @@ case phaseRoute:
   <div class="capstone-renderers-copy">
     <p class="eyebrow">BONUS / DRAW ONLY</p>
     <h2>Same game. Different ways to make the picture.</h2>
-    <p>This WASM is built from the same package as the finished game above. It delegates to the original <code>Update</code> and <code>Layout</code> unchanged. One Draw snapshot is projected simultaneously as polished art, edge lines, and a rectangle mosaic. Position, score, enemies, collision, and time exist only once.</p>
+    <p>This WASM is built from the same package as the finished game above. It delegates to the original <code>Update</code> and <code>Layout</code> unchanged. The native-size game stays playable beside an edge view of the same instant and a mock game drawn entirely with ASCII characters. Rules and presentation can be designed separately.</p>
   </div>
   <div class="capstone-renderers-facts">
     <article><b>01</b><h3>UPDATE</h3><p>Advances input and game facts once for every view.</p></article>
     <article><b>02</b><h3>LAYOUT</h3><p>Returns the original game's size unchanged.</p></article>
-    <article><b>03</b><h3>DRAW</h3><p>Only changes how one snapshot is presented.</p></article>
+    <article><b>03</b><h3>DRAW</h3><p>Chooses pixels, edge lines, ASCII, or another presentation.</p></article>
   </div>
   <div class="capstone-renderers-demo">
     <iframe data-shared-demo="capstone-renderers" src="../../../../play/ebi-ascent-renderer/" loading="lazy" title="The same finished game shown through three Draw styles" allow="autoplay; fullscreen"></iframe>
   </div>
   <div class="capstone-renderers-code">
-    <div><p class="eyebrow">THE ONLY BOUNDARY</p><h3>Update and Layout pass straight to the original game.</h3><p>The rectangle view shrinks the snapshot to a small grid and restores it with nearest filtering. The wire view turns neighboring-pixel differences into lines with a Kage shader. Neither reads or writes game state.</p></div>
+    <div><p class="eyebrow">THE ONLY BOUNDARY</p><h3>Update and Layout pass straight to the original game.</h3><p>The native snapshot is the input-aligned playable surface. The edge inset uses Kage to keep only neighboring-pixel differences. The ASCII mock shows how a comparable game scene can communicate with characters alone. Rendering does not change the rules.</p></div>
     <pre><code>func (g *gallery) Update() error {
     return g.inner.Update()
 }
@@ -118,9 +118,9 @@ func (g *gallery) Layout(w, h int) (int, int) {
 func (g *gallery) Draw(screen *ebiten.Image) {
     snapshot := ebiten.NewImage(width, height)
     g.inner.Draw(snapshot)
-    drawPolished(screen, snapshot)
-    drawWireframe(screen, snapshot)
-    drawRectangles(screen, snapshot)
+    screen.DrawImage(snapshot, nil) // native-size playable input surface
+    drawEdgeInset(screen, snapshot)
+    drawASCIIGameMock(screen)
 }</code></pre>
   </div>
 </section>

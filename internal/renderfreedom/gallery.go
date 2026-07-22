@@ -21,6 +21,7 @@ var wireframeSource []byte
 type gallery struct {
 	inner ebiten.Game
 	wire  *ebiten.Shader
+	tick  int
 }
 
 // Run starts a renderer gallery for the exact game value passed by the
@@ -31,6 +32,7 @@ func Run(inner ebiten.Game) error {
 }
 
 func (g *gallery) Update() error {
+	g.tick++
 	return g.inner.Update()
 }
 
@@ -60,24 +62,21 @@ func (g *gallery) Draw(screen *ebiten.Image) {
 		wire.DrawImage(snapshot, op)
 	}
 
-	// Scaling down once and back with nearest filtering turns the same snapshot
-	// into visible rectangular cells. No rule or state is reconstructed here.
-	tinyW, tinyH := max(12, w/18), max(12, h/18)
-	blocks := ebiten.NewImage(tinyW, tinyH)
-	down := &ebiten.DrawImageOptions{}
-	down.GeoM.Scale(float64(tinyW)/float64(w), float64(tinyH)/float64(h))
-	down.Filter = ebiten.FilterLinear
-	blocks.DrawImage(snapshot, down)
+	// Keep the original snapshot at its original logical coordinates. Ebitengine
+	// input is read by the unchanged inner Update, so scaling the playable view
+	// would make pointer coordinates disagree with what the player sees.
+	screen.DrawImage(snapshot, nil)
+	drawPanelLabel(screen, 0, 0, min(w, 208), "PLAYABLE ORIGINAL DRAW")
 
-	screen.Fill(color.RGBA{4, 9, 22, 255})
-	cellW, cellH := w/2, h/2
-	drawImageCell(screen, snapshot, 0, 0, cellW, cellH, false)
-	drawImageCell(screen, wire, cellW, 0, w-cellW, cellH, false)
-	drawImageCell(screen, blocks, 0, cellH, cellW, h-cellH, true)
-	drawExplanation(screen, cellW, cellH, w-cellW, h-cellH)
-	drawPanelLabel(screen, 0, 0, cellW, "POLISHED DRAW")
-	drawPanelLabel(screen, cellW, 0, w-cellW, "WIREFRAME DRAW")
-	drawPanelLabel(screen, 0, cellH, cellW, "RECTANGLE DRAW")
+	// The alternate renderers are presentation-only insets. They never become
+	// the input surface, so the full-size game remains playable without an input
+	// adapter or a second copy of game state.
+	panelW := max(120, min(168, w/3))
+	panelH := max(126, min(180, h/4))
+	panelX := w - panelW - 8
+	drawImageCell(screen, wire, panelX, 42, panelW, panelH, false)
+	drawPanelLabel(screen, panelX, 42, panelW, "EDGE MAP")
+	drawASCIIInset(screen, panelX, 54+panelH, panelW, panelH, g.tick)
 }
 
 func drawImageCell(dst, src *ebiten.Image, x, y, width, height int, nearest bool) {
@@ -94,22 +93,23 @@ func drawImageCell(dst, src *ebiten.Image, x, y, width, height int, nearest bool
 }
 
 func drawPanelLabel(dst *ebiten.Image, x, y, width int, label string) {
-	vector.DrawFilledRect(dst, float32(x+8), float32(y+8), float32(min(width-16, 148)), 24, color.RGBA{3, 10, 27, 225}, false)
+	vector.DrawFilledRect(dst, float32(x+8), float32(y+8), float32(min(width-16, 184)), 24, color.RGBA{3, 10, 27, 225}, false)
 	ebitenutil.DebugPrintAt(dst, label, x+16, y+15)
 }
 
-func drawExplanation(dst *ebiten.Image, x, y, width, height int) {
-	vector.DrawFilledRect(dst, float32(x), float32(y), float32(width), float32(height), color.RGBA{8, 17, 39, 255}, false)
-	vector.StrokeRect(dst, float32(x)+.5, float32(y)+.5, float32(width)-1, float32(height)-1, 1, color.RGBA{255, 209, 105, 190}, false)
-	left := x + max(12, width/12)
-	top := y + max(18, height/7)
-	ebitenutil.DebugPrintAt(dst, "ONE GAME SNAPSHOT", left, top)
-	ebitenutil.DebugPrintAt(dst, "", left, top+20)
-	ebitenutil.DebugPrintAt(dst, "UPDATE: ORIGINAL", left, top+40)
-	ebitenutil.DebugPrintAt(dst, "LAYOUT: ORIGINAL", left, top+58)
-	ebitenutil.DebugPrintAt(dst, "DRAW: REPLACEABLE", left, top+76)
-	vector.StrokeLine(dst, float32(left), float32(top+102), float32(min(x+width-14, left+180)), float32(top+102), 2, color.RGBA{94, 234, 212, 220}, false)
-	ebitenutil.DebugPrintAt(dst, "SAME RULES / SAME STATE", left, top+116)
+func drawASCIIInset(dst *ebiten.Image, x, y, width, height, tick int) {
+	// This deliberately recognizable ASCII mini-game is a second renderer
+	// concept, not a pixelated copy of the artwork. Alternating frames make the
+	// character motion legible while keeping all rendering on the GPU path.
+	frames := [...]string{
+		"+----------------+\n| SCORE 000120    |\n|       *         |\n|   @==>     <c>  |\n|  /|\\      /\\  |\n|___|______==_____|\n| HP ***          |\n+----------------+",
+		"+----------------+\n| SCORE 000120    |\n|        *        |\n|    @==>  <c>    |\n|   /|\\    /\\    |\n|___/______==_____|\n| HP ***          |\n+----------------+",
+	}
+	ascii := frames[(tick/24)%len(frames)]
+	vector.DrawFilledRect(dst, float32(x), float32(y), float32(width), float32(height), color.RGBA{3, 9, 18, 242}, false)
+	vector.StrokeRect(dst, float32(x)+.5, float32(y)+.5, float32(width)-1, float32(height)-1, 1, color.RGBA{255, 209, 105, 210}, false)
+	ebitenutil.DebugPrintAt(dst, "ASCII GAME MOCK", x+10, y+10)
+	ebitenutil.DebugPrintAt(dst, ascii, x+10, y+34)
 }
 
 func min(a, b int) int {

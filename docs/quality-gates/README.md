@@ -53,7 +53,9 @@ node scripts/check-quality-gates.mjs --family authoring,loop,pedagogy --sample 2
 node scripts/check-quality-gates.mjs --lenses loop,authoring --json
 ```
 
-`ai_feedback_crawler.py` always audits one gate per run. With no `--lens`, it
+`ai_feedback_crawler.py` always audits one gate per run and, by default, asks
+for three independent votes per page. It accepts a finding only when a majority
+both reports an actionable verdict and quotes the same page evidence. With no `--lens`, it
 chooses from all LLM gates. A family such as `--lens pedagogy` narrows that
 random choice; an exact id such as `--lens pedagogy.code-matches-impl` fixes it.
 

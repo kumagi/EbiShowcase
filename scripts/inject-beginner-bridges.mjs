@@ -113,7 +113,7 @@ const notes = {
   "command-fighter":"入力履歴は押した方向・ボタン・時刻を古い順に残すリスト、コマンド認識は末尾の並びが技の決められた順番と一致するか調べること。20フレームより古い入力を捨ててから比較します。|inputs = append(inputs, Input{key, frame})",
   "ebi-fighters":"ラウンドはどちらかの体力が0になるまでの一勝負、体力はあと何回攻撃に耐えられるかの数、対戦ルールは勝利条件と時間制限。ラウンド勝利数を先に2へした側が試合に勝ちます。|if hp<=0 { roundWins[winner]++ }",
   "frame-attack":"60fpsで4フレームは約0.067秒。攻撃矩形はactiveの間だけ出し、その前後は当たりません。|active := frame >= 6 && frame < 10",
-  "guard-throw":"防御状態はガード中というstate、優先順位は同時に起きた判定をどの順で決めるか。投げはガードに勝ち、ガードは打撃に勝ち、打撃は投げの準備に勝つ順で一つだけ選びます。|switch { case throw: state=Throw; case guard: state=Guard }",
+  "guard-throw":"まず技の矩形どうしが重なったかを確かめます。重なった接触の中で、投げはガードに勝ち、ガードは打撃に勝ち、打撃は投げの準備に勝つ優先順位を使います。離れて矩形が重ならなければ、どの技も空振りです。|if boxesOverlap(attackBox, targetBox) { resolvePriority() }",
   "hit-reaction":"攻撃矩形と食らい矩形が重なった一瞬にHPを減らし、同じ出来事からのけぞり演出を始めます。|if attack.Overlaps(hurt) { hp--; state=Hurt }",
   "circle-collision":"中心距離は二円の中心どうしの離れ具合、接触法線は一方の中心からもう一方へ向く長さ1の矢印。中心距離が半径二つの合計より小さければ重なっています。|dx*dx+dy*dy < (ra+rb)*(ra+rb)",
   "falling-circles":"固定時間ステップは毎Updateを同じ短い時間として計算する方法。同じ重力g=.5を毎コマ速度へ足し、円の下端y+rが床を越えたら床-rへ戻します。|vy += .5; y += vy",

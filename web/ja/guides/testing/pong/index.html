@@ -1,27 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="ボールのY座標から、得点なし・上側・下側を返す規則を取り出します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><title>Ebi Showcase – Pong：画面外と得点を分ける</title>
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/testing/pong/">
-    <!-- ogp:start -->
-    <meta property="og:site_name" content="Ebi Showcase">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Pong：画面外と得点を分ける">
-    <meta property="og:description" content="ボールのY座標から、得点なし・上側・下側を返す規則を取り出します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
-    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/guides/testing/pong/">
-    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--pong.png?v=20260713-font1">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Pong：画面外と得点を分ける">
-    <meta property="og:locale" content="ja_JP">
-    <meta property="og:locale:alternate" content="en_US">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Pong：画面外と得点を分ける">
-    <meta name="twitter:description" content="ボールのY座標から、得点なし・上側・下側を返す規則を取り出します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
-    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--pong.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Pong：画面外と得点を分ける">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
-  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
-  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
-  <!-- favicon:end -->
-</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../en/guides/testing/pong/" lang="en">EN</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 05 / 12</p><h1>Pong：画面外と得点を分ける</h1><p>ボールのY座標から、得点なし・上側・下側を返す規則を取り出します。</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>serveには乱数があるため、境界判定と同じテストへ混ぜません。まず誰の得点かを決定的に確認します。</h2><p><strong>Draw:</strong> CPUの強さ、反射音、パドルへの当たり方はプレイ確認です。</p></div><div class="test-case-table"><p class="eyebrow">境界を先に決める</p><table><tbody><tr><th>場内</th><td><code>360</code></td><td><code>得点なし</code></td></tr><tr><th>上へ通過</th><td><code>-20.1</code></td><td><code>player</code></td></tr><tr><th>下へ通過</th><td><code>740.1</code></td><td><code>CPU</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>現行Updateの全手順</h2><p>省略記号はありません。入力から早期return、ループ、勝敗まで、現在ゲームで動く順番です。この中から抽出した純粋関数を直接テストします。</p></div><ol><li><span>01</span><p>プレイヤーのパドルを動かす</p></li><li><span>02</span><p>CPUをボールへ追従させる</p></li><li><span>03</span><p>ボール移動と壁／パドル反射</p></li><li><span>04</span><p>上端／下端の通過を得点へ変換</p></li><li><span>05</span><p>得点後に新しいサーブを作る</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / Update()全文</p><code>games/core/pong/main.go</code></div><pre><code>func (g *game) Update() error {
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="ボールのY座標から、得点なし・上側・下側を返す規則を取り出します。"><title>Pong：画面外と得点を分ける | Ebi Showcase</title><link rel="icon" type="image/png" href="../../../../assets/favicon.png"><link rel="stylesheet" href="../../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../en/guides/testing/pong/" lang="en">EN</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 05 / 12</p><h1>Pong：画面外と得点を分ける</h1><p>ボールのY座標から、得点なし・上側・下側を返す規則を取り出します。</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>serveには乱数があるため、境界判定と同じテストへ混ぜません。まず誰の得点かを決定的に確認します。</h2><p><strong>Draw:</strong> CPUの強さ、反射音、パドルへの当たり方はプレイ確認です。</p></div><div class="test-case-table"><p class="eyebrow">境界を先に決める</p><table><tbody><tr><th>場内</th><td><code>360</code></td><td><code>得点なし</code></td></tr><tr><th>上へ通過</th><td><code>-20.1</code></td><td><code>player</code></td></tr><tr><th>下へ通過</th><td><code>740.1</code></td><td><code>CPU</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>現行Updateの全手順</h2><p>省略記号はありません。入力から早期return、ループ、勝敗まで、現在ゲームで動く順番です。この中から抽出した純粋関数を直接テストします。</p></div><ol><li><span>01</span><p>プレイヤーのパドルを動かす</p></li><li><span>02</span><p>CPUをボールへ追従させる</p></li><li><span>03</span><p>ボール移動と壁／パドル反射</p></li><li><span>04</span><p>上端／下端の通過を得点へ変換</p></li><li><span>05</span><p>得点後に新しいサーブを作る</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / Update()全文</p><code>games/core/pong/main.go</code></div><pre><code>func (g *game) Update() error {
 	g.movePlayer()
 	g.moveCPU()
 	g.bounceBall()
@@ -50,48 +27,33 @@ func ExitScore(y, min, max float64) int {
 import "testing"
 
 func TestExitScore(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name string
 		y    float64
 		want int
 	}{
-		{name: "inside", y: 360, want: -1},
-		{name: "upper boundary stays", y: -20, want: -1},
-		{name: "leaves top", y: -20.1, want: 0},
-		{name: "lower boundary stays", y: 740, want: -1},
-		{name: "leaves bottom", y: 740.1, want: 1},
+		{name: "ball inside field gives no score", y: 360, want: -1},
+		{name: "ball on upper boundary gives no score", y: -20, want: -1},
+		{name: "ball above upper boundary scores for player", y: -20.1, want: 0},
+		{name: "ball on lower boundary gives no score", y: 740, want: -1},
+		{name: "ball below lower boundary scores for CPU", y: 740.1, want: 1},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := ExitScore(tt.y, -20, 740); got != tt.want {
-				t.Fatalf("ExitScore(%v) = %d, want %d", tt.y, got, tt.want)
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got := ExitScore(tc.y, -20, 740)
+
+			if got != tc.want {
+				t.Fatalf("score side = %d, want %d", got, tc.want)
 			}
 		})
 	}
 }
-</code></pre></article></section><section class="test-run"><p>自分のGoプロジェクトに上のファイルを作って実行</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>テストのあとも人が確認すること</h2><p>CPUの強さ、反射音、パドルへの当たり方はプレイ確認です。</p></section><nav class="test-pager"><a href="../flappy/">← 前へ</a><span>5 / 12</span><a href="../space-shooter/">次へ →</a></nav>
-    <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>ベクトルは横の速さvxと縦の速さvyを組にしたもの。符号反転は+を-へ変え、壁へ向かう速さを反対向きにします。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>vx = -vx</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">ひとことフィードバック</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/ja/guides/testing/pong/">
-          <label class="feedback-field">
-            <span class="sr-only">フィードバック</span>
-            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>
+</code></pre></article></section><section class="test-audit"><div><p class="eyebrow">TEST REVIEW / ALL CASES</p><h2>この章のテストを、同じ品質基準で点検済み。</h2></div><div class="test-quality-grid"><article><h3>命名</h3><p>トップレベルは<code>TestExitScore</code>。各<code>t.Run</code>名が「どういう前提なら何を返すか」を文章で示します。<code>whenFoo_shouldBar</code>形式は使いません。</p></article><article><h3>AAA</h3><p>ケースの値で前提を作り、対象関数を一度呼び、その結果だけを比較します。三段落は空行で分け、Arrange / Act / Assertコメントは置きません。</p></article><article><h3>DAMP</h3><p>意味のあるケース名とgot / wantを省略しません。Assertには値の探索ループやswitchを置かず、複数戻り値は別々に検証して失敗理由を一つに絞ります。</p></article><article><h3>テーブル駆動</h3><p>同じ関数へ境界値を渡す反復なので、各行が完全な一件になるテーブル駆動テストを使います。外側のforはケース実行であり、Assertの中の探索ではありません。</p></article></div></section><section class="test-golden test-golden-lesson"><div><p class="eyebrow">DRAW / GOLDEN ONLY</p><h2>この章でDrawも守るなら</h2><p>初期サーブ・パドル・0対0のHUDを固定し、<code>testdata/pong-initial-serve.png</code>と一枚まるごと比較します。座標や描画命令を個別にAssertしません。</p><p>このコードはゲーム側のmain_test.goへ置き、ガイド冒頭のTestMain / assertGoldenと組み合わせます。golden更新前には.actual.pngを必ず目で確認します。</p></div><pre><code>func TestDrawInitialServeMatchesGolden(t *testing.T) {
+	g := newGame()
+	screen := ebiten.NewImage(screenWidth, screenHeight)
+
+	g.Draw(screen)
+
+	assertGolden(t, screen, "testdata/pong-initial-serve.png")
+}</code></pre></section><section class="test-run"><p>自分のGoプロジェクトに上のファイルを作って実行</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>テストのあとも人が確認すること</h2><p>CPUの強さ、反射音、パドルへの当たり方はプレイ確認です。</p></section><nav class="test-pager"><a href="../flappy/">← 前へ</a><span>5 / 12</span><a href="../space-shooter/">次へ →</a></nav></main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

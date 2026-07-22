@@ -37,7 +37,7 @@
 </section>
 <!-- update-draw-contract:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Resolve the result once on the contact tick</h2><p>Split a tool swing into anticipation, contact, flying chips, and recovery.</p></div><pre><code>phase--
-if phase == contactFrame {
+if phase == contactTick {
     block.HP--
     spawnChips()
     shake = 8

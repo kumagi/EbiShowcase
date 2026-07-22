@@ -26,6 +26,29 @@ import (
 const width, height, tile = 480, 720, 48
 const saveKey = "ebiShowcaseQuest."
 
+const (
+	battleChoose = iota
+	battlePlayerAction
+	battleEnemyAction
+)
+
+// A small, explicit route graph makes the world read like a classic tile RPG:
+// # is scenery and . is a walkable road. Every quest target is on one route.
+var worldRoute = [...]string{
+	"##########",
+	"#######..#",
+	"#######..#",
+	"#####....#",
+	"#####.####",
+	"#####.####",
+	"##.......#",
+	"##.##.####",
+	"##.##.####",
+	"#..##.####",
+	"#.....####",
+	"##########",
+}
+
 //go:embed assets/quest-pearl-kingdom.png assets/quest-moon-arena.png assets/quest-party-atlas.png assets/quest-enemy-atlas.png
 var questArtFS embed.FS
 
@@ -42,9 +65,9 @@ var (
 type game struct {
 	x, y, quest, hp, enemyHP, enemyMax, enemy, scene int
 	turn, tick, shake, flash                         int
-	action, actionTick                               int
+	action, actionTick, battlePhase, pendingChoice   int
 	companion, clear                                 bool
-	defend                                           bool
+	defend, effectApplied                            bool
 	message                                          string
 	audio                                            *audio.Context
 	gate                                             audiolab.Gate
@@ -84,12 +107,6 @@ func (g *game) save() {
 }
 func (g *game) Update() error {
 	g.tick++
-	if g.actionTick > 0 {
-		g.actionTick--
-		if g.actionTick == 0 {
-			g.action = 0
-		}
-	}
 	g.cam.Pos = cameralab.Vec{X: float64(g.x * tile), Y: float64(g.y * tile)}
 	if g.shake > 0 {
 		g.shake--
@@ -144,8 +161,12 @@ func (g *game) Update() error {
 		}
 	}
 	if dx != 0 || dy != 0 {
-		g.x = max(0, min(9, g.x+dx))
-		g.y = max(0, min(11, g.y+dy))
+		nextX, nextY := g.x+dx, g.y+dy
+		if !passableTile(nextX, nextY) {
+			g.message = "The reef blocks that route. Follow the glowing road."
+			return nil
+		}
+		g.x, g.y = nextX, nextY
 		switch {
 		case g.quest == 0 && g.x == 2 && g.y == 9:
 			g.quest = 1
@@ -172,6 +193,12 @@ func (g *game) startBattle(enemy, hp int, msg string) {
 	g.enemyHP = hp
 	g.enemyMax = hp
 	g.turn = 0
+	g.battlePhase = battleChoose
+	g.pendingChoice = -1
+	g.action = 0
+	g.actionTick = 0
+	g.effectApplied = false
+	g.defend = false
 	g.message = msg
 }
 func (g *game) resetSave() {
@@ -180,6 +207,11 @@ func (g *game) resetSave() {
 	}
 }
 func (g *game) battle() error {
+	if g.battlePhase != battleChoose {
+		g.advanceBattle()
+		return nil
+	}
+
 	choice := -1
 	if inpututil.IsKeyJustPressed(ebiten.Key1) || inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 		choice = 0
@@ -196,21 +228,92 @@ func (g *game) battle() error {
 	if choice < 0 {
 		return nil
 	}
-	g.action, g.actionTick = choice+1, 30
-	if choice == 0 {
+	g.pendingChoice = choice
+	g.action = choice + 1
+	g.actionTick = 36
+	g.battlePhase = battlePlayerAction
+	g.effectApplied = false
+	g.message = []string{"Ebi rushes in...", "Ebi raises the shell guard...", "Momo begins a healing song..."}[choice]
+	return nil
+}
+
+func (g *game) advanceBattle() {
+	if g.actionTick > 0 {
+		g.actionTick--
+	}
+	if g.actionTick == 18 && !g.effectApplied {
+		if g.battlePhase == battlePlayerAction {
+			g.applyPlayerAction()
+		} else {
+			g.applyEnemyAction()
+		}
+		g.effectApplied = true
+	}
+	if g.actionTick > 0 {
+		return
+	}
+
+	if g.battlePhase == battlePlayerAction {
+		if g.enemyHP <= 0 {
+			g.finishBattle()
+			return
+		}
+		g.battlePhase = battleEnemyAction
+		g.action = 4
+		g.actionTick = 36
+		g.effectApplied = false
+		g.message = "Enemy turn: " + enemyIntentName(g.turn%3)
+		return
+	}
+
+	if g.hp <= 0 {
+		g.hp = 60
+		g.scene = 0
+		g.x, g.y = 2, 9
+		g.message = "The party escaped and recovered in the village."
+		g.save()
+		return
+	}
+	g.turn++
+	g.battlePhase = battleChoose
+	g.pendingChoice = -1
+	g.action = 0
+	g.effectApplied = false
+	g.message = "Your turn. Choose a command for the next intent."
+	g.save()
+}
+
+func (g *game) applyPlayerAction() {
+	switch g.pendingChoice {
+	case 0:
 		d := partyAttackDamage(g.enemy, g.turn, g.companion)
 		g.enemyHP -= d
 		g.play(720)
 		g.flash = 7
 		g.shake = 4
-		g.message = fmt.Sprintf("Ebi and Momo deal %d damage!", d)
-	} else if choice == 1 {
+		g.message = fmt.Sprintf("Party attack: %d damage!", d)
+	case 1:
 		g.defend = true
-		g.message = "Ebi braces for the next attack!"
-	} else {
+		g.message = "Shell guard ready: the next hit is halved."
+	case 2:
+		before := g.hp
 		g.hp = min(60, g.hp+15)
-		g.message = "Momo's song restores 15 HP!"
+		g.play(540)
+		g.message = fmt.Sprintf("Momo restores %d HP!", g.hp-before)
 	}
+}
+
+func (g *game) applyEnemyAction() {
+	intent := g.turn % 3
+	damage := enemyAttackDamage(g.enemy, intent, g.defend)
+	g.defend = false
+	g.hp -= damage
+	g.play(180)
+	g.shake = 7
+	g.message = fmt.Sprintf("%s: party takes %d damage.", enemyIntentName(intent), damage)
+}
+
+func (g *game) finishBattle() {
 	if g.enemyHP <= 0 {
 		g.quest++
 		g.scene = 0
@@ -225,30 +328,8 @@ func (g *game) battle() error {
 			g.message = "Shadow Crab defeated! Return to the village."
 		}
 		g.save()
-		return nil
+		return
 	}
-	intent := g.turn % 3
-	damage := enemyAttackDamage(g.enemy, intent, g.defend)
-	g.defend = false
-	g.hp -= damage
-	g.play(180)
-	g.turn++
-	g.shake = 7
-	if intent == 1 {
-		g.message = fmt.Sprintf("Heavy attack! Party takes %d.", damage)
-	} else if intent == 2 {
-		g.message = fmt.Sprintf("Quick attack! Party takes %d.", damage)
-	} else {
-		g.message = fmt.Sprintf("Enemy attacks for %d.", damage)
-	}
-	if g.hp <= 0 {
-		g.hp = 60
-		g.scene = 0
-		g.x, g.y = 2, 9
-		g.message = "The party escaped and recovered in the village."
-	}
-	g.save()
-	return nil
 }
 func (g *game) play(hz float64) {
 	g.gate.Arm(true)
@@ -277,6 +358,7 @@ func (g *game) Draw(s *ebiten.Image) {
 	}
 	drawQuestCover(s, questArt["world"], 0, 0, width, height)
 	vector.DrawFilledRect(s, 0, 0, width, height, color.RGBA{3, 20, 35, 14}, false)
+	drawWorldRoute(s)
 
 	// The painted landmarks are the actual quest graph, not detached key art.
 	drawMapLabel(s, "PEARL VILLAGE", 14, 548)
@@ -334,6 +416,10 @@ func (g *game) drawBattle(s *ebiten.Image) {
 	enemyW := []float64{150, 178, 235}[g.enemy]
 	enemyH := []float64{145, 220, 205}[g.enemy]
 	enemyX := 285.0 + ox - enemyW/2
+	actionPulse := battleActionPulse(g.actionTick)
+	if g.action == 4 {
+		enemyX -= 48 * actionPulse
+	}
 	enemyY := []float64{148, 115, 128}[g.enemy] + math.Sin(float64(g.tick)*.08)*3
 	vector.DrawFilledCircle(s, float32(285+ox), float32(enemyY+enemyH*.78), float32(enemyW*.34), color.RGBA{2, 10, 25, 100}, true)
 	drawQuestContain(s, questEnemies[g.enemy], enemyX, enemyY, enemyW, enemyH, false, 1, g.flash > 0)
@@ -343,7 +429,7 @@ func (g *game) drawBattle(s *ebiten.Image) {
 	ebiX, ebiY := 30.0, 330.0
 	momoX, momoY := 132.0, 354.0
 	if g.action == 1 {
-		ebiX += float64(30 - g.actionTick)
+		ebiX += 72 * actionPulse
 		vector.StrokeLine(s, float32(ebiX+94), 387, 274, 270, 7, color.RGBA{115, 244, 255, 205}, true)
 	}
 	partyShake := 0.0
@@ -381,6 +467,8 @@ func (g *game) drawBattle(s *ebiten.Image) {
 		intentColor = color.RGBA{255, 154, 115, 255}
 	}
 	drawCenteredQuestLabel(s, "NEXT  •  "+intent, 240, 79, questFace14, intentColor)
+	phaseLabel := []string{"CHOOSE A COMMAND", "PARTY ACTION", "ENEMY ACTION"}[g.battlePhase]
+	drawCenteredQuestLabel(s, phaseLabel, 240, 98, questFace14, color.RGBA{255, 238, 181, 255})
 
 	vector.DrawFilledRect(s, 20, 467, 440, 72, color.RGBA{4, 14, 29, 226}, true)
 	vector.StrokeRect(s, 20, 467, 440, 72, 2, color.RGBA{112, 225, 238, 150}, true)
@@ -389,6 +477,10 @@ func (g *game) drawBattle(s *ebiten.Image) {
 	drawBattleButton(s, 0, 12, "1  ATTACK", color.RGBA{27, 127, 133, 245})
 	drawBattleButton(s, 1, 167, "2  GUARD", color.RGBA{45, 77, 137, 245})
 	drawBattleButton(s, 2, 322, "3  SONG", color.RGBA{133, 72, 119, 245})
+	if g.battlePhase != battleChoose {
+		vector.DrawFilledRect(s, 12, 550, 455, 88, color.RGBA{4, 12, 26, 145}, true)
+		drawCenteredQuestLabel(s, "RESOLVING — WATCH EACH ACTION", 240, 581, questFace14, color.RGBA{255, 238, 181, 255})
+	}
 	drawCenteredQuestLabel(s, "TAP A COMMAND   •   ENEMY INTENT IS SHOWN ABOVE", 240, 654, questFace14, color.RGBA{231, 238, 245, 255})
 	g.drawBadge(s)
 }
@@ -498,6 +590,20 @@ func drawMapLabel(dst *ebiten.Image, label string, x, y float64) {
 	drawQuestLabel(dst, label, x+8, y+4, questFace14, color.RGBA{255, 242, 209, 255})
 }
 
+func drawWorldRoute(dst *ebiten.Image) {
+	for y, row := range worldRoute {
+		for x, cell := range row {
+			if cell != '.' {
+				continue
+			}
+			px, py := float32(x*tile), float32(74+y*tile)
+			vector.DrawFilledRect(dst, px+4, py+4, float32(tile-8), float32(tile-8), color.RGBA{77, 222, 221, 38}, true)
+			vector.StrokeRect(dst, px+5, py+5, float32(tile-10), float32(tile-10), 1, color.RGBA{188, 250, 224, 115}, true)
+			vector.DrawFilledCircle(dst, px+float32(tile)/2, py+float32(tile)/2, 3, color.RGBA{255, 238, 153, 180}, true)
+		}
+	}
+}
+
 func drawBattleButton(dst *ebiten.Image, action int, x float64, label string, fill color.RGBA) {
 	vector.DrawFilledRect(dst, float32(x), 550, 145, 88, fill, true)
 	vector.StrokeRect(dst, float32(x), 550, 145, 88, 3, color.RGBA{255, 235, 190, 175}, true)
@@ -548,6 +654,21 @@ func enemyAttackDamage(enemy, intent int, defend bool) int {
 		damage = (damage + 1) / 2
 	}
 	return damage
+}
+
+func enemyIntentName(intent int) string {
+	return []string{"NORMAL ATTACK", "HEAVY ATTACK", "QUICK ATTACK"}[intent]
+}
+
+func battleActionPulse(actionTick int) float64 {
+	if actionTick <= 0 || actionTick >= 36 {
+		return 0
+	}
+	return 1 - math.Abs(float64(actionTick-18))/18
+}
+
+func passableTile(x, y int) bool {
+	return y >= 0 && y < len(worldRoute) && x >= 0 && x < len(worldRoute[y]) && worldRoute[y][x] == '.'
 }
 
 func press() (int, int, bool) {

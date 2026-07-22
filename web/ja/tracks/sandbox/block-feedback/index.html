@@ -37,7 +37,7 @@
 </section>
 <!-- update-draw-contract:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>接触tickで結果を一度だけ決める</h2><p>道具を振りかぶり、当て、破片が飛び、元の姿勢へ戻るまでを時間に分けます。</p></div><pre><code>phase--
-if phase == contactFrame {
+if phase == contactTick {
     block.HP--
     spawnChips()
     shake = 8

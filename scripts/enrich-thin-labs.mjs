@@ -279,7 +279,7 @@ const specs = {
       eye: "TRY IT / DROP CLOCK",
       title: "時計が満ちたときだけ1マス落とす",
       body: "「1 tick進める」たびにタイマーが増えます。満タンになると1マス落下。下にブロックがあると LOCK して上から再開。tickごとに落とすと一瞬で床へ着くので、時計で間引きます。",
-      hint: "本番は 38 tickで1マス。ラボはわかりやすく 8 tickで再現しています。",
+      hint: "本番は38 tickで1マス。ラボはわかりやすく8 tickで再現しています。",
       controls: [
         ["data-lab-step", "1 tick進める", "lab-button-primary"],
         ["data-lab-reset", "時計を0へ", "lab-button-quiet"],

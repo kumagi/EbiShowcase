@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import concurrent.futures
 import hashlib
 import html
 import json
@@ -44,6 +45,56 @@ MAX_SUGGESTION_CHARS = 190
 # Keep accidental form submissions small even when a large crawl size is
 # copied from a dry-run command.
 MAX_SUBMIT_PAGES = 25
+DEFAULT_REVIEW_ROUNDS = 3
+CONSENSUS_VERSION = 1
+GATE_REVIEW_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "gate_id": {"type": "string"},
+        "verdict": {"type": "string", "enum": ["fail", "warn", "pass"]},
+        "evidence": {"type": "string"},
+        "fix": {"type": "string"},
+    },
+    "required": ["gate_id", "verdict", "evidence", "fix"],
+    "additionalProperties": False,
+}
+REVIEW_REQUEST_ERRORS = (
+    HTTPError,
+    URLError,
+    TimeoutError,
+    OSError,
+    KeyError,
+    ValueError,
+    json.JSONDecodeError,
+    RuntimeError,
+)
+
+
+@dataclass(frozen=True)
+class GateReview:
+    """One validated vote for a single catalog gate."""
+
+    gate_id: str
+    verdict: str
+    evidence: str
+    fix: str
+
+    @property
+    def actionable(self) -> bool:
+        return self.verdict in {"fail", "warn"}
+
+    def suggestion(self) -> str:
+        return normalize_suggestion(
+            json.dumps(
+                {
+                    "gate_id": self.gate_id,
+                    "verdict": self.verdict,
+                    "evidence": self.evidence,
+                    "fix": self.fix,
+                },
+                ensure_ascii=False,
+            )
+        )
 
 
 def normalize_url(url: str) -> str:
@@ -389,6 +440,18 @@ class StateStore:
             CREATE TABLE IF NOT EXISTS frontier (
                 url TEXT PRIMARY KEY,
                 queued_at REAL NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS review_votes (
+                url TEXT NOT NULL,
+                review_hash TEXT NOT NULL,
+                round_number INTEGER NOT NULL,
+                gate_id TEXT,
+                verdict TEXT,
+                evidence TEXT,
+                fix TEXT,
+                error TEXT,
+                generated_at REAL NOT NULL,
+                PRIMARY KEY(url, review_hash, round_number)
             )"""
         )
         self.db.commit()
@@ -455,6 +518,31 @@ class StateStore:
 
     def mark_submitted(self, url: str) -> None:
         self.db.execute("UPDATE pages SET submitted_at = ? WHERE url = ?", (time.time(), url))
+        self.db.commit()
+
+    def save_review_votes(self, url: str, review_hash: str, rounds: list[dict]) -> None:
+        """Persist independent votes so a consensus can be audited later."""
+
+        self.db.execute("DELETE FROM review_votes WHERE url = ? AND review_hash = ?", (url, review_hash))
+        self.db.executemany(
+            """INSERT INTO review_votes(
+                   url, review_hash, round_number, gate_id, verdict, evidence, fix, error, generated_at
+               ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (
+                (
+                    url,
+                    review_hash,
+                    item["round_number"],
+                    item.get("gate_id"),
+                    item.get("verdict"),
+                    item.get("evidence"),
+                    item.get("fix"),
+                    item.get("error"),
+                    time.time(),
+                )
+                for item in rounds
+            ),
+        )
         self.db.commit()
 
 
@@ -551,14 +639,17 @@ HEADINGS: {' / '.join(page.headings[:16])}
 TEXT: {page.text}
 END UNTRUSTED PAGE MATERIAL"""
 
-    def suggest(self, page: Page) -> str:
+    def _inapplicable_gate_review(self, page: Page) -> GateReview | None:
         if self.gate_review and len(self.gate_ids) == 1:
             gate_id = next(iter(self.gate_ids))
             page_kind = classify_page(page.url)
             if self.gate_applies_to and page_kind not in self.gate_applies_to:
-                return f"[pass] {gate_id}: gate does not apply to page kind {page_kind or 'unknown'}"
+                return GateReview(gate_id, "pass", f"Gate does not apply to page kind {page_kind or 'unknown'}.", "")
             if self.gate_languages and page.language not in self.gate_languages:
-                return f"[pass] {gate_id}: gate does not apply to language {page.language}"
+                return GateReview(gate_id, "pass", f"Gate does not apply to language {page.language}.", "")
+        return None
+
+    def _request_content(self, page: Page) -> str:
         output_contract = (
             "Return JSON only with string keys gate_id, verdict, evidence, fix. "
             "verdict must be fail, warn, or pass."
@@ -579,16 +670,16 @@ END UNTRUSTED PAGE MATERIAL"""
             # Ollama's OpenAI-compatible path often leaves content empty for
             # thinking models; the native /api/chat + think=false returns the
             # final answer in message.content reliably.
-            response = self._json_request(
-                f"{self._native_ollama_root()}/api/chat",
-                {
-                    "model": self.model,
-                    "stream": False,
-                    "think": False,
-                    "options": {"temperature": 0.35, "num_predict": 256},
-                    "messages": messages,
-                },
-            )
+            payload = {
+                "model": self.model,
+                "stream": False,
+                "think": False,
+                "options": {"temperature": 0.35, "num_predict": 256},
+                "messages": messages,
+            }
+            if self.gate_review:
+                payload["format"] = GATE_REVIEW_SCHEMA
+            response = self._json_request(f"{self._native_ollama_root()}/api/chat", payload)
             content = (response.get("message") or {}).get("content") or ""
         else:
             payload: dict = {
@@ -612,16 +703,29 @@ END UNTRUSTED PAGE MATERIAL"""
                 raise ValueError("model response stopped at max_tokens (partial output)")
         if not content:
             raise ValueError(f"{self.provider} returned no final content")
+        return content
+
+    def review_gate(self, page: Page) -> GateReview:
+        """Return one independently sampled, locally validated gate vote."""
+
+        if not self.gate_review:
+            raise ValueError("structured gate review is not enabled")
+        inapplicable = self._inapplicable_gate_review(page)
+        if inapplicable:
+            return inapplicable
+        return parse_gate_review_response(self._request_content(page), page, self.gate_ids)
+
+    def suggest(self, page: Page) -> str:
         if self.gate_review:
-            content = validate_gate_review_response(content, page, self.gate_ids)
-        return normalize_suggestion(content)
+            return self.review_gate(page).suggestion()
+        return normalize_suggestion(self._request_content(page))
 
 # Backwards-compatible alias for imports / older call sites.
 LMStudio = ChatClient
 
 
-def validate_gate_review_response(raw: str, page: Page, allowed_gate_ids: set[str]) -> str:
-    """Turn unsupported local-model gate findings into a safe pass result."""
+def parse_gate_review_response(raw: str, page: Page, allowed_gate_ids: set[str]) -> GateReview:
+    """Parse one vote, turning unsupported findings into a safe pass."""
 
     cleaned = raw.strip()
     cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", cleaned, flags=re.IGNORECASE | re.DOTALL).strip()
@@ -639,18 +743,9 @@ def validate_gate_review_response(raw: str, page: Page, allowed_gate_ids: set[st
     fallback_gate = sorted(allowed_gate_ids)[0] if allowed_gate_ids else gate_id or "?"
 
     if gate_id not in allowed_gate_ids or verdict not in {"fail", "warn", "pass"}:
-        return json.dumps(
-            {
-                "gate_id": fallback_gate,
-                "verdict": "pass",
-                "evidence": "No valid selected-gate verdict was returned.",
-                "fix": "",
-            },
-            ensure_ascii=False,
-        )
+        return GateReview(fallback_gate, "pass", "No valid selected-gate verdict was returned.", "")
     if verdict == "pass":
-        result["fix"] = ""
-        return json.dumps(result, ensure_ascii=False)
+        return GateReview(gate_id, "pass", evidence, "")
 
     # fail/warn evidence must contain only literal supplied quotes, not a model
     # paraphrase or an inference about an unseen file/runtime. Multiple
@@ -658,19 +753,160 @@ def validate_gate_review_response(raw: str, page: Page, allowed_gate_ids: set[st
     quotes = [part.strip(" \t\r\n\"'“”‘’`") for part in evidence.split("|")]
     page_material = clean_text(" ".join([page.title, *page.headings, page.text]))
     if not quotes or any(len(quote) < 6 or quote not in page_material for quote in quotes) or not fix:
-        return json.dumps(
-            {
-                "gate_id": gate_id,
-                "verdict": "pass",
-                "evidence": "No exact supplied quote proves this gate is violated.",
-                "fix": "",
-            },
-            ensure_ascii=False,
-        )
+        return GateReview(gate_id, "pass", "No exact supplied quote proves this gate is violated.", "")
+    return GateReview(gate_id, verdict, " | ".join(quotes), fix)
+
+
+def validate_gate_review_response(raw: str, page: Page, allowed_gate_ids: set[str]) -> str:
+    """Backward-compatible JSON wrapper around gate-vote validation."""
+
+    review = parse_gate_review_response(raw, page, allowed_gate_ids)
     return json.dumps(
-        {"gate_id": gate_id, "verdict": verdict, "evidence": " | ".join(quotes), "fix": fix},
+        {
+            "gate_id": review.gate_id,
+            "verdict": review.verdict,
+            "evidence": review.evidence,
+            "fix": review.fix,
+        },
         ensure_ascii=False,
     )
+
+
+def evidence_agrees(left: str, right: str) -> bool:
+    """Whether two votes quote the same supplied page fragment."""
+
+    left_parts = [clean_text(part).casefold() for part in left.split("|") if clean_text(part)]
+    right_parts = [clean_text(part).casefold() for part in right.split("|") if clean_text(part)]
+
+    def matches(part: str, candidates: list[str]) -> bool:
+        return any(
+            part in candidate or candidate in part
+            for candidate in candidates
+            if min(len(part), len(candidate)) >= 6
+        )
+
+    # Require bilateral coverage. For a gate that needs two separate quotes,
+    # agreeing on only one generic fragment is not consensus on the defect.
+    return bool(left_parts and right_parts) and all(matches(part, right_parts) for part in left_parts) and all(
+        matches(part, left_parts) for part in right_parts
+    )
+
+
+class ConsensusReviewer:
+    """Run independent gate reviews and keep only an evidenced majority."""
+
+    def __init__(self, client: ChatClient, rounds: int = DEFAULT_REVIEW_ROUNDS, workers: int = 1):
+        if not client.gate_review:
+            raise ValueError("consensus review requires a selected quality gate")
+        if rounds < 1 or rounds % 2 == 0:
+            raise ValueError("review rounds must be a positive odd number")
+        if workers < 1 or workers > rounds:
+            raise ValueError("review workers must be between 1 and the number of rounds")
+        self.client = client
+        self.rounds = rounds
+        self.workers = workers
+        self.quorum = rounds // 2 + 1
+        self.last_rounds: list[dict] = []
+
+    def ensure_model(self) -> None:
+        self.client.ensure_model()
+
+    def _review_one(self, round_number: int, page: Page) -> tuple[int, GateReview]:
+        return round_number, self.client.review_gate(page)
+
+    def suggest(self, page: Page) -> str:
+        self.last_rounds = []
+        completed: list[tuple[int, GateReview]] = []
+        errors: list[tuple[int, Exception]] = []
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=self.workers) as executor:
+            futures = {
+                executor.submit(self._review_one, round_number, page): round_number
+                for round_number in range(1, self.rounds + 1)
+            }
+            for future in concurrent.futures.as_completed(futures):
+                round_number = futures[future]
+                try:
+                    completed.append(future.result())
+                except REVIEW_REQUEST_ERRORS as exc:
+                    # Each failed model vote is recorded; quorum must still
+                    # succeed. Programming errors intentionally escape.
+                    errors.append((round_number, exc))
+
+        completed.sort(key=lambda item: item[0])
+        errors.sort(key=lambda item: item[0])
+        by_round = {round_number: review for round_number, review in completed}
+        error_by_round = {round_number: exc for round_number, exc in errors}
+        for round_number in range(1, self.rounds + 1):
+            if review := by_round.get(round_number):
+                self.last_rounds.append(
+                    {
+                        "round_number": round_number,
+                        "gate_id": review.gate_id,
+                        "verdict": review.verdict,
+                        "evidence": review.evidence,
+                        "fix": review.fix,
+                    }
+                )
+            else:
+                self.last_rounds.append(
+                    {
+                        "round_number": round_number,
+                        "error": clean_text(str(error_by_round[round_number]))[:500],
+                    }
+                )
+
+        if len(completed) < self.quorum:
+            raise ValueError(
+                f"consensus unavailable: only {len(completed)}/{self.rounds} review rounds succeeded"
+            )
+
+        reviews = [review for _, review in completed]
+        gate_id = reviews[0].gate_id
+        actionable = [review for review in reviews if review.actionable and review.gate_id == gate_id]
+        if len(actionable) < self.quorum:
+            result = GateReview(
+                gate_id,
+                "pass",
+                f"Consensus: {len(actionable)}/{self.rounds} reviewers found an evidenced issue.",
+                "",
+            )
+            print(
+                f"[consensus] {gate_id}: {len(actionable)}/{self.rounds} actionable; pass",
+                file=sys.stderr,
+            )
+            return result.suggestion()
+
+        groups = [
+            [candidate for candidate in actionable if evidence_agrees(anchor.evidence, candidate.evidence)]
+            for anchor in actionable
+        ]
+        agreeing = max(groups, key=len)
+        if len(agreeing) < self.quorum:
+            result = GateReview(
+                gate_id,
+                "pass",
+                "Consensus rejected: actionable votes quoted different page evidence.",
+                "",
+            )
+            print(
+                f"[consensus] {gate_id}: {len(actionable)}/{self.rounds} actionable but evidence disagreed; pass",
+                file=sys.stderr,
+            )
+            return result.suggestion()
+
+        # A mixed fail/warn majority becomes warn unless fail itself has a
+        # majority. Pick the shortest agreed vote to fit the public form.
+        verdict = "fail" if sum(review.verdict == "fail" for review in agreeing) >= self.quorum else "warn"
+        representatives = [review for review in agreeing if review.verdict == verdict] or agreeing
+        representative = min(representatives, key=lambda review: len(review.evidence) + len(review.fix))
+        result = GateReview(gate_id, verdict, representative.evidence, representative.fix)
+        print(
+            f"[consensus] {gate_id}: {len(actionable)}/{self.rounds} actionable, "
+            f"{len(agreeing)} evidence agreement; {verdict}",
+            file=sys.stderr,
+        )
+        return result.suggestion()
 
 
 def normalize_suggestion(raw: str) -> str:
@@ -801,6 +1037,18 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--reviews",
+        type=int,
+        default=DEFAULT_REVIEW_ROUNDS,
+        help="independent gate-review rounds per page; must be odd (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--review-workers",
+        type=int,
+        default=DEFAULT_REVIEW_ROUNDS,
+        help="concurrent local-model requests, at most --reviews (default: %(default)s)",
+    )
+    parser.add_argument(
         "--model",
         default=DEFAULT_MODEL,
         help="chat model id (LM Studio default: %(default)s; for Ollama pass e.g. qwen3.6:latest)",
@@ -843,6 +1091,12 @@ def validate_args(args: argparse.Namespace) -> None:
         raise SystemExit("--submit cannot be combined with --force; change the page or review lens instead")
     if args.submit and args.max_pages > MAX_SUBMIT_PAGES:
         raise SystemExit(f"--submit accepts at most {MAX_SUBMIT_PAGES} pages per run")
+    reviews = getattr(args, "reviews", 1)
+    workers = getattr(args, "review_workers", 1)
+    if reviews < 1 or reviews % 2 == 0:
+        raise SystemExit("--reviews must be a positive odd number")
+    if workers < 1 or workers > reviews:
+        raise SystemExit("--review-workers must be between 1 and --reviews")
 
 
 def run_batch(args: argparse.Namespace, store: StateStore, model: ChatClient) -> int:
@@ -868,10 +1122,14 @@ def run_batch(args: argparse.Namespace, store: StateStore, model: ChatClient) ->
         else:
             try:
                 suggestion = model.suggest(page)
-            except (HTTPError, URLError, TimeoutError, OSError, KeyError, ValueError, json.JSONDecodeError, RuntimeError) as exc:
+            except REVIEW_REQUEST_ERRORS as exc:
+                if rounds := getattr(model, "last_rounds", None):
+                    store.save_review_votes(page.url, review_hash, rounds)
                 print(f"[model skipped] {page.url}: {exc}", file=sys.stderr)
                 continue
             store.save(page, suggestion, content_hash=review_hash)
+            if rounds := getattr(model, "last_rounds", None):
+                store.save_review_votes(page.url, review_hash, rounds)
             generated += 1
         if re.match(r"(?i)^\[pass\](?:\s|$)", suggestion):
             # Keep the audit result in local state so unchanged pages are not
@@ -905,7 +1163,16 @@ def main() -> int:
     # Cache identity includes the full instructions, not just gate ids, so a
     # catalog wording/policy improvement automatically triggers a fresh audit.
     review_config = json.dumps(
-        {"lenses": lenses, "review_policy": review_policy},
+        {
+            "lenses": lenses,
+            "review_policy": review_policy,
+            "consensus_version": CONSENSUS_VERSION,
+            "reviews": args.reviews,
+            "instruction": args.instruction,
+            "provider": provider,
+            "base_url": base_url,
+            "model": model_name,
+        },
         ensure_ascii=False,
         sort_keys=True,
     )
@@ -919,7 +1186,7 @@ def main() -> int:
         else args.instruction
     )
     store = StateStore(args.state_file)
-    model = ChatClient(
+    client = ChatClient(
         base_url,
         model_name,
         args.timeout,
@@ -930,9 +1197,10 @@ def main() -> int:
         gate_applies_to=lenses[0].get("applies_to", []) if lenses else [],
         gate_languages=lenses[0].get("languages", ["ja", "en"]) if lenses else [],
     )
+    model = ConsensusReviewer(client, rounds=args.reviews, workers=args.review_workers) if lenses else client
     try:
         model.ensure_model()
-    except (HTTPError, URLError, TimeoutError, OSError, KeyError, json.JSONDecodeError, RuntimeError) as exc:
+    except REVIEW_REQUEST_ERRORS as exc:
         raise SystemExit(f"Cannot connect to {provider} at {base_url}: {exc}") from exc
     while True:
         run_batch(args, store, model)

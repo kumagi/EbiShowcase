@@ -1,27 +1,4 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="0〜1のprogressを進め、完了したかを返す関数へ分離します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><title>Ebi Showcase – 倉庫番：補間の完了を状態遷移にする</title>
-  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/testing/sokoban/">
-    <!-- ogp:start -->
-    <meta property="og:site_name" content="Ebi Showcase">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – 倉庫番：補間の完了を状態遷移にする">
-    <meta property="og:description" content="0〜1のprogressを進め、完了したかを返す関数へ分離します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
-    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/guides/testing/sokoban/">
-    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--sokoban.png?v=20260713-font1">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="倉庫番：補間の完了を状態遷移にする">
-    <meta property="og:locale" content="ja_JP">
-    <meta property="og:locale:alternate" content="en_US">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – 倉庫番：補間の完了を状態遷移にする">
-    <meta name="twitter:description" content="0〜1のprogressを進め、完了したかを返す関数へ分離します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
-    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--sokoban.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="倉庫番：補間の完了を状態遷移にする">
-    <!-- ogp:end --><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
-  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
-  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
-  <!-- favicon:end -->
-</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../en/guides/testing/sokoban/" lang="en">EN</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 09 / 12</p><h1>倉庫番：補間の完了を状態遷移にする</h1><p>0〜1のprogressを進め、完了したかを返す関数へ分離します。</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Drawはprogressを読むだけです。playerやboxの確定はUpdateに残し、0.98+0.14が必ず1で完了することをテストします。</h2><p><strong>Draw:</strong> 滑らかさ、箱の重さ、ゴールの見やすさはプレイ確認です。</p></div><div class="test-case-table"><p class="eyebrow">境界を先に決める</p><table><tbody><tr><th>途中</th><td><code>0.28+0.14</code></td><td><code>0.42,false</code></td></tr><tr><th>完了</th><td><code>0.98+0.14</code></td><td><code>1,true</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>現行Updateの全手順</h2><p>省略記号はありません。入力から早期return、ループ、勝敗まで、現在ゲームで動く順番です。この中から抽出した純粋関数を直接テストします。</p></div><ol><li><span>01</span><p>Rで全体リセット</p></li><li><span>02</span><p>停止中だけUndo</p></li><li><span>03</span><p>クリア後は再開だけ</p></li><li><span>04</span><p>移動中は補間だけ進め入力を無視</p></li><li><span>05</span><p>完了時にplayer／boxを確定しクリア判定</p></li><li><span>06</span><p>停止中だけ新しい移動を計画</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / Update()全文</p><code>games/core/sokoban/main.go</code></div><pre><code>func (g *game) Update() error {
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="0〜1のprogressを進め、完了したかを返す関数へ分離します。"><title>倉庫番：補間の完了を状態遷移にする | Ebi Showcase</title><link rel="icon" type="image/png" href="../../../../assets/favicon.png"><link rel="stylesheet" href="../../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../en/guides/testing/sokoban/" lang="en">EN</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 09 / 12</p><h1>倉庫番：補間の完了を状態遷移にする</h1><p>0〜1のprogressを進め、完了したかを返す関数へ分離します。</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Drawはprogressを読むだけです。playerやboxの確定はUpdateに残し、0.98+0.14が必ず1で完了することをテストします。</h2><p><strong>Draw:</strong> 滑らかさ、箱の重さ、ゴールの見やすさはプレイ確認です。</p></div><div class="test-case-table"><p class="eyebrow">境界を先に決める</p><table><tbody><tr><th>途中</th><td><code>0.28+0.14</code></td><td><code>0.42,false</code></td></tr><tr><th>完了</th><td><code>0.98+0.14</code></td><td><code>1,true</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>現行Updateの全手順</h2><p>省略記号はありません。入力から早期return、ループ、勝敗まで、現在ゲームで動く順番です。この中から抽出した純粋関数を直接テストします。</p></div><ol><li><span>01</span><p>Rで全体リセット</p></li><li><span>02</span><p>停止中だけUndo</p></li><li><span>03</span><p>クリア後は再開だけ</p></li><li><span>04</span><p>移動中は補間だけ進め入力を無視</p></li><li><span>05</span><p>完了時にplayer／boxを確定しクリア判定</p></li><li><span>06</span><p>停止中だけ新しい移動を計画</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / Update()全文</p><code>games/core/sokoban/main.go</code></div><pre><code>func (g *game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
 		*g = *newGame()
 		return nil
@@ -73,48 +50,37 @@ import (
 	"testing"
 )
 
+const floatTolerance = 1e-9
+
 func TestAdvanceTween(t *testing.T) {
-	tests := []struct {
+	testCases := []struct {
 		name         string
 		progress     float64
 		wantProgress float64
 		wantComplete bool
 	}{
-		{name: "in progress", progress: 0.28, wantProgress: 0.42},
-		{name: "reaches end", progress: 0.98, wantProgress: 1, wantComplete: true},
+		{name: "step below end stays incomplete", progress: 0.28, wantProgress: 0.42, wantComplete: false},
+		{name: "step past end clamps and completes", progress: 0.98, wantProgress: 1, wantComplete: true},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, complete := AdvanceTween(tt.progress, 0.14)
-			if math.Abs(got-tt.wantProgress) &gt; 1e-9 || complete != tt.wantComplete {
-				t.Fatalf("AdvanceTween() = (%v, %v), want (%v, %v)", got, complete, tt.wantProgress, tt.wantComplete)
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			gotProgress, gotComplete := AdvanceTween(tc.progress, 0.14)
+
+			if math.Abs(gotProgress-tc.wantProgress) &gt; floatTolerance {
+				t.Errorf("progress = %v, want %v", gotProgress, tc.wantProgress)
+			}
+			if gotComplete != tc.wantComplete {
+				t.Errorf("complete = %v, want %v", gotComplete, tc.wantComplete)
 			}
 		})
 	}
 }
-</code></pre></article></section><section class="test-run"><p>自分のGoプロジェクトに上のファイルを作って実行</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>テストのあとも人が確認すること</h2><p>滑らかさ、箱の重さ、ゴールの見やすさはプレイ確認です。</p></section><nav class="test-pager"><a href="../snake/">← 前へ</a><span>9 / 12</span><a href="../platformer/">次へ →</a></nav>
-    <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>論理座標は『何列・何行』、描画座標は画面のピクセル。天次郎が1マス動く間はmoving=trueにして入力を待たせ、Drawだけ途中位置を描きます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>if moving { progress++; return nil }</code></pre></div></section>
-<!-- END BEGINNER BRIDGE -->
-<section class="feedback-section" aria-labelledby="feedback-title">
-      <div class="feedback-card">
-        <div class="feedback-heading">
-          <p class="eyebrow">FEEDBACK</p>
-          <h2 id="feedback-title">ひとことフィードバック</h2>
-        </div>
-        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
-          <input type="hidden" name="entry.765794446" value="/ja/guides/testing/sokoban/">
-          <label class="feedback-field">
-            <span class="sr-only">フィードバック</span>
-            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
-          </label>
-          <div class="feedback-actions">
-            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
-            <p class="feedback-status" aria-live="polite"></p>
-          </div>
-          <input type="hidden" name="fvv" value="1">
-          <input type="hidden" name="pageHistory" value="0">
-        </form>
-      </div>
-    </section>
-</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>
+</code></pre></article></section><section class="test-audit"><div><p class="eyebrow">TEST REVIEW / ALL CASES</p><h2>この章のテストを、同じ品質基準で点検済み。</h2></div><div class="test-quality-grid"><article><h3>命名</h3><p>トップレベルは<code>TestAdvanceTween</code>。各<code>t.Run</code>名が「どういう前提なら何を返すか」を文章で示します。<code>whenFoo_shouldBar</code>形式は使いません。</p></article><article><h3>AAA</h3><p>ケースの値で前提を作り、対象関数を一度呼び、その結果だけを比較します。三段落は空行で分け、Arrange / Act / Assertコメントは置きません。</p></article><article><h3>DAMP</h3><p>意味のあるケース名とgot / wantを省略しません。Assertには値の探索ループやswitchを置かず、複数戻り値は別々に検証して失敗理由を一つに絞ります。</p></article><article><h3>テーブル駆動</h3><p>同じ関数へ境界値を渡す反復なので、各行が完全な一件になるテーブル駆動テストを使います。外側のforはケース実行であり、Assertの中の探索ではありません。</p></article></div></section><section class="test-golden test-golden-lesson"><div><p class="eyebrow">DRAW / GOLDEN ONLY</p><h2>この章でDrawも守るなら</h2><p>初期の壁・箱・ゴール・プレイヤーを固定し、<code>testdata/sokoban-initial.png</code>と一枚まるごと比較します。座標や描画命令を個別にAssertしません。</p><p>このコードはゲーム側のmain_test.goへ置き、ガイド冒頭のTestMain / assertGoldenと組み合わせます。golden更新前には.actual.pngを必ず目で確認します。</p></div><pre><code>func TestDrawInitialBoardMatchesGolden(t *testing.T) {
+	g := newGame()
+	screen := ebiten.NewImage(screenWidth, screenHeight)
+
+	g.Draw(screen)
+
+	assertGolden(t, screen, "testdata/sokoban-initial.png")
+}</code></pre></section><section class="test-run"><p>自分のGoプロジェクトに上のファイルを作って実行</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>テストのあとも人が確認すること</h2><p>滑らかさ、箱の重さ、ゴールの見やすさはプレイ確認です。</p></section><nav class="test-pager"><a href="../snake/">← 前へ</a><span>9 / 12</span><a href="../platformer/">次へ →</a></nav></main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>
