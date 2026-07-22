@@ -72,6 +72,18 @@ for (const entry of curriculum) {
 }
 
 for (const lang of ["ja", "en"]) {
+  const gameData = readPage(lang, "guides/game-data");
+  for (const required of [
+    'id="authorship"',
+    'data-game-data-editor="platformer"',
+    'data-game-data-editor="fighting"',
+    'data-game-data-editor="towerDefense"',
+    'id="done"',
+    'src="../../../game-data-editor.mjs"',
+  ]) {
+    if (!gameData.includes(required)) fail(`${lang}/guides/game-data: missing authoring-tool material ${required}`);
+  }
+
   const hub = readPage(lang, "guides/testing");
   if (!hub.includes("Draw()") || !hub.includes("Update()") || !hub.includes("internal/lessonlogic") || !hub.includes("AAA + DAMP + GO STYLE") || !hub.includes("DRAW / VISUAL REGRESSION")) {
     fail(`${lang}/guides/testing: missing Draw/Update testing boundary`);

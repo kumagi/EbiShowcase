@@ -75,6 +75,7 @@ node "$ROOT/scripts/normalize-html-whitespace.mjs"
 node "$ROOT/scripts/normalize-html-whitespace.mjs" --check
 node "$ROOT/scripts/check-authoring-copy-regression.mjs"
 node "$ROOT/scripts/check-tick-language.mjs"
+node "$ROOT/scripts/test-game-data-editor.mjs"
 OGP_STATE="$ROOT/.cache/ebi-showcase/ogp-inputs.sha256"
 OGP_FINGERPRINT="$(node "$ROOT/scripts/ogp-cache.mjs" fingerprint)"
 if [[ "$FAST_BUILD" == "1" ]] && [[ -f "$OGP_STATE" ]] && [[ "$(<"$OGP_STATE")" == "$OGP_FINGERPRINT" ]] && node "$ROOT/scripts/ogp-cache.mjs" verify; then

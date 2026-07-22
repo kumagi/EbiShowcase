@@ -276,6 +276,15 @@
       "sources": ["AGENTS.md"]
     },
     {
+      "id": "pedagogy.game-data-authoring-tools",
+      "family": "pedagogy",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["guide"],
+      "summary": "The game-data guide teaches the code/data/editor/runtime boundary and includes working, validated, round-trippable editors for platformer levels, fighting moves, and tower-defense scenarios.",
+      "sources": ["web/{ja,en}/guides/game-data/index.html", "web/game-data-editor.mjs", "scripts/test-game-data-editor.mjs", "scripts/check-site-metadata.mjs"]
+    },
+    {
       "id": "pedagogy.testing-aaa-damp",
       "family": "pedagogy",
       "severity": "fail",
