@@ -141,13 +141,28 @@ func TestOutside(t *testing.T) {
 		})
 	}
 }
-</code></pre></article></section><section class="test-audit"><div><p class="eyebrow">TEST REVIEW / ALL CASES</p><h2>この章のテストを、同じ品質基準で点検済み。</h2></div><div class="test-quality-grid"><article><h3>命名</h3><p>トップレベルは<code>TestCircleHit</code>・<code>TestOutside</code>。各<code>t.Run</code>名が「どういう前提なら何を返すか」を文章で示します。<code>whenFoo_shouldBar</code>形式は使いません。</p></article><article><h3>AAA</h3><p>ケースの値で前提を作り、対象関数を一度呼び、その結果だけを比較します。三段落は空行で分け、Arrange / Act / Assertコメントは置きません。</p></article><article><h3>DAMP</h3><p>意味のあるケース名とgot / wantを省略しません。Assertには値の探索ループやswitchを置かず、複数戻り値は別々に検証して失敗理由を一つに絞ります。</p></article><article><h3>テーブル駆動</h3><p>同じ関数へ境界値を渡す反復なので、各行が完全な一件になるテーブル駆動テストを使います。外側のforはケース実行であり、Assertの中の探索ではありません。</p></article></div></section><section class="test-golden test-golden-lesson"><div><p class="eyebrow">DRAW / GOLDEN ONLY</p><h2>この章でDrawも守るなら</h2><p>開始時のボス・自機・HP表示を固定し、<code>testdata/bullet-hell-initial.png</code>と一枚まるごと比較します。座標や描画命令を個別にAssertしません。</p><p>このコードはゲーム側のmain_test.goへ置き、ガイド冒頭のTestMain / assertGoldenと組み合わせます。golden更新前には.actual.pngを必ず目で確認します。</p></div><pre><code>func TestDrawInitialBossMatchesGolden(t *testing.T) {
-	g := newGame()
-	screen := ebiten.NewImage(screenWidth, screenHeight)
+</code></pre></article></section><section class="test-audit"><div><p class="eyebrow">TEST REVIEW / ALL CASES</p><h2>この章のテストを、同じ品質基準で点検済み。</h2></div><div class="test-quality-grid"><article><h3>命名</h3><p>トップレベルは<code>TestCircleHit</code>・<code>TestOutside</code>。各<code>t.Run</code>名が「どういう前提なら何を返すか」を文章で示します。<code>whenFoo_shouldBar</code>形式は使いません。</p></article><article><h3>AAA</h3><p>ケースの値で前提を作り、対象関数を一度呼び、その結果だけを比較します。三段落は空行で分け、Arrange / Act / Assertコメントは置きません。</p></article><article><h3>DAMP</h3><p>意味のあるケース名とgot / wantを省略しません。Assertには値の探索ループやswitchを置かず、複数戻り値は別々に検証して失敗理由を一つに絞ります。</p></article><article><h3>テーブル駆動</h3><p>同じ関数へ境界値を渡す反復なので、各行が完全な一件になるテーブル駆動テストを使います。外側のforはケース実行であり、Assertの中の探索ではありません。</p></article></div></section><section class="test-golden test-golden-lesson"><div><p class="eyebrow">DRAW / GOLDEN ONLY</p><h2>同じシーンをLayoutの3契約で守る</h2><p>開始時のボス・自機・HP表示を一つのfixtureとして固定します。外側サイズだけをmobile portrait・console 16:9・PC windowへ変え、各ケースで<code>Layout</code>が返した論理サイズに<code>Draw</code>して、<code>bullet-hell-initial-mobile.png</code>・<code>bullet-hell-initial-console.png</code>・<code>bullet-hell-initial-pc.png</code>と一枚まるごと比較します。これならゲーム状態の差ではなく画面構成の差だけをレビューできます。座標や描画命令は個別にAssertしません。</p><p>下の3ケースは、Layoutに縦長・16:9・PCウインドウの実際の分岐がある場合の形です。現在のLayoutが外側サイズを無視して一つの論理画面だけを返すなら、同一PNGを3枚承認せずdefaultの1ケースにします。分岐を追加した時点で3ケースへ広げ、モバイルの縦積み、コンソール／TVの安全領域、PCの横幅を.actual.pngで目視調整します。このコードはゲーム側のmain_test.goへ置き、ガイド冒頭のTestMain / assertGoldenと組み合わせます。</p></div><pre><code>func TestDrawInitialBossMatchesLayoutGoldens(t *testing.T) {
+	layoutCases := []struct {
+		name                       string
+		outsideWidth, outsideHeight int
+		golden                     string
+	}{
+		{name: "mobile portrait", outsideWidth: 390, outsideHeight: 844, golden: "testdata/bullet-hell-initial-mobile.png"},
+		{name: "console 16:9", outsideWidth: 1920, outsideHeight: 1080, golden: "testdata/bullet-hell-initial-console.png"},
+		{name: "PC window", outsideWidth: 1280, outsideHeight: 800, golden: "testdata/bullet-hell-initial-pc.png"},
+	}
 
-	g.Draw(screen)
+	for _, tc := range layoutCases {
+		t.Run(tc.name, func(t *testing.T) {
+			g := newGame()
+			logicalWidth, logicalHeight := g.Layout(tc.outsideWidth, tc.outsideHeight)
+			screen := ebiten.NewImage(logicalWidth, logicalHeight)
 
-	assertGolden(t, screen, "testdata/bullet-hell-initial.png")
+			g.Draw(screen)
+
+			assertGolden(t, screen, tc.golden)
+		})
+	}
 }</code></pre></section><section class="test-run"><p>自分のGoプロジェクトに上のファイルを作って実行</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>テストのあとも人が確認すること</h2><p>弾幕の美しさ、避けられる隙間、被弾の見やすさはプレイ確認です。</p></section><nav class="test-pager"><a href="../dungeon/">← 前へ</a><span>12 / 12</span><a href="../">次へ →</a></nav>
     <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>cos/sinは角度から円周上の横・縦位置を得る道具。ラジアンは角度単位で2πが一周、tick%周期は一定tickごとに同じ模様を繰り返します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>angle := 2*math.Pi*float64(i)/count</code></pre></div></section>

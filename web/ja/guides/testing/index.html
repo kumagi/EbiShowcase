@@ -44,7 +44,7 @@
 			}
 		})
 	}
-}</code></pre></section><section class="test-golden"><div><p class="eyebrow">DRAW / VISUAL REGRESSION</p><h2>Drawを自動テストするなら、方法はゴールデン画像比較だけ。</h2><p>Drawの呼び出し回数、内部座標、個々の描画命令をテストしません。固定したgame状態・asset・font・viewportを一枚描き、testdataの承認済みPNGと比較します。差分が出たら実画像を人が見てからUPDATE_GOLDEN=1で更新します。描画バックエンド差がある環境では実行環境を固定するか、環境別goldenを持ちます。Ebitengineの画素読み出しはメインループ内で行う必要があるため、下のTestMain harness内でテストを実行します。</p></div><pre><code>package main
+}</code></pre></section><section class="test-golden"><div><p class="eyebrow">DRAW / VISUAL REGRESSION</p><h2>Drawのゴールデンは、Layoutの表示契約ごとに分ける。</h2><p>Drawの呼び出し回数、内部座標、個々の描画命令はテストしません。同じgame状態・asset・fontを固定したまま、mobile portrait（390×844）、console 16:9（1920×1080）、PC window（1280×800）の外側サイズをそれぞれLayoutへ渡します。Layoutが返した論理サイズで一枚描き、パターン別の承認済みPNGと比較します。これにより、モバイルの縦積みとタッチ領域、コンソール／TVの安全領域と離れて読めるHUD、PCウインドウの横幅の使い方を、同じゲーム状態で調整できます。入力表示も変えるなら、端末を推測せずcontrol schemeをfixtureへ明示します。同じ論理サイズ・同じ配置を返す固定Layoutなら、同一画像を3枚複製せずdefaultの1枚だけで十分です。ブラウザ側の拡大縮小やCSSの折り返しはDrawではなく実ブラウザのスクリーンショットテストで守ります。差分が出たら.actual.pngを人が見てからUPDATE_GOLDEN=1で更新します。Ebitengineの画素読み出しはメインループ内で行う必要があるため、下のTestMain harness内でテストを実行します。</p></div><pre><code>package main
 
 import (
 	"bytes"

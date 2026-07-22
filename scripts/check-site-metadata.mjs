@@ -88,9 +88,10 @@ for (const lang of ["ja", "en"]) {
   if (!hub.includes("Draw()") || !hub.includes("Update()") || !hub.includes("internal/lessonlogic") || !hub.includes("AAA + DAMP + GO STYLE") || !hub.includes("DRAW / VISUAL REGRESSION")) {
     fail(`${lang}/guides/testing: missing Draw/Update testing boundary`);
   }
+  const fixedLayoutGoldenNote = lang === "ja" ? "同一PNGを3枚承認せず" : "three identical PNGs";
   for (const slug of testingLessons) {
     const page = readPage(lang, `guides/testing/${slug}`);
-    for (const required of ["func (g *game) Update() error", "package lessonlogic", "func Test", "testCases :=", "t.Run(tc.name", "go test ./internal/lessonlogic", "TEST REVIEW / ALL CASES", "DRAW / GOLDEN ONLY", "assertGolden(t, screen, \"testdata/"]) {
+    for (const required of ["func (g *game) Update() error", "package lessonlogic", "func Test", "testCases :=", "t.Run(tc.name", "go test ./internal/lessonlogic", "TEST REVIEW / ALL CASES", "DRAW / GOLDEN ONLY", "layoutCases :=", "mobile portrait", "console 16:9", "PC window", "g.Layout(tc.outsideWidth, tc.outsideHeight)", "assertGolden(t, screen, tc.golden)", fixedLayoutGoldenNote]) {
       if (!page.includes(required)) fail(`${lang}/guides/testing/${slug}: missing complete testing material ${required}`);
     }
   }

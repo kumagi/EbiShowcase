@@ -299,7 +299,7 @@
       "severity": "fail",
       "check": "deterministic",
       "applies_to": ["guide"],
-      "summary": "Every unit-testing chapter presents Draw verification only as a whole-image golden comparison with a deterministic fixture.",
+      "summary": "Every unit-testing chapter presents Draw verification only as a whole-image golden comparison with a deterministic fixture, drives real mobile/console/PC variants through Layout, and avoids duplicate goldens when Layout has only one visual contract.",
       "sources": ["scripts/gen-testing-guide.mjs", "scripts/check-site-metadata.mjs"]
     },
     {

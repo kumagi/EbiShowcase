@@ -117,13 +117,28 @@ func TestIntegrateGravity(t *testing.T) {
 		})
 	}
 }
-</code></pre></article></section><section class="test-audit"><div><p class="eyebrow">TEST REVIEW / ALL CASES</p><h2>This chapter's tests pass the same readability review.</h2></div><div class="test-quality-grid"><article><h3>Naming</h3><p>Top-level subjects are <code>TestIntegrateGravity</code>. Every <code>t.Run</code> name states the premise and expected result in a sentence; there is no whenFoo_shouldBar convention.</p></article><article><h3>AAA</h3><p>Case values arrange the premise, one call acts, and comparisons assert only its result. Blank lines separate the three paragraphs; Arrange / Act / Assert comments do not label them.</p></article><article><h3>DAMP</h3><p>Meaningful case names and got / want values stay visible. Assert contains no search loop or switch, and multiple return values are checked separately so each failure says one thing.</p></article><article><h3>Table-driven</h3><p>These are repeated boundary inputs to the same function, so every row is one complete table-driven case. The outer for runs cases; it is not a search hidden inside Assert.</p></article></div></section><section class="test-golden test-golden-lesson"><div><p class="eyebrow">DRAW / GOLDEN ONLY</p><h2>If this chapter protects Draw</h2><p>Freeze the bird, pipes, and input prompt before play starts, then compare the whole image with <code>testdata/flappy-ready.png</code>. Do not assert individual coordinates or drawing commands.</p><p>Put this code in the game's main_test.go and combine it with the TestMain / assertGolden harness from the guide hub. Inspect .actual.png before approving any golden update.</p></div><pre><code>func TestDrawReadyStateMatchesGolden(t *testing.T) {
-	g := newGame()
-	screen := ebiten.NewImage(screenWidth, screenHeight)
+</code></pre></article></section><section class="test-audit"><div><p class="eyebrow">TEST REVIEW / ALL CASES</p><h2>This chapter's tests pass the same readability review.</h2></div><div class="test-quality-grid"><article><h3>Naming</h3><p>Top-level subjects are <code>TestIntegrateGravity</code>. Every <code>t.Run</code> name states the premise and expected result in a sentence; there is no whenFoo_shouldBar convention.</p></article><article><h3>AAA</h3><p>Case values arrange the premise, one call acts, and comparisons assert only its result. Blank lines separate the three paragraphs; Arrange / Act / Assert comments do not label them.</p></article><article><h3>DAMP</h3><p>Meaningful case names and got / want values stay visible. Assert contains no search loop or switch, and multiple return values are checked separately so each failure says one thing.</p></article><article><h3>Table-driven</h3><p>These are repeated boundary inputs to the same function, so every row is one complete table-driven case. The outer for runs cases; it is not a search hidden inside Assert.</p></article></div></section><section class="test-golden test-golden-lesson"><div><p class="eyebrow">DRAW / GOLDEN ONLY</p><h2>Protect the same scene across three Layout contracts</h2><p>Freeze the bird, pipes, and input prompt before play starts as one fixture. Change only the outer size among mobile portrait, console 16:9, and PC window; in each case, draw at the logical size returned by <code>Layout</code> and compare the whole image with <code>flappy-ready-mobile.png</code>, <code>flappy-ready-console.png</code>, or <code>flappy-ready-pc.png</code>. Reviewers then see layout differences rather than game-state differences. Do not assert individual coordinates or drawing commands.</p><p>The three cases below are the form to use when Layout has real portrait, 16:9, and PC-window branches. If the current Layout ignores the outer size and exposes one logical screen, keep one default case instead of approving three identical PNGs. Expand the table when the branches are introduced, then inspect .actual.png to tune mobile stacking, console/TV safe areas, and PC width. Put this code in the game's main_test.go and combine it with the TestMain / assertGolden harness from the guide hub.</p></div><pre><code>func TestDrawReadyStateMatchesLayoutGoldens(t *testing.T) {
+	layoutCases := []struct {
+		name                       string
+		outsideWidth, outsideHeight int
+		golden                     string
+	}{
+		{name: "mobile portrait", outsideWidth: 390, outsideHeight: 844, golden: "testdata/flappy-ready-mobile.png"},
+		{name: "console 16:9", outsideWidth: 1920, outsideHeight: 1080, golden: "testdata/flappy-ready-console.png"},
+		{name: "PC window", outsideWidth: 1280, outsideHeight: 800, golden: "testdata/flappy-ready-pc.png"},
+	}
 
-	g.Draw(screen)
+	for _, tc := range layoutCases {
+		t.Run(tc.name, func(t *testing.T) {
+			g := newGame()
+			logicalWidth, logicalHeight := g.Layout(tc.outsideWidth, tc.outsideHeight)
+			screen := ebiten.NewImage(logicalWidth, logicalHeight)
 
-	assertGolden(t, screen, "testdata/flappy-ready.png")
+			g.Draw(screen)
+
+			assertGolden(t, screen, tc.golden)
+		})
+	}
 }</code></pre></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Play-test flap feel, pipe readability, and animation.</p></section><nav class="test-pager"><a href="../catch-stars/">← PREVIOUS</a><span>4 / 12</span><a href="../pong/">NEXT →</a></nav>
     <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>vy = -7.4; vy += gravity; y += vy</code></pre></div></section>

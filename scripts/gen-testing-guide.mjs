@@ -283,8 +283,8 @@ function hub(lang) {
     namesTitle: "Goらしい名前", names: "whenFooBar_shouldQuaxはGoの決まりではありません。トップレベルはTestSpendLifeのように対象を名付け、条件と結果はt.Run(\"spending last life ends game\")のようなサブテスト名で表します。これならgo test -runで一件だけ選べます。",
     tableTitle: "同じ形ならテーブル駆動", tables: "境界値のようにArrange・Act・Assertの形が同じで値だけ違うときは、各行が完全な一件になるテーブル駆動テストにします。準備や操作そのものが違うシナリオまで無理に一つの表へ押し込みません。",
     sources: "Go公式の命名説明と、t.Runを使うテーブル駆動テスト",
-    goldenTitle: "Drawを自動テストするなら、方法はゴールデン画像比較だけ。",
-    goldenBody: "Drawの呼び出し回数、内部座標、個々の描画命令をテストしません。固定したgame状態・asset・font・viewportを一枚描き、testdataの承認済みPNGと比較します。差分が出たら実画像を人が見てからUPDATE_GOLDEN=1で更新します。描画バックエンド差がある環境では実行環境を固定するか、環境別goldenを持ちます。Ebitengineの画素読み出しはメインループ内で行う必要があるため、下のTestMain harness内でテストを実行します。",
+    goldenTitle: "Drawのゴールデンは、Layoutの表示契約ごとに分ける。",
+    goldenBody: "Drawの呼び出し回数、内部座標、個々の描画命令はテストしません。同じgame状態・asset・fontを固定したまま、mobile portrait（390×844）、console 16:9（1920×1080）、PC window（1280×800）の外側サイズをそれぞれLayoutへ渡します。Layoutが返した論理サイズで一枚描き、パターン別の承認済みPNGと比較します。これにより、モバイルの縦積みとタッチ領域、コンソール／TVの安全領域と離れて読めるHUD、PCウインドウの横幅の使い方を、同じゲーム状態で調整できます。入力表示も変えるなら、端末を推測せずcontrol schemeをfixtureへ明示します。同じ論理サイズ・同じ配置を返す固定Layoutなら、同一画像を3枚複製せずdefaultの1枚だけで十分です。ブラウザ側の拡大縮小やCSSの折り返しはDrawではなく実ブラウザのスクリーンショットテストで守ります。差分が出たら.actual.pngを人が見てからUPDATE_GOLDEN=1で更新します。Ebitengineの画素読み出しはメインループ内で行う必要があるため、下のTestMain harness内でテストを実行します。",
     cards: "12本すべてを、実コードで分解する", cardsLead: "各ページに、現行のUpdate全文、責務の全手順、抽出した関数の完全なGoファイル、完全な_test.go、境界ケース、残すべき手動確認を掲載します。", read: "全文を読む →",
   } : {
     title: "Unit-test Update across LEVEL 01–12", desc: "A complete guide to leaving Draw untested by default and extracting pure rules from every LEVEL 01–12 Update for Go unit tests.",
@@ -299,8 +299,8 @@ function hub(lang) {
     namesTitle: "Idiomatic Go names", names: "whenFooBar_shouldQuax is not a Go rule. Name the top-level subject, such as TestSpendLife, then put premise and outcome in a subtest such as t.Run(\"spending last life ends game\"). go test -run can select that one case.",
     tableTitle: "Use tables when the shape repeats", tables: "Use a table-driven test when boundary cases share the same Arrange, Act, and Assert and only values change. Each row must be one complete case. Do not force scenarios with different setup or actions into one clever table.",
     sources: "Official Go naming guidance and table-driven subtests with t.Run",
-    goldenTitle: "When Draw is automated, use only a golden-image comparison.",
-    goldenBody: "Do not test Draw call counts, internal coordinates, or individual drawing commands. Render one fixed game state with pinned assets, fonts, and viewport, then compare it with an approved PNG in testdata. When it changes, inspect the actual image before running UPDATE_GOLDEN=1. Pin the rendering environment or keep backend-specific goldens where GPUs differ. Ebitengine pixel reads must happen inside its main loop, so the TestMain harness below runs the tests there.",
+    goldenTitle: "Keep one Draw golden for each Layout contract.",
+    goldenBody: "Do not test Draw call counts, internal coordinates, or individual drawing commands. Keep the game state, assets, and fonts fixed, then pass a mobile portrait (390×844), console 16:9 (1920×1080), and PC window (1280×800) outer size through Layout. Render at the logical size returned by Layout and compare each result with its own approved PNG. The same scene can then tune mobile stacking and touch space, console/TV safe areas and distance-readable HUDs, and use of width in a PC window. If input hints differ, put an explicit control scheme in the fixture instead of guessing the device. A fixed Layout that returns the same logical size and arrangement needs one default golden—not three identical copies. Browser scaling and CSS wrapping belong in real-browser screenshot tests rather than Draw tests. Inspect .actual.png before running UPDATE_GOLDEN=1. Ebitengine pixel reads must happen inside its main loop, so the TestMain harness below runs the tests there.",
     cards: "Decompose all twelve real games", cardsLead: "Every page includes the full current Update, every responsibility in order, a complete pure Go file, a complete _test.go, boundary cases, and the manual checks that remain.", read: "READ ALL →",
   };
   const cards = lessons.map((lesson) => { const t = lesson[lang]; return `<a class="test-course-card" href="${lesson.slug}/"><span>${lesson.level}</span><h3>${t.title}</h3><p>${t.lead}</p><strong>${c.read}</strong></a>`; }).join("");
@@ -314,18 +314,34 @@ function lessonPage(lang, index) {
   const t = lesson[lang];
   const ja = lang === "ja";
   const golden = goldenCases[lesson.slug];
+  const goldenStem = golden.file.replace(/\.png$/, "");
   const update = updateFunction(lesson.source);
   const pureFunctions = lesson.pure.map((name) => namedFunction(logicFiles, name));
   const tests = lesson.tests.map((name) => namedFunction(testFiles, name));
   const pure = goFile(pureFunctions, supportCode(lesson.support));
   const test = testFile(tests);
-  const goldenTest = `func TestDraw${golden.testName}MatchesGolden(t *testing.T) {
-	${golden.fixture}
-	screen := ebiten.NewImage(screenWidth, screenHeight)
+  const goldenTest = `func TestDraw${golden.testName}MatchesLayoutGoldens(t *testing.T) {
+	layoutCases := []struct {
+		name                       string
+		outsideWidth, outsideHeight int
+		golden                     string
+	}{
+		{name: "mobile portrait", outsideWidth: 390, outsideHeight: 844, golden: "testdata/${goldenStem}-mobile.png"},
+		{name: "console 16:9", outsideWidth: 1920, outsideHeight: 1080, golden: "testdata/${goldenStem}-console.png"},
+		{name: "PC window", outsideWidth: 1280, outsideHeight: 800, golden: "testdata/${goldenStem}-pc.png"},
+	}
 
-	g.Draw(screen)
+	for _, tc := range layoutCases {
+		t.Run(tc.name, func(t *testing.T) {
+			${golden.fixture}
+			logicalWidth, logicalHeight := g.Layout(tc.outsideWidth, tc.outsideHeight)
+			screen := ebiten.NewImage(logicalWidth, logicalHeight)
 
-	assertGolden(t, screen, "testdata/${golden.file}")
+			g.Draw(screen)
+
+			assertGolden(t, screen, tc.golden)
+		})
+	}
 }`;
   const rows = t.cases.map((r) => `<tr><th>${esc(r[0])}</th><td><code>${esc(r[1])}</code></td><td><code>${esc(r[2])}</code></td></tr>`).join("");
   const phases = lesson.phases[lang].map((phase, i) => `<li><span>${String(i + 1).padStart(2, "0")}</span><p>${phase}</p></li>`).join("");
@@ -338,7 +354,7 @@ function lessonPage(lang, index) {
     aaa: "AAA", aaaBody: "ケースの値で前提を作り、対象関数を一度呼び、その結果だけを比較します。三段落は空行で分け、Arrange / Act / Assertコメントは置きません。",
     damp: "DAMP", dampBody: "意味のあるケース名とgot / wantを省略しません。Assertには値の探索ループやswitchを置かず、複数戻り値は別々に検証して失敗理由を一つに絞ります。",
     parameterized: "テーブル駆動", parameterizedBody: "同じ関数へ境界値を渡す反復なので、各行が完全な一件になるテーブル駆動テストを使います。外側のforはケース実行であり、Assertの中の探索ではありません。",
-    goldenTitle: "この章でDrawも守るなら", goldenBody: `${golden.ja}を固定し、<code>testdata/${golden.file}</code>と一枚まるごと比較します。座標や描画命令を個別にAssertしません。`, goldenNote: "このコードはゲーム側のmain_test.goへ置き、ガイド冒頭のTestMain / assertGoldenと組み合わせます。golden更新前には.actual.pngを必ず目で確認します。",
+    goldenTitle: "同じシーンをLayoutの3契約で守る", goldenBody: `${golden.ja}を一つのfixtureとして固定します。外側サイズだけをmobile portrait・console 16:9・PC windowへ変え、各ケースで<code>Layout</code>が返した論理サイズに<code>Draw</code>して、<code>${goldenStem}-mobile.png</code>・<code>${goldenStem}-console.png</code>・<code>${goldenStem}-pc.png</code>と一枚まるごと比較します。これならゲーム状態の差ではなく画面構成の差だけをレビューできます。座標や描画命令は個別にAssertしません。`, goldenNote: "下の3ケースは、Layoutに縦長・16:9・PCウインドウの実際の分岐がある場合の形です。現在のLayoutが外側サイズを無視して一つの論理画面だけを返すなら、同一PNGを3枚承認せずdefaultの1ケースにします。分岐を追加した時点で3ケースへ広げ、モバイルの縦積み、コンソール／TVの安全領域、PCの横幅を.actual.pngで目視調整します。このコードはゲーム側のmain_test.goへ置き、ガイド冒頭のTestMain / assertGoldenと組み合わせます。",
   } : {
     complete: "Every step in the current Update", completeBody: "There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.",
     update: "REAL GO / complete Update()", pure: "EXTRACTED / complete pure logic", test: "TEST / complete _test.go", table: "Choose boundaries first", manual: "What a person still checks", run: "Create these files in your own Go project, then run", back: "← PREVIOUS", forward: "NEXT →",
@@ -346,7 +362,7 @@ function lessonPage(lang, index) {
     aaa: "AAA", aaaBody: "Case values arrange the premise, one call acts, and comparisons assert only its result. Blank lines separate the three paragraphs; Arrange / Act / Assert comments do not label them.",
     damp: "DAMP", dampBody: "Meaningful case names and got / want values stay visible. Assert contains no search loop or switch, and multiple return values are checked separately so each failure says one thing.",
     parameterized: "Table-driven", parameterizedBody: "These are repeated boundary inputs to the same function, so every row is one complete table-driven case. The outer for runs cases; it is not a search hidden inside Assert.",
-    goldenTitle: "If this chapter protects Draw", goldenBody: `Freeze ${golden.en}, then compare the whole image with <code>testdata/${golden.file}</code>. Do not assert individual coordinates or drawing commands.`, goldenNote: "Put this code in the game's main_test.go and combine it with the TestMain / assertGolden harness from the guide hub. Inspect .actual.png before approving any golden update.",
+    goldenTitle: "Protect the same scene across three Layout contracts", goldenBody: `Freeze ${golden.en} as one fixture. Change only the outer size among mobile portrait, console 16:9, and PC window; in each case, draw at the logical size returned by <code>Layout</code> and compare the whole image with <code>${goldenStem}-mobile.png</code>, <code>${goldenStem}-console.png</code>, or <code>${goldenStem}-pc.png</code>. Reviewers then see layout differences rather than game-state differences. Do not assert individual coordinates or drawing commands.`, goldenNote: "The three cases below are the form to use when Layout has real portrait, 16:9, and PC-window branches. If the current Layout ignores the outer size and exposes one logical screen, keep one default case instead of approving three identical PNGs. Expand the table when the branches are introduced, then inspect .actual.png to tune mobile stacking, console/TV safe areas, and PC width. Put this code in the game's main_test.go and combine it with the TestMain / assertGolden harness from the guide hub.",
   };
   const logicPath = index < 2 ? "internal/lessonlogic/rules.go" : "internal/lessonlogic/core_updates.go";
   const testPath = index < 2 ? "internal/lessonlogic/rules_test.go" : "internal/lessonlogic/core_updates_test.go";
