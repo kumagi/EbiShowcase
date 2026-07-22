@@ -11,6 +11,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -268,6 +269,18 @@ function runStructureGates(gates) {
 
 function runSiteGates(gates) {
   const ids = new Set(gates.map((g) => g.id));
+  if (ids.has("a11y.mobile-linear-flow")) {
+    const audits = [[320, 568], [375, 667], [390, 844]].map(([width, height]) => {
+      const result = spawnSync(process.execPath, [join(root, "scripts/audit-mobile-layout.mjs"), "--width", String(width), "--height", String(height)], {
+        cwd: root,
+        encoding: "utf8",
+        maxBuffer: 8 * 1024 * 1024,
+      });
+      const output = `${result.stdout || ""}\n${result.stderr || ""}`.trim().split("\n").filter(Boolean);
+      return { status: result.status, detail: output.at(-1) || `${width}px audit exited ${result.status}` };
+    });
+    note("a11y.mobile-linear-flow", "fail", audits.every((audit) => audit.status === 0), "web/**/*.html", audits.map((audit) => audit.detail).join(" | "));
+  }
   if (ids.has("site.gated-count")) {
     const vfx = curriculum.filter((e) => e.group === "vfx");
     const ok = gated.length === 208 && vfx.length === 29;

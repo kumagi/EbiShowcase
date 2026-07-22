@@ -486,6 +486,15 @@
       "sources": ["AGENTS.md"]
     },
     {
+      "id": "a11y.mobile-linear-flow",
+      "family": "a11y",
+      "severity": "fail",
+      "check": "deterministic",
+      "applies_to": ["site"],
+      "summary": "At 320px, 375px, and 390px phone viewports, every page and embedded teaching component fits a single vertical reading flow without page-level or component-level horizontal scrolling.",
+      "sources": ["scripts/audit-mobile-layout.mjs", "scripts/check-quality-gates.mjs", "web/style.css", "AGENTS.md#verification-ladder"]
+    },
+    {
       "id": "a11y.iframe-title",
       "family": "a11y",
       "severity": "warn",

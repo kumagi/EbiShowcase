@@ -1,4 +1,27 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="重力を足してから位置を動かす順序を、数値の入出力としてテストします。"><title>Flappy：加速度の1 tickを固定する | Ebi Showcase</title><link rel="icon" type="image/png" href="../../../../assets/favicon.png"><link rel="stylesheet" href="../../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../en/guides/testing/flappy/" lang="en">EN</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 04 / 12</p><h1>Flappy：加速度の1 tickを固定する</h1><p>重力を足してから位置を動かす順序を、数値の入出力としてテストします。</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>60回待つテストではなく、位置100・速度-7.4へ重力0.42を1回適用し、次の位置と速度を確認します。</h2><p><strong>Draw:</strong> 羽ばたきの気持ちよさ、パイプの見やすさ、アニメーションはプレイ確認です。</p></div><div class="test-case-table"><p class="eyebrow">境界を先に決める</p><table><tbody><tr><th>羽ばたき直後</th><td><code>100,-7.4,+0.42</code></td><td><code>93.02,-6.98</code></td></tr><tr><th>落下中</th><td><code>100,2,+0.42</code></td><td><code>102.42,2.42</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>現行Updateの全手順</h2><p>省略記号はありません。入力から早期return、ループ、勝敗まで、現在ゲームで動く順番です。この中から抽出した純粋関数を直接テストします。</p></div><ol><li><span>01</span><p>フレーム番号と押下を読む</p></li><li><span>02</span><p>開始前／ゲームオーバーを処理</p></li><li><span>03</span><p>押下で上向き速度を設定</p></li><li><span>04</span><p>重力→速度→位置の順に積分</p></li><li><span>05</span><p>パイプ移動・得点・再利用</p></li><li><span>06</span><p>衝突とBEST更新</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / Update()全文</p><code>game/main.go</code></div><pre><code>func (g *game) Update() error {
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="重力を足してから位置を動かす順序を、数値の入出力としてテストします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。"><title>Ebi Showcase – Flappy：加速度の1 tickを固定する</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/guides/testing/flappy/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Flappy：加速度の1 tickを固定する">
+    <meta property="og:description" content="重力を足してから位置を動かす順序を、数値の入出力としてテストします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/guides/testing/flappy/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--flappy.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Flappy：加速度の1 tickを固定する">
+    <meta property="og:locale" content="ja_JP">
+    <meta property="og:locale:alternate" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Flappy：加速度の1 tickを固定する">
+    <meta name="twitter:description" content="重力を足してから位置を動かす順序を、数値の入出力としてテストします。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--guides--testing--flappy.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Flappy：加速度の1 tickを固定する">
+    <!-- ogp:end --><link rel="icon" type="image/png" href="../../../../assets/favicon.png"><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../ja/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../en/guides/testing/flappy/" lang="en">EN</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 04 / 12</p><h1>Flappy：加速度の1 tickを固定する</h1><p>重力を足してから位置を動かす順序を、数値の入出力としてテストします。</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>60回待つテストではなく、位置100・速度-7.4へ重力0.42を1回適用し、次の位置と速度を確認します。</h2><p><strong>Draw:</strong> 羽ばたきの気持ちよさ、パイプの見やすさ、アニメーションはプレイ確認です。</p></div><div class="test-case-table"><p class="eyebrow">境界を先に決める</p><table><tbody><tr><th>羽ばたき直後</th><td><code>100,-7.4,+0.42</code></td><td><code>93.02,-6.98</code></td></tr><tr><th>落下中</th><td><code>100,2,+0.42</code></td><td><code>102.42,2.42</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>現行Updateの全手順</h2><p>省略記号はありません。入力から早期return、ループ、勝敗まで、現在ゲームで動く順番です。この中から抽出した純粋関数を直接テストします。</p></div><ol><li><span>01</span><p>フレーム番号と押下を読む</p></li><li><span>02</span><p>開始前／ゲームオーバーを処理</p></li><li><span>03</span><p>押下で上向き速度を設定</p></li><li><span>04</span><p>重力→速度→位置の順に積分</p></li><li><span>05</span><p>パイプ移動・得点・再利用</p></li><li><span>06</span><p>衝突とBEST更新</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / Update()全文</p><code>game/main.go</code></div><pre><code>func (g *game) Update() error {
 	g.frame++
 	pressed := justPressed()
 
@@ -101,4 +124,29 @@ func TestIntegrateGravity(t *testing.T) {
 	g.Draw(screen)
 
 	assertGolden(t, screen, "testdata/flappy-ready.png")
-}</code></pre></section><section class="test-run"><p>自分のGoプロジェクトに上のファイルを作って実行</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>テストのあとも人が確認すること</h2><p>羽ばたきの気持ちよさ、パイプの見やすさ、アニメーションはプレイ確認です。</p></section><nav class="test-pager"><a href="../catch-stars/">← 前へ</a><span>4 / 12</span><a href="../pong/">次へ →</a></nav></main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>
+}</code></pre></section><section class="test-run"><p>自分のGoプロジェクトに上のファイルを作って実行</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>テストのあとも人が確認すること</h2><p>羽ばたきの気持ちよさ、パイプの見やすさ、アニメーションはプレイ確認です。</p></section><nav class="test-pager"><a href="../catch-stars/">← 前へ</a><span>4 / 12</span><a href="../pong/">次へ →</a></nav>
+    <!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>画面は上がY=0で、下へ行くほどYが増えます。加速度は『Updateの刻みごとに速さがどれだけ変わるか』。羽ばたき時の負の速度は上向き、正の重力が少しずつ下向きへ戻します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>vy = -7.4; vy += gravity; y += vy</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">ひとことフィードバック</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/ja/guides/testing/flappy/">
+          <label class="feedback-field">
+            <span class="sr-only">フィードバック</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="フィードバック" maxlength="200" required data-sending="送信中…" data-sent="送信しました。ありがとうございます！" data-failed="送信できませんでした。時間をおいて再試行してください。" placeholder="ひとこと入力…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">送信する<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

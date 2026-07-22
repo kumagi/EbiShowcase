@@ -1185,3 +1185,32 @@ main>.motion-lab,main>.code-lesson,main>.why-grid{width:min(calc(100% - 48px),11
 .capstone-renderers-demo{width:min(100%,1160px);height:clamp(540px,67vw,760px);margin:0 auto 30px;overflow:hidden;border:1px solid rgba(125,241,222,.32);border-radius:24px;background:#020712;box-shadow:0 34px 90px rgba(0,0,0,.42),0 0 60px rgba(46,230,200,.08)}.capstone-renderers-demo iframe{display:block;width:100%;height:100%;border:0;background:#020712}
 .capstone-renderers-code{width:min(100%,1160px);margin:auto;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:30px;align-items:center;padding:clamp(25px,4vw,48px);border:1px solid rgba(141,123,255,.28);border-radius:22px;background:rgba(8,14,37,.78)}.capstone-renderers-code .eyebrow{color:#aa9eff}.capstone-renderers-code h3{margin:12px 0 14px;font-size:clamp(24px,3vw,40px);line-height:1.15}.capstone-renderers-code p:not(.eyebrow){color:#b8c6e6;line-height:1.85}.capstone-renderers-code pre{min-width:0;margin:0;padding:24px;overflow:auto;border:1px solid #26365f;border-radius:15px;background:#040a1a}.capstone-renderers-code pre code{display:block;color:#e8eeff;font:600 12px/1.7 var(--font-mono);white-space:pre}
 @media(max-width:760px){.capstone-renderers{padding-inline:14px}.capstone-renderers-copy{padding-inline:8px;text-align:left}.capstone-renderers-copy h2{font-size:clamp(36px,11vw,54px)}.capstone-renderers-facts,.capstone-renderers-code{grid-template-columns:1fr}.capstone-renderers-demo{height:clamp(500px,128vw,680px);border-radius:16px}.capstone-renderers-code{padding:24px 18px}.capstone-renderers-code pre{padding:18px 14px}.capstone-renderers-code pre code{font-size:11px}}
+
+/* ---------- Phone linear-flow contract ----------
+   At phone width every lesson reads top-to-bottom. Code, tables, labs and
+   authoring tools wrap or shrink in place; none require a sideways gesture. */
+@media(max-width:650px){
+  pre{max-width:100%!important;overflow-x:clip!important}
+  pre code{display:block!important;max-width:100%!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important;word-break:break-word!important}
+  main :where(h1,h2,h3,h4,p,a,code,strong,small,td,th){overflow-wrap:anywhere;word-break:break-word}
+  table{width:100%!important;max-width:100%!important;table-layout:fixed}
+  th,td{min-width:0!important;overflow-wrap:anywhere;word-break:break-word}
+  .motion-lab>*,.lab-visual>*,.lab-stage>*,.beginner-bridge>*,.test-course-grid>*,.editor-case>*{min-width:0;max-width:100%}
+  .tile-legend{overflow-x:visible}
+  .tile-legend table{min-width:0}
+  .vfx-parameter-panel{overflow-x:visible}
+  .vfx-parameter-table{min-width:0}
+  .camera-world-ruler{width:100%}
+  .test-course-grid,.test-course-card{width:100%;max-width:100%}
+  .steps{grid-template-columns:1fr!important}
+  .platformer-editor-board{min-width:0}
+  .asset-editor>[data-editor-workspace]{overflow-x:hidden}
+  .fight-timeline{flex-wrap:wrap;overflow-x:hidden}
+}
+@media(max-width:350px){
+  .asset-rhythm{grid-template-columns:1fr}
+  .asset-rhythm span{width:100%;min-width:0}
+  .asset-rhythm i{display:none}
+  .matchup-grid{overflow-x:visible}
+  .matchup-grid table{min-width:0}
+}

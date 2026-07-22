@@ -1,4 +1,27 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Test the order gravity→velocity→position as numeric input and output."><title>Flappy: freeze one tick of acceleration | Ebi Showcase</title><link rel="icon" type="image/png" href="../../../../assets/favicon.png"><link rel="stylesheet" href="../../../../style.css"></head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/flappy/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 04 / 12</p><h1>Flappy: freeze one tick of acceleration</h1><p>Test the order gravity→velocity→position as numeric input and output.</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Do not wait 60 ticks. Apply 0.42 once to position 100 and velocity -7.4, then compare both next values.</h2><p><strong>Draw:</strong> Play-test flap feel, pipe readability, and animation.</p></div><div class="test-case-table"><p class="eyebrow">Choose boundaries first</p><table><tbody><tr><th>after flap</th><td><code>100,-7.4,+0.42</code></td><td><code>93.02,-6.98</code></td></tr><tr><th>falling</th><td><code>100,2,+0.42</code></td><td><code>102.42,2.42</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>Every step in the current Update</h2><p>There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.</p></div><ol><li><span>01</span><p>Read tick count and fresh press</p></li><li><span>02</span><p>Handle pre-start and game-over</p></li><li><span>03</span><p>Apply flap velocity on press</p></li><li><span>04</span><p>Integrate gravity, velocity, then position</p></li><li><span>05</span><p>Move, score, and recycle pipes</p></li><li><span>06</span><p>Resolve collision and best score</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / complete Update()</p><code>game/main.go</code></div><pre><code>func (g *game) Update() error {
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Test the order gravity→velocity→position as numeric input and output. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game "><title>Ebi Showcase – Flappy: freeze one tick of acceleration</title>
+  <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/guides/testing/flappy/">
+    <!-- ogp:start -->
+    <meta property="og:site_name" content="Ebi Showcase">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ebi Showcase – Flappy: freeze one tick of acceleration">
+    <meta property="og:description" content="Test the order gravity→velocity→position as numeric input and output. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game ">
+    <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/guides/testing/flappy/">
+    <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--flappy.png?v=20260713-font1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Flappy: freeze one tick of acceleration">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:locale:alternate" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ebi Showcase – Flappy: freeze one tick of acceleration">
+    <meta name="twitter:description" content="Test the order gravity→velocity→position as numeric input and output. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game ">
+    <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--guides--testing--flappy.png?v=20260713-font1">
+    <meta name="twitter:image:alt" content="Flappy: freeze one tick of acceleration">
+    <!-- ogp:end --><link rel="icon" type="image/png" href="../../../../assets/favicon.png"><link rel="stylesheet" href="../../../../style.css">  <!-- favicon:start -->
+  <link rel="icon" type="image/png" href="../../../../assets/favicon.png">
+  <link rel="apple-touch-icon" href="../../../../assets/favicon.png">
+  <!-- favicon:end -->
+</head><body class="testing-guide"><header class="nav"><a class="brand" href="../../../../en/"><span>EBI</span> SHOWCASE</a><nav><a href="../">TESTING</a><a class="lang" href="../../../../ja/guides/testing/flappy/" lang="ja">日本語</a></nav></header><main><section class="test-step-hero"><a href="../">TESTING GUIDE</a><p class="eyebrow">LEVEL 04 / 12</p><h1>Flappy: freeze one tick of acceleration</h1><p>Test the order gravity→velocity→position as numeric input and output.</p></section><section class="test-rule-strip"><span>EBITENGINE INPUT</span><i>→</i><strong>PURE RULE + go test</strong><i>→</i><span>GAME STATE</span></section><section class="test-explain"><div><p class="eyebrow">WHY THIS SEAM?</p><h2>Do not wait 60 ticks. Apply 0.42 once to position 100 and velocity -7.4, then compare both next values.</h2><p><strong>Draw:</strong> Play-test flap feel, pipe readability, and animation.</p></div><div class="test-case-table"><p class="eyebrow">Choose boundaries first</p><table><tbody><tr><th>after flap</th><td><code>100,-7.4,+0.42</code></td><td><code>93.02,-6.98</code></td></tr><tr><th>falling</th><td><code>100,2,+0.42</code></td><td><code>102.42,2.42</code></td></tr></tbody></table></div></section><section class="test-update-map"><div><p class="eyebrow">NO OMISSIONS</p><h2>Every step in the current Update</h2><p>There are no ellipses. This is the running order from input and early returns through loops and win/lose. Unit-test the extracted pure rules directly.</p></div><ol><li><span>01</span><p>Read tick count and fresh press</p></li><li><span>02</span><p>Handle pre-start and game-over</p></li><li><span>03</span><p>Apply flap velocity on press</p></li><li><span>04</span><p>Integrate gravity, velocity, then position</p></li><li><span>05</span><p>Move, score, and recycle pipes</p></li><li><span>06</span><p>Resolve collision and best score</p></li></ol></section><section class="test-code-full"><div><p class="eyebrow">REAL GO / complete Update()</p><code>game/main.go</code></div><pre><code>func (g *game) Update() error {
 	g.frame++
 	pressed := justPressed()
 
@@ -101,4 +124,29 @@ func TestIntegrateGravity(t *testing.T) {
 	g.Draw(screen)
 
 	assertGolden(t, screen, "testdata/flappy-ready.png")
-}</code></pre></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Play-test flap feel, pipe readability, and animation.</p></section><nav class="test-pager"><a href="../catch-stars/">← PREVIOUS</a><span>4 / 12</span><a href="../pong/">NEXT →</a></nav></main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>
+}</code></pre></section><section class="test-run"><p>Create these files in your own Go project, then run</p><code>go test ./internal/lessonlogic</code><strong>✓ PASS / NO WINDOW / NO DRAW</strong></section><section class="test-challenge"><p class="eyebrow">MANUAL CHECK IS STILL REAL</p><h2>What a person still checks</h2><p>Play-test flap feel, pipe readability, and animation.</p></section><nav class="test-pager"><a href="../catch-stars/">← PREVIOUS</a><span>4 / 12</span><a href="../pong/">NEXT →</a></nav>
+    <!-- BEGIN BEGINNER BRIDGE -->
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>vy = -7.4; vy += gravity; y += vy</code></pre></div></section>
+<!-- END BEGINNER BRIDGE -->
+<section class="feedback-section" aria-labelledby="feedback-title">
+      <div class="feedback-card">
+        <div class="feedback-heading">
+          <p class="eyebrow">FEEDBACK</p>
+          <h2 id="feedback-title">Quick feedback</h2>
+        </div>
+        <form class="feedback-form" action="https://docs.google.com/forms/d/e/1FAIpQLSdE74SxJYstsQ2pckmG-IIGwgMMlpcp3w7c2bG-RPso-nQLbA/formResponse" method="POST">
+          <input type="hidden" name="entry.765794446" value="/en/guides/testing/flappy/">
+          <label class="feedback-field">
+            <span class="sr-only">Feedback</span>
+            <input class="feedback-message" name="entry.893595607" aria-label="Feedback" maxlength="200" required data-sending="Sending…" data-sent="Sent — thank you!" data-failed="Could not send. Please try again later." placeholder="Write one short note…">
+          </label>
+          <div class="feedback-actions">
+            <button type="submit" class="feedback-submit" disabled aria-disabled="true">Send feedback<span>→</span></button>
+            <p class="feedback-status" aria-live="polite"></p>
+          </div>
+          <input type="hidden" name="fvv" value="1">
+          <input type="hidden" name="pageHistory" value="0">
+        </form>
+      </div>
+    </section>
+</main><footer><span>EBI SHOWCASE</span><span>GO + EBITENGINE</span><span>APACHE-2.0</span></footer><script src="../../../../learn.js"></script></body></html>

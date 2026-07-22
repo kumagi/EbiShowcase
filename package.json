@@ -4,6 +4,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "gen-diagrams": "node scripts/gen-diagrams.mjs",
+    "check-mobile": "node scripts/audit-mobile-layout.mjs",
     "build": "bash scripts/build.sh"
   }
 }
