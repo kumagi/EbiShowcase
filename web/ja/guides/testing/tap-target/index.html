@@ -33,10 +33,10 @@
 	}
 
 	// 時間切れ → 押したら最初から
-	if g.framesLeft &lt;= 0 {
+	if g.ticksLeft &lt;= 0 {
 		if pressed {
 			g.score = 0
-			g.framesLeft = startSeconds * 60
+			g.ticksLeft = startSeconds * 60
 			g.started = false
 			g.moveTarget()
 		}
@@ -44,7 +44,7 @@
 	}
 
 	// タイマーを1 tick減らす
-	g.framesLeft--
+	g.ticksLeft--
 
 	// 押した瞬間だけ、丸との距離を調べる
 	if pressed {

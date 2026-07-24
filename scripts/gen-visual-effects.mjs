@@ -694,70 +694,72 @@ else if wasHolding {
     labKind: "magic-ice",
     concept: { ja: "形成→粉砕のタイミング", en: "Form → shatter timing" },
     hubDesc: {
-      ja: "結晶を集めてから割る。氷スプライト・霜・粉砕・ブルーム。",
-      en: "Gather a crystal, then shatter: ice shards, frost, bloom.",
+      ja: "対象を水色の氷殻で凍結し、霜・ひび・粉砕を順番に見せる。",
+      en: "Freeze a target inside an aqua shell, then show frost, cracks, and shatter.",
     },
     ja: {
-      navConcept: "かっこいい氷",
-      title: "かっこいい氷魔法を作ろう",
-      lead: "ショーケース第2弾。タップすると霜が集まり結晶になり、一瞬の静止のあと粉砕します。「見た目」だけでなく「タイミング」が魔法の正体です。",
-      deepEyebrow: "DEEP DIVE / ICE",
-      deepH: "氷は<br>二幕構成",
-      deepLead: "幕1（forming）: 周囲の霜を中心へ引き寄せ、氷PNGの核を大きくする。幕2（shatter）: 結晶を消し、氷スプライトを外へ飛ばし、加算のキラキラとリングのブルームを足す。phase と timer の状態機械が、同じ粒子エンジンに「物語」を載せます。",
+      navConcept: "水色の凍結",
+      title: "水色の凍結魔法を作ろう",
+      lead: "ショーケース第2弾。タップすると冷気が対象へ集まり、足元から水色の氷殻がせり上がります。完全に凍った姿を一拍見せ、白いひびが走ってから粉砕します。",
+      deepEyebrow: "DEEP DIVE / AQUA FREEZE",
+      deepH: "凍結は<br>三つの合図",
+      deepLead: "①霜と雪片を対象へ集める ②透明感のある水色の氷柱で全身を覆い、動きを止める ③白いひびのあと、尖った氷片と冷気のリングへ砕く。形・色・停止時間を重ねることで、単なる青い爆発ではなく「凍結した」と読めます。",
       concepts: [
-        { h: "形成", p: "霜を中心へ lerp で引き寄せる。", code: "x += (cx-x)*0.06" },
-        { h: "粉砕", p: "外向き速度＋重力で砕片を飛ばす。", code: "Ice PNG + gravity" },
-        { h: "ブルーム", p: "割れた瞬間だけ光るリング。", code: "Ring + Light PNG" },
+        { h: "霜が集まる", p: "水色の冷気を対象へ lerp で引き寄せる。", code: "frost += (target-frost)*0.06" },
+        { h: "氷殻と停止", p: "足元から尖った氷柱を伸ばし、一拍静止する。", code: "drawIceShell(aqua)" },
+        { h: "ひび→粉砕", p: "白い亀裂のあと、外向きに氷片を飛ばす。", code: "drawCracks(); shatter()" },
       ],
       lab: {
-        eyebrow: "TRY IT / ICE SHARDS",
-        title: "結晶の飛び方",
-        p: "バーストで氷スプライトが外へ飛び散ります。本編の「集まる→割れる」二幕はWASMデモで。",
+        eyebrow: "TRY IT / AQUA FREEZE",
+        title: "凍結してから砕ける",
+        p: "水色の氷殻、雪片、冷気の輪が対象を包み、白く光ってから氷片へ砕けます。本編では霜が集まるところから確認できます。",
       },
       play: {
-        title: "結晶を作って砕け",
-        p: "CAST ICE（または Space）。霜が集まり、結晶が割れるまで待ってみよう。",
+        title: "対象を凍結して砕け",
+        p: "CAST ICE（または Space）。霜が集まり、水色の氷殻が完成し、ひび割れて砕けるまで見てみよう。",
       },
-      codeHead: { eyebrow: "IN THE SHOWCASE", h: "phase で二幕を切り替える", p: "forming のあと shatter へ。同じ Particle 型でも役割が変わります。" },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "色・形・停止で凍結を伝える", p: "freeze 中は水色の氷殻を保ち、hold の終わりに亀裂、shatter で破片へ切り替えます。" },
       whys: [
-        { eyebrow: "WHY TWO ACTS?", h: "溜めが印象を作る", p: "いきなり砕くより、一度見せてから壊す方が「魔法っぽい」です。" },
-        { eyebrow: "WHY ICE PNG?", h: "形が属性を語る", p: "丸い火花では氷に見えません。尖ったテクスチャが属性の半分です。" },
+        { eyebrow: "WHY AQUA?", h: "水色を主役にする", p: "紺の背景に明るいシアン、白い稜線、透明な面を重ねると、炎や雷とは違う冷たさが伝わります。" },
+        { eyebrow: "WHY HOLD?", h: "止まった時間が凍結を語る", p: "完成した氷殻を一拍残すと、爆発ではなく「動きを封じた」効果として読めます。" },
         { eyebrow: "TRY NEXT", h: "雷へ", p: "次は枝分かれする稲妻の線芸です。" },
       ],
     },
     en: {
-      navConcept: "Cool ice",
-      title: "Make Cool Ice Magic",
-      lead: "Showcase #2. Tap to gather frost into a crystal, pause, then shatter. Timing—not just pixels—is the spell.",
-      deepEyebrow: "DEEP DIVE / ICE",
-      deepH: "Ice is<br>a two-act play",
-      deepLead: "Act 1 (forming): pull frost inward and grow an ice-PNG core. Act 2 (shatter): hide the crystal, fling ice sprites outward, add additive sparkles and a bloom ring. A tiny phase/timer state machine puts a story on the same particle engine.",
+      navConcept: "Aqua freeze",
+      title: "Build an Aqua Freeze Spell",
+      lead: "Showcase #2. Cold gathers around the target, then an aqua ice shell rises from the floor. Hold the fully frozen pose for one beat, draw white cracks, and only then shatter.",
+      deepEyebrow: "DEEP DIVE / AQUA FREEZE",
+      deepH: "Freeze has<br>three cues",
+      deepLead: "① Pull frost and snowflakes toward the target ② Cover the body with translucent aqua spikes and stop the motion ③ Draw white cracks, then release sharp shards and a cold bloom ring. Shape, color, and held time make this read as freezing instead of a blue explosion.",
       concepts: [
-        { h: "Form", p: "Lerp frost toward the center.", code: "x += (cx-x)*0.06" },
-        { h: "Shatter", p: "Outward velocity + gravity shards.", code: "Ice PNG + gravity" },
-        { h: "Bloom", p: "A ring that flashes on the break.", code: "Ring + Light PNG" },
+        { h: "Gather frost", p: "Lerp aqua cold toward the target.", code: "frost += (target-frost)*0.06" },
+        { h: "Shell and hold", p: "Grow sharp ice from the floor, then pause.", code: "drawIceShell(aqua)" },
+        { h: "Crack → shatter", p: "Show white fractures before outward shards.", code: "drawCracks(); shatter()" },
       ],
       lab: {
-        eyebrow: "TRY IT / ICE SHARDS",
-        title: "Watch shards fly",
-        p: "Burst to scatter ice sprites. The gather→break two-act lives in the WASM demo.",
+        eyebrow: "TRY IT / AQUA FREEZE",
+        title: "Freeze, then shatter",
+        p: "An aqua shell, snowflakes, and a cold ring lock the target, flash white, and break into shards. The full demo starts with gathering frost.",
       },
       play: {
-        title: "Form and shatter",
-        p: "Tap CAST ICE (or Space). Watch frost gather, then the crystal break.",
+        title: "Freeze and break the target",
+        p: "Tap CAST ICE (or Space). Watch frost gather, the aqua shell hold, white cracks appear, and the prison shatter.",
       },
-      codeHead: { eyebrow: "IN THE SHOWCASE", h: "Switch acts with phase", p: "forming → shatter. Same Particle type, different jobs." },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "Sell freeze with color, shape, and a hold", p: "Keep the aqua shell during freeze, add cracks at the end of hold, then switch to shards." },
       whys: [
-        { eyebrow: "WHY TWO ACTS?", h: "Build-up sells the break", p: "Shattering after a beat feels more magical than an instant burst." },
-        { eyebrow: "WHY ICE PNG?", h: "Shape reads as element", p: "Round sparks don’t say ice—sharp textures do half the work." },
+        { eyebrow: "WHY AQUA?", h: "Make cyan the lead color", p: "Bright cyan, white ridges, and translucent planes against navy read colder than a generic pale burst." },
+        { eyebrow: "WHY HOLD?", h: "Stopped time communicates freeze", p: "Leaving the completed shell on screen for one beat makes it feel like motion was sealed, not merely exploded." },
         { eyebrow: "TRY NEXT", h: "Thunder", p: "Next: branching jagged lightning lines." },
       ],
     },
-    code: `// Act 1: pull frost inward
-f.x += (castX - f.x) * 0.06
-// Act 2: shatter shards outward
+    code: `// Freeze: gather frost and hold an aqua shell
+frost += (target - frost) * 0.06
+drawIceShell(target, aqua)
+if freezeTick > 55 { drawCracks(target) }
+// Shatter: release sharp shards only after the held pose
 spawn(IcePNG, vx: cos(a)*sp, grav: 0.12)
-spawn(Ring) // bloom on break`,
+spawn(ColdRing)`,
   },
   {
     slug: "vfx-magic-thunder",
@@ -840,73 +842,74 @@ StrokeLine(glow); StrokeLine(body); StrokeLine(core)`,
     step: "12",
     stars: "★★★★★",
     labKind: "magic-light",
-    concept: { ja: "放射フレアとブルーム", en: "Radial flare & bloom" },
+    concept: { ja: "光柱・輪光・祝福の余韻", en: "Pillar, halo & benediction" },
     hubDesc: {
-      ja: "放射状の光線・ソフトブルーム・キラキラ粒。",
-      en: "Radial rays, soft bloom, twinkling sparks.",
+      ja: "天から降りる金白色の光柱、三重の輪光、左右対称の光線、祝福の粒。",
+      en: "A descending white-gold pillar, triple halo, symmetric rays, and blessing motes.",
     },
     ja: {
-      navConcept: "かっこいい光",
-      title: "かっこいい光魔法を作ろう",
-      lead: "ショーケース第4弾。中心から光線が走り、柔らかい光の輪が広がります。暗い背景ほど加算合成が効きます。",
-      deepEyebrow: "DEEP DIVE / LIGHT",
-      deepH: "光は<br>中心から外へ",
-      deepLead: "①中心から放射する StrokeLine のレイ ②light.png のソフトフレアを複数枚重ねてブルーム風 ③ring.png の拡大輪 ④spark のキラキラ。暗い背景＋ BlendLighter で「光源」に見せるのがコツ。色は白〜金に寄せると神聖さが出ます。",
+      navConcept: "神聖な光",
+      title: "神聖な光魔法を作ろう",
+      lead: "ショーケース第4弾。天から金白色の光柱が降り、対象の背後に三重の輪光と左右対称の光線が現れます。最後に小さな光がゆっくり降り、祝福の余韻を残します。",
+      deepEyebrow: "DEEP DIVE / SACRED LIGHT",
+      deepH: "神聖さは<br>秩序と降臨",
+      deepLead: "①上から下へ降りる幅の違う光柱 ②中心を動かさない三重の輪光と十字光 ③左右対称に開く光線 ④爆発せず静かに降る金色の粒。白〜金の色、上から来る方向、回転しない幾何学、長めの余韻を重ねると、ただ明るいだけでなく「神聖な力が降りた」と読めます。",
       concepts: [
-        { h: "放射レイ", p: "角度を等分して線を伸ばす。", code: "ang = i * 2π / n" },
-        { h: "ブルーム", p: "半透明のフレアを重ねる。", code: "Light PNG × layers" },
-        { h: "キラキラ", p: "外向きの小さな spark。", code: "Spark + outward vel" },
+        { h: "天からの光柱", p: "幅の違う半透明の帯を上から重ねる。", code: "DrawLightPillar(whiteGold)" },
+        { h: "輪光と対称性", p: "同心円・十字・左右対称の線を固定する。", code: "DrawHalo(rings: 3)" },
+        { h: "祝福の余韻", p: "金白色の小さな光をゆっくり降らせる。", code: "mote.y += fallSlowly()" },
       ],
       lab: {
-        eyebrow: "TRY IT / FLARE",
-        title: "光の広がり",
-        p: "バーストでフレアと粒が広がります。放射レイの本数はWASMデモで体感。",
+        eyebrow: "TRY IT / BENEDICTION",
+        title: "光が降り、祝福が残る",
+        p: "光柱、三重の輪光、対称のレイ、降り続ける金色の粒を重ねます。本編では光線の本数と長さも変えられます。",
       },
       play: {
-        title: "聖なる光を放て",
-        p: "CAST LIGHT（または Space）。レイとブルームが重なる様子を見てみよう。",
+        title: "聖なる光を降ろせ",
+        p: "CAST LIGHT（または Space）。天からの光柱、輪光、祝福の粒が順番に重なる様子を見てみよう。",
       },
-      codeHead: { eyebrow: "IN THE SHOWCASE", h: "レイ＋フレア＋リング", p: "線とテクスチャを同じ原点から同時に広げます。" },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "光柱→輪光→祝福", p: "方向、対称性、ゆっくりした粒の順で、演出に儀式らしい秩序を作ります。" },
       whys: [
-        { eyebrow: "WHY DARK BG?", h: "加算の味方", p: "暗い画面ほど、明るい加算が「光」に見えます。" },
-        { eyebrow: "WHY MANY LAYERS?", h: "ソフトなにじみ", p: "一枚の大きな円より、薄いフレアを重ねた方が自然です。" },
+        { eyebrow: "WHY FROM ABOVE?", h: "降臨の方向を作る", p: "中心から爆発させず、上から対象へ光を降ろすと、外から授けられた力に見えます。" },
+        { eyebrow: "WHY SYMMETRY?", h: "秩序が神聖さになる", p: "ランダムに回転する線より、輪・十字・左右対称の形の方が紋章や儀式として読めます。" },
         { eyebrow: "TRY NEXT", h: "闇へ", p: "最後は内側へ吸い込む渦です。" },
       ],
     },
     en: {
-      navConcept: "Cool light",
-      title: "Make Cool Light Magic",
-      lead: "Showcase #4. Rays shoot from the center while soft bloom rings expand. Dark backgrounds make additive light sing.",
-      deepEyebrow: "DEEP DIVE / LIGHT",
-      deepH: "Light moves<br>out from a core",
-      deepLead: "① Radial StrokeLine rays ② Stacked light.png flares for soft bloom ③ Expanding ring.png ④ Outward spark twinkles. Dark BG + BlendLighter sells a light source; gold–white tints feel sacred.",
+      navConcept: "Sacred light",
+      title: "Build Sacred Light Magic",
+      lead: "Showcase #4. A white-gold pillar descends from above, while a triple halo and symmetric rays form behind the target. Slow falling motes leave a benediction-like afterglow.",
+      deepEyebrow: "DEEP DIVE / SACRED LIGHT",
+      deepH: "Sacred reads as<br>order and descent",
+      deepLead: "① Stack vertical bands into a descending pillar ② Keep a triple halo and cross fixed at the center ③ Open rays symmetrically to both sides ④ Let small gold motes fall instead of exploding outward. White-gold color, top-down direction, still geometry, and a long tail make this feel like a sacred presence rather than generic brightness.",
       concepts: [
-        { h: "Radial rays", p: "Even angles, growing lines.", code: "ang = i * 2π / n" },
-        { h: "Bloom", p: "Stack translucent flares.", code: "Light PNG × layers" },
-        { h: "Twinkles", p: "Tiny outward sparks.", code: "Spark + outward vel" },
+        { h: "Pillar from above", p: "Stack translucent bands of different widths.", code: "DrawLightPillar(whiteGold)" },
+        { h: "Halo and symmetry", p: "Fix concentric rings, a cross, and paired rays.", code: "DrawHalo(rings: 3)" },
+        { h: "Benediction tail", p: "Let white-gold motes descend slowly.", code: "mote.y += fallSlowly()" },
       ],
       lab: {
-        eyebrow: "TRY IT / FLARE",
-        title: "Watch the flare grow",
-        p: "Burst for flare and sparks. Feel ray count in the WASM demo.",
+        eyebrow: "TRY IT / BENEDICTION",
+        title: "Let light descend and linger",
+        p: "Layer a pillar, triple halo, symmetric rays, and falling gold motes. The full demo lets you tune ray count and length.",
       },
       play: {
-        title: "Cast holy light",
-        p: "Tap CAST LIGHT (or Space). Watch rays and bloom stack.",
+        title: "Call down sacred light",
+        p: "Tap CAST LIGHT (or Space). Watch the pillar, halo, and blessing motes arrive in layers.",
       },
-      codeHead: { eyebrow: "IN THE SHOWCASE", h: "Rays + flare + ring", p: "Expand lines and textures from the same origin." },
+      codeHead: { eyebrow: "IN THE SHOWCASE", h: "Pillar → halo → benediction", p: "Direction, symmetry, and slow particles give the effect a ceremonial order." },
       whys: [
-        { eyebrow: "WHY DARK BG?", h: "Additive’s friend", p: "On a dark screen, bright additive reads as light." },
-        { eyebrow: "WHY MANY LAYERS?", h: "Soft bleed", p: "Thin stacked flares beat one hard circle." },
+        { eyebrow: "WHY FROM ABOVE?", h: "Give the light a source", p: "Descending toward the target feels bestowed; exploding from the center feels like another attack." },
+        { eyebrow: "WHY SYMMETRY?", h: "Order becomes sacred", p: "Still rings, a cross, and paired rays read as an emblem or ritual rather than random glare." },
         { eyebrow: "TRY NEXT", h: "Dark", p: "Finale: a vortex that pulls inward." },
       ],
     },
-    code: `for i := 0; i < n; i++ {
-  ang := base + float64(i)*2*math.Pi/float64(n)
-  StrokeLine(cx,cy, cx+cos(ang)*len, cy+sin(ang)*len, ...)
+    code: `DrawLightPillar(target, whiteGold)
+DrawHalo(target, rings: 3)
+for i := 0; i < rays; i++ {
+  ang := -math.Pi/2 + float64(i)*2*math.Pi/float64(rays)
+  DrawSymmetricRay(target, ang)
 }
-DrawImage(LightPNG) // soft bloom layers
-DrawImage(RingPNG)  // expanding ring`,
+for _, mote := range blessingMotes { mote.y += fallSlowly }`,
   },
   {
     slug: "vfx-magic-dark",
@@ -1393,11 +1396,11 @@ function hubPage(lang) {
   const basicSteps = basic.map(stepLink).join("\n");
   const advSteps = advanced.map(stepLink).join("\n");
   const bridge = lang === "ja"
-    ? `<p class="curriculum-bridge">共通基礎(LEVEL 01〜12)の続きです。前半は描画道具、A01〜A12は<strong>ルールの事実→独立した演出状態→Draw/FX</strong>という実装設計を12種類のゲームで身につけます。この設計が次の25ジャンル共通の前提になります。</p>`
-    : `<p class="curriculum-bridge">This continues the core lessons (LEVEL 01–12). Basics cover drawing tools; A01–A12 teach twelve implementations of <strong>rule fact → independent presentation state → Draw/FX</strong>. That architecture is assumed by all twenty-five genre paths.</p>`;
+    ? `<p class="curriculum-bridge">共通基礎(LEVEL 01〜12)の続きです。前半は描画道具、A01〜A12は<strong>ルールの事実→独立した演出状態→Draw/FX</strong>という実装設計を12種類のゲームで身につけます。ここは必修ではありません。先に好きなジャンルへ進み、演出で困った時に対応する章へ戻っても大丈夫です。</p>`
+    : `<p class="curriculum-bridge">This continues the core lessons (LEVEL 01–12). Basics cover drawing tools; A01–A12 teach twelve implementations of <strong>rule fact → independent presentation state → Draw/FX</strong>. This is not a prerequisite: start a genre first and return to the matching chapter when presentation gets tricky.</p>`;
   const parameterTableBlock = lang === "ja"
-    ? `<section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">数字を変えると、見た目が変わる。</h2><p>speed・size・alpha・lifeを変えると、同じルールでも手ざわりが変わります。</p></div><table class="vfx-parameter-table"><thead><tr><th>値</th><th>意味</th><th>小さく</th><th>大きく</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>粒の速さ</td><td>漂う</td><td>飛ぶ</td></tr><tr><th scope="row"><code>size</code></th><td>大きさ</td><td>細かい</td><td>フレア</td></tr><tr><th scope="row"><code>alpha</code></th><td>透明度</td><td>薄い</td><td>濃い</td></tr><tr><th scope="row"><code>life</code></th><td>寿命（フレーム）</td><td>一瞬</td><td>余韻</td></tr></tbody></table></section>`
-    : `<section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">Change a number, change the feel.</h2><p>Try speed, size, alpha, and life independently from the game rules.</p></div><table class="vfx-parameter-table"><thead><tr><th>Value</th><th>Meaning</th><th>Smaller</th><th>Larger</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>Particle speed</td><td>Drift</td><td>Burst</td></tr><tr><th scope="row"><code>size</code></th><td>Scale</td><td>Tiny</td><td>Flare</td></tr><tr><th scope="row"><code>alpha</code></th><td>Opacity</td><td>Faint</td><td>Solid</td></tr><tr><th scope="row"><code>life</code></th><td>Frames alive</td><td>Quick</td><td>Afterglow</td></tr></tbody></table></section>`;
+    ? `<section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">数字を変えると、見た目が変わる。</h2><p>speed・size・alpha・lifeを変えると、同じルールでも手ざわりが変わります。</p></div><table class="vfx-parameter-table"><thead><tr><th>値</th><th>意味</th><th>小さく</th><th>大きく</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>粒の速さ</td><td>漂う</td><td>飛ぶ</td></tr><tr><th scope="row"><code>size</code></th><td>大きさ</td><td>細かい</td><td>フレア</td></tr><tr><th scope="row"><code>alpha</code></th><td>透明度</td><td>薄い</td><td>濃い</td></tr><tr><th scope="row"><code>life</code></th><td>寿命（tick）</td><td>一瞬</td><td>余韻</td></tr></tbody></table></section>`
+    : `<section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">Change a number, change the feel.</h2><p>Try speed, size, alpha, and life independently from the game rules.</p></div><table class="vfx-parameter-table"><thead><tr><th>Value</th><th>Meaning</th><th>Smaller</th><th>Larger</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>Particle speed</td><td>Drift</td><td>Burst</td></tr><tr><th scope="row"><code>size</code></th><td>Scale</td><td>Tiny</td><td>Flare</td></tr><tr><th scope="row"><code>alpha</code></th><td>Opacity</td><td>Faint</td><td>Solid</td></tr><tr><th scope="row"><code>life</code></th><td>Ticks alive</td><td>Quick</td><td>Afterglow</td></tr></tbody></table></section>`;
   const basicHead = lang === "ja"
     ? `${parameterTableBlock}<div class="path-intro"><p class="eyebrow">BASIC / 基本編</p><h2>描画の文法を<br>手で確かめる。</h2><p>スタンプから魔法ショーケースまで。ページ上のスライダーで「置く・回す・染める」を体感する ${basic.length} ステップ（全部やらなくてOK）。</p></div>`
     : `${parameterTableBlock}<div class="path-intro"><p class="eyebrow">BASIC</p><h2>Feel the drawing<br>grammar by hand.</h2><p>${basic.length} steps from Stamp to magic showcases—try the on-page sliders (you don’t need every step).</p></div>`;
@@ -1405,8 +1408,8 @@ function hubPage(lang) {
     ? `<div class="path-intro" id="advanced"><p class="eyebrow">ADVANCED / アニメーション設計編</p><h2>12のゲームで、<br>12の壊れにくい動かし方。</h2><p>値イベント、演出レシピ、表示代理、導出Pose、描画履歴、削除Snapshot、グリッド補間、イベント予算、Plan→Commit→Tween、状態エッジ、リアクション時間軸、決定的Cue台本を一章ずつ実装します。</p></div>`
     : `<div class="path-intro" id="advanced"><p class="eyebrow">ADVANCED / ANIMATION ARCHITECTURE</p><h2>Twelve games,<br>twelve durable motion designs.</h2><p>Build immutable events, recipes, proxies, derived poses, bounded history, deletion snapshots, grid interpolation, event budgets, Plan→Commit→Tween, state edges, reaction timelines, and deterministic cue scripts—one per chapter.</p></div>`;
   const parameterTable = lang === "ja"
-    ? '<section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">数字を変えると、見た目が変わる。</h2><p>各ステップで触る代表値をまとめました。ルールの数字と演出の数字を別々に調整すると、ゲーム性を壊さず手ざわりを磨けます。</p></div><div class="vfx-parameter-table-wrap"><table class="vfx-parameter-table"><thead><tr><th>パラメータ</th><th>意味</th><th>小さくすると</th><th>大きくすると</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>粒の移動量</td><td>ふわっと漂う</td><td>勢いよく飛ぶ</td></tr><tr><th scope="row"><code>size</code></th><td>光・粒の大きさ</td><td>細かな点</td><td>大きなフレア</td></tr><tr><th scope="row"><code>alpha</code></th><td>透明度</td><td>淡い残像</td><td>くっきり見える</td></tr><tr><th scope="row"><code>life</code></th><td>生きているフレーム数</td><td>短い一瞬</td><td>長い余韻</td></tr></tbody></table></div></section>'
-    : '<section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">Change a number, change the feel.</h2><p>These are the first knobs to try in each chapter. Tune rule numbers and presentation numbers separately so polish never changes the win condition.</p></div><div class="vfx-parameter-table-wrap"><table class="vfx-parameter-table"><thead><tr><th>Parameter</th><th>Meaning</th><th>Smaller</th><th>Larger</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>Particle movement</td><td>Soft drift</td><td>Sharp burst</td></tr><tr><th scope="row"><code>size</code></th><td>Glow or particle size</td><td>Tiny dots</td><td>Big flare</td></tr><tr><th scope="row"><code>alpha</code></th><td>Opacity</td><td>Faint trail</td><td>Solid mark</td></tr><tr><th scope="row"><code>life</code></th><td>Frames alive</td><td>Quick spark</td><td>Long afterglow</td></tr></tbody></table></div></section>';
+    ? '<section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">数字を変えると、見た目が変わる。</h2><p>各ステップで触る代表値をまとめました。ルールの数字と演出の数字を別々に調整すると、ゲーム性を壊さず手ざわりを磨けます。</p></div><div class="vfx-parameter-table-wrap"><table class="vfx-parameter-table"><thead><tr><th>パラメータ</th><th>意味</th><th>小さくすると</th><th>大きくすると</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>粒の移動量</td><td>ふわっと漂う</td><td>勢いよく飛ぶ</td></tr><tr><th scope="row"><code>size</code></th><td>光・粒の大きさ</td><td>細かな点</td><td>大きなフレア</td></tr><tr><th scope="row"><code>alpha</code></th><td>透明度</td><td>淡い残像</td><td>くっきり見える</td></tr><tr><th scope="row"><code>life</code></th><td>生きているtick数</td><td>短い一瞬</td><td>長い余韻</td></tr></tbody></table></div></section>'
+    : '<section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">Change a number, change the feel.</h2><p>These are the first knobs to try in each chapter. Tune rule numbers and presentation numbers separately so polish never changes the win condition.</p></div><div class="vfx-parameter-table-wrap"><table class="vfx-parameter-table"><thead><tr><th>Parameter</th><th>Meaning</th><th>Smaller</th><th>Larger</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>Particle movement</td><td>Soft drift</td><td>Sharp burst</td></tr><tr><th scope="row"><code>size</code></th><td>Glow or particle size</td><td>Tiny dots</td><td>Big flare</td></tr><tr><th scope="row"><code>alpha</code></th><td>Opacity</td><td>Faint trail</td><td>Solid mark</td></tr><tr><th scope="row"><code>life</code></th><td>Ticks alive</td><td>Quick spark</td><td>Long afterglow</td></tr></tbody></table></div></section>';
 
   return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>${h.title} | Ebi Showcase</title><link rel="stylesheet" href="../../../style.css"></head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">${lang === "ja" ? "目次" : "CURRICULUM"}</a><a class="lang" href="../../../${other}/tracks/${track}/">${otherLabel}</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">${h.breadcrumb}</a><span>${basic.length}+${advanced.length} STEPS</span></div><section class="track-hero track-visual-effects"><span class="track-letter">${hub.letter}</span><div><p class="eyebrow">${h.eyebrow}</p><h1>${h.title}</h1><p>${h.lead}</p></div>${bridge}</section><section class="path-list"><div class="path-intro"><p class="eyebrow">LEARNING PATH</p><h2>${h.pathTitle}</h2><p>${h.pathLead}</p></div>${basicHead}${basicSteps}${advHead}${advSteps}</section></main></body></html>
 `;
@@ -1419,7 +1422,7 @@ function homeSection(lang) {
     ? {
         eyebrow: "VISUAL EFFECTS / 表現編",
         title: "ルールを覚えたら、<br>画面に手ざわりを足そう。",
-        lead: "前半で描画道具を触り、後半はLEVEL 01〜12を使ってアニメーション状態の設計を学びます。派手さだけでなく、GPUなしでテストでき、ゲームルールを壊さず拡張できるコードが25のゲーム制作編への入口です。",
+        lead: "前半で描画道具を触り、後半はLEVEL 01〜12を使ってアニメーション状態の設計を学びます。ここは必修ではありません。気になる演出だけ試すか、先に好きなゲーム制作編へ進んで必要な時に戻れます。",
         basicEyebrow: "DRAWING BASICS / 描画の基本",
         basicTitle: "まずは、絵を変える13の道具。",
         basicLead: "置く、回す、染める、透かす、光らせる。気になるパネルから触って大丈夫です。",
@@ -1432,7 +1435,7 @@ function homeSection(lang) {
     : {
         eyebrow: "VISUAL EFFECTS / PRESENTATION",
         title: "Once the rules work,<br>give the screen some feel.",
-        lead: "First touch the drawing tools. Then use LEVEL 01–12 to design animation state that is rich on screen, testable without a GPU, and safe to extend. This code architecture leads directly into the twenty-five game-building paths.",
+        lead: "First touch the drawing tools, then use LEVEL 01–12 to design animation state. This is optional: try only the effects you like, or start a game-building path and return here when you need a specific technique.",
         basicEyebrow: "DRAWING BASICS",
         basicTitle: "Start with thirteen ways to change a picture.",
         basicLead: "Place, spin, tint, fade, and glow. It is fine to begin with whichever panel catches your eye.",

@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Showcase #4. Rays shoot from the center while soft bloom rings expand. Dark backgrounds make additive light sing. Play the demo, add one Go rule, verify it, and">
-  <title>Ebi Showcase – Make Cool Light Magic</title>
+  <meta name="description" content="Showcase #4. A white-gold pillar descends from above, while a triple halo and symmetric rays form behind the target. Slow falling motes leav">
+  <title>Ebi Showcase – Build Sacred Light Magic</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-magic-light/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Make Cool Light Magic">
-    <meta property="og:description" content="Showcase #4. Rays shoot from the center while soft bloom rings expand. Dark backgrounds make additive light sing. Play the demo, add one Go rule, verify it, and">
+    <meta property="og:title" content="Ebi Showcase – Build Sacred Light Magic">
+    <meta property="og:description" content="Showcase #4. A white-gold pillar descends from above, while a triple halo and symmetric rays form behind the target. Slow falling motes leav">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-magic-light/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-magic-light.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Make Cool Light Magic">
+    <meta property="og:image:alt" content="Build Sacred Light Magic">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Make Cool Light Magic">
-    <meta name="twitter:description" content="Showcase #4. Rays shoot from the center while soft bloom rings expand. Dark backgrounds make additive light sing. Play the demo, add one Go rule, verify it, and">
+    <meta name="twitter:title" content="Ebi Showcase – Build Sacred Light Magic">
+    <meta name="twitter:description" content="Showcase #4. A white-gold pillar descends from above, while a triple halo and symmetric rays form behind the target. Slow falling motes leav">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-magic-light.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Make Cool Light Magic">
+    <meta name="twitter:image:alt" content="Build Sacred Light Magic">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -44,25 +44,25 @@
 
     <section class="overview-hero">
       <p class="eyebrow">★★★★★ / PLAYABLE</p>
-      <h1>Make Cool Light Magic</h1>
-      <p>Showcase #4. Rays shoot from the center while soft bloom rings expand. Dark backgrounds make additive light sing.</p>
-      <div class="overview-concept"><small>What you learn here</small><strong>Radial flare & bloom</strong></div>
+      <h1>Build Sacred Light Magic</h1>
+      <p>Showcase #4. A white-gold pillar descends from above, while a triple halo and symmetric rays form behind the target. Slow falling motes leave a benediction-like afterglow.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Pillar, halo & benediction</strong></div>
     </section>
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Cast holy light</h2></div>
-        <p>Tap CAST LIGHT (or Space). Watch rays and bloom stack.</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Call down sacred light</h2></div>
+        <p>Tap CAST LIGHT (or Space). Watch the pillar, halo, and blessing motes arrive in layers.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 12</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="Make Cool Light Magic" src="../../../../play/vfx-magic-light/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Build Sacred Light Magic" src="../../../../play/vfx-magic-light/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>angle := 2 * math.Pi * float64(i) / 16</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>DrawPillar(); DrawHalo(); fallBlessingMotes()</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
 
@@ -70,37 +70,37 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / LIGHT</p>
-        <h2>Light moves<br>out from a core</h2>
-        <p class="lesson-lead">① Radial StrokeLine rays ② Stacked light.png flares for soft bloom ③ Expanding ring.png ④ Outward spark twinkles. Dark BG + BlendLighter sells a light source; gold–white tints feel sacred.</p>
+        <p class="eyebrow">DEEP DIVE / SACRED LIGHT</p>
+        <h2>Sacred reads as<br>order and descent</h2>
+        <p class="lesson-lead">① Stack vertical bands into a descending pillar ② Keep a triple halo and cross fixed at the center ③ Open rays symmetrically to both sides ④ Let small gold motes fall instead of exploding outward. White-gold color, top-down direction, still geometry, and a long tail make this feel like a sacred presence rather than generic brightness.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>Radial rays</h3>
-          <p>Even angles, growing lines.</p>
-          <code>ang = i * 2π / n</code>
+          <h3>Pillar from above</h3>
+          <p>Stack translucent bands of different widths.</p>
+          <code>DrawLightPillar(whiteGold)</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>Bloom</h3>
-          <p>Stack translucent flares.</p>
-          <code>Light PNG × layers</code>
+          <h3>Halo and symmetry</h3>
+          <p>Fix concentric rings, a cross, and paired rays.</p>
+          <code>DrawHalo(rings: 3)</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>Twinkles</h3>
-          <p>Tiny outward sparks.</p>
-          <code>Spark + outward vel</code>
+          <h3>Benediction tail</h3>
+          <p>Let white-gold motes descend slowly.</p>
+          <code>mote.y += fallSlowly()</code>
         </article>
       </div>
 
       <div class="motion-lab" data-lab="magic-light" aria-labelledby="lab-title-vfx-magic-light">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / FLARE</p>
-          <h3 id="lab-title-vfx-magic-light">Watch the flare grow</h3>
-          <p>Burst for flare and sparks. Feel ray count in the WASM demo.</p>
+          <p class="eyebrow">TRY IT / BENEDICTION</p>
+          <h3 id="lab-title-vfx-magic-light">Let light descend and linger</h3>
+          <p>Layer a pillar, triple halo, symmetric rays, and falling gold motes. The full demo lets you tune ray count and length.</p>
           <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-burst>Burst!</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
@@ -112,27 +112,28 @@
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE SHOWCASE</p>
-          <h3>Rays + flare + ring</h3>
-          <p>Expand lines and textures from the same origin.</p>
+          <h3>Pillar → halo → benediction</h3>
+          <p>Direction, symmetry, and slow particles give the effect a ceremonial order.</p>
         </div>
-        <pre><code>for i := 0; i &lt; n; i++ {
-  ang := base + float64(i)*2*math.Pi/float64(n)
-  StrokeLine(cx,cy, cx+cos(ang)*len, cy+sin(ang)*len, ...)
+        <pre><code>DrawLightPillar(target, whiteGold)
+DrawHalo(target, rings: 3)
+for i := 0; i &lt; rays; i++ {
+  ang := -math.Pi/2 + float64(i)*2*math.Pi/float64(rays)
+  DrawSymmetricRay(target, ang)
 }
-DrawImage(LightPNG) // soft bloom layers
-DrawImage(RingPNG)  // expanding ring</code></pre>
+for _, mote := range blessingMotes { mote.y += fallSlowly }</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY DARK BG?</p>
-          <h3>Additive’s friend</h3>
-          <p>On a dark screen, bright additive reads as light.</p>
+          <p class="eyebrow">WHY FROM ABOVE?</p>
+          <h3>Give the light a source</h3>
+          <p>Descending toward the target feels bestowed; exploding from the center feels like another attack.</p>
         </article>
         <article>
-          <p class="eyebrow">WHY MANY LAYERS?</p>
-          <h3>Soft bleed</h3>
-          <p>Thin stacked flares beat one hard circle.</p>
+          <p class="eyebrow">WHY SYMMETRY?</p>
+          <h3>Order becomes sacred</h3>
+          <p>Still rings, a cross, and paired rays read as an emblem or ritual rather than random glare.</p>
         </article>
         <article class="challenge">
           <p class="eyebrow">TRY NEXT</p>

@@ -12,7 +12,7 @@ func TestActionAddsOneStar(t *testing.T) {
 
 func TestTimeLimitEndsRound(t *testing.T) {
 	round := NewRound()
-	round.Frames = RoundFrames - 1
+	round.Ticks = RoundTicks - 1
 	round.Step(Input{})
 	if !round.Over {
 		t.Fatal("round must end")
@@ -20,7 +20,7 @@ func TestTimeLimitEndsRound(t *testing.T) {
 }
 
 func TestRestartMakesFreshRound(t *testing.T) {
-	round := Round{Score: 40, Frames: 900, Over: true}
+	round := Round{Score: 40, Ticks: 900, Over: true}
 	round.Step(Input{Restart: true})
 	if round != (Round{}) {
 		t.Fatalf("restart = %+v", round)

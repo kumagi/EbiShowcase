@@ -76,7 +76,7 @@
       <article class="setup-os"><h3>Windows</h3><ol class="setup-ol"><li>キーボードの Windows キーを押す</li><li>「powershell」と入力する</li><li>「Windows PowerShell」または「ターミナル」を開く</li></ol></article>
       <article class="setup-os"><h3>macOS</h3><ol class="setup-ol"><li>Command + Space キーを同時に押す</li><li>「ターミナル」と入力する</li><li>「ターミナル」アプリを開く</li></ol></article>
     </div>
-    <p class="setup-tip">文字を入力する画面が開き、カーソルが点滅していれば OK。Windows は黒いことが多く、Mac は白いこともありますが、役割は同じです。これからここにコマンドをコピーして貼り付けます。</p>
+    <p class="setup-tip">文字を入力する画面が開き、カーソルが点滅していれば OK。これから出てくるコマンドは、右上の「コピー」を押し、1行ずつ貼り付けて Enter を押します。画面の先頭に見える <code>PS C:\&gt;</code> や <code>%</code> は入力しません。</p>
     <p class="setup-note">用語メモ：Windows では「PowerShell」、Mac では「ターミナル」と呼ぶことが多いです。どちらも<strong>同じ役割</strong>——キーボードでパソコンに命令を出す黒い（または白い）窓です。「ターミナル＝Mac専用」ではありません。Windows 11 の「ターミナル」アプリでも PowerShell が使えます。このガイドでは Windows 欄を PowerShell、Mac 欄をターミナルと書きます。</p>
   </section>
 
@@ -96,7 +96,13 @@
     <h2>Mac だけ：C コンパイラを入れる</h2>
     <p class="setup-lead">Ebitengine は中で C の部品も使います。<strong>Windows の学校 PC はこのステップを飛ばして大丈夫</strong>です。Mac だけ、無料の「コマンドラインツール」——プログラムを作るときに裏側で使う道具一式——を入れます。長い名前を覚える必要はありません。教室の PC が Windows なら、すぐ「3. 動作確認」へ進んでください。</p>
     <p class="setup-skip">Windows の人はこのステップを飛ばして「3. 動作確認」へ進んでください。</p>
-    <pre class="setup-code"><code>xcode-select --install</code></pre>
+    <div class="full-code setup-full-code">
+  <div class="full-code-head">
+    <span>Mac のコマンド</span>
+    <button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました">コピー</button>
+  </div>
+  <pre class="setup-code"><code>xcode-select --install</code></pre>
+</div>
     <ol class="setup-ol"><li>ターミナルに上のコマンドを貼り付けて Enter</li><li>ダイアログが出たら「インストール」を選ぶ（数分〜十数分かかることがあります）</li><li>すでに入っている場合は「command line tools are already installed」のようなメッセージで大丈夫です</li></ol>
   </section>
 
@@ -104,13 +110,25 @@
     <p class="setup-n">STEP 03</p>
     <h2>本当に入ったか確かめる</h2>
     <p class="setup-lead">ターミナルに次を打ち、Enter を押します。</p>
-    <pre class="setup-code"><code>go version</code></pre>
+    <div class="full-code setup-full-code">
+  <div class="full-code-head">
+    <span>動作確認</span>
+    <button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました">コピー</button>
+  </div>
+  <pre class="setup-code"><code>go version</code></pre>
+</div>
     <p class="setup-ok">例: go version go1.25.0 windows/amd64 のように、go1.25 以上の数字が出れば成功です。</p>
     <p class="setup-fail">「コマンドが見つかりません」「go は認識されていません」と出たら：インストール後にターミナルを開き直したか確認し、それでもだめなら PC を再起動してからもう一度。</p>
     <div class="setup-bonus">
       <h3>さらに安心したい人へ（任意）</h3>
       <p>公式の回転サンプルを一度走らせると、画面が出るところまでまとめて確認できます。初回はダウンロードに少し時間がかかります。</p>
-      <pre class="setup-code"><code>go run github.com/hajimehoshi/ebiten/v2/examples/rotate@latest</code></pre>
+      <div class="full-code setup-full-code">
+  <div class="full-code-head">
+    <span>任意の確認</span>
+    <button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました">コピー</button>
+  </div>
+  <pre class="setup-code"><code>go run github.com/hajimehoshi/ebiten/v2/examples/rotate@latest</code></pre>
+</div>
       <p>ゴファーの絵がくるくる回る窓が開けば、環境はバッチリです。閉じたら次へ進みましょう。</p>
     </div>
   </section>
@@ -119,14 +137,21 @@
     <p class="setup-n">STEP 04</p>
     <h2>ゲーム用のフォルダを作る</h2>
     <p class="setup-lead">デスクトップでもドキュメントでも構いません。ここでは例として home の直下に ebi-empty を作ります。</p>
-    <ol class="setup-cmd-list"><li><code>mkdir ebi-empty</code><span>フォルダを作る</span></li><li><code>cd ebi-empty</code><span>その中へ入る</span></li><li><code>go mod init example.com/ebi-empty</code><span>このフォルダの目次 go.mod を作る</span></li></ol>
+    <ol class="setup-cmd-list"><li><code>mkdir ebi-empty</code><span>フォルダを作る</span><button type="button" class="setup-command-copy" data-copy-command data-copied-label="コピーしました" aria-label="コマンドをコピー">コピー</button></li><li><code>cd ebi-empty</code><span>その中へ入る</span><button type="button" class="setup-command-copy" data-copy-command data-copied-label="コピーしました" aria-label="コマンドをコピー">コピー</button></li><li><code>go mod init example.com/ebi-empty</code><span>このフォルダの目次 go.mod を作る</span><button type="button" class="setup-command-copy" data-copy-command data-copied-label="コピーしました" aria-label="コマンドをコピー">コピー</button></li></ol>
     <p class="setup-ok">go.mod は、このゲームの名前（モジュール名）と、外から借りる部品（Ebitengine など）を Go が管理するための『プロジェクトの目次ノート』です。モジュール名は、コードの部品をどの名前で呼ぶかを決める住所のようなもの。これがあることで、Go は必要な外部パッケージを同じ組み合わせで用意できます。小さな go.mod ができていれば OK。名前は後から変えられます。</p>
   </section>
 
   <section class="setup-step" id="code">
     <p class="setup-n">STEP 05</p>
     <h2>main.go を書く（何もしない窓）</h2>
-    <p class="setup-lead">テキストエディタ（メモ帳、メモ帳++、VS Code、Cursor など）で、いまのフォルダに main.go という名前のファイルを作り、次をそのままコピーします。</p>
+    <p class="setup-lead">最初に ebi-empty フォルダを画面で開きます。そのフォルダを VS Code、Cursor、メモ帳などのテキストエディタで開き、<strong>main.go</strong> という名前のファイルを作って、下の全文を貼り付けて保存します。</p>
+    <div class="setup-folder-guide">
+      <h3>いまいるフォルダを開く</h3>
+      <div class="setup-os-grid">
+        <article class="setup-os"><h3>Windows</h3><ol class="setup-ol"><li>PowerShell で <code>explorer .</code> を実行する</li><li>開いた ebi-empty フォルダをテキストエディタで開く</li><li>表示 → 表示 →「ファイル名拡張子」をオンにする</li><li><strong>main.go.txt ではなく main.go</strong> になっていることを確認する</li></ol></article>
+        <article class="setup-os"><h3>macOS</h3><ol class="setup-ol"><li>ターミナルで <code>open .</code> を実行する</li><li>開いた ebi-empty フォルダをテキストエディタで開く</li><li>main.go を作り、コードを貼り付けて保存する</li></ol></article>
+      </div>
+    </div>
     <div class="full-code setup-full-code">
   <div class="full-code-head">
     <span>main.go</span>
@@ -167,6 +192,26 @@ func main() {
 	}
 }</code></pre>
 </div>
+    <div class="setup-file-check">
+      <h3>保存できたか確かめる</h3>
+      <div class="setup-os-grid">
+        <article class="setup-os"><h3>Windows</h3><div class="full-code setup-full-code">
+  <div class="full-code-head">
+    <span>PowerShell</span>
+    <button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました">コピー</button>
+  </div>
+  <pre class="setup-code"><code>Get-ChildItem</code></pre>
+</div></article>
+        <article class="setup-os"><h3>macOS</h3><div class="full-code setup-full-code">
+  <div class="full-code-head">
+    <span>Terminal</span>
+    <button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました">コピー</button>
+  </div>
+  <pre class="setup-code"><code>ls</code></pre>
+</div></article>
+      </div>
+      <p class="setup-ok">一覧に <code>go.mod</code> と <code>main.go</code> の2つが見えれば成功です。<code>main.go.txt</code> と出たら、ファイル名を <code>main.go</code> に直します。</p>
+    </div>
     <div class="setup-explain">
       <div><code>Update</code><span>tickごとの入力・数字・状態更新担当。今は空。</span></div><div><code>Draw</code><span>呼ばれた時の投影担当。色を一塗りし、状態は変えない。</span></div><div><code>Layout</code><span>ゲーム内部の幅と高さ。</span></div><div><code>RunGame</code><span>このくり返しを起動するスイッチ。</span></div>
     </div>
@@ -176,7 +221,7 @@ func main() {
     <p class="setup-n">STEP 06</p>
     <h2>依存関係を入れて、実行する</h2>
     <p class="setup-lead">ターミナルのカレントディレクトリが ebi-empty のまま、次を順番に打ちます。</p>
-    <ol class="setup-cmd-list"><li><code>go mod tidy</code><span>Ebitengine などを自動で取ってくる</span></li><li><code>go run .</code><span>プログラムを動かす</span></li></ol>
+    <ol class="setup-cmd-list"><li><code>go mod tidy</code><span>Ebitengine などを自動で取ってくる</span><button type="button" class="setup-command-copy" data-copy-command data-copied-label="コピーしました" aria-label="コマンドをコピー">コピー</button></li><li><code>go run .</code><span>プログラムを動かす</span><button type="button" class="setup-command-copy" data-copy-command data-copied-label="コピーしました" aria-label="コマンドをコピー">コピー</button></li></ol>
     <p class="setup-success">タイトルが Empty Window の、暗い青い長方形の窓が開けば成功です。閉じるボタンで終了できます。中身はまだ何も動きません——それでも「ゲームの土台」はもう動いています。</p>
     <p class="setup-lead">次は、この土台の上で Update と Draw を1行ずつ書き、最初の RULE まで進む Build Track へどうぞ。clone は必要ありません。</p>
     <a class="cta setup-cta" href="../../build/">Build Track を始める →</a>
@@ -186,7 +231,7 @@ func main() {
     <h2>うまくいかないとき</h2>
     <p class="setup-lead">ここが一番よく止まります。下の表から自分の症状に近いものを選んでください。それでもだめなら、赤いエラー全文をコピーしてページ末尾のフィードバックへ送ってください。</p>
     <div class="setup-trouble-list">
-      <article><h3>PowerShell とターミナル、どっち？</h3><p>Windows なら「PowerShell」で大丈夫。Mac なら「ターミナル」。どちらも命令を打ち込む窓です。Windows の「ターミナル」アプリを開いても、中身が PowerShell なら問題ありません。</p></article><article><h3>go: command not found / 認識されない</h3><p>① Go を入れたあと、命令の窓を<strong>完全に閉じて開き直したか</strong>確認。② Windows ならスタートメニューに「Go」があるか確認。③ それでもだめなら PC を再起動してもう一度 <code>go version</code>。</p></article><article><h3>xcrun: error: invalid active developer path…（Mac）</h3><p>ステップ 02 の <code>xcode-select --install</code> をもう一度実行する。途中で止まったら再起動してから再実行。</p></article><article><h3>go mod tidy や go run でネットエラー</h3><p>インターネット接続と、会社・学校のプロキシ設定を確認。自宅の回線で試すと通ることがあります。</p></article><article><h3>窓が一瞬で消える / パニック</h3><p>命令の窓に赤いエラー全文が出ています。その文を検索するか、このページ末尾のフィードバックへ貼ってください。</p></article><article><h3>WSL（Windows の Linux）を使っている</h3><p>公式どおり、実行時に GOOS=windows が必要になることがあります。はじめてなら通常の PowerShell での手順を推奨します。</p></article>
+      <article><h3>PowerShell とターミナル、どっち？</h3><p>Windows なら「PowerShell」で大丈夫。Mac なら「ターミナル」。どちらも命令を打ち込む窓です。Windows の「ターミナル」アプリを開いても、中身が PowerShell なら問題ありません。</p></article><article><h3>go: command not found / 認識されない</h3><p>① Go を入れたあと、命令の窓を<strong>完全に閉じて開き直したか</strong>確認。② Windows ならスタートメニューに「Go」があるか確認。③ それでもだめなら PC を再起動してもう一度 <code>go version</code>。</p></article><article><h3>xcrun: error: invalid active developer path…（Mac）</h3><p>ステップ 02 の <code>xcode-select --install</code> をもう一度実行する。途中で止まったら再起動してから再実行。</p></article><article><h3>go mod tidy や go run でネットエラー</h3><p>インターネット接続と、会社・学校のプロキシ設定を確認。自宅の回線で試すと通ることがあります。</p></article><article><h3>no Go files / package が見つからない</h3><p>① <code>Get-ChildItem</code>（Windows）または <code>ls</code>（Mac）で <code>go.mod</code> と <code>main.go</code> が見えるか確認。② <code>main.go.txt</code> なら <code>.txt</code> を外す。③ 見えないなら <code>cd ebi-empty</code> でゲームのフォルダへ入り直します。</p></article><article><h3>窓が一瞬で消える / パニック</h3><p>命令の窓に赤いエラー全文が残っています。まず最初の <code>main.go:行:列</code> を見て、その行の直前で括弧・引用符・スペルを確認します。直せなければ、最後に変えた所を元へ戻して保存し、もう一度実行します。</p></article><article><h3>WSL（Windows の Linux）を使っている</h3><p>公式どおり、実行時に GOOS=windows が必要になることがあります。はじめてなら通常の PowerShell での手順を推奨します。</p></article>
     </div>
     <p class="setup-footer-note">手順の詳細は公式ドキュメント（Install / Hello, World!）にもあります。このページは「まっさらな PC 向け」に順序を並べ替えた導入です。つまずいたらまず「うまくいかないとき」へ戻ってください。 <a href="https://ebitengine.org/en/documents/install.html" rel="noreferrer">公式 Install ↗</a></p>
   </section>

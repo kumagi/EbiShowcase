@@ -207,40 +207,52 @@ func drawBolt() *image.RGBA {
 	return img
 }
 
-// drawIce — hexagonal-ish crystal shard, cyan/white.
+// drawIce — a solid, faceted aqua shard. Keep the silhouette opaque enough
+// that it reads as ice instead of a soft sparkle when scaled down.
 func drawIce() *image.RGBA {
 	const W, H = 64, 96
 	img := image.NewRGBA(image.Rect(0, 0, W, H))
-	core := color.RGBA{230, 250, 255, 255}
-	mid := color.RGBA{120, 210, 255, 255}
-	edgeC := color.RGBA{40, 120, 220, 255}
-	cx, cy := float64(W)*0.5, float64(H)*0.55
+	core := color.RGBA{238, 255, 255, 255}
+	mid := color.RGBA{92, 226, 246, 255}
+	edgeC := color.RGBA{18, 157, 205, 255}
+	deep := color.RGBA{13, 103, 170, 255}
+	cx, cy := float64(W)*0.5, float64(H)*0.54
 	for y := 0; y < H; y++ {
 		for x := 0; x < W; x++ {
-			fx := (float64(x) + 0.5 - cx) / (float64(W) * 0.28)
-			fy := (float64(y) + 0.5 - cy) / (float64(H) * 0.42)
-			// diamond / shard: |fx|+|fy|
-			d := math.Abs(fx) + math.Abs(fy)*0.85
+			fx := (float64(x) + 0.5 - cx) / (float64(W) * 0.35)
+			fy := (float64(y) + 0.5 - cy) / (float64(H) * 0.46)
+			// A wide upper facet and long lower point make a readable icicle.
+			verticalWeight := 0.82
+			if fy > 0 {
+				verticalWeight = 0.96
+			}
+			d := math.Abs(fx) + math.Abs(fy)*verticalWeight
 			if d > 1 {
 				continue
 			}
 			edge := 1 - d
-			col := mixRGBA(edgeC, mid, edge)
-			if edge > 0.65 {
-				col = mixRGBA(mid, core, (edge-0.65)/0.35)
+			col := mixRGBA(edgeC, mid, edge*0.9)
+			if fx > 0.16 {
+				col = mixRGBA(col, deep, 0.36)
 			}
-			// facet line
-			if math.Abs(fx) < 0.08 {
-				col = mixRGBA(col, core, 0.55)
+			if fx < -0.18 {
+				col = mixRGBA(col, core, 0.22)
 			}
-			col.A = uint8(255 * clamp01(edge*1.15))
-			img.SetRGBA(x, y, col)
+			// Two bright seams expose the planar crystal facets.
+			if math.Abs(fx+fy*0.22) < 0.055 || math.Abs(fx-fy*0.48) < 0.035 {
+				col = mixRGBA(col, core, 0.72)
+			}
+			col.A = uint8(255 * clamp01(0.7+edge*0.3))
+			// image.RGBA stores premultiplied channels. Set through NRGBA so
+			// the requested aqua hue survives translucent edge pixels instead
+			// of clipping into red/green fringes after PNG encoding.
+			img.Set(x, y, color.NRGBA{R: col.R, G: col.G, B: col.B, A: col.A})
 		}
 	}
 	return img
 }
 
-// drawLight — soft golden star/flare.
+// drawLight — a white-gold sacred star with a long cross and shorter facets.
 func drawLight() *image.RGBA {
 	const R = 40
 	size := R * 2
@@ -254,9 +266,21 @@ func drawLight() *image.RGBA {
 				continue
 			}
 			ang := math.Atan2(dy, dx)
-			ray := math.Pow(math.Abs(math.Cos(ang*4)), 8) // 8-point soft star
-			a := (1 - d) * (1 - d) * (0.35 + 0.65*ray)
-			img.SetRGBA(x, y, color.RGBA{255, 236, 180, uint8(255 * clamp01(a))})
+			cross := math.Pow(math.Abs(math.Cos(ang*2)), 20)
+			facets := math.Pow(math.Abs(math.Cos(ang*4)), 18) * 0.52
+			ray := math.Max(cross, facets)
+			reach := 0.34 + ray*0.66
+			if d > reach {
+				continue
+			}
+			edge := 1 - d/reach
+			core := math.Exp(-d * d * 9)
+			a := clamp01(math.Pow(edge, 1.35)*(0.48+0.52*ray) + core*0.65)
+			warmth := clamp01(d * 0.85)
+			col := mixRGBA(color.RGBA{255, 255, 245, 255}, color.RGBA{255, 215, 112, 255}, warmth)
+			col.A = uint8(255 * a)
+			// Preserve straight white-gold RGB through translucent PNG edges.
+			img.Set(x, y, color.NRGBA{R: col.R, G: col.G, B: col.B, A: col.A})
 		}
 	}
 	return img

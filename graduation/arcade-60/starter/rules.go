@@ -1,7 +1,7 @@
 package main
 
-// RoundFrames is 60 seconds at Ebitengine's default 60 updates per second.
-const RoundFrames = 60 * 60
+// RoundTicks is 60 seconds at Ebitengine's default 60 updates per second.
+const RoundTicks = 60 * 60
 
 // Input is deliberately small so the game rules can be tested without
 // starting a window. main.go converts keyboard, pointer, and touch input to it.
@@ -11,11 +11,11 @@ type Input struct {
 }
 
 // Round is all state that changes while the 60-second game is running.
-// TODO 1: Keep the score, elapsed frames, and finished state here.
+// TODO 1: Keep the score, elapsed ticks, and finished state here.
 type Round struct {
-	Score  int
-	Frames int
-	Over   bool
+	Score int
+	Ticks int
+	Over  bool
 }
 
 func NewRound() Round {
@@ -35,11 +35,11 @@ func (r *Round) Step(in Input) {
 	}
 
 	// TODO 4: When Action is true, add 10 score points exactly once.
-	// TODO 5: Advance Frames once per Step and set Over at RoundFrames.
+	// TODO 5: Advance Ticks once per Step and set Over at RoundTicks.
 }
 
 func (r Round) SecondsLeft() int {
-	left := 60 - r.Frames/60
+	left := 60 - r.Ticks/60
 	if left < 0 {
 		return 0
 	}

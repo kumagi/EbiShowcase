@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Showcase #2. Tap to gather frost into a crystal, pause, then shatter. Timing—not just pixels—is the spell. Play the demo, add one Go rule, verify it, and apply ">
-  <title>Ebi Showcase – Make Cool Ice Magic</title>
+  <meta name="description" content="Showcase #2. Cold gathers around the target, then an aqua ice shell rises from the floor. Hold the fully frozen pose for one beat, draw whit">
+  <title>Ebi Showcase – Build an Aqua Freeze Spell</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-magic-ice/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Make Cool Ice Magic">
-    <meta property="og:description" content="Showcase #2. Tap to gather frost into a crystal, pause, then shatter. Timing—not just pixels—is the spell. Play the demo, add one Go rule, verify it, and apply ">
+    <meta property="og:title" content="Ebi Showcase – Build an Aqua Freeze Spell">
+    <meta property="og:description" content="Showcase #2. Cold gathers around the target, then an aqua ice shell rises from the floor. Hold the fully frozen pose for one beat, draw whit">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-magic-ice/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-magic-ice.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Make Cool Ice Magic">
+    <meta property="og:image:alt" content="Build an Aqua Freeze Spell">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Make Cool Ice Magic">
-    <meta name="twitter:description" content="Showcase #2. Tap to gather frost into a crystal, pause, then shatter. Timing—not just pixels—is the spell. Play the demo, add one Go rule, verify it, and apply ">
+    <meta name="twitter:title" content="Ebi Showcase – Build an Aqua Freeze Spell">
+    <meta name="twitter:description" content="Showcase #2. Cold gathers around the target, then an aqua ice shell rises from the floor. Hold the fully frozen pose for one beat, draw whit">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-magic-ice.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Make Cool Ice Magic">
+    <meta name="twitter:image:alt" content="Build an Aqua Freeze Spell">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -44,8 +44,8 @@
 
     <section class="overview-hero">
       <p class="eyebrow">★★★★★ / PLAYABLE</p>
-      <h1>Make Cool Ice Magic</h1>
-      <p>Showcase #2. Tap to gather frost into a crystal, pause, then shatter. Timing—not just pixels—is the spell.</p>
+      <h1>Build an Aqua Freeze Spell</h1>
+      <p>Showcase #2. Cold gathers around the target, then an aqua ice shell rises from the floor. Hold the fully frozen pose for one beat, draw white cracks, and only then shatter.</p>
       <div class="overview-concept"><small>What you learn here</small><strong>Form → shatter timing</strong></div>
     </section>
 
@@ -53,16 +53,16 @@
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Form and shatter</h2></div>
-        <p>Tap CAST ICE (or Space). Watch frost gather, then the crystal break.</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Freeze and break the target</h2></div>
+        <p>Tap CAST ICE (or Space). Watch frost gather, the aqua shell hold, white cracks appear, and the prison shatter.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 10</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="Make Cool Ice Magic" src="../../../../play/vfx-magic-ice/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Build an Aqua Freeze Spell" src="../../../../play/vfx-magic-ice/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
-<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if phase == Form { grow() } else { shatter() }</code></pre></div></section>
+<section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>if phase == Freeze { drawShell() } else { shatter() }</code></pre></div></section>
 <!-- END BEGINNER BRIDGE -->
 <!-- diagram-lesson:start -->
 
@@ -70,37 +70,37 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / ICE</p>
-        <h2>Ice is<br>a two-act play</h2>
-        <p class="lesson-lead">Act 1 (forming): pull frost inward and grow an ice-PNG core. Act 2 (shatter): hide the crystal, fling ice sprites outward, add additive sparkles and a bloom ring. A tiny phase/timer state machine puts a story on the same particle engine.</p>
+        <p class="eyebrow">DEEP DIVE / AQUA FREEZE</p>
+        <h2>Freeze has<br>three cues</h2>
+        <p class="lesson-lead">① Pull frost and snowflakes toward the target ② Cover the body with translucent aqua spikes and stop the motion ③ Draw white cracks, then release sharp shards and a cold bloom ring. Shape, color, and held time make this read as freezing instead of a blue explosion.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>Form</h3>
-          <p>Lerp frost toward the center.</p>
-          <code>x += (cx-x)*0.06</code>
+          <h3>Gather frost</h3>
+          <p>Lerp aqua cold toward the target.</p>
+          <code>frost += (target-frost)*0.06</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>Shatter</h3>
-          <p>Outward velocity + gravity shards.</p>
-          <code>Ice PNG + gravity</code>
+          <h3>Shell and hold</h3>
+          <p>Grow sharp ice from the floor, then pause.</p>
+          <code>drawIceShell(aqua)</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>Bloom</h3>
-          <p>A ring that flashes on the break.</p>
-          <code>Ring + Light PNG</code>
+          <h3>Crack → shatter</h3>
+          <p>Show white fractures before outward shards.</p>
+          <code>drawCracks(); shatter()</code>
         </article>
       </div>
 
       <div class="motion-lab" data-lab="magic-ice" aria-labelledby="lab-title-vfx-magic-ice">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / ICE SHARDS</p>
-          <h3 id="lab-title-vfx-magic-ice">Watch shards fly</h3>
-          <p>Burst to scatter ice sprites. The gather→break two-act lives in the WASM demo.</p>
+          <p class="eyebrow">TRY IT / AQUA FREEZE</p>
+          <h3 id="lab-title-vfx-magic-ice">Freeze, then shatter</h3>
+          <p>An aqua shell, snowflakes, and a cold ring lock the target, flash white, and break into shards. The full demo starts with gathering frost.</p>
           <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-burst>Burst!</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
@@ -112,26 +112,28 @@
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE SHOWCASE</p>
-          <h3>Switch acts with phase</h3>
-          <p>forming → shatter. Same Particle type, different jobs.</p>
+          <h3>Sell freeze with color, shape, and a hold</h3>
+          <p>Keep the aqua shell during freeze, add cracks at the end of hold, then switch to shards.</p>
         </div>
-        <pre><code>// Act 1: pull frost inward
-f.x += (castX - f.x) * 0.06
-// Act 2: shatter shards outward
+        <pre><code>// Freeze: gather frost and hold an aqua shell
+frost += (target - frost) * 0.06
+drawIceShell(target, aqua)
+if freezeTick &gt; 55 { drawCracks(target) }
+// Shatter: release sharp shards only after the held pose
 spawn(IcePNG, vx: cos(a)*sp, grav: 0.12)
-spawn(Ring) // bloom on break</code></pre>
+spawn(ColdRing)</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY TWO ACTS?</p>
-          <h3>Build-up sells the break</h3>
-          <p>Shattering after a beat feels more magical than an instant burst.</p>
+          <p class="eyebrow">WHY AQUA?</p>
+          <h3>Make cyan the lead color</h3>
+          <p>Bright cyan, white ridges, and translucent planes against navy read colder than a generic pale burst.</p>
         </article>
         <article>
-          <p class="eyebrow">WHY ICE PNG?</p>
-          <h3>Shape reads as element</h3>
-          <p>Round sparks don’t say ice—sharp textures do half the work.</p>
+          <p class="eyebrow">WHY HOLD?</p>
+          <h3>Stopped time communicates freeze</h3>
+          <p>Leaving the completed shell on screen for one beat makes it feel like motion was sealed, not merely exploded.</p>
         </article>
         <article class="challenge">
           <p class="eyebrow">TRY NEXT</p>

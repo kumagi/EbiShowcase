@@ -23,20 +23,20 @@ const (
 
 // game はこのゲームの全部の数字を入れた箱です。
 type game struct {
-	circleX    float64 // 丸の中心 X
-	circleY    float64 // 丸の中心 Y
-	radius     float64 // 丸の半径
-	score      int     // 得点
-	framesLeft int     // 残りフレーム（60フレーム ≒ 1秒）
-	started    bool    // スタートしたか
-	rng        *rand.Rand
+	circleX   float64 // 丸の中心 X
+	circleY   float64 // 丸の中心 Y
+	radius    float64 // 丸の半径
+	score     int     // 得点
+	ticksLeft int     // 残りtick（初期設定では約60 tick ≒ 1秒）
+	started   bool    // スタートしたか
+	rng       *rand.Rand
 }
 
 func newGame() *game {
 	g := &game{
-		radius:     38,
-		framesLeft: startSeconds * 60,
-		rng:        rand.New(rand.NewSource(11)),
+		radius:    38,
+		ticksLeft: startSeconds * 60,
+		rng:       rand.New(rand.NewSource(11)),
 	}
 	g.moveTarget()
 	return g
@@ -75,10 +75,10 @@ func (g *game) Update() error {
 	}
 
 	// 時間切れ → 押したら最初から
-	if g.framesLeft <= 0 {
+	if g.ticksLeft <= 0 {
 		if pressed {
 			g.score = 0
-			g.framesLeft = startSeconds * 60
+			g.ticksLeft = startSeconds * 60
 			g.started = false
 			g.moveTarget()
 		}
@@ -86,7 +86,7 @@ func (g *game) Update() error {
 	}
 
 	// タイマーを1 tick減らす
-	g.framesLeft--
+	g.ticksLeft--
 
 	// 押した瞬間だけ、丸との距離を調べる
 	if pressed {
@@ -123,11 +123,11 @@ func (g *game) Draw(screen *ebiten.Image) {
 	vector.DrawFilledCircle(screen, float32(g.circleX-10), float32(g.circleY-10), float32(g.radius/4), color.RGBA{230, 255, 249, 220}, false)
 
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %02d", g.score), 24, 24)
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("TIME  %02d", max(0, g.framesLeft/60)), 380, 24)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("TIME  %02d", max(0, g.ticksLeft/60)), 380, 24)
 
 	if !g.started {
 		ebitenutil.DebugPrintAt(screen, "TAP THE TARGET\n\nCLICK / TOUCH TO START", 145, 320)
-	} else if g.framesLeft <= 0 {
+	} else if g.ticksLeft <= 0 {
 		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("TIME UP!  SCORE %d\n\nTAP TO RETRY", g.score), 160, 320)
 	}
 }

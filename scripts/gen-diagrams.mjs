@@ -41,10 +41,10 @@ const diagrams = [
     nodes: [
       { id: "start", ja: "LEVEL 01\n数字 → 絵", en: "LEVEL 01\nNumbers → picture" },
       { id: "core", ja: "LEVEL 02–12\nゲームの部品", en: "LEVEL 02–12\nGame building blocks" },
-      { id: "vfx", ja: "Visual Effects Lab\n見た目を磨く", en: "Visual Effects Lab\nPolish the picture" },
-      { id: "tracks", ja: "25専門トラック\n大きなゲーム", en: "25 specialist tracks\nBigger games" },
+      { id: "vfx", ja: "Visual Effects Lab\n必要な演出だけ", en: "Visual Effects Lab\nOptional polish" },
+      { id: "tracks", ja: "25専門トラック\n好きな型を選ぶ", en: "25 specialist tracks\nChoose a game" },
     ],
-    edges: [["start", "core"], ["core", "vfx"], ["vfx", "tracks"]],
+    edges: [["start", "core"], ["core", "vfx"], ["core", "tracks"], ["vfx", "tracks"]],
   },
   {
     id: "glossary-map",
@@ -795,7 +795,7 @@ function figure(relativeAsset, alt, caption, extraClass = "") {
 function curriculumBlock(lang) {
   const ja = lang === "ja";
   const links = coreLinks.map(([jaLabel, enLabel, href]) => `<a href="${href}"><span>${ja ? jaLabel : enLabel}</span><b>→</b></a>`).join("");
-  return `<!-- curriculum-map:start -->\n<section class="curriculum-map" aria-labelledby="curriculum-map-title"><div><p class="eyebrow">CURRICULUM MAP / 学びの地図</p><h2 id="curriculum-map-title">${ja ? "小さな遊びから、大きなゲームへ。" : "From one tiny game to a bigger one."}</h2><p>${ja ? "最初は丸を押すだけ。次のレベルでは時間、当たり判定、動きへ進み、最後に作りたいジャンルを選びます。" : "Start by pressing one target. Later levels add timing, collisions, and movement before you choose a genre to build."}</p></div><figure class="diagram-figure curriculum-map-figure"><img src="../assets/diagrams/${lang}_curriculum-flow.svg" alt="${esc(ja ? "LEVEL 01から専門トラックまでの学習の流れ" : "Learning flow from LEVEL 01 to specialist tracks")}" loading="lazy" decoding="async"><figcaption>${ja ? "矢印はおすすめの順番です。迷ったらLEVEL 01から、気になるゲームがあればそこから始めても大丈夫です。" : "Arrows show a suggested order. Start at LEVEL 01 if unsure, or jump to a game that interests you."}</figcaption></figure><nav class="curriculum-map-links" aria-label="${ja ? "カリキュラムへのリンク" : "Curriculum links"}">${links}<a href="tracks/visual-effects/"><span>${ja ? "VISUAL EFFECTS LAB · 見た目" : "VISUAL EFFECTS LAB · polish"}</span><b>→</b></a><a href="#specializations"><span>${ja ? "25専門トラック · 大きなゲーム" : "25 SPECIALIST TRACKS · bigger games"}</span><b>→</b></a></nav></section>\n<!-- curriculum-map:end -->`;
+  return `<!-- curriculum-map:start -->\n<section class="curriculum-map" aria-labelledby="curriculum-map-title"><div><p class="eyebrow">CURRICULUM MAP / 学びの地図</p><h2 id="curriculum-map-title">${ja ? "小さな遊びから、大きなゲームへ。" : "From one tiny game to a bigger one."}</h2><p>${ja ? "最初は丸を押すだけ。次のレベルでは時間、当たり判定、動きへ進み、その後は作りたいジャンルか、気になる演出を選びます。" : "Start by pressing one target. Later levels add timing, collisions, and movement; after that, choose a genre or an effect that interests you."}</p></div><figure class="diagram-figure curriculum-map-figure"><img src="../assets/diagrams/${lang}_curriculum-flow.svg" alt="${esc(ja ? "LEVEL 01から専門トラックまでの学習の流れ" : "Learning flow from LEVEL 01 to specialist tracks")}" loading="lazy" decoding="async"><figcaption>${ja ? "矢印はおすすめの道です。VFXは必修ではなく、専門トラックから必要な章へ戻れます。迷ったらLEVEL 01から始めましょう。" : "Arrows are suggested routes. VFX is optional; a genre path can send you back to the chapter you need. Start at LEVEL 01 if unsure."}</figcaption></figure><nav class="curriculum-map-links" aria-label="${ja ? "カリキュラムへのリンク" : "Curriculum links"}">${links}<a href="tracks/visual-effects/"><span>${ja ? "VISUAL EFFECTS LAB · 必要な演出だけ" : "VISUAL EFFECTS LAB · optional polish"}</span><b>→</b></a><a href="guides/choose-your-path/"><span>${ja ? "5つからジャンルを選ぶ" : "CHOOSE A GENRE FROM FIVE STYLES"}</span><b>→</b></a></nav></section>\n<!-- curriculum-map:end -->`;
 }
 
 function injectHome(file, lang) {

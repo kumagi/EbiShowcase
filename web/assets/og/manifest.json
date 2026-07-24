@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-07-24T00:05:19.071Z",
+  "generatedAt": "2026-07-24T07:53:15.853Z",
   "pages": [
     {
       "file": "web/en/build/empty-loop/index.html",
@@ -285,7 +285,7 @@
       "lang": "en",
       "kind": "guide",
       "title": "Ebi Showcase – First 30 minutes",
-      "h1": "Your first own game in 30 minutes.",
+      "h1": "Your first 30-minute build on a prepared PC.",
       "eyebrow": "FIRST 30 MINUTES",
       "description": "Learn Ebitengine through playable mini games. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.",
       "image": "assets/og/en--guides--first-30-minutes.png"
@@ -3512,10 +3512,10 @@
       "key": "en--tracks--visual-effects--vfx-magic-ice",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Make Cool Ice Magic",
-      "h1": "Make Cool Ice Magic",
+      "title": "Ebi Showcase – Build an Aqua Freeze Spell",
+      "h1": "Build an Aqua Freeze Spell",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Showcase #2. Tap to gather frost into a crystal, pause, then shatter. Timing—not just pixels—is the spell. Play the demo, add one Go rule, verify it, and apply ",
+      "description": "Showcase #2. Cold gathers around the target, then an aqua ice shell rises from the floor. Hold the fully frozen pose for one beat, draw whit",
       "image": "assets/og/en--tracks--visual-effects--vfx-magic-ice.png"
     },
     {
@@ -3524,10 +3524,10 @@
       "key": "en--tracks--visual-effects--vfx-magic-light",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Make Cool Light Magic",
-      "h1": "Make Cool Light Magic",
+      "title": "Ebi Showcase – Build Sacred Light Magic",
+      "h1": "Build Sacred Light Magic",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Showcase #4. Rays shoot from the center while soft bloom rings expand. Dark backgrounds make additive light sing. Play the demo, add one Go rule, verify it, and",
+      "description": "Showcase #4. A white-gold pillar descends from above, while a triple halo and symmetric rays form behind the target. Slow falling motes leav",
       "image": "assets/og/en--tracks--visual-effects--vfx-magic-light.png"
     },
     {
@@ -4005,7 +4005,7 @@
       "lang": "ja",
       "kind": "guide",
       "title": "Ebi Showcase – 最初の30分",
-      "h1": "30分で、最初の自分のゲームへ。",
+      "h1": "準備が終わったPCで、 30分の最初の制作。",
       "eyebrow": "FIRST 30 MINUTES",
       "description": "遊べるミニゲームで学ぶ Ebitengine ショーケース。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja--guides--first-30-minutes.png"
@@ -7232,10 +7232,10 @@
       "key": "ja--tracks--visual-effects--vfx-magic-ice",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – かっこいい氷魔法を作ろう",
-      "h1": "かっこいい氷魔法を作ろう",
+      "title": "Ebi Showcase – 水色の凍結魔法を作ろう",
+      "h1": "水色の凍結魔法を作ろう",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "ショーケース第2弾。タップすると霜が集まり結晶になり、一瞬の静止のあと粉砕します。「見た目」だけでなく「タイミング」が魔法の正体です。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "ショーケース第2弾。タップすると冷気が対象へ集まり、足元から水色の氷殻がせり上がります。完全に凍った姿を一拍見せ、白いひびが走ってから粉砕します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja--tracks--visual-effects--vfx-magic-ice.png"
     },
     {
@@ -7244,10 +7244,10 @@
       "key": "ja--tracks--visual-effects--vfx-magic-light",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – かっこいい光魔法を作ろう",
-      "h1": "かっこいい光魔法を作ろう",
+      "title": "Ebi Showcase – 神聖な光魔法を作ろう",
+      "h1": "神聖な光魔法を作ろう",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "ショーケース第4弾。中心から光線が走り、柔らかい光の輪が広がります。暗い背景ほど加算合成が効きます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "ショーケース第4弾。天から金白色の光柱が降り、対象の背後に三重の輪光と左右対称の光線が現れます。最後に小さな光がゆっくり降り、祝福の余韻を残します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
       "image": "assets/og/ja--tracks--visual-effects--vfx-magic-light.png"
     },
     {

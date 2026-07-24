@@ -9,11 +9,25 @@
   <style>
     html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0c1330;overscroll-behavior:none;user-select:none;-webkit-user-select:none}
     canvas{display:block;width:100%!important;height:100%!important;object-fit:contain;touch-action:none;outline:none}
-    #loading{position:fixed;inset:0;display:grid;place-items:center;color:#2ee6c8;font:700 12px monospace;letter-spacing:.15em}
+    #loading{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:24px;background:#0c1330;color:#eaf1ff;font-family:system-ui,-apple-system,sans-serif;text-align:center}
+    #loading[hidden]{display:none}
+    .loading-card{width:min(100%,430px);padding:28px;border:1px solid #31436f;border-radius:18px;background:#111b3d;box-shadow:0 22px 70px rgba(0,0,0,.35)}
+    .loading-card strong{display:block;color:#2ee6c8;font:800 13px monospace;letter-spacing:.12em}
+    .loading-card p{margin:14px 0 0;color:#b9c6eb;font-size:14px;line-height:1.7;letter-spacing:0}
+    .loading-card button{margin-top:18px;padding:11px 18px;border:0;border-radius:999px;background:#2ee6c8;color:#091126;font-weight:850;cursor:pointer}
+    .loading-card details{margin-top:16px;color:#93a3d5;font:12px/1.6 monospace;text-align:left;overflow-wrap:anywhere}
+    .loading-card summary{cursor:pointer;text-align:center}
   </style>
 </head>
 <body>
-  <div id="loading">LOADING WASM…</div>
+  <div id="loading" role="status" aria-live="polite">
+    <div class="loading-card">
+      <strong id="loading-title">LOADING GAME…</strong>
+      <p id="loading-note">The first load can take a moment.</p>
+      <button id="loading-retry" type="button" hidden>RETRY</button>
+      <details id="loading-details" hidden><summary>ERROR DETAILS</summary><code id="loading-error"></code></details>
+    </div>
+  </div>
   <script src="wasm_exec.js"></script>
   <script>
     // iframe 内では最初のクリックが「フォーカス」だけに食われ、ゲーム入力が無視されがち。
@@ -40,21 +54,76 @@
         focusCanvas();
       }, true);
     }
+    const loading = document.querySelector("#loading");
+    const loadingTitle = document.querySelector("#loading-title");
+    const loadingNote = document.querySelector("#loading-note");
+    const retry = document.querySelector("#loading-retry");
+    const details = document.querySelector("#loading-details");
+    const errorText = document.querySelector("#loading-error");
+    const isJapanese = (() => {
+      try {
+        return window.parent.document.documentElement.lang === "ja";
+      } catch (_) {
+        return navigator.language.toLowerCase().startsWith("ja");
+      }
+    })();
+    loadingTitle.textContent = isJapanese ? "ゲームを読み込み中…" : "LOADING GAME…";
+    loadingNote.textContent = isJapanese
+      ? "初回は少し時間がかかることがあります。"
+      : "The first load can take a moment.";
+    retry.textContent = isJapanese ? "もう一度読み込む" : "RETRY";
+    details.querySelector("summary").textContent = isJapanese ? "エラーの詳細" : "ERROR DETAILS";
+    retry.addEventListener("click", () => location.reload());
+
+    const slowMessage = window.setTimeout(() => {
+      loadingNote.textContent = isJapanese
+        ? "まだ準備中です。通信が遅い時は、もう少しだけ待ってください。"
+        : "Still preparing. On a slow connection, please wait a little longer.";
+    }, 5000);
+
+    const showFailure = (error) => {
+      window.clearTimeout(slowMessage);
+      loading.hidden = false;
+      loadingTitle.textContent = isJapanese ? "ゲームを開けませんでした" : "THE GAME COULD NOT START";
+      loadingNote.textContent = isJapanese
+        ? "通信を確認して、もう一度読み込んでください。ローカルでは file:// ではなくHTTPサーバーから開きます。"
+        : "Check your connection and retry. For local use, open this through an HTTP server, not file://.";
+      retry.hidden = false;
+      details.hidden = false;
+      errorText.textContent = String(error);
+      console.error(error);
+    };
+
     const go = new Go();
     // build.sh replaces this token with the SHA-256 of the actual WASM bytes.
     // A changed game therefore gets a changed URL and cannot silently reuse an
     // older browser/CDN response (which otherwise looks like a failed fix).
     const wasmURL = "game.wasm?v=__WASM_VERSION__";
-    WebAssembly.instantiateStreaming(fetch(wasmURL, { cache: "no-cache" }), go.importObject)
-      .then((r) => {
-        document.querySelector("#loading").remove();
-        go.run(r.instance);
+    const loadGame = async () => {
+      const response = await fetch(wasmURL, { cache: "no-cache" });
+      if (!response.ok) throw new Error(`HTTP ${response.status} while loading game.wasm`);
+      if (WebAssembly.instantiateStreaming) {
+        try {
+          return await WebAssembly.instantiateStreaming(response.clone(), go.importObject);
+        } catch (streamError) {
+          // Some local servers send WASM with the wrong MIME type. Falling back
+          // to bytes gives beginners a working game instead of a blank frame.
+          console.warn("Streaming WASM load failed; retrying with bytes.", streamError);
+        }
+      }
+      return WebAssembly.instantiate(await response.arrayBuffer(), go.importObject);
+    };
+
+    loadGame().then((result) => {
+      window.clearTimeout(slowMessage);
+      loading.hidden = true;
+      try {
+        Promise.resolve(go.run(result.instance)).catch(showFailure);
         requestAnimationFrame(focusCanvas);
-      })
-      .catch((e) => {
-        document.querySelector("#loading").textContent = "LOAD FAILED — " + e;
-        console.error(e);
-      });
+      } catch (error) {
+        showFailure(error);
+      }
+    }).catch(showFailure);
   </script>
 </body>
 </html>

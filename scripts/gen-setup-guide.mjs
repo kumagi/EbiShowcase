@@ -150,7 +150,7 @@ function page(lang) {
             "「ターミナル」と入力する",
             "「ターミナル」アプリを開く",
           ],
-          tip: "文字を入力する画面が開き、カーソルが点滅していれば OK。Windows は黒いことが多く、Mac は白いこともありますが、役割は同じです。これからここにコマンドをコピーして貼り付けます。",
+          tip: "文字を入力する画面が開き、カーソルが点滅していれば OK。これから出てくるコマンドは、右上の「コピー」を押し、1行ずつ貼り付けて Enter を押します。画面の先頭に見える <code>PS C:\\&gt;</code> や <code>%</code> は入力しません。",
           note: "用語メモ：Windows では「PowerShell」、Mac では「ターミナル」と呼ぶことが多いです。どちらも<strong>同じ役割</strong>——キーボードでパソコンに命令を出す黒い（または白い）窓です。「ターミナル＝Mac専用」ではありません。Windows 11 の「ターミナル」アプリでも PowerShell が使えます。このガイドでは Windows 欄を PowerShell、Mac 欄をターミナルと書きます。",
         },
         step1: {
@@ -216,7 +216,23 @@ function page(lang) {
           id: "code",
           n: "05",
           h: "main.go を書く（何もしない窓）",
-          p: "テキストエディタ（メモ帳、メモ帳++、VS Code、Cursor など）で、いまのフォルダに main.go という名前のファイルを作り、次をそのままコピーします。",
+          p: "最初に ebi-empty フォルダを画面で開きます。そのフォルダを VS Code、Cursor、メモ帳などのテキストエディタで開き、<strong>main.go</strong> という名前のファイルを作って、下の全文を貼り付けて保存します。",
+          openTitle: "いまいるフォルダを開く",
+          winSteps: [
+            "PowerShell で <code>explorer .</code> を実行する",
+            "開いた ebi-empty フォルダをテキストエディタで開く",
+            "表示 → 表示 →「ファイル名拡張子」をオンにする",
+            "<strong>main.go.txt ではなく main.go</strong> になっていることを確認する",
+          ],
+          macSteps: [
+            "ターミナルで <code>open .</code> を実行する",
+            "開いた ebi-empty フォルダをテキストエディタで開く",
+            "main.go を作り、コードを貼り付けて保存する",
+          ],
+          checkTitle: "保存できたか確かめる",
+          winCheck: "Get-ChildItem",
+          macCheck: "ls",
+          checkOk: "一覧に <code>go.mod</code> と <code>main.go</code> の2つが見えれば成功です。<code>main.go.txt</code> と出たら、ファイル名を <code>main.go</code> に直します。",
           explain: [
             ["Update", "tickごとの入力・数字・状態更新担当。今は空。"],
             ["Draw", "呼ばれた時の投影担当。色を一塗りし、状態は変えない。"],
@@ -260,8 +276,12 @@ function page(lang) {
               "インターネット接続と、会社・学校のプロキシ設定を確認。自宅の回線で試すと通ることがあります。",
             ],
             [
+              "no Go files / package が見つからない",
+              "① <code>Get-ChildItem</code>（Windows）または <code>ls</code>（Mac）で <code>go.mod</code> と <code>main.go</code> が見えるか確認。② <code>main.go.txt</code> なら <code>.txt</code> を外す。③ 見えないなら <code>cd ebi-empty</code> でゲームのフォルダへ入り直します。",
+            ],
+            [
               "窓が一瞬で消える / パニック",
-              "命令の窓に赤いエラー全文が出ています。その文を検索するか、このページ末尾のフィードバックへ貼ってください。",
+              "命令の窓に赤いエラー全文が残っています。まず最初の <code>main.go:行:列</code> を見て、その行の直前で括弧・引用符・スペルを確認します。直せなければ、最後に変えた所を元へ戻して保存し、もう一度実行します。",
             ],
             [
               "WSL（Windows の Linux）を使っている",
@@ -315,7 +335,7 @@ function page(lang) {
             "Type Terminal",
             "Open the Terminal app",
           ],
-          tip: "If you see a blinking cursor, you’re ready. You’ll paste commands there.",
+          tip: "A blinking cursor means you’re ready. For each command below, press Copy, paste one line, and press Enter. Do not type the prompt shown at the left, such as <code>PS C:\\&gt;</code> or <code>%</code>.",
           note: "Name tip: on Windows people often say <strong>PowerShell</strong>; on Mac, <strong>Terminal</strong>. Same job—a window where you type commands. Windows 11’s “Terminal” app can host PowerShell. This guide says PowerShell for Windows and Terminal for Mac.",
         },
         step1: {
@@ -381,7 +401,23 @@ function page(lang) {
           id: "code",
           n: "05",
           h: "Write main.go (do-nothing window)",
-          p: "In a text editor (Notepad, VS Code, Cursor…), create main.go in that folder and paste this exactly:",
+          p: "First open the ebi-empty folder on screen. Open that folder in a text editor such as VS Code, Cursor, or Notepad, create a file named <strong>main.go</strong>, paste the full code below, and save it.",
+          openTitle: "Open the folder you are in",
+          winSteps: [
+            "Run <code>explorer .</code> in PowerShell",
+            "Open the ebi-empty folder in your text editor",
+            "Turn on View → Show → File name extensions",
+            "Confirm the name is <strong>main.go, not main.go.txt</strong>",
+          ],
+          macSteps: [
+            "Run <code>open .</code> in Terminal",
+            "Open the ebi-empty folder in your text editor",
+            "Create main.go, paste the code, and save",
+          ],
+          checkTitle: "Check that the file was saved",
+          winCheck: "Get-ChildItem",
+          macCheck: "ls",
+          checkOk: "You should see both <code>go.mod</code> and <code>main.go</code>. If you see <code>main.go.txt</code>, rename it to <code>main.go</code>.",
           explain: [
             ["Update", "Per-tick input and state changes. Empty for now."],
             ["Draw", "Per-frame projection. One solid fill; no state changes."],
@@ -425,8 +461,12 @@ function page(lang) {
               "Check internet and school/work proxies. Home networks often work when campus ones don’t.",
             ],
             [
+              "no Go files / package not found",
+              "① Run <code>Get-ChildItem</code> (Windows) or <code>ls</code> (Mac) and look for <code>go.mod</code> plus <code>main.go</code>. ② Rename <code>main.go.txt</code> to <code>main.go</code>. ③ If neither file appears, run <code>cd ebi-empty</code> to re-enter the game folder.",
+            ],
+            [
               "Window flashes and disappears / panic",
-              "Read the full red error in the command window. Search it, or paste it into the feedback box below.",
+              "Start with the first <code>main.go:line:column</code> in the error and check that line plus the line before it for a missing bracket, quote, or spelling mistake. If unsure, undo only your latest edit, save, and run again.",
             ],
             [
               "Using WSL (Linux on Windows)",
@@ -451,9 +491,16 @@ function page(lang) {
     `<ol class="setup-cmd-list">${cmds
       .map(
         ([c, note]) =>
-          `<li><code>${esc(c)}</code><span>${esc(note)}</span></li>`,
+          `<li><code>${esc(c)}</code><span>${esc(note)}</span><button type="button" class="setup-command-copy" data-copy-command data-copied-label="${ja ? "コピーしました" : "Copied!"}" aria-label="${ja ? "コマンドをコピー" : "Copy command"}">${ja ? "コピー" : "Copy"}</button></li>`,
       )
       .join("")}</ol>`;
+
+  const commandBlock = (command, label) =>
+    codeBlock(command, {
+      copy: ja ? "コピー" : "Copy",
+      copied: ja ? "コピーしました" : "Copied!",
+      filename: label,
+    });
 
   return `<!doctype html>
 <html lang="${lang}">
@@ -529,7 +576,7 @@ function page(lang) {
     <h2>${t.step2.h}</h2>
     <p class="setup-lead">${t.step2.p}</p>
     <p class="setup-skip">${t.step2.winSkip}</p>
-    ${codeBlock(t.step2.macCmd)}
+    ${commandBlock(t.step2.macCmd, ja ? "Mac のコマンド" : "Mac command")}
     ${ol(t.step2.macBody)}
   </section>
 
@@ -537,13 +584,13 @@ function page(lang) {
     <p class="setup-n">STEP ${t.step3.n}</p>
     <h2>${t.step3.h}</h2>
     <p class="setup-lead">${t.step3.p}</p>
-    ${codeBlock(t.step3.cmd)}
+    ${commandBlock(t.step3.cmd, ja ? "動作確認" : "Verify")}
     <p class="setup-ok">${t.step3.ok}</p>
     <p class="setup-fail">${t.step3.fail}</p>
     <div class="setup-bonus">
       <h3>${t.step3.bonusTitle}</h3>
       <p>${t.step3.bonusP}</p>
-      ${codeBlock(t.step3.bonusCmd)}
+      ${commandBlock(t.step3.bonusCmd, ja ? "任意の確認" : "Optional check")}
       <p>${t.step3.bonusOk}</p>
     </div>
   </section>
@@ -560,11 +607,26 @@ function page(lang) {
     <p class="setup-n">STEP ${t.step5.n}</p>
     <h2>${t.step5.h}</h2>
     <p class="setup-lead">${t.step5.p}</p>
+    <div class="setup-folder-guide">
+      <h3>${t.step5.openTitle}</h3>
+      <div class="setup-os-grid">
+        ${osCard("Windows", ol(t.step5.winSteps))}
+        ${osCard("macOS", ol(t.step5.macSteps))}
+      </div>
+    </div>
     ${codeBlock(code, {
       copy: ja ? "全文をコピー" : "Copy all",
       copied: ja ? "コピーしました" : "Copied!",
       filename: "main.go",
     })}
+    <div class="setup-file-check">
+      <h3>${t.step5.checkTitle}</h3>
+      <div class="setup-os-grid">
+        ${osCard("Windows", commandBlock(t.step5.winCheck, "PowerShell"))}
+        ${osCard("macOS", commandBlock(t.step5.macCheck, "Terminal"))}
+      </div>
+      <p class="setup-ok">${t.step5.checkOk}</p>
+    </div>
     <div class="setup-explain">
       ${t.step5.explain
         .map(([k, v]) => `<div><code>${esc(k)}</code><span>${esc(v)}</span></div>`)

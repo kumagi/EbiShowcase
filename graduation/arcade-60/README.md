@@ -24,7 +24,7 @@ named in each failing test:
 | Test | TODO | Rule to implement |
 | --- | --- | --- |
 | `TestActionAddsOneStar` | TODO 4 | one action gives exactly 10 points |
-| `TestTimeLimitEndsRound` | TODO 5 | frame 3600 ends the round |
+| `TestTimeLimitEndsRound` | TODO 5 | tick 3600 ends the round |
 | `TestRestartMakesFreshRound` | TODO 3 | restart creates a clean round |
 
 Then add your own rule, such as a combo multiplier or a missed-action penalty,

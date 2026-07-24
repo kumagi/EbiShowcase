@@ -1,6 +1,6 @@
 package main
 
-const RoundFrames = 60 * 60
+const RoundTicks = 60 * 60
 
 type Input struct {
 	Action  bool
@@ -8,9 +8,9 @@ type Input struct {
 }
 
 type Round struct {
-	Score  int
-	Frames int
-	Over   bool
+	Score int
+	Ticks int
+	Over  bool
 }
 
 func NewRound() Round { return Round{} }
@@ -26,14 +26,14 @@ func (r *Round) Step(in Input) {
 	if in.Action {
 		r.Score += 10
 	}
-	r.Frames++
-	if r.Frames >= RoundFrames {
+	r.Ticks++
+	if r.Ticks >= RoundTicks {
 		r.Over = true
 	}
 }
 
 func (r Round) SecondsLeft() int {
-	left := 60 - r.Frames/60
+	left := 60 - r.Ticks/60
 	if left < 0 {
 		return 0
 	}

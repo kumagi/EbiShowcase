@@ -20,6 +20,6 @@ console.log(JSON.stringify({
     coreLateRules: { complete: count(/YOUR FIRST RULE/g, corePages), total: corePages.length },
     dualLayerTrackHubs: { complete: count(/graduation-cta:start/g, hubs), total: hubs.length },
     graduationBriefs: { complete: graduationPages.filter(existsSync).length, total: graduationPages.length },
-    first30Minutes: langs.filter((lang) => text(join(root, "web", lang, "guides", "first-30-minutes", "index.html")).includes("25–30")).length,
+    first30Minutes: langs.filter((lang) => /(?:22|25)–30/.test(text(join(root, "web", lang, "guides", "first-30-minutes", "index.html")))).length,
   },
 }, null, 2));

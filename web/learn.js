@@ -1654,6 +1654,36 @@ document.querySelectorAll(".motion-lab[data-lab^='magic-']").forEach((lab) => {
       }
       board.appendChild(sprite(asset.ring, "lab-vfx-ring", { left: "50%", top: "70%" }));
     } else if (kind === "ice") {
+      board.classList.add("is-freezing");
+      board.appendChild(sprite(asset.ring, "lab-vfx-ring lab-vfx-frost-ring", {
+        left: "50%",
+        top: "48%",
+      }));
+      [
+        ["39%", "50%", "-18deg", "112px"],
+        ["45%", "47%", "-8deg", "138px"],
+        ["50%", "45%", "0deg", "154px"],
+        ["56%", "47%", "10deg", "136px"],
+        ["62%", "51%", "20deg", "108px"],
+      ].forEach(([left, top, rotation, size], index) => {
+        board.appendChild(sprite(asset.ice, "lab-vfx-ice-core", {
+          left,
+          top,
+          "--rot": rotation,
+          "--size": size,
+          "--delay": `${index * 55}ms`,
+        }));
+      });
+      for (let i = 0; i < 10; i++) {
+        const flake = document.createElement("span");
+        flake.className = "lab-vfx-frost-flake";
+        flake.textContent = "❄";
+        flake.style.setProperty("left", `${12 + Math.random() * 76}%`);
+        flake.style.setProperty("top", `${14 + Math.random() * 66}%`);
+        flake.style.setProperty("--delay", `${Math.random() * 260}ms`);
+        flake.style.setProperty("--size", `${14 + Math.random() * 18}px`);
+        board.appendChild(flake);
+      }
       for (let i = 0; i < n; i++) {
         board.appendChild(sprite(asset.ice, "lab-vfx-ice", {
           left: "50%",
@@ -1662,6 +1692,7 @@ document.querySelectorAll(".motion-lab[data-lab^='magic-']").forEach((lab) => {
           "--dy": `${(Math.random() - 0.5) * 180}px`,
           "--rot": `${(Math.random() - 0.5) * 120}deg`,
           "--size": `${36 + Math.random() * 48}px`,
+          "--delay": `${520 + Math.random() * 160}ms`,
         }));
       }
     } else if (kind === "thunder") {
@@ -1682,15 +1713,39 @@ document.querySelectorAll(".motion-lab[data-lab^='magic-']").forEach((lab) => {
         }));
       }
     } else if (kind === "light") {
-      board.appendChild(sprite(asset.light, "lab-vfx-flare", { left: "50%", top: "45%" }));
-      board.appendChild(sprite(asset.ring, "lab-vfx-ring", { left: "50%", top: "45%" }));
-      for (let i = 0; i < n; i++) {
-        board.appendChild(sprite(asset.spark, "lab-vfx-zap", {
+      board.classList.add("is-consecrated");
+      const pillar = document.createElement("span");
+      pillar.className = "lab-vfx-light-pillar";
+      board.appendChild(pillar);
+      for (let i = 0; i < 3; i++) {
+        board.appendChild(sprite(asset.ring, "lab-vfx-ring lab-vfx-holy-ring", {
           left: "50%",
-          top: "45%",
-          "--dx": `${(Math.random() - 0.5) * 200}px`,
-          "--dy": `${(Math.random() - 0.5) * 200}px`,
+          top: "48%",
+          "--size": `${96 + i * 54}px`,
+          "--delay": `${i * 90}ms`,
         }));
+      }
+      for (let i = 0; i < 12; i++) {
+        const ray = document.createElement("span");
+        ray.className = "lab-vfx-holy-ray";
+        ray.style.setProperty("--rot", `${i * 30}deg`);
+        ray.style.setProperty("--length", `${i % 2 ? 88 : 136}px`);
+        board.appendChild(ray);
+      }
+      board.appendChild(sprite(asset.light, "lab-vfx-flare lab-vfx-holy-core", {
+        left: "50%",
+        top: "48%",
+      }));
+      for (let i = 0; i < Math.min(n, 22); i++) {
+        const mote = document.createElement("span");
+        mote.className = "lab-vfx-holy-mote";
+        mote.textContent = "✦";
+        mote.style.setProperty("left", `${14 + Math.random() * 72}%`);
+        mote.style.setProperty("top", `${5 + Math.random() * 58}%`);
+        mote.style.setProperty("--delay", `${Math.random() * 360}ms`);
+        mote.style.setProperty("--drift", `${(Math.random() - 0.5) * 22}px`);
+        mote.style.setProperty("--size", `${10 + Math.random() * 14}px`);
+        board.appendChild(mote);
       }
     } else {
       for (let i = 0; i < n; i++) {
@@ -1911,42 +1966,57 @@ document.querySelectorAll(".feedback-form").forEach((form) => {
   });
 });
 
+const copyText = async (text) => {
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
+    // Some embedded browsers leave clipboard permission requests pending
+    // forever. Fall back quickly so a learner's button never appears dead.
+    await Promise.race([
+      navigator.clipboard.writeText(text),
+      new Promise((_, reject) => window.setTimeout(() => reject(new Error("Clipboard timeout")), 600)),
+    ]);
+    return true;
+  } catch {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.left = "-9999px";
+    document.body.appendChild(area);
+    area.select();
+    const copied = document.execCommand("copy");
+    area.remove();
+    return copied;
+  }
+};
+
+const showCopiedLabel = (button) => {
+  const idle = button.textContent.trim() || "Copy";
+  const done = button.dataset.copiedLabel || "Copied!";
+  button.dataset.copied = "1";
+  button.textContent = done;
+  window.setTimeout(() => {
+    button.dataset.copied = "0";
+    button.textContent = idle;
+  }, 1600);
+};
+
 document.querySelectorAll(".full-code").forEach((block) => {
   const button = block.querySelector("[data-copy]");
   const code = block.querySelector("[data-embed-slot], pre code");
   if (!button || !code) return;
-  const idle = button.textContent.trim() || "Copy";
-  const done = button.dataset.copiedLabel || "Copied!";
   button.addEventListener("click", async () => {
-    const text = code.textContent || "";
-    let copied = false;
-    try {
-      if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
-      // Some embedded browsers leave clipboard permission requests pending
-      // forever. Fall back quickly so a learner's button never appears dead.
-      await Promise.race([
-        navigator.clipboard.writeText(text),
-        new Promise((_, reject) => window.setTimeout(() => reject(new Error("Clipboard timeout")), 600)),
-      ]);
-      copied = true;
-    } catch {
-      const area = document.createElement("textarea");
-      area.value = text;
-      area.setAttribute("readonly", "");
-      area.style.position = "fixed";
-      area.style.left = "-9999px";
-      document.body.appendChild(area);
-      area.select();
-      copied = document.execCommand("copy");
-      area.remove();
-    }
-    if (!copied) return;
-    button.dataset.copied = "1";
-    button.textContent = done;
-    window.setTimeout(() => {
-      button.dataset.copied = "0";
-      button.textContent = idle;
-    }, 1600);
+    if (!await copyText(code.textContent || "")) return;
+    showCopiedLabel(button);
+  });
+});
+
+document.querySelectorAll("[data-copy-command]").forEach((button) => {
+  const code = button.parentElement?.querySelector("code");
+  if (!code) return;
+  button.addEventListener("click", async () => {
+    if (!await copyText(code.textContent || "")) return;
+    showCopiedLabel(button);
   });
 });
 

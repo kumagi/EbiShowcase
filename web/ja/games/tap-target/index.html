@@ -248,20 +248,20 @@ const (
 
 // game はこのゲームの全部の数字を入れた箱です。
 type game struct {
-	circleX    float64 // 丸の中心 X
-	circleY    float64 // 丸の中心 Y
-	radius     float64 // 丸の半径
-	score      int     // 得点
-	framesLeft int     // 残りフレーム（60フレーム ≒ 1秒）
-	started    bool    // スタートしたか
-	rng        *rand.Rand
+	circleX   float64 // 丸の中心 X
+	circleY   float64 // 丸の中心 Y
+	radius    float64 // 丸の半径
+	score     int     // 得点
+	ticksLeft int     // 残りtick（初期設定では約60 tick ≒ 1秒）
+	started   bool    // スタートしたか
+	rng       *rand.Rand
 }
 
 func newGame() *game {
 	g := &amp;game{
-		radius:     38,
-		framesLeft: startSeconds * 60,
-		rng:        rand.New(rand.NewSource(11)),
+		radius:    38,
+		ticksLeft: startSeconds * 60,
+		rng:       rand.New(rand.NewSource(11)),
 	}
 	g.moveTarget()
 	return g
@@ -300,10 +300,10 @@ func (g *game) Update() error {
 	}
 
 	// 時間切れ → 押したら最初から
-	if g.framesLeft &lt;= 0 {
+	if g.ticksLeft &lt;= 0 {
 		if pressed {
 			g.score = 0
-			g.framesLeft = startSeconds * 60
+			g.ticksLeft = startSeconds * 60
 			g.started = false
 			g.moveTarget()
 		}
@@ -311,7 +311,7 @@ func (g *game) Update() error {
 	}
 
 	// タイマーを1 tick減らす
-	g.framesLeft--
+	g.ticksLeft--
 
 	// 押した瞬間だけ、丸との距離を調べる
 	if pressed {
@@ -348,11 +348,11 @@ func (g *game) Draw(screen *ebiten.Image) {
 	vector.DrawFilledCircle(screen, float32(g.circleX-10), float32(g.circleY-10), float32(g.radius/4), color.RGBA{230, 255, 249, 220}, false)
 
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("SCORE %02d", g.score), 24, 24)
-	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("TIME  %02d", max(0, g.framesLeft/60)), 380, 24)
+	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("TIME  %02d", max(0, g.ticksLeft/60)), 380, 24)
 
 	if !g.started {
 		ebitenutil.DebugPrintAt(screen, "TAP THE TARGET\n\nCLICK / TOUCH TO START", 145, 320)
-	} else if g.framesLeft &lt;= 0 {
+	} else if g.ticksLeft &lt;= 0 {
 		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("TIME UP!  SCORE %d\n\nTAP TO RETRY", g.score), 160, 320)
 	}
 }
@@ -382,17 +382,17 @@ func main() {
 		return nil
 	}</code></pre></div></article>
 <article class="update-build-step"><header><span>03</span><div><small>PASTE NEXT / 次に貼る</small><h3>時間切れなら、リセットだけを扱う</h3></div></header><p>残りtickが0以下なら終了画面の状態です。押されたら得点・時間・大きさを初期状態へ戻します。複数の代入が『新しい一回』を作ります。</p><div class="update-go-note"><b>GO</b><span>&lt;= は0ちょうどだけでなく、念のため負の値も含めます。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 3/5</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// 時間切れ → 押したら最初から
-	if g.framesLeft &lt;= 0 {
+	if g.ticksLeft &lt;= 0 {
 		if pressed {
 			g.score = 0
-			g.framesLeft = startSeconds * 60
+			g.ticksLeft = startSeconds * 60
 			g.started = false
 			g.moveTarget()
 		}
 		return nil
 	}</code></pre></div></article>
-<article class="update-build-step"><header><span>04</span><div><small>PASTE NEXT / 次に貼る</small><h3>遊んでいる時だけ時計を進める</h3></div></header><p>ここまでreturnされなかった時だけ、残り時間を1 tick減らします。g.framesLeft-- は g.framesLeft = g.framesLeft - 1 の短い書き方です。</p><div class="update-go-note"><b>GO</b><span>コードの置き場所がルールになります。開始前にはこの行へ届きません。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 4/5</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// タイマーを1 tick減らす
-	g.framesLeft--</code></pre></div></article>
+<article class="update-build-step"><header><span>04</span><div><small>PASTE NEXT / 次に貼る</small><h3>遊んでいる時だけ時計を進める</h3></div></header><p>ここまでreturnされなかった時だけ、残り時間を1 tick減らします。g.ticksLeft-- は g.ticksLeft = g.ticksLeft - 1 の短い書き方です。</p><div class="update-go-note"><b>GO</b><span>コードの置き場所がルールになります。開始前にはこの行へ届きません。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 4/5</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// タイマーを1 tick減らす
+	g.ticksLeft--</code></pre></div></article>
 <article class="update-build-step"><header><span>05</span><div><small>PASTE NEXT / 次に貼る</small><h3>押した瞬間に、当たりを一度だけ採点する</h3></div></header><p>pressed の時だけ円の判定を呼び、当たれば score を1増やします。math.Maxで小さくなりすぎるのを防ぎ、次の的を動かします。最後の nil は『問題なくこのtickを終えた』です。</p><div class="update-go-note"><b>GO</b><span>ifを入れ子にすると『押した、しかも当たった』をそのまま読めます。</span></div><div class="full-code update-code"><div class="full-code-head"><span>Update · block 5/5</span><button type="button" class="full-code-copy" data-copy data-copied-label="コピーしました！">この部分をコピー</button></div><pre><code>	// 押した瞬間だけ、丸との距離を調べる
 	if pressed {
 		if lessonlogic.PointInCircle(float64(px), float64(py), g.circleX, g.circleY, g.radius) {

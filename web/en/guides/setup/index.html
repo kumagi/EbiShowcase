@@ -76,7 +76,7 @@
       <article class="setup-os"><h3>Windows</h3><ol class="setup-ol"><li>Press the Windows key</li><li>Type powershell</li><li>Open Windows PowerShell or Terminal</li></ol></article>
       <article class="setup-os"><h3>macOS</h3><ol class="setup-ol"><li>Press Command + Space</li><li>Type Terminal</li><li>Open the Terminal app</li></ol></article>
     </div>
-    <p class="setup-tip">If you see a blinking cursor, you’re ready. You’ll paste commands there.</p>
+    <p class="setup-tip">A blinking cursor means you’re ready. For each command below, press Copy, paste one line, and press Enter. Do not type the prompt shown at the left, such as <code>PS C:\&gt;</code> or <code>%</code>.</p>
     <p class="setup-note">Name tip: on Windows people often say <strong>PowerShell</strong>; on Mac, <strong>Terminal</strong>. Same job—a window where you type commands. Windows 11’s “Terminal” app can host PowerShell. This guide says PowerShell for Windows and Terminal for Mac.</p>
   </section>
 
@@ -96,7 +96,13 @@
     <h2>Mac only: install a C compiler</h2>
     <p class="setup-lead">Ebitengine also uses a little C under the hood. <strong>Windows school PCs can skip this.</strong> On Mac only, install Apple’s Command Line Tools—the behind-the-scenes tool kit used to build programs. You do not need to memorize the long name. If your classroom PC is Windows, jump to step 3.</p>
     <p class="setup-skip">On Windows, skip this step and go to “3. Verify”.</p>
-    <pre class="setup-code"><code>xcode-select --install</code></pre>
+    <div class="full-code setup-full-code">
+  <div class="full-code-head">
+    <span>Mac command</span>
+    <button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy</button>
+  </div>
+  <pre class="setup-code"><code>xcode-select --install</code></pre>
+</div>
     <ol class="setup-ol"><li>Paste the command above into Terminal and press Enter</li><li>In the dialog, choose Install (it can take several minutes)</li><li>If tools are already present, a message like “already installed” is fine</li></ol>
   </section>
 
@@ -104,13 +110,25 @@
     <p class="setup-n">STEP 03</p>
     <h2>Check that Go works</h2>
     <p class="setup-lead">Type this in the terminal and press Enter:</p>
-    <pre class="setup-code"><code>go version</code></pre>
+    <div class="full-code setup-full-code">
+  <div class="full-code-head">
+    <span>Verify</span>
+    <button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy</button>
+  </div>
+  <pre class="setup-code"><code>go version</code></pre>
+</div>
     <p class="setup-ok">Success looks like go version go1.25.0 windows/amd64 — any go1.25+ is fine.</p>
     <p class="setup-fail">If you see “command not found” or “not recognized”: reopen the terminal after install; if it still fails, reboot once.</p>
     <div class="setup-bonus">
       <h3>Optional extra check</h3>
       <p>Running the official rotate sample proves a window can open. The first run downloads packages.</p>
-      <pre class="setup-code"><code>go run github.com/hajimehoshi/ebiten/v2/examples/rotate@latest</code></pre>
+      <div class="full-code setup-full-code">
+  <div class="full-code-head">
+    <span>Optional check</span>
+    <button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy</button>
+  </div>
+  <pre class="setup-code"><code>go run github.com/hajimehoshi/ebiten/v2/examples/rotate@latest</code></pre>
+</div>
       <p>A spinning gopher window means your environment is ready. Close it and continue.</p>
     </div>
   </section>
@@ -119,14 +137,21 @@
     <p class="setup-n">STEP 04</p>
     <h2>Make a project folder</h2>
     <p class="setup-lead">Desktop or Documents is fine. Here we create ebi-empty under your home folder.</p>
-    <ol class="setup-cmd-list"><li><code>mkdir ebi-empty</code><span>Create the folder</span></li><li><code>cd ebi-empty</code><span>Enter it</span></li><li><code>go mod init example.com/ebi-empty</code><span>Create the go.mod table of contents</span></li></ol>
+    <ol class="setup-cmd-list"><li><code>mkdir ebi-empty</code><span>Create the folder</span><button type="button" class="setup-command-copy" data-copy-command data-copied-label="Copied!" aria-label="Copy command">Copy</button></li><li><code>cd ebi-empty</code><span>Enter it</span><button type="button" class="setup-command-copy" data-copy-command data-copied-label="Copied!" aria-label="Copy command">Copy</button></li><li><code>go mod init example.com/ebi-empty</code><span>Create the go.mod table of contents</span><button type="button" class="setup-command-copy" data-copy-command data-copied-label="Copied!" aria-label="Copy command">Copy</button></li></ol>
     <p class="setup-ok">go.mod is the project’s table-of-contents note. It records the module name—the address used to name your code—and lets Go manage borrowed parts such as Ebitengine. With it, Go can prepare the same external packages again. Seeing the small go.mod file means success; you can rename the module later.</p>
   </section>
 
   <section class="setup-step" id="code">
     <p class="setup-n">STEP 05</p>
     <h2>Write main.go (do-nothing window)</h2>
-    <p class="setup-lead">In a text editor (Notepad, VS Code, Cursor…), create main.go in that folder and paste this exactly:</p>
+    <p class="setup-lead">First open the ebi-empty folder on screen. Open that folder in a text editor such as VS Code, Cursor, or Notepad, create a file named <strong>main.go</strong>, paste the full code below, and save it.</p>
+    <div class="setup-folder-guide">
+      <h3>Open the folder you are in</h3>
+      <div class="setup-os-grid">
+        <article class="setup-os"><h3>Windows</h3><ol class="setup-ol"><li>Run <code>explorer .</code> in PowerShell</li><li>Open the ebi-empty folder in your text editor</li><li>Turn on View → Show → File name extensions</li><li>Confirm the name is <strong>main.go, not main.go.txt</strong></li></ol></article>
+        <article class="setup-os"><h3>macOS</h3><ol class="setup-ol"><li>Run <code>open .</code> in Terminal</li><li>Open the ebi-empty folder in your text editor</li><li>Create main.go, paste the code, and save</li></ol></article>
+      </div>
+    </div>
     <div class="full-code setup-full-code">
   <div class="full-code-head">
     <span>main.go</span>
@@ -167,6 +192,26 @@ func main() {
 	}
 }</code></pre>
 </div>
+    <div class="setup-file-check">
+      <h3>Check that the file was saved</h3>
+      <div class="setup-os-grid">
+        <article class="setup-os"><h3>Windows</h3><div class="full-code setup-full-code">
+  <div class="full-code-head">
+    <span>PowerShell</span>
+    <button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy</button>
+  </div>
+  <pre class="setup-code"><code>Get-ChildItem</code></pre>
+</div></article>
+        <article class="setup-os"><h3>macOS</h3><div class="full-code setup-full-code">
+  <div class="full-code-head">
+    <span>Terminal</span>
+    <button type="button" class="full-code-copy" data-copy data-copied-label="Copied!">Copy</button>
+  </div>
+  <pre class="setup-code"><code>ls</code></pre>
+</div></article>
+      </div>
+      <p class="setup-ok">You should see both <code>go.mod</code> and <code>main.go</code>. If you see <code>main.go.txt</code>, rename it to <code>main.go</code>.</p>
+    </div>
     <div class="setup-explain">
       <div><code>Update</code><span>Per-tick input and state changes. Empty for now.</span></div><div><code>Draw</code><span>Per-frame projection. One solid fill; no state changes.</span></div><div><code>Layout</code><span>Internal width and height.</span></div><div><code>RunGame</code><span>Starts the loop.</span></div>
     </div>
@@ -176,7 +221,7 @@ func main() {
     <p class="setup-n">STEP 06</p>
     <h2>Fetch dependencies and run</h2>
     <p class="setup-lead">Still inside ebi-empty, run these in order:</p>
-    <ol class="setup-cmd-list"><li><code>go mod tidy</code><span>Download Ebitengine and friends</span></li><li><code>go run .</code><span>Run the program</span></li></ol>
+    <ol class="setup-cmd-list"><li><code>go mod tidy</code><span>Download Ebitengine and friends</span><button type="button" class="setup-command-copy" data-copy-command data-copied-label="Copied!" aria-label="Copy command">Copy</button></li><li><code>go run .</code><span>Run the program</span><button type="button" class="setup-command-copy" data-copy-command data-copied-label="Copied!" aria-label="Copy command">Copy</button></li></ol>
     <p class="setup-success">A dark-blue window titled Empty Window means success. Close it with the window button. Nothing moves yet—but the game foundation is alive.</p>
     <p class="setup-lead">Next, write Update and Draw one line at a time in Build Track, all the way to your first RULE. No clone is needed.</p>
     <a class="cta setup-cta" href="../../build/">Start Build Track →</a>
@@ -186,7 +231,7 @@ func main() {
     <h2>Troubleshooting</h2>
     <p class="setup-lead">This is where people get stuck most. Match your symptom below. Still stuck? Copy the full red error into the feedback box at the bottom.</p>
     <div class="setup-trouble-list">
-      <article><h3>PowerShell vs Terminal—which one?</h3><p>On Windows, PowerShell is fine. On Mac, use Terminal. Same job: a window for typing commands. Windows 11’s Terminal app is OK if it opens PowerShell inside.</p></article><article><h3>go: command not found / not recognized</h3><p>① After installing Go, fully close and reopen the command window. ② On Windows, check Start for “Go”. ③ Still stuck? Reboot, then try <code>go version</code> again.</p></article><article><h3>xcrun: error: invalid active developer path… (Mac)</h3><p>Run step 02’s <code>xcode-select --install</code> again. If it stalled, reboot and retry.</p></article><article><h3>Network errors on go mod tidy / go run</h3><p>Check internet and school/work proxies. Home networks often work when campus ones don’t.</p></article><article><h3>Window flashes and disappears / panic</h3><p>Read the full red error in the command window. Search it, or paste it into the feedback box below.</p></article><article><h3>Using WSL (Linux on Windows)</h3><p>Official docs may require GOOS=windows for go run. Prefer plain PowerShell for this first guide.</p></article>
+      <article><h3>PowerShell vs Terminal—which one?</h3><p>On Windows, PowerShell is fine. On Mac, use Terminal. Same job: a window for typing commands. Windows 11’s Terminal app is OK if it opens PowerShell inside.</p></article><article><h3>go: command not found / not recognized</h3><p>① After installing Go, fully close and reopen the command window. ② On Windows, check Start for “Go”. ③ Still stuck? Reboot, then try <code>go version</code> again.</p></article><article><h3>xcrun: error: invalid active developer path… (Mac)</h3><p>Run step 02’s <code>xcode-select --install</code> again. If it stalled, reboot and retry.</p></article><article><h3>Network errors on go mod tidy / go run</h3><p>Check internet and school/work proxies. Home networks often work when campus ones don’t.</p></article><article><h3>no Go files / package not found</h3><p>① Run <code>Get-ChildItem</code> (Windows) or <code>ls</code> (Mac) and look for <code>go.mod</code> plus <code>main.go</code>. ② Rename <code>main.go.txt</code> to <code>main.go</code>. ③ If neither file appears, run <code>cd ebi-empty</code> to re-enter the game folder.</p></article><article><h3>Window flashes and disappears / panic</h3><p>Start with the first <code>main.go:line:column</code> in the error and check that line plus the line before it for a missing bracket, quote, or spelling mistake. If unsure, undo only your latest edit, save, and run again.</p></article><article><h3>Using WSL (Linux on Windows)</h3><p>Official docs may require GOOS=windows for go run. Prefer plain PowerShell for this first guide.</p></article>
     </div>
     <p class="setup-footer-note">Official Install / Hello, World! docs have more detail. This page reorders them for a blank-machine first run. When stuck, jump back to Troubleshooting first. <a href="https://ebitengine.org/en/documents/install.html" rel="noreferrer">Official Install ↗</a></p>
   </section>
