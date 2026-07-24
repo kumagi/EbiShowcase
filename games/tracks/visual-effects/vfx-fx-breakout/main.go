@@ -11,6 +11,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/vfxfx"
 	"github.com/kumagi/EbiShowcase/internal/vfxlive"
+	"github.com/kumagi/EbiShowcase/internal/vfxmotion"
 	"github.com/kumagi/EbiShowcase/internal/vfxui"
 )
 
@@ -37,6 +38,8 @@ type game struct {
 	score   int
 	lives   int
 	ready   bool
+	ghosts  []vfxmotion.Tombstone
+	hitStop int
 }
 
 func newGame() *game {
@@ -138,8 +141,12 @@ func (g *game) updatePlay() {
 		if !hit {
 			continue
 		}
+		g.ghosts = append(g.ghosts, vfxmotion.NewTombstone(vfxmotion.Snapshot{
+			ID: i, X: b.x, Y: b.y, W: brickW, H: brickH, Variant: b.row,
+		}, 24))
 		b.alive = false
 		g.score += 10
+		g.hitStop = 2
 		g.vy = -g.vy
 		cx, cy := b.x+brickW/2, b.y+brickH/2
 		if b.row%2 == 0 {
@@ -164,18 +171,35 @@ func (g *game) updatePlay() {
 	if g.aliveCount() == 0 {
 		g.buildBricks()
 		g.fx.FlashScreen(0.5*k, 255, 160, 60)
+		g.fx.Confetti(vfxlive.Width/2, sy+sh*0.55, int(48*k))
 		g.serve()
 	}
+}
+
+func (g *game) updateGhosts() {
+	alive := g.ghosts[:0]
+	for i := range g.ghosts {
+		g.ghosts[i].Advance()
+		if !g.ghosts[i].Done() {
+			alive = append(alive, g.ghosts[i])
+		}
+	}
+	g.ghosts = alive
 }
 
 func (g *game) Update() error {
 	ate := g.shell.Update()
 	if !ate {
-		g.updatePlay()
+		if g.hitStop > 0 {
+			g.hitStop--
+		} else {
+			g.updatePlay()
+		}
 	} else if !g.ready {
 		g.buildBricks()
 		g.serve()
 	}
+	g.updateGhosts()
 	g.fx.Update()
 	g.shell.SetToken("b", fmt.Sprintf("%d", g.aliveCount()))
 	g.shell.SetToken("n", fmt.Sprintf("%d", g.fx.Count()))
@@ -198,6 +222,27 @@ func (g *game) Draw(s *ebiten.Image) {
 			continue
 		}
 		vector.DrawFilledRect(s, float32(b.x), float32(b.y), brickW, brickH, brickTint[b.row%len(brickTint)], false)
+	}
+	for _, ghost := range g.ghosts {
+		snapshot := ghost.Snapshot
+		t := ghost.Progress()
+		alpha := uint8(220 * (1 - t))
+		base := brickTint[snapshot.Variant%len(brickTint)]
+		c := color.RGBA{base.R, base.G, base.B, alpha}
+		for shard := 0; shard < 4; shard++ {
+			sideX := -1.0
+			if shard%2 == 1 {
+				sideX = 1
+			}
+			sideY := -1.0
+			if shard >= 2 {
+				sideY = 1
+			}
+			x := snapshot.X + snapshot.W/2 + sideX*t*(12+float64(shard)*3)
+			y := snapshot.Y + snapshot.H/2 + sideY*t*(8+float64(shard)*2) + t*t*18
+			vector.DrawFilledRect(s, float32(x-snapshot.W/5), float32(y-snapshot.H/5),
+				float32(snapshot.W/2.5), float32(snapshot.H/2.5), c, false)
+		}
 	}
 	vector.DrawFilledRect(s, float32(g.paddleX-padHW), float32(bot), float32(padHW*2), 12, color.RGBA{45, 226, 194, 255}, false)
 	vector.DrawFilledCircle(s, float32(g.bx), float32(g.by), ballR, color.White, false)

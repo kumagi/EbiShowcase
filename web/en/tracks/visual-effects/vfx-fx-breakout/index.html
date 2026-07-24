@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Bricks are game sprites that participate in rules; shards and flames are visual-only FX sprites. Keep the core brick update and collision ru">
-  <title>Ebi Showcase – Break Bricks in Two Steps</title>
+  <meta name="description" content="After deletion there is no safe brick from which to read shape or color. At collision, copy ID, rectangle, and color variant into Snapshot,">
+  <title>Ebi Showcase – Hand a Broken Brick to Its Shards</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-fx-breakout/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Break Bricks in Two Steps">
-    <meta property="og:description" content="Bricks are game sprites that participate in rules; shards and flames are visual-only FX sprites. Keep the core brick update and collision ru">
+    <meta property="og:title" content="Ebi Showcase – Hand a Broken Brick to Its Shards">
+    <meta property="og:description" content="After deletion there is no safe brick from which to read shape or color. At collision, copy ID, rectangle, and color variant into Snapshot,">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-fx-breakout/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-fx-breakout.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Break Bricks in Two Steps">
+    <meta property="og:image:alt" content="Hand a Broken Brick to Its Shards">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Break Bricks in Two Steps">
-    <meta name="twitter:description" content="Bricks are game sprites that participate in rules; shards and flames are visual-only FX sprites. Keep the core brick update and collision ru">
+    <meta name="twitter:title" content="Ebi Showcase – Hand a Broken Brick to Its Shards">
+    <meta name="twitter:description" content="After deletion there is no safe brick from which to read shape or color. At collision, copy ID, rectangle, and color variant into Snapshot,">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-fx-breakout.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Break Bricks in Two Steps">
+    <meta name="twitter:image:alt" content="Hand a Broken Brick to Its Shards">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -44,22 +44,35 @@
 
     <section class="overview-hero">
       <p class="eyebrow">★★★★★ / PLAYABLE</p>
-      <h1>Break Bricks in Two Steps</h1>
-      <p>Bricks are game sprites that participate in rules; shards and flames are visual-only FX sprites. Keep the core brick update and collision rules, then add FX pictures at the broken spot.</p>
-      <div class="overview-concept"><small>What you learn here</small><strong>Separate game sprites and FX</strong></div>
+      <h1>Hand a Broken Brick to Its Shards</h1>
+      <p>After deletion there is no safe brick from which to read shape or color. At collision, copy ID, rectangle, and color variant into Snapshot, then commit alive=false immediately. Tombstone breaks that still image into shards for twenty-four frames while a two-frame hit stop sells impact.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Animate deletion from a snapshot</strong></div>
     </section>
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
-    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED-FX DESIGN RULE</p><h2>Separate the answer<br>from the time used to show it.</h2><p><code>updatePlay()</code> first commits the correct collision, score, or board. It hands that fact across once as a value or event. Presentation then advances interpolation, poses, trails, and particles. <code>Draw</code> only reads state; it never edits score or coordinates. This boundary supports both a rich screen and unit tests that need no GPU.</p></section>
+    <section class="vfx-pattern" aria-labelledby="pattern-vfx-fx-breakout">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">PATTERN A06 / PRE-DELETE SNAPSHOT</p><h2 id="pattern-vfx-fx-breakout">Pre-delete Snapshot</h2></div>
+          <p>Drawing shards through the deleted entity risks nil access, slice reuse, and data from the next stage.</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="State flow">
+          <span>brick hit</span><b>→</b><span>copy Snapshot</span><b>→</b><span>remove brick</span><b>→</b><span>Tombstone Tween</span><b>→</b><span>four shards</span>
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>Tombstone never references the entity</h3><p>It value-owns only the rectangle and Variant needed for drawing, then expires after twenty-four frames.</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>Separate deletion and afterlife contracts</h3><ul><li>alive is false immediately</li><li>Snapshot stays unchanged during Tween</li><li>Done tombstones are pruned</li></ul></article>
+        </div>
+      </section>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Smash bricks</h2></div>
-        <p>Break blocks with the ball. Shards are fx—compare bricks vs fx.parts.</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Break one brick and watch its afterlife</h2></div>
+        <p>The ball pauses briefly and the brick falls into four pieces. Clear confetti is another presentation list, not the new level.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A06</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="Break Bricks in Two Steps" src="../../../../play/vfx-fx-breakout/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Hand a Broken Brick to Its Shards" src="../../../../play/vfx-fx-breakout/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -71,84 +84,83 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / DESTROY</p>
-        <h2>What vanishes vs<br>what sprays</h2>
-        <p class="lesson-lead">Game bricks own collision, score, and remaining count. FX shards own only lifetime and appearance. Keep these boxes separate in Game, preserve the original Update rules, and layer shards in Draw.</p>
+        <p class="eyebrow">DEEP DIVE / PRE-DELETE SNAPSHOT</p>
+        <h2>What draws the shards<br>after the object is gone?</h2>
+        <p class="lesson-lead">Value-copy only the facts presentation needs before deletion. Tombstone holds no pointer to the brick, so slice compaction and next-level creation are harmless. Rules already consider the brick absent, so shards cannot collide again.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>Delete</h3>
-          <p>Drop from bricks.</p>
-          <code>bricks = alive</code>
+          <h3>Copy first</h3>
+          <p>Value-copy ID, rect, and color variant.</p>
+          <code>Snapshot{...}</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>Shards</h3>
-          <p>Burst/Flame at that spot.</p>
-          <code>fx.FlameBurst</code>
+          <h3>Delete in rules now</h3>
+          <p>Commit alive=false and score.</p>
+          <code>brick.alive = false</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>Split</h3>
-          <p>Manage game sprites and FX sprites separately.</p>
-          <code>bricks / fx.parts</code>
+          <h3>Break the tombstone</h3>
+          <p>Spread four shards from Progress.</p>
+          <code>ghost.Progress()</code>
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-breakout" aria-labelledby="lab-title-vfx-fx-breakout">
+      <div class="motion-lab" data-lab="architecture-trace" aria-labelledby="lab-title-vfx-fx-breakout">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / TWO BOXES</p>
-          <h3 id="lab-title-vfx-fx-breakout">Separate game and FX sprites</h3>
-          <p>Left is the game brick; right is the visual shard. Each job gets its own box.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-breakout-hit>Hit a brick</button><button type="button" class="lab-button" data-lab-breakout-tick>Advance shards 1 tick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <p class="eyebrow">TRACE IT / RULE → MOTION → PIXELS</p>
+          <h3 id="lab-title-vfx-fx-breakout">Let shards finish without a brick</h3>
+          <p>Advance Tombstone after alive becomes false. Rebuilding bricks must not alter old shard position or color.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-architecture-step>Next state →</button><button type="button" class="lab-button lab-button-quiet" data-lab-architecture-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col"><h4>play (collidable)</h4>
-            <p>● ball</p><ul data-lab-brick-list></ul></div>
-          <div class="lab-fx-col"><h4>fx (no collision)</h4>
-            <ul data-lab-shard-list></ul></div>
-          <div class="lab-fx-stage" data-lab-shard-stage aria-hidden="true"></div>
-        </div><p class="lab-fx-hint" data-lab-breakout-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>bricks (play)</span><strong data-lab-bricks>—</strong></div><div><span>shards (fx)</span><strong data-lab-shards>—</strong></div></div>
+          <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>brick hit</span><i>→</i><span data-lab-architecture-node><b>2</b>copy Snapshot</span><i>→</i><span data-lab-architecture-node><b>3</b>remove brick</span><i>→</i><span data-lab-architecture-node><b>4</b>Tombstone Tween</span><i>→</i><span data-lab-architecture-node><b>5</b>four shards</span></div>
+          <div class="lab-architecture-boundary"><small>Boundary to protect</small><strong data-lab-architecture-boundary>alive is false immediately</strong></div>
+        </div>
+          <div class="lab-values" aria-live="polite"><div><span>current step</span><strong data-lab-architecture-index>—</strong></div><div><span>state owner</span><strong data-lab-architecture-owner>—</strong></div></div>
         </div>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>Delete, then spawn</h3>
-          <p>Reverse the order and you double for a frame.</p>
+          <h3>Store values, not a reference</h3>
+          <p>A presentation pointer to a deleted slice element may draw an element later reused for something else.</p>
         </div>
-        <pre><code>// brick broken:
-bricks = remove(bricks, i)     // play
-g.fx.FlameBurst(x, y, 12)      // fx only</code></pre>
+        <pre><code>snap := vfxmotion.Snapshot{
+    ID: i, X: b.x, Y: b.y, W: brickW, H: brickH, Variant: b.row,
+}
+g.ghosts = append(g.ghosts, vfxmotion.NewTombstone(snap, 24))
+b.alive = false // collision truth changes immediately</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY DELETE FIRST?</p>
-          <h3>Truth of rules</h3>
-          <p>The brick is gone—then fireworks.</p>
+          <p class="eyebrow">TEST THE CONTRACT</p>
+          <h3>Verify Snapshot stays immutable</h3>
+          <p>Advance Tombstone to completion and compare the original ID, rectangle, and Variant.</p>
         </article>
         <article>
-          <p class="eyebrow">WHY TWO SPRITES?</p>
-          <h3>Different jobs</h3>
-          <p>Bricks participate in rules; shards are visual only. The split keeps both kinds of code readable.</p>
+          <p class="eyebrow">FAILURE MODE</p>
+          <h3>Do not grow a breaking rule state unnecessarily</h3>
+          <p>Keeping breaking bricks in collision complicates repeat hits, clear checks, and save data.</p>
         </article>
         <article class="challenge">
-          <p class="eyebrow">TRY NEXT</p>
-          <h3>Snake</h3>
-          <p>Body cells vs sparkles.</p>
+          <p class="eyebrow">DESIGN PAYOFF</p>
+          <h3>Extend to deaths, chests, and terrain</h3>
+          <p>Immediate deletion plus a visual snapshot fits every death animation that outlives its entity.</p>
         </article>
       </div>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-pong/" rel="prev">← STEP A05<strong>Pong Sparks & Trails</strong></a>
-      <a href="../vfx-fx-snake/" rel="next">STEP A07 →<strong>Snake Eat FX</strong></a>
+      <a href="../vfx-fx-pong/" rel="prev">← STEP A05<strong>Turn Ball History into a Safe Trail</strong></a>
+      <a href="../vfx-fx-snake/" rel="next">STEP A07 →<strong>Connect a Grid Snake Smoothly</strong></a>
     </nav>
 
     <section class="feedback-section" aria-labelledby="feedback-title">

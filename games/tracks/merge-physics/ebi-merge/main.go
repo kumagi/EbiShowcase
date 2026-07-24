@@ -121,6 +121,14 @@ func alphaColumnCells(atlas image.Image, cells int) []image.Rectangle {
 		result[i] = image.Rect(max(cellMinX, minX-apron), minY-apron, min(cellMaxX, maxX+apron), maxY+apron).
 			Intersect(image.Rect(0, 0, w, h)).Add(bounds.Min)
 	}
+	// Adjacent aprons may both reach their shared (transparent) cell divider.
+	// Keep one atlas column outside both crops so a future filtering or crop
+	// change cannot make neighboring sprites share a sampling edge.
+	for i := 1; i < len(result); i++ {
+		if result[i-1].Max.X == result[i].Min.X {
+			result[i-1].Max.X--
+		}
+	}
 	return result
 }
 

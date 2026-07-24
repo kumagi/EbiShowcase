@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"image/color"
+	"math"
 	"math/rand"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -13,6 +14,7 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/hero"
 	"github.com/kumagi/EbiShowcase/internal/vfxfx"
 	"github.com/kumagi/EbiShowcase/internal/vfxlive"
+	"github.com/kumagi/EbiShowcase/internal/vfxmotion"
 	"github.com/kumagi/EbiShowcase/internal/vfxui"
 )
 
@@ -30,16 +32,18 @@ type pipe struct {
 }
 
 type game struct {
-	shell    *vfxlive.Shell
-	fx       vfxfx.System
-	rng      *rand.Rand
-	birdY    float64
-	vy       float64
-	pipes    []pipe
-	score    int
-	started  bool
-	gameOver bool
-	ready    bool
+	shell     *vfxlive.Shell
+	fx        vfxfx.System
+	rng       *rand.Rand
+	birdY     float64
+	vy        float64
+	pipes     []pipe
+	score     int
+	started   bool
+	gameOver  bool
+	ready     bool
+	sinceFlap int
+	frame     int
 }
 
 func newGame() *game {
@@ -69,6 +73,8 @@ func (g *game) reset() {
 	g.started = false
 	g.gameOver = false
 	g.fx = vfxfx.System{}
+	g.sinceFlap = 99
+	g.frame = 0
 	base := float64(vfxlive.Width) + 40
 	g.pipes = []pipe{
 		{x: base, gapY: sy + sh*0.45},
@@ -108,6 +114,8 @@ func (g *game) updatePlay() {
 	gap := g.shell.Get("gap")
 	k := g.shell.Get("fx")
 	pressed := g.stagePress()
+	g.frame++
+	g.sinceFlap++
 
 	if g.gameOver {
 		if pressed {
@@ -119,12 +127,14 @@ func (g *game) updatePlay() {
 		if pressed {
 			g.started = true
 			g.vy = flapVY
+			g.sinceFlap = 0
 			g.fx.Burst(birdX, g.birdY, int(10*k), 2.2*k, color.RGBA{180, 220, 255, 255}, true)
 		}
 		return
 	}
 	if pressed {
 		g.vy = flapVY
+		g.sinceFlap = 0
 		g.fx.Burst(birdX-6, g.birdY+8, int(12*k), 2.4*k, color.RGBA{160, 210, 255, 255}, true)
 	}
 	g.vy += gravity
@@ -137,10 +147,10 @@ func (g *game) updatePlay() {
 			p.scored = true
 			g.score++
 			cx, cy := birdX+18, g.birdY
-			g.fx.Ring(cx, cy, 1.6*k, color.RGBA{120, 255, 230, 255})
-			g.fx.Ring(cx, cy, 0.85*k, color.RGBA{255, 230, 120, 255})
+			g.fx.Shockwave(cx, cy, 1.05*k, color.RGBA{120, 255, 230, 255}, color.RGBA{255, 230, 120, 255})
 			g.fx.Burst(cx, cy, int(36*k), 3.6*k, color.RGBA{100, 255, 220, 255}, true)
 			g.fx.Burst(cx, cy, int(18*k), 2.4*k, color.RGBA{255, 220, 100, 255}, true)
+			g.fx.Confetti(cx, cy, int(12*k))
 			g.fx.FlashScreen(0.55*k, 90, 230, 210)
 		}
 		if p.x < -pipeW {
@@ -151,7 +161,8 @@ func (g *game) updatePlay() {
 	}
 	if g.birdY > ground-birdR || g.birdY < sy+birdR || g.hitPipe(gap) {
 		g.gameOver = true
-		g.fx.Burst(birdX, g.birdY, int(14*k), 2.0, color.RGBA{255, 120, 100, 255}, true)
+		g.fx.Shockwave(birdX, g.birdY, 0.7*k, color.White, color.RGBA{255, 100, 90, 255})
+		g.fx.Burst(birdX, g.birdY, int(18*k), 2.4, color.RGBA{255, 120, 100, 255}, true)
 	}
 }
 
@@ -179,7 +190,15 @@ func (g *game) Draw(s *ebiten.Image) {
 		vector.DrawFilledRect(s, float32(p.x), float32(sy), pipeW, float32(top-sy), color.RGBA{45, 180, 120, 255}, false)
 		vector.DrawFilledRect(s, float32(p.x), float32(bot), pipeW, float32(sy+sh-bot), color.RGBA{45, 180, 120, 255}, false)
 	}
-	hero.DrawCentered(s, birdX, g.birdY, 42)
+	for i := 0; i < 6; i++ {
+		x := math.Mod(float64(g.frame*3+i*91), float64(vfxlive.Width))
+		y := sy + 24 + float64((i*53)%int(math.Max(1, sh-48)))
+		vector.StrokeLine(s, float32(x), float32(y), float32(x-18), float32(y), 1, color.RGBA{150, 210, 235, 80}, false)
+	}
+	_, pose := vfxmotion.PoseForFlight(g.vy, g.sinceFlap, g.gameOver)
+	hero.DrawCenteredPose(s, birdX, g.birdY, 42, hero.Pose{
+		ScaleX: pose.ScaleX, ScaleY: pose.ScaleY, Rotation: pose.Rotation,
+	})
 	g.fx.Draw(s)
 	msg := fmt.Sprintf("SCORE %d", g.score)
 	if !g.started {

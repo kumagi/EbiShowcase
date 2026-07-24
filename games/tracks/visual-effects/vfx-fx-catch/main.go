@@ -13,21 +13,28 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/hero"
 	"github.com/kumagi/EbiShowcase/internal/vfxfx"
 	"github.com/kumagi/EbiShowcase/internal/vfxlive"
+	"github.com/kumagi/EbiShowcase/internal/vfxmotion"
 	"github.com/kumagi/EbiShowcase/internal/vfxui"
 )
 
-type star struct{ x, y, speed float64 }
+type star struct {
+	id          int
+	x, y, speed float64
+}
 
 type game struct {
-	shell   *vfxlive.Shell
-	fx      vfxfx.System
-	rng     *rand.Rand
-	basketX float64
-	stars   []star // gameplay entities — NOT mixed with fx.Parts
-	frame   int
-	score   int
-	lives   int
-	over    bool
+	shell       *vfxlive.Shell
+	fx          vfxfx.System
+	rng         *rand.Rand
+	basketX     float64
+	stars       []star // gameplay entities — NOT mixed with fx.Parts
+	frame       int
+	score       int
+	lives       int
+	over        bool
+	nextID      int
+	proxies     []vfxmotion.Proxy
+	basketPulse vfxmotion.Tween
 }
 
 func newGame() *game {
@@ -57,6 +64,9 @@ func (g *game) reset() {
 	g.score, g.lives, g.frame = 0, 3, 0
 	g.over = false
 	g.basketX = vfxlive.Width / 2
+	g.nextID = 0
+	g.proxies = nil
+	g.basketPulse = vfxmotion.Tween{}
 }
 
 func (g *game) moveBasket() {
@@ -87,9 +97,11 @@ func (g *game) updatePlay() {
 	g.frame++
 	rate := int(g.shell.Get("rate"))
 	if g.frame%rate == 0 {
+		g.nextID++
 		g.stars = append(g.stars, star{
-			x: 30 + g.rng.Float64()*float64(vfxlive.Width-60),
-			y: sy + 10, speed: 2.4 + g.rng.Float64()*2,
+			id: g.nextID,
+			x:  30 + g.rng.Float64()*float64(vfxlive.Width-60),
+			y:  sy + 10, speed: 2.4 + g.rng.Float64()*2,
 		})
 	}
 	k := g.shell.Get("fx")
@@ -99,8 +111,10 @@ func (g *game) updatePlay() {
 		caught := s.y > basketY-10 && s.y < basketY+24 && math.Abs(s.x-g.basketX) < 52
 		if caught {
 			g.score++
+			g.proxies = append(g.proxies, vfxmotion.NewProxy(s.id, s.x, s.y, 28, sy+18, 24))
+			g.basketPulse = vfxmotion.NewTween(10)
 			g.fx.Burst(s.x, s.y, int(16*k), 2.6*k, color.RGBA{255, 230, 120, 255}, true)
-			g.fx.Ring(s.x, s.y, 0.7*k, color.RGBA{255, 240, 180, 255})
+			g.fx.Shockwave(s.x, s.y, 0.55*k, color.White, color.RGBA{255, 220, 100, 255})
 			continue
 		}
 		if s.y > floor {
@@ -114,6 +128,17 @@ func (g *game) updatePlay() {
 		next = append(next, s)
 	}
 	g.stars = next
+	visible := g.proxies[:0]
+	for i := range g.proxies {
+		g.proxies[i].Advance()
+		if !g.proxies[i].Done() {
+			visible = append(visible, g.proxies[i])
+		}
+	}
+	g.proxies = visible
+	if !g.basketPulse.Done() {
+		g.basketPulse.Advance()
+	}
 }
 
 func (g *game) Update() error {
@@ -137,8 +162,17 @@ func (g *game) Draw(s *ebiten.Image) {
 	for _, st := range g.stars {
 		vector.DrawFilledCircle(s, float32(st.x), float32(st.y), 8, color.RGBA{255, 220, 90, 255}, false)
 	}
-	hero.DrawBottomCentered(s, g.basketX, basketY+8, 56)
-	vector.DrawFilledRect(s, float32(g.basketX-48), float32(basketY), 96, 14, color.RGBA{255, 105, 79, 255}, false)
+	for _, proxy := range g.proxies {
+		x, y := proxy.Position()
+		radius := 4 + 5*(1-proxy.Tween.Progress())
+		vector.DrawFilledCircle(s, float32(x), float32(y), float32(radius), color.RGBA{255, 240, 150, 220}, false)
+	}
+	squash := 0.0
+	if !g.basketPulse.Done() {
+		squash = math.Sin(g.basketPulse.Progress()*math.Pi) * 0.16
+	}
+	hero.DrawBottomCenteredPose(s, g.basketX, basketY+8, 56, hero.Pose{ScaleX: 1 + squash, ScaleY: 1 - squash})
+	vector.DrawFilledRect(s, float32(g.basketX-48*(1+squash)), float32(basketY), float32(96*(1+squash)), 14, color.RGBA{255, 105, 79, 255}, false)
 	g.fx.Draw(s)
 	msg := fmt.Sprintf("SCORE %d  LIVES %d", g.score, g.lives)
 	if g.over {

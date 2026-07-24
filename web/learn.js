@@ -3834,3 +3834,36 @@ document.querySelectorAll(".motion-lab").forEach((lab) => {
     focusGo(lab, ids, btn.getAttribute("data-go-caption") || undefined);
   });
 });
+document.querySelectorAll(".motion-lab[data-lab='architecture-trace']").forEach((lab) => {
+  const nodes = [...lab.querySelectorAll("[data-lab-architecture-node]")];
+  const indexOut = lab.querySelector("[data-lab-architecture-index]");
+  const ownerOut = lab.querySelector("[data-lab-architecture-owner]");
+  const boundary = lab.querySelector("[data-lab-architecture-boundary]");
+  const tests = [...lab.closest(".physics")?.querySelectorAll(".vfx-test-contract li") || []].map((node) => node.textContent.trim());
+  let index = 0;
+
+  const owner = () => {
+    if (index <= 1) return document.documentElement.lang === "ja" ? "play / ルール" : "play / rules";
+    if (index === nodes.length - 1) return "Draw / FX";
+    return document.documentElement.lang === "ja" ? "presentation / 演出" : "presentation";
+  };
+  const render = () => {
+    nodes.forEach((node, i) => {
+      if (i === index) node.dataset.active = "true";
+      else delete node.dataset.active;
+      node.dataset.visited = i < index ? "true" : "false";
+    });
+    if (indexOut) indexOut.textContent = `${index + 1} / ${nodes.length}`;
+    if (ownerOut) ownerOut.textContent = owner();
+    if (boundary && tests.length) boundary.textContent = tests[index % tests.length];
+  };
+  lab.querySelector("[data-lab-architecture-step]")?.addEventListener("click", () => {
+    index = (index + 1) % nodes.length;
+    render();
+  });
+  lab.querySelector("[data-lab-architecture-reset]")?.addEventListener("click", () => {
+    index = 0;
+    render();
+  });
+  render();
+});

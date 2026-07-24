@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Stop in the zone: Perfect gets a big burst, Miss a gray puff. Map game states to FX strength. Play the demo, add one Go rule, verify it, and apply the idea to y">
-  <title>Ebi Showcase – FX for Timing Grades</title>
+  <meta name="description" content="Separate switches for Perfect score and Perfect fireworks will drift apart. Resolve Grade once, then map it to a data-only recipe containing">
+  <title>Ebi Showcase – Map Timing Grades to Recipes</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-meter/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – FX for Timing Grades">
-    <meta property="og:description" content="Stop in the zone: Perfect gets a big burst, Miss a gray puff. Map game states to FX strength. Play the demo, add one Go rule, verify it, and apply the idea to y">
+    <meta property="og:title" content="Ebi Showcase – Map Timing Grades to Recipes">
+    <meta property="og:description" content="Separate switches for Perfect score and Perfect fireworks will drift apart. Resolve Grade once, then map it to a data-only recipe containing">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-meter/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-meter.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="FX for Timing Grades">
+    <meta property="og:image:alt" content="Map Timing Grades to Recipes">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – FX for Timing Grades">
-    <meta name="twitter:description" content="Stop in the zone: Perfect gets a big burst, Miss a gray puff. Map game states to FX strength. Play the demo, add one Go rule, verify it, and apply the idea to y">
+    <meta name="twitter:title" content="Ebi Showcase – Map Timing Grades to Recipes">
+    <meta name="twitter:description" content="Separate switches for Perfect score and Perfect fireworks will drift apart. Resolve Grade once, then map it to a data-only recipe containing">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-meter.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="FX for Timing Grades">
+    <meta name="twitter:image:alt" content="Map Timing Grades to Recipes">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -43,23 +43,36 @@
     <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>ADV A02</span></div>
 
     <section class="overview-hero">
-      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
-      <h1>FX for Timing Grades</h1>
-      <p>Stop in the zone: Perfect gets a big burst, Miss a gray puff. Map game states to FX strength.</p>
-      <div class="overview-concept"><small>What you learn here</small><strong>FX per game state</strong></div>
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Map Timing Grades to Recipes</h1>
+      <p>Separate switches for Perfect score and Perfect fireworks will drift apart. Resolve Grade once, then map it to a data-only recipe containing Score, BurstCount, Flash, and Freeze. Better timing now produces stronger pause, banner expansion, and shockwave from one source.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Map a grade enum to a recipe</strong></div>
     </section>
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
-    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED-FX DESIGN RULE</p><h2>Separate the answer<br>from the time used to show it.</h2><p><code>updatePlay()</code> first commits the correct collision, score, or board. It hands that fact across once as a value or event. Presentation then advances interpolation, poses, trails, and particles. <code>Draw</code> only reads state; it never edits score or coordinates. This boundary supports both a rich screen and unit tests that need no GPU.</p></section>
+    <section class="vfx-pattern" aria-labelledby="pattern-vfx-fx-meter">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">PATTERN A02 / TYPED RECIPE</p><h2 id="pattern-vfx-fx-meter">Typed Presentation Recipe</h2></div>
+          <p>Scattering grade, score, color, and count across switches gives Perfect a different meaning in every file.</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="State flow">
+          <span>marker position</span><b>→</b><span>Grade</span><b>→</b><span>GradeRecipe</span><b>→</b><span>feedback Tween</span><b>→</b><span>banner + FX</span>
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>feedback owns Grade and one clock</h3><p>Marker, banner, and flash derive from the same Progress instead of drifting on separate timers.</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>Guarantee boundaries and mapping separately</h3><ul><li>center ±10 is Perfect</li><li>Perfect maps to 100 and the largest burst</li><li>Miss maps to zero score and freeze</li></ul></article>
+        </div>
+      </section>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Stop in the zone</h2></div>
-        <p>Tap to freeze the meter. FX changes with the grade—watch play vs fx in LIVE GO.</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Deliberately produce all three grades</h2></div>
+        <p>Perfect holds and swells, OK is moderate, and Miss makes only a heavy puff. Score and visuals share one Grade.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A02</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="FX for Timing Grades" src="../../../../play/vfx-fx-meter/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Map Timing Grades to Recipes" src="../../../../play/vfx-fx-meter/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -71,93 +84,83 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / STATE → FX</p>
-        <h2>Same tap,<br>different fireworks</h2>
-        <p class="lesson-lead">Branching stays in play (zone test). Then pick Burst count/color. Don’t put zone math inside the FX system.</p>
+        <p class="eyebrow">DEEP DIVE / TYPED RECIPE</p>
+        <h2>How do all grade effects<br>stay in one place?</h2>
+        <p class="lesson-lead">JudgeMeter owns distance math; RecipeForGrade owns presentation mapping. Never teach the FX system that ten pixels means Perfect. It receives Grade and reads numbers, so difficulty and visual tuning can be reviewed separately.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>State</h3>
-          <p>Perfect / OK / Miss.</p>
-          <code>result := grade()</code>
+          <h3>Rule enum</h3>
+          <p>Resolve a position into Grade.</p>
+          <code>grade := JudgeMeter(...)</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>Map</h3>
-          <p>Strength per result.</p>
-          <code>switch result</code>
+          <h3>Presentation recipe</h3>
+          <p>Bundle score, count, and freeze.</p>
+          <code>recipe := RecipeForGrade(grade)</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>Life</h3>
-          <p>FX dies on a timer.</p>
-          <code>fx.Update()</code>
+          <h3>One feedback clock</h3>
+          <p>Synchronize marker and banner motion.</p>
+          <code>feedback Tween</code>
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-meter-grade" aria-labelledby="lab-title-vfx-fx-meter">
+      <div class="motion-lab" data-lab="architecture-trace" aria-labelledby="lab-title-vfx-fx-meter">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / GRADE → FX</p>
-          <h3 id="lab-title-vfx-fx-meter">Turn a stopped position into FX strength</h3>
-          <p>Move the marker and press Judge. play turns distance from center into Perfect / OK / Miss, then passes only that grade to fx. The same position always produces the same score and burst.</p>
-          <div class="lab-controls"><label class="lab-meter-slider"><span>stop position</span><input type="range" min="0" max="100" value="50" data-lab-meter-position></label><button type="button" class="lab-button lab-button-primary" data-lab-meter-judge>Judge!</button><button type="button" class="lab-button" data-lab-meter-miss>Try Miss</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <p class="eyebrow">TRACE IT / RULE → MOTION → PIXELS</p>
+          <h3 id="lab-title-vfx-fx-meter">Freeze Grade; tune only its recipe</h3>
+          <p>Change Perfect Freeze or BurstCount and verify that the judgement window never moves. The recipe is a safe tuning surface.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-architecture-step>Next state →</button><button type="button" class="lab-button lab-button-quiet" data-lab-architecture-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-grade-demo" data-lab-board>
-          <div class="lab-grade-track" aria-label="timing grade zones">
-            <span class="lab-grade-zone lab-grade-zone-ok"></span><span class="lab-grade-zone lab-grade-zone-perfect"></span>
-            <span class="lab-grade-marker" data-lab-grade-marker></span>
-          </div>
-          <div class="lab-grade-flow">
-            <div class="lab-grade-play"><small>play</small><strong data-lab-grade-result>—</strong><span data-lab-grade-rule>measure center distance</span></div>
-            <b aria-hidden="true">→</b>
-            <div class="lab-grade-fx"><small>fx</small><strong data-lab-grade-strength>—</strong><span>choose strength from grade</span></div>
-          </div>
-          <div class="lab-grade-burst" data-lab-grade-burst aria-hidden="true"></div>
-          <p class="lab-grade-explain" data-lab-grade-explain aria-live="polite"></p>
+          <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>marker position</span><i>→</i><span data-lab-architecture-node><b>2</b>Grade</span><i>→</i><span data-lab-architecture-node><b>3</b>GradeRecipe</span><i>→</i><span data-lab-architecture-node><b>4</b>feedback Tween</span><i>→</i><span data-lab-architecture-node><b>5</b>banner + FX</span></div>
+          <div class="lab-architecture-boundary"><small>Boundary to protect</small><strong data-lab-architecture-boundary>center ±10 is Perfect</strong></div>
         </div>
-          <div class="lab-values" aria-live="polite"><div><span>center distance (play)</span><strong data-lab-grade-distance>—</strong></div><div><span>particles (fx)</span><strong data-lab-grade-particles>—</strong></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>current step</span><strong data-lab-architecture-index>—</strong></div><div><span>state owner</span><strong data-lab-architecture-owner>—</strong></div></div>
         </div>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>switch stays in play</h3>
-          <p>FX only receives “how flashy”.</p>
+          <h3>Read a recipe instead of branching everywhere</h3>
+          <p>Separate pure Judge and Recipe functions make boundaries and presentation mapping independently table-testable.</p>
         </div>
-        <pre><code>switch grade(pos) {
-case perfect: g.fx.Burst(x, y, 48, 5.0, gold, true); g.fx.FlashScreen(0.8, white)
-case ok:      g.fx.Burst(x, y, 20, 2.8, cyan, true)
-case miss:    g.fx.Burst(x, y, 8, 1.2, gray, false)
-}
-g.fx.Update()</code></pre>
+        <pre><code>grade := vfxmotion.JudgeMeter(g.marker, center)
+recipe := vfxmotion.RecipeForGrade(grade)
+g.score += recipe.Score
+g.feedback = vfxmotion.NewTween(22 + recipe.Freeze)
+g.spawnGradeFX(grade, recipe)</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY SWITCH IN PLAY?</p>
-          <h3>Rules live there</h3>
-          <p>Correctness is play; looks are the result.</p>
+          <p class="eyebrow">TEST THE CONTRACT</p>
+          <h3>Test a Grade × Recipe table</h3>
+          <p>Resolve marker positions, then compare each recipe’s Score, Label, and BurstCount in the same table.</p>
         </article>
         <article>
-          <p class="eyebrow">WHY TUNE FX?</p>
-          <h3>Feedback</h3>
-          <p>Better play → bigger fireworks feels good.</p>
+          <p class="eyebrow">FAILURE MODE</p>
+          <h3>Do not re-judge distance in FX</h3>
+          <p>A second Perfect calculation can show Perfect while gameplay awards only OK.</p>
         </article>
         <article class="challenge">
-          <p class="eyebrow">TRY NEXT</p>
-          <h3>Catch</h3>
-          <p>Next: stars[] and fx.Parts[] both grow.</p>
+          <p class="eyebrow">DESIGN PAYOFF</p>
+          <h3>Designers can tune a number table</h3>
+          <p>A data recipe can later move to JSON without exposing the judgement algorithm.</p>
         </article>
       </div>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-tap/" rel="prev">← STEP A01<strong>Add Effects to Tap</strong></a>
-      <a href="../vfx-fx-catch/" rel="next">STEP A03 →<strong>Catch Stars—Then Notice the Split</strong></a>
+      <a href="../vfx-fx-tap/" rel="prev">← STEP A01<strong>Turn a Tap Result into Motion</strong></a>
+      <a href="../vfx-fx-catch/" rel="next">STEP A03 →<strong>Fly a Caught Star to the HUD</strong></a>
     </nav>
 
     <section class="feedback-section" aria-labelledby="feedback-title">

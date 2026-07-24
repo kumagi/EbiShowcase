@@ -53,7 +53,7 @@
 <small>このステップで学ぶこと</small>
 <strong>ドラッグベクトルと発射速度</strong>
 </div>
-</section>
+</section><!-- genre-presentation-bridge:start --><aside class="genre-presentation-inline"><strong>この章も、演出の基礎は実装済みから始めます。</strong><span>新しい課題はドラッグ照準、円反射、減速、接触攻撃、味方連携です。</span><nav aria-label="参照するVFX設計"><a href="../../visual-effects/vfx-fx-pong/"><b>A05</b><span>上限つき描画履歴</span></a><a href="../../visual-effects/vfx-fx-dungeon/"><b>A11</b><span>ヒットリアクション時間軸</span></a><a href="../../visual-effects/vfx-fx-shooter/"><b>A08</b><span>イベント列と演出予算</span></a></nav><div class="genre-presentation-inline-contract"><p><b>MOTION BASELINE</b>予測線は上限つきサンプル、衝突はヒットリアクション、同tickの多重接触はイベント列で一回ずつ処理します。</p><p><b>TEST SEAM</b>予測軌道を消しても実軌道が同じで、同じ敵IDへの接触が一発射中に規定回数だけになること。</p></div></aside><!-- genre-presentation-bridge:end -->
 <p class="curriculum-bridge">これは共通基礎の続きです。まだゲームループを知らない人は、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。ここでは入力から速度を作るところへ進みます。</p>
 
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>真珠を引っぱり、3つのリングへ届けよう。</h2></div><p>真珠からドラッグして離します。矢印キーで引く向きを変え、Spaceで発射することもできます。6発以内でクリア。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 01</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="ひっぱって発射" src="../../../../play/drag-launch/" allow="autoplay; fullscreen"></iframe></div></div></section>

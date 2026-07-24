@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="The stage is numbers. Push dust and goal sparkles are fx—don't overload tiles with FX flags. Play the demo, add one Go rule, verify it, and apply the idea to yo">
-  <title>Ebi Showcase – Sokoban Dust &amp; Goal Glow</title>
+  <meta name="description" content="Sokoban truth should jump to the next integer board in one move. Drawing that jump immediately feels stiff. PlanSokobanMove resolves walk, p">
+  <title>Ebi Showcase – Show One Sokoban Move Smoothly</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-sokoban/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Sokoban Dust &amp; Goal Glow">
-    <meta property="og:description" content="The stage is numbers. Push dust and goal sparkles are fx—don't overload tiles with FX flags. Play the demo, add one Go rule, verify it, and apply the idea to yo">
+    <meta property="og:title" content="Ebi Showcase – Show One Sokoban Move Smoothly">
+    <meta property="og:description" content="Sokoban truth should jump to the next integer board in one move. Drawing that jump immediately feels stiff. PlanSokobanMove resolves walk, p">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-sokoban/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-sokoban.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Sokoban Dust &amp; Goal Glow">
+    <meta property="og:image:alt" content="Show One Sokoban Move Smoothly">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Sokoban Dust &amp; Goal Glow">
-    <meta name="twitter:description" content="The stage is numbers. Push dust and goal sparkles are fx—don't overload tiles with FX flags. Play the demo, add one Go rule, verify it, and apply the idea to yo">
+    <meta name="twitter:title" content="Ebi Showcase – Show One Sokoban Move Smoothly">
+    <meta name="twitter:description" content="Sokoban truth should jump to the next integer board in one move. Drawing that jump immediately feels stiff. PlanSokobanMove resolves walk, p">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-sokoban.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Sokoban Dust &amp; Goal Glow">
+    <meta name="twitter:image:alt" content="Show One Sokoban Move Smoothly">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -44,22 +44,35 @@
 
     <section class="overview-hero">
       <p class="eyebrow">★★★★★ / PLAYABLE</p>
-      <h1>Sokoban Dust & Goal Glow</h1>
-      <p>The stage is numbers. Push dust and goal sparkles are fx—don't overload tiles with FX flags.</p>
-      <div class="overview-concept"><small>What you learn here</small><strong>Tilemap vs push FX</strong></div>
+      <h1>Show One Sokoban Move Smoothly</h1>
+      <p>Sokoban truth should jump to the next integer board in one move. Drawing that jump immediately feels stiff. PlanSokobanMove resolves walk, push, or block without side effects; an allowed plan commits once, while its captured from/to points tween for nine frames. Input is locked during the tween.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Plan, commit, then tween a move</strong></div>
     </section>
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
-    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED-FX DESIGN RULE</p><h2>Separate the answer<br>from the time used to show it.</h2><p><code>updatePlay()</code> first commits the correct collision, score, or board. It hands that fact across once as a value or event. Presentation then advances interpolation, poses, trails, and particles. <code>Draw</code> only reads state; it never edits score or coordinates. This boundary supports both a rich screen and unit tests that need no GPU.</p></section>
+    <section class="vfx-pattern" aria-labelledby="pattern-vfx-fx-sokoban">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">PATTERN A09 / PLAN → COMMIT → TWEEN</p><h2 id="pattern-vfx-fx-sokoban">Plan, Commit, Tween</h2></div>
+          <p>Moving the board a little each tick forces collision and goal rules for every in-between fraction.</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="State flow">
+          <span>input direction</span><b>→</b><span>pure MovePlan</span><b>→</b><span>commit grid once</span><b>→</b><span>input lock + Tween</span><b>→</b><span>dust / goal FX</span>
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>moveAnimation reads an already committed Plan</h3><p>Keep no second board—only committed truth and captured endpoints. move != nil is also the explicit input lock.</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>Guarantee Plan and Tween without a GPU</h3><ul><li>a wall plan is not Allowed</li><li>a valid push returns BoxTo one cell ahead</li><li>board commit happens once across the Tween</li></ul></article>
+        </div>
+      </section>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Push boxes to goals</h2></div>
-        <p>Dust and glow are fx; the map is play.</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Push a box and follow both motions</h2></div>
+        <p>The board commits on input, while Ebi and box share one smooth Progress. Dust lands at the end, goals get a double wave, and clear waits for the final tween.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A09</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="Sokoban Dust & Goal Glow" src="../../../../play/vfx-fx-sokoban/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Show One Sokoban Move Smoothly" src="../../../../play/vfx-fx-sokoban/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -71,84 +84,86 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / TILEMAP</p>
-        <h2>Map is truth,<br>dust is feeling</h2>
-        <p class="lesson-lead">Rules should read tile values only. Judging by sparkles invites bugs.</p>
+        <p class="eyebrow">DEEP DIVE / PLAN → COMMIT → TWEEN</p>
+        <h2>How can one correct move<br>travel between cells?</h2>
+        <p class="lesson-lead">MovePlan contains PlayerFrom/To and, for a push, BoxIndex and BoxFrom/To. Committed player/boxes are the only board truth. moveAnimation retains that Plan and a Tween for drawing, then emits dust, goal wave, and clear confetti at completion.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>Map</h3>
-          <p>Wall, floor, box, goal.</p>
-          <code>tiles [][]int</code>
+          <h3>Plan is pure</h3>
+          <p>Return Allowed and destinations from walls/boxes.</p>
+          <code>PlanSokobanMove(...)</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>Push</h3>
-          <p>Dust when push succeeds.</p>
-          <code>fx.Burst on push</code>
+          <h3>Commit once</h3>
+          <p>Update integer player and optional box.</p>
+          <code>apply(plan)</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>Goal</h3>
-          <p>Glow when box sits.</p>
-          <code>fx.Ring</code>
+          <h3>Tween only presentation</h3>
+          <p>Ease from/to into Draw positions.</p>
+          <code>Lerp(from, to, t)</code>
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-sokoban">
+      <div class="motion-lab" data-lab="architecture-trace" aria-labelledby="lab-title-vfx-fx-sokoban">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / SPLIT</p>
-          <h3 id="lab-title-vfx-fx-sokoban">Judge tiles</h3>
-          <p>Don't clear based on sparkles.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Advance FX 1 tick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <p class="eyebrow">TRACE IT / RULE → MOTION → PIXELS</p>
+          <h3 id="lab-title-vfx-fx-sokoban">Compare walk, push, and blocked plans</h3>
+          <p>Table-test wall, empty, push into empty, and push into blocked. Allowed=false creates neither board mutation nor Tween.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-architecture-step>Next state →</button><button type="button" class="lab-button lab-button-quiet" data-lab-architecture-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play (rules / score)</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx (sparks)</h4><ul data-lab-fx-list></ul></div>
-          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
+          <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>input direction</span><i>→</i><span data-lab-architecture-node><b>2</b>pure MovePlan</span><i>→</i><span data-lab-architecture-node><b>3</b>commit grid once</span><i>→</i><span data-lab-architecture-node><b>4</b>input lock + Tween</span><i>→</i><span data-lab-architecture-node><b>5</b>dust / goal FX</span></div>
+          <div class="lab-architecture-boundary"><small>Boundary to protect</small><strong data-lab-architecture-boundary>a wall plan is not Allowed</strong></div>
         </div>
-        <p class="lab-fx-hint" data-lab-fx-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>score (play)</span><strong data-lab-score>—</strong></div><div><span>sparks (fx)</span><strong data-lab-fx-n>—</strong></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>current step</span><strong data-lab-architecture-index>—</strong></div><div><span>state owner</span><strong data-lab-architecture-owner>—</strong></div></div>
         </div>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>Clear = tile compare</h3>
-          <p>FX only celebrates the result.</p>
+          <h3>Do not change the board on animation completion</h3>
+          <p>Truth was committed at input. Completion callbacks emit presentation only, preventing a double move.</p>
         </div>
-        <pre><code>if pushOK {
-  tiles = applyPush(tiles) // play truth
-  g.fx.Burst(boxX, boxY, 16, 2, dust, true)
-}</code></pre>
+        <pre><code>plan := vfxmotion.PlanSokobanMove(player, direction, walls, boxes)
+if !plan.Allowed { return }
+
+commit(plan) // integer board truth changes once
+g.move = &amp;moveAnimation{
+    plan: plan, tween: vfxmotion.NewTween(9),
+}
+// Draw lerps plan.PlayerFrom → plan.PlayerTo.</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY?</p>
-          <h3>Save & test</h3>
-          <p>Persist the map and you can replay.</p>
+          <p class="eyebrow">TEST THE CONTRACT</p>
+          <h3>Cover MovePlan with board tables</h3>
+          <p>Compare empty walk, wall, valid push, box behind box, and box against wall without images.</p>
         </article>
         <article>
-          <p class="eyebrow">WHY FX OPTIONAL?</p>
-          <h3>Rules first</h3>
-          <p>Puzzle works with juice off.</p>
+          <p class="eyebrow">FAILURE MODE</p>
+          <h3>Never make float position board truth</h3>
+          <p>A half-cell box makes goal, undo, save, and clear semantics ambiguous.</p>
         </article>
         <article class="challenge">
-          <p class="eyebrow">TRY NEXT</p>
-          <h3>Platformer</h3>
-          <p>Landing and jump dust.</p>
+          <p class="eyebrow">DESIGN PAYOFF</p>
+          <h3>Foundation for chess, tactics, and turns</h3>
+          <p>Plan, commit, then tween is the safe default for animated grid actions.</p>
         </article>
       </div>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-shooter/" rel="prev">← STEP A08<strong>Bullets, Enemies, Explosions</strong></a>
-      <a href="../vfx-fx-platform/" rel="next">STEP A10 →<strong>Jump & Land Dust</strong></a>
+      <a href="../vfx-fx-shooter/" rel="prev">← STEP A08<strong>Dispatch Heavy Combat FX within a Budget</strong></a>
+      <a href="../vfx-fx-platform/" rel="next">STEP A10 →<strong>Build a Body that Runs, Jumps, and Lands</strong></a>
     </nav>
 
     <section class="feedback-section" aria-labelledby="feedback-title">

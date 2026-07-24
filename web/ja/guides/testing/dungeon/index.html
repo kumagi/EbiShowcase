@@ -140,8 +140,10 @@ func TestEnemyMode(t *testing.T) {
 		want     int
 	}{
 		{name: "distance below chase boundary starts chase", distance: 164.9, want: 1},
+		{name: "exact chase boundary keeps wander mode", distance: 165, want: 0},
 		{name: "middle distance keeps wander mode", distance: 200, want: 0},
 		{name: "middle distance keeps chase mode", current: 1, distance: 200, want: 1},
+		{name: "exact wander boundary keeps chase mode", current: 1, distance: 230, want: 1},
 		{name: "distance above wander boundary returns to wander", current: 1, distance: 230.1, want: 0},
 	}
 
@@ -163,6 +165,7 @@ func TestAimVelocity(t *testing.T) {
 		wantX, wantY  float64
 	}{
 		{name: "three four five direction scales to requested speed", dx: 3, dy: 4, speed: 10, wantX: 6, wantY: 8},
+		{name: "negative direction preserves left and upward signs", dx: -3, dy: -4, speed: 10, wantX: -6, wantY: -8},
 		{name: "zero direction produces stopped bullet", speed: 10, wantX: 0, wantY: 0},
 	}
 
@@ -179,7 +182,7 @@ func TestAimVelocity(t *testing.T) {
 		})
 	}
 }
-</code></pre></article></section><section class="test-audit"><div><p class="eyebrow">TEST REVIEW / ALL CASES</p><h2>この章のテストを、同じ品質基準で点検済み。</h2></div><div class="test-quality-grid"><article><h3>命名</h3><p>トップレベルは<code>TestEnemyMode</code>・<code>TestAimVelocity</code>。各<code>t.Run</code>名が「どういう前提なら何を返すか」を文章で示します。<code>whenFoo_shouldBar</code>形式は使いません。</p></article><article><h3>AAA</h3><p>ケースの値で前提を作り、対象関数を一度呼び、その結果だけを比較します。三段落は空行で分け、Arrange / Act / Assertコメントは置きません。</p></article><article><h3>DAMP</h3><p>意味のあるケース名とgot / wantを省略しません。Assertには値の探索ループやswitchを置かず、複数戻り値は別々に検証して失敗理由を一つに絞ります。</p></article><article><h3>テーブル駆動</h3><p>同じ関数へ境界値を渡す反復なので、各行が完全な一件になるテーブル駆動テストを使います。外側のforはケース実行であり、Assertの中の探索ではありません。</p></article></div></section><section class="test-golden test-golden-lesson"><div><p class="eyebrow">DRAW / GOLDEN ONLY</p><h2>同じシーンをLayoutの3契約で守る</h2><p>最初の部屋・敵・ライフHUDを一つのfixtureとして固定します。外側サイズだけをmobile portrait・console 16:9・PC windowへ変え、各ケースで<code>Layout</code>が返した論理サイズに<code>Draw</code>して、<code>dungeon-initial-mobile.png</code>・<code>dungeon-initial-console.png</code>・<code>dungeon-initial-pc.png</code>と一枚まるごと比較します。これならゲーム状態の差ではなく画面構成の差だけをレビューできます。座標や描画命令は個別にAssertしません。</p><p>下の3ケースは、Layoutに縦長・16:9・PCウインドウの実際の分岐がある場合の形です。現在のLayoutが外側サイズを無視して一つの論理画面だけを返すなら、同一PNGを3枚承認せずdefaultの1ケースにします。分岐を追加した時点で3ケースへ広げ、モバイルの縦積み、コンソール／TVの安全領域、PCの横幅を.actual.pngで目視調整します。このコードはゲーム側のmain_test.goへ置き、ガイド冒頭のTestMain / assertGoldenと組み合わせます。</p></div><pre><code>func TestDrawInitialRoomMatchesLayoutGoldens(t *testing.T) {
+</code></pre></article></section><section class="test-audit test-aaa-practice" data-aaa-lesson="11"><div><p class="eyebrow">AAA PRACTICE 11 / 12</p><h2>AAA 11：現在状態もArrangeして状態機械を守る</h2><p>AIの答えは距離だけでなく現在のmodeにも依存します。同じ距離200でも徘徊中なら徘徊、追跡中なら追跡という二つのAAAを書くことで、ヒステリシスの『状態を保つ』を守れます。</p><p class="test-aaa-count">9本のサブテストを一つずつレビュー済みです。各行は「データの数」ではなく、独立した一つのAAAの物語です。</p></div><div class="test-quality-grid test-aaa-stage-grid"><article data-aaa-stage="arrange"><h3>01 / ARRANGE</h3><p>current modeとdistanceを一組にします。さらに165・230の境界ちょうどと、その外側164.9・230.1を並べます。</p></article><article data-aaa-stage="act"><h3>02 / ACT</h3><p>EnemyModeを一度呼びます。移動速度を求めるAimVelocityは別のTest関数・別のActとして残します。</p></article><article data-aaa-stage="assert"><h3>03 / ASSERT</h3><p>next mode一つを比較します。敵の座標やアニメーションではなく、状態機械が約束した遷移だけを観測します。</p></article></div><div class="test-aaa-repetitions"><p class="eyebrow">AAA REPETITIONS</p><h3>最低3つの物語で、隣り合う契約を守る</h3><ol><li><span>01</span><p>165未満なら追跡を始める</p></li><li><span>02</span><p>中間距離では現在modeを保つ</p></li><li><span>03</span><p>230を越えたら徘徊へ戻る</p></li></ol></div><aside class="test-aaa-trap"><div><small>AAA SMELL / 分解する合図</small><p>近い敵は追跡、遠い敵は徘徊の2件だけでは、中間帯でmodeを毎tick反転させるバグを見逃します。</p></div><div><small>ONE MORE TEST / 次は自分で1本</small><p>current=0,distance=230とcurrent=1,distance=165を追加し、境界ちょうどではそれぞれの現在状態を保つことを確かめてください。</p></div></aside></section><section class="test-audit"><div><p class="eyebrow">TEST REVIEW / ALL CASES</p><h2>この章の全テストを、AAAと読みやすさの両方で点検済み。</h2></div><div class="test-quality-grid"><article><h3>命名</h3><p>トップレベルは<code>TestEnemyMode</code>・<code>TestAimVelocity</code>。各<code>t.Run</code>名が「どういう前提なら何を返すか」を文章で示します。<code>whenFoo_shouldBar</code>形式は使いません。</p></article><article><h3>AAAレビュー結果</h3><p>EnemyModeは6サブテストになり、開始・維持・終了と両境界ちょうどを覆います。AimVelocityの3件とは分離され、AI判断と移動計算の失敗が混ざりません。</p></article><article><h3>DAMP</h3><p>意味のあるケース名とgot / wantを省略しません。Assertには値の探索ループやswitchを置かず、複数戻り値は別々に検証して失敗理由を一つに絞ります。</p></article><article><h3>テーブル駆動</h3><p>同じ関数へ境界値を渡す反復なので、各行が完全な一件になるテーブル駆動テストを使います。外側のforはケース実行であり、Assertの中の探索ではありません。</p></article></div></section><section class="test-golden test-golden-lesson"><div><p class="eyebrow">DRAW / GOLDEN ONLY</p><h2>同じシーンをLayoutの3契約で守る</h2><p>最初の部屋・敵・ライフHUDを一つのfixtureとして固定します。外側サイズだけをmobile portrait・console 16:9・PC windowへ変え、各ケースで<code>Layout</code>が返した論理サイズに<code>Draw</code>して、<code>dungeon-initial-mobile.png</code>・<code>dungeon-initial-console.png</code>・<code>dungeon-initial-pc.png</code>と一枚まるごと比較します。これならゲーム状態の差ではなく画面構成の差だけをレビューできます。座標や描画命令は個別にAssertしません。</p><p>下の3ケースは、Layoutに縦長・16:9・PCウインドウの実際の分岐がある場合の形です。現在のLayoutが外側サイズを無視して一つの論理画面だけを返すなら、同一PNGを3枚承認せずdefaultの1ケースにします。分岐を追加した時点で3ケースへ広げ、モバイルの縦積み、コンソール／TVの安全領域、PCの横幅を.actual.pngで目視調整します。このコードはゲーム側のmain_test.goへ置き、ガイド冒頭のTestMain / assertGoldenと組み合わせます。</p></div><pre><code>func TestDrawInitialRoomMatchesLayoutGoldens(t *testing.T) {
 	layoutCases := []struct {
 		name                       string
 		outsideWidth, outsideHeight int

@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-07-19T17:32:04.052Z",
+  "generatedAt": "2026-07-24T00:05:19.071Z",
   "pages": [
     {
       "file": "web/en/build/empty-loop/index.html",
@@ -3140,10 +3140,10 @@
       "key": "en--tracks--visual-effects--fx-breakout",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Break Bricks in Two Steps",
-      "h1": "Break Bricks in Two Steps",
+      "title": "Ebi Showcase – Hand a Broken Brick to Its Shards",
+      "h1": "Hand a Broken Brick to Its Shards",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Bricks are game sprites that participate in rules; shards and flames are visual-only FX sprites. Keep the core brick update and collision ru",
+      "description": "After deletion there is no safe brick from which to read shape or color. At collision, copy ID, rectangle, and color variant into Snapshot,",
       "image": "assets/og/en--tracks--visual-effects--fx-breakout.png"
     },
     {
@@ -3152,10 +3152,10 @@
       "key": "en--tracks--visual-effects--fx-bullethell",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Bomb Clears Bullets—Explosions Are FX",
-      "h1": "Bomb Clears Bullets—Explosions Are FX",
+      "title": "Ebi Showcase – Script a Full-screen Bomb Sequence",
+      "h1": "Script a Full-screen Bomb Sequence",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Advanced finale. A bomb deletes nearby bullets (play) and spawns a huge Ring/Flash (fx). Don't recycle live bullets as fireworks—delete, the",
+      "description": "The finale layers several effects over time. Rules delete in-range bullets in the same tick and convert their count to score. BombScript the",
       "image": "assets/og/en--tracks--visual-effects--fx-bullethell.png"
     },
     {
@@ -3164,10 +3164,10 @@
       "key": "en--tracks--visual-effects--fx-catch",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Catch Stars—Then Notice the Split",
-      "h1": "Catch Stars—Then Notice the Split",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Stars participate in game rules; sparks are visual only. Their jobs and updates differ, so Game keeps stars and fx in separate boxes.",
+      "title": "Ebi Showcase – Fly a Caught Star to the HUD",
+      "h1": "Fly a Caught Star to the HUD",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "A caught star should leave collision immediately, but vanishing from the screen instantly feels weak. Copy its ID and catch position into a",
       "image": "assets/og/en--tracks--visual-effects--fx-catch.png"
     },
     {
@@ -3176,10 +3176,10 @@
       "key": "en--tracks--visual-effects--fx-dungeon",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Dungeon Hit Flashes",
-      "h1": "Dungeon Hit Flashes",
+      "title": "Ebi Showcase – Split One Hit into Layers of Time",
+      "h1": "Split One Hit into Layers of Time",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Reducing HP is play. Flashes and shards are fx. Choose knockback as physics or juice on purpose. Play the demo, add one Go rule, verify it, and apply the idea t",
+      "description": "A satisfying hit is more than reducing HP and spawning particles. Commit HP once, then let Reaction advance HitStop→Flash→Recover. The enemy",
       "image": "assets/og/en--tracks--visual-effects--fx-dungeon.png"
     },
     {
@@ -3188,10 +3188,10 @@
       "key": "en--tracks--visual-effects--fx-flight",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Flight with Whoosh FX",
-      "h1": "Flight with Whoosh FX",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Velocity and gravity are play physics. Flap sparks and pass rings are fx. A Game.fx field should feel natural now. Play the demo, add one Go rule, verify it, an",
+      "title": "Ebi Showcase – Translate Flight Physics into Pose",
+      "h1": "Translate Flight Physics into Pose",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "vy is enough for collision but not for a player reading rise, stall, and fall. Feed velocity, frames since flap, and crash state to PoseForF",
       "image": "assets/og/en--tracks--visual-effects--fx-flight.png"
     },
     {
@@ -3200,10 +3200,10 @@
       "key": "en--tracks--visual-effects--fx-meter",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – FX for Timing Grades",
-      "h1": "FX for Timing Grades",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Stop in the zone: Perfect gets a big burst, Miss a gray puff. Map game states to FX strength. Play the demo, add one Go rule, verify it, and apply the idea to y",
+      "title": "Ebi Showcase – Map Timing Grades to Recipes",
+      "h1": "Map Timing Grades to Recipes",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Separate switches for Perfect score and Perfect fireworks will drift apart. Resolve Grade once, then map it to a data-only recipe containing",
       "image": "assets/og/en--tracks--visual-effects--fx-meter.png"
     },
     {
@@ -3212,10 +3212,10 @@
       "key": "en--tracks--visual-effects--fx-platform",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Jump & Land Dust",
-      "h1": "Jump & Land Dust",
+      "title": "Ebi Showcase – Build a Body that Runs, Jumps, and Lands",
+      "h1": "Build a Body that Runs, Jumps, and Lands",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Rising edge wasOnGround to onGround triggers land FX. Grounded flag is play; dust is fx. Play the demo, add one Go rule, verify it, and apply the idea to your o",
+      "description": "Do not emit dust every grounded frame. Compare previous and current physics to create one Landed edge. Derive Idle / Run / Rise / Fall from",
       "image": "assets/og/en--tracks--visual-effects--fx-platform.png"
     },
     {
@@ -3224,10 +3224,10 @@
       "key": "en--tracks--visual-effects--fx-pong",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Pong Sparks & Trails",
-      "h1": "Pong Sparks & Trails",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Burst only on paddle/wall hits. Soft trail sparks while moving—still fx. Ball vx,vy stay play. Play the demo, add one Go rule, verify it, and apply the idea to ",
+      "title": "Ebi Showcase – Turn Ball History into a Safe Trail",
+      "h1": "Turn Ball History into a Safe Trail",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "A trail does not need unlimited particles every tick. Keep only the latest sixteen points in presentation and draw old samples smaller and",
       "image": "assets/og/en--tracks--visual-effects--fx-pong.png"
     },
     {
@@ -3236,10 +3236,10 @@
       "key": "en--tracks--visual-effects--fx-shooter",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Bullets, Enemies, Explosions",
-      "h1": "Bullets, Enemies, Explosions",
+      "title": "Ebi Showcase – Dispatch Heavy Combat FX within a Budget",
+      "h1": "Dispatch Heavy Combat FX within a Budget",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Player shots, enemies, and burst FX. Muzzle flash is fx; HP is play. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game s",
+      "description": "A shooter can fire, destroy several enemies, and take damage in one tick. Rules append typed ShotFired / EnemyDestroyed / PlayerDamaged even",
       "image": "assets/og/en--tracks--visual-effects--fx-shooter.png"
     },
     {
@@ -3248,10 +3248,10 @@
       "key": "en--tracks--visual-effects--fx-snake",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Snake Eat FX",
-      "h1": "Snake Eat FX",
+      "title": "Ebi Showcase – Connect a Grid Snake Smoothly",
+      "h1": "Connect a Grid Snake Smoothly",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Body is grid history. Only the eat moment gets fx. Don't hang particles on every cell. Play the demo, add one Go rule, verify it, and apply the idea to your own",
+      "description": "Snake truth is an integer cell list. Turning it into floats breaks self-collision and food tests. Copy body into visualFrom before a move, t",
       "image": "assets/og/en--tracks--visual-effects--fx-snake.png"
     },
     {
@@ -3260,10 +3260,10 @@
       "key": "en--tracks--visual-effects--fx-sokoban",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Sokoban Dust & Goal Glow",
-      "h1": "Sokoban Dust & Goal Glow",
+      "title": "Ebi Showcase – Show One Sokoban Move Smoothly",
+      "h1": "Show One Sokoban Move Smoothly",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "The stage is numbers. Push dust and goal sparkles are fx—don't overload tiles with FX flags. Play the demo, add one Go rule, verify it, and apply the idea to yo",
+      "description": "Sokoban truth should jump to the next integer board in one move. Drawing that jump immediately feels stiff. PlanSokobanMove resolves walk, p",
       "image": "assets/og/en--tracks--visual-effects--fx-sokoban.png"
     },
     {
@@ -3272,10 +3272,10 @@
       "key": "en--tracks--visual-effects--fx-tap",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Add Effects to Tap",
-      "h1": "Add Effects to Tap",
+      "title": "Ebi Showcase – Turn a Tap Result into Motion",
+      "h1": "Turn a Tap Result into Motion",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Advanced track starts here. Take LEVEL 01’s tap-the-circle and add hit bursts and rings. Notice updatePlay() then a separate fx.Update().",
+      "description": "Do not hide “the instant of a hit” inside a pile of side effects. Resolve the input into a small TapResult value. Score and presentation con",
       "image": "assets/og/en--tracks--visual-effects--fx-tap.png"
     },
     {
@@ -3332,10 +3332,10 @@
       "key": "en--tracks--visual-effects--vfx-fx-breakout",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Break Bricks in Two Steps",
-      "h1": "Break Bricks in Two Steps",
+      "title": "Ebi Showcase – Hand a Broken Brick to Its Shards",
+      "h1": "Hand a Broken Brick to Its Shards",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Bricks are game sprites that participate in rules; shards and flames are visual-only FX sprites. Keep the core brick update and collision ru",
+      "description": "After deletion there is no safe brick from which to read shape or color. At collision, copy ID, rectangle, and color variant into Snapshot,",
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-breakout.png"
     },
     {
@@ -3344,10 +3344,10 @@
       "key": "en--tracks--visual-effects--vfx-fx-bullethell",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Bomb Clears Bullets—Explosions Are FX",
-      "h1": "Bomb Clears Bullets—Explosions Are FX",
+      "title": "Ebi Showcase – Script a Full-screen Bomb Sequence",
+      "h1": "Script a Full-screen Bomb Sequence",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Advanced finale. A bomb deletes nearby bullets (play) and spawns a huge Ring/Flash (fx). Don't recycle live bullets as fireworks—delete, the",
+      "description": "The finale layers several effects over time. Rules delete in-range bullets in the same tick and convert their count to score. BombScript the",
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-bullethell.png"
     },
     {
@@ -3356,10 +3356,10 @@
       "key": "en--tracks--visual-effects--vfx-fx-catch",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Catch Stars—Then Notice the Split",
-      "h1": "Catch Stars—Then Notice the Split",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Stars participate in game rules; sparks are visual only. Their jobs and updates differ, so Game keeps stars and fx in separate boxes.",
+      "title": "Ebi Showcase – Fly a Caught Star to the HUD",
+      "h1": "Fly a Caught Star to the HUD",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "A caught star should leave collision immediately, but vanishing from the screen instantly feels weak. Copy its ID and catch position into a",
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-catch.png"
     },
     {
@@ -3368,10 +3368,10 @@
       "key": "en--tracks--visual-effects--vfx-fx-dungeon",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Dungeon Hit Flashes",
-      "h1": "Dungeon Hit Flashes",
+      "title": "Ebi Showcase – Split One Hit into Layers of Time",
+      "h1": "Split One Hit into Layers of Time",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Reducing HP is play. Flashes and shards are fx. Choose knockback as physics or juice on purpose. Play the demo, add one Go rule, verify it, and apply the idea t",
+      "description": "A satisfying hit is more than reducing HP and spawning particles. Commit HP once, then let Reaction advance HitStop→Flash→Recover. The enemy",
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-dungeon.png"
     },
     {
@@ -3380,10 +3380,10 @@
       "key": "en--tracks--visual-effects--vfx-fx-flight",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Flight with Whoosh FX",
-      "h1": "Flight with Whoosh FX",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Velocity and gravity are play physics. Flap sparks and pass rings are fx. A Game.fx field should feel natural now. Play the demo, add one Go rule, verify it, an",
+      "title": "Ebi Showcase – Translate Flight Physics into Pose",
+      "h1": "Translate Flight Physics into Pose",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "vy is enough for collision but not for a player reading rise, stall, and fall. Feed velocity, frames since flap, and crash state to PoseForF",
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-flight.png"
     },
     {
@@ -3392,10 +3392,10 @@
       "key": "en--tracks--visual-effects--vfx-fx-meter",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – FX for Timing Grades",
-      "h1": "FX for Timing Grades",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Stop in the zone: Perfect gets a big burst, Miss a gray puff. Map game states to FX strength. Play the demo, add one Go rule, verify it, and apply the idea to y",
+      "title": "Ebi Showcase – Map Timing Grades to Recipes",
+      "h1": "Map Timing Grades to Recipes",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Separate switches for Perfect score and Perfect fireworks will drift apart. Resolve Grade once, then map it to a data-only recipe containing",
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-meter.png"
     },
     {
@@ -3404,10 +3404,10 @@
       "key": "en--tracks--visual-effects--vfx-fx-platform",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Jump & Land Dust",
-      "h1": "Jump & Land Dust",
+      "title": "Ebi Showcase – Build a Body that Runs, Jumps, and Lands",
+      "h1": "Build a Body that Runs, Jumps, and Lands",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Rising edge wasOnGround to onGround triggers land FX. Grounded flag is play; dust is fx. Play the demo, add one Go rule, verify it, and apply the idea to your o",
+      "description": "Do not emit dust every grounded frame. Compare previous and current physics to create one Landed edge. Derive Idle / Run / Rise / Fall from",
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-platform.png"
     },
     {
@@ -3416,10 +3416,10 @@
       "key": "en--tracks--visual-effects--vfx-fx-pong",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Pong Sparks & Trails",
-      "h1": "Pong Sparks & Trails",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Burst only on paddle/wall hits. Soft trail sparks while moving—still fx. Ball vx,vy stay play. Play the demo, add one Go rule, verify it, and apply the idea to ",
+      "title": "Ebi Showcase – Turn Ball History into a Safe Trail",
+      "h1": "Turn Ball History into a Safe Trail",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "A trail does not need unlimited particles every tick. Keep only the latest sixteen points in presentation and draw old samples smaller and",
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-pong.png"
     },
     {
@@ -3428,10 +3428,10 @@
       "key": "en--tracks--visual-effects--vfx-fx-shooter",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Bullets, Enemies, Explosions",
-      "h1": "Bullets, Enemies, Explosions",
+      "title": "Ebi Showcase – Dispatch Heavy Combat FX within a Budget",
+      "h1": "Dispatch Heavy Combat FX within a Budget",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Player shots, enemies, and burst FX. Muzzle flash is fx; HP is play. Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game s",
+      "description": "A shooter can fire, destroy several enemies, and take damage in one tick. Rules append typed ShotFired / EnemyDestroyed / PlayerDamaged even",
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-shooter.png"
     },
     {
@@ -3440,10 +3440,10 @@
       "key": "en--tracks--visual-effects--vfx-fx-snake",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Snake Eat FX",
-      "h1": "Snake Eat FX",
+      "title": "Ebi Showcase – Connect a Grid Snake Smoothly",
+      "h1": "Connect a Grid Snake Smoothly",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "Body is grid history. Only the eat moment gets fx. Don't hang particles on every cell. Play the demo, add one Go rule, verify it, and apply the idea to your own",
+      "description": "Snake truth is an integer cell list. Turning it into floats breaks self-collision and food tests. Copy body into visualFrom before a move, t",
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-snake.png"
     },
     {
@@ -3452,10 +3452,10 @@
       "key": "en--tracks--visual-effects--vfx-fx-sokoban",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Sokoban Dust & Goal Glow",
-      "h1": "Sokoban Dust & Goal Glow",
+      "title": "Ebi Showcase – Show One Sokoban Move Smoothly",
+      "h1": "Show One Sokoban Move Smoothly",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "The stage is numbers. Push dust and goal sparkles are fx—don't overload tiles with FX flags. Play the demo, add one Go rule, verify it, and apply the idea to yo",
+      "description": "Sokoban truth should jump to the next integer board in one move. Drawing that jump immediately feels stiff. PlanSokobanMove resolves walk, p",
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-sokoban.png"
     },
     {
@@ -3464,10 +3464,10 @@
       "key": "en--tracks--visual-effects--vfx-fx-tap",
       "lang": "en",
       "kind": "vfx",
-      "title": "Ebi Showcase – Add Effects to Tap",
-      "h1": "Add Effects to Tap",
+      "title": "Ebi Showcase – Turn a Tap Result into Motion",
+      "h1": "Turn a Tap Result into Motion",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "Advanced track starts here. Take LEVEL 01’s tap-the-circle and add hit bursts and rings. Notice updatePlay() then a separate fx.Update().",
+      "description": "Do not hide “the instant of a hit” inside a pile of side effects. Resolve the input into a small TapResult value. Score and presentation con",
       "image": "assets/og/en--tracks--visual-effects--vfx-fx-tap.png"
     },
     {
@@ -6860,10 +6860,10 @@
       "key": "ja--tracks--visual-effects--fx-breakout",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – ブロック破壊を二段にする",
-      "h1": "ブロック破壊を二段にする",
+      "title": "Ebi Showcase – 壊れたブロックを破片へ引き継ぐ",
+      "h1": "壊れたブロックを破片へ引き継ぐ",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "ブロックはゲームのルールに参加するスプライト、破片・炎は見た目だけのFXスプライトです。基礎編のブロック判定と更新はそのままに、壊れた場所へfx用の絵を足します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "ブロックを消してから色や形を読もうとしても、参照先はもうありません。衝突が成立した瞬間にID・矩形・色番号をSnapshotへコピーし、bricksではalive=falseを即確定します。Tombstoneはその静止画を24フレームだけ破片へ崩し、2フレームのヒットストップが衝",
       "image": "assets/og/ja--tracks--visual-effects--fx-breakout.png"
     },
     {
@@ -6872,10 +6872,10 @@
       "key": "ja--tracks--visual-effects--fx-bullethell",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – ボムで弾を消し、爆発は演出へ",
-      "h1": "ボムで弾を消し、爆発は演出へ",
+      "title": "Ebi Showcase – 画面全体のボム演出を台本化する",
+      "h1": "画面全体のボム演出を台本化する",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "総仕上げは複数の演出が時間差で重なるボムです。ルール側は範囲内の弾を同tickで削除し、個数を得点へ変えます。その後BombScriptが0Fの停止とフラッシュ、1Fの衝撃波、4Fの弾消散、12Fの紙吹雪をCueとして発行します。同じStrengthとFrameなら同じCue列に",
       "image": "assets/og/ja--tracks--visual-effects--fx-bullethell.png"
     },
     {
@@ -6884,10 +6884,10 @@
       "key": "ja--tracks--visual-effects--fx-catch",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – 落ちものに演出を足すと気づくこと",
-      "h1": "落ちものに演出を足すと気づくこと",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "星はゲームのルールに参加し、粒は見た目だけを担当します。役割と更新のしかたが違うので、Gameの中でも stars と fx を別の箱として持ちます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "title": "Ebi Showcase – 捕まえた星をHUDまで飛ばす",
+      "h1": "捕まえた星をHUDまで飛ばす",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "捕獲された星は当たり判定から即座に消すべきですが、画面からも瞬間消去すると手応えがありません。そこで星のIDと捕獲位置を表示代理Proxyへ写し、本物は削除、代理だけを放物線でHUDへ飛ばします。カゴも同じTweenで潰れて戻ります。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengine",
       "image": "assets/og/ja--tracks--visual-effects--fx-catch.png"
     },
     {
@@ -6896,10 +6896,10 @@
       "key": "ja--tracks--visual-effects--fx-dungeon",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – 攻撃ヒットに閃光を足す",
-      "h1": "攻撃ヒットに閃光を足す",
+      "title": "Ebi Showcase – 一撃を時間の層に分解する",
+      "h1": "一撃を時間の層に分解する",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "HP を減らすのは play。閃光と破片は fx。ノックバックを入れるなら物理か演出か、意図を決めてから場を選ぶ。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "気持ちよい攻撃は「HPを減らして粒を出す」だけではありません。命中判定は一回でHPを即減らし、ReactionがHitStop→Flash→Recoverを順に進めます。敵は左右へ振れ、斬撃は円弧を描き、白発光から元色へ戻ります。一回の斬撃が同じ敵へtickごとに多段ヒットしないよう",
       "image": "assets/og/ja--tracks--visual-effects--fx-dungeon.png"
     },
     {
@@ -6908,10 +6908,10 @@
       "key": "ja--tracks--visual-effects--fx-flight",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – ジャンプに羽ばたき演出を足す",
-      "h1": "ジャンプに羽ばたき演出を足す",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "速度と重力はプレイの物理。羽ばたきで出る粒は演出。パイプ通過のリングも fx。ここまで来ると、Game 構造体に fx フィールドがあるのが自然に見えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "title": "Ebi Showcase – 飛行物理を読みやすい姿勢へ翻訳する",
+      "h1": "飛行物理を読みやすい姿勢へ翻訳する",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "vyは衝突計算には十分でも、プレイヤーには上昇・失速・落下が読めません。速度、羽ばたきからの経過、衝突済みかをPoseForFlightへ渡し、回転と縦横スケールを導出します。風の流線、羽ばたきの粒、ゲート通過の紙吹雪も加えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲー",
       "image": "assets/og/ja--tracks--visual-effects--fx-flight.png"
     },
     {
@@ -6920,10 +6920,10 @@
       "key": "ja--tracks--visual-effects--fx-meter",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – タイミング判定に演出を振る",
-      "h1": "タイミング判定に演出を振る",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "止めた位置の「状態」が Perfect なら大花火、Miss なら小さな煙。ゲーム状態の enum/分岐と、演出の強さを対応させる練習です。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "title": "Ebi Showcase – タイミング判定を演出レシピへ写す",
+      "h1": "タイミング判定を演出レシピへ写す",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Perfectの得点と花火を別々のswitchにすると、調整の途中で食い違います。Gradeを一度求め、Score・BurstCount・Flash・Freezeを持つデータだけのRecipeへ変換します。大成功ほど停止感、バナーの膨張、衝撃波が強くなります。",
       "image": "assets/og/ja--tracks--visual-effects--fx-meter.png"
     },
     {
@@ -6932,10 +6932,10 @@
       "key": "ja--tracks--visual-effects--fx-platform",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – ジャンプと着地に塵を足す",
-      "h1": "ジャンプと着地に塵を足す",
+      "title": "Ebi Showcase – 走る・跳ぶ・着地する身体を作る",
+      "h1": "走る・跳ぶ・着地する身体を作る",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "wasOnGround から onGround へ切り替わった瞬間だけ着地演出。物理の grounded は play、塵は fx。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "接地中ずっと土煙を出すのではなく、前のtickと今のtickを比較してLandedを一度だけ作ります。水平・垂直速度と接地からIdle / Run / Rise / Fallを導出し、Landingだけ短いPoseとして保持します。走りの上下動、上昇の伸び、落下の広がり、着地の潰れを",
       "image": "assets/og/ja--tracks--visual-effects--fx-platform.png"
     },
     {
@@ -6944,10 +6944,10 @@
       "key": "ja--tracks--visual-effects--fx-pong",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – ボールに火花とトレイルを足す",
-      "h1": "ボールに火花とトレイルを足す",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "パドルや壁に当たったtickだけ Burst。tickごとに少しトレイルを足すのも fx。ボール自体の vx,vy は play のままです。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "title": "Ebi Showcase – ボールの過去を安全な軌跡にする",
+      "h1": "ボールの過去を安全な軌跡にする",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "残像は粒をtickごとに無制限に出す必要がありません。表示層に直近16点だけのTrailを持ち、古い点から薄く小さく描けば、メモリ上限が明確な滑らかな光跡になります。打球時にはパドルを横へ潰し、接触点へリングと火花を重ねます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ",
       "image": "assets/og/ja--tracks--visual-effects--fx-pong.png"
     },
     {
@@ -6956,10 +6956,10 @@
       "key": "ja--tracks--visual-effects--fx-shooter",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – 弾と敵と爆発を分ける",
-      "h1": "弾と敵と爆発を分ける",
+      "title": "Ebi Showcase – 大量の発射と爆発を予算内でさばく",
+      "h1": "大量の発射と爆発を予算内でさばく",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "自弾、敵、爆発粒。役割ごとにスライス。撃った瞬間のマズルは fx、敵の HP は play。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "シューティングでは一tickに発射・複数撃破・被弾が重なります。ルール更新はShotFired / EnemyDestroyed / PlayerDamagedを型付きQueueへ順番に積み、dispatchFXが一度だけDrainします。粒子数はBudget.Takeで上限を持",
       "image": "assets/og/ja--tracks--visual-effects--fx-shooter.png"
     },
     {
@@ -6968,10 +6968,10 @@
       "key": "ja--tracks--visual-effects--fx-snake",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – スネークに捕食演出を足す",
-      "h1": "スネークに捕食演出を足す",
+      "title": "Ebi Showcase – マス目の蛇を滑らかにつなぐ",
+      "h1": "マス目の蛇を滑らかにつなぐ",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "体はマス目の履歴。食べた瞬間の花火だけ fx。体の各セルに粒を持たせない。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "Snakeの正解は整数マス列です。そこを小数座標へ変えると自己衝突や餌判定が壊れます。移動tickの直前bodyをvisualFromへコピーし、次tickまでのProgressで各節を補間します。さらに前・現在・次の三セルから直線か角かを導出し、円と太線で切れ目のない身体を描き",
       "image": "assets/og/ja--tracks--visual-effects--fx-snake.png"
     },
     {
@@ -6980,10 +6980,10 @@
       "key": "ja--tracks--visual-effects--fx-sokoban",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – 箱押しに塵とゴール輝きを足す",
-      "h1": "箱押しに塵とゴール輝きを足す",
+      "title": "Ebi Showcase – 倉庫番の一手を滑らかに見せる",
+      "h1": "倉庫番の一手を滑らかに見せる",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "ステージは二次元の数値。押した瞬間の塵、ゴールの輝きは fx。タイルに演出フラグを増やしすぎない。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "倉庫番の盤面は一手で即座に次の整数状態へ移るのが正解です。しかしDrawも即座に次セルへ飛ばすと硬く見えます。PlanSokobanMoveで歩行・押し・失敗を副作用なしに求め、許可されたPlanを一度だけ盤面へ確定し、保存したfrom/toを9フレーム補間します。補間中は次入力",
       "image": "assets/og/ja--tracks--visual-effects--fx-sokoban.png"
     },
     {
@@ -6992,10 +6992,10 @@
       "key": "ja--tracks--visual-effects--fx-tap",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – タッチにエフェクトを足す",
-      "h1": "タッチにエフェクトを足す",
+      "title": "Ebi Showcase – タッチ結果を演出イベントにする",
+      "h1": "タッチ結果を演出イベントにする",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "応用編の入口。LEVEL 01 の「光る丸をタッチ」に、命中の粒とリングを足します。ゲームの点数処理のあとに、fx.Update() を別呼び出ししていることに注目してください。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "最初の章では「当たった瞬間」を関数呼び出しの勢いで済ませません。判定を TapResult という小さな値に確定し、得点と演出が同じ事実を一度だけ読む構造へ変えます。命中した的の残像、潰れ、二重の衝撃波、粒子を足しても判定式は一行も増えません。",
       "image": "assets/og/ja--tracks--visual-effects--fx-tap.png"
     },
     {
@@ -7052,10 +7052,10 @@
       "key": "ja--tracks--visual-effects--vfx-fx-breakout",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – ブロック破壊を二段にする",
-      "h1": "ブロック破壊を二段にする",
+      "title": "Ebi Showcase – 壊れたブロックを破片へ引き継ぐ",
+      "h1": "壊れたブロックを破片へ引き継ぐ",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "ブロックはゲームのルールに参加するスプライト、破片・炎は見た目だけのFXスプライトです。基礎編のブロック判定と更新はそのままに、壊れた場所へfx用の絵を足します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "ブロックを消してから色や形を読もうとしても、参照先はもうありません。衝突が成立した瞬間にID・矩形・色番号をSnapshotへコピーし、bricksではalive=falseを即確定します。Tombstoneはその静止画を24フレームだけ破片へ崩し、2フレームのヒットストップが衝",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-breakout.png"
     },
     {
@@ -7064,10 +7064,10 @@
       "key": "ja--tracks--visual-effects--vfx-fx-bullethell",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – ボムで弾を消し、爆発は演出へ",
-      "h1": "ボムで弾を消し、爆発は演出へ",
+      "title": "Ebi Showcase – 画面全体のボム演出を台本化する",
+      "h1": "画面全体のボム演出を台本化する",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "応用編のゴール。ボムは近くの bullets を削除（play）し、同時に巨大な Ring と Flash（fx）。弾を演出用に再利用しない——消してから花火。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "総仕上げは複数の演出が時間差で重なるボムです。ルール側は範囲内の弾を同tickで削除し、個数を得点へ変えます。その後BombScriptが0Fの停止とフラッシュ、1Fの衝撃波、4Fの弾消散、12Fの紙吹雪をCueとして発行します。同じStrengthとFrameなら同じCue列に",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-bullethell.png"
     },
     {
@@ -7076,10 +7076,10 @@
       "key": "ja--tracks--visual-effects--vfx-fx-catch",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – 落ちものに演出を足すと気づくこと",
-      "h1": "落ちものに演出を足すと気づくこと",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "星はゲームのルールに参加し、粒は見た目だけを担当します。役割と更新のしかたが違うので、Gameの中でも stars と fx を別の箱として持ちます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "title": "Ebi Showcase – 捕まえた星をHUDまで飛ばす",
+      "h1": "捕まえた星をHUDまで飛ばす",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "捕獲された星は当たり判定から即座に消すべきですが、画面からも瞬間消去すると手応えがありません。そこで星のIDと捕獲位置を表示代理Proxyへ写し、本物は削除、代理だけを放物線でHUDへ飛ばします。カゴも同じTweenで潰れて戻ります。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengine",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-catch.png"
     },
     {
@@ -7088,10 +7088,10 @@
       "key": "ja--tracks--visual-effects--vfx-fx-dungeon",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – 攻撃ヒットに閃光を足す",
-      "h1": "攻撃ヒットに閃光を足す",
+      "title": "Ebi Showcase – 一撃を時間の層に分解する",
+      "h1": "一撃を時間の層に分解する",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "HP を減らすのは play。閃光と破片は fx。ノックバックを入れるなら物理か演出か、意図を決めてから場を選ぶ。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "気持ちよい攻撃は「HPを減らして粒を出す」だけではありません。命中判定は一回でHPを即減らし、ReactionがHitStop→Flash→Recoverを順に進めます。敵は左右へ振れ、斬撃は円弧を描き、白発光から元色へ戻ります。一回の斬撃が同じ敵へtickごとに多段ヒットしないよう",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-dungeon.png"
     },
     {
@@ -7100,10 +7100,10 @@
       "key": "ja--tracks--visual-effects--vfx-fx-flight",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – ジャンプに羽ばたき演出を足す",
-      "h1": "ジャンプに羽ばたき演出を足す",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "速度と重力はプレイの物理。羽ばたきで出る粒は演出。パイプ通過のリングも fx。ここまで来ると、Game 構造体に fx フィールドがあるのが自然に見えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "title": "Ebi Showcase – 飛行物理を読みやすい姿勢へ翻訳する",
+      "h1": "飛行物理を読みやすい姿勢へ翻訳する",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "vyは衝突計算には十分でも、プレイヤーには上昇・失速・落下が読めません。速度、羽ばたきからの経過、衝突済みかをPoseForFlightへ渡し、回転と縦横スケールを導出します。風の流線、羽ばたきの粒、ゲート通過の紙吹雪も加えます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲー",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-flight.png"
     },
     {
@@ -7112,10 +7112,10 @@
       "key": "ja--tracks--visual-effects--vfx-fx-meter",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – タイミング判定に演出を振る",
-      "h1": "タイミング判定に演出を振る",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "止めた位置の「状態」が Perfect なら大花火、Miss なら小さな煙。ゲーム状態の enum/分岐と、演出の強さを対応させる練習です。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "title": "Ebi Showcase – タイミング判定を演出レシピへ写す",
+      "h1": "タイミング判定を演出レシピへ写す",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "Perfectの得点と花火を別々のswitchにすると、調整の途中で食い違います。Gradeを一度求め、Score・BurstCount・Flash・Freezeを持つデータだけのRecipeへ変換します。大成功ほど停止感、バナーの膨張、衝撃波が強くなります。",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-meter.png"
     },
     {
@@ -7124,10 +7124,10 @@
       "key": "ja--tracks--visual-effects--vfx-fx-platform",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – ジャンプと着地に塵を足す",
-      "h1": "ジャンプと着地に塵を足す",
+      "title": "Ebi Showcase – 走る・跳ぶ・着地する身体を作る",
+      "h1": "走る・跳ぶ・着地する身体を作る",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "wasOnGround から onGround へ切り替わった瞬間だけ着地演出。物理の grounded は play、塵は fx。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "接地中ずっと土煙を出すのではなく、前のtickと今のtickを比較してLandedを一度だけ作ります。水平・垂直速度と接地からIdle / Run / Rise / Fallを導出し、Landingだけ短いPoseとして保持します。走りの上下動、上昇の伸び、落下の広がり、着地の潰れを",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-platform.png"
     },
     {
@@ -7136,10 +7136,10 @@
       "key": "ja--tracks--visual-effects--vfx-fx-pong",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – ボールに火花とトレイルを足す",
-      "h1": "ボールに火花とトレイルを足す",
-      "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "パドルや壁に当たったtickだけ Burst。tickごとに少しトレイルを足すのも fx。ボール自体の vx,vy は play のままです。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "title": "Ebi Showcase – ボールの過去を安全な軌跡にする",
+      "h1": "ボールの過去を安全な軌跡にする",
+      "eyebrow": "★★★★★ / PLAYABLE",
+      "description": "残像は粒をtickごとに無制限に出す必要がありません。表示層に直近16点だけのTrailを持ち、古い点から薄く小さく描けば、メモリ上限が明確な滑らかな光跡になります。打球時にはパドルを横へ潰し、接触点へリングと火花を重ねます。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-pong.png"
     },
     {
@@ -7148,10 +7148,10 @@
       "key": "ja--tracks--visual-effects--vfx-fx-shooter",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – 弾と敵と爆発を分ける",
-      "h1": "弾と敵と爆発を分ける",
+      "title": "Ebi Showcase – 大量の発射と爆発を予算内でさばく",
+      "h1": "大量の発射と爆発を予算内でさばく",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "自弾、敵、爆発粒。役割ごとにスライス。撃った瞬間のマズルは fx、敵の HP は play。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "シューティングでは一tickに発射・複数撃破・被弾が重なります。ルール更新はShotFired / EnemyDestroyed / PlayerDamagedを型付きQueueへ順番に積み、dispatchFXが一度だけDrainします。粒子数はBudget.Takeで上限を持",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-shooter.png"
     },
     {
@@ -7160,10 +7160,10 @@
       "key": "ja--tracks--visual-effects--vfx-fx-snake",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – スネークに捕食演出を足す",
-      "h1": "スネークに捕食演出を足す",
+      "title": "Ebi Showcase – マス目の蛇を滑らかにつなぐ",
+      "h1": "マス目の蛇を滑らかにつなぐ",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "体はマス目の履歴。食べた瞬間の花火だけ fx。体の各セルに粒を持たせない。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "Snakeの正解は整数マス列です。そこを小数座標へ変えると自己衝突や餌判定が壊れます。移動tickの直前bodyをvisualFromへコピーし、次tickまでのProgressで各節を補間します。さらに前・現在・次の三セルから直線か角かを導出し、円と太線で切れ目のない身体を描き",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-snake.png"
     },
     {
@@ -7172,10 +7172,10 @@
       "key": "ja--tracks--visual-effects--vfx-fx-sokoban",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – 箱押しに塵とゴール輝きを足す",
-      "h1": "箱押しに塵とゴール輝きを足す",
+      "title": "Ebi Showcase – 倉庫番の一手を滑らかに見せる",
+      "h1": "倉庫番の一手を滑らかに見せる",
       "eyebrow": "★★★★★ / PLAYABLE",
-      "description": "ステージは二次元の数値。押した瞬間の塵、ゴールの輝きは fx。タイルに演出フラグを増やしすぎない。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。",
+      "description": "倉庫番の盤面は一手で即座に次の整数状態へ移るのが正解です。しかしDrawも即座に次セルへ飛ばすと硬く見えます。PlanSokobanMoveで歩行・押し・失敗を副作用なしに求め、許可されたPlanを一度だけ盤面へ確定し、保存したfrom/toを9フレーム補間します。補間中は次入力",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-sokoban.png"
     },
     {
@@ -7184,10 +7184,10 @@
       "key": "ja--tracks--visual-effects--vfx-fx-tap",
       "lang": "ja",
       "kind": "vfx",
-      "title": "Ebi Showcase – タッチにエフェクトを足す",
-      "h1": "タッチにエフェクトを足す",
+      "title": "Ebi Showcase – タッチ結果を演出イベントにする",
+      "h1": "タッチ結果を演出イベントにする",
       "eyebrow": "★★★★☆ / PLAYABLE",
-      "description": "応用編の入口。LEVEL 01 の「光る丸をタッチ」に、命中の粒とリングを足します。ゲームの点数処理のあとに、fx.Update() を別呼び出ししていることに注目してください。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。",
+      "description": "最初の章では「当たった瞬間」を関数呼び出しの勢いで済ませません。判定を TapResult という小さな値に確定し、得点と演出が同じ事実を一度だけ読む構造へ変えます。命中した的の残像、潰れ、二重の衝撃波、粒子を足しても判定式は一行も増えません。",
       "image": "assets/og/ja--tracks--visual-effects--vfx-fx-tap.png"
     },
     {

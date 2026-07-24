@@ -13,25 +13,29 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/hero"
 	"github.com/kumagi/EbiShowcase/internal/vfxfx"
 	"github.com/kumagi/EbiShowcase/internal/vfxlive"
+	"github.com/kumagi/EbiShowcase/internal/vfxmotion"
 	"github.com/kumagi/EbiShowcase/internal/vfxui"
 )
 
 type slime struct {
 	x, y, hp float64
 	alive    bool
+	reaction vfxmotion.Reaction
 }
 
 type Game struct {
-	shell         *vfxlive.Shell
-	fx            vfxfx.System
-	px, py        float64
-	fxDir, fyDir  float64
-	slash         int
-	php           float64
-	slimes        []slime
-	inv           int
-	over, cleared bool
-	sy, sh        float64
+	shell          *vfxlive.Shell
+	fx             vfxfx.System
+	px, py         float64
+	fxDir, fyDir   float64
+	slash          int
+	php            float64
+	slimes         []slime
+	inv            int
+	over, cleared  bool
+	sy, sh         float64
+	slashHit       bool
+	playerReaction vfxmotion.Reaction
 }
 
 func newGame() *Game {
@@ -55,9 +59,9 @@ func newGame() *Game {
 	cy := g.sy + g.sh/2
 	g.py = cy
 	g.slimes = []slime{
-		{120, cy - 80, 3, true},
-		{360, cy + 40, 3, true},
-		{240, cy - 140, 4, true},
+		{x: 120, y: cy - 80, hp: 3, alive: true},
+		{x: 360, y: cy + 40, hp: 3, alive: true},
+		{x: 240, y: cy - 140, hp: 4, alive: true},
 	}
 	return g
 }
@@ -101,24 +105,31 @@ func (g *Game) updatePlay() {
 	}
 	if slash && g.slash <= 0 {
 		g.slash = 12
+		g.slashHit = false
 	}
 	if g.slash > 0 {
 		g.slash--
 		sx := g.px + g.fxDir*28
 		sy := g.py + g.fyDir*28
 		for i := range g.slimes {
+			if g.slashHit {
+				break
+			}
 			s := &g.slimes[i]
 			if !s.alive {
 				continue
 			}
 			if math.Hypot(s.x-sx, s.y-sy) < 36 {
 				s.hp--
+				s.reaction = vfxmotion.NewReaction(2, 5, 10)
+				g.slashHit = true
 				fx := g.shell.Get("fx")
 				g.fx.Burst(s.x, s.y, int(16*fx), 2.8*fx, color.RGBA{120, 255, 140, 255}, true)
-				g.fx.FlashScreen(0.35*fx, 180, 255, 160)
+				g.fx.Shockwave(s.x, s.y, 0.45*fx, color.White, color.RGBA{100, 255, 130, 255})
+				g.fx.FlashScreen(0.28*fx, 180, 255, 160)
 				if s.hp <= 0 {
 					s.alive = false
-					g.fx.Ring(s.x, s.y, 1.0*fx, color.RGBA{160, 255, 180, 255})
+					g.fx.Confetti(s.x, s.y, int(14*fx))
 				}
 				break
 			}
@@ -137,6 +148,7 @@ func (g *Game) updatePlay() {
 		if math.Hypot(s.x-g.px, s.y-g.py) < 26 && g.inv == 0 {
 			g.php--
 			g.inv = 40
+			g.playerReaction = vfxmotion.NewReaction(2, 6, 12)
 			fx := g.shell.Get("fx")
 			g.fx.Burst(g.px, g.py, int(10*fx), 2*fx, color.RGBA{255, 80, 80, 255}, true)
 			g.fx.FlashScreen(0.5, 255, 40, 40)
@@ -147,6 +159,26 @@ func (g *Game) updatePlay() {
 	}
 	if alive == 0 {
 		g.cleared = true
+		g.fx.Confetti(vfxlive.Width/2, g.sy+g.sh/2, int(48*g.shell.Get("fx")))
+	}
+}
+
+func (g *Game) reactionsInHitStop() bool {
+	if g.playerReaction.Phase() == vfxmotion.ReactionHitStop {
+		return true
+	}
+	for i := range g.slimes {
+		if g.slimes[i].reaction.Phase() == vfxmotion.ReactionHitStop {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Game) advanceReactions() {
+	g.playerReaction.Advance()
+	for i := range g.slimes {
+		g.slimes[i].reaction.Advance()
 	}
 }
 
@@ -162,7 +194,10 @@ func (g *Game) Update() error {
 		return nil
 	}
 	_ = ate
-	g.updatePlay()
+	if !g.reactionsInHitStop() {
+		g.updatePlay()
+	}
+	g.advanceReactions()
 	g.fx.Update()
 	return nil
 }
@@ -176,15 +211,26 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		if !s.alive {
 			continue
 		}
-		vector.DrawFilledCircle(screen, float32(s.x), float32(s.y), 18, color.RGBA{80, 200, 100, 255}, false)
-		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%.0f", s.hp), int(s.x)-4, int(s.y)-6)
+		x := s.x + s.reaction.Offset(7)
+		tint := color.RGBA{80, 200, 100, 255}
+		if s.reaction.Phase() == vfxmotion.ReactionFlash {
+			tint = color.RGBA{235, 255, 235, 255}
+		}
+		vector.DrawFilledCircle(screen, float32(x), float32(s.y), 18, tint, false)
+		ebitenutil.DebugPrintAt(screen, fmt.Sprintf("%.0f", s.hp), int(x)-4, int(s.y)-6)
 	}
 	if g.slash > 0 {
-		sx := g.px + g.fxDir*28
-		sy := g.py + g.fyDir*28
-		vector.StrokeLine(screen, float32(g.px), float32(g.py), float32(sx+g.fxDir*20), float32(sy+g.fyDir*20), 4, color.RGBA{255, 240, 180, 255}, false)
+		base := math.Atan2(g.fyDir, g.fxDir)
+		progress := 1 - float64(g.slash)/12
+		for i := 0; i < 3; i++ {
+			a := base - 0.8 + progress*1.6 + float64(i-1)*0.1
+			x1, y1 := g.px+math.Cos(a)*20, g.py+math.Sin(a)*20
+			x2, y2 := g.px+math.Cos(a)*55, g.py+math.Sin(a)*55
+			vector.StrokeLine(screen, float32(x1), float32(y1), float32(x2), float32(y2),
+				float32(5-i), color.RGBA{255, 240, 180, uint8(220 - i*55)}, false)
+		}
 	}
-	hero.DrawCentered(screen, g.px, g.py, 40)
+	hero.DrawCenteredPose(screen, g.px+g.playerReaction.Offset(6), g.py, 40, hero.Pose{})
 	g.fx.Draw(screen)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("HP %.0f", g.php), 12, int(g.sy)+6)
 	if g.cleared {

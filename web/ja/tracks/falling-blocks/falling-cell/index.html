@@ -53,7 +53,7 @@
 <small>このステップで学ぶこと</small>
 <strong>一定間隔更新とグリッド移動</strong>
 </div>
-</section>
+</section><!-- genre-presentation-bridge:start --><aside class="genre-presentation-inline"><strong>この章も、演出の基礎は実装済みから始めます。</strong><span>新しい課題は回転、壁蹴り、固定、ライン判定、ホールドと落下速度です。</span><nav aria-label="参照するVFX設計"><a href="../../visual-effects/vfx-fx-sokoban/"><b>A09</b><span>Plan→Commit→Tween</span></a><a href="../../visual-effects/vfx-fx-breakout/"><b>A06</b><span>削除前スナップショット</span></a><a href="../../visual-effects/vfx-fx-bullethell/"><b>A12</b><span>決定的エフェクト台本</span></a></nav><div class="genre-presentation-inline-contract"><p><b>MOTION BASELINE</b>盤面はライン消去結果へ即確定し、旧行Snapshotを点滅・消散、上の行の落下をTween、得点をCueで見せます。</p><p><b>TEST SEAM</b>回転候補とライン圧縮を純粋関数で試し、消去アニメーション中も確定盤面が一意であること。</p></div></aside><!-- genre-presentation-bridge:end -->
 
 <section class="play lesson-play">
 <div class="section-head">

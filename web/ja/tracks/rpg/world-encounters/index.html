@@ -48,7 +48,7 @@
       <p>フィールドマップと戦闘画面を <strong>シーン変数</strong> で切り替え、歩いた歩数と乱数で敵が出現します。地域ごとの <strong>敵テーブル</strong> に切り替えるだけで、草原・砂漠・雪山で違う敵が出るRPGになります。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>シーン遷移と敵テーブル</strong></div>
       <p class="cast-note">見た目はオリジナル主人公の <strong>海老・天次郎</strong>。当たり判定は図形のままです。動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01</a>と同じく、位置や得点などゲームの中身はUpdateで進めます。Drawは中身を変えず、画面への見せ方だけを担当します。</p>
-    </section>
+    </section><!-- genre-presentation-bridge:start --><aside class="genre-presentation-inline"><strong>この章も、演出の基礎は実装済みから始めます。</strong><span>新しい課題はターン、コマンド、状態効果、会話フラグ、クエスト進行です。</span><nav aria-label="参照するVFX設計"><a href="../../visual-effects/vfx-fx-dungeon/"><b>A11</b><span>ヒットリアクション時間軸</span></a><a href="../../visual-effects/vfx-fx-meter/"><b>A02</b><span>型付き演出レシピ</span></a><a href="../../visual-effects/vfx-fx-bullethell/"><b>A12</b><span>決定的エフェクト台本</span></a></nav><div class="genre-presentation-inline-contract"><p><b>MOTION BASELINE</b>行動を予備→接触→回復の時間軸にし、技ごとの表示レシピと勝利・レベルアップの台本を組みます。</p><p><b>TEST SEAM</b>ダメージ式とターン遷移を演出時間から切り離し、行動一回がHPへ一度だけ反映されること。</p></div></aside><!-- genre-presentation-bridge:end -->
 
 <section class="play lesson-play" id="play">
       <div class="section-head">

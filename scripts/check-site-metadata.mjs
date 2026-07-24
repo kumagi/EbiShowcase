@@ -85,13 +85,14 @@ for (const lang of ["ja", "en"]) {
   }
 
   const hub = readPage(lang, "guides/testing");
-  if (!hub.includes("Draw()") || !hub.includes("Update()") || !hub.includes("internal/lessonlogic") || !hub.includes("AAA + DAMP + GO STYLE") || !hub.includes("DRAW / VISUAL REGRESSION")) {
+  if (!hub.includes("Draw()") || !hub.includes("Update()") || !hub.includes("internal/lessonlogic") || !hub.includes("MULTIPLE AAA + DAMP + GO STYLE") || !hub.includes("DRAW / VISUAL REGRESSION") || !hub.includes("data-aaa-foundation") || !hub.includes("AAA REVIEW QUESTIONS") || !hub.includes("// Arrange") || !hub.includes("// Act") || !hub.includes("// Assert") || !hub.includes("TestSpendLifeContinuesWhenLivesRemain") || !hub.includes("TestSpendLifeEndsAfterLastLife")) {
     fail(`${lang}/guides/testing: missing Draw/Update testing boundary`);
   }
   const fixedLayoutGoldenNote = lang === "ja" ? "同一PNGを3枚承認せず" : "three identical PNGs";
-  for (const slug of testingLessons) {
+  for (const [lessonIndex, slug] of testingLessons.entries()) {
     const page = readPage(lang, `guides/testing/${slug}`);
-    for (const required of ["func (g *game) Update() error", "package lessonlogic", "func Test", "testCases :=", "t.Run(tc.name", "go test ./internal/lessonlogic", "TEST REVIEW / ALL CASES", "DRAW / GOLDEN ONLY", "layoutCases :=", "mobile portrait", "console 16:9", "PC window", "g.Layout(tc.outsideWidth, tc.outsideHeight)", "assertGolden(t, screen, tc.golden)", fixedLayoutGoldenNote]) {
+    const aaaLesson = String(lessonIndex + 1).padStart(2, "0");
+    for (const required of ["func (g *game) Update() error", "package lessonlogic", "func Test", "testCases :=", "t.Run(tc.name", "go test ./internal/lessonlogic", "TEST REVIEW / ALL CASES", "DRAW / GOLDEN ONLY", "layoutCases :=", "mobile portrait", "console 16:9", "PC window", "g.Layout(tc.outsideWidth, tc.outsideHeight)", "assertGolden(t, screen, tc.golden)", fixedLayoutGoldenNote, `data-aaa-lesson=\"${aaaLesson}\"`, "AAA PRACTICE", "data-aaa-stage=\"arrange\"", "data-aaa-stage=\"act\"", "data-aaa-stage=\"assert\"", "AAA REPETITIONS", "AAA SMELL", "ONE MORE TEST"]) {
       if (!page.includes(required)) fail(`${lang}/guides/testing/${slug}: missing complete testing material ${required}`);
     }
   }

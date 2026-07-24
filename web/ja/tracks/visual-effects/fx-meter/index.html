@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="止めた位置の「状態」が Perfect なら大花火、Miss なら小さな煙。ゲーム状態の enum/分岐と、演出の強さを対応させる練習です。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
-  <title>Ebi Showcase – タイミング判定に演出を振る</title>
+  <meta name="description" content="Perfectの得点と花火を別々のswitchにすると、調整の途中で食い違います。Gradeを一度求め、Score・BurstCount・Flash・Freezeを持つデータだけのRecipeへ変換します。大成功ほど停止感、バナーの膨張、衝撃波が強くなります。">
+  <title>Ebi Showcase – タイミング判定を演出レシピへ写す</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/fx-meter/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – タイミング判定に演出を振る">
-    <meta property="og:description" content="止めた位置の「状態」が Perfect なら大花火、Miss なら小さな煙。ゲーム状態の enum/分岐と、演出の強さを対応させる練習です。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta property="og:title" content="Ebi Showcase – タイミング判定を演出レシピへ写す">
+    <meta property="og:description" content="Perfectの得点と花火を別々のswitchにすると、調整の途中で食い違います。Gradeを一度求め、Score・BurstCount・Flash・Freezeを持つデータだけのRecipeへ変換します。大成功ほど停止感、バナーの膨張、衝撃波が強くなります。">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/fx-meter/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--fx-meter.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="タイミング判定に演出を振る">
+    <meta property="og:image:alt" content="タイミング判定を演出レシピへ写す">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – タイミング判定に演出を振る">
-    <meta name="twitter:description" content="止めた位置の「状態」が Perfect なら大花火、Miss なら小さな煙。ゲーム状態の enum/分岐と、演出の強さを対応させる練習です。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta name="twitter:title" content="Ebi Showcase – タイミング判定を演出レシピへ写す">
+    <meta name="twitter:description" content="Perfectの得点と花火を別々のswitchにすると、調整の途中で食い違います。Gradeを一度求め、Score・BurstCount・Flash・Freezeを持つデータだけのRecipeへ変換します。大成功ほど停止感、バナーの膨張、衝撃波が強くなります。">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--fx-meter.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="タイミング判定に演出を振る">
+    <meta name="twitter:image:alt" content="タイミング判定を演出レシピへ写す">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -43,23 +43,36 @@
     <div class="lesson-breadcrumb"><a href="../">← ビジュアルエフェクト工房</a><span>ADV A02</span></div>
 
     <section class="overview-hero">
-      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
-      <h1>タイミング判定に演出を振る</h1>
-      <p>止めた位置の「状態」が Perfect なら大花火、Miss なら小さな煙。ゲーム状態の enum/分岐と、演出の強さを対応させる練習です。</p>
-      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>状態ごとに違う演出</strong></div>
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>タイミング判定を演出レシピへ写す</h1>
+      <p>Perfectの得点と花火を別々のswitchにすると、調整の途中で食い違います。Gradeを一度求め、Score・BurstCount・Flash・Freezeを持つデータだけのRecipeへ変換します。大成功ほど停止感、バナーの膨張、衝撃波が強くなります。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>判定enumを演出レシピへ写す</strong></div>
     </section>
 
     <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）とDraw（絵）の独立した境界</strong>の上にあります。ここでは同じ状態を別の描き方へ投影する方法を一段深く扱います。</p>
-    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED FX の約束</p><h2>ゲームのルールは、そのまま。<br>見た目だけを増やせる。</h2><p><code>updatePlay()</code> は点数・当たり・勝敗をこれまで通り決めます。<code>Game</code> に <code>fx</code> の箱を足し、<code>fx.Update()</code> は粒など<strong>見た目用の時間</strong>だけを進め、<code>Draw</code> で <code>fx.Draw()</code> を重ねます。つまり元のゲームルールを触らずに派手にできます。ただし粒が動く演出には、play を変えない独立した <code>fx.Update()</code> は必要です。</p></section>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED FX の設計原則</p><h2>ルールの答えと、<br>答えを見せる時間を分ける。</h2><p><code>updatePlay()</code> は衝突・得点・盤面などの<strong>正解</strong>を先に確定し、結果を値やイベントとして一度だけ渡します。演出側はその事実から補間・姿勢・残像・粒子の時間を進めます。<code>Draw</code> は状態を読むだけで、得点も座標も書き換えません。この境界があるから、派手な画面とGPUなしで試せるユニットテストを両立できます。</p></section>
+    <section class="vfx-pattern" aria-labelledby="pattern-vfx-fx-meter">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">PATTERN A02 / TYPED RECIPE</p><h2 id="pattern-vfx-fx-meter">Typed Presentation Recipe</h2></div>
+          <p>判定・得点・色・粒数を複数のswitchへ散らすと、同じPerfectが場所ごとに別の意味になります。</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="状態の流れ">
+          <span>marker position</span><b>→</b><span>Grade</span><b>→</b><span>GradeRecipe</span><b>→</b><span>feedback Tween</span><b>→</b><span>banner + FX</span>
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>feedback はGradeと一個の時計を持つ</h3><p>マーカー、バナー、フラッシュを別々のタイマーでずらさず、同じProgressから大きさと明度を導出します。</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>境界と対応表を別々に保証</h3><ul><li>中心±10はPerfect</li><li>Perfectは100点と最大Burst</li><li>Missは得点0・Freeze 0</li></ul></article>
+        </div>
+      </section>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>ゾーンで止めよう</h2></div>
-        <p>メーターをタップで停止。判定に応じて演出が変わる。LIVE GO の play / fx を見比べよう。</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>三つの判定をわざと出して比べる</h2></div>
+        <p>Perfectではマーカーが大きく止まり、OKは中程度、Missは重い土煙だけ。点数と見た目が同じGradeを共有します。</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A02</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="タイミング判定に演出を振る" src="../../../../play/vfx-fx-meter/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="タイミング判定を演出レシピへ写す" src="../../../../play/vfx-fx-meter/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -71,93 +84,83 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / STATE → FX</p>
-        <h2>同じタップでも、<br>演出が違う理由</h2>
-        <p class="lesson-lead">分岐はプレイ側（ゾーン判定）。そこから fx.Burst の個数や色を変える。演出側に「ゾーン判定」を持ち込まないのがポイントです。</p>
+        <p class="eyebrow">DEEP DIVE / TYPED RECIPE</p>
+        <h2>判定ごとの派手さを、<br>どう一箇所で管理する？</h2>
+        <p class="lesson-lead">距離計算は JudgeMeter、見せ方の対応表は RecipeForGrade に分けます。FXシステムに「中心から10pxならPerfect」と教えてはいけません。演出はGradeだけを受け取り、数値の表を読むため、難易度調整と見た目調整を別々にレビューできます。</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>状態</h3>
-          <p>Perfect / OK / Miss。</p>
-          <code>result := grade()</code>
+          <h3>ルールのenum</h3>
+          <p>位置を Grade に確定する。</p>
+          <code>grade := JudgeMeter(...)</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>対応</h3>
-          <p>状態ごとに Burst の強さ。</p>
-          <code>switch result</code>
+          <h3>表示のレシピ</h3>
+          <p>得点・粒数・停止時間を一組にする。</p>
+          <code>recipe := RecipeForGrade(grade)</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>寿命</h3>
-          <p>演出は frames で消える。</p>
-          <code>fx.Update()</code>
+          <h3>一つのフィードバック時計</h3>
+          <p>バナーとマーカーの伸縮を同期する。</p>
+          <code>feedback Tween</code>
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-meter-grade" aria-labelledby="lab-title-vfx-fx-meter">
+      <div class="motion-lab" data-lab="architecture-trace" aria-labelledby="lab-title-vfx-fx-meter">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / 判定→演出</p>
-          <h3 id="lab-title-vfx-fx-meter">止めた位置が、演出の強さへ変わる</h3>
-          <p>マーカーを動かして「判定！」。play が中心からの距離を Perfect / OK / Miss に変え、その判定値だけを fx へ渡します。位置が同じなら、点数と花火も必ず同じです。</p>
-          <div class="lab-controls"><label class="lab-meter-slider"><span>止める位置</span><input type="range" min="0" max="100" value="50" data-lab-meter-position></label><button type="button" class="lab-button lab-button-primary" data-lab-meter-judge>判定！</button><button type="button" class="lab-button" data-lab-meter-miss>Miss の位置</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+          <p class="eyebrow">TRACE IT / RULE → MOTION → PIXELS</p>
+          <h3 id="lab-title-vfx-fx-meter">Gradeを固定してレシピだけ調整する</h3>
+          <p>PerfectのFreezeやBurstCountを変え、判定範囲が変化しないことを確かめます。対応表は視覚調整の安全な操作面です。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-architecture-step>次の状態へ →</button><button type="button" class="lab-button lab-button-quiet" data-lab-architecture-reset>リセット</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-grade-demo" data-lab-board>
-          <div class="lab-grade-track" aria-label="タイミング判定ゾーン">
-            <span class="lab-grade-zone lab-grade-zone-ok"></span><span class="lab-grade-zone lab-grade-zone-perfect"></span>
-            <span class="lab-grade-marker" data-lab-grade-marker></span>
-          </div>
-          <div class="lab-grade-flow">
-            <div class="lab-grade-play"><small>play</small><strong data-lab-grade-result>—</strong><span data-lab-grade-rule>中心との差を計算</span></div>
-            <b aria-hidden="true">→</b>
-            <div class="lab-grade-fx"><small>fx</small><strong data-lab-grade-strength>—</strong><span>判定値で強さを選ぶ</span></div>
-          </div>
-          <div class="lab-grade-burst" data-lab-grade-burst aria-hidden="true"></div>
-          <p class="lab-grade-explain" data-lab-grade-explain aria-live="polite"></p>
+          <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>marker position</span><i>→</i><span data-lab-architecture-node><b>2</b>Grade</span><i>→</i><span data-lab-architecture-node><b>3</b>GradeRecipe</span><i>→</i><span data-lab-architecture-node><b>4</b>feedback Tween</span><i>→</i><span data-lab-architecture-node><b>5</b>banner + FX</span></div>
+          <div class="lab-architecture-boundary"><small>壊してはいけない境界</small><strong data-lab-architecture-boundary>中心±10はPerfect</strong></div>
         </div>
-          <div class="lab-values" aria-live="polite"><div><span>中心との差(play)</span><strong data-lab-grade-distance>—</strong></div><div><span>粒の数(fx)</span><strong data-lab-grade-particles>—</strong></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>現在の段階</span><strong data-lab-architecture-index>—</strong></div><div><span>状態の所有者</span><strong data-lab-architecture-owner>—</strong></div></div>
         </div>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>switch はプレイ側</h3>
-          <p>演出関数は「どれだけ派手か」だけ受け取る。</p>
+          <h3>switchではなくレシピを読む</h3>
+          <p>JudgeとRecipeを別の純粋関数にすると、境界値と演出対応を独立して表形式で試せます。</p>
         </div>
-        <pre><code>switch grade(pos) {
-case perfect: g.fx.Burst(x, y, 48, 5.0, gold, true); g.fx.FlashScreen(0.8, white)
-case ok:      g.fx.Burst(x, y, 20, 2.8, cyan, true)
-case miss:    g.fx.Burst(x, y, 8, 1.2, gray, false)
-}
-g.fx.Update()</code></pre>
+        <pre><code>grade := vfxmotion.JudgeMeter(g.marker, center)
+recipe := vfxmotion.RecipeForGrade(grade)
+g.score += recipe.Score
+g.feedback = vfxmotion.NewTween(22 + recipe.Freeze)
+g.spawnGradeFX(grade, recipe)</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY SWITCH IN PLAY?</p>
-          <h3>ルールの場所</h3>
-          <p>ゲームの正しさはプレイ層。見た目はその結果。</p>
+          <p class="eyebrow">TEST THE CONTRACT</p>
+          <h3>Grade×Recipeの表を比較する</h3>
+          <p>marker位置から期待Gradeを確認し、そのGradeのScore・Label・BurstCountを同じテーブルで検証します。</p>
         </article>
         <article>
-          <p class="eyebrow">WHY TUNE FX?</p>
-          <h3>フィードバック</h3>
-          <p>上手いほど派手、だと上達が気持ちいい。</p>
+          <p class="eyebrow">FAILURE MODE</p>
+          <h3>FX側で距離を再計算しない</h3>
+          <p>表示側が独自にPerfectを判定すると、点数はOKなのに画面はPerfectという矛盾が生まれます。</p>
         </article>
         <article class="challenge">
-          <p class="eyebrow">TRY NEXT</p>
-          <h3>キャッチへ</h3>
-          <p>次は「星の配列」と「粒の配列」が同時に増えます。</p>
+          <p class="eyebrow">DESIGN PAYOFF</p>
+          <h3>デザイナーが数値表だけ調整できる</h3>
+          <p>レシピがデータなら、後でJSON化しても判定アルゴリズムに触れずに手触りを調整できます。</p>
         </article>
       </div>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-tap/" rel="prev">← STEP A01<strong>タッチにエフェクトを足す</strong></a>
-      <a href="../vfx-fx-catch/" rel="next">STEP A03 →<strong>落ちものに演出を足すと気づくこと</strong></a>
+      <a href="../vfx-fx-tap/" rel="prev">← STEP A01<strong>タッチ結果を演出イベントにする</strong></a>
+      <a href="../vfx-fx-catch/" rel="next">STEP A03 →<strong>捕まえた星をHUDまで飛ばす</strong></a>
     </nav>
 
     <section class="feedback-section" aria-labelledby="feedback-title">

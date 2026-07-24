@@ -24,7 +24,14 @@
   <link rel="icon" type="image/png" href="../../../assets/favicon.png">
   <link rel="apple-touch-icon" href="../../../assets/favicon.png">
   <!-- favicon:end -->
-</head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/deckbuilder/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>9 STEPS</span></div><section class="track-hero track-deckbuilder"><span class="track-letter">G</span><div><p class="eyebrow">Slay the Spire型ゲームを作る</p><h1>デッキ構築カードゲーム</h1><p>スレイ・ザ・スパイアのような、カードを選んでデッキを作りながら進むゲームを作ります。カードを1枚使うところから、手札が山札→手札→捨て札を巡る仕組み（手札循環）、敵の予告、毒や強化が数ターン続く効果（状態効果）、報酬、分岐マップへ広げます。</p></div></section>
+</head><body><header class="nav"><a class="brand" href="../../"><span>EBI</span> SHOWCASE</a><nav><a href="../../">目次</a><a class="lang" href="../../../en/tracks/deckbuilder/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../../">← 全コース</a><span>9 STEPS</span></div><section class="track-hero track-deckbuilder"><span class="track-letter">G</span><div><p class="eyebrow">Slay the Spire型ゲームを作る</p><h1>デッキ構築カードゲーム</h1><p>スレイ・ザ・スパイアのような、カードを選んでデッキを作りながら進むゲームを作ります。カードを1枚使うところから、手札が山札→手札→捨て札を巡る仕組み（手札循環）、敵の予告、毒や強化が数ターン続く効果（状態効果）、報酬、分岐マップへ広げます。</p></div></section><!-- genre-presentation-bridge:start --><section class="genre-presentation-bridge" aria-labelledby="genre-motion-deckbuilder">
+      <div class="genre-presentation-head"><div><p class="eyebrow">SPECIALIZATION / VFX基礎は習得済み</p><h2 id="genre-motion-deckbuilder">演出を足す練習ではなく、<br>デッキ構築カードゲームのルールを作る。</h2></div><p>新しい課題は山札・手札・捨て札、エネルギー、敵予告、報酬と分岐です。</p></div>
+      <nav class="genre-pattern-links" aria-label="このコースで使うVisual Effects設計"><a href="../visual-effects/vfx-fx-catch/"><b>A03</b><span>表示代理の寿命</span></a><a href="../visual-effects/vfx-fx-dungeon/"><b>A11</b><span>ヒットリアクション時間軸</span></a><a href="../visual-effects/vfx-fx-bullethell/"><b>A12</b><span>決定的エフェクト台本</span></a></nav>
+      <div class="genre-presentation-contract">
+        <article><p class="eyebrow">MOTION BASELINE</p><h3>動いて見えることも完成条件</h3><p>使ったカードは表示代理として対象へ飛び、攻撃はリアクション時間軸、報酬・階層遷移はCue台本にします。</p></article>
+        <article><p class="eyebrow">TEST SEAM</p><h3>派手さを外してもルールは同じ</h3><p>カード移動は先にゾーン間で確定し、飛行中の表示代理がもう一度使用・捨て札化されないこと。</p></article>
+      </div>
+    </section><!-- genre-presentation-bridge:end -->
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>このコースの組み立て図</h2><p>引く→コスト→効果→敵予告の順に、海老・天次郎（えび・てんじろう）と一部品ずつ作ります。 このページの1本はコース全体で共通するgame状態の境界です。ルールはUpdateへ足し、Drawの順番や見た目は自由に差し替えられます。下の01から順に、その中へ各仕組みを実装していきます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div><div class="course-mini-flow" role="img" aria-label="コースの学習順"><span>01 引く</span><b aria-hidden="true">→</b><span>02 コスト</span><b aria-hidden="true">→</b><span>03 効果</span><b aria-hidden="true">→</b><span>04 敵予告</span></div></section>
 <!-- END BEGINNER BRIDGE -->

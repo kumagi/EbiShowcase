@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Body is grid history. Only the eat moment gets fx. Don't hang particles on every cell. Play the demo, add one Go rule, verify it, and apply the idea to your own">
-  <title>Ebi Showcase – Snake Eat FX</title>
+  <meta name="description" content="Snake truth is an integer cell list. Turning it into floats breaks self-collision and food tests. Copy body into visualFrom before a move, t">
+  <title>Ebi Showcase – Connect a Grid Snake Smoothly</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-fx-snake/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Snake Eat FX">
-    <meta property="og:description" content="Body is grid history. Only the eat moment gets fx. Don't hang particles on every cell. Play the demo, add one Go rule, verify it, and apply the idea to your own">
+    <meta property="og:title" content="Ebi Showcase – Connect a Grid Snake Smoothly">
+    <meta property="og:description" content="Snake truth is an integer cell list. Turning it into floats breaks self-collision and food tests. Copy body into visualFrom before a move, t">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-fx-snake/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-fx-snake.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Snake Eat FX">
+    <meta property="og:image:alt" content="Connect a Grid Snake Smoothly">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Snake Eat FX">
-    <meta name="twitter:description" content="Body is grid history. Only the eat moment gets fx. Don't hang particles on every cell. Play the demo, add one Go rule, verify it, and apply the idea to your own">
+    <meta name="twitter:title" content="Ebi Showcase – Connect a Grid Snake Smoothly">
+    <meta name="twitter:description" content="Snake truth is an integer cell list. Turning it into floats breaks self-collision and food tests. Copy body into visualFrom before a move, t">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-fx-snake.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Snake Eat FX">
+    <meta name="twitter:image:alt" content="Connect a Grid Snake Smoothly">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -44,22 +44,35 @@
 
     <section class="overview-hero">
       <p class="eyebrow">★★★★★ / PLAYABLE</p>
-      <h1>Snake Eat FX</h1>
-      <p>Body is grid history. Only the eat moment gets fx. Don't hang particles on every cell.</p>
-      <div class="overview-concept"><small>What you learn here</small><strong>Body cells vs sparkles</strong></div>
+      <h1>Connect a Grid Snake Smoothly</h1>
+      <p>Snake truth is an integer cell list. Turning it into floats breaks self-collision and food tests. Copy body into visualFrom before a move, then interpolate each segment until the next tick. Derive straight or corner shape from previous/current/next cells and draw a seamless body with thick lines and circles.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Interpolate a discrete grid and derive shape</strong></div>
     </section>
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
-    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED-FX DESIGN RULE</p><h2>Separate the answer<br>from the time used to show it.</h2><p><code>updatePlay()</code> first commits the correct collision, score, or board. It hands that fact across once as a value or event. Presentation then advances interpolation, poses, trails, and particles. <code>Draw</code> only reads state; it never edits score or coordinates. This boundary supports both a rich screen and unit tests that need no GPU.</p></section>
+    <section class="vfx-pattern" aria-labelledby="pattern-vfx-fx-snake">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">PATTERN A07 / DISCRETE INTERPOLATION</p><h2 id="pattern-vfx-fx-snake">Discrete State, Continuous Presentation</h2></div>
+          <p>Float board positions make same-cell, self-collision, and replay answers ambiguous.</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="State flow">
+          <span>old body cells</span><b>→</b><span>commit new cells</span><b>→</b><span>step Tween</span><b>→</b><span>Lerp positions</span><b>→</b><span>derive corners</span>
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>visualFrom is a one-tick copy</h3><p>Only body is saved. visualFrom and stepTween are derived presentation state overwritten at the next move.</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>Separate grid rules from shape derivation</h3><ul><li>Progress 0/1 equals old/new centers</li><li>horizontal and vertical are Straight</li><li>orthogonal neighbors form Corner</li></ul></article>
+        </div>
+      </section>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Eat and grow</h2></div>
-        <p>Steer to food. Eat fireworks are fx—compare body vs fx.parts.</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Watch corners and the head glide</h2></div>
+        <p>The head slides between cells and the body stays connected. Food pulses; eating alone spawns growth ring and particles.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A07</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="Snake Eat FX" src="../../../../play/vfx-fx-snake/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Connect a Grid Snake Smoothly" src="../../../../play/vfx-fx-snake/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -71,83 +84,84 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / GRID BODY</p>
-        <h2>Body is history,<br>fireworks are a moment</h2>
-        <p class="lesson-lead">Snake is a list of cells. Embedding FX per cell muddies the move logic.</p>
+        <p class="eyebrow">DEEP DIVE / DISCRETE INTERPOLATION</p>
+        <h2>How can an integer board<br>look continuous?</h2>
+        <p class="lesson-lead">Rules still jump exactly one cell. Only presentation moves old→new over several frames. SegmentPose is a pure neighbor function returning Straight / Corner, so body never stores spriteIndex.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>Body</h3>
-          <p>Cells on a grid.</p>
+          <h3>Integers are truth</h3>
+          <p>Body and food compare Cell values.</p>
           <code>body []cell</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>Eat</h3>
-          <p>Burst at food.</p>
-          <code>fx.Burst(food)</code>
+          <h3>Keep one old pose</h3>
+          <p>Copy segments to visualFrom before commit.</p>
+          <code>visualFrom []cell</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>Split</h3>
-          <p>No particle on cell.</p>
-          <code>no cell.fx</code>
+          <h3>Derive shape from neighbors</h3>
+          <p>Previous/current/next choose line or corner.</p>
+          <code>PoseForSegment</code>
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-snake" aria-labelledby="lab-title-vfx-fx-snake">
+      <div class="motion-lab" data-lab="architecture-trace" aria-labelledby="lab-title-vfx-fx-snake">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / SPLIT</p>
-          <h3 id="lab-title-vfx-fx-snake">Cells are data</h3>
-          <p>Don't mix sparkles into body data.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-snake-step>Move and eat</button><button type="button" class="lab-button" data-lab-snake-tick>Advance sparkles 1 tick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <p class="eyebrow">TRACE IT / RULE → MOTION → PIXELS</p>
+          <h3 id="lab-title-vfx-fx-snake">Match tween duration to rule tick</h3>
+          <p>Rules move one cell every eight frames; presentation completes in eight. Self-collision always reads integer body during the tween.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-architecture-step>Next state →</button><button type="button" class="lab-button lab-button-quiet" data-lab-architecture-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col"><h4>play (body and food)</h4>
-            <p data-lab-snake-grid></p><ul data-lab-snake-body></ul></div>
-          <div class="lab-fx-col"><h4>fx (eat sparkles)</h4><ul data-lab-snake-fx></ul></div>
-          <div class="lab-fx-stage" data-lab-snake-stage aria-hidden="true"></div>
-        </div><p class="lab-fx-hint" data-lab-snake-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>body cells (play)</span><strong data-lab-snake-length>—</strong></div><div><span>sparkles (fx)</span><strong data-lab-snake-parts>—</strong></div></div>
+          <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>old body cells</span><i>→</i><span data-lab-architecture-node><b>2</b>commit new cells</span><i>→</i><span data-lab-architecture-node><b>3</b>step Tween</span><i>→</i><span data-lab-architecture-node><b>4</b>Lerp positions</span><i>→</i><span data-lab-architecture-node><b>5</b>derive corners</span></div>
+          <div class="lab-architecture-boundary"><small>Boundary to protect</small><strong data-lab-architecture-boundary>Progress 0/1 equals old/new centers</strong></div>
+        </div>
+          <div class="lab-values" aria-live="polite"><div><span>current step</span><strong data-lab-architecture-index>—</strong></div><div><span>state owner</span><strong data-lab-architecture-owner>—</strong></div></div>
         </div>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>One place: eat</h3>
-          <p>Don't Burst every cell while moving.</p>
+          <h3>Build Draw coordinates from old/new boards</h3>
+          <p>Keep discrete Update and Lerp only the Draw position—the same foundation used by Sokoban and tactics.</p>
         </div>
-        <pre><code>// on eat:
-body = grow(body)
-g.fx.Burst(food.x, food.y, 24, 3, tint, true)</code></pre>
+        <pre><code>oldBody := append([]cell(nil), g.body...)
+g.body = commitGridStep(g.body, nextHead) // integer truth
+g.visualFrom = originsFor(g.body, oldBody)
+g.stepTween = vfxmotion.NewTween(ruleTickFrames)
+
+drawX := vfxmotion.Lerp(oldX, newX, g.stepTween.Progress())</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY?</p>
-          <h3>Grid is the lesson</h3>
-          <p>History matters; juice is garnish.</p>
+          <p class="eyebrow">TEST THE CONTRACT</p>
+          <h3>Table-test corner combinations</h3>
+          <p>Pass horizontal, vertical, and corner triples and compare SegmentKind and Rotation. Also test interpolation at exactly 0 and 1.</p>
         </article>
         <article>
-          <p class="eyebrow">WHY ONE BURST?</p>
-          <h3>Event</h3>
-          <p>Celebrate the eat instant only.</p>
+          <p class="eyebrow">FAILURE MODE</p>
+          <h3>Never test cells from interpolated coordinates</h3>
+          <p>Rounding a head at 0.4 cells makes collision depend on frame rate and rounding.</p>
         </article>
         <article class="challenge">
-          <p class="eyebrow">TRY NEXT</p>
-          <h3>Shooter</h3>
-          <p>Bullets, enemies, FX—three piles.</p>
+          <p class="eyebrow">DESIGN PAYOFF</p>
+          <h3>This becomes the grid-game default</h3>
+          <p>Chess, tactics, and roguelikes stay simple with discrete truth plus presentation interpolation.</p>
         </article>
       </div>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-breakout/" rel="prev">← STEP A06<strong>Break Bricks in Two Steps</strong></a>
-      <a href="../vfx-fx-shooter/" rel="next">STEP A08 →<strong>Bullets, Enemies, Explosions</strong></a>
+      <a href="../vfx-fx-breakout/" rel="prev">← STEP A06<strong>Hand a Broken Brick to Its Shards</strong></a>
+      <a href="../vfx-fx-shooter/" rel="next">STEP A08 →<strong>Dispatch Heavy Combat FX within a Budget</strong></a>
     </nav>
 
     <section class="feedback-section" aria-labelledby="feedback-title">

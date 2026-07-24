@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Reducing HP is play. Flashes and shards are fx. Choose knockback as physics or juice on purpose. Play the demo, add one Go rule, verify it, and apply the idea t">
-  <title>Ebi Showcase – Dungeon Hit Flashes</title>
+  <meta name="description" content="A satisfying hit is more than reducing HP and spawning particles. Commit HP once, then let Reaction advance HitStop→Flash→Recover. The enemy">
+  <title>Ebi Showcase – Split One Hit into Layers of Time</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-dungeon/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Dungeon Hit Flashes">
-    <meta property="og:description" content="Reducing HP is play. Flashes and shards are fx. Choose knockback as physics or juice on purpose. Play the demo, add one Go rule, verify it, and apply the idea t">
+    <meta property="og:title" content="Ebi Showcase – Split One Hit into Layers of Time">
+    <meta property="og:description" content="A satisfying hit is more than reducing HP and spawning particles. Commit HP once, then let Reaction advance HitStop→Flash→Recover. The enemy">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-dungeon/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-dungeon.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Dungeon Hit Flashes">
+    <meta property="og:image:alt" content="Split One Hit into Layers of Time">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Dungeon Hit Flashes">
-    <meta name="twitter:description" content="Reducing HP is play. Flashes and shards are fx. Choose knockback as physics or juice on purpose. Play the demo, add one Go rule, verify it, and apply the idea t">
+    <meta name="twitter:title" content="Ebi Showcase – Split One Hit into Layers of Time">
+    <meta name="twitter:description" content="A satisfying hit is more than reducing HP and spawning particles. Commit HP once, then let Reaction advance HitStop→Flash→Recover. The enemy">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-dungeon.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Dungeon Hit Flashes">
+    <meta name="twitter:image:alt" content="Split One Hit into Layers of Time">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -44,22 +44,35 @@
 
     <section class="overview-hero">
       <p class="eyebrow">★★★★★ / PLAYABLE</p>
-      <h1>Dungeon Hit Flashes</h1>
-      <p>Reducing HP is play. Flashes and shards are fx. Choose knockback as physics or juice on purpose.</p>
-      <div class="overview-concept"><small>What you learn here</small><strong>Hit reactions are FX</strong></div>
+      <h1>Split One Hit into Layers of Time</h1>
+      <p>A satisfying hit is more than reducing HP and spawning particles. Commit HP once, then let Reaction advance HitStop→Flash→Recover. The enemy shakes, the slash draws an arc, and white flash fades back. A separate slashHit prevents one swing from damaging the same target every tick.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>A post-damage reaction timeline</strong></div>
     </section>
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
-    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED-FX DESIGN RULE</p><h2>Separate the answer<br>from the time used to show it.</h2><p><code>updatePlay()</code> first commits the correct collision, score, or board. It hands that fact across once as a value or event. Presentation then advances interpolation, poses, trails, and particles. <code>Draw</code> only reads state; it never edits score or coordinates. This boundary supports both a rich screen and unit tests that need no GPU.</p></section>
+    <section class="vfx-pattern" aria-labelledby="pattern-vfx-fx-dungeon">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">PATTERN A11 / REACTION TIMELINE</p><h2 id="pattern-vfx-fx-dungeon">Layered Hit-reaction Timeline</h2></div>
+          <p>Stacking pause, flash, and shake as conditions on one unnamed timer hides boundaries and cancellation rules.</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="State flow">
+          <span>hit once</span><b>→</b><span>apply HP</span><b>→</b><span>HitStop</span><b>→</b><span>Flash</span><b>→</b><span>Recover / Done</span>
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>Reaction owns only phase time</h3><p>It owns no HP or alive flag; Phase and Offset derive from duration fields and current Frame.</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>Guarantee numbers and timeline separately</h3><ul><li>one swing hits one enemy once</li><li>phases advance for exact durations</li><li>Offset is zero after Done</li></ul></article>
+        </div>
+      </section>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Smack the slime</h2></div>
-        <p>Move and attack. Hit juice is fx; HP is play.</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Feel the pause and white flash per strike</h2></div>
+        <p>Three lines sweep as a slash arc. Contact pauses briefly; enemies flash white, shake, and become small confetti on death.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A11</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="Dungeon Hit Flashes" src="../../../../play/vfx-fx-dungeon/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Split One Hit into Layers of Time" src="../../../../play/vfx-fx-dungeon/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -71,85 +84,84 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / COMBAT FEEDBACK</p>
-        <h2>Painful numbers vs<br>painful looks</h2>
-        <p class="lesson-lead">Split HP truth from flash feedback and i-frames/combos get easier to add.</p>
+        <p class="eyebrow">DEEP DIVE / REACTION TIMELINE</p>
+        <h2>How does one damage event<br>become several layers of feel?</h2>
+        <p class="lesson-lead">HP is play truth and commits on the hit frame. Reaction owns only visual pause, white flash, and decaying offset, returning to zero when Done. Its fake knockback never changes collision position, so it cannot tunnel through walls or re-hit.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>Damage</h3>
-          <p>Reduce HP.</p>
-          <code>hp -= dmg</code>
+          <h3>Numbers now</h3>
+          <p>Reduce HP exactly once per hit.</p>
+          <code>hp--</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>Reaction</h3>
-          <p>Flash and sparks.</p>
-          <code>fx.FlashScreen</code>
+          <h3>Explicit phases</h3>
+          <p>Name HitStop / Flash / Recover.</p>
+          <code>Reaction.Phase()</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>Split</h3>
-          <p>Don't invent HP from blinks.</p>
-          <code>bar from hp</code>
+          <h3>Visual offset</h3>
+          <p>Add shake only to Draw position.</p>
+          <code>x + reaction.Offset(7)</code>
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-dungeon">
+      <div class="motion-lab" data-lab="architecture-trace" aria-labelledby="lab-title-vfx-fx-dungeon">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / PLAY vs FX</p>
-          <h3 id="lab-title-vfx-fx-dungeon">A hit updates numbers and sparks</h3>
-          <p>Hit! grows score + sparks. Tick FX ages sparks only — score stays.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Advance FX 1 tick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <p class="eyebrow">TRACE IT / RULE → MOTION → PIXELS</p>
+          <h3 id="lab-title-vfx-fx-dungeon">Trace 2 stop, 5 flash, 10 recover frames</h3>
+          <p>Advance Reaction one tick at a time and compare the Phase sequence plus Offset=0 after Done.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-architecture-step>Next state →</button><button type="button" class="lab-button lab-button-quiet" data-lab-architecture-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play (rules / score)</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx (sparks)</h4><ul data-lab-fx-list></ul></div>
-          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
+          <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>hit once</span><i>→</i><span data-lab-architecture-node><b>2</b>apply HP</span><i>→</i><span data-lab-architecture-node><b>3</b>HitStop</span><i>→</i><span data-lab-architecture-node><b>4</b>Flash</span><i>→</i><span data-lab-architecture-node><b>5</b>Recover / Done</span></div>
+          <div class="lab-architecture-boundary"><small>Boundary to protect</small><strong data-lab-architecture-boundary>one swing hits one enemy once</strong></div>
         </div>
-        <p class="lab-fx-hint" data-lab-fx-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>score (play)</span><strong data-lab-score>—</strong></div><div><span>sparks (fx)</span><strong data-lab-fx-n>—</strong></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>current step</span><strong data-lab-architecture-index>—</strong></div><div><span>state owner</span><strong data-lab-architecture-owner>—</strong></div></div>
         </div>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>FX at end of applyDamage</h3>
-          <p>Numbers first, looks second.</p>
+          <h3>Separate applyDamage from startReaction</h3>
+          <p>Create Reaction after committing the number. Completion must never apply damage again.</p>
         </div>
-        <pre><code>func applyDamage(e *enemy, dmg int) {
-  e.hp -= dmg
-  g.fx.FlashScreen(0.5, 255, 80, 80)
-  g.fx.Burst(e.x, e.y, 28, 4, tint, true)
-}</code></pre>
+        <pre><code>enemy.hp-- // gameplay commits once
+enemy.reaction = vfxmotion.NewReaction(2, 5, 10)
+
+// Draw only:
+x := enemy.x + enemy.reaction.Offset(7)
+if enemy.reaction.Phase() == vfxmotion.ReactionFlash { tint = white }</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY?</p>
-          <h3>Debug</h3>
-          <p>Log HP without the light show.</p>
+          <p class="eyebrow">TEST THE CONTRACT</p>
+          <h3>Test phase sequence and one HP delta</h3>
+          <p>Verify HitStop×2, Flash×5, Recover×10, Done—and separately verify one swing changes HP by one.</p>
         </article>
         <article>
-          <p class="eyebrow">WHY FLASH?</p>
-          <h3>Feedback</h3>
-          <p>No hit feel = feels unfair.</p>
+          <p class="eyebrow">FAILURE MODE</p>
+          <h3>Do not feed visual knockback into physics</h3>
+          <p>Small render shakes in real coordinates alter walls, contact, and replay results.</p>
         </article>
         <article class="challenge">
-          <p class="eyebrow">TRY NEXT</p>
-          <h3>Bullet hell</h3>
-          <p>Finale: clear bombs vs bullets[].</p>
+          <p class="eyebrow">DESIGN PAYOFF</p>
+          <h3>Organize combos, bosses, and invulnerability</h3>
+          <p>Separated results and reaction time allow named action and cancel rules.</p>
         </article>
       </div>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-platform/" rel="prev">← STEP A10<strong>Jump & Land Dust</strong></a>
-      <a href="../vfx-fx-bullethell/" rel="next">STEP A12 →<strong>Bomb Clears Bullets—Explosions Are FX</strong></a>
+      <a href="../vfx-fx-platform/" rel="prev">← STEP A10<strong>Build a Body that Runs, Jumps, and Lands</strong></a>
+      <a href="../vfx-fx-bullethell/" rel="next">STEP A12 →<strong>Script a Full-screen Bomb Sequence</strong></a>
     </nav>
 
     <section class="feedback-section" aria-labelledby="feedback-title">

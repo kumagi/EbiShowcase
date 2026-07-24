@@ -1180,9 +1180,24 @@ function labParts(kind, lang) {
 
 function labSection(lesson, lang, idx) {
   const c = lesson[lang].lab;
-  const { controls, board, values } = labParts(lesson.labKind, lang);
+  const advanced = lesson.tier === "advanced" && lesson[lang].architecture;
+  const { controls, board, values } = advanced
+    ? {
+        controls:
+          btn("data-lab-architecture-step", lang === "ja" ? "次の状態へ →" : "Next state →", "lab-button-primary") +
+          btn("data-lab-architecture-reset", RESET[lang], "lab-button-quiet"),
+        board: `<div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow">${lesson[lang].architecture.flow.map((item, i) =>
+            `<span data-lab-architecture-node${i === 0 ? ' data-active="true"' : ""}><b>${i + 1}</b>${item}</span>${i < lesson[lang].architecture.flow.length - 1 ? "<i>→</i>" : ""}`).join("")}</div>
+          <div class="lab-architecture-boundary"><small>${lang === "ja" ? "壊してはいけない境界" : "Boundary to protect"}</small><strong data-lab-architecture-boundary>${lesson[lang].architecture.tests[0]}</strong></div>
+        </div>`,
+        values:
+          val("data-lab-architecture-index", lang === "ja" ? "現在の段階" : "current step") +
+          val("data-lab-architecture-owner", lang === "ja" ? "状態の所有者" : "state owner"),
+      }
+    : labParts(lesson.labKind, lang);
   const id = `lab-title-${lesson.slug}`;
-  return `      <div class="motion-lab" data-lab="${lesson.labKind}" aria-labelledby="${id}">
+  return `      <div class="motion-lab" data-lab="${advanced ? "architecture-trace" : lesson.labKind}" aria-labelledby="${id}">
         <div class="lab-copy">
           <p class="eyebrow">${c.eyebrow}</p>
           <h3 id="${id}">${c.title}</h3>
@@ -1233,8 +1248,24 @@ function stepPage(lesson, idx, lang) {
     : `This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.`;
   const advancedContract = lesson.tier === "advanced"
     ? (lang === "ja"
-        ? `<section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED FX の約束</p><h2>ゲームのルールは、そのまま。<br>見た目だけを増やせる。</h2><p><code>updatePlay()</code> は点数・当たり・勝敗をこれまで通り決めます。<code>Game</code> に <code>fx</code> の箱を足し、<code>fx.Update()</code> は粒など<strong>見た目用の時間</strong>だけを進め、<code>Draw</code> で <code>fx.Draw()</code> を重ねます。つまり元のゲームルールを触らずに派手にできます。ただし粒が動く演出には、play を変えない独立した <code>fx.Update()</code> は必要です。</p></section>`
-        : `<section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>`)
+        ? `<section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED FX の設計原則</p><h2>ルールの答えと、<br>答えを見せる時間を分ける。</h2><p><code>updatePlay()</code> は衝突・得点・盤面などの<strong>正解</strong>を先に確定し、結果を値やイベントとして一度だけ渡します。演出側はその事実から補間・姿勢・残像・粒子の時間を進めます。<code>Draw</code> は状態を読むだけで、得点も座標も書き換えません。この境界があるから、派手な画面とGPUなしで試せるユニットテストを両立できます。</p></section>`
+        : `<section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED-FX DESIGN RULE</p><h2>Separate the answer<br>from the time used to show it.</h2><p><code>updatePlay()</code> first commits the correct collision, score, or board. It hands that fact across once as a value or event. Presentation then advances interpolation, poses, trails, and particles. <code>Draw</code> only reads state; it never edits score or coordinates. This boundary supports both a rich screen and unit tests that need no GPU.</p></section>`)
+    : "";
+
+  const advancedPattern = lesson.tier === "advanced" && t.architecture
+    ? `<section class="vfx-pattern" aria-labelledby="pattern-${lesson.slug}">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">${t.architecture.eyebrow}</p><h2 id="pattern-${lesson.slug}">${t.architecture.name}</h2></div>
+          <p>${t.architecture.problem}</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="${lang === "ja" ? "状態の流れ" : "State flow"}">
+          ${t.architecture.flow.map((item, i) => `<span>${item}</span>${i < t.architecture.flow.length - 1 ? "<b>→</b>" : ""}`).join("")}
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>${t.architecture.stateTitle}</h3><p>${t.architecture.state}</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>${t.architecture.testTitle}</h3><ul>${t.architecture.tests.map((item) => `<li>${item}</li>`).join("")}</ul></article>
+        </div>
+      </section>`
     : "";
 
   const concepts = t.concepts
@@ -1296,6 +1327,7 @@ function stepPage(lesson, idx, lang) {
 
     <p class="curriculum-bridge">${bridge}</p>
     ${advancedContract}
+    ${advancedPattern}
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
@@ -1347,7 +1379,7 @@ ${whys}
   </script>
 </body>
 </html>
-`;
+`.replace(/[ \t]+$/gm, "");
 }
 
 function hubPage(lang) {
@@ -1361,8 +1393,8 @@ function hubPage(lang) {
   const basicSteps = basic.map(stepLink).join("\n");
   const advSteps = advanced.map(stepLink).join("\n");
   const bridge = lang === "ja"
-    ? `<p class="curriculum-bridge">共通基礎(LEVEL 01〜12)の続きです。ルールはUpdateで進め、<a href="../../games/tap-target/#basics">Draw</a>は同じ状態を好きな見た目へ投影します。見た目を作る道具を1つずつ足します。主人公はオリジナルの海老・天次郎（えび・てんじろう）です。</p>`
-    : `<p class="curriculum-bridge">This continues the core lessons (LEVEL 01–12). Update advances the rules; <a href="../../games/tap-target/#basics">Draw</a> projects that state into any visual style. Add one presentation tool at a time. The hero is original Ebi Tenjiroh (海老・天次郎 / ebi-tenjiroh).</p>`;
+    ? `<p class="curriculum-bridge">共通基礎(LEVEL 01〜12)の続きです。前半は描画道具、A01〜A12は<strong>ルールの事実→独立した演出状態→Draw/FX</strong>という実装設計を12種類のゲームで身につけます。この設計が次の25ジャンル共通の前提になります。</p>`
+    : `<p class="curriculum-bridge">This continues the core lessons (LEVEL 01–12). Basics cover drawing tools; A01–A12 teach twelve implementations of <strong>rule fact → independent presentation state → Draw/FX</strong>. That architecture is assumed by all twenty-five genre paths.</p>`;
   const parameterTableBlock = lang === "ja"
     ? `<section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">数字を変えると、見た目が変わる。</h2><p>speed・size・alpha・lifeを変えると、同じルールでも手ざわりが変わります。</p></div><table class="vfx-parameter-table"><thead><tr><th>値</th><th>意味</th><th>小さく</th><th>大きく</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>粒の速さ</td><td>漂う</td><td>飛ぶ</td></tr><tr><th scope="row"><code>size</code></th><td>大きさ</td><td>細かい</td><td>フレア</td></tr><tr><th scope="row"><code>alpha</code></th><td>透明度</td><td>薄い</td><td>濃い</td></tr><tr><th scope="row"><code>life</code></th><td>寿命（フレーム）</td><td>一瞬</td><td>余韻</td></tr></tbody></table></section>`
     : `<section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">Change a number, change the feel.</h2><p>Try speed, size, alpha, and life independently from the game rules.</p></div><table class="vfx-parameter-table"><thead><tr><th>Value</th><th>Meaning</th><th>Smaller</th><th>Larger</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>Particle speed</td><td>Drift</td><td>Burst</td></tr><tr><th scope="row"><code>size</code></th><td>Scale</td><td>Tiny</td><td>Flare</td></tr><tr><th scope="row"><code>alpha</code></th><td>Opacity</td><td>Faint</td><td>Solid</td></tr><tr><th scope="row"><code>life</code></th><td>Frames alive</td><td>Quick</td><td>Afterglow</td></tr></tbody></table></section>`;
@@ -1370,8 +1402,8 @@ function hubPage(lang) {
     ? `${parameterTableBlock}<div class="path-intro"><p class="eyebrow">BASIC / 基本編</p><h2>描画の文法を<br>手で確かめる。</h2><p>スタンプから魔法ショーケースまで。ページ上のスライダーで「置く・回す・染める」を体感する ${basic.length} ステップ（全部やらなくてOK）。</p></div>`
     : `${parameterTableBlock}<div class="path-intro"><p class="eyebrow">BASIC</p><h2>Feel the drawing<br>grammar by hand.</h2><p>${basic.length} steps from Stamp to magic showcases—try the on-page sliders (you don’t need every step).</p></div>`;
   const advHead = lang === "ja"
-    ? `<div class="path-intro" id="advanced"><p class="eyebrow">ADVANCED / 応用編</p><h2>12のコアゲームに<br>派手な演出を足す。</h2><p>LEVEL 01〜12 をベースに、<strong>得点や当たり（ルール）</strong>と<strong>花火や光（見た目）</strong>を別の箱に入れる練習をする ${advanced.length} 章。まずルールをUpdateで確定し、そのイベントを合図にFXを発生させる順番で読みます。</p></div>`
-    : `<div class="path-intro" id="advanced"><p class="eyebrow">ADVANCED</p><h2>Dress up all twelve<br>core games.</h2><p>${advanced.length} chapters on LEVEL 01–12 remakes—practice keeping score/hits in one box and fireworks in another. First settle the rule in Update, then spawn FX from that event.</p></div>`;
+    ? `<div class="path-intro" id="advanced"><p class="eyebrow">ADVANCED / アニメーション設計編</p><h2>12のゲームで、<br>12の壊れにくい動かし方。</h2><p>値イベント、演出レシピ、表示代理、導出Pose、描画履歴、削除Snapshot、グリッド補間、イベント予算、Plan→Commit→Tween、状態エッジ、リアクション時間軸、決定的Cue台本を一章ずつ実装します。</p></div>`
+    : `<div class="path-intro" id="advanced"><p class="eyebrow">ADVANCED / ANIMATION ARCHITECTURE</p><h2>Twelve games,<br>twelve durable motion designs.</h2><p>Build immutable events, recipes, proxies, derived poses, bounded history, deletion snapshots, grid interpolation, event budgets, Plan→Commit→Tween, state edges, reaction timelines, and deterministic cue scripts—one per chapter.</p></div>`;
   const parameterTable = lang === "ja"
     ? '<section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">数字を変えると、見た目が変わる。</h2><p>各ステップで触る代表値をまとめました。ルールの数字と演出の数字を別々に調整すると、ゲーム性を壊さず手ざわりを磨けます。</p></div><div class="vfx-parameter-table-wrap"><table class="vfx-parameter-table"><thead><tr><th>パラメータ</th><th>意味</th><th>小さくすると</th><th>大きくすると</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>粒の移動量</td><td>ふわっと漂う</td><td>勢いよく飛ぶ</td></tr><tr><th scope="row"><code>size</code></th><td>光・粒の大きさ</td><td>細かな点</td><td>大きなフレア</td></tr><tr><th scope="row"><code>alpha</code></th><td>透明度</td><td>淡い残像</td><td>くっきり見える</td></tr><tr><th scope="row"><code>life</code></th><td>生きているフレーム数</td><td>短い一瞬</td><td>長い余韻</td></tr></tbody></table></div></section>'
     : '<section class="vfx-parameter-panel" aria-labelledby="vfx-parameter-title"><div><p class="eyebrow">VFX CHEAT SHEET</p><h2 id="vfx-parameter-title">Change a number, change the feel.</h2><p>These are the first knobs to try in each chapter. Tune rule numbers and presentation numbers separately so polish never changes the win condition.</p></div><div class="vfx-parameter-table-wrap"><table class="vfx-parameter-table"><thead><tr><th>Parameter</th><th>Meaning</th><th>Smaller</th><th>Larger</th></tr></thead><tbody><tr><th scope="row"><code>speed</code></th><td>Particle movement</td><td>Soft drift</td><td>Sharp burst</td></tr><tr><th scope="row"><code>size</code></th><td>Glow or particle size</td><td>Tiny dots</td><td>Big flare</td></tr><tr><th scope="row"><code>alpha</code></th><td>Opacity</td><td>Faint trail</td><td>Solid mark</td></tr><tr><th scope="row"><code>life</code></th><td>Frames alive</td><td>Quick spark</td><td>Long afterglow</td></tr></tbody></table></div></section>';
@@ -1387,26 +1419,26 @@ function homeSection(lang) {
     ? {
         eyebrow: "VISUAL EFFECTS / 表現編",
         title: "ルールを覚えたら、<br>画面に手ざわりを足そう。",
-        lead: "基礎編で作った動きに、回転・色・光・アニメーション・粒を足します。前半は描画の道具を1つずつ触り、後半はLEVEL 01〜12へ演出を組み込みます。ここもすべてブラウザで操作できます。",
+        lead: "前半で描画道具を触り、後半はLEVEL 01〜12を使ってアニメーション状態の設計を学びます。派手さだけでなく、GPUなしでテストでき、ゲームルールを壊さず拡張できるコードが25のゲーム制作編への入口です。",
         basicEyebrow: "DRAWING BASICS / 描画の基本",
         basicTitle: "まずは、絵を変える13の道具。",
         basicLead: "置く、回す、染める、透かす、光らせる。気になるパネルから触って大丈夫です。",
         advancedEyebrow: "GAME FX / ゲーム演出",
-        advancedTitle: "次に、12のゲームへ演出を足す。",
-        advancedLead: "得点や当たり判定はそのままに、光や粒だけを別の仕組みとして重ねます。",
+        advancedTitle: "次に、12のゲームで動きの設計を学ぶ。",
+        advancedLead: "同じ粒子分離を繰り返さず、イベント、補間、Pose、Snapshot、Timeline、Cue台本を重複なく実装します。",
         concept: "今回の道具",
         open: "工房の全体を見る",
       }
     : {
         eyebrow: "VISUAL EFFECTS / PRESENTATION",
         title: "Once the rules work,<br>give the screen some feel.",
-        lead: "Add rotation, color, light, animation, and particles to the movement from Basics. First touch one drawing tool at a time; then wire effects into LEVEL 01–12. Every panel runs in the browser.",
+        lead: "First touch the drawing tools. Then use LEVEL 01–12 to design animation state that is rich on screen, testable without a GPU, and safe to extend. This code architecture leads directly into the twenty-five game-building paths.",
         basicEyebrow: "DRAWING BASICS",
         basicTitle: "Start with thirteen ways to change a picture.",
         basicLead: "Place, spin, tint, fade, and glow. It is fine to begin with whichever panel catches your eye.",
         advancedEyebrow: "GAME FX",
-        advancedTitle: "Then dress up all twelve core games.",
-        advancedLead: "Keep score and collisions intact while layering light and particles as a separate system.",
+        advancedTitle: "Then learn one motion architecture per core game.",
+        advancedLead: "Do not repeat particle separation: implement events, interpolation, poses, snapshots, timelines, and cue scripts without overlap.",
         concept: "TOOL",
         open: "View the whole lab",
       };

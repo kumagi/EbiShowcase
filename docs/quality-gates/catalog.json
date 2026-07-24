@@ -290,7 +290,7 @@
       "severity": "fail",
       "check": "deterministic",
       "applies_to": ["guide"],
-      "summary": "Every unit-testing chapter teaches and demonstrates unlabeled AAA reading order, DAMP assertions, descriptive Go subtest names, and table-driven boundary cases.",
+      "summary": "The unit-testing course defines unlabeled AAA as one-world/one-event/observable-contract design, progresses through twelve distinct game-logic applications, reviews at least three independent scenarios per lesson, rejects giant mixed-action tests, and still demonstrates DAMP assertions, descriptive Go subtest names, and table-driven boundaries.",
       "sources": ["scripts/gen-testing-guide.mjs", "scripts/check-site-metadata.mjs"]
     },
     {

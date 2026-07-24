@@ -41,7 +41,7 @@
       <p>消したあとに落とし、盤面が止まったらもう一度探します。続けて消えた回数が、そのまま得点の倍率になります。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>連鎖倍率とスコア</strong></div>
       <p class="cast-note">動きの計算は <a href="../../../games/tap-target/#basics">LEVEL 01</a>と同じく、位置や得点などゲームの中身はUpdateで進めます。Drawは中身を変えず、画面への見せ方だけを担当します。</p>
-    </section>
+    </section><!-- genre-presentation-bridge:start --><aside class="genre-presentation-inline"><strong>この章も、演出の基礎は実装済みから始めます。</strong><span>新しい課題は二個組回転、連結探索、重力、再探索、連鎖得点とおじゃまです。</span><nav aria-label="参照するVFX設計"><a href="../../visual-effects/vfx-fx-snake/"><b>A07</b><span>離散状態の補間</span></a><a href="../../visual-effects/vfx-fx-breakout/"><b>A06</b><span>削除前スナップショット</span></a><a href="../../visual-effects/vfx-fx-bullethell/"><b>A12</b><span>決定的エフェクト台本</span></a></nav><div class="genre-presentation-inline-contract"><p><b>MOTION BASELINE</b>整数盤面を補間し、消去群をSnapshotへ移し、連鎖数ごとの消去→落下→再探索をCue台本にします。</p><p><b>TEST SEAM</b>連結・重力・連鎖を盤面単位で試し、表示の消去時間が連鎖数を変えないこと。</p></div></aside><!-- genre-presentation-bridge:end -->
 <p class="curriculum-bridge">共通基礎の続きです。ゲームの1コマが初めてなら、先に<a href="../../../games/tap-target/#basics">LEVEL 01 の Update / Draw</a>を見てください。</p>
 
 <section class="play lesson-play" id="play">

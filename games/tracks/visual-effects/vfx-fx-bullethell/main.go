@@ -14,24 +14,29 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/hero"
 	"github.com/kumagi/EbiShowcase/internal/vfxfx"
 	"github.com/kumagi/EbiShowcase/internal/vfxlive"
+	"github.com/kumagi/EbiShowcase/internal/vfxmotion"
 	"github.com/kumagi/EbiShowcase/internal/vfxui"
 )
 
 type bullet struct{ x, y, vx, vy float64 }
 
 type Game struct {
-	shell        *vfxlive.Shell
-	fx           vfxfx.System
-	px, py       float64
-	bullets      []bullet
-	angle        float64
-	frame, lives int
-	bombs, inv   int
-	score        int
-	over         bool
-	rng          *rand.Rand
-	sy, sh       float64
-	bombBtn      vfxui.Button
+	shell          *vfxlive.Shell
+	fx             vfxfx.System
+	px, py         float64
+	bullets        []bullet
+	angle          float64
+	frame, lives   int
+	bombs, inv     int
+	score          int
+	over           bool
+	rng            *rand.Rand
+	sy, sh         float64
+	bombBtn        vfxui.Button
+	bombScript     vfxmotion.EffectScript
+	scriptActive   bool
+	clearedBullets []bullet
+	freezeFrames   int
 }
 
 func newGame() *Game {
@@ -85,21 +90,52 @@ func (g *Game) doBomb() {
 	}
 	g.bombs--
 	fx := g.shell.Get("fx")
-	g.fx.Ring(g.px, g.py, 2.2*fx, color.RGBA{255, 200, 120, 255})
-	g.fx.FlashScreen(0.85*fx, 255, 220, 160)
-	g.fx.Burst(g.px, g.py, int(40*fx), 5*fx, color.RGBA{255, 180, 80, 255}, true)
-	g.fx.FlameBurst(g.px, g.py, int(18*fx))
 	r := 110 * fx
 	keep := g.bullets[:0]
+	g.clearedBullets = g.clearedBullets[:0]
 	for _, b := range g.bullets {
 		if math.Hypot(b.x-g.px, b.y-g.py) > r {
 			keep = append(keep, b)
 		} else {
+			g.clearedBullets = append(g.clearedBullets, b)
 			g.score++
 		}
 	}
 	g.bullets = keep
 	g.inv = 30
+	g.bombScript = vfxmotion.BombScript(fx)
+	g.scriptActive = true
+}
+
+func (g *Game) updateBombScript() {
+	if !g.scriptActive {
+		return
+	}
+	fx := g.shell.Get("fx")
+	for _, cue := range g.bombScript.Current() {
+		switch cue.Kind {
+		case vfxmotion.CueFreeze:
+			g.freezeFrames = int(cue.Strength)
+		case vfxmotion.CueFlash:
+			g.fx.FlashScreen(cue.Strength, 255, 220, 160)
+		case vfxmotion.CueShockwave:
+			g.fx.Shockwave(g.px, g.py, cue.Strength, color.White, color.RGBA{255, 170, 70, 255})
+			g.fx.Burst(g.px, g.py, int(32*fx), 4.5*fx, color.RGBA{255, 180, 80, 255}, true)
+		case vfxmotion.CueDissolve:
+			limit := min(len(g.clearedBullets), 48)
+			for i := 0; i < limit; i++ {
+				b := g.clearedBullets[i]
+				g.fx.Burst(b.x, b.y, 2, 1.2*fx, color.RGBA{255, 180, 220, 255}, true)
+			}
+		case vfxmotion.CueConfetti:
+			g.fx.Confetti(g.px, g.py, int(28*fx))
+		}
+	}
+	g.bombScript.Advance()
+	if g.bombScript.Done() {
+		g.scriptActive = false
+		g.clearedBullets = g.clearedBullets[:0]
+	}
 }
 
 func (g *Game) updatePlay(ate bool) {
@@ -178,7 +214,12 @@ func (g *Game) Update() error {
 		g.fx.Update()
 		return nil
 	}
-	g.updatePlay(ate)
+	if g.freezeFrames > 0 {
+		g.freezeFrames--
+	} else {
+		g.updatePlay(ate)
+	}
+	g.updateBombScript()
 	g.fx.Update()
 	return nil
 }
@@ -190,6 +231,19 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	vector.DrawFilledCircle(screen, 240, float32(g.sy+50), 22, color.RGBA{180, 60, 90, 255}, false)
 	for _, b := range g.bullets {
 		vector.DrawFilledCircle(screen, float32(b.x), float32(b.y), 4, color.RGBA{255, 160, 200, 255}, false)
+	}
+	if g.scriptActive {
+		t := float64(g.bombScript.Frame) / 13
+		alpha := uint8(180 * math.Max(0, 1-t))
+		for i, b := range g.clearedBullets {
+			if i >= 80 {
+				break
+			}
+			x := b.x + b.vx*t*18
+			y := b.y + b.vy*t*18
+			vector.StrokeCircle(screen, float32(x), float32(y), float32(4+t*7), 2,
+				color.RGBA{255, 180, 230, alpha}, false)
+		}
 	}
 	if g.inv%4 < 2 {
 		hero.DrawCentered(screen, g.px, g.py, 32)

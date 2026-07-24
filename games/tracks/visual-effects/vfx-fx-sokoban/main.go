@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"image/color"
+	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -12,10 +13,17 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/hero"
 	"github.com/kumagi/EbiShowcase/internal/vfxfx"
 	"github.com/kumagi/EbiShowcase/internal/vfxlive"
+	"github.com/kumagi/EbiShowcase/internal/vfxmotion"
 	"github.com/kumagi/EbiShowcase/internal/vfxui"
 )
 
 type pt struct{ x, y int }
+
+type moveAnimation struct {
+	plan        vfxmotion.MovePlan
+	tween       vfxmotion.Tween
+	reachedGoal bool
+}
 
 type Game struct {
 	shell      *vfxlive.Shell
@@ -28,6 +36,8 @@ type Game struct {
 	cleared    bool
 	ox, oy, ts float64
 	w, h       int
+	move       *moveAnimation
+	frame      int
 }
 
 var level = []string{
@@ -113,28 +123,37 @@ func (g *Game) onGoal(p pt) bool {
 }
 
 func (g *Game) tryMove(dx, dy int) {
-	np := pt{g.player.x + dx, g.player.y + dy}
-	if g.walls[np] {
+	if g.move != nil {
 		return
 	}
-	if i := g.boxAt(np); i >= 0 {
-		bp := pt{np.x + dx, np.y + dy}
-		if g.walls[bp] || g.boxAt(bp) >= 0 {
-			return
-		}
-		g.boxes[i] = bp
-		cx, cy := g.center(np)
-		fx := g.shell.Get("fx")
-		n := int(g.shell.Get("dust") * fx)
-		g.fx.Burst(cx, cy, n, 1.8*fx, color.RGBA{180, 160, 120, 255}, false)
-		if g.onGoal(bp) {
-			gx, gy := g.center(bp)
-			g.fx.Ring(gx, gy, 1.1*fx, color.RGBA{120, 255, 200, 255})
-			g.fx.Burst(gx, gy, int(12*fx), 2.2*fx, color.RGBA{180, 255, 220, 255}, true)
-		}
+	walls := make(map[vfxmotion.Cell]bool, len(g.walls))
+	for wall := range g.walls {
+		walls[vfxmotion.Cell{X: wall.x, Y: wall.y}] = true
 	}
-	g.player = np
+	boxes := make([]vfxmotion.Cell, len(g.boxes))
+	for i, box := range g.boxes {
+		boxes[i] = vfxmotion.Cell{X: box.x, Y: box.y}
+	}
+	plan := vfxmotion.PlanSokobanMove(
+		vfxmotion.Cell{X: g.player.x, Y: g.player.y},
+		vfxmotion.Cell{X: dx, Y: dy},
+		walls,
+		boxes,
+	)
+	if !plan.Allowed {
+		return
+	}
+
+	g.player = pt{plan.PlayerTo.X, plan.PlayerTo.Y}
+	reachedGoal := false
+	if plan.BoxIndex >= 0 {
+		g.boxes[plan.BoxIndex] = pt{plan.BoxTo.X, plan.BoxTo.Y}
+		reachedGoal = g.onGoal(g.boxes[plan.BoxIndex])
+	}
 	g.moves++
+	g.move = &moveAnimation{
+		plan: plan, tween: vfxmotion.NewTween(9), reachedGoal: reachedGoal,
+	}
 	g.cleared = true
 	for _, b := range g.boxes {
 		if !g.onGoal(b) {
@@ -142,13 +161,36 @@ func (g *Game) tryMove(dx, dy int) {
 			break
 		}
 	}
+}
+
+func (g *Game) updateMoveAnimation() {
+	if g.move == nil {
+		return
+	}
+	g.move.tween.Advance()
+	if !g.move.tween.Done() {
+		return
+	}
+	fx := g.shell.Get("fx")
+	plan := g.move.plan
+	if plan.BoxIndex >= 0 {
+		x, y := g.center(pt{plan.BoxTo.X, plan.BoxTo.Y})
+		g.fx.Dust(x, y+g.ts*0.28, float64(plan.BoxTo.X-plan.BoxFrom.X), int(g.shell.Get("dust")*fx),
+			color.RGBA{180, 160, 120, 255})
+		if g.move.reachedGoal {
+			g.fx.Shockwave(x, y, 0.65*fx, color.RGBA{210, 255, 230, 255}, color.RGBA{80, 230, 170, 255})
+			g.fx.Burst(x, y, int(12*fx), 2.2*fx, color.RGBA{180, 255, 220, 255}, true)
+		}
+	}
+	g.move = nil
 	if g.cleared {
-		g.fx.FlashScreen(0.5*g.shell.Get("fx"), 120, 255, 200)
+		g.fx.FlashScreen(0.5*fx, 120, 255, 200)
+		g.fx.Confetti(vfxlive.Width/2, g.oy+float64(g.h)*g.ts/2, int(40*fx))
 	}
 }
 
 func (g *Game) readInput(ate bool) {
-	if ate || g.cleared {
+	if ate || g.cleared || g.move != nil {
 		return
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) || inpututil.IsKeyJustPressed(ebiten.KeyW) {
@@ -195,9 +237,11 @@ func abs(v float64) float64 {
 func (g *Game) Update() error {
 	ate := g.shell.Update()
 	g.layout()
+	g.frame++
 	g.shell.SetToken("b", fmt.Sprintf("%d", len(g.boxes)))
 	g.shell.SetToken("n", fmt.Sprintf("%d", g.fx.Count()))
-	if g.cleared {
+	g.updateMoveAnimation()
+	if g.cleared && g.move == nil {
 		if vfxui.AnyPressStart() && !ate {
 			*g = *newGame()
 		}
@@ -225,10 +269,17 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 	for _, gl := range g.goals {
 		cx, cy := g.center(gl)
-		vector.StrokeCircle(screen, float32(cx), float32(cy), float32(g.ts*0.28), 3, color.RGBA{80, 220, 160, 255}, false)
+		pulse := 1 + 0.08*math.Sin(float64(g.frame)*0.08)
+		vector.StrokeCircle(screen, float32(cx), float32(cy), float32(g.ts*0.28*pulse), 3, color.RGBA{80, 220, 160, 255}, false)
 	}
-	for _, b := range g.boxes {
+	for i, b := range g.boxes {
 		cx, cy := g.center(b)
+		if g.move != nil && g.move.plan.BoxIndex == i {
+			fromX, fromY := g.center(pt{g.move.plan.BoxFrom.X, g.move.plan.BoxFrom.Y})
+			toX, toY := g.center(pt{g.move.plan.BoxTo.X, g.move.plan.BoxTo.Y})
+			t := vfxmotion.EaseInOutCubic(g.move.tween.Progress())
+			cx, cy = vfxmotion.Lerp(fromX, toX, t), vfxmotion.Lerp(fromY, toY, t)
+		}
 		col := color.RGBA{200, 140, 70, 255}
 		if g.onGoal(b) {
 			col = color.RGBA{120, 230, 160, 255}
@@ -237,7 +288,17 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			float32(g.ts*0.64), float32(g.ts*0.64), col, false)
 	}
 	px, py := g.center(g.player)
-	hero.DrawCentered(screen, px, py, g.ts*0.85)
+	pose := hero.Pose{}
+	if g.move != nil {
+		fromX, fromY := g.center(pt{g.move.plan.PlayerFrom.X, g.move.plan.PlayerFrom.Y})
+		toX, toY := g.center(pt{g.move.plan.PlayerTo.X, g.move.plan.PlayerTo.Y})
+		t := vfxmotion.EaseInOutCubic(g.move.tween.Progress())
+		px, py = vfxmotion.Lerp(fromX, toX, t), vfxmotion.Lerp(fromY, toY, t)
+		bob := math.Sin(t * math.Pi)
+		py -= bob * g.ts * 0.08
+		pose.ScaleX, pose.ScaleY = 1+0.08*bob, 1-0.06*bob
+	}
+	hero.DrawCenteredPose(screen, px, py, g.ts*0.85, pose)
 	g.fx.Draw(screen)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("moves %d", g.moves), 12, int(g.oy)-18)
 	if g.cleared {

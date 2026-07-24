@@ -33,6 +33,7 @@ func TestBouncedPosition(t *testing.T) {
 		wantPosition, wantSpeed float64
 	}{
 		{name: "movement within bounds keeps direction", position: 40, speed: 3, wantPosition: 43, wantSpeed: 3},
+		{name: "landing exactly on right edge keeps direction", position: 97, speed: 3, wantPosition: 100, wantSpeed: 3},
 		{name: "crossing right edge clamps and reverses", position: 99, speed: 3, wantPosition: 100, wantSpeed: -3},
 		{name: "crossing left edge clamps and reverses", position: 1, speed: -3, wantPosition: 0, wantSpeed: 3},
 	}
@@ -62,6 +63,7 @@ func TestTimingScore(t *testing.T) {
 		{name: "perfect outer edge scores perfect", distance: 8, wantPoints: 100, wantLabel: "PERFECT +100"},
 		{name: "just beyond perfect scores great", distance: 8.1, wantPoints: 50, wantLabel: "GREAT +50"},
 		{name: "great outer edge scores great", distance: 28, wantPoints: 50, wantLabel: "GREAT +50"},
+		{name: "just beyond great scores good", distance: 28.1, wantPoints: 10, wantLabel: "GOOD +10"},
 		{name: "good outer edge scores good", distance: 55, wantPoints: 10, wantLabel: "GOOD +10"},
 		{name: "just beyond good scores miss", distance: 55.1, wantPoints: 0, wantLabel: "MISS"},
 	}

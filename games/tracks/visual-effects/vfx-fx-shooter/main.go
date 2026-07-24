@@ -13,6 +13,7 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/hero"
 	"github.com/kumagi/EbiShowcase/internal/vfxfx"
 	"github.com/kumagi/EbiShowcase/internal/vfxlive"
+	"github.com/kumagi/EbiShowcase/internal/vfxmotion"
 	"github.com/kumagi/EbiShowcase/internal/vfxui"
 )
 
@@ -29,12 +30,16 @@ type Game struct {
 	over         bool
 	rng          *rand.Rand
 	sy, sh       float64
+	events       vfxmotion.Queue
+	budget       vfxmotion.Budget
+	recoil       vfxmotion.Tween
 }
 
 func newGame() *Game {
 	g := &Game{
-		rng:   rand.New(rand.NewSource(88)),
-		lives: 3,
+		rng:    rand.New(rand.NewSource(88)),
+		lives:  3,
+		budget: vfxmotion.Budget{Limit: 72},
 		shell: vfxlive.New(
 			"FX Shooter",
 			[]string{
@@ -87,8 +92,7 @@ func (g *Game) updatePlay() {
 	if wantShot {
 		g.cool = 0
 		g.bullets = append(g.bullets, ball{x: g.shipX, y: g.shipY - 18, vy: -8, r: 4})
-		fx := g.shell.Get("fx")
-		g.fx.Burst(g.shipX, g.shipY-18, int(8*fx), 1.6*fx, color.RGBA{255, 220, 120, 255}, true)
+		g.events.Push(vfxmotion.Event{Kind: vfxmotion.EventShotFired, X: g.shipX, Y: g.shipY - 18, Strength: g.shell.Get("fx")})
 	}
 
 	if g.rng.Float64() < 0.025 {
@@ -119,16 +123,12 @@ func (g *Game) updatePlay() {
 		g.bullets = keepB
 		if hit {
 			g.score++
-			fx := g.shell.Get("fx")
-			g.fx.Burst(e.x, e.y, int(22*fx), 3.2*fx, color.RGBA{255, 140, 60, 255}, true)
-			g.fx.FlashScreen(0.55*fx, 255, 160, 80)
+			g.events.Push(vfxmotion.Event{Kind: vfxmotion.EventEnemyDestroyed, X: e.x, Y: e.y, Strength: g.shell.Get("fx")})
 			continue
 		}
 		if math.Hypot(e.x-g.shipX, e.y-g.shipY) < e.r+16 {
 			g.lives--
-			fx := g.shell.Get("fx")
-			g.fx.Burst(g.shipX, g.shipY, int(16*fx), 2.5*fx, color.RGBA{255, 80, 80, 255}, true)
-			g.fx.FlashScreen(0.7, 255, 40, 40)
+			g.events.Push(vfxmotion.Event{Kind: vfxmotion.EventPlayerDamaged, X: g.shipX, Y: g.shipY, Strength: g.shell.Get("fx")})
 			if g.lives <= 0 {
 				g.over = true
 			}
@@ -139,6 +139,31 @@ func (g *Game) updatePlay() {
 		}
 	}
 	g.enemies = aliveE
+}
+
+func (g *Game) dispatchFX() {
+	g.budget.Reset()
+	for _, event := range g.events.Drain() {
+		k := event.Strength
+		switch event.Kind {
+		case vfxmotion.EventShotFired:
+			g.recoil = vfxmotion.NewTween(8)
+			n := g.budget.Take(int(8 * k))
+			g.fx.Burst(event.X, event.Y, n, 1.8*k, color.RGBA{255, 220, 120, 255}, true)
+		case vfxmotion.EventEnemyDestroyed:
+			n := g.budget.Take(int(28 * k))
+			g.fx.Burst(event.X, event.Y, n, 3.4*k, color.RGBA{255, 140, 60, 255}, true)
+			g.fx.Shockwave(event.X, event.Y, 0.7*k, color.RGBA{255, 240, 180, 255}, color.RGBA{255, 100, 50, 255})
+			g.fx.FlashScreen(0.42*k, 255, 160, 80)
+		case vfxmotion.EventPlayerDamaged:
+			n := g.budget.Take(int(18 * k))
+			g.fx.Burst(event.X, event.Y, n, 2.5*k, color.RGBA{255, 80, 80, 255}, true)
+			g.fx.FlashScreen(0.7, 255, 40, 40)
+		}
+	}
+	if !g.recoil.Done() {
+		g.recoil.Advance()
+	}
 }
 
 func (g *Game) Update() error {
@@ -155,6 +180,7 @@ func (g *Game) Update() error {
 	}
 	_ = ate
 	g.updatePlay()
+	g.dispatchFX()
 	g.fx.Update()
 	return nil
 }
@@ -167,9 +193,16 @@ func (g *Game) Draw(screen *ebiten.Image) {
 		vector.DrawFilledCircle(screen, float32(e.x), float32(e.y), float32(e.r), color.RGBA{220, 70, 90, 255}, false)
 	}
 	for _, b := range g.bullets {
+		vector.StrokeLine(screen, float32(b.x), float32(b.y+16), float32(b.x), float32(b.y),
+			float32(b.r*1.25), color.RGBA{255, 190, 80, 110}, false)
 		vector.DrawFilledCircle(screen, float32(b.x), float32(b.y), float32(b.r), color.RGBA{255, 240, 140, 255}, false)
 	}
-	hero.DrawCentered(screen, g.shipX, g.shipY, 36)
+	recoil := 0.0
+	if !g.recoil.Done() {
+		recoil = math.Sin(g.recoil.Progress()*math.Pi) * 0.15
+	}
+	hero.DrawCenteredPose(screen, g.shipX, g.shipY+recoil*18, 36,
+		hero.Pose{ScaleX: 1 + recoil, ScaleY: 1 - recoil})
 	g.fx.Draw(screen)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("score %d  lives %d", g.score, g.lives), 12, int(g.sy)+6)
 	if g.over {

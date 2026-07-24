@@ -53,7 +53,7 @@
 <small>このステップで学ぶこと</small>
 <strong>盤面への合成と行の圧縮</strong>
 </div>
-</section>
+</section><!-- genre-presentation-bridge:start --><aside class="genre-presentation-inline"><strong>この章も、演出の基礎は実装済みから始めます。</strong><span>新しい課題は回転、壁蹴り、固定、ライン判定、ホールドと落下速度です。</span><nav aria-label="参照するVFX設計"><a href="../../visual-effects/vfx-fx-sokoban/"><b>A09</b><span>Plan→Commit→Tween</span></a><a href="../../visual-effects/vfx-fx-breakout/"><b>A06</b><span>削除前スナップショット</span></a><a href="../../visual-effects/vfx-fx-bullethell/"><b>A12</b><span>決定的エフェクト台本</span></a></nav><div class="genre-presentation-inline-contract"><p><b>MOTION BASELINE</b>盤面はライン消去結果へ即確定し、旧行Snapshotを点滅・消散、上の行の落下をTween、得点をCueで見せます。</p><p><b>TEST SEAM</b>回転候補とライン圧縮を純粋関数で試し、消去アニメーション中も確定盤面が一意であること。</p></div></aside><!-- genre-presentation-bridge:end -->
 
 <section class="play lesson-play"><div class="section-head"><div><p class="eyebrow">PLAYABLE / WEBASSEMBLY</p><h2>2マスのピースで4行を完成させよう。</h2></div><p>← →または画面ボタンで移動、↓かSpaceで落下。空いた2マスを埋めると行が消えます。</p></div><div class="game-shell"><div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP 04</span></div><div id="game-wrap"><iframe class="lesson-game-frame" title="固定とライン消去" src="../../../../play/lock-lines/" allow="autoplay; fullscreen"></iframe></div></div></section>
 <!-- BEGIN BEGINNER BRIDGE -->

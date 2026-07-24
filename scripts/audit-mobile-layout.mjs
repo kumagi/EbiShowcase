@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { spawn } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { tmpdir } from "node:os";
 import { extname, join, relative, resolve, sep } from "node:path";
@@ -16,6 +16,7 @@ const routeArg = valueAfter("--routes");
 const routePattern = routeArg ? new RegExp(routeArg) : null;
 const viewportWidth = Number(valueAfter("--width") || 390);
 const viewportHeight = Number(valueAfter("--height") || 844);
+const screenshotDir = valueAfter("--screenshot-dir");
 if (!Number.isInteger(viewportWidth) || viewportWidth < 280 || !Number.isInteger(viewportHeight) || viewportHeight < 480) {
   throw new Error("--width and --height must be integer phone viewport dimensions.");
 }
@@ -156,6 +157,7 @@ const auditExpression = `new Promise(async resolveAudit => {
   await new Promise(done => requestAnimationFrame(() => requestAnimationFrame(done)));
   const viewport = document.documentElement.clientWidth;
   const visible = element => {
+    if (element.matches(".sr-only,[aria-hidden='true'],input[type='file']")) return false;
     const style = getComputedStyle(element);
     const rect = element.getBoundingClientRect();
     return style.display !== "none" && style.visibility !== "hidden" && rect.width > 0 && rect.height > 0;
@@ -185,7 +187,11 @@ const auditExpression = `new Promise(async resolveAudit => {
     }
     if (element.scrollWidth > element.clientWidth + 1 && /auto|scroll/.test(style.overflowX)) {
       scrollers.push({ element: label(element), client: element.clientWidth, scroll: element.scrollWidth });
-    } else if (element.scrollWidth > element.clientWidth + 1) {
+    } else if (
+      element.scrollWidth > element.clientWidth + 1
+      && /hidden|clip/.test(style.overflowX)
+      && style.textOverflow !== "ellipsis"
+    ) {
       innerOverflow.push({ element: label(element), client: element.clientWidth, scroll: element.scrollWidth, overflow: style.overflowX });
     }
   }
@@ -218,6 +224,7 @@ const chrome = spawn(chromePath(), [
 ], { stdio: "ignore" });
 
 const findings = [];
+if (screenshotDir) mkdirSync(screenshotDir, { recursive: true });
 try {
   const debuggerURL = await waitForDebugger(debugPort);
   const cdp = new CDP(debuggerURL);
@@ -234,7 +241,14 @@ try {
     const evaluated = await cdp.send("Runtime.evaluate", { expression: auditExpression, awaitPromise: true, returnByValue: true });
     const result = evaluated.result?.result?.value;
     if (!result) throw new Error(`${route}: layout evaluation failed`);
-    if (result.pageWidth > result.viewport + 1 || result.outside.length || result.scrollers.length) findings.push({ route, ...result });
+    if (screenshotDir) {
+      const captured = await cdp.send("Page.captureScreenshot", { format: "png", captureBeyondViewport: false });
+      const filename = route === "/" ? "index.png" : `${route.replace(/^\/|\/$/g, "").replaceAll("/", "__")}.png`;
+      writeFileSync(join(screenshotDir, filename), Buffer.from(captured.result.data, "base64"));
+    }
+    if (result.pageWidth > result.viewport + 1 || result.outside.length || result.scrollers.length || result.innerOverflow.length) {
+      findings.push({ route, ...result });
+    }
     if (!json && ((index + 1) % 25 === 0 || index + 1 === routes.length)) console.log(`Audited ${index + 1}/${routes.length} pages; ${findings.length} need fixes.`);
   }
   cdp.close();

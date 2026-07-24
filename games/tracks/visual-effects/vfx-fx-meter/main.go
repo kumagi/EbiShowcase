@@ -11,18 +11,21 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/vfxfx"
 	"github.com/kumagi/EbiShowcase/internal/vfxlive"
+	"github.com/kumagi/EbiShowcase/internal/vfxmotion"
 	"github.com/kumagi/EbiShowcase/internal/vfxui"
 )
 
 type game struct {
-	shell   *vfxlive.Shell
-	fx      vfxfx.System
-	marker  float64
-	speed   float64
-	score   int
-	round   int
-	stopped bool
-	label   string
+	shell    *vfxlive.Shell
+	fx       vfxfx.System
+	marker   float64
+	speed    float64
+	score    int
+	round    int
+	stopped  bool
+	label    string
+	grade    vfxmotion.Grade
+	feedback vfxmotion.Tween
 }
 
 func newGame() *game {
@@ -67,22 +70,22 @@ func (g *game) updatePlay() {
 			return
 		}
 		g.stopped = true
-		d := math.Abs(g.marker - cx)
+		g.grade = vfxmotion.JudgeMeter(g.marker, cx)
+		recipe := vfxmotion.RecipeForGrade(g.grade)
+		g.feedback = vfxmotion.NewTween(22 + recipe.Freeze)
+		g.score += recipe.Score
+		g.label = recipe.Label
 		k := g.shell.Get("fx")
-		switch {
-		case d <= 10:
-			g.score += 100
-			g.label = "PERFECT"
-			g.fx.Burst(g.marker, barY, int(28*k), 3.5*k, color.RGBA{120, 255, 200, 255}, true)
-			g.fx.Ring(g.marker, barY, 1.2*k, color.RGBA{180, 255, 220, 255})
-			g.fx.FlashScreen(0.55*k, 60, 220, 180)
-		case d <= 40:
-			g.score += 40
-			g.label = "OK"
-			g.fx.Burst(g.marker, barY, int(12*k), 2.0*k, color.RGBA{255, 210, 90, 255}, true)
+		switch g.grade {
+		case vfxmotion.GradePerfect:
+			g.fx.Burst(g.marker, barY, int(float64(recipe.BurstCount)*k), recipe.BurstSpeed*k, color.RGBA{120, 255, 200, 255}, true)
+			g.fx.Shockwave(g.marker, barY, 1.1*k, color.White, color.RGBA{120, 255, 200, 255})
+			g.fx.FlashScreen(recipe.Flash*k, 60, 220, 180)
+		case vfxmotion.GradeOK:
+			g.fx.Burst(g.marker, barY, int(float64(recipe.BurstCount)*k), recipe.BurstSpeed*k, color.RGBA{255, 210, 90, 255}, true)
+			g.fx.Ring(g.marker, barY, 0.8*k, color.RGBA{255, 230, 130, 255})
 		default:
-			g.label = "MISS"
-			g.fx.Burst(g.marker, barY, int(8*k), 1.0, color.RGBA{130, 130, 140, 255}, false)
+			g.fx.Dust(g.marker, barY+28, 0, int(float64(recipe.BurstCount)*k), color.RGBA{130, 130, 140, 255})
 		}
 		return
 	}
@@ -102,6 +105,9 @@ func (g *game) Update() error {
 	ate := g.shell.Update()
 	if !ate {
 		g.updatePlay()
+	}
+	if !g.feedback.Done() {
+		g.feedback.Advance()
 	}
 	g.fx.Update()
 	st := "RUN"
@@ -124,7 +130,23 @@ func (g *game) Draw(s *ebiten.Image) {
 	vector.DrawFilledRect(s, float32(cx-50), float32(barY-30), 100, 60, color.RGBA{255, 120, 80, 255}, false)
 	vector.DrawFilledRect(s, float32(cx-24), float32(barY-30), 48, 60, color.RGBA{255, 205, 69, 255}, false)
 	vector.DrawFilledRect(s, float32(cx-10), float32(barY-30), 20, 60, color.RGBA{45, 226, 194, 255}, false)
-	vector.DrawFilledRect(s, float32(g.marker-3), float32(barY-42), 6, 84, color.White, false)
+	kick := 0.0
+	if g.stopped && !g.feedback.Done() {
+		t := g.feedback.Progress()
+		kick = math.Sin(t*math.Pi) * 7
+	}
+	vector.DrawFilledRect(s, float32(g.marker-3-kick/2), float32(barY-42-kick), float32(6+kick), float32(84+kick*2), color.White, false)
+	if g.stopped && g.label != "" {
+		width := 96.0 + kick*4
+		banner := color.RGBA{40, 50, 78, 220}
+		if g.grade == vfxmotion.GradePerfect {
+			banner = color.RGBA{20, 120, 100, 235}
+		} else if g.grade == vfxmotion.GradeOK {
+			banner = color.RGBA{130, 92, 20, 235}
+		}
+		vector.DrawFilledRect(s, float32(cx-width/2), float32(barY+58), float32(width), 30, banner, false)
+		ebitenutil.DebugPrintAt(s, g.label, int(cx)-len(g.label)*3, int(barY)+68)
+	}
 	g.fx.Draw(s)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("SCORE %d  ROUND %d  %s", g.score, g.round+1, g.label), 12, int(sy)+8)
 	tip := "TAP STAGE TO STOP"

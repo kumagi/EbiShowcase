@@ -6,6 +6,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/vfxfx"
+	"github.com/kumagi/EbiShowcase/internal/vfxmotion"
 	"image/color"
 	"math"
 )
@@ -20,18 +22,23 @@ type game struct {
 	flags                      []float64
 	grounded, clear            bool
 	visible                    int
+	tick, landFrames           int
+	fx                         vfxfx.System
 }
 
 func newGame() *game {
 	return &game{p: rect{35, 580, 28, 38}, checkpoint: 35, grounds: []rect{{0, 640, 350, 80}, {410, 580, 260, 140}, {735, 640, 310, 80}, {1110, 545, 260, 175}, {1430, 640, 320, 80}, {1810, 565, 250, 155}, {2120, 640, 380, 80}, {180, 505, 100, 20}, {520, 430, 105, 20}, {840, 500, 105, 20}, {1190, 395, 110, 20}, {1530, 480, 110, 20}, {1900, 410, 105, 20}, {2240, 500, 105, 20}}, flags: []float64{780, 1500, 2200}}
 }
 func (g *game) Update() error {
+	g.tick++
 	if g.clear {
 		if restart() {
 			*g = *newGame()
 		}
+		g.fx.Update()
 		return nil
 	}
+	wasGrounded := g.grounded
 	l := ebiten.IsKeyPressed(ebiten.KeyA) || ebiten.IsKeyPressed(ebiten.KeyLeft)
 	r := ebiten.IsKeyPressed(ebiten.KeyD) || ebiten.IsKeyPressed(ebiten.KeyRight)
 	j := inpututil.IsKeyJustPressed(ebiten.KeySpace) || inpututil.IsKeyJustPressed(ebiten.KeyUp)
@@ -76,6 +83,14 @@ func (g *game) Update() error {
 			g.grounded = true
 		}
 	}
+	edges := vfxmotion.DetectGroundEdges(wasGrounded, g.grounded)
+	if edges.Landed {
+		g.landFrames = 8
+		g.fx.Dust(g.p.x-g.camera+g.p.w/2, g.p.y+g.p.h, g.vx, 12, color.RGBA{220, 245, 210, 220})
+	}
+	if g.landFrames > 0 {
+		g.landFrames--
+	}
 	for _, f := range g.flags {
 		if g.p.x > f {
 			g.checkpoint = f
@@ -86,8 +101,9 @@ func (g *game) Update() error {
 		g.p.y = 500
 		g.vx, g.vy = 0, 0
 	}
-	if g.p.x > 2440 {
+	if g.p.x > 2440 && !g.clear {
 		g.clear = true
+		g.fx.Confetti(g.p.x-g.camera, g.p.y, 55)
 	}
 	target := g.p.x - width*.4
 	g.camera = clamp(g.camera+(target-g.camera)*.08, 0, 2020)
@@ -98,6 +114,7 @@ func (g *game) Update() error {
 			g.visible++
 		}
 	}
+	g.fx.Update()
 	return nil
 }
 func (g *game) Draw(s *ebiten.Image) {
@@ -122,7 +139,21 @@ func (g *game) Draw(s *ebiten.Image) {
 		vector.DrawFilledRect(s, float32(x), 500, 5, 140, color.RGBA{240, 245, 250, 255}, false)
 		vector.DrawFilledRect(s, float32(x+5), 505, 48, 30, c, false)
 	}
-	vector.DrawFilledRect(s, float32(g.p.x-g.camera), float32(g.p.y), float32(g.p.w), float32(g.p.h), color.RGBA{240, 73, 89, 255}, false)
+	px, py, pw, ph := g.p.x-g.camera, g.p.y, g.p.w, g.p.h
+	switch vfxmotion.PoseForPlatform(g.vx, g.vy, g.grounded, g.landFrames) {
+	case vfxmotion.LocomotionRun:
+		py += math.Sin(float64(g.tick)*.42) * 2
+	case vfxmotion.LocomotionRise:
+		pw, ph = pw*.88, ph*1.14
+	case vfxmotion.LocomotionFall:
+		pw, ph = pw*1.1, ph*.92
+	case vfxmotion.LocomotionLand:
+		pw, ph = pw*1.18, ph*.82
+	}
+	px += (g.p.w - pw) / 2
+	py += g.p.h - ph
+	vector.DrawFilledRect(s, float32(px), float32(py), float32(pw), float32(ph), color.RGBA{240, 73, 89, 255}, false)
+	g.fx.Draw(s)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("WORLD X %04d   CAMERA %04d   DRAWN %02d", int(g.p.x), int(g.camera), g.visible), 55, 22)
 	ebitenutil.DebugPrintAt(s, "GREEN FLAGS ARE CHECKPOINTS", 145, 48)
 	ebitenutil.DebugPrintAt(s, "MOVE: A/D OR LOWER TOUCH    JUMP: SPACE OR UPPER TOUCH", 50, 685)

@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Rising edge wasOnGround to onGround triggers land FX. Grounded flag is play; dust is fx. Play the demo, add one Go rule, verify it, and apply the idea to your o">
-  <title>Ebi Showcase – Jump &amp; Land Dust</title>
+  <meta name="description" content="Do not emit dust every grounded frame. Compare previous and current physics to create one Landed edge. Derive Idle / Run / Rise / Fall from">
+  <title>Ebi Showcase – Build a Body that Runs, Jumps, and Lands</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-platform/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Jump &amp; Land Dust">
-    <meta property="og:description" content="Rising edge wasOnGround to onGround triggers land FX. Grounded flag is play; dust is fx. Play the demo, add one Go rule, verify it, and apply the idea to your o">
+    <meta property="og:title" content="Ebi Showcase – Build a Body that Runs, Jumps, and Lands">
+    <meta property="og:description" content="Do not emit dust every grounded frame. Compare previous and current physics to create one Landed edge. Derive Idle / Run / Rise / Fall from">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-platform/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-platform.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Jump &amp; Land Dust">
+    <meta property="og:image:alt" content="Build a Body that Runs, Jumps, and Lands">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Jump &amp; Land Dust">
-    <meta name="twitter:description" content="Rising edge wasOnGround to onGround triggers land FX. Grounded flag is play; dust is fx. Play the demo, add one Go rule, verify it, and apply the idea to your o">
+    <meta name="twitter:title" content="Ebi Showcase – Build a Body that Runs, Jumps, and Lands">
+    <meta name="twitter:description" content="Do not emit dust every grounded frame. Compare previous and current physics to create one Landed edge. Derive Idle / Run / Rise / Fall from">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-platform.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Jump &amp; Land Dust">
+    <meta name="twitter:image:alt" content="Build a Body that Runs, Jumps, and Lands">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -44,22 +44,35 @@
 
     <section class="overview-hero">
       <p class="eyebrow">★★★★★ / PLAYABLE</p>
-      <h1>Jump & Land Dust</h1>
-      <p>Rising edge wasOnGround to onGround triggers land FX. Grounded flag is play; dust is fx.</p>
-      <div class="overview-concept"><small>What you learn here</small><strong>Landing events & dust</strong></div>
+      <h1>Build a Body that Runs, Jumps, and Lands</h1>
+      <p>Do not emit dust every grounded frame. Compare previous and current physics to create one Landed edge. Derive Idle / Run / Rise / Fall from velocity and grounded, retaining only Landing as a short pose. Run bob, rise stretch, fall width, and landing squash stay outside collision.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Drive poses from state edges</strong></div>
     </section>
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
-    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED-FX DESIGN RULE</p><h2>Separate the answer<br>from the time used to show it.</h2><p><code>updatePlay()</code> first commits the correct collision, score, or board. It hands that fact across once as a value or event. Presentation then advances interpolation, poses, trails, and particles. <code>Draw</code> only reads state; it never edits score or coordinates. This boundary supports both a rich screen and unit tests that need no GPU.</p></section>
+    <section class="vfx-pattern" aria-labelledby="pattern-vfx-fx-platform">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">PATTERN A10 / EDGE-DRIVEN POSE MACHINE</p><h2 id="pattern-vfx-fx-platform">Edge-driven Pose Machine</h2></div>
+          <p>Emitting FX every grounded tick spams dust, while hand-written pose flags drift from physics.</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="State flow">
+          <span>resolve physics</span><b>→</b><span>grounded edge</span><b>→</b><span>Locomotion</span><b>→</b><span>pose Tween</span><b>→</b><span>squash + dust</span>
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>Physics owns durable state; landPulse owns the transient</h3><p>Idle/Run/Rise/Fall derive every tick. Only Land needs a Tween because it has a visible duration.</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>Guarantee once-only edges and pose mapping</h3><ul><li>false→true emits one Landed</li><li>airborne vy<0 selects Rise</li><li>active landPulse overrides with Land</li></ul></article>
+        </div>
+      </section>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Jump and land</h2></div>
-        <p>Jump/land dust is fx; grounded tests are play.</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Compare run, rise, fall, and land shapes</h2></div>
+        <p>Run breathes, rise stretches, fall widens, and land squashes. Double wave and bilateral dust occur only on the landing edge.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A10</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="Jump & Land Dust" src="../../../../play/vfx-fx-platform/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Build a Body that Runs, Jumps, and Lands" src="../../../../play/vfx-fx-platform/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -71,83 +84,86 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / EDGE TRIGGER</p>
-        <h2>Not every tick—<br>the moment it changes</h2>
-        <p class="lesson-lead">Bursting while grounded forever makes a smoke factory. Fire once on the edge.</p>
+        <p class="eyebrow">DEEP DIVE / EDGE-DRIVEN POSE MACHINE</p>
+        <h2>How does a continuous state<br>yield one landing?</h2>
+        <p class="lesson-lead">grounded is physics state; landed is its change. DetectGroundEdges(was, now) returns Landed / TookOff. Only Landed starts Shockwave, Dust, and landPulse. PoseForPlatform reads velocity and grounded to return a display enum.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>Physics</h3>
-          <p>Vel, platforms, grounded.</p>
-          <code>onGround bool</code>
+          <h3>State vs edge</h3>
+          <p>Only grounded false→true is Landed.</p>
+          <code>DetectGroundEdges</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>Edge</h3>
-          <p>false→true = land.</p>
-          <code>landed := !was &amp;&amp; on</code>
+          <h3>Pose enum</h3>
+          <p>Derive Idle/Run/Rise/Fall from physics.</p>
+          <code>PoseForPlatform</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>FX</h3>
-          <p>Dust only then.</p>
-          <code>fx.Burst</code>
+          <h3>Short landing pose</h3>
+          <p>Squash only during landPulse.</p>
+          <code>LocomotionLand</code>
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-platform">
+      <div class="motion-lab" data-lab="architecture-trace" aria-labelledby="lab-title-vfx-fx-platform">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / SPLIT</p>
-          <h3 id="lab-title-vfx-fx-platform">Once per edge</h3>
-          <p>Held is not repeating events.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Advance FX 1 tick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <p class="eyebrow">TRACE IT / RULE → MOTION → PIXELS</p>
+          <h3 id="lab-title-vfx-fx-platform">Count events from a grounded sequence</h3>
+          <p>For false,false,true,true,false, verify exactly one Landed and one TookOff.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-architecture-step>Next state →</button><button type="button" class="lab-button lab-button-quiet" data-lab-architecture-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play (rules / score)</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx (sparks)</h4><ul data-lab-fx-list></ul></div>
-          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
+          <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>resolve physics</span><i>→</i><span data-lab-architecture-node><b>2</b>grounded edge</span><i>→</i><span data-lab-architecture-node><b>3</b>Locomotion</span><i>→</i><span data-lab-architecture-node><b>4</b>pose Tween</span><i>→</i><span data-lab-architecture-node><b>5</b>squash + dust</span></div>
+          <div class="lab-architecture-boundary"><small>Boundary to protect</small><strong data-lab-architecture-boundary>false→true emits one Landed</strong></div>
         </div>
-        <p class="lab-fx-hint" data-lab-fx-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>score (play)</span><strong data-lab-score>—</strong></div><div><span>sparks (fx)</span><strong data-lab-fx-n>—</strong></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>current step</span><strong data-lab-architecture-index>—</strong></div><div><span>state owner</span><strong data-lab-architecture-owner>—</strong></div></div>
         </div>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>Compare last frame</h3>
-          <p>State deltas become events.</p>
+          <h3>Find edges after physics resolution</h3>
+          <p>Commit grounded after collision, compare it to the previous state, then choose presentation Pose.</p>
         </div>
-        <pre><code>landed := !g.wasGround &amp;&amp; g.onGround
-g.wasGround = g.onGround
-if landed { g.fx.Burst(g.x, g.y+h, 20, 2.5, dust, true) }</code></pre>
+        <pre><code>wasGrounded := g.onGround
+g.resolvePhysics()
+edges := vfxmotion.DetectGroundEdges(wasGrounded, g.onGround)
+if edges.Landed {
+    g.landPulse = vfxmotion.NewTween(10)
+    g.fx.Dust(feetX, feetY, g.vx, 14, dust)
+}
+g.pose = vfxmotion.PoseForPlatform(g.vx, g.vy, g.onGround, landFrames)</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY EDGE?</p>
-          <h3>No spam</h3>
-          <p>Don't event every grounded frame.</p>
+          <p class="eyebrow">TEST THE CONTRACT</p>
+          <h3>Test state sequences and velocity tables</h3>
+          <p>Test edge detection as bool sequences and Pose mapping as vx/vy/grounded rows.</p>
         </article>
         <article>
-          <p class="eyebrow">WHY?</p>
-          <h3>Physics first</h3>
-          <p>Movement is the genre core.</p>
+          <p class="eyebrow">FAILURE MODE</p>
+          <h3>Never update wasGrounded in Draw</h3>
+          <p>Draw count and hidden windows would change event count, destroying replay and tests.</p>
         </article>
         <article class="challenge">
-          <p class="eyebrow">TRY NEXT</p>
-          <h3>Dungeon</h3>
-          <p>Hit flashes on attack.</p>
+          <p class="eyebrow">DESIGN PAYOFF</p>
+          <h3>Independent of input, AI, and networking</h3>
+          <p>Physics-derived poses work identically for a player, enemy AI, or synchronized remote unit.</p>
         </article>
       </div>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-sokoban/" rel="prev">← STEP A09<strong>Sokoban Dust & Goal Glow</strong></a>
-      <a href="../vfx-fx-dungeon/" rel="next">STEP A11 →<strong>Dungeon Hit Flashes</strong></a>
+      <a href="../vfx-fx-sokoban/" rel="prev">← STEP A09<strong>Show One Sokoban Move Smoothly</strong></a>
+      <a href="../vfx-fx-dungeon/" rel="next">STEP A11 →<strong>Split One Hit into Layers of Time</strong></a>
     </nav>
 
     <section class="feedback-section" aria-labelledby="feedback-title">

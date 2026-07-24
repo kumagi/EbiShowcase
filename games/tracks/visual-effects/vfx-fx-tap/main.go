@@ -12,6 +12,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kumagi/EbiShowcase/internal/vfxfx"
 	"github.com/kumagi/EbiShowcase/internal/vfxlive"
+	"github.com/kumagi/EbiShowcase/internal/vfxmotion"
 	"github.com/kumagi/EbiShowcase/internal/vfxui"
 )
 
@@ -25,6 +26,9 @@ type game struct {
 	score      int
 	framesLeft int
 	over       bool
+	hitX, hitY float64
+	hitEcho    vfxmotion.Tween
+	showEcho   bool
 }
 
 func newGame() *game {
@@ -54,6 +58,7 @@ func (g *game) reset() {
 	g.over = false
 	g.r = 36
 	g.fx = vfxfx.System{}
+	g.showEcho = false
 	g.moveTarget()
 }
 
@@ -89,18 +94,22 @@ func (g *game) updatePlay() {
 	if y < sy || y > sy+sh {
 		return
 	}
-	hit := math.Hypot(x-g.cx, y-g.cy) <= g.r
+	result := vfxmotion.ResolveTap(x, y, g.cx, g.cy, g.r)
 	k := g.intensity()
-	if hit {
-		g.score++
+	if result.Outcome == vfxmotion.TapHit {
+		g.score += result.ScoreDelta
 		g.r = math.Max(20, 36-float64(g.score)*0.4)
 		n := int(18 * k)
-		g.fx.Burst(g.cx, g.cy, n, 2.8*k, color.RGBA{120, 240, 220, 255}, true)
-		g.fx.Ring(g.cx, g.cy, 0.9*k, color.RGBA{180, 255, 240, 255})
+		g.hitX, g.hitY = result.X, result.Y
+		g.hitEcho = vfxmotion.NewTween(14)
+		g.showEcho = true
+		g.fx.Burst(result.X, result.Y, n, 2.8*k, color.RGBA{120, 240, 220, 255}, true)
+		g.fx.Shockwave(result.X, result.Y, 0.75*k,
+			color.RGBA{235, 255, 250, 255}, color.RGBA{80, 220, 200, 255})
 		g.fx.FlashScreen(0.35*k, 80, 200, 180)
 		g.moveTarget()
 	} else {
-		g.fx.Burst(x, y, int(6*k), 1.2, color.RGBA{140, 140, 150, 255}, false)
+		g.fx.Dust(result.X, result.Y, 0, int(6*k), color.RGBA{140, 140, 150, 255})
 	}
 }
 
@@ -108,6 +117,12 @@ func (g *game) Update() error {
 	ate := g.shell.Update()
 	if !ate {
 		g.updatePlay()
+	}
+	if g.showEcho {
+		g.hitEcho.Advance()
+		if g.hitEcho.Done() {
+			g.showEcho = false
+		}
 	}
 	g.fx.Update() // separate
 	g.shell.SetToken("n", fmt.Sprintf("%d", g.fx.Count()))
@@ -121,6 +136,13 @@ func (g *game) Draw(s *ebiten.Image) {
 	pulse := 0.75 + 0.25*math.Sin(float64(g.framesLeft)*0.12)
 	vector.DrawFilledCircle(s, float32(g.cx), float32(g.cy), float32(g.r*pulse), color.RGBA{45, 226, 194, 220}, false)
 	vector.StrokeCircle(s, float32(g.cx), float32(g.cy), float32(g.r+6), 2, color.RGBA{120, 240, 220, 160}, false)
+	if g.showEcho {
+		t := vfxmotion.EaseOutCubic(g.hitEcho.Progress())
+		radius := g.r * (1 + t*0.55)
+		alpha := uint8(210 * (1 - t))
+		vector.StrokeCircle(s, float32(g.hitX), float32(g.hitY), float32(radius), 5,
+			color.RGBA{210, 255, 245, alpha}, false)
+	}
 	g.fx.Draw(s)
 	msg := fmt.Sprintf("SCORE %d   TIME %.1fs", g.score, float64(g.framesLeft)/60)
 	if g.over {

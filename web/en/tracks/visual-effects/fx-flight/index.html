@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Velocity and gravity are play physics. Flap sparks and pass rings are fx. A Game.fx field should feel natural now. Play the demo, add one Go rule, verify it, an">
-  <title>Ebi Showcase – Flight with Whoosh FX</title>
+  <meta name="description" content="vy is enough for collision but not for a player reading rise, stall, and fall. Feed velocity, frames since flap, and crash state to PoseForF">
+  <title>Ebi Showcase – Translate Flight Physics into Pose</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-flight/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Flight with Whoosh FX">
-    <meta property="og:description" content="Velocity and gravity are play physics. Flap sparks and pass rings are fx. A Game.fx field should feel natural now. Play the demo, add one Go rule, verify it, an">
+    <meta property="og:title" content="Ebi Showcase – Translate Flight Physics into Pose">
+    <meta property="og:description" content="vy is enough for collision but not for a player reading rise, stall, and fall. Feed velocity, frames since flap, and crash state to PoseForF">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-flight/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-flight.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Flight with Whoosh FX">
+    <meta property="og:image:alt" content="Translate Flight Physics into Pose">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Flight with Whoosh FX">
-    <meta name="twitter:description" content="Velocity and gravity are play physics. Flap sparks and pass rings are fx. A Game.fx field should feel natural now. Play the demo, add one Go rule, verify it, an">
+    <meta name="twitter:title" content="Ebi Showcase – Translate Flight Physics into Pose">
+    <meta name="twitter:description" content="vy is enough for collision but not for a player reading rise, stall, and fall. Feed velocity, frames since flap, and crash state to PoseForF">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-flight.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Flight with Whoosh FX">
+    <meta name="twitter:image:alt" content="Translate Flight Physics into Pose">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -43,23 +43,36 @@
     <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>ADV A04</span></div>
 
     <section class="overview-hero">
-      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
-      <h1>Flight with Whoosh FX</h1>
-      <p>Velocity and gravity are play physics. Flap sparks and pass rings are fx. A Game.fx field should feel natural now.</p>
-      <div class="overview-concept"><small>What you learn here</small><strong>Physics vs FX</strong></div>
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Translate Flight Physics into Pose</h1>
+      <p>vy is enough for collision but not for a player reading rise, stall, and fall. Feed velocity, frames since flap, and crash state to PoseForFlight to derive rotation and squash. Add wind streaks, flap sparks, and gate confetti without touching gravity.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Derive pose from physics</strong></div>
     </section>
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
-    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED-FX DESIGN RULE</p><h2>Separate the answer<br>from the time used to show it.</h2><p><code>updatePlay()</code> first commits the correct collision, score, or board. It hands that fact across once as a value or event. Presentation then advances interpolation, poses, trails, and particles. <code>Draw</code> only reads state; it never edits score or coordinates. This boundary supports both a rich screen and unit tests that need no GPU.</p></section>
+    <section class="vfx-pattern" aria-labelledby="pattern-vfx-fx-flight">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">PATTERN A04 / DERIVED POSE</p><h2 id="pattern-vfx-fx-flight">Pose Derived from Physics</h2></div>
+          <p>A separately hand-written animationState can show falling art while physics is rising.</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="State flow">
+          <span>birdY + vy</span><b>→</b><span>framesSinceFlap</span><b>→</b><span>FlightPose</span><b>→</b><span>PoseTransform</span><b>→</b><span>sprite + wind</span>
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>Store only time since the flap</h3><p>Glide and Dive derive from vy. Avoid duplicated state; keep only the short aftertaste of the input event.</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>Test the display function without changing physics</h3><ul><li>the first seven frames select Flap</li><li>large positive vy selects Dive</li><li>crashed always selects Crash</li></ul></article>
+        </div>
+      </section>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Fly through pipes</h2></div>
-        <p>Tap to flap. Passing a gate fires big rings + bursts. Physics is play; sparkles are fx—read LIVE GO.</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Read the body from flap to dive</h2></div>
+        <p>A fresh flap stretches upward; a fast fall tilts forward. Gate passes add double waves and confetti; crashes add a red shockwave.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A04</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="Flight with Whoosh FX" src="../../../../play/vfx-fx-flight/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Translate Flight Physics into Pose" src="../../../../play/vfx-fx-flight/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -71,84 +84,84 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / PHYSICS ≠ FX</p>
-        <h2>Falling force vs<br>visible wind</h2>
-        <p class="lesson-lead">vy += gravity is world rules. Burst is juice. Mix them and disabling FX can break physics.</p>
+        <p class="eyebrow">DEEP DIVE / DERIVED POSE</p>
+        <h2>How do physics numbers<br>become body language?</h2>
+        <p class="lesson-lead">birdY and vy are play truth. FlightPose and PoseTransform are disposable presentation values derived every tick. They need no save state or collider. DrawCenteredPose keeps the center stable while applying rotation and scale.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>Physics</h3>
-          <p>Pos, vel, gravity, hits.</p>
-          <code>vy += gravity</code>
+          <h3>Physics truth</h3>
+          <p>Gravity and flap update vy.</p>
+          <code>birdY += vy</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>FX</h3>
-          <p>Whoosh sparks, pass rings.</p>
-          <code>fx.Burst on flap</code>
+          <h3>Derived pose</h3>
+          <p>vy and age select Flap / Glide / Dive.</p>
+          <code>PoseForFlight(...)</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>Structure</h3>
-          <p>Game owns both; updates stay split.</p>
-          <code>g.fx System</code>
+          <h3>Draw transform</h3>
+          <p>Apply rotation and scale to the image only.</p>
+          <code>DrawCenteredPose</code>
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-flight">
+      <div class="motion-lab" data-lab="architecture-trace" aria-labelledby="lab-title-vfx-fx-flight">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / PHYSICS vs FX</p>
-          <h3 id="lab-title-vfx-fx-flight">Falling force ≠ fireworks</h3>
-          <p>Same two boxes as the hit lab. Here gravity/pipes are play; flap sparks and gate fireworks are fx. Imagine turning only one off.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Advance FX 1 tick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <p class="eyebrow">TRACE IT / RULE → MOTION → PIXELS</p>
+          <h3 id="lab-title-vfx-fx-flight">The same vy always yields the same pose</h3>
+          <p>Hold velocity fixed and compare fresh flap, glide, dive, and crash. Never modify the birdY equation to tune a pose.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-architecture-step>Next state →</button><button type="button" class="lab-button lab-button-quiet" data-lab-architecture-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play (rules / score)</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx (sparks)</h4><ul data-lab-fx-list></ul></div>
-          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
+          <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>birdY + vy</span><i>→</i><span data-lab-architecture-node><b>2</b>framesSinceFlap</span><i>→</i><span data-lab-architecture-node><b>3</b>FlightPose</span><i>→</i><span data-lab-architecture-node><b>4</b>PoseTransform</span><i>→</i><span data-lab-architecture-node><b>5</b>sprite + wind</span></div>
+          <div class="lab-architecture-boundary"><small>Boundary to protect</small><strong data-lab-architecture-boundary>the first seven frames select Flap</strong></div>
         </div>
-        <p class="lab-fx-hint" data-lab-fx-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>score (play)</span><strong data-lab-score>—</strong></div><div><span>sparks (fx)</span><strong data-lab-fx-n>—</strong></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>current step</span><strong data-lab-architecture-index>—</strong></div><div><span>state owner</span><strong data-lab-architecture-owner>—</strong></div></div>
         </div>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>Call Burst once on flap</h3>
-          <p>Don’t bury Burst inside the physics integrator.</p>
+          <h3>Derive pose just before drawing</h3>
+          <p>Keep animationFrame out of physics; pass physics values and only the short flap-age clock.</p>
         </div>
-        <pre><code>func (g *Game) flap() {
-  g.vy = jumpV          // physics (play)
-  g.fx.Burst(g.x, g.y…) // juice (fx)
-}</code></pre>
+        <pre><code>g.vy += gravity
+g.birdY += g.vy // collision truth
+
+_, pose := vfxmotion.PoseForFlight(g.vy, g.sinceFlap, g.gameOver)
+hero.DrawCenteredPose(screen, birdX, g.birdY, 42,
+    hero.Pose{Rotation: pose.Rotation, ScaleX: pose.ScaleX, ScaleY: pose.ScaleY})</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY ISOLATE?</p>
-          <h3>Playable without juice</h3>
-          <p>Ideally the game still works with FX off.</p>
+          <p class="eyebrow">TEST THE CONTRACT</p>
+          <h3>Table-test velocity × age × crash</h3>
+          <p>Fresh flap, slow glide, fast fall, and crashed inputs should map to their expected Pose.</p>
         </article>
         <article>
-          <p class="eyebrow">WHY FIELD?</p>
-          <h3>Findable</h3>
-          <p>Search fx and you find every effect.</p>
+          <p class="eyebrow">FAILURE MODE</p>
+          <h3>Do not collide the rotated art</h3>
+          <p>Feeding visual rotation into collision turns an art tweak into a difficulty change.</p>
         </article>
         <article class="challenge">
-          <p class="eyebrow">TRY NEXT</p>
-          <h3>Pong</h3>
-          <p>Next: sparks on bounce, trails while moving.</p>
+          <p class="eyebrow">DESIGN PAYOFF</p>
+          <h3>Reuse for enemies, vehicles, and projectiles</h3>
+          <p>Deriving display pose from a physics vector works for planes, fish, and knocked-back characters.</p>
         </article>
       </div>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-catch/" rel="prev">← STEP A03<strong>Catch Stars—Then Notice the Split</strong></a>
-      <a href="../vfx-fx-pong/" rel="next">STEP A05 →<strong>Pong Sparks & Trails</strong></a>
+      <a href="../vfx-fx-catch/" rel="prev">← STEP A03<strong>Fly a Caught Star to the HUD</strong></a>
+      <a href="../vfx-fx-pong/" rel="next">STEP A05 →<strong>Turn Ball History into a Safe Trail</strong></a>
     </nav>
 
     <section class="feedback-section" aria-labelledby="feedback-title">

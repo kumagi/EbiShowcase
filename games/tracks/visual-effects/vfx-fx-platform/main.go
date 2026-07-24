@@ -13,6 +13,7 @@ import (
 	"github.com/kumagi/EbiShowcase/internal/hero"
 	"github.com/kumagi/EbiShowcase/internal/vfxfx"
 	"github.com/kumagi/EbiShowcase/internal/vfxlive"
+	"github.com/kumagi/EbiShowcase/internal/vfxmotion"
 	"github.com/kumagi/EbiShowcase/internal/vfxui"
 )
 
@@ -25,11 +26,13 @@ type Game struct {
 	vx, vy        float64
 	plats         []rect
 	onGround      bool
-	wasGround     bool
 	coins         []rect
 	got, goal     int
 	over, cleared bool
 	sy, sh        float64
+	landPulse     vfxmotion.Tween
+	pose          vfxmotion.Locomotion
+	runFrame      int
 }
 
 func newGame() *Game {
@@ -108,13 +111,13 @@ func (g *Game) updatePlay() {
 		g.vy = -g.shell.Get("jump")
 		g.onGround = false
 		fx := g.shell.Get("fx")
-		g.fx.Burst(g.player.x+g.player.w/2, g.player.y+g.player.h, int(14*fx), 2.2*fx, color.RGBA{200, 180, 140, 255}, false)
+		g.fx.Dust(g.player.x+g.player.w/2, g.player.y+g.player.h, -g.vx, int(14*fx), color.RGBA{200, 180, 140, 255})
 	}
 	g.vy += 0.55
 	g.player.x += g.vx
 	g.player.y += g.vy
 	g.player.x = math.Max(0, math.Min(480-g.player.w, g.player.x))
-	g.wasGround = g.onGround
+	wasGround := g.onGround
 	g.onGround = false
 	for _, p := range g.plats {
 		if overlap(g.player, p) && g.vy >= 0 && g.player.y+g.player.h-g.vy <= p.y+4 {
@@ -123,19 +126,31 @@ func (g *Game) updatePlay() {
 			g.onGround = true
 		}
 	}
-	if g.onGround && !g.wasGround {
+	edges := vfxmotion.DetectGroundEdges(wasGround, g.onGround)
+	if edges.Landed {
 		fx := g.shell.Get("fx")
 		cx := g.player.x + g.player.w/2
 		cy := g.player.y + g.player.h
-		g.fx.Ring(cx, cy, 0.55*fx, color.RGBA{220, 200, 160, 255})
-		g.fx.Burst(cx, cy, int(8*fx), 1.4*fx, color.RGBA{180, 170, 140, 255}, false)
+		g.landPulse = vfxmotion.NewTween(10)
+		g.fx.Shockwave(cx, cy, 0.38*fx, color.RGBA{235, 220, 190, 255}, color.RGBA{160, 150, 125, 255})
+		g.fx.Dust(cx, cy, g.vx, int(14*fx), color.RGBA{180, 170, 140, 255})
 	}
+	if !g.landPulse.Done() {
+		g.landPulse.Advance()
+	}
+	landedFrames := 0
+	if !g.landPulse.Done() {
+		landedFrames = g.landPulse.Frames - g.landPulse.Frame
+	}
+	g.pose = vfxmotion.PoseForPlatform(g.vx, g.vy, g.onGround, landedFrames)
+	g.runFrame++
 	keep := g.coins[:0]
 	for _, c := range g.coins {
 		if overlap(g.player, c) {
 			g.got++
 			fx := g.shell.Get("fx")
 			g.fx.Burst(c.x+6, c.y+6, int(12*fx), 2*fx, color.RGBA{255, 220, 80, 255}, true)
+			g.fx.Ring(c.x+6, c.y+6, 0.45*fx, color.RGBA{255, 235, 130, 255})
 			continue
 		}
 		keep = append(keep, c)
@@ -144,6 +159,7 @@ func (g *Game) updatePlay() {
 	if g.got >= g.goal {
 		g.cleared = true
 		g.fx.FlashScreen(0.45, 255, 220, 80)
+		g.fx.Confetti(g.player.x+g.player.w/2, g.player.y, int(36*g.shell.Get("fx")))
 	}
 	if g.player.y > g.sy+g.sh+40 {
 		g.over = true
@@ -177,7 +193,20 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	for _, c := range g.coins {
 		vector.DrawFilledCircle(screen, float32(c.x+6), float32(c.y+6), 7, color.RGBA{255, 210, 60, 255}, false)
 	}
-	hero.DrawBottomCentered(screen, g.player.x+g.player.w/2, g.player.y+g.player.h, g.player.h+4)
+	pose := hero.Pose{}
+	switch g.pose {
+	case vfxmotion.LocomotionRun:
+		bob := math.Sin(float64(g.runFrame)*0.38) * 0.05
+		pose.ScaleX, pose.ScaleY = 1-bob, 1+bob
+	case vfxmotion.LocomotionRise:
+		pose.ScaleX, pose.ScaleY = 0.9, 1.13
+	case vfxmotion.LocomotionFall:
+		pose.ScaleX, pose.ScaleY = 1.08, 0.94
+	case vfxmotion.LocomotionLand:
+		squash := math.Sin(g.landPulse.Progress()*math.Pi) * 0.18
+		pose.ScaleX, pose.ScaleY = 1+squash, 1-squash
+	}
+	hero.DrawBottomCenteredPose(screen, g.player.x+g.player.w/2, g.player.y+g.player.h, g.player.h+4, pose)
 	g.fx.Draw(screen)
 	ebitenutil.DebugPrintAt(screen, fmt.Sprintf("coins %d/%d", g.got, g.goal), 12, int(g.sy)+6)
 	if g.cleared {

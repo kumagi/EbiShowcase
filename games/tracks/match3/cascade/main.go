@@ -2,11 +2,15 @@ package main
 
 import (
 	"fmt"
+	"image/color"
+	"math"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
-	"image/color"
+	"github.com/kumagi/EbiShowcase/internal/vfxfx"
+	"github.com/kumagi/EbiShowcase/internal/vfxmotion"
 )
 
 const width, height = 480, 720
@@ -16,12 +20,22 @@ const empty = -1
 var colors = []color.RGBA{{239, 93, 87, 255}, {73, 161, 230, 255}, {244, 184, 64, 255}, {105, 194, 119, 255}, {177, 94, 218, 255}}
 
 type point struct{ x, y int }
+
+type clearedGem struct {
+	point
+	kind int
+}
+
 type game struct {
 	board               [rows][cols]int
 	marked              map[point]bool
 	combo, score, round int
 	settled, clear      bool
 	message             string
+	fx                  vfxfx.System
+	cleared             []clearedGem
+	cascadeTween        vfxmotion.Tween
+	animating           bool
 }
 
 func newGame() *game { g := &game{}; g.seed(); return g }
@@ -40,6 +54,15 @@ func (g *game) seed() {
 	g.message = "Press RESOLVE to clear the first match."
 }
 func (g *game) Update() error {
+	if g.animating {
+		g.cascadeTween.Advance()
+		g.fx.Update()
+		if g.cascadeTween.Done() {
+			g.animating = false
+			g.cleared = g.cleared[:0]
+		}
+		return nil
+	}
 	if g.clear {
 		if restart() {
 			*g = *newGame()
@@ -63,6 +86,7 @@ func (g *game) Update() error {
 			g.resolveOne()
 		}
 	}
+	g.fx.Update()
 	return nil
 }
 func (g *game) resolveOne() {
@@ -70,7 +94,17 @@ func (g *game) resolveOne() {
 	g.combo++
 	g.score += count * 10 * g.combo
 	for p := range g.marked {
+		g.cleared = append(g.cleared, clearedGem{point: p, kind: g.board[p.y][p.x]})
 		g.board[p.y][p.x] = empty
+	}
+	g.cascadeTween = vfxmotion.NewTween(24)
+	g.animating = true
+	cx, cy := float64(width)/2, float64(oy+rows*cell/2)
+	g.fx.Shockwave(cx, cy, 0.8+float64(g.combo)*0.12, color.White, color.RGBA{255, 190, 80, 255})
+	for _, gem := range g.cleared {
+		x := float64(ox + gem.x*cell + cell/2)
+		y := float64(oy + gem.y*cell + cell/2)
+		g.fx.Burst(x, y, 5+g.combo*2, 1.6+float64(g.combo)*0.25, colors[gem.kind], true)
 	}
 	g.fall()
 	g.refill()
@@ -148,16 +182,35 @@ func (g *game) Draw(s *ebiten.Image) {
 	ebitenutil.DebugPrintAt(s, g.message, 55, 100)
 	for y := 0; y < rows; y++ {
 		for x := 0; x < cols; x++ {
-			px, py := float32(ox+x*cell), float32(oy+y*cell)
-			vector.DrawFilledRect(s, px+3, py+3, cell-6, cell-6, colors[g.board[y][x]], false)
+			t := 1.0
+			if g.animating {
+				t = vfxmotion.EaseOutCubic(g.cascadeTween.Progress())
+			}
+			px := float32(ox + x*cell)
+			py := float32(float64(oy+y*cell) - (1-t)*float64(cell)*0.7)
+			inset := float32(3 + math.Sin(t*math.Pi)*3)
+			vector.DrawFilledRect(s, px+inset, py+inset, cell-inset*2, cell-inset*2, colors[g.board[y][x]], false)
 			if g.marked[point{x, y}] {
 				vector.StrokeRect(s, px+2, py+2, cell-4, cell-4, 6, color.White, false)
 			}
 		}
 	}
+	if g.animating {
+		t := vfxmotion.EaseOutCubic(g.cascadeTween.Progress())
+		for _, gem := range g.cleared {
+			cx := float32(ox + gem.x*cell + cell/2)
+			cy := float32(oy + gem.y*cell + cell/2)
+			r := float32(cell) * float32(0.42*(1-t))
+			vector.DrawFilledCircle(s, cx, cy, r, colors[gem.kind], false)
+			vector.StrokeCircle(s, cx, cy, r+float32(t*18), 3, color.White, false)
+		}
+	}
+	g.fx.Draw(s)
 	vector.DrawFilledRect(s, 55, 615, 370, 65, color.RGBA{240, 177, 65, 255}, false)
 	label := "RESOLVE NEXT MATCH [SPACE]"
-	if g.settled {
+	if g.animating {
+		label = fmt.Sprintf("CASCADE x%d — RESOLVING", g.combo)
+	} else if g.settled {
 		label = "NEXT MOVE [SPACE]"
 	}
 	ebitenutil.DebugPrintAt(s, label, 135, 642)

@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Advanced finale. A bomb deletes nearby bullets (play) and spawns a huge Ring/Flash (fx). Don't recycle live bullets as fireworks—delete, the">
-  <title>Ebi Showcase – Bomb Clears Bullets—Explosions Are FX</title>
+  <meta name="description" content="The finale layers several effects over time. Rules delete in-range bullets in the same tick and convert their count to score. BombScript the">
+  <title>Ebi Showcase – Script a Full-screen Bomb Sequence</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-bullethell/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Bomb Clears Bullets—Explosions Are FX">
-    <meta property="og:description" content="Advanced finale. A bomb deletes nearby bullets (play) and spawns a huge Ring/Flash (fx). Don't recycle live bullets as fireworks—delete, the">
+    <meta property="og:title" content="Ebi Showcase – Script a Full-screen Bomb Sequence">
+    <meta property="og:description" content="The finale layers several effects over time. Rules delete in-range bullets in the same tick and convert their count to score. BombScript the">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-bullethell/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-bullethell.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Bomb Clears Bullets—Explosions Are FX">
+    <meta property="og:image:alt" content="Script a Full-screen Bomb Sequence">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Bomb Clears Bullets—Explosions Are FX">
-    <meta name="twitter:description" content="Advanced finale. A bomb deletes nearby bullets (play) and spawns a huge Ring/Flash (fx). Don't recycle live bullets as fireworks—delete, the">
+    <meta name="twitter:title" content="Ebi Showcase – Script a Full-screen Bomb Sequence">
+    <meta name="twitter:description" content="The finale layers several effects over time. Rules delete in-range bullets in the same tick and convert their count to score. BombScript the">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-bullethell.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Bomb Clears Bullets—Explosions Are FX">
+    <meta name="twitter:image:alt" content="Script a Full-screen Bomb Sequence">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -44,22 +44,35 @@
 
     <section class="overview-hero">
       <p class="eyebrow">★★★★★ / PLAYABLE</p>
-      <h1>Bomb Clears Bullets—Explosions Are FX</h1>
-      <p>Advanced finale. A bomb deletes nearby bullets (play) and spawns a huge Ring/Flash (fx). Don't recycle live bullets as fireworks—delete, then celebrate.</p>
-      <div class="overview-concept"><small>What you learn here</small><strong>Bomb clear vs bullets[]</strong></div>
+      <h1>Script a Full-screen Bomb Sequence</h1>
+      <p>The finale layers several effects over time. Rules delete in-range bullets in the same tick and convert their count to score. BombScript then issues freeze and flash at frame 0, shockwave at 1, bullet dissolve at 4, and confetti at 12. Equal Strength and Frame produce equal cue streams for replay and tests.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Script composite FX deterministically</strong></div>
     </section>
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
-    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED-FX DESIGN RULE</p><h2>Separate the answer<br>from the time used to show it.</h2><p><code>updatePlay()</code> first commits the correct collision, score, or board. It hands that fact across once as a value or event. Presentation then advances interpolation, poses, trails, and particles. <code>Draw</code> only reads state; it never edits score or coordinates. This boundary supports both a rich screen and unit tests that need no GPU.</p></section>
+    <section class="vfx-pattern" aria-labelledby="pattern-vfx-fx-bullethell">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">PATTERN A12 / DETERMINISTIC EFFECT SCRIPT</p><h2 id="pattern-vfx-fx-bullethell">Deterministic Composite-effect Script</h2></div>
+          <p>Growing a giant timer switch destroys ordering, simultaneous cues, skipping, and replay tests.</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="State flow">
+          <span>resolve bomb</span><b>→</b><span>remove bullets</span><b>→</b><span>BombScript</span><b>→</b><span>timed Cues</span><b>→</b><span>layered FX</span>
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>Script owns only Frame and timed Cues</h3><p>Dangerous bullets are already absent. clearedBullets is a short-lived display copy discarded when Script completes.</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>Same input yields the same visual commands</h3><ul><li>Frame 0 emits Freeze+Flash</li><li>Frames 1/4/12 keep fixed cue order</li><li>deleted bullet copies never return to collision</li></ul></article>
+        </div>
+      </section>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Dodge and bomb</h2></div>
-        <p>Survive the spiral, bomb to clear. Deletion is play; explosion is fx—compare bullets vs fx.parts.</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Approach bullets and read the bomb layers</h2></div>
+        <p>Dangerous bullets leave collision instantly, followed by pause, white-orange flash, double wave, outline dissolve, and confetti.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A12</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="Bomb Clears Bullets—Explosions Are FX" src="../../../../play/vfx-fx-bullethell/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Script a Full-screen Bomb Sequence" src="../../../../play/vfx-fx-bullethell/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -71,84 +84,84 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / CAPSTONE</p>
-        <h2>Dangerous arrays vs<br>safe fireworks</h2>
-        <p class="lesson-lead">bullets hurt on contact. fx.Parts never should. If you can explain that split in your own words, you cleared the first gate of effect design.</p>
+        <p class="eyebrow">DEEP DIVE / DETERMINISTIC EFFECT SCRIPT</p>
+        <h2>How can a large sequence<br>be replayed and verified?</h2>
+        <p class="lesson-lead">Bomb safety begins with bullets disappearing first. clearedBullets is a presentation copy for dissolve and never re-enters collision. EffectScript is an array of timed Cues advanced once per tick. The particle system also has a cap, preventing mass clears from exploding load.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>Bullets</h3>
-          <p>Dangerous colliders.</p>
-          <code>bullets []</code>
+          <h3>Commit rules first</h3>
+          <p>Delete in-range bullets and score now.</p>
+          <code>bullets = keep</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>Bomb</h3>
-          <p>Rule that deletes them.</p>
-          <code>filter bullets</code>
+          <h3>Timed Cues</h3>
+          <p>Place Freeze/Flash/Wave at explicit frames.</p>
+          <code>BombScript(strength)</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>Fireworks</h3>
-          <p>Safe, looks only.</p>
-          <code>fx.Ring+Burst</code>
+          <h3>Dissolve copy</h3>
+          <p>Draw deleted bullet outlines briefly.</p>
+          <code>clearedBullets</code>
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-bullethell">
+      <div class="motion-lab" data-lab="architecture-trace" aria-labelledby="lab-title-vfx-fx-bullethell">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / SPLIT</p>
-          <h3 id="lab-title-vfx-fx-bullethell">Danger / safe</h3>
-          <p>Left = bullets (hurt), right = sparks (safe).</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Advance FX 1 tick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <p class="eyebrow">TRACE IT / RULE → MOTION → PIXELS</p>
+          <h3 id="lab-title-vfx-fx-bullethell">Run the same Script twice and compare cues</h3>
+          <p>Record Current at each tick and require exact equality. Any randomized particle placement remains outside the Cue contract.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-architecture-step>Next state →</button><button type="button" class="lab-button lab-button-quiet" data-lab-architecture-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play (rules / score)</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx (sparks)</h4><ul data-lab-fx-list></ul></div>
-          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
+          <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>resolve bomb</span><i>→</i><span data-lab-architecture-node><b>2</b>remove bullets</span><i>→</i><span data-lab-architecture-node><b>3</b>BombScript</span><i>→</i><span data-lab-architecture-node><b>4</b>timed Cues</span><i>→</i><span data-lab-architecture-node><b>5</b>layered FX</span></div>
+          <div class="lab-architecture-boundary"><small>Boundary to protect</small><strong data-lab-architecture-boundary>Frame 0 emits Freeze+Flash</strong></div>
         </div>
-        <p class="lab-fx-hint" data-lab-fx-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>score (play)</span><strong data-lab-score>—</strong></div><div><span>sparks (fx)</span><strong data-lab-fx-n>—</strong></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>current step</span><strong data-lab-architecture-index>—</strong></div><div><span>state owner</span><strong data-lab-architecture-owner>—</strong></div></div>
         </div>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>Delete, then celebrate</h3>
-          <p>Same two-step as Breakout destroy.</p>
+          <h3>Replace a giant timer switch with a Cue table</h3>
+          <p>Store what starts on which frame as data and interpret each Cue in a dispatcher.</p>
         </div>
-        <pre><code>// bomb:
-bullets = withoutNear(bullets, x, y, r) // play
-g.fx.FlashScreen(1, 200, 220, 255)
-g.fx.Ring(x, y, 3, white)
-g.fx.Burst(x, y, 80, 6, white, true)   // fx only</code></pre>
+        <pre><code>g.bullets, g.clearedBullets = resolveBomb(g.bullets, center, radius)
+g.bombScript = vfxmotion.BombScript(strength)
+
+for _, cue := range g.bombScript.Current() {
+    g.dispatchCue(cue) // freeze, flash, wave, dissolve, confetti
+}
+g.bombScript.Advance()</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY CAPSTONE?</p>
-          <h3>It all connects</h3>
-          <p>Events, state, slice splits, delete+FX.</p>
+          <p class="eyebrow">TEST THE CONTRACT</p>
+          <h3>Test determinism, immediate deletion, and cap</h3>
+          <p>Separately verify equal Cue streams, fewer bullets immediately after doBomb, and MaxParts enforcement.</p>
         </article>
         <article>
-          <p class="eyebrow">WHY SAFE FX?</p>
-          <h3>No cheap deaths</h3>
-          <p>Dying to clear confetti feels awful.</p>
+          <p class="eyebrow">FAILURE MODE</p>
+          <h3>Never return dissolving bullets to collision</h3>
+          <p>A translucent “safe-looking” bullet that still hurts communicates the opposite of the rule.</p>
         </article>
         <article class="challenge">
-          <p class="eyebrow">TRY NEXT</p>
-          <h3>Your genre track</h3>
-          <p>Carry the same split into specializations.</p>
+          <p class="eyebrow">DESIGN PAYOFF</p>
+          <h3>Use for supers, intros, and boss deaths</h3>
+          <p>Cue scripts make skip, fast-forward, replay, and quality-specific presentation possible from the same facts.</p>
         </article>
       </div>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-dungeon/" rel="prev">← STEP A11<strong>Dungeon Hit Flashes</strong></a>
+      <a href="../vfx-fx-dungeon/" rel="prev">← STEP A11<strong>Split One Hit into Layers of Time</strong></a>
       <a href="../../platformer/" rel="next">Genre tracks →<strong>Pick a game to build</strong></a>
     </nav>
 

@@ -47,7 +47,7 @@
       <h1>円どうしの衝突</h1>
       <p>中心どうしの距離から重なりを調べ、2つの円を正しい方向へ押し戻します。STEP 01 の「床との反発」を、円どうしに広げた一歩です。</p>
       <div class="overview-concept"><small>このステップで学ぶこと</small><strong>中心距離と接触法線</strong></div>
-    </section>
+    </section><!-- genre-presentation-bridge:start --><aside class="genre-presentation-inline"><strong>この章も、演出の基礎は実装済みから始めます。</strong><span>新しい課題は円の衝突解決、めり込み修正、反発、重力、合体サイズ曲線です。</span><nav aria-label="参照するVFX設計"><a href="../../visual-effects/vfx-fx-tap/"><b>A01</b><span>不変の結果イベント</span></a><a href="../../visual-effects/vfx-fx-breakout/"><b>A06</b><span>削除前スナップショット</span></a><a href="../../visual-effects/vfx-fx-shooter/"><b>A08</b><span>イベント列と演出予算</span></a></nav><div class="genre-presentation-inline-contract"><p><b>MOTION BASELINE</b>MergeResultを一回の事実にし、消えた二体のSnapshotから新しい一体への収束を描き、同時合体は予算つき列で処理します。</p><p><b>TEST SEAM</b>同じ初期状態とtick数で同じ合体結果になり、粒数を0にしても半径・得点・ゲームオーバーが一致すること。</p></div></aside><!-- genre-presentation-bridge:end -->
 <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> で学んだ <strong>Update（数字）→ Draw（絵）</strong> のくり返しの上に、新しい部品を1つ足していきます。ここでは円の絵も、当たり判定も、どちらも丸です。</p>
 
 <section class="play lesson-play" id="play">

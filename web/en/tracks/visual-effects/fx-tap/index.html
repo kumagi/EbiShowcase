@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Advanced track starts here. Take LEVEL 01’s tap-the-circle and add hit bursts and rings. Notice updatePlay() then a separate fx.Update().">
-  <title>Ebi Showcase – Add Effects to Tap</title>
+  <meta name="description" content="Do not hide “the instant of a hit” inside a pile of side effects. Resolve the input into a small TapResult value. Score and presentation con">
+  <title>Ebi Showcase – Turn a Tap Result into Motion</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-tap/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Add Effects to Tap">
-    <meta property="og:description" content="Advanced track starts here. Take LEVEL 01’s tap-the-circle and add hit bursts and rings. Notice updatePlay() then a separate fx.Update().">
+    <meta property="og:title" content="Ebi Showcase – Turn a Tap Result into Motion">
+    <meta property="og:description" content="Do not hide “the instant of a hit” inside a pile of side effects. Resolve the input into a small TapResult value. Score and presentation con">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-tap/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-tap.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Add Effects to Tap">
+    <meta property="og:image:alt" content="Turn a Tap Result into Motion">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Add Effects to Tap">
-    <meta name="twitter:description" content="Advanced track starts here. Take LEVEL 01’s tap-the-circle and add hit bursts and rings. Notice updatePlay() then a separate fx.Update().">
+    <meta name="twitter:title" content="Ebi Showcase – Turn a Tap Result into Motion">
+    <meta name="twitter:description" content="Do not hide “the instant of a hit” inside a pile of side effects. Resolve the input into a small TapResult value. Score and presentation con">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-tap.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Add Effects to Tap">
+    <meta name="twitter:image:alt" content="Turn a Tap Result into Motion">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -44,22 +44,35 @@
 
     <section class="overview-hero">
       <p class="eyebrow">★★★★☆ / PLAYABLE</p>
-      <h1>Add Effects to Tap</h1>
-      <p>Advanced track starts here. Take LEVEL 01’s tap-the-circle and add hit bursts and rings. Notice updatePlay() then a separate fx.Update().</p>
-      <div class="overview-concept"><small>What you learn here</small><strong>Spawn FX on events</strong></div>
+      <h1>Turn a Tap Result into Motion</h1>
+      <p>Do not hide “the instant of a hit” inside a pile of side effects. Resolve the input into a small TapResult value. Score and presentation consume the same fact once. Target echo, squash, a double shockwave, and particles can grow without growing the hit test.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Pass one immutable result</strong></div>
     </section>
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
-    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED-FX DESIGN RULE</p><h2>Separate the answer<br>from the time used to show it.</h2><p><code>updatePlay()</code> first commits the correct collision, score, or board. It hands that fact across once as a value or event. Presentation then advances interpolation, poses, trails, and particles. <code>Draw</code> only reads state; it never edits score or coordinates. This boundary supports both a rich screen and unit tests that need no GPU.</p></section>
+    <section class="vfx-pattern" aria-labelledby="pattern-vfx-fx-tap">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">PATTERN A01 / IMMUTABLE RESULT</p><h2 id="pattern-vfx-fx-tap">Immutable Result</h2></div>
+          <p>Inlining score, particles, and sound in the hit test makes every new flourish a rule change. First freeze what happened into a value.</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="State flow">
+          <span>tap input</span><b>→</b><span>ResolveTap</span><b>→</b><span>TapResult</span><b>→</b><span>score + hitEcho</span><b>→</b><span>Draw / FX</span>
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>hitEcho owns only position and a Tween</h3><p>The target may move on immediately. Presentation keeps the resolved position and a fourteen-frame clock to show the vanished instant.</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>Test the fact, not the fireworks</h3><ul><li>the radius boundary is a hit</li><li>a miss retains the tap position</li><li>ScoreDelta represents exactly one hit</li></ul></article>
+        </div>
+      </section>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Tap for fireworks</h2></div>
-        <p>Tap the circle for Burst+Ring. Drag intensity and read LIVE GO: play vs fx.</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Chain hits and follow their echoes</h2></div>
+        <p>The target moves immediately; the old hit outline lingers. Compare the gameplay target with the presentation-only echo.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A01</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="Add Effects to Tap" src="../../../../play/vfx-fx-tap/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Turn a Tap Result into Motion" src="../../../../play/vfx-fx-tap/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -71,88 +84,84 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / EVENT → FX</p>
-        <h2>Who spawns sparks<br>on a hit?</h2>
-        <p class="lesson-lead">Score and timer live in updatePlay(). Sparks go into g.fx.Burst(). Same Update frame—different jobs. Even in one file, split the fields.</p>
+        <p class="eyebrow">DEEP DIVE / IMMUTABLE RESULT</p>
+        <h2>How does a hit cross<br>into presentation once?</h2>
+        <p class="lesson-lead">ResolveTap is a pure function of coordinates and radius. It returns Hit / Miss, a presentation position, and a score delta. updatePlay commits score first; presentation consumes the result. Draw only reads hitEcho, so a fourteen-frame echo can never award fourteen hits.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>Play</h3>
-          <p>Score, time, target position.</p>
-          <code>updatePlay()</code>
+          <h3>Make a fact</h3>
+          <p>Resolve input to outcome and position.</p>
+          <code>result := ResolveTap(...)</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>FX</h3>
-          <p>Particles, rings, flashes.</p>
-          <code>fx.Burst / Ring</code>
+          <h3>Apply it once</h3>
+          <p>ScoreDelta is committed in Update once.</p>
+          <code>score += result.ScoreDelta</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>Order</h3>
-          <p>Advance rules, then effects.</p>
-          <code>play → fx.Update</code>
+          <h3>Own visual time</h3>
+          <p>The hit echo gets an independent Tween.</p>
+          <code>hitEcho.Advance()</code>
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-tap">
+      <div class="motion-lab" data-lab="architecture-trace" aria-labelledby="lab-title-vfx-fx-tap">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / TWO BOXES</p>
-          <h3 id="lab-title-vfx-fx-tap">Score is play, sparks are fx</h3>
-          <p>Hit! grows score and sparks together. Tick FX ages sparks only—score stays put. That’s the split.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Advance FX 1 tick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <p class="eyebrow">TRACE IT / RULE → MOTION → PIXELS</p>
+          <h3 id="lab-title-vfx-fx-tap">Fork numbers and fireworks from one result</h3>
+          <p>Keep TapResult fixed while changing echo duration and particle count. If score changes, presentation crossed the boundary.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-architecture-step>Next state →</button><button type="button" class="lab-button lab-button-quiet" data-lab-architecture-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play (rules / score)</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx (sparks)</h4><ul data-lab-fx-list></ul></div>
-          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
+          <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>tap input</span><i>→</i><span data-lab-architecture-node><b>2</b>ResolveTap</span><i>→</i><span data-lab-architecture-node><b>3</b>TapResult</span><i>→</i><span data-lab-architecture-node><b>4</b>score + hitEcho</span><i>→</i><span data-lab-architecture-node><b>5</b>Draw / FX</span></div>
+          <div class="lab-architecture-boundary"><small>Boundary to protect</small><strong data-lab-architecture-boundary>the radius boundary is a hit</strong></div>
         </div>
-        <p class="lab-fx-hint" data-lab-fx-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>score (play)</span><strong data-lab-score>—</strong></div><div><span>sparks (fx)</span><strong data-lab-fx-n>—</strong></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>current step</span><strong data-lab-architecture-index>—</strong></div><div><span>state owner</span><strong data-lab-architecture-owner>—</strong></div></div>
         </div>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>Split Update in two</h3>
-          <p>Don’t paste rules and FX into one blob.</p>
+          <h3>The judge knows no effects</h3>
+          <p>Use pure TapResult as the seam; Shockwave and Burst belong to its consumer.</p>
         </div>
-        <pre><code>func (g *Game) Update() error {
-  g.updatePlay() // score, timer, targets
-  g.fx.Update()  // particles live here
-  return nil
-}
-// on hit:
-g.fx.Burst(x, y, n, speed, tint, true)
-g.fx.Ring(x, y, 1.2, tint)</code></pre>
+        <pre><code>result := vfxmotion.ResolveTap(x, y, g.cx, g.cy, g.r)
+if result.Outcome == vfxmotion.TapHit {
+    g.score += result.ScoreDelta       // commit the rule once
+    g.hitEcho = vfxmotion.NewTween(14) // presentation clock
+    g.fx.Shockwave(result.X, result.Y, .75, inner, outer)
+}</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY SEPARATE?</p>
-          <h3>Different lifetimes</h3>
-          <p>Targets move; sparks die by life timer.</p>
+          <p class="eyebrow">TEST THE CONTRACT</p>
+          <h3>Table-test inside, edge, and outside</h3>
+          <p>Compare Outcome and ScoreDelta at the center, exactly on the radius, and just outside. No image or particle system is needed.</p>
         </article>
         <article>
-          <p class="eyebrow">WHY ON EVENT?</p>
-          <h3>Play owns the trigger</h3>
-          <p>“Hit” is a game test—then call FX.</p>
+          <p class="eyebrow">FAILURE MODE</p>
+          <h3>Never score from living particles</h3>
+          <p>If “a ring still exists” means the hit is active, effect duration changes the score.</p>
         </article>
         <article class="challenge">
-          <p class="eyebrow">TRY NEXT</p>
-          <h3>Meter</h3>
-          <p>Next: different FX per Perfect/OK/Miss.</p>
+          <p class="eyebrow">DESIGN PAYOFF</p>
+          <h3>Sound and haptics can read the same fact</h3>
+          <p>TapResult is not screen-specific. Audio, vibration, and achievements can subscribe to the same one-shot result.</p>
         </article>
       </div>
     </section>
 
     <nav class="lesson-pager">
       <a href="../vfx-faux-bloom/" rel="prev">← STEP 17<strong>Faux Bloom from Larger Copies</strong></a>
-      <a href="../vfx-fx-meter/" rel="next">STEP A02 →<strong>FX for Timing Grades</strong></a>
+      <a href="../vfx-fx-meter/" rel="next">STEP A02 →<strong>Map Timing Grades to Recipes</strong></a>
     </nav>
 
     <section class="feedback-section" aria-labelledby="feedback-title">

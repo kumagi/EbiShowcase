@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="体はマス目の履歴。食べた瞬間の花火だけ fx。体の各セルに粒を持たせない。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
-  <title>Ebi Showcase – スネークに捕食演出を足す</title>
+  <meta name="description" content="Snakeの正解は整数マス列です。そこを小数座標へ変えると自己衝突や餌判定が壊れます。移動tickの直前bodyをvisualFromへコピーし、次tickまでのProgressで各節を補間します。さらに前・現在・次の三セルから直線か角かを導出し、円と太線で切れ目のない身体を描き">
+  <title>Ebi Showcase – マス目の蛇を滑らかにつなぐ</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/fx-snake/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – スネークに捕食演出を足す">
-    <meta property="og:description" content="体はマス目の履歴。食べた瞬間の花火だけ fx。体の各セルに粒を持たせない。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta property="og:title" content="Ebi Showcase – マス目の蛇を滑らかにつなぐ">
+    <meta property="og:description" content="Snakeの正解は整数マス列です。そこを小数座標へ変えると自己衝突や餌判定が壊れます。移動tickの直前bodyをvisualFromへコピーし、次tickまでのProgressで各節を補間します。さらに前・現在・次の三セルから直線か角かを導出し、円と太線で切れ目のない身体を描き">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/fx-snake/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--fx-snake.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="スネークに捕食演出を足す">
+    <meta property="og:image:alt" content="マス目の蛇を滑らかにつなぐ">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – スネークに捕食演出を足す">
-    <meta name="twitter:description" content="体はマス目の履歴。食べた瞬間の花火だけ fx。体の各セルに粒を持たせない。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。 キーボードとタッチの両方で試せます。">
+    <meta name="twitter:title" content="Ebi Showcase – マス目の蛇を滑らかにつなぐ">
+    <meta name="twitter:description" content="Snakeの正解は整数マス列です。そこを小数座標へ変えると自己衝突や餌判定が壊れます。移動tickの直前bodyをvisualFromへコピーし、次tickまでのProgressで各節を補間します。さらに前・現在・次の三セルから直線か角かを導出し、円と太線で切れ目のない身体を描き">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--fx-snake.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="スネークに捕食演出を足す">
+    <meta name="twitter:image:alt" content="マス目の蛇を滑らかにつなぐ">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -44,22 +44,35 @@
 
     <section class="overview-hero">
       <p class="eyebrow">★★★★★ / PLAYABLE</p>
-      <h1>スネークに捕食演出を足す</h1>
-      <p>体はマス目の履歴。食べた瞬間の花火だけ fx。体の各セルに粒を持たせない。</p>
-      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>体セルとキラキラ</strong></div>
+      <h1>マス目の蛇を滑らかにつなぐ</h1>
+      <p>Snakeの正解は整数マス列です。そこを小数座標へ変えると自己衝突や餌判定が壊れます。移動tickの直前bodyをvisualFromへコピーし、次tickまでのProgressで各節を補間します。さらに前・現在・次の三セルから直線か角かを導出し、円と太線で切れ目のない身体を描きます。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>離散グリッドを補間し形を導出する</strong></div>
     </section>
 
     <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）とDraw（絵）の独立した境界</strong>の上にあります。ここでは同じ状態を別の描き方へ投影する方法を一段深く扱います。</p>
-    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED FX の約束</p><h2>ゲームのルールは、そのまま。<br>見た目だけを増やせる。</h2><p><code>updatePlay()</code> は点数・当たり・勝敗をこれまで通り決めます。<code>Game</code> に <code>fx</code> の箱を足し、<code>fx.Update()</code> は粒など<strong>見た目用の時間</strong>だけを進め、<code>Draw</code> で <code>fx.Draw()</code> を重ねます。つまり元のゲームルールを触らずに派手にできます。ただし粒が動く演出には、play を変えない独立した <code>fx.Update()</code> は必要です。</p></section>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED FX の設計原則</p><h2>ルールの答えと、<br>答えを見せる時間を分ける。</h2><p><code>updatePlay()</code> は衝突・得点・盤面などの<strong>正解</strong>を先に確定し、結果を値やイベントとして一度だけ渡します。演出側はその事実から補間・姿勢・残像・粒子の時間を進めます。<code>Draw</code> は状態を読むだけで、得点も座標も書き換えません。この境界があるから、派手な画面とGPUなしで試せるユニットテストを両立できます。</p></section>
+    <section class="vfx-pattern" aria-labelledby="pattern-vfx-fx-snake">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">PATTERN A07 / DISCRETE INTERPOLATION</p><h2 id="pattern-vfx-fx-snake">Discrete State, Continuous Presentation</h2></div>
+          <p>滑らかさのため盤面座標をfloatにすると、同一セル・自己衝突・リプレイの答えが曖昧になります。</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="状態の流れ">
+          <span>old body cells</span><b>→</b><span>commit new cells</span><b>→</b><span>step Tween</span><b>→</b><span>Lerp positions</span><b>→</b><span>derive corners</span>
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>visualFromは次tickまでの一時コピー</h3><p>保存対象はbodyだけ。visualFromとstepTweenは見せ終えたら次の移動で上書きできる派生状態です。</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>グリッド規則と形状関数を分離</h3><ul><li>Progress 0/1で旧/新中心に一致</li><li>水平・垂直はStraight</li><li>直交する隣接はCorner</li></ul></article>
+        </div>
+      </section>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>餌を食べて伸びよう</h2></div>
-        <p>方向を変えて餌へ。捕食花火は fx。body と fx.parts を見比べよう。</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>曲がり角と頭の滑走を見る</h2></div>
+        <p>頭はセル間を滑り、胴体は太線と丸い節で連続します。餌は脈動し、食べた瞬間だけ成長のリングと粒が出ます。</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A07</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="スネークに捕食演出を足す" src="../../../../play/vfx-fx-snake/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="マス目の蛇を滑らかにつなぐ" src="../../../../play/vfx-fx-snake/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -71,83 +84,84 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / GRID BODY</p>
-        <h2>体は履歴、<br>花火は一瞬</h2>
-        <p class="lesson-lead">Snake の本質は位置の列。演出をセルに埋め込むと、移動ロジックが読めなくなります。</p>
+        <p class="eyebrow">DEEP DIVE / DISCRETE INTERPOLATION</p>
+        <h2>整数の盤面を保ったまま、<br>どう滑らかに見せる？</h2>
+        <p class="lesson-lead">ルール更新は従来どおり一マス跳びます。表示だけがold→newを9フレームで移動します。SegmentPoseは隣接関係からStraight / Cornerを返す純粋関数なので、spriteIndexをbodyへ保存する必要がありません。</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>体</h3>
-          <p>グリッド上のセル列。</p>
+          <h3>整数が正解</h3>
+          <p>bodyとfoodの比較はCell同士。</p>
           <code>body []cell</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>捕食</h3>
-          <p>食った座標で Burst。</p>
-          <code>fx.Burst(food)</code>
+          <h3>前回位置を一時保存</h3>
+          <p>移動直前の各節をvisualFromへ写す。</p>
+          <code>visualFrom []cell</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>分離</h3>
-          <p>セルに particle を持たない。</p>
-          <code>no cell.fx</code>
+          <h3>形は隣接から導出</h3>
+          <p>前・現在・次で直線／角を決める。</p>
+          <code>PoseForSegment</code>
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-snake" aria-labelledby="lab-title-vfx-fx-snake">
+      <div class="motion-lab" data-lab="architecture-trace" aria-labelledby="lab-title-vfx-fx-snake">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / SPLIT</p>
-          <h3 id="lab-title-vfx-fx-snake">セルはデータ</h3>
-          <p>見た目のキラキラは体データに混ぜない。</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-snake-step>進んでエサを食べる</button><button type="button" class="lab-button" data-lab-snake-tick>キラキラだけ 1 tick進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+          <p class="eyebrow">TRACE IT / RULE → MOTION → PIXELS</p>
+          <h3 id="lab-title-vfx-fx-snake">tick速度と補間時間を対応させる</h3>
+          <p>ルールは8Fごとに一マス、表示Tweenも8Fで完了させます。補間途中でも自己衝突は常に整数bodyだけで判定します。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-architecture-step>次の状態へ →</button><button type="button" class="lab-button lab-button-quiet" data-lab-architecture-reset>リセット</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col"><h4>play（体とエサ）</h4>
-            <p data-lab-snake-grid></p><ul data-lab-snake-body></ul></div>
-          <div class="lab-fx-col"><h4>fx（捕食のキラキラ）</h4><ul data-lab-snake-fx></ul></div>
-          <div class="lab-fx-stage" data-lab-snake-stage aria-hidden="true"></div>
-        </div><p class="lab-fx-hint" data-lab-snake-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>体セル(play)</span><strong data-lab-snake-length>—</strong></div><div><span>キラキラ(fx)</span><strong data-lab-snake-parts>—</strong></div></div>
+          <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>old body cells</span><i>→</i><span data-lab-architecture-node><b>2</b>commit new cells</span><i>→</i><span data-lab-architecture-node><b>3</b>step Tween</span><i>→</i><span data-lab-architecture-node><b>4</b>Lerp positions</span><i>→</i><span data-lab-architecture-node><b>5</b>derive corners</span></div>
+          <div class="lab-architecture-boundary"><small>壊してはいけない境界</small><strong data-lab-architecture-boundary>Progress 0/1で旧/新中心に一致</strong></div>
+        </div>
+          <div class="lab-values" aria-live="polite"><div><span>現在の段階</span><strong data-lab-architecture-index>—</strong></div><div><span>状態の所有者</span><strong data-lab-architecture-owner>—</strong></div></div>
         </div>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>eat の一箇所だけ</h3>
-          <p>移動ループの中で毎セル Burst しない。</p>
+          <h3>old/new二枚の盤面からDraw座標を作る</h3>
+          <p>Updateの離散性を捨てず、Draw座標だけLerpします。これが倉庫番やタクティクスにも続く基本です。</p>
         </div>
-        <pre><code>// on eat:
-body = grow(body)
-g.fx.Burst(food.x, food.y, 24, 3, tint, true)</code></pre>
+        <pre><code>oldBody := append([]cell(nil), g.body...)
+g.body = commitGridStep(g.body, nextHead) // integer truth
+g.visualFrom = originsFor(g.body, oldBody)
+g.stepTween = vfxmotion.NewTween(ruleTickFrames)
+
+drawX := vfxmotion.Lerp(oldX, newX, g.stepTween.Progress())</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY?</p>
-          <h3>グリッドが本体</h3>
-          <p>学習ポイントは履歴。演出は添え物。</p>
+          <p class="eyebrow">TEST THE CONTRACT</p>
+          <h3>角の組合せを表で試す</h3>
+          <p>水平、垂直、左上角などの三セルを渡し、SegmentKindとRotationを比較します。補間の0と1も厳密に確認します。</p>
         </article>
         <article>
-          <p class="eyebrow">WHY ONE BURST?</p>
-          <h3>イベント</h3>
-          <p>食べた瞬間だけ祝う。</p>
+          <p class="eyebrow">FAILURE MODE</p>
+          <h3>補間座標でセル判定しない</h3>
+          <p>0.4マス移動中の頭を丸めると、FPSや丸め方で自己衝突の結果が変わります。</p>
         </article>
         <article class="challenge">
-          <p class="eyebrow">TRY NEXT</p>
-          <h3>シューターへ</h3>
-          <p>弾・敵・演出の三分割。</p>
+          <p class="eyebrow">DESIGN PAYOFF</p>
+          <h3>盤面ゲーム全般の標準形になる</h3>
+          <p>チェス駒、SRPG、ローグライクも、離散状態＋表示補間ならルールを単純に保てます。</p>
         </article>
       </div>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-breakout/" rel="prev">← STEP A06<strong>ブロック破壊を二段にする</strong></a>
-      <a href="../vfx-fx-shooter/" rel="next">STEP A08 →<strong>弾と敵と爆発を分ける</strong></a>
+      <a href="../vfx-fx-breakout/" rel="prev">← STEP A06<strong>壊れたブロックを破片へ引き継ぐ</strong></a>
+      <a href="../vfx-fx-shooter/" rel="next">STEP A08 →<strong>大量の発射と爆発を予算内でさばく</strong></a>
     </nav>
 
     <section class="feedback-section" aria-labelledby="feedback-title">

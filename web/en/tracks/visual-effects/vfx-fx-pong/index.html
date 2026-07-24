@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Burst only on paddle/wall hits. Soft trail sparks while moving—still fx. Ball vx,vy stay play. Play the demo, add one Go rule, verify it, and apply the idea to ">
-  <title>Ebi Showcase – Pong Sparks &amp; Trails</title>
+  <meta name="description" content="A trail does not need unlimited particles every tick. Keep only the latest sixteen points in presentation and draw old samples smaller and">
+  <title>Ebi Showcase – Turn Ball History into a Safe Trail</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-fx-pong/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Pong Sparks &amp; Trails">
-    <meta property="og:description" content="Burst only on paddle/wall hits. Soft trail sparks while moving—still fx. Ball vx,vy stay play. Play the demo, add one Go rule, verify it, and apply the idea to ">
+    <meta property="og:title" content="Ebi Showcase – Turn Ball History into a Safe Trail">
+    <meta property="og:description" content="A trail does not need unlimited particles every tick. Keep only the latest sixteen points in presentation and draw old samples smaller and">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/vfx-fx-pong/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-fx-pong.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Pong Sparks &amp; Trails">
+    <meta property="og:image:alt" content="Turn Ball History into a Safe Trail">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Pong Sparks &amp; Trails">
-    <meta name="twitter:description" content="Burst only on paddle/wall hits. Soft trail sparks while moving—still fx. Ball vx,vy stay play. Play the demo, add one Go rule, verify it, and apply the idea to ">
+    <meta name="twitter:title" content="Ebi Showcase – Turn Ball History into a Safe Trail">
+    <meta name="twitter:description" content="A trail does not need unlimited particles every tick. Keep only the latest sixteen points in presentation and draw old samples smaller and">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--vfx-fx-pong.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Pong Sparks &amp; Trails">
+    <meta name="twitter:image:alt" content="Turn Ball History into a Safe Trail">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -43,23 +43,36 @@
     <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>ADV A05</span></div>
 
     <section class="overview-hero">
-      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
-      <h1>Pong Sparks & Trails</h1>
-      <p>Burst only on paddle/wall hits. Soft trail sparks while moving—still fx. Ball vx,vy stay play.</p>
-      <div class="overview-concept"><small>What you learn here</small><strong>Impact + trails</strong></div>
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Turn Ball History into a Safe Trail</h1>
+      <p>A trail does not need unlimited particles every tick. Keep only the latest sixteen points in presentation and draw old samples smaller and dimmer. Memory is bounded, shape is smooth, and impacts can still add paddle squash, ring, and sparks.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Build trails from bounded history</strong></div>
     </section>
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
-    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED-FX DESIGN RULE</p><h2>Separate the answer<br>from the time used to show it.</h2><p><code>updatePlay()</code> first commits the correct collision, score, or board. It hands that fact across once as a value or event. Presentation then advances interpolation, poses, trails, and particles. <code>Draw</code> only reads state; it never edits score or coordinates. This boundary supports both a rich screen and unit tests that need no GPU.</p></section>
+    <section class="vfx-pattern" aria-labelledby="pattern-vfx-fx-pong">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">PATTERN A05 / BOUNDED HISTORY</p><h2 id="pattern-vfx-fx-pong">Bounded Presentation History</h2></div>
+          <p>Per-frame particle trails depend on speed and frame rate, obscuring both memory cap and shape.</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="State flow">
+          <span>ball position</span><b>→</b><span>Trail.Push</span><b>→</b><span>last 16 points</span><b>→</b><span>age gradient</span><b>→</b><span>glow trail</span>
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>Trail is a presentation cache</h3><p>It never scores or collides and clears on serve. One eviction rule fixes memory use.</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>Guarantee only order and capacity</h3><ul><li>order is preserved up to the limit</li><li>overflow evicts the oldest</li><li>Clear isolates the next rally</li></ul></article>
+        </div>
+      </section>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Flashy bounces</h2></div>
-        <p>Move the paddle. Impact sparks and trails are fx.</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Rally through trails and paddle squash</h2></div>
+        <p>The trail reads as continuous; the paddle widens only on contact. A serve clears history so rallies never share ghosts.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A05</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="Pong Sparks & Trails" src="../../../../play/vfx-fx-pong/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Turn Ball History into a Safe Trail" src="../../../../play/vfx-fx-pong/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -71,93 +84,84 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / IMPACT + TRAIL</p>
-        <h2>Instant sparks vs<br>ongoing trail</h2>
-        <p class="lesson-lead">Collisions are game events; trails are ongoing visual spawns. Keep both FX records in fx so ball stays thin.</p>
+        <p class="eyebrow">DEEP DIVE / BOUNDED HISTORY</p>
+        <h2>How much of the past<br>should presentation remember?</h2>
+        <p class="lesson-lead">The ball collides with current position and velocity only. Old positions are a presentation cache. Trail.Push evicts the oldest sample at its cap; Points returns a copy so Draw cannot mutate history.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>Impact</h3>
-          <p>Burst on the hit frame.</p>
-          <code>onBounce → Burst</code>
+          <h3>Present is play</h3>
+          <p>Collision reads bx/by/vx/vy only.</p>
+          <code>ball state</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>Trail</h3>
-          <p>Soft sparks while moving.</p>
-          <code>each N frames</code>
+          <h3>Past is presentation</h3>
+          <p>Keep the latest sixteen points.</p>
+          <code>trail.Push(point)</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>Body</h3>
-          <p>Ball is only pose + velocity.</p>
-          <code>ball {x,y,vx,vy}</code>
+          <h3>Style from order</h3>
+          <p>Newer points draw larger and brighter.</p>
+          <code>alpha := age / len</code>
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-pong">
+      <div class="motion-lab" data-lab="architecture-trace" aria-labelledby="lab-title-vfx-fx-pong">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / TWO BOXES</p>
-          <h3 id="lab-title-vfx-fx-pong">Ball stays ball</h3>
-          <p>Don’t embed the visual tail inside ball.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Advance FX 1 tick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <p class="eyebrow">TRACE IT / RULE → MOTION → PIXELS</p>
+          <h3 id="lab-title-vfx-fx-pong">Compare short and long bounded trails</h3>
+          <p>Try 3, 8, and 16 samples. Bounce and score remain identical while only the trail changes.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-architecture-step>Next state →</button><button type="button" class="lab-button lab-button-quiet" data-lab-architecture-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play (rules / score)</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx (sparks)</h4><ul data-lab-fx-list></ul></div>
-          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
+          <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>ball position</span><i>→</i><span data-lab-architecture-node><b>2</b>Trail.Push</span><i>→</i><span data-lab-architecture-node><b>3</b>last 16 points</span><i>→</i><span data-lab-architecture-node><b>4</b>age gradient</span><i>→</i><span data-lab-architecture-node><b>5</b>glow trail</span></div>
+          <div class="lab-architecture-boundary"><small>Boundary to protect</small><strong data-lab-architecture-boundary>order is preserved up to the limit</strong></div>
         </div>
-        <p class="lab-fx-hint" data-lab-fx-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>score (play)</span><strong data-lab-score>—</strong></div><div><span>sparks (fx)</span><strong data-lab-fx-n>—</strong></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>current step</span><strong data-lab-architecture-index>—</strong></div><div><span>state owner</span><strong data-lab-architecture-owner>—</strong></div></div>
         </div>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>Keep ball thin</h3>
-          <p>If you want an FX field on ball—put it in fx instead.</p>
+          <h3>Choose history instead of particles</h3>
+          <p>A continuous path is cheaper and deterministic as bounded samples. Reserve particles for impacts.</p>
         </div>
-        <pre><code>type trail struct { x, y float64; life int }
-type System struct { trails []trail } // history belongs to FX
+        <pre><code>g.bx += g.vx * speed
+g.by += g.vy * speed
+g.trail.Push(vfxmotion.Point{X: g.bx, Y: g.by})
 
-func (fx *System) Trail(x, y float64) {
-  fx.trails = append(fx.trails, trail{x: x, y: y, life: 12})
-}
-// Update decrements only trail life; Draw paints old entries faintly.
-if bounced {
-  g.fx.Burst(ball.x, ball.y, …)
-}
-if frame%3 == 0 {
-  g.fx.Trail(ball.x, ball.y)
-}</code></pre>
+// Draw: old samples are dim; only the current ball collides.
+for i, p := range g.trail.Points() { drawTrailSample(p, i) }</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY TRAIL IN FX?</p>
-          <h3>FX owns the history</h3>
-          <p>Keep the trail history slice in fx.System. Ball retains only position and velocity, so physics remains readable.</p>
+          <p class="eyebrow">TEST THE CONTRACT</p>
+          <h3>Test eviction order and cap</h3>
+          <p>Pushing four points into a limit-three Trail must return only 2, 3, 4.</p>
         </article>
         <article>
-          <p class="eyebrow">WHY BURST ON HIT?</p>
-          <h3>Event-driven</h3>
-          <p>Sparks every tick become noise.</p>
+          <p class="eyebrow">FAILURE MODE</p>
+          <h3>Never collide the trail</h3>
+          <p>If old circles collide, a longer trail creates a larger hitbox.</p>
         </article>
         <article class="challenge">
-          <p class="eyebrow">TRY NEXT</p>
-          <h3>Breakout</h3>
-          <p>Bricks vs flying shards.</p>
+          <p class="eyebrow">DESIGN PAYOFF</p>
+          <h3>Reuse for sword arcs, lasers, and replay ghosts</h3>
+          <p>Bounded time series fit visuals that must preserve a shape better than particles do.</p>
         </article>
       </div>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-flight/" rel="prev">← STEP A04<strong>Flight with Whoosh FX</strong></a>
-      <a href="../vfx-fx-breakout/" rel="next">STEP A06 →<strong>Break Bricks in Two Steps</strong></a>
+      <a href="../vfx-fx-flight/" rel="prev">← STEP A04<strong>Translate Flight Physics into Pose</strong></a>
+      <a href="../vfx-fx-breakout/" rel="next">STEP A06 →<strong>Hand a Broken Brick to Its Shards</strong></a>
     </nav>
 
     <section class="feedback-section" aria-labelledby="feedback-title">

@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="Stars participate in game rules; sparks are visual only. Their jobs and updates differ, so Game keeps stars and fx in separate boxes.">
-  <title>Ebi Showcase – Catch Stars—Then Notice the Split</title>
+  <meta name="description" content="A caught star should leave collision immediately, but vanishing from the screen instantly feels weak. Copy its ID and catch position into a">
+  <title>Ebi Showcase – Fly a Caught Star to the HUD</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-catch/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – Catch Stars—Then Notice the Split">
-    <meta property="og:description" content="Stars participate in game rules; sparks are visual only. Their jobs and updates differ, so Game keeps stars and fx in separate boxes.">
+    <meta property="og:title" content="Ebi Showcase – Fly a Caught Star to the HUD">
+    <meta property="og:description" content="A caught star should leave collision immediately, but vanishing from the screen instantly feels weak. Copy its ID and catch position into a">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/en/tracks/visual-effects/fx-catch/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-catch.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Catch Stars—Then Notice the Split">
+    <meta property="og:image:alt" content="Fly a Caught Star to the HUD">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – Catch Stars—Then Notice the Split">
-    <meta name="twitter:description" content="Stars participate in game rules; sparks are visual only. Their jobs and updates differ, so Game keeps stars and fx in separate boxes.">
+    <meta name="twitter:title" content="Ebi Showcase – Fly a Caught Star to the HUD">
+    <meta name="twitter:description" content="A caught star should leave collision immediately, but vanishing from the screen instantly feels weak. Copy its ID and catch position into a">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/en--tracks--visual-effects--fx-catch.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="Catch Stars—Then Notice the Split">
+    <meta name="twitter:image:alt" content="Fly a Caught Star to the HUD">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -43,23 +43,36 @@
     <div class="lesson-breadcrumb"><a href="../">← Visual Effects Lab</a><span>ADV A03</span></div>
 
     <section class="overview-hero">
-      <p class="eyebrow">★★★★☆ / PLAYABLE</p>
-      <h1>Catch Stars—Then Notice the Split</h1>
-      <p>Stars participate in game rules; sparks are visual only. Their jobs and updates differ, so Game keeps stars and fx in separate boxes.</p>
-      <div class="overview-concept"><small>What you learn here</small><strong>Don’t mix entities & FX</strong></div>
+      <p class="eyebrow">★★★★★ / PLAYABLE</p>
+      <h1>Fly a Caught Star to the HUD</h1>
+      <p>A caught star should leave collision immediately, but vanishing from the screen instantly feels weak. Copy its ID and catch position into a presentation Proxy, delete the real star, and fly only the proxy along an arc to the HUD. The basket squashes on the same catch event.</p>
+      <div class="overview-concept"><small>What you learn here</small><strong>Let a visual proxy outlive an entity</strong></div>
     </section>
 
     <p class="curriculum-bridge">This lab also sits on the <a href="../../../games/tap-target/#basics">LEVEL 01</a> boundary between <strong>Update (state)</strong> and <strong>Draw (pixels)</strong>. Here we dig one layer deeper into projecting the same state through different renderers.</p>
-    <section class="vfx-advanced-contract"><p class="eyebrow">THE ADVANCED-FX PROMISE</p><h2>Keep the game rules.<br>Grow only the picture.</h2><p><code>updatePlay()</code> still decides score, hits, and wins. Add an <code>fx</code> box to <code>Game</code>; <code>fx.Update()</code> advances only visual time such as particles, and <code>Draw</code> layers <code>fx.Draw()</code> on top. That makes the game flashier without changing its original rules. Moving particles still need their own independent <code>fx.Update()</code>, never a change to play logic.</p></section>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED-FX DESIGN RULE</p><h2>Separate the answer<br>from the time used to show it.</h2><p><code>updatePlay()</code> first commits the correct collision, score, or board. It hands that fact across once as a value or event. Presentation then advances interpolation, poses, trails, and particles. <code>Draw</code> only reads state; it never edits score or coordinates. This boundary supports both a rich screen and unit tests that need no GPU.</p></section>
+    <section class="vfx-pattern" aria-labelledby="pattern-vfx-fx-catch">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">PATTERN A03 / VISUAL PROXY</p><h2 id="pattern-vfx-fx-catch">Visual Proxy Lifecycle</h2></div>
+          <p>Keeping pickups in rules for animation pollutes collision and save data with objects that are both collected and present.</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="State flow">
+          <span>star ID</span><b>→</b><span>catch event</span><b>→</b><span>remove star</span><b>→</b><span>spawn Proxy</span><b>→</b><span>fly to HUD</span>
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>Proxy owns only from/to and a Tween</h3><p>It has no scoring, velocity rule, or collider—just an ID, two points, and a clock.</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>Test entity and proxy lifetimes separately</h3><ul><li>catch removes one star once</li><li>Proxy arcs to the HUD</li><li>finished proxies are pruned</li></ul></article>
+        </div>
+      </section>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Catch the stars</h2></div>
-        <p>Move the basket. Fireworks are fx. Watch stars vs fx.parts counts in LIVE GO.</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + MOUSE</p><h2>Catch a star and follow the light left</h2></div>
+        <p>The star bursts at the basket and a visual proxy arcs into the HUD. Basket squash and shockwave share the one catch event.</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A03</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="Catch Stars—Then Notice the Split" src="../../../../play/vfx-fx-catch/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="Fly a Caught Star to the HUD" src="../../../../play/vfx-fx-catch/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -71,85 +84,84 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / TWO SLICES</p>
-        <h2>Why not one slice<br>for stars and sparks?</h2>
-        <p class="lesson-lead">Stars need basket/floor tests. Sparks only need life. Different types, different updates. The demo shows stars vs fx.Parts side by side.</p>
+        <p class="eyebrow">DEEP DIVE / VISUAL PROXY</p>
+        <h2>How can a deleted star<br>remain only on screen?</h2>
+        <p class="lesson-lead">Gameplay stars own fall, catch, and miss. A catch creates NewProxy(id, from, HUD, frames), then removes the star. Proxy has no collision and leaves the presentation list when its tween finishes.</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>Stars</h3>
-          <p>Fall, collide, score.</p>
-          <code>stars []star</code>
+          <h3>Stable ID</h3>
+          <p>Track which visual was captured.</p>
+          <code>star.id</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>Sparks</h3>
-          <p>Spawn, drift, die.</p>
-          <code>fx.Parts</code>
+          <h3>Immediate removal</h3>
+          <p>Never collide a caught star again.</p>
+          <code>stars = next</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>Insight</h3>
-          <p>Different jobs → different fields.</p>
-          <code>type Game { stars; fx }</code>
+          <h3>Visual proxy</h3>
+          <p>Interpolate to HUD, then discard.</p>
+          <code>proxies []Proxy</code>
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-split" aria-labelledby="lab-title-vfx-fx-catch">
+      <div class="motion-lab" data-lab="architecture-trace" aria-labelledby="lab-title-vfx-fx-catch">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / TWO BOXES</p>
-          <h3 id="lab-title-vfx-fx-catch">One job, one box</h3>
-          <p>Left list = stars, right = sparks. Stars collide; sparks age, so keep them separate.</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-fx-ping>Hit! (play+fx)</button><button type="button" class="lab-button" data-lab-fx-tick>Advance FX 1 tick</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>Reset</button></div>
+          <p class="eyebrow">TRACE IT / RULE → MOTION → PIXELS</p>
+          <h3 id="lab-title-vfx-fx-catch">Delete the star while its trip completes</h3>
+          <p>Immediately after catch, stars shrinks and proxies grows. The same star cannot score again while its proxy is flying.</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-architecture-step>Next state →</button><button type="button" class="lab-button lab-button-quiet" data-lab-architecture-reset>Reset</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col" data-lab-play><h4>play (rules / score)</h4><ul data-lab-play-list></ul></div>
-          <div class="lab-fx-col" data-lab-fx><h4>fx (sparks)</h4><ul data-lab-fx-list></ul></div>
-          <div class="lab-fx-stage" data-lab-fx-stage aria-hidden="true"></div>
+          <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>star ID</span><i>→</i><span data-lab-architecture-node><b>2</b>catch event</span><i>→</i><span data-lab-architecture-node><b>3</b>remove star</span><i>→</i><span data-lab-architecture-node><b>4</b>spawn Proxy</span><i>→</i><span data-lab-architecture-node><b>5</b>fly to HUD</span></div>
+          <div class="lab-architecture-boundary"><small>Boundary to protect</small><strong data-lab-architecture-boundary>catch removes one star once</strong></div>
         </div>
-        <p class="lab-fx-hint" data-lab-fx-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>score (play)</span><strong data-lab-score>—</strong></div><div><span>sparks (fx)</span><strong data-lab-fx-n>—</strong></div></div>
+          <div class="lab-values" aria-live="polite"><div><span>current step</span><strong data-lab-architecture-index>—</strong></div><div><span>state owner</span><strong data-lab-architecture-owner>—</strong></div></div>
         </div>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>Two slices</h3>
-          <p>Gameplay entities ≠ ephemeral FX.</p>
+          <h3>Copy display facts instead of extending the entity</h3>
+          <p>Do not keep adding caught flags to gameplay stars; copy the minimum into a short-lived model.</p>
         </div>
-        <pre><code>type Game struct {
-  stars []star     // play entities
-  fx    vfxfx.System // ephemeral FX
-}
-// NEVER: objects []any{star, spark, ...}</code></pre>
+        <pre><code>if caught {
+    g.score++                    // gameplay commits now
+    g.proxies = append(g.proxies,
+        vfxmotion.NewProxy(st.id, st.x, st.y, hudX, hudY, 24))
+    continue                     // st is absent from next gameplay slice
+}</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY TWO SLICES?</p>
-          <h3>Different questions</h3>
-          <p>“In basket?” vs “life==0?” are different ifs.</p>
+          <p class="eyebrow">TEST THE CONTRACT</p>
+          <h3>Test start, destination, and completion</h3>
+          <p>At frame zero Proxy is at catch position, at the last frame it reaches HUD, then Done is true—all without images.</p>
         </article>
         <article>
-          <p class="eyebrow">WHY NOW?</p>
-          <h3>Before counts explode</h3>
-          <p>The more objects, the more a split pays off.</p>
+          <p class="eyebrow">FAILURE MODE</p>
+          <h3>Never leave a caught collider alive</h3>
+          <p>Keeping the star for animation lets the basket catch it again every tick.</p>
         </article>
         <article class="challenge">
-          <p class="eyebrow">TRY NEXT</p>
-          <h3>Flight</h3>
-          <p>Next: gravity play vs flap whoosh FX.</p>
+          <p class="eyebrow">DESIGN PAYOFF</p>
+          <h3>Reuse for coins, XP, and loot</h3>
+          <p>Any pickup that flies into UI benefits from the same entity/proxy split.</p>
         </article>
       </div>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-meter/" rel="prev">← STEP A02<strong>FX for Timing Grades</strong></a>
-      <a href="../vfx-fx-flight/" rel="next">STEP A04 →<strong>Flight with Whoosh FX</strong></a>
+      <a href="../vfx-fx-meter/" rel="prev">← STEP A02<strong>Map Timing Grades to Recipes</strong></a>
+      <a href="../vfx-fx-flight/" rel="next">STEP A04 →<strong>Translate Flight Physics into Pose</strong></a>
     </nav>
 
     <section class="feedback-section" aria-labelledby="feedback-title">

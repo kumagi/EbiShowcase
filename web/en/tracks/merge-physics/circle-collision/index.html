@@ -47,7 +47,7 @@
       <h1>Circle Collision</h1>
       <p>Use center distance to detect overlap and push two circles apart along the right direction. STEP 01’s floor bounce, now between two circles.</p>
       <div class="overview-concept"><small>CONCEPT THIS STEP</small><strong>Center distance and contact normals</strong></div>
-    </section>
+    </section><!-- genre-presentation-bridge:start --><aside class="genre-presentation-inline"><strong>This chapter starts with presentation fundamentals already in place.</strong><span>New work is circle resolution, penetration correction, bounce, gravity, and tier-size curves.</span><nav aria-label="VFX design references"><a href="../../visual-effects/vfx-fx-tap/"><b>A01</b><span>immutable result event</span></a><a href="../../visual-effects/vfx-fx-breakout/"><b>A06</b><span>pre-delete snapshot</span></a><a href="../../visual-effects/vfx-fx-shooter/"><b>A08</b><span>event queue and FX budget</span></a></nav><div class="genre-presentation-inline-contract"><p><b>MOTION BASELINE</b>Create one MergeResult, animate two deleted snapshots into the new body, and budget simultaneous merge events.</p><p><b>TEST SEAM</b>Equal initial state and ticks yield equal merges; zero particles preserve radii, score, and game-over.</p></div></aside><!-- genre-presentation-bridge:end -->
 <p class="curriculum-bridge">This track shares the <a href="../../../games/tap-target/#basics">LEVEL 01</a> state boundary: rules advance in Update, while Draw is a replaceable projection—each step adds one new piece. Here the drawing and the hit test are both circles.</p>
 
 <section class="play lesson-play" id="play">

@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="ブロックはゲームのルールに参加するスプライト、破片・炎は見た目だけのFXスプライトです。基礎編のブロック判定と更新はそのままに、壊れた場所へfx用の絵を足します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
-  <title>Ebi Showcase – ブロック破壊を二段にする</title>
+  <meta name="description" content="ブロックを消してから色や形を読もうとしても、参照先はもうありません。衝突が成立した瞬間にID・矩形・色番号をSnapshotへコピーし、bricksではalive=falseを即確定します。Tombstoneはその静止画を24フレームだけ破片へ崩し、2フレームのヒットストップが衝">
+  <title>Ebi Showcase – 壊れたブロックを破片へ引き継ぐ</title>
   <link rel="canonical" href="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/fx-breakout/">
     <!-- ogp:start -->
     <meta property="og:site_name" content="Ebi Showcase">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ebi Showcase – ブロック破壊を二段にする">
-    <meta property="og:description" content="ブロックはゲームのルールに参加するスプライト、破片・炎は見た目だけのFXスプライトです。基礎編のブロック判定と更新はそのままに、壊れた場所へfx用の絵を足します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta property="og:title" content="Ebi Showcase – 壊れたブロックを破片へ引き継ぐ">
+    <meta property="og:description" content="ブロックを消してから色や形を読もうとしても、参照先はもうありません。衝突が成立した瞬間にID・矩形・色番号をSnapshotへコピーし、bricksではalive=falseを即確定します。Tombstoneはその静止画を24フレームだけ破片へ崩し、2フレームのヒットストップが衝">
     <meta property="og:url" content="https://kumagi.github.io/EbiShowcase/ja/tracks/visual-effects/fx-breakout/">
     <meta property="og:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--fx-breakout.png?v=20260713-font1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="ブロック破壊を二段にする">
+    <meta property="og:image:alt" content="壊れたブロックを破片へ引き継ぐ">
     <meta property="og:locale" content="ja_JP">
     <meta property="og:locale:alternate" content="en_US">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ebi Showcase – ブロック破壊を二段にする">
-    <meta name="twitter:description" content="ブロックはゲームのルールに参加するスプライト、破片・炎は見た目だけのFXスプライトです。基礎編のブロック判定と更新はそのままに、壊れた場所へfx用の絵を足します。 遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。">
+    <meta name="twitter:title" content="Ebi Showcase – 壊れたブロックを破片へ引き継ぐ">
+    <meta name="twitter:description" content="ブロックを消してから色や形を読もうとしても、参照先はもうありません。衝突が成立した瞬間にID・矩形・色番号をSnapshotへコピーし、bricksではalive=falseを即確定します。Tombstoneはその静止画を24フレームだけ破片へ崩し、2フレームのヒットストップが衝">
     <meta name="twitter:image" content="https://kumagi.github.io/EbiShowcase/assets/og/ja--tracks--visual-effects--fx-breakout.png?v=20260713-font1">
-    <meta name="twitter:image:alt" content="ブロック破壊を二段にする">
+    <meta name="twitter:image:alt" content="壊れたブロックを破片へ引き継ぐ">
     <!-- ogp:end -->
   <link rel="stylesheet" href="../../../../style.css">
   <!-- favicon:start -->
@@ -44,22 +44,35 @@
 
     <section class="overview-hero">
       <p class="eyebrow">★★★★★ / PLAYABLE</p>
-      <h1>ブロック破壊を二段にする</h1>
-      <p>ブロックはゲームのルールに参加するスプライト、破片・炎は見た目だけのFXスプライトです。基礎編のブロック判定と更新はそのままに、壊れた場所へfx用の絵を足します。</p>
-      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>ゲーム用スプライトとFXを分ける</strong></div>
+      <h1>壊れたブロックを破片へ引き継ぐ</h1>
+      <p>ブロックを消してから色や形を読もうとしても、参照先はもうありません。衝突が成立した瞬間にID・矩形・色番号をSnapshotへコピーし、bricksではalive=falseを即確定します。Tombstoneはその静止画を24フレームだけ破片へ崩し、2フレームのヒットストップが衝撃を強調します。</p>
+      <div class="overview-concept"><small>このステップで学ぶこと</small><strong>削除前スナップショットで破壊を描く</strong></div>
     </section>
 
     <p class="curriculum-bridge">このコースも <a href="../../../games/tap-target/#basics">LEVEL 01</a> の <strong>Update（数字）とDraw（絵）の独立した境界</strong>の上にあります。ここでは同じ状態を別の描き方へ投影する方法を一段深く扱います。</p>
-    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED FX の約束</p><h2>ゲームのルールは、そのまま。<br>見た目だけを増やせる。</h2><p><code>updatePlay()</code> は点数・当たり・勝敗をこれまで通り決めます。<code>Game</code> に <code>fx</code> の箱を足し、<code>fx.Update()</code> は粒など<strong>見た目用の時間</strong>だけを進め、<code>Draw</code> で <code>fx.Draw()</code> を重ねます。つまり元のゲームルールを触らずに派手にできます。ただし粒が動く演出には、play を変えない独立した <code>fx.Update()</code> は必要です。</p></section>
+    <section class="vfx-advanced-contract"><p class="eyebrow">ADVANCED FX の設計原則</p><h2>ルールの答えと、<br>答えを見せる時間を分ける。</h2><p><code>updatePlay()</code> は衝突・得点・盤面などの<strong>正解</strong>を先に確定し、結果を値やイベントとして一度だけ渡します。演出側はその事実から補間・姿勢・残像・粒子の時間を進めます。<code>Draw</code> は状態を読むだけで、得点も座標も書き換えません。この境界があるから、派手な画面とGPUなしで試せるユニットテストを両立できます。</p></section>
+    <section class="vfx-pattern" aria-labelledby="pattern-vfx-fx-breakout">
+        <div class="vfx-pattern-head">
+          <div><p class="eyebrow">PATTERN A06 / PRE-DELETE SNAPSHOT</p><h2 id="pattern-vfx-fx-breakout">Pre-delete Snapshot</h2></div>
+          <p>削除後に元実体へ参照して破片を描くと、nil・配列再利用・次ステージのデータ混入が起きます。</p>
+        </div>
+        <div class="vfx-pattern-flow" aria-label="状態の流れ">
+          <span>brick hit</span><b>→</b><span>copy Snapshot</span><b>→</b><span>remove brick</span><b>→</b><span>Tombstone Tween</span><b>→</b><span>four shards</span>
+        </div>
+        <div class="vfx-pattern-grid">
+          <article><p class="eyebrow">PRESENTATION STATE</p><h3>Tombstoneは元実体を参照しない</h3><p>描画に必要な矩形とVariantだけを値で持ち、24F後に捨てます。元のbricks配列とは独立して更新できます。</p></article>
+          <article class="vfx-test-contract"><p class="eyebrow">TEST CONTRACT</p><h3>削除と余韻を別の契約にする</h3><ul><li>hit直後にalive=false</li><li>Snapshotの値はTween中不変</li><li>Done後にghostsから除去</li></ul></article>
+        </div>
+      </section>
 
     <section class="play lesson-play" id="play">
       <div class="section-head">
-        <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>ブロックを砕こう</h2></div>
-        <p>ボールでブロックを壊す。破片は fx。bricks の数と fx.parts を見比べよう。</p>
+        <div><p class="eyebrow">PLAYABLE / LIVE GO + マウス</p><h2>一個ずつ壊し、破片の余韻を見る</h2></div>
+        <p>衝突時にボールは短く止まり、ブロックは四片へ割れて落ちます。全消しでは紙吹雪を重ねますが、新面のブロックとは別リストです。</p>
       </div>
       <div class="game-shell">
         <div class="game-top"><span>● LIVE / GO + WASM</span><span>STEP A06</span></div>
-        <div id="game-wrap"><iframe class="lesson-game-frame" title="ブロック破壊を二段にする" src="../../../../play/vfx-fx-breakout/" allow="autoplay; fullscreen"></iframe></div>
+        <div id="game-wrap"><iframe class="lesson-game-frame" title="壊れたブロックを破片へ引き継ぐ" src="../../../../play/vfx-fx-breakout/" allow="autoplay; fullscreen"></iframe></div>
       </div>
     </section>
 <!-- BEGIN BEGINNER BRIDGE -->
@@ -71,84 +84,83 @@
 
     <section class="physics" id="learn">
       <div class="lesson-intro">
-        <p class="eyebrow">DEEP DIVE / DESTROY</p>
-        <h2>消えるものと、<br>飛び散るもの</h2>
-        <p class="lesson-lead">ゲーム用の bricks は当たり判定・得点・残り数を持ちます。fx の破片は寿命と見た目だけを持ちます。Game構造体で二つを分け、基礎編のUpdateのルールを保ったまま、Drawで破片を重ねます。</p>
+        <p class="eyebrow">DEEP DIVE / PRE-DELETE SNAPSHOT</p>
+        <h2>削除した物の破片を、<br>何から描けばいい？</h2>
+        <p class="lesson-lead">削除前に表示に必要な事実だけを値コピーします。Tombstoneは元brickへのポインタを持たないため、配列の詰め替えや次の面の生成後も安全です。ゲーム側ではブロックが消えているので、破片へ再衝突しません。</p>
       </div>
 
       <div class="concept-row">
         <article>
           <span class="concept-number">1</span>
-          <h3>削除</h3>
-          <p>bricks から外す。</p>
-          <code>bricks = alive</code>
+          <h3>先に写す</h3>
+          <p>ID・位置・大きさ・色番号を値コピー。</p>
+          <code>Snapshot{...}</code>
         </article>
         <article>
           <span class="concept-number">2</span>
-          <h3>破片</h3>
-          <p>同じ座標で Burst/Flame。</p>
-          <code>fx.FlameBurst</code>
+          <h3>ルールは即削除</h3>
+          <p>alive=falseと得点をその場で確定。</p>
+          <code>brick.alive = false</code>
         </article>
         <article>
           <span class="concept-number">3</span>
-          <h3>分離</h3>
-          <p>ゲーム用スプライトと演出用スプライトを別管理。</p>
-          <code>bricks / fx.parts</code>
+          <h3>墓標を崩す</h3>
+          <p>TombstoneのProgressで四片を広げる。</p>
+          <code>ghost.Progress()</code>
         </article>
       </div>
 
-      <div class="motion-lab" data-lab="fx-breakout" aria-labelledby="lab-title-vfx-fx-breakout">
+      <div class="motion-lab" data-lab="architecture-trace" aria-labelledby="lab-title-vfx-fx-breakout">
         <div class="lab-copy">
-          <p class="eyebrow">TRY IT / TWO BOXES</p>
-          <h3 id="lab-title-vfx-fx-breakout">ゲーム用と演出用を分ける</h3>
-          <p>左はゲームのブロック、右は見た目だけの破片。役割ごとに別の箱で持ちます。</p>
-          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-breakout-hit>ボールを当てる</button><button type="button" class="lab-button" data-lab-breakout-tick>破片だけ 1 tick進める</button><button type="button" class="lab-button lab-button-quiet" data-lab-reset>リセット</button></div>
+          <p class="eyebrow">TRACE IT / RULE → MOTION → PIXELS</p>
+          <h3 id="lab-title-vfx-fx-breakout">ブロックなしでも破片が完走する</h3>
+          <p>aliveを落とした直後からTombstoneだけを進めます。次の面をbuildBricksしても旧破片の色と位置が変わらないことを確認します。</p>
+          <div class="lab-controls"><button type="button" class="lab-button lab-button-primary" data-lab-architecture-step>次の状態へ →</button><button type="button" class="lab-button lab-button-quiet" data-lab-architecture-reset>リセット</button></div>
         </div>
         <div class="lab-visual">
-          <div class="lab-board lab-fx-split" data-lab-board>
-          <div class="lab-fx-col"><h4>play（当たり判定あり）</h4>
-            <p>● ball</p><ul data-lab-brick-list></ul></div>
-          <div class="lab-fx-col"><h4>fx（当たり判定なし）</h4>
-            <ul data-lab-shard-list></ul></div>
-          <div class="lab-fx-stage" data-lab-shard-stage aria-hidden="true"></div>
-        </div><p class="lab-fx-hint" data-lab-breakout-hint></p>
-          <div class="lab-values" aria-live="polite"><div><span>ブロック(play)</span><strong data-lab-bricks>—</strong></div><div><span>破片(fx)</span><strong data-lab-shards>—</strong></div></div>
+          <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>brick hit</span><i>→</i><span data-lab-architecture-node><b>2</b>copy Snapshot</span><i>→</i><span data-lab-architecture-node><b>3</b>remove brick</span><i>→</i><span data-lab-architecture-node><b>4</b>Tombstone Tween</span><i>→</i><span data-lab-architecture-node><b>5</b>four shards</span></div>
+          <div class="lab-architecture-boundary"><small>壊してはいけない境界</small><strong data-lab-architecture-boundary>hit直後にalive=false</strong></div>
+        </div>
+          <div class="lab-values" aria-live="polite"><div><span>現在の段階</span><strong data-lab-architecture-index>—</strong></div><div><span>状態の所有者</span><strong data-lab-architecture-owner>—</strong></div></div>
         </div>
       </div>
 
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE DEMO</p>
-          <h3>delete してから spawn</h3>
-          <p>順序を逆にすると一瞬二重になる。</p>
+          <h3>参照ではなく値を保存する</h3>
+          <p>削除対象へのポインタを演出が握ると、再利用された配列要素を誤って描きます。</p>
         </div>
-        <pre><code>// brick broken:
-bricks = remove(bricks, i)     // play
-g.fx.FlameBurst(x, y, 12)      // fx only</code></pre>
+        <pre><code>snap := vfxmotion.Snapshot{
+    ID: i, X: b.x, Y: b.y, W: brickW, H: brickH, Variant: b.row,
+}
+g.ghosts = append(g.ghosts, vfxmotion.NewTombstone(snap, 24))
+b.alive = false // collision truth changes immediately</code></pre>
       </div>
 
       <div class="why-grid">
         <article>
-          <p class="eyebrow">WHY DELETE FIRST?</p>
-          <h3>ルールの真実</h3>
-          <p>もうブロックは無い、が先。花火は後。</p>
+          <p class="eyebrow">TEST THE CONTRACT</p>
+          <h3>Snapshotが最後まで不変か試す</h3>
+          <p>Tombstoneを完了までAdvanceし、元のID・矩形・Variantが変化しないことを比較します。</p>
         </article>
         <article>
-          <p class="eyebrow">WHY TWO SPRITES?</p>
-          <h3>役割が違う</h3>
-          <p>ブロックはルールに参加し、破片は見た目だけ。分けると両方のコードを読みやすく保てます。</p>
+          <p class="eyebrow">FAILURE MODE</p>
+          <h3>壊れかけ状態をルールへ増やしすぎない</h3>
+          <p>breaking brickを衝突配列へ残すと、再ヒット・クリア判定・保存形式が複雑になります。</p>
         </article>
         <article class="challenge">
-          <p class="eyebrow">TRY NEXT</p>
-          <h3>Snakeへ</h3>
-          <p>体のセル配列とキラキラを分離。</p>
+          <p class="eyebrow">DESIGN PAYOFF</p>
+          <h3>敵死亡・宝箱・地形破壊へ拡張</h3>
+          <p>即時削除＋表示スナップショットは、元実体より長い死亡演出すべてに使えます。</p>
         </article>
       </div>
     </section>
 
     <nav class="lesson-pager">
-      <a href="../vfx-fx-pong/" rel="prev">← STEP A05<strong>ボールに火花とトレイルを足す</strong></a>
-      <a href="../vfx-fx-snake/" rel="next">STEP A07 →<strong>スネークに捕食演出を足す</strong></a>
+      <a href="../vfx-fx-pong/" rel="prev">← STEP A05<strong>ボールの過去を安全な軌跡にする</strong></a>
+      <a href="../vfx-fx-snake/" rel="next">STEP A07 →<strong>マス目の蛇を滑らかにつなぐ</strong></a>
     </nav>
 
     <section class="feedback-section" aria-labelledby="feedback-title">

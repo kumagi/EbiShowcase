@@ -10,6 +10,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/vfxfx"
+	"github.com/kumagi/EbiShowcase/internal/vfxmotion"
 )
 
 const width, height = 480, 720
@@ -21,16 +23,29 @@ type fruit struct {
 	x, y, vx, vy float64
 	tier         int
 	dead         bool
+	born         int
 }
+
+type mergeVisual struct {
+	fromAX, fromAY float64
+	fromBX, fromBY float64
+	toX, toY       float64
+	tier           int
+	tween          vfxmotion.Tween
+}
+
 type game struct {
 	fruits              []fruit
 	rng                 *rand.Rand
 	next, score, merges int
 	clear               bool
+	mergeVisuals        []mergeVisual
+	fx                  vfxfx.System
 }
 
 func newGame() *game { return &game{rng: rand.New(rand.NewSource(4705))} }
 func (g *game) Update() error {
+	g.updatePresentation()
 	if g.clear {
 		if any() {
 			*g = *newGame()
@@ -43,6 +58,9 @@ func (g *game) Update() error {
 	}
 	for i := range g.fruits {
 		f := &g.fruits[i]
+		if f.born > 0 {
+			f.born--
+		}
 		f.vy += .46
 		f.x += f.vx
 		f.y += f.vy
@@ -84,10 +102,17 @@ func (g *game) Update() error {
 				}
 				if pass == 0 && a.tier == b.tier && a.tier < 5 {
 					tier := a.tier + 1
-					spawned = append(spawned, fruit{x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, vx: (a.vx + b.vx) / 2, vy: -2, tier: tier})
+					x, y := (a.x+b.x)/2, (a.y+b.y)/2
+					g.mergeVisuals = append(g.mergeVisuals, mergeVisual{
+						fromAX: a.x, fromAY: a.y, fromBX: b.x, fromBY: b.y,
+						toX: x, toY: y, tier: a.tier, tween: vfxmotion.NewTween(14),
+					})
+					spawned = append(spawned, fruit{x: x, y: y, vx: (a.vx + b.vx) / 2, vy: -2, tier: tier, born: 14})
 					a.dead, b.dead = true, true
 					g.merges++
 					g.score += 10 * (tier + 1)
+					g.fx.Shockwave(x, y, 0.5+float64(tier)*0.12, color.White, colors[tier])
+					g.fx.Burst(x, y, 10+tier*3, 1.8+float64(tier)*0.25, colors[tier], true)
 					if tier == 5 {
 						g.clear = true
 					}
@@ -119,15 +144,44 @@ func (g *game) Update() error {
 	g.fruits = append(alive, spawned...)
 	return nil
 }
+
+func (g *game) updatePresentation() {
+	alive := g.mergeVisuals[:0]
+	for i := range g.mergeVisuals {
+		g.mergeVisuals[i].tween.Advance()
+		if !g.mergeVisuals[i].tween.Done() {
+			alive = append(alive, g.mergeVisuals[i])
+		}
+	}
+	g.mergeVisuals = alive
+	g.fx.Update()
+}
+
 func (g *game) Draw(s *ebiten.Image) {
 	s.Fill(color.RGBA{18, 28, 44, 255})
 	vector.DrawFilledRect(s, 20, 70, 440, 610, color.RGBA{35, 44, 61, 255}, false)
 	vector.StrokeRect(s, 20, 70, 440, 610, 5, color.RGBA{110, 128, 151, 255}, false)
 	for _, f := range g.fruits {
 		r := radii[f.tier]
-		vector.DrawFilledCircle(s, float32(f.x), float32(f.y), float32(r), colors[f.tier], false)
+		scale := 1.0
+		if f.born > 0 {
+			progress := 1 - float64(f.born)/14
+			scale = 0.55 + vfxmotion.EaseOutCubic(progress)*0.45 + math.Sin(progress*math.Pi)*0.12
+		}
+		vector.DrawFilledCircle(s, float32(f.x), float32(f.y), float32(r*scale), colors[f.tier], false)
 		ebitenutil.DebugPrintAt(s, fmt.Sprintf("%d", f.tier+1), int(f.x)-3, int(f.y)-5)
 	}
+	for _, visual := range g.mergeVisuals {
+		t := vfxmotion.EaseInOutCubic(visual.tween.Progress())
+		ax := vfxmotion.Lerp(visual.fromAX, visual.toX, t)
+		ay := vfxmotion.Lerp(visual.fromAY, visual.toY, t)
+		bx := vfxmotion.Lerp(visual.fromBX, visual.toX, t)
+		by := vfxmotion.Lerp(visual.fromBY, visual.toY, t)
+		r := radii[visual.tier] * (1 - 0.65*t)
+		vector.DrawFilledCircle(s, float32(ax), float32(ay), float32(r), colors[visual.tier], false)
+		vector.DrawFilledCircle(s, float32(bx), float32(by), float32(r), colors[visual.tier], false)
+	}
+	g.fx.Draw(s)
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("NEXT TIER %d   MERGES %02d   SCORE %04d", g.next+1, g.merges, g.score), 85, 28)
 	ebitenutil.DebugPrintAt(s, "TAP TO DROP — MATCH EQUAL NUMBERS", 105, 690)
 	if g.clear {

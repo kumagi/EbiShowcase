@@ -41,6 +41,7 @@ func TestIntegrateGravity(t *testing.T) {
 	}{
 		{name: "upward velocity slows before position advances", position: 100, velocity: -7.4, gravity: 0.42, wantPosition: 93.02, wantVelocity: -6.98},
 		{name: "downward velocity grows before position advances", position: 100, velocity: 2, gravity: 0.42, wantPosition: 102.42, wantVelocity: 2.42},
+		{name: "zero gravity preserves velocity for one tick", position: 100, velocity: 2, gravity: 0, wantPosition: 102, wantVelocity: 2},
 	}
 
 	for _, tc := range testCases {
@@ -88,6 +89,7 @@ func TestAimVelocity(t *testing.T) {
 		wantX, wantY  float64
 	}{
 		{name: "three four five direction scales to requested speed", dx: 3, dy: 4, speed: 10, wantX: 6, wantY: 8},
+		{name: "negative direction preserves left and upward signs", dx: -3, dy: -4, speed: 10, wantX: -6, wantY: -8},
 		{name: "zero direction produces stopped bullet", speed: 10, wantX: 0, wantY: 0},
 	}
 
@@ -113,6 +115,7 @@ func TestSpendLife(t *testing.T) {
 		wantGameOver bool
 	}{
 		{name: "spending one of three lives continues game", lives: 3, wantLives: 2, wantGameOver: false},
+		{name: "spending penultimate life leaves one life", lives: 2, wantLives: 1, wantGameOver: false},
 		{name: "spending last life ends game", lives: 1, wantLives: 0, wantGameOver: true},
 	}
 
@@ -137,6 +140,7 @@ func TestSnakeStepInterval(t *testing.T) {
 		wantInterval int
 	}{
 		{name: "zero score uses ten tick interval", score: 0, wantInterval: 10},
+		{name: "two points keep ten tick interval", score: 2, wantInterval: 10},
 		{name: "three points reduce interval by one", score: 3, wantInterval: 9},
 		{name: "eighteen points reach four tick floor", score: 18, wantInterval: 4},
 		{name: "high score stays at four tick floor", score: 99, wantInterval: 4},
@@ -161,6 +165,7 @@ func TestAdvanceTween(t *testing.T) {
 		wantComplete bool
 	}{
 		{name: "step below end stays incomplete", progress: 0.28, wantProgress: 0.42, wantComplete: false},
+		{name: "step ending just below one stays incomplete", progress: 0.85, wantProgress: 0.99, wantComplete: false},
 		{name: "step past end clamps and completes", progress: 0.98, wantProgress: 1, wantComplete: true},
 	}
 
@@ -239,8 +244,10 @@ func TestEnemyMode(t *testing.T) {
 		want     int
 	}{
 		{name: "distance below chase boundary starts chase", distance: 164.9, want: 1},
+		{name: "exact chase boundary keeps wander mode", distance: 165, want: 0},
 		{name: "middle distance keeps wander mode", distance: 200, want: 0},
 		{name: "middle distance keeps chase mode", current: 1, distance: 200, want: 1},
+		{name: "exact wander boundary keeps chase mode", current: 1, distance: 230, want: 1},
 		{name: "distance above wander boundary returns to wander", current: 1, distance: 230.1, want: 0},
 	}
 
@@ -286,6 +293,9 @@ func TestOutside(t *testing.T) {
 		{name: "point inside field is not outside", x: 240, y: 360, want: false},
 		{name: "point on margin is not outside", x: -30, y: 100, want: false},
 		{name: "point beyond margin is outside", x: -30.1, y: 100, want: true},
+		{name: "point beyond right margin is outside", x: 510.1, y: 100, want: true},
+		{name: "point beyond top margin is outside", x: 100, y: -30.1, want: true},
+		{name: "point beyond bottom margin is outside", x: 100, y: 750.1, want: true},
 	}
 
 	for _, tc := range testCases {
