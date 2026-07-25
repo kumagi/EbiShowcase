@@ -3909,8 +3909,13 @@ document.querySelectorAll(".motion-lab[data-lab='architecture-trace']").forEach(
   const indexOut = lab.querySelector("[data-lab-architecture-index]");
   const ownerOut = lab.querySelector("[data-lab-architecture-owner]");
   const boundary = lab.querySelector("[data-lab-architecture-boundary]");
+  const breakoutScene = lab.querySelector("[data-lab-breakout-scene]");
+  const breakoutStatus = lab.querySelector("[data-lab-breakout-status]");
   const tests = [...lab.closest(".physics")?.querySelectorAll(".vfx-test-contract li") || []].map((node) => node.textContent.trim());
   let index = 0;
+  const breakoutLabels = document.documentElement.lang === "ja"
+    ? ["ボールがブロックに命中", "消す前の形と色をSnapshotへコピー", "ルール側のブロックはすぐ削除", "Tombstoneが四片へ分かれ始める", "元ブロックなしで破片だけが完走"]
+    : ["The ball hits the brick", "Copy shape and color into Snapshot", "Remove the rules-side brick immediately", "Tombstone starts splitting into four", "The shards finish without the old brick"];
 
   const owner = () => {
     if (index <= 1) return document.documentElement.lang === "ja" ? "play / ルール" : "play / rules";
@@ -3926,6 +3931,8 @@ document.querySelectorAll(".motion-lab[data-lab='architecture-trace']").forEach(
     if (indexOut) indexOut.textContent = `${index + 1} / ${nodes.length}`;
     if (ownerOut) ownerOut.textContent = owner();
     if (boundary && tests.length) boundary.textContent = tests[index % tests.length];
+    if (breakoutScene) breakoutScene.dataset.state = String(index);
+    if (breakoutStatus) breakoutStatus.textContent = breakoutLabels[index] || breakoutLabels.at(-1);
   };
   lab.querySelector("[data-lab-architecture-step]")?.addEventListener("click", () => {
     index = (index + 1) % nodes.length;

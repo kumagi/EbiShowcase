@@ -1184,12 +1184,23 @@ function labParts(kind, lang) {
 function labSection(lesson, lang, idx) {
   const c = lesson[lang].lab;
   const advanced = lesson.tier === "advanced" && lesson[lang].architecture;
+  const architectureVisual = lesson.labVisual === "breakout"
+    ? `<div class="lab-breakout-scene" data-lab-breakout-scene data-state="0" role="img" aria-label="${lang === "ja" ? "ボールがブロックに当たり、ブロックが消えて四つの破片になる図" : "A ball hits a brick; the brick disappears and becomes four shards"}">
+            <div class="lab-breakout-bricks" aria-hidden="true"><i></i><i></i><i data-lab-breakout-brick></i><i></i><i></i></div>
+            <span class="lab-breakout-snapshot" data-lab-breakout-snapshot aria-hidden="true"></span>
+            <span class="lab-breakout-ball" data-lab-breakout-ball aria-hidden="true"></span>
+            <span class="lab-breakout-paddle" aria-hidden="true"></span>
+            <span class="lab-breakout-shards" data-lab-breakout-shards aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <p><b>PLAY</b><span data-lab-breakout-status aria-live="polite">${lang === "ja" ? "ボールがブロックに命中" : "The ball hits the brick"}</span></p>
+          </div>`
+    : "";
+  const architectureVisualMarkup = architectureVisual ? `\n          ${architectureVisual}` : "";
   const { controls, board, values } = advanced
     ? {
         controls:
           btn("data-lab-architecture-step", lang === "ja" ? "次の状態へ →" : "Next state →", "lab-button-primary") +
           btn("data-lab-architecture-reset", RESET[lang], "lab-button-quiet"),
-        board: `<div class="lab-board lab-architecture-trace" data-lab-board>
+        board: `<div class="lab-board lab-architecture-trace" data-lab-board>${architectureVisualMarkup}
           <div class="lab-architecture-flow">${lesson[lang].architecture.flow.map((item, i) =>
             `<span data-lab-architecture-node${i === 0 ? ' data-active="true"' : ""}><b>${i + 1}</b>${item}</span>${i < lesson[lang].architecture.flow.length - 1 ? "<i>→</i>" : ""}`).join("")}</div>
           <div class="lab-architecture-boundary"><small>${lang === "ja" ? "壊してはいけない境界" : "Boundary to protect"}</small><strong data-lab-architecture-boundary>${lesson[lang].architecture.tests[0]}</strong></div>

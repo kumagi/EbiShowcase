@@ -6,12 +6,10 @@ import (
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
-	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/cameralab"
 	"github.com/kumagi/EbiShowcase/internal/mobileart"
 	"github.com/kumagi/EbiShowcase/internal/shaderlab"
@@ -59,8 +57,6 @@ type game struct {
 	enter                                                        float64
 	ended                                                        bool
 	particles                                                    []particle
-	audio                                                        *audio.Context
-	gate                                                         audiolab.Gate
 	pulse                                                        *shaderlab.Pulse
 	cam                                                          cameralab.State
 	badge                                                        *ebiten.Image
@@ -71,7 +67,6 @@ var collectedEndings int
 func newGame() *game {
 	mobileart.Preload()
 	g := &game{endingMask: collectedEndings, enter: 0}
-	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: W / 2, Y: H / 2}, ViewW: W, ViewH: H}
 	g.badge = ebiten.NewImage(20, 20)
@@ -130,7 +125,6 @@ func (g *game) Update() error {
 	return nil
 }
 func (g *game) selectChoice(c choice) {
-	g.play(620)
 	g.flags |= c.flag
 	g.flash = 5
 	for i := 0; i < 18; i++ {
@@ -148,10 +142,6 @@ func (g *game) selectChoice(c choice) {
 	if story[g.node].entrance == "shake" {
 		g.shake = 18
 	}
-}
-func (g *game) play(freq float64) {
-	g.gate.Arm(true)
-	g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, freq, .055)).Play()
 }
 func (g *game) finish() {
 	switch {

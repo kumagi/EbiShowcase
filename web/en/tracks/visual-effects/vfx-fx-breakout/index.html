@@ -119,6 +119,14 @@
         </div>
         <div class="lab-visual">
           <div class="lab-board lab-architecture-trace" data-lab-board>
+          <div class="lab-breakout-scene" data-lab-breakout-scene data-state="0" role="img" aria-label="A ball hits a brick; the brick disappears and becomes four shards">
+            <div class="lab-breakout-bricks" aria-hidden="true"><i></i><i></i><i data-lab-breakout-brick></i><i></i><i></i></div>
+            <span class="lab-breakout-snapshot" data-lab-breakout-snapshot aria-hidden="true"></span>
+            <span class="lab-breakout-ball" data-lab-breakout-ball aria-hidden="true"></span>
+            <span class="lab-breakout-paddle" aria-hidden="true"></span>
+            <span class="lab-breakout-shards" data-lab-breakout-shards aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <p><b>PLAY</b><span data-lab-breakout-status aria-live="polite">The ball hits the brick</span></p>
+          </div>
           <div class="lab-architecture-flow"><span data-lab-architecture-node data-active="true"><b>1</b>brick hit</span><i>→</i><span data-lab-architecture-node><b>2</b>copy Snapshot</span><i>→</i><span data-lab-architecture-node><b>3</b>remove brick</span><i>→</i><span data-lab-architecture-node><b>4</b>Tombstone Tween</span><i>→</i><span data-lab-architecture-node><b>5</b>four shards</span></div>
           <div class="lab-architecture-boundary"><small>Boundary to protect</small><strong data-lab-architecture-boundary>alive is false immediately</strong></div>
         </div>
