@@ -15,7 +15,10 @@ import (
 	xdraw "golang.org/x/image/draw"
 )
 
-const iconSize = 512
+// 180px is the largest size requested by the current markup
+// (rel="apple-touch-icon"). Serving a 512px PNG as the browser favicon made a
+// high-priority request roughly four times larger than it needed to be.
+const iconSize = 180
 
 func main() {
 	root := "."
@@ -36,7 +39,7 @@ func main() {
 
 	icon := image.NewNRGBA(image.Rect(0, 0, iconSize, iconSize))
 	center := iconSize / 2
-	radius := 248
+	radius := iconSize * 31 / 64
 	background := color.NRGBA{R: 14, G: 27, B: 62, A: 255}
 	for y := 0; y < iconSize; y++ {
 		for x := 0; x < iconSize; x++ {
@@ -53,7 +56,8 @@ func main() {
 	head := source.(interface {
 		SubImage(image.Rectangle) image.Image
 	}).SubImage(image.Rect(0, 0, 390, 390))
-	xdraw.CatmullRom.Scale(icon, image.Rect(12, 12, 500, 500), head, head.Bounds(), xdraw.Over, nil)
+	inset := iconSize * 3 / 128
+	xdraw.CatmullRom.Scale(icon, image.Rect(inset, inset, iconSize-inset, iconSize-inset), head, head.Bounds(), xdraw.Over, nil)
 
 	outputPath := filepath.Join(root, "web", "assets", "favicon.png")
 	outputFile, err := os.Create(outputPath)

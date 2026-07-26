@@ -1,0 +1,98 @@
+/*
+ * Above-the-fold styles for the bilingual home pages.
+ *
+ * Keep these rules in sync with the matching navigation and catalog-hero
+ * rules in web/style.css. scripts/inject-home-critical-css.mjs inlines this
+ * small subset so the shared stylesheet does not block the first render.
+ */
+:root {
+  --ink: #2b3158;
+  --ink-soft: #4a5378;
+  --paper: #f4f6ff;
+  --card: #ffffff;
+  --space: #131a3f;
+  --space-2: #1b2452;
+  --space-line: #2e3a72;
+  --cyan: #2ee6c8;
+  --violet: #8d7bff;
+  --pink: #ff8fc0;
+  --sun: #ffd166;
+  --orange: #ff7a6b;
+  --line: #dde2f5;
+  --glow-cyan: 0 10px 30px rgba(46, 230, 200, .35);
+  --glow-violet: 0 10px 30px rgba(141, 123, 255, .35);
+  --shadow-soft: 0 18px 44px rgba(70, 80, 160, .14);
+  --shadow-pop: 0 24px 60px rgba(70, 80, 160, .2);
+  --radius: 22px;
+  --radius-sm: 14px;
+  --grad-hero: linear-gradient(120deg, #2ee6c8, #8d7bff 55%, #ff8fc0);
+  --grad-cta: linear-gradient(120deg, #8d7bff, #2ee6c8);
+  --font-round: "Hiragino Maru Gothic ProN", "HG Maru Gothic M-PRO", "Zen Maru Gothic", "Yu Gothic UI", "Yu Gothic", YuGothic, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+body { margin: 0; min-width: 0; overflow-x: hidden; background: var(--paper); color: var(--ink); font-family: var(--font-round); line-height: 1.6; }
+button, a, [role="button"], input[type="button"], input[type="submit"] { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+
+.nav { height: 74px; padding: 0 max(24px, 5vw); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 2; background: rgba(255, 255, 255, .75); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.brand { font: 900 17px var(--font-mono); letter-spacing: .1em; text-decoration: none; color: var(--ink); }
+.brand span { background: var(--grad-cta); color: #0c1235; padding: 8px 10px; border-radius: 12px; box-shadow: var(--glow-violet); }
+.nav nav { display: flex; gap: 26px; align-items: center; }
+.nav nav a { color: inherit; text-decoration: none; font: 700 11px var(--font-mono); letter-spacing: .08em; padding: 9px 12px; border-radius: 999px; transition: background .18s, color .18s; }
+.lang { border: 2px solid var(--violet); color: #5a48d8; padding: 8px 14px; border-radius: 999px; }
+.eyebrow { font: 800 11px var(--font-mono); letter-spacing: .15em; color: #6a58e6; text-transform: uppercase; }
+.cta { display: inline-flex; margin-top: 24px; gap: 55px; align-items: center; background: var(--grad-cta); color: #0c1235; padding: 20px 28px; text-decoration: none; font: 800 12px var(--font-mono); border-radius: 999px; box-shadow: var(--glow-cyan); transition: transform .18s, box-shadow .18s; }
+.cta b { color: #0c1235; }
+
+.catalog-hero { min-height: 620px; padding: 72px max(24px, 7vw); background: radial-gradient(rgba(141, 123, 255, .14) 1.6px, transparent 1.6px) 0 0/28px 28px, radial-gradient(900px 480px at 90% -10%, rgba(46, 230, 200, .18), transparent 60%), radial-gradient(760px 420px at -5% 105%, rgba(255, 143, 192, .16), transparent 60%), var(--paper); }
+.catalog-hero-layout { width: min(100%, 1280px); margin: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(270px, 360px); align-items: center; gap: clamp(40px, 7vw, 100px); }
+.catalog-hero h1 { max-width: 900px; font-size: clamp(54px, 7vw, 96px); line-height: .97; letter-spacing: -.05em; margin: 22px 0 32px; font-weight: 900; }
+.catalog-hero h1 em { font-style: normal; background: var(--grad-hero); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.catalog-hero-copy > p:not(.eyebrow) { max-width: 700px; font-size: 18px; line-height: 1.95; color: var(--ink-soft); }
+.catalog-start-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
+.catalog-start-actions .cta { margin-top: 0; min-width: 250px; }
+.catalog-start-actions .cta small { display: block; font: 700 9px var(--font-mono); letter-spacing: .1em; opacity: .72; }
+.catalog-start-actions .cta strong { display: block; margin-top: 3px; }
+.catalog-start-actions .cta-secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+.catalog-character { margin: 0; align-self: stretch; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 20px 18px 18px; border: 1px solid var(--line); border-radius: 32px; background: linear-gradient(180deg, rgba(255, 255, 255, .82), rgba(220, 250, 246, .82)); box-shadow: var(--shadow-soft); overflow: hidden; }
+.catalog-character picture { display: contents; }
+.catalog-character img { display: block; width: auto; height: min(440px, 48vw); max-width: 100%; object-fit: contain; object-position: center bottom; }
+.catalog-character figcaption { width: 100%; padding: 16px; border-radius: 18px; background: #101636; color: #fff; }
+.catalog-character figcaption strong, .catalog-character figcaption span { display: block; }
+.catalog-character figcaption strong { font-size: 17px; }
+.catalog-character figcaption span { margin-top: 7px; font-size: 12px; line-height: 1.7; color: #c9d3f4; }
+
+@media (max-width: 900px) {
+  .catalog-hero-layout { grid-template-columns: 1fr; }
+  .catalog-character { min-height: 360px; display: grid; grid-template-columns: minmax(160px, 240px) 1fr; align-items: end; }
+  .catalog-character img { height: 340px; }
+  .catalog-character figcaption { margin-bottom: 18px; }
+}
+
+@media (max-width: 800px) {
+  .nav nav a:not(:first-child) { display: none; }
+  .nav nav a.lang { display: inline; }
+  .nav { height: 64px; padding-inline: 18px; }
+  .nav nav { gap: 10px; }
+}
+
+@media (max-width: 600px) {
+  .catalog-hero { min-height: auto; padding: 54px 22px; }
+  .catalog-hero h1 { font-size: 50px; }
+  .catalog-hero-copy > p:not(.eyebrow) { font-size: 16px; }
+  .catalog-start-actions, .catalog-start-actions .cta { width: 100%; }
+  .catalog-character { min-height: 0; grid-template-columns: 130px 1fr; padding: 12px; }
+  .catalog-character img { height: 270px; }
+  .catalog-character figcaption { margin-bottom: 8px; padding: 13px; }
+  .catalog-character figcaption strong { font-size: 14px; }
+  .catalog-character figcaption span { font-size: 10px; }
+}
+
+@media (max-width: 420px) {
+  .brand { font-size: 14px; }
+  .nav nav { gap: 8px; }
+  .nav nav a { font-size: 10px; }
+  .cta { width: 100%; justify-content: space-between; }
+}
