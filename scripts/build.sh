@@ -74,6 +74,7 @@ node "$ROOT/scripts/inject-home-critical-css.mjs"
 node "$ROOT/scripts/inject-ogp.mjs"
 node "$ROOT/scripts/gen-search-files.mjs"
 node "$ROOT/scripts/normalize-html-whitespace.mjs"
+node "$ROOT/scripts/optimize-page-delivery.mjs"
 node "$ROOT/scripts/normalize-html-whitespace.mjs" --check
 node "$ROOT/scripts/check-authoring-copy-regression.mjs"
 node "$ROOT/scripts/check-genre-presentation.mjs"

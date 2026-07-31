@@ -15,7 +15,11 @@ const root = new URL("..", import.meta.url).pathname;
 const webRoot = join(root, "web");
 // Bump when the rendered card design/font changes so social crawlers do not
 // keep showing a cached image at the otherwise stable per-page URL.
-const OGP_IMAGE_VERSION = "20260713-font1";
+const OGP_IMAGE_VERSION = "20260731-gameplay1";
+const thumbnailRoot = join(webRoot, "assets", "home-thumbnails");
+const thumbnailItems = JSON.parse(readFileSync(join(thumbnailRoot, "manifest.json"), "utf8"));
+const thumbnailsBySlug = new Map(thumbnailItems.map((item) => [item.slug, item]));
+const thumbnailsByRoute = new Map(thumbnailItems.map((item) => [item.route, item]));
 
 function walk(dir, files = []) {
   for (const name of readdirSync(dir)) {
@@ -66,25 +70,35 @@ function normalizeTitle(raw) {
   return name ? `Ebi Showcase – ${name}` : "Ebi Showcase";
 }
 
-function enrichDescription(description, lang) {
-  // Old builds appended a tuning-only teaching promise. Strip it before using
-  // existing metadata as the next build's source so a stale page cannot keep
-  // reintroducing the obsolete copy (including truncated duplicates).
+function cleanDescription(description, lang) {
+  // Never let a previous generated meta tail become the next build's source.
   let source = String(description || "");
-  source = lang === "ja"
-    ? source.replace(/遊べるデモを動かし、短いGoコードを読み、値を変えて[\s\S]*$/, "")
-    : source.replace(/Play the demo, read a short Go example, change a value, and apply[\s\S]*$/, "");
+  const stale = lang === "ja"
+    ? [
+      /遊べるデモを動かし、短いGoコードを読み、値を変えて[\s\S]*$/u,
+      /遊べるデモを動かし、Goで1つルールを足して[\s\S]*$/u,
+      /キーボードとタッチの両方で試せます。?[\s\S]*$/u,
+    ]
+    : [
+      /Play the demo, read a short Go example, change a value, and apply[\s\S]*$/iu,
+      /Play the demo, add one Go rule, verify it, and apply[\s\S]*$/iu,
+      /The demo works with keyboard and touch\.?[\s\S]*$/iu,
+    ];
+  for (const pattern of stale) source = source.replace(pattern, "");
   source = source.replace(/\s+/g, " ").trim();
-  const tail = lang === "ja"
-    ? "遊べるデモを動かし、Goで1つルールを足して確かめながら、自分のEbitengineゲームへ応用します。"
-    : "Play the demo, add one Go rule, verify it, and apply the idea to your own Ebitengine game step by step.";
-  const extra = lang === "ja"
-    ? "キーボードとタッチの両方で試せます。"
-    : "The demo works with keyboard and touch.";
-  let result = source || (lang === "ja" ? "遊べるミニゲームで学ぶEbitengineのレッスン。" : "Learn Ebitengine through a playable mini-game lesson.");
-  if (result.length < 120) result = `${result} ${tail}`;
-  if (result.length < 120) result = `${result} ${extra}`;
-  return result.slice(0, 160);
+  return source;
+}
+
+function truncate(value, max) {
+  const chars = Array.from(String(value || ""));
+  if (chars.length <= max) return chars.join("");
+  return chars.slice(0, max - 1).join("").replace(/[、,;:\s]+$/u, "") + "…";
+}
+
+function firstSentence(value) {
+  const source = String(value || "").trim();
+  const sentence = source.match(/^.*?[。.!?](?:\s|$)/u)?.[0] || source;
+  return sentence.trim();
 }
 
 function pick(html, ...res) {
@@ -118,6 +132,9 @@ function counterpartPath(pagePath, lang) {
 
 function classify(pagePath) {
   if (!pagePath || pagePath === "root" || pagePath === "ja" || pagePath === "en") return "home";
+  if (pagePath.includes("/graduation")) return "graduation";
+  if (pagePath.includes("/build")) return "build";
+  if (pagePath.includes("/labs/")) return "guide";
   if (pagePath.includes("/guides/")) return "guide";
   if (pagePath.includes("/tracks/visual-effects")) return "vfx";
   if (pagePath.includes("/tracks/")) return "track";
@@ -128,31 +145,144 @@ function classify(pagePath) {
 function extract(html, pagePath) {
   const lang = pick(html, /<html[^>]*\blang="([^"]+)"/i) || (pagePath.startsWith("ja") ? "ja" : "en");
   const title = normalizeTitle(pick(html, /<title>([^<]*)<\/title>/i) || "Ebi Showcase");
-  let description = pick(html, /<meta\s+name="description"\s+content="([^"]*)"/i);
-  if (!description) {
-    description = pick(
-      html,
-      /<p class="lead"[^>]*>([\s\S]*?)<\/p>/i,
-      /<section class="overview-hero"[\s\S]*?<h1[^>]*>[\s\S]*?<\/h1>\s*<p>([\s\S]*?)<\/p>/i,
-      /class="[^"]*track-hero[^"]*"[\s\S]*?<h1[^>]*>[\s\S]*?<\/h1>\s*<p>([\s\S]*?)<\/p>/i,
-      /<p class="lesson-lead"[^>]*>([\s\S]*?)<\/p>/i,
-      /<meta\s+name="description"\s+content='([^']*)'/i,
-    );
-  }
-  if (!description) {
-    description =
-      lang === "ja"
-        ? "遊べるミニゲームで学ぶ Ebitengine ショーケース。"
-        : "Learn Ebitengine through playable mini games.";
-  }
-  description = enrichDescription(description, lang);
   const h1 = pick(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i) || title.split("|")[0].trim();
   const eyebrow = pick(
     html,
     /<p class="eyebrow"[^>]*>([\s\S]*?)<\/p>/i,
     /<div class="lesson-breadcrumb"[\s\S]*?<span>([\s\S]*?)<\/span>/i,
   );
-  return { lang, title, description, h1, eyebrow, kind: classify(pagePath) };
+  const concept = pick(
+    html,
+    /<div class="overview-concept"[\s\S]*?<strong>([\s\S]*?)<\/strong>/i,
+    /<div class="lesson-meta"[\s\S]*?<strong>([\s\S]*?)<\/strong>/i,
+    /<section class="play[^"]*"[\s\S]*?<h2[^>]*>([\s\S]*?)<\/h2>/i,
+    /<section class="play-panel"[\s\S]*?<h2[^>]*>([\s\S]*?)<\/h2>/i,
+    /<section class="test-rule-strip"[\s\S]*?<strong>([\s\S]*?)<\/strong>/i,
+  );
+  let description = pick(
+    html,
+    /<(?:section|div)\s+class="[^"]*(?:overview-hero|lesson-hero|track-hero|data-hero|test-hero|test-step-hero)[^"]*"[\s\S]*?<h1[^>]*>[\s\S]*?<\/h1>[\s\S]*?<p(?![^>]*\beyebrow\b)[^>]*>([\s\S]*?)<\/p>/i,
+    /<p class="lead"[^>]*>([\s\S]*?)<\/p>/i,
+    /<p class="lesson-lead"[^>]*>([\s\S]*?)<\/p>/i,
+    /<meta\s+name="description"\s+content="([^"]*)"/i,
+    /<meta\s+name="description"\s+content='([^']*)'/i,
+  );
+  description = cleanDescription(description, lang);
+  if (!description) {
+    description = lang === "ja"
+      ? `${h1}を、実際に動くEbitengineの画面とGoコードで学びます。`
+      : `Explore ${h1} through a working Ebitengine experience and the Go code behind it.`;
+  } else if (Array.from(description).length < 35) {
+    const subject = (concept || h1).replace(/[。.!?]+$/u, "").trim();
+    const addition = lang === "ja"
+      ? `「${subject}」を、実際に動く画面とGoコードで確かめます。`
+      : `Try ${subject} in a working game, then see how the Go rule is built.`;
+    if (!description.includes(subject)) description = `${description} ${addition}`;
+  }
+  const pageLabel = title.replace(/^Ebi Showcase\s*[–—-]\s*/i, "").trim();
+  if (pageLabel && !description.includes(pageLabel)) description = `${pageLabel} — ${description}`;
+  description = truncate(description, 155);
+  const hook = concept
+    ? (lang === "ja" ? `${concept}を、遊んで解き明かす。` : `Play with ${concept}—then build it.`)
+    : firstSentence(description);
+  return {
+    lang,
+    title,
+    description,
+    h1,
+    eyebrow,
+    concept,
+    hook: truncate(hook, 64),
+    kind: classify(pagePath),
+  };
+}
+
+function unlocalizedPath(pagePath) {
+  return pagePath.replace(/^(?:ja|en)(?:\/|$)/, "");
+}
+
+function directPlayableSlug(html) {
+  for (const match of html.matchAll(/<iframe\b[^>]*>/gi)) {
+    const tag = match[0];
+    if (!/\blesson-game-frame\b/i.test(tag)) continue;
+    const source = tag.match(/\b(?:src|data-game-src)="[^"]*\/play\/([^/"]+)\/?"/i)?.[1];
+    if (source) return source;
+  }
+  return "";
+}
+
+const guidePreviewSlugs = new Map([
+  ["guides/performance", "space-shooter"],
+  ["guides/game-data", "dungeon"],
+  ["guides/save", "tap-target"],
+  ["guides/setup", "tap-target"],
+  ["guides/first-30-minutes", "tap-target"],
+  ["guides/choose-your-path", "rpg"],
+  ["labs/shader", "vfx-faux-bloom"],
+  ["labs/audio", "vfx-spells"],
+  ["labs/camera", "platformer"],
+  ["graduation/arcade-60", "bullet-hell"],
+  ["graduation/exploration-3rooms", "metroidvania"],
+  ["graduation/puzzle-3stages", "match3"],
+  ["build", "tap-target"],
+]);
+
+function resolvePreview(html, pagePath, kind, lang) {
+  const route = unlocalizedPath(pagePath);
+  const directSlug = directPlayableSlug(html);
+  let item = directSlug ? thumbnailsBySlug.get(directSlug) : null;
+  let mode = item ? "exact" : "";
+
+  if (!item && route.startsWith("guides/testing/")) {
+    const lessonSlug = route.split("/").at(-1);
+    item = thumbnailsBySlug.get(lessonSlug);
+    if (item) mode = "related";
+  }
+  if (!item) {
+    const track = route.match(/^tracks\/([^/]+)/)?.[1];
+    if (track) {
+      item = thumbnailsByRoute.get(`tracks/${track}`);
+      if (item) mode = route === `tracks/${track}` ? "exact" : "capstone";
+    }
+  }
+  if (!item) {
+    const mappedSlug =
+      guidePreviewSlugs.get(route) ||
+      [...guidePreviewSlugs].find(([prefix]) => route.startsWith(`${prefix}/`))?.[1];
+    item = thumbnailsBySlug.get(mappedSlug);
+    if (item) mode = "related";
+  }
+  if (!item) {
+    item = thumbnailsByRoute.get(route) || thumbnailsBySlug.get("tap-target");
+    mode = thumbnailsByRoute.has(route) ? "exact" : "related";
+  }
+
+  const labels = lang === "ja"
+    ? { exact: "このページの実ゲーム", capstone: "作っていく完成ゲーム", related: "関連する実ゲーム" }
+    : { exact: "REAL GAME ON THIS PAGE", capstone: "THE FINAL GAME YOU'LL BUILD", related: "RELATED REAL GAME" };
+  const actions = lang === "ja"
+    ? {
+      exact: "今すぐ遊べる · Goで仕組みを作る",
+      capstone: "このSTEPを遊ぶ · 完成ゲームへつなぐ",
+      related: kind === "guide" ? "読んで試す · 自分のゲームへ持ち帰る" : "仕組みを学ぶ · 実ゲームで確かめる",
+    }
+    : {
+      exact: "PLAY NOW · BUILD THE RULE IN GO",
+      capstone: "PLAY THIS STEP · BUILD TOWARD THE FINAL",
+      related: kind === "guide" ? "READ · TRY · USE IT IN YOUR GAME" : "LEARN THE IDEA · SEE IT IN A REAL GAME",
+    };
+  if (kind === "home") {
+    labels.related = lang === "ja" ? "ブラウザで動くゲーム教材" : "PLAYABLE EBITENGINE LESSONS";
+    actions.related = lang === "ja"
+      ? "208レッスンから選ぶ · ブラウザですぐ遊ぶ"
+      : "CHOOSE A LESSON · PLAY IT IN YOUR BROWSER";
+  }
+  return {
+    preview: `assets/home-thumbnails/${item.file}`,
+    previewMode: mode,
+    previewLabel: labels[mode],
+    action: actions[mode],
+  };
 }
 
 function buildOgBlock(meta) {
@@ -260,6 +390,7 @@ for (const file of files) {
   const pagePath = pagePathFromFile(file);
   const html = readFileSync(file, "utf8");
   const info = extract(html, pagePath);
+  const preview = resolvePreview(html, pagePath, info.kind, info.lang);
   const key = ogImageKey(pagePath || "root");
   const pageURL = absoluteURL(pagePath ? `${pagePath}/` : "");
   // Root language gate uses trailing path without forcing index
@@ -272,7 +403,7 @@ for (const file of files) {
     pageURL,
     imageURL,
     lang: info.lang,
-    imageAlt: info.h1 || info.title,
+    imageAlt: `${info.h1 || info.title} — ${preview.previewLabel}`,
   });
 
   let next = ensureTitle(html, info.title);
@@ -297,6 +428,11 @@ for (const file of files) {
     eyebrow: info.eyebrow,
     description: info.description,
     image: imagePath,
+    hook: info.hook,
+    action: preview.action,
+    preview: preview.preview,
+    previewMode: preview.previewMode,
+    previewLabel: preview.previewLabel,
   });
 }
 

@@ -27,9 +27,14 @@ function walk(dir, predicate, files = []) {
 function rendererInputs() {
   const generator = walk(join(root, "cmd", "gen-og-images"), (file) => file.endsWith(".go"));
   const font = walk(join(root, "internal", "ogfont"), () => true);
+  const gameplayPreviews = walk(
+    join(root, "web", "assets", "home-thumbnails"),
+    (file) => file.endsWith(".webp") || file.endsWith("manifest.json"),
+  );
   return [
     ...generator,
     ...font,
+    ...gameplayPreviews,
     join(root, "go.mod"),
     join(root, "go.sum"),
     join(root, "scripts", "inject-ogp.mjs"),
@@ -65,6 +70,14 @@ function isPNG(file) {
   return bytes.length >= 8 && bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
 }
 
+function isWebP(file) {
+  if (!existsSync(file)) return false;
+  const bytes = readFileSync(file);
+  return bytes.length >= 12 &&
+    bytes.subarray(0, 4).toString("ascii") === "RIFF" &&
+    bytes.subarray(8, 12).toString("ascii") === "WEBP";
+}
+
 function verify() {
   const manifestPath = join(root, "web", "assets", "og", "manifest.json");
   if (!existsSync(manifestPath)) throw new Error("OGP manifest is missing");
@@ -72,7 +85,16 @@ function verify() {
   if (!Array.isArray(manifest.pages) || manifest.pages.length === 0) throw new Error("OGP manifest has no pages");
   const missing = manifest.pages.filter((page) => !page.image || !isPNG(join(root, "web", page.image)));
   if (missing.length) throw new Error(`Missing or invalid OGP PNGs (${missing.length}): ${missing.slice(0, 8).map((page) => page.image || page.path).join(", ")}`);
-  console.log(`OGP cache ready: ${manifest.pages.length} PNGs.`);
+  const weak = manifest.pages.filter((page) =>
+    !page.preview ||
+    !isWebP(join(root, "web", page.preview)) ||
+    !page.hook ||
+    !page.action ||
+    !page.previewLabel ||
+    /遊べるデモを動かし|Play the demo, add one Go rule|キーボードとタッチ|keyboard and touch/i.test(page.description || "")
+  );
+  if (weak.length) throw new Error(`Incomplete gameplay OGP cards (${weak.length}): ${weak.slice(0, 8).map((page) => page.path).join(", ")}`);
+  console.log(`OGP cache ready: ${manifest.pages.length} screenshot-backed PNGs.`);
 }
 
 if (command === "fingerprint") console.log(fingerprint());

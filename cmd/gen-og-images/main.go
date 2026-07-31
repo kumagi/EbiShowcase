@@ -1,6 +1,9 @@
 // Command gen-og-images renders per-page Open Graph images (1200×630)
 // from web/assets/og/manifest.json (produced by scripts/inject-ogp.mjs).
 //
+// Each card uses a real WASM gameplay capture from home-thumbnails. Track
+// lessons without a dedicated capture show the finished game they build into.
+//
 //	go run ./cmd/gen-og-images
 package main
 
@@ -9,19 +12,22 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"image/color/palette"
 	"image/draw"
 	"image/png"
-	"math"
 	"os"
 	"path/filepath"
 	"strings"
 	"unicode"
 
+	xdraw "golang.org/x/image/draw"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/gofont/gobold"
 	"golang.org/x/image/font/gofont/goregular"
 	"golang.org/x/image/font/opentype"
+	"golang.org/x/image/font/sfnt"
 	"golang.org/x/image/math/fixed"
+	"golang.org/x/image/webp"
 )
 
 const (
@@ -30,16 +36,21 @@ const (
 )
 
 type page struct {
-	File        string `json:"file"`
-	Path        string `json:"path"`
-	Key         string `json:"key"`
-	Lang        string `json:"lang"`
-	Kind        string `json:"kind"`
-	Title       string `json:"title"`
-	H1          string `json:"h1"`
-	Eyebrow     string `json:"eyebrow"`
-	Description string `json:"description"`
-	Image       string `json:"image"`
+	File         string `json:"file"`
+	Path         string `json:"path"`
+	Key          string `json:"key"`
+	Lang         string `json:"lang"`
+	Kind         string `json:"kind"`
+	Title        string `json:"title"`
+	H1           string `json:"h1"`
+	Eyebrow      string `json:"eyebrow"`
+	Description  string `json:"description"`
+	Image        string `json:"image"`
+	Hook         string `json:"hook"`
+	Action       string `json:"action"`
+	Preview      string `json:"preview"`
+	PreviewMode  string `json:"previewMode"`
+	PreviewLabel string `json:"previewLabel"`
 }
 
 type manifest struct {
@@ -47,23 +58,64 @@ type manifest struct {
 	Pages  []page `json:"pages"`
 }
 
-func loadFaceFile(path string, size float64) (font.Face, error) {
+type faces struct {
+	title   font.Face
+	body    font.Face
+	small   font.Face
+	micro   font.Face
+	canCJK  bool
+	closeFn func()
+}
+
+func weightScore(name, wanted string) int {
+	name = strings.ToLower(name)
+	if wanted == "bold" {
+		for i, label := range []string{"black", "heavy", "extra bold", "extrabold", "bold", "semi bold", "semibold", "demibold", "medium", "regular", "light", "thin"} {
+			if strings.Contains(name, label) {
+				return 20 - i
+			}
+		}
+		return 0
+	}
+	for i, label := range []string{"regular", "normal", "book", "medium", "light", "semi bold", "semibold", "bold", "thin"} {
+		if strings.Contains(name, label) {
+			return 20 - i
+		}
+	}
+	return 0
+}
+
+func loadFaceFile(path string, size float64, wanted string) (font.Face, error) {
 	raw, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
-	f, err := opentype.Parse(raw)
-	if err != nil {
-		collection, collectionErr := opentype.ParseCollection(raw)
-		if collectionErr != nil {
-			return nil, err
+	var selected *sfnt.Font
+	if collection, collectionErr := opentype.ParseCollection(raw); collectionErr == nil {
+		bestScore := -1
+		for i := 0; i < collection.NumFonts(); i++ {
+			candidate, fontErr := collection.Font(i)
+			if fontErr != nil {
+				continue
+			}
+			name, _ := candidate.Name(nil, sfnt.NameIDTypographicSubfamily)
+			if name == "" {
+				name, _ = candidate.Name(nil, sfnt.NameIDSubfamily)
+			}
+			score := weightScore(name, wanted)
+			if selected == nil || score > bestScore {
+				selected = candidate
+				bestScore = score
+			}
 		}
-		f, err = collection.Font(0)
+	}
+	if selected == nil {
+		selected, err = opentype.Parse(raw)
 		if err != nil {
 			return nil, err
 		}
 	}
-	return opentype.NewFace(f, &opentype.FaceOptions{Size: size, DPI: 72, Hinting: font.HintingFull})
+	return opentype.NewFace(selected, &opentype.FaceOptions{Size: size, DPI: 72, Hinting: font.HintingFull})
 }
 
 func supportsJapanese(face font.Face) bool {
@@ -75,18 +127,17 @@ func supportsJapanese(face font.Face) bool {
 	return true
 }
 
-func trySystemFaces(size float64) font.Face {
+func trySystemFace(size float64) font.Face {
 	candidates := []string{
 		"/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc",
 		"/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc",
 		"/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
 		"/Library/Fonts/Arial Unicode.ttf",
 		"/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc",
-		"/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
-		"/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+		"/usr/share/opentype/noto/NotoSansCJK-Bold.ttc",
 	}
-	for _, p := range candidates {
-		if face, err := loadFaceFile(p, size); err == nil && supportsJapanese(face) {
+	for _, path := range candidates {
+		if face, err := loadFaceFile(path, size, "bold"); err == nil && supportsJapanese(face) {
 			return face
 		}
 	}
@@ -105,164 +156,232 @@ func mustFace(ttf []byte, size float64) font.Face {
 	return face
 }
 
+func loadFaces(root string) faces {
+	result := faces{
+		title:  mustFace(gobold.TTF, 52),
+		body:   mustFace(goregular.TTF, 27),
+		small:  mustFace(gobold.TTF, 20),
+		micro:  mustFace(gobold.TTF, 16),
+		canCJK: false,
+	}
+	bundled := filepath.Join(root, "internal/ogfont/NotoSansJP.ttf")
+	if face, err := loadFaceFile(bundled, 52, "bold"); err == nil && supportsJapanese(face) {
+		result.title = face
+		result.body, _ = loadFaceFile(bundled, 27, "regular")
+		result.small, _ = loadFaceFile(bundled, 20, "bold")
+		result.micro, _ = loadFaceFile(bundled, 16, "bold")
+		result.canCJK = true
+		fmt.Println("using bundled Noto Sans JP for OG text")
+		return result
+	}
+	if face := trySystemFace(52); face != nil {
+		result.title = face
+		result.body = trySystemFace(27)
+		result.small = trySystemFace(20)
+		result.micro = trySystemFace(16)
+		result.canCJK = true
+		fmt.Println("using system Unicode font for OG text")
+		return result
+	}
+	fmt.Println("no CJK font; Japanese card text falls back to route labels")
+	return result
+}
+
 func mix(a, b color.RGBA, t float64) color.RGBA {
 	f := func(x, y uint8) uint8 { return uint8(float64(x)*(1-t) + float64(y)*t) }
 	return color.RGBA{f(a.R, b.R), f(a.G, b.G), f(a.B, b.B), 255}
 }
 
 func hashColor(s string) color.RGBA {
-	var h uint32
+	var hash uint32
 	for i := 0; i < len(s); i++ {
-		h = h*33 + uint32(s[i])
+		hash = hash*33 + uint32(s[i])
 	}
-	// Keep hues in the site's teal / coral / indigo family.
 	palette := []color.RGBA{
-		{46, 201, 174, 255},
+		{46, 230, 200, 255},
 		{141, 123, 255, 255},
 		{255, 138, 92, 255},
 		{74, 144, 226, 255},
 		{245, 199, 75, 255},
 		{230, 90, 120, 255},
-		{90, 190, 120, 255},
-		{100, 120, 200, 255},
 	}
-	return palette[int(h)%len(palette)]
+	return palette[int(hash)%len(palette)]
 }
 
-func fillGrad(img *image.RGBA, c0, c1 color.RGBA) {
-	b := img.Bounds()
-	for y := b.Min.Y; y < b.Max.Y; y++ {
-		t := float64(y-b.Min.Y) / float64(b.Dy())
-		col := mix(c0, c1, t)
-		for x := b.Min.X; x < b.Max.X; x++ {
-			img.SetRGBA(x, y, col)
-		}
+func cardPalette(accent color.RGBA) color.Palette {
+	deep := color.RGBA{9, 16, 39, 255}
+	top := mix(deep, accent, .26)
+	result := append(color.Palette{}, palette.WebSafe...)
+	for i := 0; i < 24; i++ {
+		result = append(result, mix(top, deep, float64(i)/23))
+	}
+	for i := 0; i < 8; i++ {
+		result = append(result, mix(accent, color.RGBA{255, 255, 255, 255}, float64(i)/10))
+	}
+	result = append(result,
+		color.RGBA{247, 250, 255, 255},
+		color.RGBA{192, 207, 234, 255},
+		color.RGBA{126, 148, 185, 255},
+		color.RGBA{243, 247, 255, 255},
+		color.RGBA{30, 42, 75, 255},
+		color.RGBA{10, 20, 47, 255},
+		color.RGBA{8, 18, 39, 255},
+		color.RGBA{15, 24, 52, 255},
+	)
+	return result
+}
+
+func fillGradient(img *image.RGBA, top, bottom color.RGBA) {
+	bounds := img.Bounds()
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		t := float64(y-bounds.Min.Y) / float64(bounds.Dy())
+		col := mix(top, bottom, t)
+		draw.Draw(img, image.Rect(0, y, ogW, y+1), image.NewUniform(col), image.Point{}, draw.Src)
 	}
 }
 
-func fillRect(img *image.RGBA, r image.Rectangle, col color.RGBA) {
-	draw.Draw(img, r, &image.Uniform{col}, image.Point{}, draw.Src)
-}
-
-func fillCircle(img *image.RGBA, cx, cy, rad int, col color.RGBA) {
-	for y := cy - rad; y <= cy+rad; y++ {
-		for x := cx - rad; x <= cx+rad; x++ {
-			dx, dy := x-cx, y-cy
-			if dx*dx+dy*dy <= rad*rad {
-				if x >= 0 && y >= 0 && x < ogW && y < ogH {
-					img.SetRGBA(x, y, col)
-				}
-			}
-		}
-	}
-}
-
-func drawString(img *image.RGBA, face font.Face, s string, x, y int, col color.RGBA) {
-	d := &font.Drawer{
-		Dst:  img,
-		Src:  image.NewUniform(col),
-		Face: face,
-		Dot:  fixed.P(x, y),
-	}
-	d.DrawString(s)
-}
-
-func measure(face font.Face, s string) int {
-	return font.MeasureString(face, s).Ceil()
-}
-
-func wrap(face font.Face, s string, maxW int) []string {
-	s = strings.TrimSpace(s)
-	if s == "" {
-		return nil
-	}
-	// Prefer word wrap when spaces exist; otherwise wrap by rune for CJK.
-	if strings.Contains(s, " ") {
-		words := strings.Fields(s)
-		var lines []string
-		cur := words[0]
-		for _, w := range words[1:] {
-			trial := cur + " " + w
-			if measure(face, trial) <= maxW {
-				cur = trial
+func roundedMask(width, height, radius int) *image.Alpha {
+	mask := image.NewAlpha(image.Rect(0, 0, width, height))
+	r2 := radius * radius
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			cx, cy := x, y
+			if x >= radius && x < width-radius || y >= radius && y < height-radius {
+				mask.SetAlpha(x, y, color.Alpha{A: 255})
 				continue
 			}
-			lines = append(lines, cur)
-			cur = w
+			if x >= width-radius {
+				cx = width - radius - 1
+			} else if x >= radius {
+				cx = x
+			} else {
+				cx = radius
+			}
+			if y >= height-radius {
+				cy = height - radius - 1
+			} else if y >= radius {
+				cy = y
+			} else {
+				cy = radius
+			}
+			dx, dy := x-cx, y-cy
+			if dx*dx+dy*dy <= r2 {
+				mask.SetAlpha(x, y, color.Alpha{A: 255})
+			}
 		}
-		lines = append(lines, cur)
-		return lines
 	}
-	var lines []string
-	var cur []rune
-	for _, r := range s {
-		trial := string(append(append([]rune{}, cur...), r))
-		if len(cur) > 0 && measure(face, trial) > maxW {
-			lines = append(lines, string(cur))
-			cur = []rune{r}
+	return mask
+}
+
+func fillRounded(img *image.RGBA, rect image.Rectangle, radius int, col color.RGBA) {
+	mask := roundedMask(rect.Dx(), rect.Dy(), radius)
+	draw.DrawMask(img, rect, image.NewUniform(col), image.Point{}, mask, image.Point{}, draw.Over)
+}
+
+func drawString(img *image.RGBA, face font.Face, value string, x, y int, col color.RGBA) {
+	d := &font.Drawer{Dst: img, Src: image.NewUniform(col), Face: face, Dot: fixed.P(x, y)}
+	d.DrawString(value)
+}
+
+func drawStrongString(img *image.RGBA, face font.Face, value string, x, y int, col color.RGBA) {
+	for oy := -1; oy <= 1; oy++ {
+		for ox := -1; ox <= 1; ox++ {
+			drawString(img, face, value, x+ox, y+oy, col)
+		}
+	}
+}
+
+func measure(face font.Face, value string) int {
+	return font.MeasureString(face, value).Ceil()
+}
+
+func wrap(face font.Face, value string, maxWidth int) []string {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return nil
+	}
+	if strings.Contains(value, " ") {
+		words := strings.Fields(value)
+		lines := make([]string, 0, 3)
+		current := words[0]
+		for _, word := range words[1:] {
+			trial := current + " " + word
+			if measure(face, trial) <= maxWidth {
+				current = trial
+				continue
+			}
+			lines = append(lines, current)
+			current = word
+		}
+		return append(lines, current)
+	}
+	lines := make([]string, 0, 3)
+	current := make([]rune, 0, len([]rune(value)))
+	for _, r := range value {
+		trial := string(append(append([]rune{}, current...), r))
+		if len(current) > 0 && measure(face, trial) > maxWidth {
+			lines = append(lines, string(current))
+			current = []rune{r}
 			continue
 		}
-		cur = append(cur, r)
+		current = append(current, r)
 	}
-	if len(cur) > 0 {
-		lines = append(lines, string(cur))
+	if len(current) > 0 {
+		lines = append(lines, string(current))
 	}
 	return lines
 }
 
-func mostlyPrintable(s string) bool {
-	letters := 0
-	ok := 0
-	for _, r := range s {
+func truncateRunes(value string, max int) string {
+	runes := []rune(strings.TrimSpace(value))
+	if len(runes) <= max {
+		return string(runes)
+	}
+	return strings.TrimRight(string(runes[:max-1]), " 、,;:") + "…"
+}
+
+func mostlyPrintable(value string) bool {
+	letters, printable := 0, 0
+	for _, r := range value {
 		if unicode.IsSpace(r) {
 			continue
 		}
 		letters++
 		if r <= unicode.MaxASCII && (unicode.IsLetter(r) || unicode.IsDigit(r) || strings.ContainsRune("—–-·|/:,.'\"!?", r)) {
-			ok++
+			printable++
 		}
 	}
-	if letters == 0 {
-		return true
-	}
-	return float64(ok)/float64(letters) >= 0.55
+	return letters == 0 || float64(printable)/float64(letters) >= .55
 }
 
-func displayTitle(p page, canCJK bool) string {
-	t := strings.TrimSpace(p.H1)
-	if t == "" {
-		t = strings.Split(p.Title, "|")[0]
-		t = strings.TrimSpace(t)
-	}
-	if canCJK || mostlyPrintable(t) {
-		return t
-	}
-	// Fall back to a readable path label when the title is mostly CJK
-	// (embedded gofont lacks glyphs; og:title meta still carries the real text).
+func fallbackLabel(p page) string {
 	path := strings.Trim(p.Path, "/")
-	parts := strings.Split(path, "/")
-	if len(parts) == 0 || path == "" {
+	if path == "" {
 		return "Ebi Showcase"
 	}
-	label := parts[len(parts)-1]
-	label = strings.ReplaceAll(label, "-", " ")
+	parts := strings.Split(path, "/")
+	label := strings.ReplaceAll(parts[len(parts)-1], "-", " ")
 	if label == "" {
 		return "Ebi Showcase"
 	}
 	return strings.ToUpper(label[:1]) + label[1:]
 }
 
+func displayText(value string, p page, canCJK bool) string {
+	if canCJK || mostlyPrintable(value) {
+		return strings.TrimSpace(value)
+	}
+	return fallbackLabel(p)
+}
+
 func badge(p page) string {
-	e := strings.TrimSpace(p.Eyebrow)
-	if e != "" && mostlyPrintable(e) {
-		if len(e) > 48 {
-			return e[:48]
-		}
-		return e
+	eyebrow := strings.TrimSpace(p.Eyebrow)
+	if eyebrow != "" && mostlyPrintable(eyebrow) {
+		return truncateRunes(strings.ToUpper(eyebrow), 42)
 	}
 	switch p.Kind {
 	case "home":
-		return "EBITENGINE CURRICULUM"
+		return "PLAYABLE EBITENGINE CURRICULUM"
 	case "core":
 		return "CORE LESSON"
 	case "track":
@@ -270,82 +389,125 @@ func badge(p page) string {
 	case "vfx":
 		return "VISUAL EFFECTS LAB"
 	case "guide":
-		return "GUIDE"
+		return "PRACTICAL GUIDE"
+	case "build":
+		return "BUILD TRACK"
+	case "graduation":
+		return "GRADUATION PROJECT"
 	default:
 		return "EBI SHOWCASE"
 	}
 }
 
-func render(p page, bold, regular, small font.Face, canCJK bool) *image.RGBA {
+func loadPreview(root string, p page) (image.Image, error) {
+	path := filepath.Join(root, "web", filepath.FromSlash(p.Preview))
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, fmt.Errorf("%s preview: %w", p.Path, err)
+	}
+	defer file.Close()
+	preview, err := webp.Decode(file)
+	if err != nil {
+		return nil, fmt.Errorf("%s preview decode: %w", p.Path, err)
+	}
+	return preview, nil
+}
+
+func drawPreview(img *image.RGBA, source image.Image, p page, face font.Face, accent color.RGBA) {
+	panel := image.Rect(802, 24, 1174, 596)
+	fillRounded(img, panel.Add(image.Pt(0, 10)), 30, color.RGBA{0, 0, 0, 80})
+	fillRounded(img, panel, 30, color.RGBA{243, 247, 255, 255})
+	fillRounded(img, image.Rect(813, 35, 1163, 545), 23, mix(accent, color.RGBA{15, 24, 52, 255}, .84))
+
+	shotRect := image.Rect(828, 48, 1148, 528)
+	scaled := image.NewRGBA(image.Rect(0, 0, shotRect.Dx(), shotRect.Dy()))
+	xdraw.CatmullRom.Scale(scaled, scaled.Bounds(), source, source.Bounds(), draw.Src, nil)
+	mask := roundedMask(shotRect.Dx(), shotRect.Dy(), 18)
+	draw.DrawMask(img, shotRect, scaled, image.Point{}, mask, image.Point{}, draw.Over)
+
+	label := truncateRunes(strings.ToUpper(p.PreviewLabel), 33)
+	labelWidth := measure(face, label)
+	drawStrongString(img, face, label, panel.Min.X+(panel.Dx()-labelWidth)/2, 570, color.RGBA{30, 42, 75, 255})
+}
+
+func render(root string, p page, f faces) (*image.RGBA, error) {
+	preview, err := loadPreview(root, p)
+	if err != nil {
+		return nil, err
+	}
+
 	img := image.NewRGBA(image.Rect(0, 0, ogW, ogH))
 	accent := hashColor(p.Key + p.Kind)
-	deep := color.RGBA{14, 22, 48, 255}
-	mid := mix(deep, accent, 0.22)
-	fillGrad(img, mid, deep)
+	deep := color.RGBA{9, 16, 39, 255}
+	fillGradient(img, mix(deep, accent, .26), deep)
 
-	// Decorative orbs (海老天-ish glow)
-	fillCircle(img, 1040, 120, 180, color.RGBA{accent.R, accent.G, accent.B, 40})
-	fillCircle(img, 180, 520, 140, color.RGBA{46, 201, 174, 35})
-	fillCircle(img, 900, 500, 90, color.RGBA{255, 138, 92, 30})
-
-	// Left accent bar
-	fillRect(img, image.Rect(0, 0, 18, ogH), accent)
-
-	// Brand chip
-	fillRect(img, image.Rect(64, 56, 280, 108), color.RGBA{20, 32, 58, 230})
-	drawString(img, small, "EBI SHOWCASE", 84, 90, accent)
-
-	// Badge / eyebrow
-	b := badge(p)
-	drawString(img, small, strings.ToUpper(b), 64, 170, mix(accent, color.RGBA{255, 255, 255, 255}, 0.35))
-
-	// Title
-	title := displayTitle(p, canCJK)
-	titleFace := bold
-	lines := wrap(titleFace, title, 1000)
-	if len(lines) > 3 {
-		lines = lines[:3]
-		lines[2] = strings.TrimSuffix(lines[2], "…") + "…"
-	}
-	y := 260
-	for _, line := range lines {
-		drawString(img, titleFace, line, 64, y, color.RGBA{245, 250, 255, 255})
-		y += 70
-	}
-
-	// Description
-	desc := p.Description
-	if !canCJK && !mostlyPrintable(desc) {
-		desc = p.Path
-		if desc == "" {
-			desc = "Playable Ebitengine lessons"
+	for y := 18; y < ogH; y += 34 {
+		for x := 18; x < 790; x += 34 {
+			fillRounded(img, image.Rect(x, y, x+3, y+3), 1, color.RGBA{accent.R, accent.G, accent.B, 34})
 		}
 	}
-	if len([]rune(desc)) > 110 {
-		r := []rune(desc)
-		desc = string(r[:107]) + "..."
+	fillRounded(img, image.Rect(0, 0, 16, ogH), 0, accent)
+	fillRounded(img, image.Rect(54, 42, 276, 92), 15, color.RGBA{10, 20, 47, 218})
+	drawStrongString(img, f.small, "EBI SHOWCASE", 76, 75, accent)
+
+	drawString(img, f.micro, badge(p), 58, 142, mix(accent, color.RGBA{255, 255, 255, 255}, .42))
+
+	title := displayText(p.H1, p, f.canCJK)
+	titleLines := wrap(f.title, title, 690)
+	if len(titleLines) > 3 {
+		titleLines = titleLines[:3]
+		titleLines[2] = truncateRunes(titleLines[2], 22)
 	}
-	for i, line := range wrap(regular, desc, 980) {
-		if i >= 2 {
-			break
+	y := 223
+	for _, line := range titleLines {
+		drawStrongString(img, f.title, line, 58, y, color.RGBA{247, 250, 255, 255})
+		y += 61
+	}
+
+	hook := displayText(p.Hook, p, f.canCJK)
+	hookLines := wrap(f.body, hook, 680)
+	if len(hookLines) > 2 {
+		hookLines = hookLines[:2]
+		hookLines[1] = truncateRunes(hookLines[1], 34)
+	}
+	hookY := y + 28
+	if hookY < 410 {
+		hookY = 410
+	}
+	for _, line := range hookLines {
+		drawString(img, f.body, line, 58, hookY, color.RGBA{192, 207, 234, 255})
+		hookY += 36
+	}
+
+	action := displayText(p.Action, p, f.canCJK)
+	action = truncateRunes(action, 45)
+	pillWidth := measure(f.small, action) + 40
+	if pillWidth > 690 {
+		pillWidth = 690
+	}
+	fillRounded(img, image.Rect(56, 520, 56+pillWidth, 568), 24, accent)
+	drawStrongString(img, f.small, action, 76, 552, color.RGBA{8, 18, 39, 255})
+
+	route := "/" + strings.Trim(p.Path, "/") + "/"
+	if p.Path == "" {
+		route = "/"
+	}
+	drawString(img, f.micro, strings.ToUpper(p.Lang)+"  ·  "+route, 58, 605, color.RGBA{126, 148, 185, 255})
+	drawPreview(img, preview, p, f.micro, accent)
+	return img, nil
+}
+
+func selected(key string) bool {
+	filter := strings.TrimSpace(os.Getenv("OGP_ONLY"))
+	if filter == "" {
+		return true
+	}
+	for _, candidate := range strings.Split(filter, ",") {
+		if strings.TrimSpace(candidate) == key {
+			return true
 		}
-		drawString(img, regular, line, 64, 500+i*34, color.RGBA{180, 200, 220, 255})
 	}
-
-	// Lang / kind footer
-	footer := fmt.Sprintf("%s  ·  %s", strings.ToUpper(p.Lang), p.Kind)
-	drawString(img, small, footer, 64, 600, color.RGBA{140, 160, 190, 255})
-
-	// Tempura-ish shrimp curve accent
-	for i := 0; i < 24; i++ {
-		t := float64(i) / 23
-		a := -0.4 + t*2.2
-		x := 1080 + int(math.Cos(a)*70)
-		y := 320 + int(math.Sin(a)*42)
-		fillCircle(img, x, y, 7-i/5, mix(color.RGBA{255, 214, 140, 255}, color.RGBA{255, 120, 110, 255}, t))
-	}
-
-	return img
+	return false
 }
 
 func main() {
@@ -353,8 +515,7 @@ func main() {
 	if len(os.Args) > 1 {
 		root = os.Args[1]
 	}
-	manPath := filepath.Join(root, "web/assets/og/manifest.json")
-	raw, err := os.ReadFile(manPath)
+	raw, err := os.ReadFile(filepath.Join(root, "web/assets/og/manifest.json"))
 	if err != nil {
 		panic(err)
 	}
@@ -363,53 +524,48 @@ func main() {
 		panic(err)
 	}
 
-	bold := mustFace(gobold.TTF, 54)
-	regular := mustFace(goregular.TTF, 28)
-	small := mustFace(gobold.TTF, 22)
-	canCJK := false
-	bundledFont := filepath.Join(root, "internal/ogfont/NotoSansJP.ttf")
-	if bundledBold, err := loadFaceFile(bundledFont, 54); err == nil && supportsJapanese(bundledBold) {
-		bold = bundledBold
-		regular, _ = loadFaceFile(bundledFont, 28)
-		small, _ = loadFaceFile(bundledFont, 22)
-		canCJK = true
-		fmt.Println("using bundled Noto Sans JP for OG text")
-	} else if sys := trySystemFaces(54); sys != nil {
-		bold = sys
-		if sys2 := trySystemFaces(28); sys2 != nil {
-			regular = sys2
-		}
-		if sys3 := trySystemFaces(22); sys3 != nil {
-			small = sys3
-		}
-		canCJK = true
-		fmt.Println("using system Unicode font for OG titles")
-	} else {
-		fmt.Println("no system CJK font; Japanese titles fall back to path labels (meta still has full text)")
-	}
-
+	f := loadFaces(root)
 	outDir := filepath.Join(root, "web/assets/og")
 	if err := os.MkdirAll(outDir, 0o755); err != nil {
 		panic(err)
 	}
 
-	for i, p := range man.Pages {
-		img := render(p, bold, regular, small, canCJK)
+	total := 0
+	for _, p := range man.Pages {
+		if selected(p.Key) {
+			total++
+		}
+	}
+	rendered := 0
+	encoder := png.Encoder{CompressionLevel: png.BestCompression}
+	for _, p := range man.Pages {
+		if !selected(p.Key) {
+			continue
+		}
+		img, err := render(root, p, f)
+		if err != nil {
+			panic(err)
+		}
 		out := filepath.Join(root, "web", filepath.FromSlash(p.Image))
 		if err := os.MkdirAll(filepath.Dir(out), 0o755); err != nil {
 			panic(err)
 		}
-		f, err := os.Create(out)
+		file, err := os.Create(out)
 		if err != nil {
 			panic(err)
 		}
-		if err := png.Encode(f, img); err != nil {
-			f.Close()
+		paletted := image.NewPaletted(img.Bounds(), cardPalette(hashColor(p.Key+p.Kind)))
+		draw.Draw(paletted, paletted.Bounds(), img, image.Point{}, draw.Src)
+		if err := encoder.Encode(file, paletted); err != nil {
+			file.Close()
 			panic(err)
 		}
-		f.Close()
-		if (i+1)%50 == 0 || i+1 == len(man.Pages) {
-			fmt.Printf("og images %d/%d\n", i+1, len(man.Pages))
+		if err := file.Close(); err != nil {
+			panic(err)
+		}
+		rendered++
+		if rendered%50 == 0 || rendered == total {
+			fmt.Printf("og images %d/%d\n", rendered, total)
 		}
 	}
 }

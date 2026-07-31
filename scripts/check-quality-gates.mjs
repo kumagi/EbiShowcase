@@ -197,8 +197,23 @@ function runStructureGates(gates) {
         note("structure.go-exists", "fail", ok, entry.id, ok ? "ok" : "missing main.go");
       }
       if (ids.has("site.ogp-present")) {
-        const ok = /property="og:title"/.test(html) && /name="twitter:card"/.test(html);
-        note("site.ogp-present", "warn", ok, target, ok ? "ok" : "missing ogp/twitter");
+        const ok =
+          /property="og:title"/.test(html) &&
+          /name="twitter:card"/.test(html) &&
+          /property="og:image"[^>]*assets\/og\//.test(html) &&
+          !/遊べるデモを動かし、Goで1つルールを足して|Play the demo, add one Go rule/.test(html);
+        note("site.ogp-present", "warn", ok, target, ok ? "page-specific gameplay card" : "missing or generic ogp/twitter");
+      }
+      if (ids.has("site.nonblocking-first-render")) {
+        const executable = html.replace(/<noscript>[\s\S]*?<\/noscript>/gi, "");
+        const blockingStyle = /<link\s+rel="stylesheet"\s+href="[^"]*style\.css"(?![^>]*media="print")[^>]*>/i.test(executable);
+        const eagerWasm = /<iframe\b[^>]*\ssrc="[^"]*\/play\//i.test(executable);
+        const blockingLearn = /<script\b(?=[^>]*learn\.js)(?![^>]*\bdefer\b)[^>]*>/i.test(executable);
+        const ok = !blockingStyle && !eagerWasm && !blockingLearn;
+        const detail = ok
+          ? "critical CSS + deferred scripts/WASM"
+          : `blocking:${[blockingStyle && "style", eagerWasm && "wasm", blockingLearn && "learn.js"].filter(Boolean).join(",")}`;
+        note("site.nonblocking-first-render", "warn", ok, target, detail);
       }
       if (ids.has("a11y.iframe-title")) {
         const iframes = [...html.matchAll(/<iframe\b[^>]*>/gi)];

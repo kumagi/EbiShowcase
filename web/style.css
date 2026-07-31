@@ -676,6 +676,9 @@ footer p{color:#67719c}
 @media(max-width:800px){.course-card .home-card-shot{margin:-28px -28px 24px}.track-card .home-card-shot{margin:-30px -24px 6px}}
 @media(max-width:650px){.vfx-course-card .home-card-shot{margin:-28px -25px 23px}}
 @media(prefers-reduced-motion:reduce){.home-card-shot img{transition:none}.course-card:hover .home-card-shot img,.vfx-course-card:hover .home-card-shot img,.track-card:hover .home-card-shot img{transform:none}}
+
+/* Skip layout/paint work for long lesson sections until they approach the viewport. */
+.physics,.lesson-section,.feedback-section,.code-lesson,.why-grid,.setup-step,.test-explain,.test-quality,.test-audit,.test-golden,.test-update-map,.test-code-full{content-visibility:auto;contain-intrinsic-size:auto 900px}
 @media(max-width:1000px){.vfx-curriculum-head,.vfx-group-head{align-items:flex-start;flex-direction:column;gap:24px}.vfx-course-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.vfx-curriculum{padding:76px 18px}.vfx-course-grid{grid-template-columns:1fr}.vfx-course-card{min-height:0;padding:28px 25px}.vfx-course-card h3{margin-top:30px}.vfx-course-group-advanced{padding:28px 14px}.vfx-hub-link{width:100%}}
 .copyright-note{margin-top:28px;font-size:11px;color:#67719c}

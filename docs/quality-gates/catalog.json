@@ -451,8 +451,17 @@
       "severity": "warn",
       "check": "deterministic",
       "applies_to": ["core", "track", "vfx", "guide", "build", "graduation"],
-      "summary": "Content pages carry page-specific OGP + Twitter card tags.",
-      "sources": ["AGENTS.md", "scripts/inject-ogp.mjs"]
+      "summary": "Content pages carry page-specific OGP + Twitter card tags, distinct invitation copy, and a relevant real-game preview.",
+      "sources": ["AGENTS.md", "scripts/inject-ogp.mjs", "scripts/ogp-cache.mjs"]
+    },
+    {
+      "id": "site.nonblocking-first-render",
+      "family": "site",
+      "severity": "warn",
+      "check": "deterministic",
+      "applies_to": ["core", "track", "vfx", "guide", "build", "graduation"],
+      "summary": "Shared CSS and lesson JavaScript do not block first render, and WASM starts only as its play area approaches the viewport.",
+      "sources": ["scripts/inject-home-critical-css.mjs", "scripts/optimize-page-delivery.mjs"]
     },
     {
       "id": "site.html-whitespace",
