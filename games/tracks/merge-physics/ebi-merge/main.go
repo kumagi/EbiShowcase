@@ -155,19 +155,29 @@ type spark struct {
 	x, y, vx, vy, life float64
 	c                  color.RGBA
 }
+type ring struct{ x, y, radius, life float64 }
+type popText struct {
+	x, y, life float64
+	text       string
+}
 type game struct {
-	fruits                               []fruit
-	rng                                  *rand.Rand
-	next, after, score, danger, cooldown int
-	cursor                               float64
-	over                                 bool
-	combo, comboTimer, shake, best       int
-	sparks                               []spark
-	audio                                *audio.Context
-	gate                                 audiolab.Gate
-	pulse                                *shaderlab.Pulse
-	cam                                  cameralab.State
-	badge                                *ebiten.Image
+	fruits                                      []fruit
+	rng                                         *rand.Rand
+	next, after, score, danger, cooldown, depth int
+	cursor                                      float64
+	over                                        bool
+	title                                       bool
+	rank                                        string
+	tick                                        int
+	combo, comboTimer, shake, best              int
+	sparks                                      []spark
+	rings                                       []ring
+	floaters                                    []popText
+	audio                                       *audio.Context
+	gate                                        audiolab.Gate
+	pulse                                       *shaderlab.Pulse
+	cam                                         cameralab.State
+	badge                                       *ebiten.Image
 }
 
 func newGame() *game {
@@ -176,7 +186,7 @@ func newGame() *game {
 	}
 	b := ebiten.NewImage(20, 20)
 	b.Fill(color.RGBA{255, 130, 80, 255})
-	g := &game{rng: rand.New(rand.NewSource(4806)), cursor: 240, audio: audiolab.Context(), pulse: shaderlab.NewPulse(), cam: cameralab.State{Pos: cameralab.Vec{240, 360}, ViewW: width, ViewH: height}, badge: b}
+	g := &game{rng: rand.New(rand.NewSource(4806)), cursor: 240, title: true, audio: audiolab.Context(), pulse: shaderlab.NewPulse(), cam: cameralab.State{Pos: cameralab.Vec{X: 240, Y: 360}, ViewW: width, ViewH: height}, badge: b}
 	g.next = g.rng.Intn(3)
 	g.after = g.rng.Intn(3)
 	// A prepared opening board communicates the merge goal immediately.
@@ -184,6 +194,15 @@ func newGame() *game {
 	return g
 }
 func (g *game) Update() error {
+	g.tick++
+	if g.title {
+		if any() {
+			g.title = false
+			g.gate.Arm(true)
+			g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, 660, .08)).Play()
+		}
+		return nil
+	}
 	if g.over {
 		if any() {
 			best := g.best
@@ -213,6 +232,27 @@ func (g *game) Update() error {
 			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
 		}
 	}
+	for i := len(g.rings) - 1; i >= 0; i-- {
+		g.rings[i].radius += 2.4
+		g.rings[i].life--
+		if g.rings[i].life <= 0 {
+			g.rings = append(g.rings[:i], g.rings[i+1:]...)
+		}
+	}
+	for i := len(g.floaters) - 1; i >= 0; i-- {
+		fl := &g.floaters[i]
+		fl.y -= .8
+		fl.life--
+		if fl.life <= 0 {
+			g.floaters = append(g.floaters[:i], g.floaters[i+1:]...)
+		}
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyLeft) || ebiten.IsKeyPressed(ebiten.KeyLeft) {
+		g.cursor = math.Max(45, g.cursor-7)
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyRight) || ebiten.IsKeyPressed(ebiten.KeyRight) {
+		g.cursor = math.Min(435, g.cursor+7)
+	}
 	if x, ok := pointerX(); ok {
 		g.cursor = math.Max(45, math.Min(435, float64(x)))
 	}
@@ -222,9 +262,10 @@ func (g *game) Update() error {
 		g.next, g.after = g.after, g.rng.Intn(3)
 		g.cooldown = 18
 	}
+	gravity := worldGravity * (1 + .07*float64(g.depth-1))
 	for i := range g.fruits {
 		f := &g.fruits[i]
-		f.vy += worldGravity
+		f.vy += gravity
 		f.x += f.vx
 		f.y += f.vy
 		r := radii[f.tier]
@@ -271,10 +312,19 @@ func (g *game) Update() error {
 					g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, 420+float64(tier)*80, .09)).Play()
 					g.combo++
 					g.comboTimer = 100
-					g.score += mergePoints(tier, g.combo)
+					points := mergePoints(tier, g.combo)
+					g.score += points
 					g.best = max(g.best, g.score)
+					g.depth = 1 + min(4, g.score/600)
 					g.shake = min(8, 3+tier)
-					g.burst((a.x+b.x)/2, (a.y+b.y)/2, 8+tier*2)
+					mx, my := (a.x+b.x)/2, (a.y+b.y)/2
+					g.burst(mx, my, 8+tier*2)
+					g.rings = append(g.rings, ring{x: mx, y: my, radius: radii[a.tier], life: 16})
+					label := fmt.Sprintf("+%d", points)
+					if g.combo > 1 {
+						label = fmt.Sprintf("+%d x%d", points, g.combo)
+					}
+					g.floaters = append(g.floaters, popText{x: mx - 22, y: my - radii[tier] - 8, life: 44, text: label})
 					break
 				}
 				nx, ny := dx/d, dy/d
@@ -314,6 +364,16 @@ func (g *game) Update() error {
 	}
 	if g.danger >= dangerLimit {
 		g.over = true
+		switch s := float64(g.score) / 800; {
+		case s >= 3:
+			g.rank = "S"
+		case s >= 2:
+			g.rank = "A"
+		case s >= 1:
+			g.rank = "B"
+		default:
+			g.rank = "C"
+		}
 	}
 	return nil
 }
@@ -338,6 +398,21 @@ func (g *game) Draw(s *ebiten.Image) {
 	}
 	drawCover(s, nurseryArt)
 	vector.DrawFilledRect(s, 0, 0, width, height, color.RGBA{2, 13, 35, 50}, false)
+	if g.title {
+		vector.DrawFilledRect(s, 42, 238, 396, 246, color.RGBA{5, 14, 30, 248}, false)
+		vector.StrokeRect(s, 42, 238, 396, 246, 4, color.RGBA{245, 184, 84, 255}, false)
+		ebitenutil.DebugPrintAt(s, "★ EBI MERGE ★", 178, 264)
+		ebitenutil.DebugPrintAt(s, "PEARL NURSERY AQUARIUM", 156, 288)
+		ebitenutil.DebugPrintAt(s, "Drop twin creatures into the tank.", 116, 326)
+		ebitenutil.DebugPrintAt(s, "They fuse into the next, bigger", 130, 344)
+		ebitenutil.DebugPrintAt(s, "species. Chain fuses fast for a", 138, 362)
+		ebitenutil.DebugPrintAt(s, "COMBO bonus — but keep the stack", 118, 380)
+		ebitenutil.DebugPrintAt(s, "under the red line!", 176, 398)
+		ebitenutil.DebugPrintAt(s, "POINTER / ARROWS: aim   TAP / SPACE: drop", 88, 430)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.tick)*0.1)))
+		vector.DrawFilledRect(s, 122, 450, 236, 22, color.RGBA{245, 184, 84, blink}, false)
+		ebitenutil.DebugPrintAt(s, "TAP or SPACE to open the tank", 128, 456)
+	}
 	ox := 0.0
 	if g.shake > 0 {
 		ox = math.Sin(float64(g.cooldown+g.comboTimer)*2) * 5

@@ -45,6 +45,8 @@ type game struct {
 	cars                                  []car
 	frames                                int
 	won, lost                             bool
+	intro                                 bool
+	rank                                  string
 	message                               string
 	stage, totalFrames, bestFrames, shake int
 	gates                                 [][2]float64
@@ -58,7 +60,7 @@ type game struct {
 
 func newGame() *game {
 	prepareRacingArt()
-	g := &game{stage: 1}
+	g := &game{stage: 1, intro: true}
 	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: W / 2, Y: H / 2}, ViewW: W, ViewH: H}
@@ -84,6 +86,14 @@ func (g *game) loadCourse() {
 	g.message = "Accelerate, steer, and pass the glowing gates in order."
 }
 func (g *game) Update() error {
+	if g.intro {
+		if retry() {
+			g.intro = false
+			g.gate.Arm(true)
+			g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Square, 640, .07)).Play()
+		}
+		return nil
+	}
 	if g.won || g.lost {
 		if retry() {
 			if g.won && g.stage < 3 {
@@ -146,7 +156,14 @@ func (g *game) Update() error {
 	g.checkGate(a)
 	if p.lap >= courses[g.stage-1].laps {
 		g.won = true
-		g.message = "Course complete!"
+		if g.cars[0].lap > g.cars[1].lap && g.frames < 60*50 {
+			g.rank = "S"
+		} else if g.frames < 60*65 {
+			g.rank = "A"
+		} else {
+			g.rank = "B"
+		}
+		g.message = fmt.Sprintf("Course complete! RANK %s", g.rank)
 		g.burst(p.x, p.y, 28)
 	}
 	if a.lap >= courses[g.stage-1].laps || g.frames > 100*60 {
@@ -246,10 +263,30 @@ func (g *game) Draw(s *ebiten.Image) {
 		vector.DrawFilledRect(s, float32(i*120+5), 650, 110, 55, color.RGBA{45, 78, 113, 255}, false)
 		ebitenutil.DebugPrintAt(s, l, i*120+38, 675)
 	}
+	if g.intro {
+		vector.DrawFilledRect(s, 38, 226, 404, 268, color.RGBA{5, 10, 22, 250}, false)
+		vector.StrokeRect(s, 38, 226, 404, 268, 4, color.RGBA{246, 198, 72, 255}, false)
+		ebitenutil.DebugPrintAt(s, "★ EBI CIRCUIT CUP ★", 158, 250)
+		ebitenutil.DebugPrintAt(s, "THREE COURSES AGAINST A RIVAL AI", 116, 278)
+		ebitenutil.DebugPrintAt(s, "The rival is honest physics: it turns", 104, 312)
+		ebitenutil.DebugPrintAt(s, "toward its next gate with a max turn", 108, 330)
+		ebitenutil.DebugPrintAt(s, "rate, so it drifts wide on corners —", 110, 348)
+		ebitenutil.DebugPrintAt(s, "that is your passing chance. Gates must", 102, 366)
+		ebitenutil.DebugPrintAt(s, "be taken IN ORDER; off-road grass slows.", 98, 384)
+		ebitenutil.DebugPrintAt(s, "Win all three ovals for the cup.", 130, 410)
+		ebitenutil.DebugPrintAt(s, "ARROWS/WASD drive · touch pad below", 118, 436)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.frames)*.1)))
+		vector.DrawFilledRect(s, 126, 442, 228, 22, color.RGBA{246, 198, 72, blink}, false)
+		ebitenutil.DebugPrintAt(s, "TAP or ENTER to the grid", 144, 448)
+	}
 	if g.won {
-		msg := "COURSE WIN!\n\nTAP / ENTER FOR NEXT COURSE"
+		rankLine := ""
+		if g.rank != "" {
+			rankLine = fmt.Sprintf("RANK %s\n", g.rank)
+		}
+		msg := fmt.Sprintf("COURSE WIN!  RANK %s\n\nTAP / ENTER FOR NEXT COURSE", g.rank)
 		if g.stage == 3 {
-			msg = "CUP COMPLETE!\n\nTAP / ENTER FOR A NEW CUP"
+			msg = fmt.Sprintf("CUP COMPLETE!\n%s\nTAP / ENTER FOR A NEW CUP", rankLine)
 		}
 		overlay(s, msg)
 	}

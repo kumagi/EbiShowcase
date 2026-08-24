@@ -66,7 +66,11 @@ type game struct {
 	x, y, quest, hp, enemyHP, enemyMax, enemy, scene int
 	turn, tick, shake, flash                         int
 	action, actionTick, battlePhase, pendingChoice   int
+	floatText                                        string
+	floatTick                                        int
 	companion, clear                                 bool
+	title                                            bool
+	rank                                             string
 	defend, effectApplied                            bool
 	message                                          string
 	audio                                            *audio.Context
@@ -80,8 +84,11 @@ func newGame() *game {
 	loadQuestArt()
 	b := ebiten.NewImage(20, 20)
 	b.Fill(color.RGBA{255, 210, 80, 255})
-	g := &game{x: 1, y: 10, hp: 60, message: "Meet Momo in the southwest village.", audio: audiolab.Context(), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: b}
+	g := &game{x: 1, y: 10, hp: 60, title: true, message: "Meet Momo in the southwest village.", audio: audiolab.Context(), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: b}
 	g.load()
+	if g.quest > 0 {
+		g.title = false // a returning hero skips the storybook intro
+	}
 	return g
 }
 func (g *game) load() {
@@ -108,6 +115,13 @@ func (g *game) save() {
 func (g *game) Update() error {
 	g.tick++
 	g.cam.Pos = cameralab.Vec{X: float64(g.x * tile), Y: float64(g.y * tile)}
+	if g.title {
+		if any() {
+			g.title = false
+			g.play(660)
+		}
+		return nil
+	}
 	if g.shake > 0 {
 		g.shake--
 	}
@@ -181,7 +195,17 @@ func (g *game) Update() error {
 		case g.quest == 4 && g.x == 1 && g.y == 10:
 			g.quest = 5
 			g.clear = true
-			g.message = "The village is safe! Quest complete."
+			switch {
+			case g.hp >= 50:
+				g.rank = "S"
+			case g.hp >= 35:
+				g.rank = "A"
+			case g.hp >= 20:
+				g.rank = "B"
+			default:
+				g.rank = "C"
+			}
+			g.message = fmt.Sprintf("The village is safe! RANK %s. Quest complete.", g.rank)
 		}
 		g.save()
 	}
@@ -238,6 +262,9 @@ func (g *game) battle() error {
 }
 
 func (g *game) advanceBattle() {
+	if g.floatTick > 0 {
+		g.floatTick--
+	}
 	if g.actionTick > 0 {
 		g.actionTick--
 	}
@@ -291,6 +318,7 @@ func (g *game) applyPlayerAction() {
 		g.play(720)
 		g.flash = 7
 		g.shake = 4
+		g.floatText, g.floatTick = fmt.Sprintf("-%d", d), 40
 		g.message = fmt.Sprintf("Party attack: %d damage!", d)
 	case 1:
 		g.defend = true
@@ -299,6 +327,7 @@ func (g *game) applyPlayerAction() {
 		before := g.hp
 		g.hp = min(60, g.hp+15)
 		g.play(540)
+		g.floatText, g.floatTick = fmt.Sprintf("+%d", g.hp-before), 40
 		g.message = fmt.Sprintf("Momo restores %d HP!", g.hp-before)
 	}
 }
@@ -310,6 +339,7 @@ func (g *game) applyEnemyAction() {
 	g.hp -= damage
 	g.play(180)
 	g.shake = 7
+	g.floatText, g.floatTick = fmt.Sprintf("-%d HP", damage), 44
 	g.message = fmt.Sprintf("%s: party takes %d damage.", enemyIntentName(intent), damage)
 }
 
@@ -359,6 +389,21 @@ func (g *game) Draw(s *ebiten.Image) {
 	drawQuestCover(s, questArt["world"], 0, 0, width, height)
 	vector.DrawFilledRect(s, 0, 0, width, height, color.RGBA{3, 20, 35, 14}, false)
 	drawWorldRoute(s)
+	if g.title {
+		vector.DrawFilledRect(s, 36, 218, 408, 286, color.RGBA{4, 13, 29, 250}, true)
+		vector.StrokeRect(s, 36, 218, 408, 286, 4, color.RGBA{107, 225, 238, 255}, true)
+		drawCenteredQuestLabel(s, "★ EBI QUEST ★", 240, 244, questFace20, color.RGBA{255, 224, 145, 255})
+		drawCenteredQuestLabel(s, "A TINY TILE RPG WITH A PROMISE", 240, 278, questFace14, color.RGBA{126, 242, 255, 255})
+		drawCenteredQuestLabel(s, "The enemy shows its NEXT move every", 240, 312, questFace14, color.White)
+		drawCenteredQuestLabel(s, "turn. HEAVY ATTACK coming? Choose", 240, 330, questFace14, color.White)
+		drawCenteredQuestLabel(s, "GUARD and take half. Progress is", 240, 348, questFace14, color.White)
+		drawCenteredQuestLabel(s, "autosaved as plain numbers, so you can", 240, 366, questFace14, color.White)
+		drawCenteredQuestLabel(s, "close the tab and continue tomorrow.", 240, 384, questFace14, color.White)
+		drawCenteredQuestLabel(s, "ARROWS/WASD walk · 1/2/3 commands · R resets", 240, 416, questFace14, color.RGBA{181, 247, 222, 255})
+		blink := uint8(140 + 90*int(math.Sin(float64(g.tick)*.1)))
+		vector.DrawFilledRect(s, 128, 442, 226, 22, color.RGBA{107, 225, 238, blink}, true)
+		drawCenteredQuestLabel(s, "TAP or SPACE to start the tale", 240, 447, questFace14, color.RGBA{6, 18, 37, 255})
+	}
 
 	// The painted landmarks are the actual quest graph, not detached key art.
 	drawMapLabel(s, "PEARL VILLAGE", 14, 548)
@@ -402,7 +447,11 @@ func (g *game) Draw(s *ebiten.Image) {
 	drawCenteredQuestLabel(s, "AUTOSAVED   •   R: DELETE SAVE", 240, 692, questFace14, color.RGBA{221, 231, 238, 255})
 	g.drawBadge(s)
 	if g.clear {
-		overlay(s, "EBI QUEST COMPLETE!\n\nTAP / SPACE TO PLAY AGAIN")
+		rankLine := ""
+		if g.rank != "" {
+			rankLine = fmt.Sprintf("RANK %s\n", g.rank)
+		}
+		overlay(s, "EBI QUEST COMPLETE!\n"+rankLine+"\nTAP / SPACE TO PLAY AGAIN")
 	}
 }
 func (g *game) drawBattle(s *ebiten.Image) {
@@ -482,6 +531,11 @@ func (g *game) drawBattle(s *ebiten.Image) {
 		drawCenteredQuestLabel(s, "RESOLVING — WATCH EACH ACTION", 240, 581, questFace14, color.RGBA{255, 238, 181, 255})
 	}
 	drawCenteredQuestLabel(s, "TAP A COMMAND   •   ENEMY INTENT IS SHOWN ABOVE", 240, 654, questFace14, color.RGBA{231, 238, 245, 255})
+	if g.floatTick > 0 && g.floatText != "" {
+		a := uint8(min(255, g.floatTick*6))
+		vector.DrawFilledRect(s, 196, 300, 88, 22, color.RGBA{4, 12, 26, uint8(a * 3 / 4)}, true)
+		drawCenteredQuestLabel(s, g.floatText, 240, 306, questFace16, color.RGBA{255, 235, 170, a})
+	}
 	g.drawBadge(s)
 }
 

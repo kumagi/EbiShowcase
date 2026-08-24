@@ -56,6 +56,8 @@ type game struct {
 	speed, aura                        float64
 	auraTick                           int
 	bossSpawned, drafting, clear, over bool
+	title                              bool
+	rank                               string
 	pickA, pickB, pickC                string
 	sparks                             []spark
 	shake, bestKills, area             int
@@ -71,7 +73,7 @@ func newGame() *game {
 	badge := ebiten.NewImage(24, 24)
 	badge.Fill(color.RGBA{255, 211, 62, 255})
 	g := &game{
-		px: 240, py: 360,
+		px: 240, py: 360, title: true,
 		rng:  rand.New(rand.NewSource(2306)),
 		life: 4, speed: 3.6, aura: 46, auraTick: 18,
 		level: 1, need: 4, audio: audiolab.Context(), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: badge,
@@ -104,6 +106,14 @@ func (g *game) resetRun() {
 }
 
 func (g *game) Update() error {
+	if g.title {
+		if restart() {
+			g.title = false
+			g.gate.Arm(true)
+			g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, 660, .08)).Play()
+		}
+		return nil
+	}
 	if g.clear || g.over {
 		if restart() {
 			g.resetRun()
@@ -188,6 +198,16 @@ func (g *game) Update() error {
 			if m.hp <= 0 {
 				if m.boss {
 					g.clear = true
+					switch {
+					case g.life >= 4 && g.level >= 5:
+						g.rank = "S"
+					case g.life >= 3:
+						g.rank = "A"
+					case g.life >= 2:
+						g.rank = "B"
+					default:
+						g.rank = "C"
+					}
 					if g.kills > g.bestKills {
 						g.bestKills = g.kills
 					}
@@ -451,8 +471,28 @@ func (g *game) Draw(s *ebiten.Image) {
 		drawPick(s, 295, 310, g.pickC)
 		ebitenutil.DebugPrintAt(s, "1/2/3 or TAP a card", 150, 400)
 	}
+	if g.title {
+		vector.DrawFilledRect(s, 38, 226, 404, 268, color.RGBA{5, 11, 24, 250}, false)
+		vector.StrokeRect(s, 38, 226, 404, 268, 4, color.RGBA{255, 211, 62, 255}, false)
+		ebitenutil.DebugPrintAt(s, "★ EBI SURVIVORS ★", 158, 250)
+		ebitenutil.DebugPrintAt(s, "ONE HERO VS THE WHOLE REEF", 140, 278)
+		ebitenutil.DebugPrintAt(s, "You never aim. The pearl aura fires", 116, 312)
+		ebitenutil.DebugPrintAt(s, "on its own timer — your only job is", 116, 330)
+		ebitenutil.DebugPrintAt(s, "POSITIONING. Collect gems to level up", 108, 348)
+		ebitenutil.DebugPrintAt(s, "and draft one of three upgrades.", 128, 366)
+		ebitenutil.DebugPrintAt(s, "Survive 55 seconds; then break the", 124, 392)
+		ebitenutil.DebugPrintAt(s, "CROWN CRAB to finish the run.", 138, 410)
+		ebitenutil.DebugPrintAt(s, "ARROWS/WASD or drag anywhere to move · 1/2/3 pick", 66, 438)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.frame)*.1)))
+		vector.DrawFilledRect(s, 126, 456, 228, 22, color.RGBA{255, 211, 62, blink}, false)
+		ebitenutil.DebugPrintAt(s, "TAP or SPACE to survive", 148, 462)
+	}
 	if g.clear {
-		overlay(s, fmt.Sprintf("EBI SURVIVORS CLEAR!\nKILLS %d  BEST %d\n\nTAP / SPACE TO PLAY AGAIN", g.kills, g.bestKills))
+		rankLine := ""
+		if g.rank != "" {
+			rankLine = fmt.Sprintf("RANK %s\n", g.rank)
+		}
+		overlay(s, fmt.Sprintf("EBI SURVIVORS CLEAR!\n%sKILLS %d  BEST %d\n\nTAP / SPACE TO PLAY AGAIN", rankLine, g.kills, g.bestKills))
 	} else if g.over {
 		overlay(s, "RUN ENDED!\n\nTAP / SPACE TO RETRY")
 	}

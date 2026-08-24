@@ -49,6 +49,8 @@ type game struct {
 	ready, stage, frames, totalFrames, best, shake, flashTarget, flashTimer int
 	message                                                                 string
 	won, lost, stageClear                                                   bool
+	intro, rankDone                                                         bool
+	rank                                                                    string
 	motion                                                                  motion
 	sparks                                                                  []spark
 	audio                                                                   *audio.Context
@@ -63,7 +65,7 @@ func party() []actor {
 }
 func newGame() *game {
 	prepareActiveRPGArt()
-	g := &game{ready: -1, best: 0, flashTarget: -1}
+	g := &game{ready: -1, best: 0, flashTarget: -1, intro: true}
 	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: W / 2, Y: H / 2}, ViewW: W, ViewH: H}
@@ -106,6 +108,14 @@ func (g *game) Update() error {
 		if p.life <= 0 {
 			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
 		}
+	}
+	if g.intro {
+		if retry() {
+			g.intro = false
+			g.gate.Arm(true)
+			g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, 640, .08)).Play()
+		}
+		return nil
 	}
 	if g.won || g.lost || g.stageClear {
 		if retry() {
@@ -301,6 +311,22 @@ func (g *game) check() {
 		}
 		if g.stage == len(encounters)-1 {
 			g.won = true
+			total := 0
+			for _, a := range g.actors {
+				if a.side == 0 {
+					total += max(0, a.hp)
+				}
+			}
+			switch {
+			case total >= 30:
+				g.rank = "S"
+			case total >= 18:
+				g.rank = "A"
+			case total >= 8:
+				g.rank = "B"
+			default:
+				g.rank = "C"
+			}
 		} else {
 			g.stageClear = true
 		}
@@ -393,11 +419,31 @@ func (g *game) Draw(s *ebiten.Image) {
 		ebitenutil.DebugPrintAt(s, l, i*160+28, 620)
 	}
 	ebitenutil.DebugPrintAt(s, "Keys 1-3 or tap when an ally is READY", 105, 685)
+	if g.intro {
+		vector.DrawFilledRect(s, 36, 210, 408, 300, color.RGBA{5, 12, 26, 250}, false)
+		vector.StrokeRect(s, 36, 210, 408, 300, 4, color.RGBA{255, 198, 75, 255}, false)
+		ebitenutil.DebugPrintAt(s, "★ EBI ACTIVE BATTLE ★", 138, 236)
+		ebitenutil.DebugPrintAt(s, "GAUGES DECIDE WHO ACTS NEXT", 140, 264)
+		ebitenutil.DebugPrintAt(s, "Every fighter's gauge fills by SPEED.", 104, 298)
+		ebitenutil.DebugPrintAt(s, "When one fills, it is READY — the queue", 100, 316)
+		ebitenutil.DebugPrintAt(s, "at the top shows the order actions fire.", 98, 334)
+		ebitenutil.DebugPrintAt(s, "ATTACK is safe. BURST hits hard but", 116, 352)
+		ebitenutil.DebugPrintAt(s, "drains you. HEAL keeps the line alive.", 102, 370)
+		ebitenutil.DebugPrintAt(s, "Win all three encounters of the tempest!", 96, 396)
+		ebitenutil.DebugPrintAt(s, "1/2/3 or tap a command when someone is READY", 74, 424)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.frames)*.1)))
+		vector.DrawFilledRect(s, 124, 452, 232, 22, color.RGBA{255, 198, 75, blink}, false)
+		ebitenutil.DebugPrintAt(s, "TAP or ENTER to sound the horn", 142, 458)
+	}
 	if g.stageClear {
 		overlay(s, fmt.Sprintf("ENCOUNTER CLEAR! BEST %d\n\nTAP / ENTER: NEXT BATTLE", g.best))
 	}
 	if g.won {
-		overlay(s, fmt.Sprintf("TEMPEST CONQUERED! BEST %d\n\nTAP / ENTER: NEW RUN", g.best))
+		rankLine := ""
+		if g.rank != "" {
+			rankLine = fmt.Sprintf("RANK %s\n", g.rank)
+		}
+		overlay(s, fmt.Sprintf("TEMPEST CONQUERED! %sBEST %d\n\nTAP / ENTER: NEW RUN", rankLine, g.best))
 	}
 	if g.lost {
 		overlay(s, "PARTY DEFEATED\n\nTAP / ENTER TO RETRY")

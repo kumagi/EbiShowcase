@@ -67,9 +67,12 @@ type game struct {
 	deck, hand                                      []card
 	hp, enemyHP, energy, block, floor, phase, route int
 	message                                         string
+	title                                           bool
+	rank                                            string
 	clear, over                                     bool
 	turn, tick, flash, shake, fx, score, best       int
 	sparks                                          []spark
+	floaters                                        []dmgText
 	audio                                           *audio.Context
 	gate                                            audiolab.Gate
 	pulse                                           *shaderlab.Pulse
@@ -80,9 +83,13 @@ type game struct {
 	enemyArt                                        [4]*ebiten.Image
 }
 type spark struct{ x, y, vx, vy, life float64 }
+type dmgText struct {
+	x, y, life float64
+	text       string
+}
 
 func newGame() *game {
-	g := &game{hp: 46, phase: phaseBattle, message: "Play cards, then end the turn."}
+	g := &game{hp: 46, phase: phaseBattle, title: true, message: "Play cards, then end the turn."}
 	g.loadGeneratedArt()
 	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
@@ -153,6 +160,22 @@ func (g *game) Update() error {
 			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
 		}
 	}
+	for i := len(g.floaters) - 1; i >= 0; i-- {
+		fl := &g.floaters[i]
+		fl.y -= .9
+		fl.life--
+		if fl.life <= 0 {
+			g.floaters = append(g.floaters[:i], g.floaters[i+1:]...)
+		}
+	}
+	if g.title {
+		if restart() || inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+			g.title = false
+			g.play(640)
+			g.message = "Play cards with your energy, then end the turn."
+		}
+		return nil
+	}
 	if g.clear || g.over {
 		if restart() {
 			best := g.best
@@ -209,6 +232,16 @@ func (g *game) Update() error {
 			if g.floor >= len(encounters) {
 				g.clear = true
 				g.score = g.hp*20 + len(g.deck)*75
+				switch {
+				case g.hp >= 32:
+					g.rank = "S"
+				case g.hp >= 22:
+					g.rank = "A"
+				case g.hp >= 12:
+					g.rank = "B"
+				default:
+					g.rank = "C"
+				}
 				if g.score > g.best {
 					g.best = g.score
 				}
@@ -231,8 +264,12 @@ func (g *game) updateBattle(choice int, end bool) {
 			g.flash = 7
 			g.shake = 4
 			g.burst(240, 165, 10)
+			g.floaters = append(g.floaters, dmgText{x: 214, y: 150, life: 40, text: fmt.Sprintf("-%d", c.damage)})
 		} else {
 			g.burst(240, 360, 7)
+			if c.block > 0 {
+				g.floaters = append(g.floaters, dmgText{x: 196, y: 352, life: 40, text: fmt.Sprintf("+%d BLOCK", c.block)})
+			}
 		}
 		g.hand = append(g.hand[:choice], g.hand[choice+1:]...)
 		g.message = fmt.Sprintf("%s: damage %d, block %d.", c.name, c.damage, c.block)
@@ -254,6 +291,9 @@ func (g *game) updateBattle(choice int, end bool) {
 		g.turn++
 		g.shake = 5
 		g.message = fmt.Sprintf("%s dealt %d. New hand drawn.", e.name, taken)
+		if taken > 0 {
+			g.floaters = append(g.floaters, dmgText{x: 216, y: 330, life: 44, text: fmt.Sprintf("-%d HP", taken)})
+		}
 		if g.hp <= 0 {
 			g.over = true
 		}
@@ -296,8 +336,27 @@ func (g *game) Draw(s *ebiten.Image) {
 	case phaseRoute:
 		g.drawRoute(s)
 	}
+	if g.title {
+		vector.DrawFilledRect(s, 38, 232, 404, 256, color.RGBA{6, 14, 30, 250}, false)
+		vector.StrokeRect(s, 38, 232, 404, 256, 4, color.RGBA{253, 200, 70, 255}, false)
+		ebitenutil.DebugPrintAt(s, "★ EBI ASCENT ★", 176, 256)
+		ebitenutil.DebugPrintAt(s, "FIVE DECKS UP THE ABYSS STAIRS", 118, 284)
+		ebitenutil.DebugPrintAt(s, "Each foe shows its NEXT move. Play", 106, 320)
+		ebitenutil.DebugPrintAt(s, "attack cards to break it, block cards", 100, 338)
+		ebitenutil.DebugPrintAt(s, "to survive its turn. Win a reward card,", 96, 356)
+		ebitenutil.DebugPrintAt(s, "then pick REST or TREASURE for the road.", 92, 374)
+		ebitenutil.DebugPrintAt(s, "Beat all five floors including the king.", 104, 392)
+		ebitenutil.DebugPrintAt(s, "1-5 play cards · E / button ends the turn", 88, 420)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.tick)*.1)))
+		vector.DrawFilledRect(s, 122, 444, 236, 22, color.RGBA{253, 200, 70, blink}, false)
+		ebitenutil.DebugPrintAt(s, "TAP or SPACE to begin the climb", 128, 450)
+	}
 	if g.clear {
-		overlay(s, "ASCENT COMPLETE!\n\nTAP / SPACE FOR A NEW RUN")
+		rankLine := ""
+		if g.rank != "" {
+			rankLine = fmt.Sprintf("RANK %s\n", g.rank)
+		}
+		overlay(s, "ASCENT COMPLETE!\n"+rankLine+"\nTAP / SPACE FOR A NEW RUN")
 	} else if g.over {
 		overlay(s, "THE RUN ENDED!\n\nTAP / SPACE TO RETRY")
 	}
@@ -434,6 +493,14 @@ func (g *game) drawBattle(s *ebiten.Image) {
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("%s  HP %02d/%02d  NEXT %s %d", e.name, max(0, g.enemyHP), e.hp, intentName, intent), 95, 88)
 	for _, p := range g.sparks {
 		vector.DrawFilledCircle(s, float32(p.x+ox), float32(p.y), float32(2+p.life/14), color.RGBA{255, 211, 62, 255}, true)
+	}
+	for _, fl := range g.floaters {
+		a := uint8(min(255, int(fl.life)*6))
+		vector.DrawFilledRect(s, float32(fl.x-8), float32(fl.y-12), float32(len(fl.text))*7+16, 18, color.RGBA{5, 11, 25, uint8(a * 3 / 4)}, false)
+		ebitenutil.DebugPrintAt(s, fl.text, int(fl.x)-4, int(fl.y)-8)
+		if a > 200 {
+			vector.StrokeRect(s, float32(fl.x-8), float32(fl.y-12), float32(len(fl.text))*7+16, 18, 1, color.RGBA{255, 224, 150, a}, false)
+		}
 	}
 	ebitenutil.DebugPrintAt(s, fmt.Sprintf("ENERGY %d/3   BLOCK %d", g.energy, g.block), 160, 340)
 	ebitenutil.DebugPrintAt(s, g.message, 45, 390)

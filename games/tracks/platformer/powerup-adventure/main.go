@@ -69,6 +69,8 @@ type game struct {
 	foes                             []foe
 	score, stage, life               int
 	grounded, big, powerTaken, clear bool
+	intro                            bool
+	rank                             string
 	tick, finishTimer                int
 	sparks                           []spark
 	audio                            *audio.Context
@@ -82,7 +84,7 @@ func newGame() *game {
 	loadPlatformerArt()
 	badge := ebiten.NewImage(32, 32)
 	badge.Fill(color.RGBA{255, 220, 72, 255})
-	g := &game{stage: 1, life: 3, audio: audiolab.Context(), pulse: shaderlab.NewPulse(), camState: cameralab.State{ViewW: width, ViewH: height}, shaderBadge: badge}
+	g := &game{stage: 1, intro: true, life: 3, audio: audiolab.Context(), pulse: shaderlab.NewPulse(), camState: cameralab.State{ViewW: width, ViewH: height}, shaderBadge: badge}
 	g.load()
 	return g
 }
@@ -123,6 +125,14 @@ func (g *game) Update() error {
 		if p.life <= 0 {
 			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
 		}
+	}
+	if g.intro {
+		if restart() {
+			g.intro = false
+			g.gate.Arm(true)
+			g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, 660, .08)).Play()
+		}
+		return nil
 	}
 	if g.clear {
 		if restart() {
@@ -239,6 +249,16 @@ func (g *game) Update() error {
 			g.load()
 		} else {
 			g.clear = true
+			switch {
+			case g.life == 3 && g.big:
+				g.rank = "S"
+			case g.life >= 2:
+				g.rank = "A"
+			case g.life >= 1:
+				g.rank = "B"
+			default:
+				g.rank = "C"
+			}
 		}
 	}
 	target := g.p.x - width*.4
@@ -340,9 +360,28 @@ func (g *game) Draw(s *ebiten.Image) {
 		ebitenutil.DebugPrintAt(s, "SUNRISE ISLAND", 178, 127)
 		ebitenutil.DebugPrintAt(s, "RUN • LEAP • POWER UP • REACH THE SKY GATE", 82, 158)
 	}
+	if g.intro {
+		vector.DrawFilledRect(s, 38, 226, 404, 268, color.RGBA{5, 14, 30, 250}, false)
+		vector.StrokeRect(s, 38, 226, 404, 268, 4, color.RGBA{255, 224, 126, 255}, false)
+		ebitenutil.DebugPrintAt(s, "★ EBI ADVENTURE ★", 166, 250)
+		ebitenutil.DebugPrintAt(s, "FOUR ISLANDS OF RUNNING AND LEAPING", 100, 278)
+		ebitenutil.DebugPrintAt(s, "Grab the glowing PEARL to grow big —", 104, 312)
+		ebitenutil.DebugPrintAt(s, "big Ebi breaks blocks from below and", 116, 330)
+		ebitenutil.DebugPrintAt(s, "shrinks instead of dying when hit.", 122, 348)
+		ebitenutil.DebugPrintAt(s, "Coins are worth 100 at the gate. Reach", 106, 374)
+		ebitenutil.DebugPrintAt(s, "the sky gate on every island to win.", 112, 392)
+		ebitenutil.DebugPrintAt(s, "ARROWS/WASD run · SPACE jump · touch pad below", 78, 420)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.tick)*.1)))
+		vector.DrawFilledRect(s, 126, 442, 228, 22, color.RGBA{255, 224, 126, blink}, false)
+		ebitenutil.DebugPrintAt(s, "TAP or SPACE to set sail", 148, 448)
+	}
 	if g.clear {
+		rankLine := ""
+		if g.rank != "" {
+			rankLine = fmt.Sprintf("RANK %s\n", g.rank)
+		}
 		vector.DrawFilledRect(s, 55, 280, 370, 150, color.RGBA{6, 18, 37, 235}, false)
-		ebitenutil.DebugPrintAt(s, "EBI ADVENTURE COMPLETE!\n\nTAP / SPACE TO PLAY AGAIN", 125, 330)
+		ebitenutil.DebugPrintAt(s, fmt.Sprintf("EBI ADVENTURE COMPLETE!\n%s\nTAP / SPACE TO PLAY AGAIN", rankLine), 125, 330)
 	}
 }
 

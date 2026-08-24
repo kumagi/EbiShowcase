@@ -79,6 +79,8 @@ type game struct {
 	cursor                   pt
 	reach                    map[pt]int
 	message                  string
+	title                    bool
+	rank                     string
 	won, lost                bool
 	mission                  int
 	totalTurns               int
@@ -99,7 +101,7 @@ type game struct {
 
 func newGame() *game {
 	prepareTacticsArt()
-	g := &game{selected: 0, cursor: pt{0, 7}, rng: rand.New(rand.NewSource(1601))}
+	g := &game{selected: 0, cursor: pt{0, 7}, title: true, rng: rand.New(rand.NewSource(1601))}
 	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: W / 2, Y: H / 2}, ViewW: W, ViewH: H}
@@ -177,6 +179,14 @@ func (g *game) Update() error {
 		}
 	}
 	if g.advanceMoves() {
+		return nil
+	}
+	if g.title {
+		if retry() {
+			g.title = false
+			g.gate.Arm(true)
+			g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, 620, .08)).Play()
+		}
 		return nil
 	}
 	if g.won || g.lost {
@@ -391,6 +401,16 @@ func (g *game) finishEnemyPhase() {
 			return
 		}
 		g.won = true
+		switch hpLeft := g.units[0].hp + g.units[1].hp; {
+		case g.turn <= 12 && hpLeft >= 15:
+			g.rank = "S"
+		case hpLeft >= 10:
+			g.rank = "A"
+		case hpLeft >= 5:
+			g.rank = "B"
+		default:
+			g.rank = "C"
+		}
 		if g.bestTurns == 0 || g.totalTurns < g.bestTurns {
 			g.bestTurns = g.totalTurns
 		}
@@ -544,8 +564,29 @@ func (g *game) drawScene(s *ebiten.Image) {
 	vector.StrokeRect(s, 278, 634, 158, 30, 2, color.RGBA{181, 221, 235, 150}, false)
 	ebitenutil.DebugPrintAt(s, "FINISH UNIT [W]", 294, 645)
 	ebitenutil.DebugPrintAt(s, "Each ally: move → attack or FINISH. Enemy phase after both.", 50, 692)
+	if g.title {
+		vector.DrawFilledRect(s, 36, 210, 408, 300, color.RGBA{5, 13, 26, 250}, false)
+		vector.StrokeRect(s, 36, 210, 408, 300, 4, color.RGBA{255, 211, 83, 255}, false)
+		ebitenutil.DebugPrintAt(s, "★ EBI TACTICS ★", 168, 234)
+		ebitenutil.DebugPrintAt(s, "TERRAIN IS THE SECOND ARMY", 132, 262)
+		ebitenutil.DebugPrintAt(s, "Plains cost 1 step, forest 2, mountain", 100, 296)
+		ebitenutil.DebugPrintAt(s, "3 — the glowing reach map already adds", 102, 314)
+		ebitenutil.DebugPrintAt(s, "those costs with a priority queue.", 128, 332)
+		ebitenutil.DebugPrintAt(s, "BLADE hits neighbors; BOW reaches 2.", 116, 358)
+		ebitenutil.DebugPrintAt(s, "Enemies show their plan before they act,", 96, 384)
+		ebitenutil.DebugPrintAt(s, "so every turn is a small puzzle, not luck.", 92, 402)
+		ebitenutil.DebugPrintAt(s, "Clear 3 missions within the turn limits.", 104, 428)
+		ebitenutil.DebugPrintAt(s, "ARROWS move · TAB swap unit · W finish · ENTER confirm", 66, 456)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.frame)*.1)))
+		vector.DrawFilledRect(s, 126, 474, 228, 22, color.RGBA{255, 211, 83, blink}, false)
+		ebitenutil.DebugPrintAt(s, "TAP or ENTER to deploy", 146, 480)
+	}
 	if g.won {
-		overlay(s, fmt.Sprintf("3 MISSIONS CLEARED!\nTOTAL TURNS %d  BEST %d\nTAP / ENTER TO REPLAY", g.totalTurns, g.bestTurns))
+		rankLine := ""
+		if g.rank != "" {
+			rankLine = fmt.Sprintf("RANK %s\n", g.rank)
+		}
+		overlay(s, fmt.Sprintf("3 MISSIONS CLEARED!\n%sTOTAL TURNS %d  BEST %d\nTAP / ENTER TO REPLAY", rankLine, g.totalTurns, g.bestTurns))
 	}
 	if g.lost {
 		overlay(s, "MISSION FAILED\n\nTAP / ENTER TO RETRY")

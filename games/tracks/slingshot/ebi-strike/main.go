@@ -60,6 +60,11 @@ type enemy struct {
 }
 type spark struct{ x, y, vx, vy, life float64 }
 
+type strikeText struct {
+	x, y, life float64
+	text       string
+}
+
 type game struct {
 	allies                              [2]ally
 	enemies                             []enemy
@@ -70,11 +75,14 @@ type game struct {
 	pulseAt                             vec
 	pulseFrames                         int
 	message                             string
+	title                               bool
+	rank                                string
 	won, lost                           bool
 	stage, totalTurns, bestTurns, shake int
 	tick                                int
 	pillars                             []vec
 	sparks                              []spark
+	floaters                            []strikeText
 	audio                               *audio.Context
 	gate                                audiolab.Gate
 	shader                              *shaderlab.Pulse
@@ -84,7 +92,7 @@ type game struct {
 
 func newGame() *game {
 	loadStrikeArt()
-	g := &game{stage: 1}
+	g := &game{stage: 1, title: true}
 	g.audio = audiolab.Context()
 	g.shader = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: screenW / 2, Y: screenH / 2}, ViewW: screenW, ViewH: screenH}
@@ -110,6 +118,13 @@ func (g *game) loadStage() {
 
 func (g *game) Update() error {
 	g.tick++
+	if g.title {
+		if retryPressed() {
+			g.title = false
+			g.play(660)
+		}
+		return nil
+	}
 	if g.won || g.lost {
 		if retryPressed() {
 			if g.won && g.stage < 3 {
@@ -143,6 +158,14 @@ func (g *game) Update() error {
 		p.life--
 		if p.life <= 0 {
 			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
+		}
+	}
+	for i := len(g.floaters) - 1; i >= 0; i-- {
+		fl := &g.floaters[i]
+		fl.y -= .8
+		fl.life--
+		if fl.life <= 0 {
+			g.floaters = append(g.floaters[:i], g.floaters[i+1:]...)
 		}
 	}
 	for i := range g.enemies {
@@ -233,7 +256,10 @@ func (g *game) bounceWalls(a *ally) {
 
 func (g *game) bouncePillars(a *ally) {
 	for _, pillar := range g.pillars {
-		g.reflectCircle(a, pillar, 24)
+		if impact := g.reflectCircle(a, pillar, 24); impact >= 1.5 && len(g.sparks) < 160 {
+			g.burst(pillar.x, pillar.y-14, 6)
+			g.play(300)
+		}
 	}
 }
 
@@ -271,6 +297,7 @@ func (g *game) hitEnemies(a *ally) {
 			e.cooldown = 22
 			g.shake = 4
 			g.burst(e.pos.x, e.pos.y, 10)
+			g.floaters = append(g.floaters, strikeText{x: e.pos.x - 20, y: e.pos.y - 34, life: 40, text: "HIT!"})
 			g.message = fmt.Sprintf("Direct contact! Enemy HP %d.", e.hp)
 		}
 	}
@@ -319,7 +346,18 @@ func (g *game) checkWin() {
 	}
 	g.won = true
 	g.moving = false
-	g.message = "Every reef guardian is defeated!"
+	total := g.totalTurns + g.turns
+	switch per := float64(total) / float64(g.stage); {
+	case per <= 4:
+		g.rank = "S"
+	case per <= 5:
+		g.rank = "A"
+	case per <= 6:
+		g.rank = "B"
+	default:
+		g.rank = "C"
+	}
+	g.message = fmt.Sprintf("Every reef guardian is defeated! RANK %s", g.rank)
 }
 
 func (g *game) endTurn() {
@@ -368,6 +406,10 @@ func (g *game) Draw(screen *ebiten.Image) {
 	}
 	for _, p := range g.sparks {
 		vector.DrawFilledCircle(screen, float32(p.x+ox), float32(p.y), float32(2+p.life/14), color.RGBA{255, 211, 62, 255}, true)
+	}
+	for _, fl := range g.floaters {
+		a := uint8(min(255, int(fl.life)*6))
+		drawCenteredStrikeLabel(screen, fl.text, fl.x+ox, fl.y, strikeFace16, color.RGBA{255, 240, 190, a})
 	}
 	if g.pulseFrames > 0 {
 		r := float32(45 + (30-g.pulseFrames)*4)
@@ -419,10 +461,26 @@ func (g *game) Draw(screen *ebiten.Image) {
 		drawCenteredStrikeLabel(screen, "CLEAR THE REEF IN 8 TURNS", 240, 135, strikeFace16, color.RGBA{128, 242, 255, alpha})
 	}
 	g.drawEffectBadge(screen)
+	if g.title {
+		vector.DrawFilledRect(screen, 42, 236, 396, 250, color.RGBA{4, 14, 31, 247}, false)
+		vector.StrokeRect(screen, 42, 236, 396, 250, 4, color.RGBA{244, 189, 68, 255}, false)
+		drawCenteredStrikeLabel(screen, "★ EBI STRIKE ★", 240, 262, strikeFace20, color.RGBA{255, 229, 150, 255})
+		drawCenteredStrikeLabel(screen, "PEARL COLISEUM RESCUE", 240, 292, strikeFace16, color.RGBA{140, 239, 247, 255})
+		drawCenteredStrikeLabel(screen, "Drag a hero backward like a", 240, 330, strikeFace14, color.RGBA{235, 240, 245, 255})
+		drawCenteredStrikeLabel(screen, "slingshot. Bounce off pillars,", 240, 352, strikeFace14, color.RGBA{235, 240, 245, 255})
+		drawCenteredStrikeLabel(screen, "crack guardians, then tag your", 240, 374, strikeFace14, color.RGBA{235, 240, 245, 255})
+		drawCenteredStrikeLabel(screen, "partner for an ALLY WAVE.", 240, 396, strikeFace14, color.RGBA{235, 240, 245, 255})
+		drawCenteredStrikeLabel(screen, "Clear all 3 reefs in 8 turns each.", 240, 424, strikeFace14, color.RGBA{255, 222, 105, 255})
+		drawCenteredStrikeLabel(screen, "TAP or SPACE to enter the arena", 240, 458, strikeFace16, color.RGBA{126, 242, 255, 255})
+	}
 	if g.won {
-		msg := "STAGE CLEAR!\n\nTAP / ENTER FOR NEXT STAGE"
+		rankLine := ""
+		if g.rank != "" {
+			rankLine = fmt.Sprintf("RANK %s   ", g.rank)
+		}
+		msg := fmt.Sprintf("STAGE CLEAR!  %s\n\nTAP / ENTER FOR NEXT STAGE", rankLine)
 		if g.stage == 3 {
-			msg = "REEF RESCUED!\n\nTAP / ENTER FOR A NEW RUN"
+			msg = fmt.Sprintf("REEF RESCUED!  %s\n\nTAP / ENTER FOR A NEW RUN", rankLine)
 		}
 		overlay(screen, msg)
 	}

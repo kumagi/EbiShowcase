@@ -13,10 +13,12 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/audio"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	text "github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kumagi/EbiShowcase/internal/audiolab"
 	"github.com/kumagi/EbiShowcase/internal/uilab"
 )
 
@@ -49,12 +51,16 @@ type game struct {
 	milestone                           int
 	previousMilestone, milestoneFlash   int
 	tapFlash, buyFlash, buyLine         int
+	title                               bool
+	audio                               *audio.Context
+	gate                                audiolab.Gate
 }
 type crumb struct{ x, y, vx, vy, life float64 }
 
 func newGame() *game {
 	loadBakeryArt()
-	g := &game{cost: 20, mixerCost: 180, shopCost: 1600, last: time.Now()}
+	g := &game{cost: 20, mixerCost: 180, shopCost: 1600, title: true, last: time.Now()}
+	g.audio = audiolab.Context()
 	g.load()
 	g.milestone = milestoneFor(g.total)
 	g.previousMilestone = g.milestone
@@ -98,6 +104,13 @@ func (g *game) save() {
 	g.lastSave = 2
 }
 func (g *game) Update() error {
+	if g.title {
+		if any() {
+			g.title = false
+			g.play(660)
+		}
+		return nil
+	}
 	now := time.Now()
 	dt := math.Min(.25, now.Sub(g.last).Seconds())
 	g.last = now
@@ -131,6 +144,7 @@ func (g *game) Update() error {
 		g.previousMilestone = g.milestone
 		g.milestoneFlash = 150
 		g.burst(240, 315, 30)
+		g.play(700)
 	}
 	if g.lastSave > 0 {
 		g.lastSave -= dt
@@ -178,6 +192,7 @@ func (g *game) Update() error {
 			g.total += made
 			g.burst(240, 280, 12)
 			g.tapFlash = 12
+			g.play(520)
 		} else if x < 160 && g.sweets >= g.cost {
 			g.sweets -= g.cost
 			g.ovens++
@@ -197,13 +212,23 @@ func (g *game) Update() error {
 			g.burst(400, 540, 18)
 			g.buyLine, g.buyFlash = 2, 24
 		}
+		g.play(760)
 		g.save()
 	}
 	if g.total >= 25000 {
 		g.clear = true
+		g.play(880)
 		g.save()
 	}
 	return nil
+}
+func (g *game) play(freq float64) {
+	g.gate.Arm(true)
+	if g.audio == nil {
+		return
+	}
+	p := g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, freq, .06))
+	p.Play()
 }
 func (g *game) burst(x, y float64, n int) {
 	for i := 0; i < n; i++ {
@@ -267,7 +292,22 @@ func (g *game) Draw(s *ebiten.Image) {
 	} else {
 		drawCenteredLabel(s, "R: DELETE SAVE", 240, 674, bakeryFace14, color.RGBA{205, 214, 225, 255})
 	}
-	if g.frame < 120 {
+	if g.title {
+		vector.DrawFilledRect(s, 38, 224, 404, 276, color.RGBA{5, 16, 31, 250}, true)
+		vector.StrokeRect(s, 38, 224, 404, 276, 4, color.RGBA{255, 220, 145, 255}, true)
+		drawCenteredLabel(s, "★ PEARL PALACE PATISSERIE ★", 240, 248, bakeryFace16, color.RGBA{255, 235, 188, 255})
+		drawCenteredLabel(s, "AN IDLE BAKERY THAT NEVER SLEEPS", 240, 276, bakeryFace14, color.RGBA{126, 244, 255, 255})
+		drawCenteredLabel(s, "Every second, Update adds rate x dt", 240, 312, bakeryFace14, color.RGBA{240, 244, 248, 255})
+		drawCenteredLabel(s, "to your sweets. Buy ovens to raise the", 240, 330, bakeryFace14, color.RGBA{240, 244, 248, 255})
+		drawCenteredLabel(s, "rate, and the game KEEPS BAKING while", 240, 348, bakeryFace14, color.RGBA{240, 244, 248, 255})
+		drawCenteredLabel(s, "you are away — saved in this browser,", 240, 366, bakeryFace14, color.RGBA{240, 244, 248, 255})
+		drawCenteredLabel(s, "so coming back pays an offline bonus.", 240, 384, bakeryFace14, color.RGBA{240, 244, 248, 255})
+		drawCenteredLabel(s, "Grow TOTAL sweets to 25.0K across three", 240, 410, bakeryFace14, color.RGBA{255, 224, 133, 255})
+		drawCenteredLabel(s, "districts to finish the palace.", 240, 428, bakeryFace14, color.RGBA{255, 224, 133, 255})
+		drawCenteredLabel(s, "TAP tart · 1/2/3 buy machines", 240, 454, bakeryFace14, color.RGBA{181, 247, 222, 255})
+		drawCenteredLabel(s, "TAP or SPACE to open the shop", 240, 480, bakeryFace16, color.RGBA{255, 245, 213, 255})
+	}
+	if !g.title && g.frame < 120 {
 		alpha := uint8(235)
 		if g.frame > 82 {
 			alpha = uint8(max(0, 235-(g.frame-82)*6))

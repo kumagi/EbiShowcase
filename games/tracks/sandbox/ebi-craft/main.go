@@ -65,6 +65,8 @@ type game struct {
 	crawlers                                     []crawler
 	particles                                    []particle
 	clear, over                                  bool
+	intro                                        bool
+	rank                                         string
 	message                                      string
 	rng                                          *rand.Rand
 	audio                                        *audio.Context
@@ -76,7 +78,7 @@ type game struct {
 
 func newGame() *game {
 	prepareCraftArt()
-	g := &game{hp: 5, rng: rand.New(rand.NewSource(44)), best: sessionBest}
+	g := &game{hp: 5, intro: true, rng: rand.New(rand.NewSource(44)), best: sessionBest}
 	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: width / 2, Y: height / 2}, ViewW: width, ViewH: height}
@@ -197,6 +199,17 @@ func (g *game) finishIsland() {
 	g.score += max(0, 1800-g.stageFrames/2) + g.hp*100
 	if g.stage == len(islands)-1 {
 		g.clear = true
+		switch {
+		case g.hp == 5:
+			g.rank = "S"
+		case g.hp >= 4:
+			g.rank = "A"
+		case g.hp >= 2:
+			g.rank = "B"
+		default:
+			g.rank = "C"
+		}
+		g.message = fmt.Sprintf("Three islands shine! RANK %s. Retry for a higher score.", g.rank)
 		if g.score > sessionBest {
 			sessionBest = g.score
 		}
@@ -256,6 +269,14 @@ func (g *game) updateCrawlers() {
 }
 
 func (g *game) Update() error {
+	if g.intro {
+		if retryPressed() {
+			g.intro = false
+			g.gate.Arm(true)
+			g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, 640, .08)).Play()
+		}
+		return nil
+	}
 	if g.clear || g.over {
 		if retryPressed() {
 			*g = *newGame()
@@ -384,6 +405,21 @@ func (g *game) Draw(screen *ebiten.Image) {
 	screen.DrawImage(world, op)
 	if g.flash > 0 {
 		vector.DrawFilledRect(screen, 0, 0, width, height, color.RGBA{255, 255, 255, 55}, false)
+	}
+	if g.intro {
+		vector.DrawFilledRect(screen, 36, 222, 408, 280, color.RGBA{5, 13, 28, 250}, false)
+		vector.StrokeRect(screen, 36, 222, 408, 280, 4, color.RGBA{255, 210, 74, 255}, false)
+		ebitenutil.DebugPrintAt(screen, "★ EBI CRAFT EXPEDITION ★", 128, 246)
+		ebitenutil.DebugPrintAt(screen, "THREE ISLANDS OF DIGGING AND LANTERNS", 92, 274)
+		ebitenutil.DebugPrintAt(screen, "Every tile you dig is one ARRAY cell", 112, 308)
+		ebitenutil.DebugPrintAt(screen, "changing state — day turns to night,", 116, 326)
+		ebitenutil.DebugPrintAt(screen, "night crawlers wake up, and lanterns", 122, 344)
+		ebitenutil.DebugPrintAt(screen, "you place become safe zones. Gather", 126, 362)
+		ebitenutil.DebugPrintAt(screen, "resources to open the boat home.", 132, 380)
+		ebitenutil.DebugPrintAt(screen, "ARROWS/WASD move · SPACE/E dig or place · touch pad below", 70, 408)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.frames)*.1)))
+		vector.DrawFilledRect(screen, 126, 448, 228, 22, color.RGBA{255, 210, 74, blink}, false)
+		ebitenutil.DebugPrintAt(screen, "TAP or ENTER to land ashore", 144, 454)
 	}
 	if g.clear || g.over {
 		vector.DrawFilledRect(screen, 28, 235, 424, 220, color.RGBA{5, 13, 28, 245}, false)

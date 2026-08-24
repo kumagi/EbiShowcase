@@ -102,6 +102,12 @@ type particle struct {
 	kind               int
 }
 
+type floatText struct {
+	x, y, life float64
+	text       string
+	gold       bool
+}
+
 type game struct {
 	level            stage
 	board            [rows][cols]int
@@ -112,12 +118,15 @@ type game struct {
 	moves, score     int
 	combo            int
 	message          string
+	title            bool
+	rank             string
 	won, lost        bool
 	stageIndex       int
 	totalScore       int
 	bestScore        int
 	tick, shake      int
 	particles        []particle
+	floaters         []floatText
 	forge            map[point]int
 	forgeAnchor      point
 	forgeAnchorValid bool
@@ -157,6 +166,7 @@ func newGame(level stage) *game {
 	g.moves = level.moves
 	g.cursor = point{2, 3}
 	g.message = "Swap neighbors. Match 3 or more!"
+	g.title = true
 	return g
 }
 
@@ -201,6 +211,22 @@ func (g *game) Update() error {
 		if p.life <= 0 {
 			g.particles = append(g.particles[:i], g.particles[i+1:]...)
 		}
+	}
+	for i := len(g.floaters) - 1; i >= 0; i-- {
+		f := &g.floaters[i]
+		f.y -= .7
+		f.life--
+		if f.life <= 0 {
+			g.floaters = append(g.floaters[:i], g.floaters[i+1:]...)
+		}
+	}
+	if g.title {
+		if retryPressed() {
+			g.title = false
+			g.play(660)
+			g.message = "Reach the gold score before moves run out!"
+		}
+		return nil
 	}
 	if g.won || g.lost {
 		if retryPressed() {
@@ -350,6 +376,7 @@ func (g *game) resolveMatches() {
 		if g.score >= g.level.targetScore {
 			g.won = true
 			final := g.totalScore + g.score + g.moves*50
+			g.rank = rankFor(float64(g.score) / float64(g.level.targetScore))
 			if final > g.bestScore {
 				g.bestScore = final
 			}
@@ -383,6 +410,25 @@ func (g *game) resolveMatches() {
 	if g.combo > 1 {
 		g.shake = 5 + g.combo
 	}
+	anchor := point{cols / 2, rows / 2}
+	for p := range matches {
+		anchor = p
+		break
+	}
+	if g.forgeAnchorValid {
+		anchor = g.forgeAnchor
+	}
+	label := fmt.Sprintf("+%d", gain)
+	if g.combo > 1 {
+		label = fmt.Sprintf("+%d x%d", gain, g.combo)
+	}
+	g.floaters = append(g.floaters, floatText{
+		x:    float64(boardX+anchor.x*cell+cell/2) - 24,
+		y:    float64(boardY + anchor.y*cell),
+		life: 46,
+		text: label,
+		gold: g.combo > 2,
+	})
 	for p := range matches {
 		for i := 0; i < 4; i++ {
 			a := float64(i)*math.Pi/2 + float64(p.x+p.y)
@@ -754,15 +800,34 @@ func (g *game) Draw(screen *ebiten.Image) {
 		vector.StrokeLine(screen, float32(p.x+ox), float32(p.y), float32(p.x-p.vx*4+ox), float32(p.y-p.vy*4), float32(2+p.life/16), c, true)
 		vector.DrawFilledCircle(screen, float32(p.x+ox), float32(p.y), float32(1.5+p.life/18), color.RGBA{255, 244, 197, 220}, true)
 	}
+	for _, f := range g.floaters {
+		a := uint8(min(255, int(f.life*6)))
+		col := color.RGBA{255, 255, 255, a}
+		if f.gold {
+			col = color.RGBA{255, 214, 82, a}
+		}
+		vector.DrawFilledRect(screen, float32(f.x-4+ox), float32(f.y-11), float32(len(f.text))*7+8, 15, color.RGBA{5, 16, 34, uint8(a * 3 / 4)}, false)
+		ebitenutil.DebugPrintAt(screen, f.text, int(f.x)+int(ox), int(f.y)-8)
+		if col.A > 0 {
+			vector.StrokeRect(screen, float32(f.x-4+ox), float32(f.y-11), float32(len(f.text))*7+8, 15, 1, col, false)
+		}
+	}
 	ebitenutil.DebugPrintAt(screen, "4: ROCKET   5: WAVE   L/T: BOMB", 91, 615)
 	ebitenutil.DebugPrintAt(screen, "Tap two neighbors  |  Arrows + Space", 90, 641)
 	ebitenutil.DebugPrintAt(screen, "Reach the gold score before moves run out", 74, 667)
+	if g.title {
+		g.titleOverlay(screen, g.level.name)
+	}
 	if g.won {
 		next := "NEXT REEF"
 		if g.stageIndex == len(stages)-1 {
 			next = "NEW RUN"
 		}
-		overlay(screen, fmt.Sprintf("STAGE CLEAR!  BONUS %d\nBEST RUN %d\n\nTAP / SPACE: %s", g.moves*50, g.bestScore, next))
+		rank := ""
+		if g.rank != "" {
+			rank = fmt.Sprintf("  RANK %s\n", g.rank)
+		}
+		overlay(screen, fmt.Sprintf("STAGE CLEAR!%s  BONUS %d\nBEST RUN %d\n\nTAP / SPACE: %s", rank, g.moves*50, g.bestScore, next))
 	}
 	if g.lost {
 		overlay(screen, "OUT OF MOVES\n\nTAP / SPACE TO RETRY")
@@ -920,6 +985,35 @@ func overlay(screen *ebiten.Image, message string) {
 	vector.DrawFilledRect(screen, 50, 278, 380, 160, color.RGBA{5, 16, 34, 245}, false)
 	vector.StrokeRect(screen, 50, 278, 380, 160, 4, color.RGBA{245, 190, 69, 255}, false)
 	ebitenutil.DebugPrintAt(screen, message, 115, 330)
+}
+
+func (g *game) titleOverlay(screen *ebiten.Image, stageName string) {
+	vector.DrawFilledRect(screen, 40, 240, 400, 240, color.RGBA{5, 16, 34, 248}, false)
+	vector.StrokeRect(screen, 40, 240, 400, 240, 4, color.RGBA{245, 190, 69, 255}, false)
+	vector.StrokeRect(screen, 46, 246, 388, 228, 1, color.RGBA{255, 214, 82, 120}, false)
+	ebitenutil.DebugPrintAt(screen, "★ EBI MATCH ★", 176, 268)
+	ebitenutil.DebugPrintAt(screen, "TREASURE VAULT OF THE REEF", 138, 292)
+	ebitenutil.DebugPrintAt(screen, "Swap two neighbors to line up", 128, 336)
+	ebitenutil.DebugPrintAt(screen, "3+ relics. Big lines forge rockets,", 118, 354)
+	ebitenutil.DebugPrintAt(screen, "color waves and bombs. Clear the", 130, 372)
+	ebitenutil.DebugPrintAt(screen, "gold score before moves run out.", 126, 390)
+	ebitenutil.DebugPrintAt(screen, "STAGE 1 / "+stageName, 168, 424)
+	blink := uint8(140 + 100*int(math.Sin(float64(g.tick)*0.1)))
+	vector.DrawFilledRect(screen, 118, 442, 244, 22, color.RGBA{245, 190, 69, blink}, false)
+	ebitenutil.DebugPrintAt(screen, "TAP or SPACE to dive in", 146, 448)
+}
+
+func rankFor(ratio float64) string {
+	switch {
+	case ratio >= 2:
+		return "S"
+	case ratio >= 1.5:
+		return "A"
+	case ratio >= 1.2:
+		return "B"
+	default:
+		return "C"
+	}
 }
 
 func abs(n int) int {

@@ -78,6 +78,8 @@ type game struct {
 	aiPlan, aiPlanTicks                int
 	sparks                             []spark
 	message                            string
+	title                              bool
+	rank                               string
 	matchOver                          bool
 	rng                                *rand.Rand
 	audio                              *audio.Context
@@ -91,7 +93,7 @@ func newGame() *game {
 	prepareFightingArt()
 	b := ebiten.NewImage(20, 20)
 	b.Fill(color.RGBA{255, 100, 80, 255})
-	g := &game{round: 1, rng: rand.New(rand.NewSource(4207)), audio: audiolab.Context(), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: b}
+	g := &game{round: 1, title: true, rng: rand.New(rand.NewSource(4207)), audio: audiolab.Context(), pulse: shaderlab.NewPulse(), cam: cameralab.State{ViewW: width, ViewH: height}, badge: b}
 	g.resetRound()
 	return g
 }
@@ -106,6 +108,14 @@ func (g *game) resetRound() {
 	g.message = fmt.Sprintf("ROUND %d — FIGHT!", g.round)
 }
 func (g *game) Update() error {
+	if g.title {
+		if any() {
+			g.title = false
+			g.gate.Arm(true)
+			g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Square, 620, .08)).Play()
+		}
+		return nil
+	}
 	if g.matchOver {
 		if any() {
 			best, streak := g.bestStreak, g.streak
@@ -137,6 +147,16 @@ func (g *game) Update() error {
 		if g.roundOver == 0 {
 			if g.pWins >= 2 || g.aiWins >= 2 {
 				g.matchOver = true
+				switch roundsLost := g.aiWins; {
+				case roundsLost == 0 && g.bestStreak >= 2:
+					g.rank = "S"
+				case roundsLost == 0:
+					g.rank = "A"
+				case roundsLost == 1:
+					g.rank = "B"
+				default:
+					g.rank = "C"
+				}
 			} else {
 				g.round++
 				g.resetRound()
@@ -565,12 +585,46 @@ func (g *game) Draw(s *ebiten.Image) {
 		vector.StrokeRect(s, x, 620, 90, 65, 2, color.RGBA{255, 255, 255, 90}, false)
 		ebitenutil.DebugPrintAt(s, l, int(x)+15, 650)
 	}
+	if g.title {
+		vector.DrawFilledRect(s, 38, 220, 404, 280, color.RGBA{6, 10, 24, 250}, false)
+		vector.StrokeRect(s, 38, 220, 404, 280, 4, color.RGBA{255, 120, 110, 255}, false)
+		ebitenutil.DebugPrintAt(s, "★ EBI FIGHTERS ★", 168, 246)
+		ebitenutil.DebugPrintAt(s, "BEST OF THREE ON THE TIDE DOJO", 118, 274)
+		ebitenutil.DebugPrintAt(s, "Every move is DATA: startup frames,", 108, 310)
+		ebitenutil.DebugPrintAt(s, "active frames, recovery. Watch the", 122, 328)
+		ebitenutil.DebugPrintAt(s, "pose change and time your counter.", 116, 346)
+		ebitenutil.DebugPrintAt(s, "Guard breaks under pressure — read the", 98, 372)
+		ebitenutil.DebugPrintAt(s, "rival's plan and punish the recovery.", 104, 390)
+		ebitenutil.DebugPrintAt(s, "J jab · K heavy · L/SHIFT guard · arrows move", 84, 418)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.frame)*.1)))
+		vector.DrawFilledRect(s, 128, 446, 226, 22, color.RGBA{255, 120, 110, blink}, false)
+		ebitenutil.DebugPrintAt(s, "TAP or SPACE to bow in", 146, 452)
+	}
+	if g.title {
+		vector.DrawFilledRect(s, 38, 220, 404, 280, color.RGBA{6, 10, 24, 250}, false)
+		vector.StrokeRect(s, 38, 220, 404, 280, 4, color.RGBA{255, 120, 110, 255}, false)
+		ebitenutil.DebugPrintAt(s, "★ EBI FIGHTERS ★", 168, 246)
+		ebitenutil.DebugPrintAt(s, "BEST OF THREE ON THE TIDE DOJO", 118, 274)
+		ebitenutil.DebugPrintAt(s, "Every move is DATA: startup frames,", 108, 310)
+		ebitenutil.DebugPrintAt(s, "active frames, recovery. Watch the", 122, 328)
+		ebitenutil.DebugPrintAt(s, "pose change and time your counter.", 116, 346)
+		ebitenutil.DebugPrintAt(s, "Guard breaks under pressure — read the", 98, 372)
+		ebitenutil.DebugPrintAt(s, "rival's plan and punish the recovery.", 104, 390)
+		ebitenutil.DebugPrintAt(s, "J jab · K heavy · L/SHIFT guard · arrows move", 84, 418)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.frame)*.1)))
+		vector.DrawFilledRect(s, 128, 446, 226, 22, color.RGBA{255, 120, 110, blink}, false)
+		ebitenutil.DebugPrintAt(s, "TAP or SPACE to bow in", 146, 452)
+	}
 	if g.matchOver {
 		result := "MATCH LOST"
 		if g.pWins > g.aiWins {
 			result = "EBI WINS THE MATCH!"
 		}
-		overlay(s, fmt.Sprintf("%s\nWIN STREAK %d  BEST %d\n\nTAP / SPACE TO REMATCH", result, g.streak, g.bestStreak))
+		rankLine := ""
+		if g.rank != "" {
+			rankLine = fmt.Sprintf("RANK %s\n", g.rank)
+		}
+		overlay(s, fmt.Sprintf("%s\n%sWIN STREAK %d  BEST %d\n\nTAP / SPACE TO REMATCH", result, rankLine, g.streak, g.bestStreak))
 	}
 }
 func draw(s *ebiten.Image, f fighter, fighterName string, right bool, offset float64, ko bool) {

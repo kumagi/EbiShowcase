@@ -132,6 +132,8 @@ type game struct {
 	collected, total, lives, frames, stageFrames, invuln, score, best, combo, shake, flash int
 	particles                                                                              []particle
 	message                                                                                string
+	title                                                                                  bool
+	rank                                                                                   string
 	won, lost                                                                              bool
 	rng                                                                                    *rand.Rand
 	audio                                                                                  *audio.Context
@@ -147,7 +149,7 @@ func newGame() *game {
 	if labyrinthArt == nil {
 		loadGeneratedArt()
 	}
-	g := &game{lives: 3, best: sessionBest, rng: rand.New(rand.NewSource(70))}
+	g := &game{lives: 3, best: sessionBest, title: true, rng: rand.New(rand.NewSource(70))}
 	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: screenW / 2, Y: screenH / 2}, ViewW: screenW, ViewH: screenH}
@@ -193,6 +195,13 @@ func (g *game) passable(p point) bool {
 	return p.x >= 0 && p.x < cols && p.y >= 0 && p.y < rows && stages[g.stage].maze[p.y][p.x] != '#'
 }
 func (g *game) Update() error {
+	if g.title {
+		if retryPressed() {
+			g.title = false
+			g.play(620)
+		}
+		return nil
+	}
 	if g.won || g.lost {
 		if retryPressed() {
 			*g = *newGame()
@@ -266,6 +275,16 @@ func (g *game) collect() {
 		}
 		if g.stage == len(stages)-1 {
 			g.won = true
+			switch per := float64(g.stageFrames) / float64(g.frames); {
+			case g.lives == 3 && per < .62:
+				g.rank = "S"
+			case g.lives >= 2:
+				g.rank = "A"
+			case g.lives >= 1:
+				g.rank = "B"
+			default:
+				g.rank = "C"
+			}
 			if g.score > sessionBest {
 				sessionBest = g.score
 			}
@@ -487,14 +506,42 @@ func (g *game) Draw(screen *ebiten.Image) {
 		ebitenutil.DebugPrintAt(world, label, i*120+40, 636)
 	}
 	ebitenutil.DebugPrintAt(world, "Buffer the next turn / arrows, WASD, or touch", 75, 691)
+	for i, e := range g.guards {
+		if e.mode != search {
+			continue
+		}
+		sx, sy := tileCenter(e.lastSeen)
+		r := float32(8 + (g.frames+i*11)%14)
+		vector.StrokeCircle(world, sx, sy, r, 2, color.RGBA{250, 210, 110, uint8(200 - (g.frames+i*11)%14*10)}, true)
+		ebitenutil.DebugPrintAt(world, "last seen", int(sx)-30, int(float64(sy)+float64(r))+2)
+	}
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(float64(dx), float64(dy))
 	screen.DrawImage(world, op)
+	if g.title {
+		vector.DrawFilledRect(screen, 40, 232, 400, 252, color.RGBA{4, 13, 29, 248}, false)
+		vector.StrokeRect(screen, 40, 232, 400, 252, 4, color.RGBA{243, 188, 69, 255}, false)
+		ebitenutil.DebugPrintAt(screen, "★ EBI MAZE MARATHON ★", 138, 256)
+		ebitenutil.DebugPrintAt(screen, "THREE MAZES, THREE KINDS OF MINDS", 106, 282)
+		ebitenutil.DebugPrintAt(screen, "Guards show their current AI mode.", 122, 318)
+		ebitenutil.DebugPrintAt(screen, "PATROL walks a loop. CHASE runs at", 116, 336)
+		ebitenutil.DebugPrintAt(screen, "you. SEARCH walks to the LAST SEEN", 108, 354)
+		ebitenutil.DebugPrintAt(screen, "ring. Read the labels, fake them out,", 104, 372)
+		ebitenutil.DebugPrintAt(screen, "and grab every pearl in all 3 mazes.", 102, 390)
+		ebitenutil.DebugPrintAt(screen, "ARROWS / WASD / D-PAD buffer your next turn", 76, 422)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.frames)*.1)))
+		vector.DrawFilledRect(screen, 128, 442, 226, 22, color.RGBA{243, 188, 69, blink}, false)
+		ebitenutil.DebugPrintAt(screen, "TAP or ENTER to start running", 136, 448)
+	}
 	if g.flash > 0 {
 		vector.DrawFilledRect(screen, 0, 0, screenW, screenH, color.RGBA{255, 255, 255, 60}, false)
 	}
 	if g.won {
-		overlay(screen, fmt.Sprintf("THREE MAZES CLEAR!\n\nSCORE %05d  BEST %05d\n\nTAP / ENTER TO RACE AGAIN", g.score, g.best))
+		rankLine := ""
+		if g.rank != "" {
+			rankLine = fmt.Sprintf("RANK %s  ", g.rank)
+		}
+		overlay(screen, fmt.Sprintf("THREE MAZES CLEAR!\n\n%sSCORE %05d  BEST %05d\n\nTAP / ENTER TO RACE AGAIN", rankLine, g.score, g.best))
 	}
 	if g.lost {
 		overlay(screen, fmt.Sprintf("MAZE RUN ENDED\n\nSCORE %05d  BEST %05d\n\nTAP / ENTER TO RETRY", g.score, sessionBest))

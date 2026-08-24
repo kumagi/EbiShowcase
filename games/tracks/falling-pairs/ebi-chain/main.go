@@ -86,6 +86,8 @@ type game struct {
 	opponentGarbage, misses      int
 	marked                       map[point]bool
 	clear, over                  bool
+	title                        bool
+	rank                         string
 	stageWon                     bool
 	duel, best, tick, shake      int
 	sparks                       []spark
@@ -101,7 +103,7 @@ func newGame() *game {
 	if arenaArt == nil {
 		loadArt()
 	}
-	g := &game{}
+	g := &game{title: true}
 	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: width / 2, Y: height / 2}, ViewW: width, ViewH: height}
@@ -174,6 +176,14 @@ func (g *game) Update() error {
 		if p.life <= 0 {
 			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
 		}
+	}
+	if g.title {
+		if retryPressed() {
+			g.title = false
+			g.gate.Arm(true)
+			g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, 640, .08)).Play()
+		}
+		return nil
 	}
 	if g.clear || g.over || g.stageWon {
 		if retryPressed() {
@@ -408,6 +418,16 @@ func (g *game) finishResolution() {
 		}
 		if g.duel == len(duels)-1 {
 			g.clear = true
+			switch m := g.misses; {
+			case m == 0 && g.chain >= 4:
+				g.rank = "S"
+			case m <= 1:
+				g.rank = "A"
+			case m <= 3:
+				g.rank = "B"
+			default:
+				g.rank = "C"
+			}
 			g.message = "All three rival reefs overflowed!"
 		} else {
 			g.stageWon = true
@@ -525,8 +545,28 @@ func (g *game) Draw(screen *ebiten.Image) {
 		c := []color.RGBA{{239, 93, 87, 255}, {73, 161, 230, 255}, {244, 184, 64, 255}, {105, 194, 119, 255}}[p.kind%4]
 		vector.DrawFilledCircle(screen, float32(p.x+ox), float32(p.y), float32(2+p.life/10), c, true)
 	}
+	if g.title {
+		vector.DrawFilledRect(screen, 38, 224, 404, 272, color.RGBA{4, 12, 26, 250}, false)
+		vector.StrokeRect(screen, 38, 224, 404, 272, 4, color.RGBA{243, 188, 69, 255}, false)
+		ebitenutil.DebugPrintAt(screen, "★ EBI CHAIN ★", 174, 248)
+		ebitenutil.DebugPrintAt(screen, "THREE REEF DUELS OF CHAINS", 132, 276)
+		ebitenutil.DebugPrintAt(screen, "Your board resolves in phases you can", 104, 310)
+		ebitenutil.DebugPrintAt(screen, "watch one at a time: SEARCH finds a", 116, 328)
+		ebitenutil.DebugPrintAt(screen, "color group, CLEAR pops it, GRAVITY", 122, 346)
+		ebitenutil.DebugPrintAt(screen, "drops the rest, then SEARCH again —", 118, 364)
+		ebitenutil.DebugPrintAt(screen, "that re-search is where chains are born.", 98, 382)
+		ebitenutil.DebugPrintAt(screen, "Overflow the rival's reef before yours does.", 92, 408)
+		ebitenutil.DebugPrintAt(screen, "ARROWS/A,D move · SPACE swap-drop · touch pad below", 74, 436)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.tick)*.1)))
+		vector.DrawFilledRect(screen, 126, 456, 228, 22, color.RGBA{243, 188, 69, blink}, false)
+		ebitenutil.DebugPrintAt(screen, "TAP or ENTER to dive in", 148, 462)
+	}
 	if g.clear {
-		overlay(screen, fmt.Sprintf("REEF CHAMPION! BEST %d\n\nTAP / ENTER: NEW RUN", g.best))
+		rankLine := ""
+		if g.rank != "" {
+			rankLine = fmt.Sprintf("RANK %s\n", g.rank)
+		}
+		overlay(screen, fmt.Sprintf("REEF CHAMPION! %sBEST %d\n\nTAP / ENTER: NEW RUN", rankLine, g.best))
 	} else if g.stageWon {
 		overlay(screen, fmt.Sprintf("DUEL %d CLEAR! BEST %d\n\nTAP / ENTER: NEXT REEF", g.duel+1, g.best))
 	} else if g.over {

@@ -200,6 +200,20 @@ func (g *game) Draw(screen *ebiten.Image) {
 	vector.StrokeRect(stage, 30, 426, 148, 42, 2, color.RGBA{246, 206, 121, 255}, false)
 	drawLabel(stage, s.speaker, 46, 436, 18, color.White)
 	drawLabel(stage, fmt.Sprintf("CHAPTER %d / 3", s.chapter), 344, 452, 11, color.RGBA{176, 229, 234, 255})
+	// The hidden flag ledger is drawn from Update-owned state so kids can SEE
+	// that their choices are stored as bits and later read back as endings.
+	for i, fname := range []string{"BRAVE", "KIND", "CURIOUS"} {
+		on := g.flags&(1<<i) != 0
+		x := float64(196 + i*88)
+		fill := color.RGBA{10, 30, 52, 200}
+		c := color.RGBA{96, 128, 158, 220}
+		if on {
+			c = []color.RGBA{{255, 154, 130, 240}, {150, 235, 160, 240}, {170, 190, 255, 240}}[i]
+			fill = color.RGBA{16, 58, 74, 230}
+		}
+		vector.DrawFilledRect(stage, float32(x), 448, 80, 20, fill, false)
+		drawLabel(stage, fname+" "+map[bool]string{true: "ON", false: "–"}[on], x+8, 450.5, 9, c)
+	}
 	drawWrappedFace(stage, string([]rune(s.text)[:min(g.shown, len([]rune(s.text)))]), 38, 486, 405, 17)
 	if g.shown >= len([]rune(s.text)) {
 		for i, ch := range s.choices {

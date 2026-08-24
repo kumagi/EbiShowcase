@@ -34,6 +34,8 @@ type game struct {
 	enemies                             []enemy
 	frames                              int
 	message                             string
+	title                               bool
+	rank                                string
 	flash, shake, bestFrames            int
 	sparks                              []spark
 	audio                               *audio.Context
@@ -52,7 +54,7 @@ type enemy struct {
 
 func newGame() *game {
 	prepareDepthsArt()
-	g := &game{x: 80, y: ground - 36, facing: 1, hp: 5, revealed: map[int]bool{}, relics: map[int]bool{720: true, 1450: true, 2350: true, 2980: true}, message: "Explore, fight, and reveal the enormous world room by room."}
+	g := &game{x: 80, y: ground - 36, facing: 1, title: true, hp: 5, revealed: map[int]bool{}, relics: map[int]bool{720: true, 1450: true, 2350: true, 2980: true}, message: "Explore, fight, and reveal the enormous world room by room."}
 	for _, e := range []enemy{
 		{x: 330, home: 330, dir: 1, hp: 1, maxHP: 1}, {x: 790, home: 790, dir: -1, hp: 1, maxHP: 1}, {x: 1030, home: 1030, dir: -1, hp: 4, maxHP: 4, guardian: true},
 		{x: 1290, home: 1290, dir: 1, hp: 1, maxHP: 1}, {x: 1640, home: 1640, dir: -1, hp: 1, maxHP: 1}, {x: 2120, home: 2120, dir: -1, hp: 4, maxHP: 4, guardian: true},
@@ -77,6 +79,14 @@ func floorAt(x float64) float64 {
 	return ground - 45*math.Sin(x/330)
 }
 func (g *game) Update() error {
+	if g.title {
+		if retry() {
+			g.title = false
+			g.play(640)
+			g.message = "Walk right. The map records every room you enter."
+		}
+		return nil
+	}
 	if g.won || g.lost {
 		if retry() {
 			best := g.bestFrames
@@ -200,6 +210,16 @@ func (g *game) Update() error {
 	}
 	if len(g.relics) == 0 && g.x > 3100 {
 		g.won = true
+		switch {
+		case g.hp >= 4 && len(g.revealed) >= 8:
+			g.rank = "S"
+		case g.hp >= 3:
+			g.rank = "A"
+		case g.hp >= 2:
+			g.rank = "B"
+		default:
+			g.rank = "C"
+		}
 		if g.bestFrames == 0 || g.frames < g.bestFrames {
 			g.bestFrames = g.frames
 		}
@@ -383,8 +403,29 @@ func (g *game) Draw(s *ebiten.Image) {
 		vector.DrawFilledRect(s, float32(i*96+3), 650, 90, 55, color.RGBA{45, 78, 113, 255}, false)
 		ebitenutil.DebugPrintAt(s, l, i*96+20, 675)
 	}
+	if g.title {
+		vector.DrawFilledRect(s, 38, 226, 404, 268, color.RGBA{4, 9, 22, 250}, false)
+		vector.StrokeRect(s, 38, 226, 404, 268, 4, color.RGBA{245, 190, 68, 255}, false)
+		ebitenutil.DebugPrintAt(s, "★ EBI DEPTHS ★", 176, 250)
+		ebitenutil.DebugPrintAt(s, "ONE CAVE, EIGHT ROOMS WIDE", 132, 278)
+		ebitenutil.DebugPrintAt(s, "The world is bigger than one screen.", 112, 314)
+		ebitenutil.DebugPrintAt(s, "Every visited room fills your map.", 116, 332)
+		ebitenutil.DebugPrintAt(s, "Seals block the route until you find", 106, 350)
+		ebitenutil.DebugPrintAt(s, "the DASH crest and the WING crest —", 114, 368)
+		ebitenutil.DebugPrintAt(s, "then old walls become new roads.", 122, 386)
+		ebitenutil.DebugPrintAt(s, "Guardians guard each region: attack,", 104, 404)
+		ebitenutil.DebugPrintAt(s, "retreat, and strike between their swings.", 96, 422)
+		ebitenutil.DebugPrintAt(s, "ARROWS/WASD move · Z/JUMP · K/ATTACK · X/DASH", 62, 452)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.frames)*.1)))
+		vector.DrawFilledRect(s, 126, 462, 228, 22, color.RGBA{245, 190, 68, blink}, false)
+		ebitenutil.DebugPrintAt(s, "TAP or ENTER to descend", 148, 468)
+	}
 	if g.won {
-		overlay(s, "THE DEPTHS MAPPED!\n\nTAP / ENTER TO RETRY")
+		rankLine := ""
+		if g.rank != "" {
+			rankLine = fmt.Sprintf("RANK %s\n", g.rank)
+		}
+		overlay(s, "THE DEPTHS MAPPED!\n"+rankLine+"\nTAP / ENTER TO RETRY")
 	}
 	if g.lost {
 		overlay(s, "EXPLORATION FAILED\n\nTAP / ENTER TO RETRY")

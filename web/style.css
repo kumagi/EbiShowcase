@@ -1333,7 +1333,6 @@ main>.motion-lab,main>.code-lesson,main>.why-grid{width:min(calc(100% - 48px),11
 /* ---------- Lesson search ---------- */
 .search-hero{padding-bottom:90px}
 .search-app{margin-top:34px;max-width:860px}
-.search-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .search-app input[type="search"]{width:100%;padding:16px 22px;border:2px solid var(--violet);border-radius:999px;background:var(--card);color:var(--ink);font:700 16px var(--font-round);box-shadow:var(--glow-violet);outline:none}
 .search-app input[type="search"]:focus-visible{border-color:#5a48d8}
 .search-status{min-height:1.4em;margin:12px 4px 0;font:700 12px var(--font-mono);color:var(--ink-soft)}

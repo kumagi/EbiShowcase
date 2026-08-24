@@ -50,6 +50,8 @@ type game struct {
 	items                                                []item
 	power, capacity, speed, broken, frames, enemyTick    int
 	enemyAlive, exitOpen, won, lost                      bool
+	intro                                                bool
+	rank                                                 string
 	message                                              string
 	stage, totalFrames, bestFrames, requiredBreak, shake int
 	chainFlash, chainCount                               int
@@ -62,7 +64,7 @@ type game struct {
 
 func newGame() *game {
 	loadBomberArt()
-	g := &game{stage: 1}
+	g := &game{stage: 1, intro: true}
 	g.audio = audiolab.Context()
 	g.cam = cameralab.State{Pos: cameralab.Vec{X: screenW / 2, Y: screenH / 2}, ViewW: screenW, ViewH: screenH}
 	g.titleFace, _ = uilab.Face("en", 16)
@@ -110,6 +112,14 @@ func hard(p point) bool {
 }
 func (g *game) blocked(p point) bool { return hard(p) || g.soft[p] || g.bombAt(p) }
 func (g *game) Update() error {
+	if g.intro {
+		if retry() {
+			g.intro = false
+			g.gate.Arm(true)
+			g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, 640, .08)).Play()
+		}
+		return nil
+	}
 	if g.won || g.lost {
 		if retry() {
 			if g.won && g.stage < 3 {
@@ -170,6 +180,16 @@ func (g *game) Update() error {
 	}
 	if g.exitOpen && g.player == g.exit {
 		g.won = true
+		if g.stage == 3 {
+			switch {
+			case g.broken <= g.requiredBreak+2:
+				g.rank = "S"
+			case g.frames < 60*90:
+				g.rank = "A"
+			default:
+				g.rank = "B"
+			}
+		}
 		g.message = "EXIT reached with every system working together!"
 	}
 	if g.frames >= 90*60 {
@@ -427,12 +447,27 @@ func (g *game) Draw(s *ebiten.Image) {
 		ebitenutil.DebugPrintAt(s, l, i*96+27, 627)
 	}
 	ebitenutil.DebugPrintAt(s, "Arrows/WASD + Space | tap controls", 107, 688)
+	if g.intro {
+		vector.DrawFilledRect(s, 38, 226, 404, 268, color.RGBA{4, 10, 24, 250}, false)
+		vector.StrokeRect(s, 38, 226, 404, 268, 4, color.RGBA{111, 228, 233, 255}, false)
+		ebitenutil.DebugPrintAt(s, "★ EBI BOMBER ★", 170, 250)
+		ebitenutil.DebugPrintAt(s, "THREE MAZES OF CHAIN BLASTS", 128, 278)
+		ebitenutil.DebugPrintAt(s, "A bomb is a timer plus a fire cross.", 108, 312)
+		ebitenutil.DebugPrintAt(s, "Fire reaches other bombs and ignites", 112, 330)
+		ebitenutil.DebugPrintAt(s, "them EARLY — the opening stage shows", 106, 348)
+		ebitenutil.DebugPrintAt(s, "a free chain demo. Break walls for", 122, 366)
+		ebitenutil.DebugPrintAt(s, "more bombs, bigger flames, faster boots.", 94, 384)
+		ebitenutil.DebugPrintAt(s, "Defeat the scout to open the EXIT.", 118, 410)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.frames)*.1)))
+		vector.DrawFilledRect(s, 126, 442, 228, 22, color.RGBA{111, 228, 233, blink}, false)
+		ebitenutil.DebugPrintAt(s, "TAP or ENTER to light the fuse", 134, 448)
+	}
 	if g.won {
-		msg := "STAGE CLEAR!\n\nTAP / ENTER FOR NEXT STAGE"
 		if g.stage == 3 {
-			msg = "ALL MAZES CLEAR!\n\nTAP / ENTER FOR A NEW RUN"
+			overlay(s, fmt.Sprintf("ALL MAZES CLEAR!  RANK %s\n\nTAP / ENTER FOR A NEW RUN", g.rank))
+			return
 		}
-		overlay(s, msg)
+		overlay(s, "STAGE CLEAR!\n\nTAP / ENTER FOR NEXT STAGE")
 	}
 	if g.lost {
 		overlay(s, "MISSION FAILED\n\nTAP / ENTER TO RETRY")

@@ -105,6 +105,8 @@ type game struct {
 	clear, over         bool
 	rng                 *rand.Rand
 	message             string
+	title               bool
+	rank                string
 	savePreview         string
 	actionFrame         int
 	actionKind          int
@@ -122,6 +124,7 @@ type game struct {
 func newGame() *game {
 	prepareMonsterArt()
 	g := &game{
+		title:   true,
 		party:   []monster{{speciesID: 0, hp: speciesBook[0].maxHP}},
 		orbs:    8,
 		rng:     rand.New(rand.NewSource(8707)),
@@ -160,6 +163,14 @@ func (g *game) Update() error {
 		g.actionFrame--
 		if g.actionFrame == 0 && g.pendingCapture {
 			g.finishCapture()
+		}
+		return nil
+	}
+	if g.title {
+		if retryPressed() {
+			g.title = false
+			g.gate.Arm(true)
+			g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, 660, .08)).Play()
 		}
 		return nil
 	}
@@ -462,6 +473,22 @@ func (g *game) save() {
 	}
 	saveSlot = append(saveSlot[:0], encoded...)
 	g.savePreview = fmt.Sprintf("SAVE SLOT: %d bytes / PARTY %d / BOX %d", len(saveSlot), len(g.party), len(g.box))
+	saved := 0
+	for _, seen := range g.dex {
+		if seen {
+			saved++
+		}
+	}
+	switch {
+	case saved >= 8 && g.orbs >= 3:
+		g.rank = "S"
+	case saved >= 6:
+		g.rank = "A"
+	case saved >= 4:
+		g.rank = "B"
+	default:
+		g.rank = "C"
+	}
 	g.clear = true
 	g.message = "Bestiary, party, box, EXP, and region visits serialized!"
 }
@@ -492,13 +519,33 @@ func (g *game) drawScene(screen *ebiten.Image) {
 	} else {
 		g.drawBattle(screen)
 	}
+	if g.title {
+		vector.DrawFilledRect(screen, 36, 224, 408, 276, color.RGBA{5, 13, 28, 250}, false)
+		vector.StrokeRect(screen, 36, 224, 408, 276, 4, color.RGBA{255, 222, 92, 255}, false)
+		ebitenutil.DebugPrintAt(screen, "★ EBI MONSTERS ★", 158, 248)
+		ebitenutil.DebugPrintAt(screen, "THREE REGIONS, ONE BESTIARY", 128, 276)
+		ebitenutil.DebugPrintAt(screen, "Each region has its own encounter", 116, 310)
+		ebitenutil.DebugPrintAt(screen, "TABLE — visit counts pick who shows up,", 100, 328)
+		ebitenutil.DebugPrintAt(screen, "so the same tile is never the same fight.", 96, 346)
+		ebitenutil.DebugPrintAt(screen, "Weaken a wild friend, throw an orb, and", 104, 372)
+		ebitenutil.DebugPrintAt(screen, "the whole party/box state is SERIALIZED", 106, 390)
+		ebitenutil.DebugPrintAt(screen, "into save bytes you could copy anywhere.", 98, 408)
+		ebitenutil.DebugPrintAt(screen, "1-4 menus · S saves · fill dex before time ends", 84, 436)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.frames)*.1)))
+		vector.DrawFilledRect(screen, 124, 456, 232, 22, color.RGBA{255, 222, 92, blink}, false)
+		ebitenutil.DebugPrintAt(screen, "TAP or ENTER to set out", 148, 462)
+	}
 	if g.clear || g.over {
 		title := "EXPEDITION SAVED!"
 		if g.over {
 			title = "EXPEDITION FAILED!"
 		}
+		rankLine := ""
+		if g.rank != "" {
+			rankLine = fmt.Sprintf("RANK %s", g.rank)
+		}
 		vector.DrawFilledRect(screen, 38, 260, 404, 180, color.RGBA{5, 13, 28, 247}, false)
-		ebitenutil.DebugPrintAt(screen, title, 157, 304)
+		ebitenutil.DebugPrintAt(screen, title+"  "+rankLine, 137, 304)
 		ebitenutil.DebugPrintAt(screen, g.message, 58, 342)
 		ebitenutil.DebugPrintAt(screen, g.savePreview, 92, 374)
 		ebitenutil.DebugPrintAt(screen, "TAP / ENTER TO RESTART", 139, 409)

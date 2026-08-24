@@ -96,6 +96,8 @@ type game struct {
 	frame                     int
 	sparks                    []spark
 	message                   string
+	title                     bool
+	rank                      string
 	won, lost                 bool
 	audio                     *audio.Context
 	gate                      audiolab.Gate
@@ -107,7 +109,7 @@ type game struct {
 }
 
 func newGame() *game {
-	g := &game{rng: rand.New(rand.NewSource(6606)), hold: noPiece, level: 1, combo: -1}
+	g := &game{rng: rand.New(rand.NewSource(6606)), hold: noPiece, level: 1, combo: -1, title: true}
 	g.loadGeneratedArt()
 	g.audio = audiolab.Context()
 	g.pulse = shaderlab.NewPulse()
@@ -212,6 +214,14 @@ func (g *game) Update() error {
 		if p.life <= 0 {
 			g.sparks = append(g.sparks[:i], g.sparks[i+1:]...)
 		}
+	}
+	if g.title {
+		if retryPressed() {
+			g.title = false
+			g.gate.Arm(true)
+			g.audio.NewPlayerF32FromBytes(audiolab.OneShot(audiolab.Sine, 640, .08)).Play()
+		}
+		return nil
 	}
 	if g.won || g.lost {
 		if retryPressed() {
@@ -400,6 +410,16 @@ func (g *game) lock() {
 	if g.stageLines >= stages[g.stage].goal {
 		if g.stage == len(stages)-1 {
 			g.won = true
+			switch {
+			case g.combo >= 3:
+				g.rank = "S"
+			case g.pieces < 60:
+				g.rank = "A"
+			case g.pieces < 90:
+				g.rank = "B"
+			default:
+				g.rank = "C"
+			}
 			if g.score > g.best {
 				g.best = g.score
 			}
@@ -538,8 +558,28 @@ func (g *game) drawScene(screen *ebiten.Image) {
 		vector.DrawFilledRect(screen, float32(i*80+3), 620, 74, 70, c, false)
 		ebitenutil.DebugPrintAt(screen, label, i*80+18, 650)
 	}
+	if g.title {
+		vector.DrawFilledRect(screen, 38, 226, 404, 268, color.RGBA{4, 10, 24, 250}, false)
+		vector.StrokeRect(screen, 38, 226, 404, 268, 4, color.RGBA{239, 190, 62, 255}, false)
+		ebitenutil.DebugPrintAt(screen, "★ EBI BLOCKS ★", 172, 250)
+		ebitenutil.DebugPrintAt(screen, "THREE SEAS, THREE STAGE RULES", 130, 278)
+		ebitenutil.DebugPrintAt(screen, "Pieces fall from a fair 7-BAG queue:", 106, 312)
+		ebitenutil.DebugPrintAt(screen, "every set of seven contains all seven", 102, 330)
+		ebitenutil.DebugPrintAt(screen, "shapes. Hold a piece for later (C),", 122, 348)
+		ebitenutil.DebugPrintAt(screen, "watch the ghost show the landing spot,", 98, 366)
+		ebitenutil.DebugPrintAt(screen, "and clear each stage's line quota before", 94, 384)
+		ebitenutil.DebugPrintAt(screen, "the stack reaches the top.", 152, 402)
+		ebitenutil.DebugPrintAt(screen, "ARROWS move/turn · SPACE drop · C hold · touch pad below", 66, 430)
+		blink := uint8(140 + 90*int(math.Sin(float64(g.tick)*.1)))
+		vector.DrawFilledRect(screen, 126, 450, 228, 22, color.RGBA{239, 190, 62, blink}, false)
+		ebitenutil.DebugPrintAt(screen, "TAP or ENTER to launch pieces", 134, 456)
+	}
 	if g.won {
-		overlay(screen, fmt.Sprintf("ALL 3 STAGES CLEAR!\nSCORE %d  PIECES %d\n\nTAP / ENTER TO PLAY AGAIN", g.score, g.pieces))
+		rankLine := ""
+		if g.rank != "" {
+			rankLine = fmt.Sprintf("RANK %s\n", g.rank)
+		}
+		overlay(screen, fmt.Sprintf("ALL 3 STAGES CLEAR!\n%sSCORE %d  PIECES %d\n\nTAP / ENTER TO PLAY AGAIN", rankLine, g.score, g.pieces))
 	}
 	if g.lost {
 		overlay(screen, "STACK REACHED THE TOP\n\nTAP / ENTER TO RETRY")

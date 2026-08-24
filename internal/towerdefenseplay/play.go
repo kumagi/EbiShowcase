@@ -452,7 +452,19 @@ func (g *game) checkWave() {
 			g.best = grade
 			storeBest(g.bestKey(), g.best)
 		}
-		g.message = g.tr("Every wave cleared!", "すべてのウェーブを守り切った！")
+		rank := "C"
+		switch lives := g.lives; {
+		case lives >= 18:
+			rank = "S"
+		case lives >= 12:
+			rank = "A"
+		case lives >= 6:
+			rank = "B"
+		}
+		g.message = g.tr(
+			fmt.Sprintf("Every wave cleared! RANK %s (grade %d)", rank, g.best),
+			fmt.Sprintf("全ウェーブ防衛成功！ ランク%s（成績%d）", rank, g.best),
+		)
 		return
 	}
 	g.coins += 40
