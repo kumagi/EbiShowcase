@@ -40,7 +40,7 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Large worlds, follow cameras, and exploration maps</h2><p>The world is 3200 pixels wide, but Draw shows only the camera neighborhood. Store visited room IDs to reveal the map as exploration grows.</p><div class="concept-row"><article><b>01</b><h3>Separate world and screen</h3><p>Objects use world coordinates; draw at worldX-cameraX.</p></article><article><b>02</b><h3>Follow camera</h3><p>Add part of the distance each tick for smooth tracking.</p></article><article><b>03</b><h3>Abilities reinterpret space</h3><p>After gaining dash, the same terrain has new routes.</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Large worlds, follow cameras, and exploration maps</h2><p>Step through the system and follow data into the next operation.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Large worlds, follow cameras, and exploration maps</h2><p>The world is 3200 pixels wide, but Draw shows only the camera neighborhood. Store visited room IDs to reveal the map as exploration grows.</p><div class="concept-row"><article><b>01</b><h3>Separate world and screen</h3><p>Objects use world coordinates; draw at worldX-cameraX.</p></article><article><b>02</b><h3>Follow camera</h3><p>Add part of the distance each tick for smooth tracking.</p></article><article><b>03</b><h3>Abilities reinterpret space</h3><p>After gaining dash, the same terrain has new routes.</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="move rooms,record map,gain dash,explore deeper"><div><p class="eyebrow">SYSTEM LAB</p><h2>Large worlds, follow cameras, and exploration maps</h2><p>Phases run move rooms → record map → gain dash → explore deeper. Step one at a time and find which phase writes the new values.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="THE UPDATE / DRAW BOUNDARY">
   <p class="eyebrow">THE UPDATE / DRAW BOUNDARY</p>
   <h2>Decide the numbers first, then paint them</h2>
@@ -112,9 +112,6 @@ func (g *gallery) Draw(screen *ebiten.Image) {
 </section>
 <!-- capstone-renderers:end -->
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><!-- page-delivery:start -->
-  <script src="../../../../page-boot.js" defer></script>
-  <!-- page-delivery:end -->
-  <!-- page-delivery:start -->
   <script src="../../../../page-boot.js" defer></script>
   <!-- page-delivery:end -->
   <script src="../../../../learn.js" defer></script></body></html>

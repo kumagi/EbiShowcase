@@ -40,7 +40,7 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Ebi Maze Marathon</h2><p>完成版は形の異なる3迷路を連続で遊びます。敵の頭上に今のAI状態を表示し、海老・天次郎と敵は走行中に上下します。真珠の粒子、被弾点滅、画面揺れ、面クリア演出が結果を伝え、命と速さを含む合計得点とベスト記録が次の走り方を作ります。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>3迷路を異なる通路とAI構成で攻略する</p></article><article><b>02</b><h3>DECIDE</h3><p>移動・収集・被弾を動きと粒子で読ませる</p></article><article><b>03</b><h3>REPLAY</h3><p>合計得点とBESTを見て安全と速さを選び直す</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>移動・収集・被弾を動きと粒子で読ませる</h2><p>完成版は形の異なる3迷路を連続で遊びます。敵の頭上に今のAI状態を表示し、海老・天次郎と敵は走行中に上下します。真珠の粒子、被弾点滅、画面揺れ、面クリア演出が結果を伝え、命と速さを含む合計得点とベスト記録が次の走り方を作ります。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Ebi Maze Marathon</h2><p>完成版は形の異なる3迷路を連続で遊びます。敵の頭上に今のAI状態を表示し、海老・天次郎と敵は走行中に上下します。真珠の粒子、被弾点滅、画面揺れ、面クリア演出が結果を伝え、命と速さを含む合計得点とベスト記録が次の走り方を作ります。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>3迷路を異なる通路とAI構成で攻略する</p></article><article><b>02</b><h3>DECIDE</h3><p>移動・収集・被弾を動きと粒子で読ませる</p></article><article><b>03</b><h3>REPLAY</h3><p>合計得点とBESTを見て安全と速さを選び直す</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="迷路1:巡回と捜索を見分ける,迷路2:先回りを読む,迷路3:総合力勝負,リザルトで作戦替え"><div><p class="eyebrow">SYSTEM LAB</p><h2>移動・収集・被弾を動きと粒子で読ませる</h2><p>迷路1:巡回と捜索を見分ける → 迷路2:先回りを読む → 迷路3:総合力勝負 → リザルトで作戦替え の順で進みます。NEXTで1段ずつ止めて、どの段階が新しい値を書くのか確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
   <h2>数字を決める場所と、絵にする場所を分けよう</h2>
@@ -55,7 +55,7 @@
 guards = spawn(stage.guards)
 if pearls == stage.goal {
     stageIndex++
-}</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>完成版は形の異なる3迷路を連続で遊びます。敵の頭上に今のAI状態を表示し、海老・天次郎と敵は走行中に上下します。真珠の粒子、被弾点滅、画面揺れ、面クリア演出が結果を伝え、命と速さを含む合計得点とベスト記録が次の走り方を作ります。</p></article><article><h3>CHANGE</h3><p>合計得点とBESTを見て安全と速さを選び直す</p></article><article><h3>CHALLENGE</h3><p>真珠を連続で取るほど短くなる制限時間を作ろう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>迷路追跡ゲーム</strong></a><a href="../" rel="next">PATH →<strong>迷路追跡ゲーム</strong></a></nav>
+}</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>迷路1:巡回と捜索を見分ける〜リザルトで作戦替え を止めながら見て、盤面や得点が変わる瞬間を探しましょう。</p></article><article><h3>CHANGE</h3><p>合計得点とBESTを見て安全と速さを選び直す</p></article><article><h3>CHALLENGE</h3><p>真珠を連続で取るほど短くなる制限時間を作ろう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>迷路追跡ゲーム</strong></a><a href="../" rel="next">PATH →<strong>迷路追跡ゲーム</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -113,9 +113,6 @@ func (g *gallery) Draw(screen *ebiten.Image) {
 </section>
 <!-- capstone-renderers:end -->
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><!-- page-delivery:start -->
-  <script src="../../../../page-boot.js" defer></script>
-  <!-- page-delivery:end -->
-  <!-- page-delivery:start -->
   <script src="../../../../page-boot.js" defer></script>
   <!-- page-delivery:end -->
   <script src="../../../../learn.js" defer></script></body></html>

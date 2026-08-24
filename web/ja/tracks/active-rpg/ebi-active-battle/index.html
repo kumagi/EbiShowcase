@@ -36,7 +36,7 @@
 <section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Active Battle</h2><p>READYになったら1〜3か画面ボタンで行動します。3戦を勝ち抜き、時間と残りHPから計算するBESTを更新しよう。</p></div><div class="game-frame"><iframe class="lesson-game-frame" loading="lazy" data-game-src="../../../../play/ebi-active-battle/" title="Ebi Active Battle" allow="autoplay; fullscreen"></iframe></div></section>
 <!-- diagram-lesson:start -->
 
-<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ゲージ・役割・3連戦の進行</h2><p>READYの待ち行列、3種類のコマンド、命中tick、敵編成を順に解決します。戦闘後は仲間を少し回復し、次の編成へ状態を引き継ぎます。</p><div class="concept-row"><article><b>01</b><h3>tickごとに加算</h3><p>gauge += speedで待ち時間を進めます。</p></article><article><b>02</b><h3>満タンでREADY</h3><p>上限に届いた役だけ行動できます。</p></article><article><b>03</b><h3>行動後に戻す</h3><p>使った役のゲージを0へ戻します。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="GAUGE,READY,COMMAND,RESOLVE"><div><p class="eyebrow">SYSTEM LAB</p><h2>素早さ・行動ゲージ・待ち時間</h2><p>ゲーム内の処理を一段ずつ進め、データが次の処理へ渡る順番を確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ゲージ・役割・3連戦の進行</h2><p>READYの待ち行列、3種類のコマンド、命中tick、敵編成を順に解決します。戦闘後は仲間を少し回復し、次の編成へ状態を引き継ぎます。</p><div class="concept-row"><article><b>01</b><h3>tickごとに加算</h3><p>gauge += speedで待ち時間を進めます。</p></article><article><b>02</b><h3>満タンでREADY</h3><p>上限に届いた役だけ行動できます。</p></article><article><b>03</b><h3>行動後に戻す</h3><p>使った役のゲージを0へ戻します。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="GAUGE,READY,COMMAND,RESOLVE" data-states="ゲージ加算,READY待行列,コマンド選択,解決"><div><p class="eyebrow">SYSTEM LAB</p><h2>素早さ・行動ゲージ・待ち時間</h2><p>ゲージ加算 → READY待行列 → コマンド選択 → 解決 の順で進みます。NEXTで1段ずつ止めて、どの段階が新しい値を書くのか確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
   <h2>数字を決める場所と、絵にする場所を分けよう</h2>
@@ -110,9 +110,6 @@ func (g *gallery) Draw(screen *ebiten.Image) {
 </section>
 <!-- capstone-renderers:end -->
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><!-- page-delivery:start -->
-  <script src="../../../../page-boot.js" defer></script>
-  <!-- page-delivery:end -->
-  <!-- page-delivery:start -->
   <script src="../../../../page-boot.js" defer></script>
   <!-- page-delivery:end -->
   <script src="../../../../learn.js" defer></script></body></html>

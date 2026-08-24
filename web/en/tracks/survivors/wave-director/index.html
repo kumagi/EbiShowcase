@@ -34,7 +34,7 @@
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_survivor-wave.svg" alt="Manage survivor waves by time" loading="lazy" decoding="async"><figcaption>A visual map of Manage survivor waves by time. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Build difficulty and fair tells from a timeline</h2><p>Simply adding enemies becomes unfair. Give each ten-second wave a distinct trait, and shrink a warning ring before a powerful dash so players have time to read and evade it.</p><div class="concept-row"><article><b>01</b><h3>Wave table</h3><p>Switch scout, armored, and rush values.</p></article><article><b>02</b><h3>Spawn interval</h3><p>Shorten interval later in the run.</p></article><article><b>03</b><h3>Attack tell</h3><p>Draw a ring before the boss accelerates.</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Build difficulty and fair tells from a timeline</h2><p>Simply adding enemies becomes unfair. Give each ten-second wave a distinct trait, and shrink a warning ring before a powerful dash so players have time to read and evade it.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Build difficulty and fair tells from a timeline</h2><p>Simply adding enemies becomes unfair. Give each ten-second wave a distinct trait, and shrink a warning ring before a powerful dash so players have time to read and evade it.</p><div class="concept-row"><article><b>01</b><h3>Wave table</h3><p>Switch scout, armored, and rush values.</p></article><article><b>02</b><h3>Spawn interval</h3><p>Shorten interval later in the run.</p></article><article><b>03</b><h3>Attack tell</h3><p>Draw a ring before the boss accelerates.</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="read time table,spawn wave,ring warning,difficulty peak"><div><p class="eyebrow">SYSTEM LAB</p><h2>Build difficulty and fair tells from a timeline</h2><p>Phases run read time table → spawn wave → ring warning → difficulty peak. Step one at a time and find which phase writes the new values.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="THE UPDATE / DRAW BOUNDARY">
   <p class="eyebrow">THE UPDATE / DRAW BOUNDARY</p>
   <h2>Decide the numbers first, then paint them</h2>
@@ -70,9 +70,6 @@ if boss.warning { drawDangerRing() }</code></pre></section><section class="why-g
       </div>
     </section>
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><!-- page-delivery:start -->
-  <script src="../../../../page-boot.js" defer></script>
-  <!-- page-delivery:end -->
-  <!-- page-delivery:start -->
   <script src="../../../../page-boot.js" defer></script>
   <!-- page-delivery:end -->
   <script src="../../../../learn.js" defer></script></body></html>

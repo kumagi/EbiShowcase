@@ -596,7 +596,7 @@ function compactLabHtml(slug, kind, titleJa, titleEn, lang) {
         : "The same NPC can speak different lines based on a flag.",
     },
     turn: {
-      attrs: `data-states="${isJa ? "選択,味方,敵,勝敗" : "select,player,enemy,win"}"`,
+      attrs: `data-states="${isJa ? "選択,味方,敵,勝敗" : "choose,ally,enemy,result"}"`,
       buttons: [
         ["data-lab-step", isJa ? "次の状態" : "Next state", "primary"],
         ["data-lab-reset", reset, "quiet"],

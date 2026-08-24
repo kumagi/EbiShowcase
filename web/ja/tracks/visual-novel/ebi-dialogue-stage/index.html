@@ -36,7 +36,7 @@
 <section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Moon Lantern Stories</h2><p>3章の月灯り事件を選択で進み、4つのエンディングを集める会話アドベンチャーです。</p></div><div class="game-frame"><iframe class="lesson-game-frame" loading="lazy" data-game-src="../../../../play/ebi-dialogue-stage/" title="Moon Lantern Stories" allow="autoplay; fullscreen"></iframe></div></section>
 <!-- diagram-lesson:start -->
 
-<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Moon Lantern Stories</h2><p>完成版は港、市場、天文台の3章をつなぎます。台詞送り、表情、まばたき、フェード・スライド・ポップ・揺れをシーンデータから再生し、勇気・優しさ・好奇心のフラグから4つの結末を選びます。見つけた結末はギャラリーへ残るため、別の答えを試したくなります。</p><div class="concept-row"><article><b>01</b><h3>DATA</h3><p>3章の場面と選択分岐をデータから再生する</p></article><article><b>02</b><h3>UPDATE</h3><p>立ち絵の表情・まばたき・登退場を動かす</p></article><article><b>03</b><h3>STORY</h3><p>4つの結末をギャラリーへ集めて再挑戦する</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>立ち絵の表情・まばたき・登退場を動かす</h2><p>完成版は港、市場、天文台の3章をつなぎます。台詞送り、表情、まばたき、フェード・スライド・ポップ・揺れをシーンデータから再生し、勇気・優しさ・好奇心のフラグから4つの結末を選びます。見つけた結末はギャラリーへ残るため、別の答えを試したくなります。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Moon Lantern Stories</h2><p>完成版は港、市場、天文台の3章をつなぎます。台詞送り、表情、まばたき、フェード・スライド・ポップ・揺れをシーンデータから再生し、勇気・優しさ・好奇心のフラグから4つの結末を選びます。見つけた結末はギャラリーへ残るため、別の答えを試したくなります。</p><div class="concept-row"><article><b>01</b><h3>DATA</h3><p>3章の場面と選択分岐をデータから再生する</p></article><article><b>02</b><h3>UPDATE</h3><p>立ち絵の表情・まばたき・登退場を動かす</p></article><article><b>03</b><h3>STORY</h3><p>4つの結末をギャラリーへ集めて再挑戦する</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="シーン番号を進める,台詞と表情,選択肢,フラグ更新,エンディング判定"><div><p class="eyebrow">SYSTEM LAB</p><h2>立ち絵の表情・まばたき・登退場を動かす</h2><p>シーン番号を進める → 台詞と表情 → 選択肢 → フラグ更新 → エンディング判定 の順で進みます。NEXTで1段ずつ止めて、どの段階が新しい値を書くのか確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
   <h2>数字を決める場所と、絵にする場所を分けよう</h2>
@@ -50,7 +50,7 @@
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>立ち絵の表情・まばたき・登退場を動かす</h2><p>3章の月灯り事件を選択で進み、4つのエンディングを集める会話アドベンチャーです。</p></div><pre><code>scene := story[node]
 flags |= selected.Flag
 node = selected.Next
-endingMask |= 1 &lt;&lt; ending</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>完成版は港、市場、天文台の3章をつなぎます。台詞送り、表情、まばたき、フェード・スライド・ポップ・揺れをシーンデータから再生し、勇気・優しさ・好奇心のフラグから4つの結末を選びます。見つけた結末はギャラリーへ残るため、別の答えを試したくなります。</p></article><article><h3>CHANGE</h3><p>4つの結末をギャラリーへ集めて再挑戦する</p></article><article><h3>CHALLENGE</h3><p>一度見た台詞だけ早送りできる既読機能を考えよう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>選択肢で分かれる会話ゲーム</strong></a><a href="../" rel="next">PATH →<strong>選択肢で分かれる会話ゲーム</strong></a></nav>
+endingMask |= 1 &lt;&lt; ending</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>シーン番号を進める〜エンディング判定 を止めながら見て、盤面や得点が変わる瞬間を探しましょう。</p></article><article><h3>CHANGE</h3><p>4つの結末をギャラリーへ集めて再挑戦する</p></article><article><h3>CHALLENGE</h3><p>一度見た台詞だけ早送りできる既読機能を考えよう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>選択肢で分かれる会話ゲーム</strong></a><a href="../" rel="next">PATH →<strong>選択肢で分かれる会話ゲーム</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -108,9 +108,6 @@ func (g *gallery) Draw(screen *ebiten.Image) {
 </section>
 <!-- capstone-renderers:end -->
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><!-- page-delivery:start -->
-  <script src="../../../../page-boot.js" defer></script>
-  <!-- page-delivery:end -->
-  <!-- page-delivery:start -->
   <script src="../../../../page-boot.js" defer></script>
   <!-- page-delivery:end -->
   <script src="../../../../learn.js" defer></script></body></html>

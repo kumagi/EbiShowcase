@@ -30,7 +30,7 @@
 </head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/active-rpg/command-roles/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← ゲージ式アクティブRPG</a><span>STEP 03 / 06</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>攻撃・大技・回復の役割</h1><p>安全な攻撃、反動のある大技、回復を比べ、READYの一回を何に使うか選びます。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- genre-presentation-bridge:start --><aside class="genre-presentation-inline"><strong>演出の言葉が初めてでも、この章から進めます。</strong><span>新しい課題は速度ゲージ、READY列、入力待ち、敵行動、戦闘継続です。 下のAリンクは、必要になった時だけ戻る参考ページです。</span><nav aria-label="参照するVFX設計"><a href="../../visual-effects/vfx-fx-shooter/"><b>A08</b><span>イベント列と演出予算</span></a><a href="../../visual-effects/vfx-fx-dungeon/"><b>A11</b><span>ヒットリアクション時間軸</span></a><a href="../../visual-effects/vfx-fx-bullethell/"><b>A12</b><span>決定的エフェクト台本</span></a></nav><div class="genre-presentation-inline-contract"><p><b>MOTION BASELINE</b>READYを型付き列、各行動をリアクション時間軸、必殺技と戦闘終了をCue台本で再生します。</p><p><b>TEST SEAM</b>ゲージ加算とREADY順を演出停止から分離し、一行動の効果が接触Cueで一度だけ適用されること。</p></div></aside><!-- genre-presentation-bridge:end --><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>攻撃・大技・回復の役割</h2><p>安全な攻撃、反動のある大技、回復を比べ、READYの一回を何に使うか選びます。</p></div><div class="game-frame"><iframe class="lesson-game-frame" loading="lazy" data-game-src="../../../../play/command-roles/" title="攻撃・大技・回復の役割" allow="autoplay; fullscreen"></iframe></div></section>
 <!-- diagram-lesson:start -->
 
-<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>同じ入力タイミングへ違う効果を結ぶ</h2><p>コマンドはダメージ、反動、回復対象をデータとして変えます。速さだけでなく、今必要な役割を選ぶことで戦闘に判断が生まれます。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>安全な攻撃、反動のある大技、回復を比べ、READYの一回を何に使うか選びます。</p></article><article><b>02</b><h3>UPDATE</h3><p>コマンドはダメージ、反動、回復対象をデータとして変えます。速さだけでなく、今必要な役割を選ぶことで戦闘に判断が生まれます。</p></article><article><b>03</b><h3>DECIDE</h3><p>数字の変化が次の判断へどうつながるか見ます。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="GAUGE,READY,COMMAND,RESOLVE"><div><p class="eyebrow">SYSTEM LAB</p><h2>同じ入力タイミングへ違う効果を結ぶ</h2><p>コマンドはダメージ、反動、回復対象をデータとして変えます。速さだけでなく、今必要な役割を選ぶことで戦闘に判断が生まれます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>同じ入力タイミングへ違う効果を結ぶ</h2><p>コマンドはダメージ、反動、回復対象をデータとして変えます。速さだけでなく、今必要な役割を選ぶことで戦闘に判断が生まれます。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>安全な攻撃、反動のある大技、回復を比べ、READYの一回を何に使うか選びます。</p></article><article><b>02</b><h3>UPDATE</h3><p>コマンド選択 → 役割データ適用 → ダメージ/回復/反動 → ゲージリセット をこの順で、1tickごとに実行します。</p></article><article><b>03</b><h3>DECIDE</h3><p>数字の変化が次の判断へどうつながるか見ます。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="GAUGE,READY,COMMAND,RESOLVE"><div><p class="eyebrow">SYSTEM LAB</p><h2>同じ入力タイミングへ違う効果を結ぶ</h2><p>コマンドはダメージ、反動、回復対象をデータとして変えます。速さだけでなく、今必要な役割を選ぶことで戦闘に判断が生まれます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
   <h2>数字を決める場所と、絵にする場所を分けよう</h2>
@@ -42,7 +42,7 @@
 </section>
 <!-- update-draw-contract:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>同じ入力タイミングへ違う効果を結ぶ</h2><p>安全な攻撃、反動のある大技、回復を比べ、READYの一回を何に使うか選びます。</p></div><pre><code>commands := []Command{attack, burst, heal}
-resolve(commands[selected])</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>コマンドはダメージ、反動、回復対象をデータとして変えます。速さだけでなく、今必要な役割を選ぶことで戦闘に判断が生まれます。</p></article><article><h3>CHANGE</h3><p>速さや行動時間を変えて比べます。</p></article><article><h3>CHALLENGE</h3><p>新しい役割を一つ追加しよう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>ゲージ式アクティブRPG</strong></a><a href="../ebi-active-battle/" rel="next">FINAL →<strong>Ebi Active Battle</strong></a></nav>
+resolve(commands[selected])</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>コマンド選択 → 役割データ適用 → ダメージ/回復/反動 → ゲージリセット をこの順で、1tickごとに実行します。</p></article><article><h3>CHANGE</h3><p>速さや行動時間を変えて比べます。</p></article><article><h3>CHALLENGE</h3><p>新しい役割を一つ追加しよう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>ゲージ式アクティブRPG</strong></a><a href="../ebi-active-battle/" rel="next">FINAL →<strong>Ebi Active Battle</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -65,9 +65,6 @@ resolve(commands[selected])</code></pre></section><section class="why-grid"><art
       </div>
     </section>
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><!-- page-delivery:start -->
-  <script src="../../../../page-boot.js" defer></script>
-  <!-- page-delivery:end -->
-  <!-- page-delivery:start -->
   <script src="../../../../page-boot.js" defer></script>
   <!-- page-delivery:end -->
   <script src="../../../../learn.js" defer></script></body></html>

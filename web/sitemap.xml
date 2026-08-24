@@ -54,6 +54,7 @@
   <url><loc>https://kumagi.github.io/EbiShowcase/en/labs/audio/</loc></url>
   <url><loc>https://kumagi.github.io/EbiShowcase/en/labs/camera/</loc></url>
   <url><loc>https://kumagi.github.io/EbiShowcase/en/labs/shader/</loc></url>
+  <url><loc>https://kumagi.github.io/EbiShowcase/en/search/</loc></url>
   <url><loc>https://kumagi.github.io/EbiShowcase/en/tracks/active-rpg/</loc></url>
   <url><loc>https://kumagi.github.io/EbiShowcase/en/tracks/active-rpg/action-motion/</loc></url>
   <url><loc>https://kumagi.github.io/EbiShowcase/en/tracks/active-rpg/command-roles/</loc></url>
@@ -363,6 +364,7 @@
   <url><loc>https://kumagi.github.io/EbiShowcase/ja/labs/audio/</loc></url>
   <url><loc>https://kumagi.github.io/EbiShowcase/ja/labs/camera/</loc></url>
   <url><loc>https://kumagi.github.io/EbiShowcase/ja/labs/shader/</loc></url>
+  <url><loc>https://kumagi.github.io/EbiShowcase/ja/search/</loc></url>
   <url><loc>https://kumagi.github.io/EbiShowcase/ja/tracks/active-rpg/</loc></url>
   <url><loc>https://kumagi.github.io/EbiShowcase/ja/tracks/active-rpg/action-motion/</loc></url>
   <url><loc>https://kumagi.github.io/EbiShowcase/ja/tracks/active-rpg/command-roles/</loc></url>

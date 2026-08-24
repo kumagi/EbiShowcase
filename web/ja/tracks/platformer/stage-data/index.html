@@ -34,7 +34,7 @@
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/ja_stage-data.svg" alt="ステージをデータから増やす" loading="lazy" decoding="async"><figcaption>ステージをデータから増やすの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ルールとステージデータを分ける</h2><p>面を増やすたびにUpdateを書き直す必要はありません。足場の座標と背景、ゴールをstage構造体へまとめ、番号を変えて読み込みます。</p><div class="concept-row"><article><b>01</b><h3>構造体にまとめる</h3><p>名前・空・足場・ゴールを1面分のデータにします。</p></article><article><b>02</b><h3>配列へ並べる</h3><p>3面を[]stageへ入れ、stage番号で選びます。</p></article><article><b>03</b><h3>ルールは共通</h3><p>重力と衝突はどの面でも同じ関数を使います。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>ルールとステージデータを分ける</h2><p>面を増やすたびにUpdateを書き直す必要はありません。足場の座標と背景、ゴールをstage構造体へまとめ、番号を変えて読み込みます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ルールとステージデータを分ける</h2><p>面を増やすたびにUpdateを書き直す必要はありません。足場の座標と背景、ゴールをstage構造体へまとめ、番号を変えて読み込みます。</p><div class="concept-row"><article><b>01</b><h3>構造体にまとめる</h3><p>名前・空・足場・ゴールを1面分のデータにします。</p></article><article><b>02</b><h3>配列へ並べる</h3><p>3面を[]stageへ入れ、stage番号で選びます。</p></article><article><b>03</b><h3>ルールは共通</h3><p>重力と衝突はどの面でも同じ関数を使います。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="ステージデータ読込,配置を構築,同じルール更新,ゴール判定"><div><p class="eyebrow">SYSTEM LAB</p><h2>ルールとステージデータを分ける</h2><p>ステージデータ読込 → 配置を構築 → 同じルール更新 → ゴール判定 の順で進みます。NEXTで1段ずつ止めて、どの段階が新しい値を書くのか確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
   <h2>数字を決める場所と、絵にする場所を分けよう</h2>
@@ -72,9 +72,6 @@ current := stages[stageNumber]</code></pre></section><section class="why-grid"><
 <section class="next-lines core-authoring-links"><p class="eyebrow">YOUR FIRST RULE</p><h3>実在する入口から、1ルールを書く</h3><p><code>games/tracks/platformer/stage-data/main.go</code> を開き、ルールを1つ追加し、動きが変わることを確かめる。<code>go test ./games/tracks/platformer/stage-data</code> を実行してから遊び直そう。</p></section>
 <!-- platformer-authoring:end -->
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><!-- page-delivery:start -->
-  <script src="../../../../page-boot.js" defer></script>
-  <!-- page-delivery:end -->
-  <!-- page-delivery:start -->
   <script src="../../../../page-boot.js" defer></script>
   <!-- page-delivery:end -->
   <script src="../../../../learn.js" defer></script></body></html>

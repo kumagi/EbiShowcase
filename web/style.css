@@ -1312,3 +1312,42 @@ main>.motion-lab,main>.code-lesson,main>.why-grid{width:min(calc(100% - 48px),11
   .matchup-grid{overflow-x:visible}
   .matchup-grid table{min-width:0}
 }
+
+/* ---------- Learning progress (page-boot.js) ---------- */
+.test-course-card{position:relative}
+.prog-done{position:absolute;top:14px;right:14px;z-index:2;display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;background:var(--cyan);color:#0c1235;font:900 15px var(--font-mono);box-shadow:var(--glow-cyan)}
+.path-step{position:relative}
+.path-step.is-played{border-color:rgba(46,230,200,.65)}
+.path-step.is-played>b{color:var(--cyan)}
+.track-card{position:relative}
+.track-card .prog-count{position:absolute;top:12px;right:12px;min-width:26px;padding:3px 8px;border-radius:999px;background:var(--space);color:var(--cyan);font:800 12px var(--font-mono);text-align:center;box-shadow:var(--glow-cyan)}
+.home-continue{margin-top:20px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.home-continue[hidden]{display:none}
+.prog-resume{display:inline-flex;align-items:center;gap:10px;max-width:100%;padding:11px 18px;border-radius:999px;background:var(--card);border:2px solid var(--violet);color:var(--ink);text-decoration:none;font-family:var(--font-round);box-shadow:var(--glow-violet);transition:transform .15s,box-shadow .15s}
+.prog-resume:hover{transform:translateY(-2px);box-shadow:var(--shadow-pop)}
+.prog-resume strong{font-size:14px;color:#5a48d8;white-space:nowrap}
+.prog-resume small{font-size:12px;color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prog-resume-count{font:700 11px var(--font-mono);color:var(--ink-soft)}
+@media(max-width:600px){.prog-resume small{display:none}}
+
+/* ---------- Lesson search ---------- */
+.search-hero{padding-bottom:90px}
+.search-app{margin-top:34px;max-width:860px}
+.search-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.search-app input[type="search"]{width:100%;padding:16px 22px;border:2px solid var(--violet);border-radius:999px;background:var(--card);color:var(--ink);font:700 16px var(--font-round);box-shadow:var(--glow-violet);outline:none}
+.search-app input[type="search"]:focus-visible{border-color:#5a48d8}
+.search-status{min-height:1.4em;margin:12px 4px 0;font:700 12px var(--font-mono);color:var(--ink-soft)}
+.search-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 22px}
+.search-chip{padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink-soft);font:800 11px var(--font-mono);letter-spacing:.05em;cursor:pointer;transition:border-color .15s,color .15s,background .15s}
+.search-chip:hover{border-color:var(--violet);color:#5a48d8}
+.search-chip.is-active{background:var(--space);border-color:var(--space);color:var(--cyan)}
+.search-results{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.search-results li a{display:block;padding:18px 20px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);color:var(--ink);text-decoration:none;transition:transform .15s,box-shadow .15s,border-color .15s}
+.search-results li a:hover,.search-results li a:focus-visible{transform:translateY(-2px);border-color:var(--violet);box-shadow:var(--shadow-pop)}
+.search-results strong{display:block;font-size:17px;line-height:1.35}
+.search-meta{display:block;margin-top:6px;font:700 11px var(--font-mono);letter-spacing:.04em;color:#6a58e6}
+.search-results p{margin:8px 0 0;font-size:13px;line-height:1.7;color:var(--ink-soft)}
+.search-hub-badge{display:inline-block;margin-right:8px;padding:2px 7px;border-radius:6px;background:var(--space-line);color:#fff;font:800 9px var(--font-mono);vertical-align:middle}
+.search-playable{display:inline-block;margin-top:8px;padding:3px 9px;border-radius:999px;background:var(--cyan);color:#0c1235;font:800 9px var(--font-mono);font-style:normal}
+.search-empty{padding:26px;text-align:center;color:var(--ink-soft);background:var(--card);border:1px dashed var(--line);border-radius:var(--radius-sm)}
+@media(max-width:600px){.search-hero{padding-bottom:60px}.search-app input[type="search"]{font-size:14px}}

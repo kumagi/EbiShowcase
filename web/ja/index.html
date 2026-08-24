@@ -38,9 +38,9 @@
   <!-- favicon:end -->
 </head>
 <body>
-  <header class="nav"><a class="brand" href="./"><span>EBI</span> SHOWCASE</a><nav><a href="#curriculum">CURRICULUM</a><a href="https://ebitengine.org/" rel="noreferrer">EBITENGINE ↗</a><a class="lang" href="../en/" lang="en" data-language="en">EN</a></nav></header>
+  <header class="nav"><a class="brand" href="./"><span>EBI</span> SHOWCASE</a><nav><a href="#curriculum">CURRICULUM</a><a href="./search/">SEARCH</a><a href="https://ebitengine.org/" rel="noreferrer">EBITENGINE ↗</a><a class="lang" href="../en/" lang="en" data-language="en">EN</a></nav></header>
   <main>
-    <section class="catalog-hero"><div class="catalog-hero-layout"><div class="catalog-hero-copy"><p class="eyebrow">ブラウザで遊べる・ゲームづくりの教室</p><h1>遊んで、気づいて、<br><em>自分で作る。</em></h1><p>ここは、ミニゲームを<strong>まず遊び、その仕組みを一つずつ作ってみる</strong>サイトです。ブラウザで遊ぶだけなら準備はいりません。遊んだあとに、Go言語とゲーム用ライブラリ <strong>Ebitengine（エビテンジン）</strong> のコードを読んでいきます。</p><div class="catalog-start-actions"><a class="cta" href="games/tap-target/#play"><small>準備はいりません</small><strong>LEVEL 01を遊ぶ</strong><b>→</b></a><a class="cta cta-secondary" href="guides/setup/"><small>自分のPCでコードを書く</small><strong>環境づくりから始める</strong><b>→</b></a></div></div><figure class="catalog-character"><picture><source type="image/avif" srcset="../assets/ebi-tenjiroh.avif"><img src="../assets/ebi-tenjiroh.png" width="390" height="904" alt="このサイトの主人公、海老・天次郎" decoding="async"></picture><figcaption><strong>海老・天次郎（えび・てんじろう）</strong><span>このサイトのゲームを旅するオリジナル主人公です。LEVEL 01と02は図形だけで仕組みに集中し、LEVEL 03から天次郎が登場します。</span></figcaption></figure></div></section>
+    <section class="catalog-hero"><div class="catalog-hero-layout"><div class="catalog-hero-copy"><p class="eyebrow">ブラウザで遊べる・ゲームづくりの教室</p><h1>遊んで、気づいて、<br><em>自分で作る。</em></h1><p>ここは、ミニゲームを<strong>まず遊び、その仕組みを一つずつ作ってみる</strong>サイトです。ブラウザで遊ぶだけなら準備はいりません。遊んだあとに、Go言語とゲーム用ライブラリ <strong>Ebitengine（エビテンジン）</strong> のコードを読んでいきます。</p><div class="catalog-start-actions"><a class="cta" href="games/tap-target/#play"><small>準備はいりません</small><strong>LEVEL 01を遊ぶ</strong><b>→</b></a><a class="cta cta-secondary" href="guides/setup/"><small>自分のPCでコードを書く</small><strong>環境づくりから始める</strong><b>→</b></a></div><div class="home-continue" data-progress-continue hidden></div></div><figure class="catalog-character"><picture><source type="image/avif" srcset="../assets/ebi-tenjiroh.avif"><img src="../assets/ebi-tenjiroh.png" width="390" height="904" alt="このサイトの主人公、海老・天次郎" decoding="async"></picture><figcaption><strong>海老・天次郎（えび・てんじろう）</strong><span>このサイトのゲームを旅するオリジナル主人公です。LEVEL 01と02は図形だけで仕組みに集中し、LEVEL 03から天次郎が登場します。</span></figcaption></figure></div></section>
 
     <section class="curriculum" id="curriculum">
       <div class="curriculum-head"><div><p class="eyebrow">BASIC / 基礎編</p><h2>まず遊ぶ。<br>次に「なぜ？」をほどく。</h2></div><p>LEVEL 01は丸を押すだけです。遊んだあとで、その動きを作る考え方を1〜2個ずつ覚えます。前のレベルで知ったことが、次のゲームの部品になります。</p></div>
@@ -162,4 +162,7 @@
     if (location.hash === "#play") location.replace("games/flappy/#play");
     document.querySelector("[data-language]").addEventListener("click",e=>localStorage.setItem("ebi-language",e.currentTarget.dataset.language));
   </script>
+  <!-- page-delivery:start -->
+  <script src="../page-boot.js" defer></script>
+  <!-- page-delivery:end -->
 </body></html>

@@ -40,7 +40,7 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>巨大ワールド・追従カメラ・探索地図</h2><p>世界座標は3200pxありますが、Drawが見せるのはカメラ周辺だけです。訪れた部屋を集合へ保存すれば、探索に合わせて地図が広がります。</p><div class="concept-row"><article><b>01</b><h3>世界と画面を分ける</h3><p>物体は世界座標、描画はworldX-cameraXです。</p></article><article><b>02</b><h3>カメラ追従</h3><p>主人公との差を少しずつ足して滑らかに追います。</p></article><article><b>03</b><h3>能力で再解釈</h3><p>ダッシュ取得後は同じ地形を別の方法で越えられます。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>巨大ワールド・追従カメラ・探索地図</h2><p>ゲーム内の処理を一段ずつ進め、データが次の処理へ渡る順番を確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>巨大ワールド・追従カメラ・探索地図</h2><p>世界座標は3200pxありますが、Drawが見せるのはカメラ周辺だけです。訪れた部屋を集合へ保存すれば、探索に合わせて地図が広がります。</p><div class="concept-row"><article><b>01</b><h3>世界と画面を分ける</h3><p>物体は世界座標、描画はworldX-cameraXです。</p></article><article><b>02</b><h3>カメラ追従</h3><p>主人公との差を少しずつ足して滑らかに追います。</p></article><article><b>03</b><h3>能力で再解釈</h3><p>ダッシュ取得後は同じ地形を別の方法で越えられます。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="部屋移動,地図記録,ダッシュ能力,奥へ探索"><div><p class="eyebrow">SYSTEM LAB</p><h2>巨大ワールド・追従カメラ・探索地図</h2><p>部屋移動 → 地図記録 → ダッシュ能力 → 奥へ探索 の順で進みます。NEXTで1段ずつ止めて、どの段階が新しい値を書くのか確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
   <h2>数字を決める場所と、絵にする場所を分けよう</h2>
@@ -112,9 +112,6 @@ func (g *gallery) Draw(screen *ebiten.Image) {
 </section>
 <!-- capstone-renderers:end -->
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><!-- page-delivery:start -->
-  <script src="../../../../page-boot.js" defer></script>
-  <!-- page-delivery:end -->
-  <!-- page-delivery:start -->
   <script src="../../../../page-boot.js" defer></script>
   <!-- page-delivery:end -->
   <script src="../../../../learn.js" defer></script></body></html>

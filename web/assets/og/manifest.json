@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-07-31T05:01:20.064Z",
+  "generatedAt": "2026-08-24T04:19:33.280Z",
   "pages": [
     {
       "file": "web/en/build/empty-loop/index.html",
@@ -900,6 +900,23 @@
       "hook": "Play with A safe shader entry point—then build it.",
       "action": "READ · TRY · USE IT IN YOUR GAME",
       "preview": "assets/home-thumbnails/tracks--visual-effects--vfx-faux-bloom.webp",
+      "previewMode": "related",
+      "previewLabel": "RELATED REAL GAME"
+    },
+    {
+      "file": "web/en/search/index.html",
+      "path": "en/search",
+      "key": "en--search",
+      "lang": "en",
+      "kind": "site",
+      "title": "Ebi Showcase – Find a Lesson",
+      "h1": "Search the mechanic, find the class.",
+      "eyebrow": "FIND A LESSON / LESSON SEARCH",
+      "description": "Find a Lesson — One search across the twelve basics, the effects lab, twenty-five genre tracks, and every guide. Playable games carry a PLAYABLE mark.",
+      "image": "assets/og/en--search.png",
+      "hook": "Find a Lesson — One search across the twelve basics, the effect…",
+      "action": "LEARN THE IDEA · SEE IT IN A REAL GAME",
+      "preview": "assets/home-thumbnails/games--tap-target.webp",
       "previewMode": "related",
       "previewLabel": "RELATED REAL GAME"
     },
@@ -6170,6 +6187,23 @@
       "hook": "安全なシェーダーの入口を、遊んで解き明かす。",
       "action": "読んで試す · 自分のゲームへ持ち帰る",
       "preview": "assets/home-thumbnails/tracks--visual-effects--vfx-faux-bloom.webp",
+      "previewMode": "related",
+      "previewLabel": "関連する実ゲーム"
+    },
+    {
+      "file": "web/ja/search/index.html",
+      "path": "ja/search",
+      "key": "ja--search",
+      "lang": "ja",
+      "kind": "site",
+      "title": "Ebi Showcase – レッスンを探す",
+      "h1": "学びたい仕組みから、授業を探す。",
+      "eyebrow": "FIND A LESSON / レッスン検索",
+      "description": "レッスンを探す — 基礎12本・演出ラボ・25ジャンルの全レッスンとガイドを横断して検索します。遊べるゲームには PLAYABLE の印が付きます。",
+      "image": "assets/og/ja--search.png",
+      "hook": "レッスンを探す — 基礎12本・演出ラボ・25ジャンルの全レッスンとガイドを横断して検索します。遊べるゲームには PLAYAB…",
+      "action": "仕組みを学ぶ · 実ゲームで確かめる",
+      "preview": "assets/home-thumbnails/games--tap-target.webp",
       "previewMode": "related",
       "previewLabel": "関連する実ゲーム"
     },

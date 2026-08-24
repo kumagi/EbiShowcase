@@ -30,7 +30,7 @@
 </head><body><header class="nav"><a class="brand" href="../../../"><span>EBI</span> SHOWCASE</a><nav><a href="../">PATH</a><a class="lang" href="../../../../en/tracks/rpg/intent-battle/">EN</a></nav></header><main><div class="lesson-breadcrumb"><a href="../">← コマンドRPG</a><span>POLISH 1/2</span></div><section class="lesson-hero"><div><p class="eyebrow">★★★★☆ / PLAYABLE</p><h1>敵の次の行動を読む</h1><p>敵の攻撃予告を見て、攻撃するか防御するかを選ぶ戦闘を作ります。</p><div class="lesson-meta"><span>GO + EBITENGINE</span><strong>PLAYABLE</strong></div></div></section><!-- genre-presentation-bridge:start --><aside class="genre-presentation-inline"><strong>演出の言葉が初めてでも、この章から進めます。</strong><span>新しい課題はターン、コマンド、状態効果、会話フラグ、クエスト進行です。 下のAリンクは、必要になった時だけ戻る参考ページです。</span><nav aria-label="参照するVFX設計"><a href="../../visual-effects/vfx-fx-dungeon/"><b>A11</b><span>ヒットリアクション時間軸</span></a><a href="../../visual-effects/vfx-fx-meter/"><b>A02</b><span>型付き演出レシピ</span></a><a href="../../visual-effects/vfx-fx-bullethell/"><b>A12</b><span>決定的エフェクト台本</span></a></nav><div class="genre-presentation-inline-contract"><p><b>MOTION BASELINE</b>行動を予備→接触→回復の時間軸にし、技ごとの表示レシピと勝利・レベルアップの台本を組みます。</p><p><b>TEST SEAM</b>ダメージ式とターン遷移を演出時間から切り離し、行動一回がHPへ一度だけ反映されること。</p></div></aside><!-- genre-presentation-bridge:end --><section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>敵の次の行動を読む</h2><p>敵の攻撃予告を見て、攻撃するか防御するかを選ぶ戦闘を作ります。</p></div><div class="game-frame"><iframe class="lesson-game-frame" loading="lazy" data-game-src="../../../../play/intent-battle/" title="敵の次の行動を読む" allow="autoplay; fullscreen"></iframe></div></section>
 <!-- diagram-lesson:start -->
 
-<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>予告がコマンド選択を作戦に変える</h2><p>通常・強攻撃・素早い攻撃を順番に表示します。強攻撃の前に防御すれば被害を半分にできるため、毎ターン同じボタンを押すだけではなくなります。</p><div class="concept-row"><article><b>01</b><h3>READ</h3><p>敵の攻撃予告を見て、攻撃するか防御するかを選ぶ戦闘を作ります。</p></article><article><b>02</b><h3>DECIDE</h3><p>通常・強攻撃・素早い攻撃を順番に表示します。強攻撃の前に防御すれば被害を半分にできるため、毎ターン同じボタンを押すだけではなくなります。</p></article><article><b>03</b><h3>FEEDBACK</h3><p>結果を次の判断に使える形で見せます。</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>予告がコマンド選択を作戦に変える</h2><p>通常・強攻撃・素早い攻撃を順番に表示します。強攻撃の前に防御すれば被害を半分にできるため、毎ターン同じボタンを押すだけではなくなります。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>予告がコマンド選択を作戦に変える</h2><p>通常・強攻撃・素早い攻撃を順番に表示します。強攻撃の前に防御すれば被害を半分にできるため、毎ターン同じボタンを押すだけではなくなります。</p><div class="concept-row"><article><b>01</b><h3>READ</h3><p>敵の攻撃予告を見て、攻撃するか防御するかを選ぶ戦闘を作ります。</p></article><article><b>02</b><h3>DECIDE</h3><p>敵のintent提示 → 行動選択 → intent判定 → 防御軽減 → ターン終了 をこの順で、1tickごとに実行します。</p></article><article><b>03</b><h3>FEEDBACK</h3><p>結果を次の判断に使える形で見せます。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="敵のintent提示,行動選択,intent判定,防御軽減,ターン終了"><div><p class="eyebrow">SYSTEM LAB</p><h2>予告がコマンド選択を作戦に変える</h2><p>敵のintent提示 → 行動選択 → intent判定 → 防御軽減 → ターン終了 の順で進みます。NEXTで1段ずつ止めて、どの段階が新しい値を書くのか確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
   <h2>数字を決める場所と、絵にする場所を分けよう</h2>
@@ -42,7 +42,7 @@
 </section>
 <!-- update-draw-contract:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>予告がコマンド選択を作戦に変える</h2><p>敵の攻撃予告を見て、攻撃するか防御するかを選ぶ戦闘を作ります。</p></div><pre><code>intent := enemyPattern[turn % len(enemyPattern)]
-if command == Guard { damage = (damage + 1) / 2 }</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>通常・強攻撃・素早い攻撃を順番に表示します。強攻撃の前に防御すれば被害を半分にできるため、毎ターン同じボタンを押すだけではなくなります。</p></article><article><h3>CHANGE</h3><p>攻撃値やフレーム数を変えます。</p></article><article><h3>CHALLENGE</h3><p>4種類目の行動を追加しよう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>コマンドRPG</strong></a><a href="../ebi-quest/" rel="next">FINAL →<strong>Ebi Quest</strong></a></nav>
+if command == Guard { damage = (damage + 1) / 2 }</code></pre></section><section class="why-grid"><article><h3>OBSERVE</h3><p>敵のintent提示〜ターン終了 を止めながら見て、盤面や得点が変わる瞬間を探しましょう。</p></article><article><h3>CHANGE</h3><p>攻撃値やフレーム数を変えます。</p></article><article><h3>CHALLENGE</h3><p>4種類目の行動を追加しよう。</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>コマンドRPG</strong></a><a href="../ebi-quest/" rel="next">FINAL →<strong>Ebi Quest</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -65,9 +65,6 @@ if command == Guard { damage = (damage + 1) / 2 }</code></pre></section><section
       </div>
     </section>
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><!-- page-delivery:start -->
-  <script src="../../../../page-boot.js" defer></script>
-  <!-- page-delivery:end -->
-  <!-- page-delivery:start -->
   <script src="../../../../page-boot.js" defer></script>
   <!-- page-delivery:end -->
   <script src="../../../../learn.js" defer></script></body></html>

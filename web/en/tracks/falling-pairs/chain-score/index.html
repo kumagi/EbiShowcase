@@ -70,7 +70,7 @@
 <article><span class="concept-number">1</span><h3>SEARCH</h3><p>Scan the board and collect every same-color group of four or more.</p></article><article><span class="concept-number">2</span><h3>CLEAR → GRAVITY</h3><p>Empty all marked cells together, then compact each column downward.</p></article><article><span class="concept-number">3</span><h3>SEARCH AGAIN</h3><p>If another group exists, raise the chain count. Otherwise finish the move.</p></article>
 </div>
 
-      <div class="motion-lab" data-lab="turn"><div><p class="eyebrow">CHAIN LOOP LAB</p><h2>Step through the processing loop</h2><p>Move through SEARCH → CLEAR → GRAVITY → SEARCH and find the exact point where a chain is born.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">Begin at SEARCH</p><button type="button" class="lab-action">Next phase</button></div>
+      <div class="motion-lab" data-lab="turn" data-states="search,clear,gravity,re-search"><div><p class="eyebrow">CHAIN LOOP LAB</p><h2>Step through the processing loop</h2><p>Move through SEARCH → CLEAR → GRAVITY → SEARCH and find the exact point where a chain is born.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">Begin at SEARCH</p><button type="button" class="lab-action">Next phase</button></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
 <pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="state">switch phase {</span>

@@ -36,7 +36,7 @@
 <section class="play-panel" id="play"><div class="play-copy"><p class="eyebrow">PLAY FIRST</p><h2>Ebi Circuit</h2><p>Play with keyboard, mouse, or touch. Watch the numbers and state labels on the game screen.</p></div><div class="game-frame"><iframe class="lesson-game-frame" loading="lazy" data-game-src="../../../../play/ebi-racing/" title="Ebi Circuit" allow="autoplay; fullscreen"></iframe></div></section>
 <!-- diagram-lesson:start -->
 
-<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Car angle, acceleration, and checkpoints</h2><p>Use dependable top-down 2D instead of forcing pseudo-3D. Convert angle into forward movement and prevent shortcuts with an ordered gate list.</p><div class="concept-row"><article><b>01</b><h3>Acceleration and drag</h3><p>Throttle adds speed; drag removes a little each tick.</p></article><article><b>02</b><h3>Move from angle</h3><p>sin and cos point along the car's nose.</p></article><article><b>03</b><h3>Lap order</h3><p>Only the next gate counts, preserving track order.</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Car angle, acceleration, and checkpoints</h2><p>Step through the system and follow data into the next operation.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Car angle, acceleration, and checkpoints</h2><p>Use dependable top-down 2D instead of forcing pseudo-3D. Convert angle into forward movement and prevent shortcuts with an ordered gate list.</p><div class="concept-row"><article><b>01</b><h3>Acceleration and drag</h3><p>Throttle adds speed; drag removes a little each tick.</p></article><article><b>02</b><h3>Move from angle</h3><p>sin and cos point along the car's nose.</p></article><article><b>03</b><h3>Lap order</h3><p>Only the next gate counts, preserving track order.</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="countdown,run laps,gate checks,rival standings,results"><div><p class="eyebrow">SYSTEM LAB</p><h2>Car angle, acceleration, and checkpoints</h2><p>Phases run countdown → run laps → gate checks → rival standings → results. Step one at a time and find which phase writes the new values.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="THE UPDATE / DRAW BOUNDARY">
   <p class="eyebrow">THE UPDATE / DRAW BOUNDARY</p>
   <h2>Decide the numbers first, then paint them</h2>
@@ -109,9 +109,6 @@ func (g *gallery) Draw(screen *ebiten.Image) {
 </section>
 <!-- capstone-renderers:end -->
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><!-- page-delivery:start -->
-  <script src="../../../../page-boot.js" defer></script>
-  <!-- page-delivery:end -->
-  <!-- page-delivery:start -->
   <script src="../../../../page-boot.js" defer></script>
   <!-- page-delivery:end -->
   <script src="../../../../learn.js" defer></script></body></html>

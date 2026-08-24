@@ -34,7 +34,7 @@
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../../assets/diagrams/en_stage-data.svg" alt="Add stages through data" loading="lazy" decoding="async"><figcaption>A visual map of Add stages through data. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
-<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Separate rules from stage data</h2><p>Adding a level should not require rewriting Update. Store platforms, background, and goal in a stage struct, then load the selected index.</p><div class="concept-row"><article><b>01</b><h3>Group one level</h3><p>Name, sky, platforms, and goal form one data record.</p></article><article><b>02</b><h3>Make a slice</h3><p>Put three stages in []stage and select by index.</p></article><article><b>03</b><h3>Reuse the rules</h3><p>Gravity and collision functions stay the same.</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Separate rules from stage data</h2><p>Adding a level should not require rewriting Update. Store platforms, background, and goal in a stage struct, then load the selected index.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Separate rules from stage data</h2><p>Adding a level should not require rewriting Update. Store platforms, background, and goal in a stage struct, then load the selected index.</p><div class="concept-row"><article><b>01</b><h3>Group one level</h3><p>Name, sky, platforms, and goal form one data record.</p></article><article><b>02</b><h3>Make a slice</h3><p>Put three stages in []stage and select by index.</p></article><article><b>03</b><h3>Reuse the rules</h3><p>Gravity and collision functions stay the same.</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="load stage data,build layout,same rules update,goal check"><div><p class="eyebrow">SYSTEM LAB</p><h2>Separate rules from stage data</h2><p>Phases run load stage data → build layout → same rules update → goal check. Step one at a time and find which phase writes the new values.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="THE UPDATE / DRAW BOUNDARY">
   <p class="eyebrow">THE UPDATE / DRAW BOUNDARY</p>
   <h2>Decide the numbers first, then paint them</h2>
@@ -72,9 +72,6 @@ current := stages[stageNumber]</code></pre></section><section class="why-grid"><
 <section class="next-lines core-authoring-links"><p class="eyebrow">YOUR FIRST RULE</p><h3>Write one rule from the real entry point</h3><p>Open <code>games/tracks/platformer/stage-data/main.go</code>, add one rule and verify that play changes. Run <code>go test ./games/tracks/platformer/stage-data</code>, then play again.</p></section>
 <!-- platformer-authoring:end -->
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><!-- page-delivery:start -->
-  <script src="../../../../page-boot.js" defer></script>
-  <!-- page-delivery:end -->
-  <!-- page-delivery:start -->
   <script src="../../../../page-boot.js" defer></script>
   <!-- page-delivery:end -->
   <script src="../../../../learn.js" defer></script></body></html>

@@ -48,14 +48,18 @@ for (const file of walk(webRoot)) {
     return `<script${attrs} defer></script>`;
   });
 
-  if (next.includes("data-game-src=") && !next.includes(start)) {
+  const needsBoot =
+    next.includes("data-game-src=") ||
+    next.includes("data-progress-continue") ||
+    /class="[^"]*\b(course-card|vfx-course-card|test-course-card|path-step|track-card)\b/.test(next);
+  if (needsBoot && !next.includes(start)) {
     const bootHref = href(file, join(webRoot, "page-boot.js"));
     const block = `${start}\n  <script src="${bootHref}" defer></script>\n  ${end}`;
     const learnTag = next.match(/<script\b[^>]*\bsrc="[^"]*learn\.js"[^>]*>\s*<\/script>/i)?.[0];
     next = learnTag
       ? next.replace(learnTag, `${block}\n  ${learnTag}`)
       : next.replace(/<\/body>/i, `  ${block}\n</body>`);
-  } else if (!next.includes("data-game-src=") && next.includes(start)) {
+  } else if (!needsBoot && next.includes(start)) {
     next = next.replace(markedBlock, "");
   }
 

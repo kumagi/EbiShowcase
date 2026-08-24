@@ -40,7 +40,7 @@
 <!-- diagram-lesson:start -->
 
 <!-- diagram-lesson:end -->
-<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Ebi Craft Expedition</h2><p>The final game loads three islands in sequence through the same game state. Resource positions, required lanterns, and night enemies change on each island. Mining has anticipation and contact, while chips, flash, and shake communicate the result. Remaining HP and speed become score, so a clear invites a faster route on the next expedition.</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>Load three islands' terrain, resources, and enemies from data</p></article><article><b>02</b><h3>UPDATE</h3><p>Connect mining and building with animation and particles</p></article><article><b>03</b><h3>FEEDBACK</h3><p>Try a different gathering route against the best total</p></article></div></section><section class="motion-lab" data-lab="turn"><div><p class="eyebrow">SYSTEM LAB</p><h2>Ebi Craft Expedition</h2><p>The final game loads three islands in sequence through the same game state. Resource positions, required lanterns, and night enemies change on each island. Mining has anticipation and contact, while chips, flash, and shake communicate the result. Remaining HP and speed become score, so a clear invites a faster route on the next expedition.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
+<section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Ebi Craft Expedition</h2><p>The final game loads three islands in sequence through the same game state. Resource positions, required lanterns, and night enemies change on each island. Mining has anticipation and contact, while chips, flash, and shake communicate the result. Remaining HP and speed become score, so a clear invites a faster route on the next expedition.</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>Load three islands' terrain, resources, and enemies from data</p></article><article><b>02</b><h3>UPDATE</h3><p>Connect mining and building with animation and particles</p></article><article><b>03</b><h3>FEEDBACK</h3><p>Try a different gathering route against the best total</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="island 1 daylight mining,ready lanterns,island 2 night foes,island 3 combined,score and retry"><div><p class="eyebrow">SYSTEM LAB</p><h2>Ebi Craft Expedition</h2><p>Phases run island 1 daylight mining → ready lanterns → island 2 night foes → island 3 combined → score and retry. Step one at a time and find which phase writes the new values.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="THE UPDATE / DRAW BOUNDARY">
   <p class="eyebrow">THE UPDATE / DRAW BOUNDARY</p>
   <h2>Decide the numbers first, then paint them</h2>
@@ -55,7 +55,7 @@
 load(stage.resources)
 if cleared(stage.goal) {
     stageIndex++
-}</code></pre></section><section class="why-grid"><article><h3>Observe</h3><p>The final game loads three islands in sequence through the same game state. Resource positions, required lanterns, and night enemies change on each island. Mining has anticipation and contact, while chips, flash, and shake communicate the result. Remaining HP and speed become score, so a clear invites a faster route on the next expedition.</p></article><article><h3>Change</h3><p>Try a different gathering route against the best total</p></article><article><h3>CHALLENGE</h3><p>Add an exploration map that reveals only visited tiles.</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>2D Block Sandbox</strong></a><a href="../" rel="next">PATH →<strong>2D Block Sandbox</strong></a></nav>
+}</code></pre></section><section class="why-grid"><article><h3>Observe</h3><p>Pause across island 1 daylight mining to score and retry and catch the moment the board or score changes.</p></article><article><h3>Change</h3><p>Try a different gathering route against the best total</p></article><article><h3>CHALLENGE</h3><p>Add an exploration map that reveals only visited tiles.</p></article></section><nav class="lesson-pager"><a href="../" rel="prev">← PATH<strong>2D Block Sandbox</strong></a><a href="../" rel="next">PATH →<strong>2D Block Sandbox</strong></a></nav>
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
         <div class="feedback-heading">
@@ -113,9 +113,6 @@ func (g *gallery) Draw(screen *ebiten.Image) {
 </section>
 <!-- capstone-renderers:end -->
 </main><footer><p>© Ebi Showcase · Apache-2.0</p></footer><!-- page-delivery:start -->
-  <script src="../../../../page-boot.js" defer></script>
-  <!-- page-delivery:end -->
-  <!-- page-delivery:start -->
   <script src="../../../../page-boot.js" defer></script>
   <!-- page-delivery:end -->
   <script src="../../../../learn.js" defer></script></body></html>

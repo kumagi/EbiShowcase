@@ -70,7 +70,7 @@
 <article><span class="concept-number">1</span><h3>SEARCH</h3><p>盤面全体を調べ、4個以上の同色グループを集めます。</p></article><article><span class="concept-number">2</span><h3>CLEAR → GRAVITY</h3><p>対象を同時に空にし、各列を下へ詰めます。</p></article><article><span class="concept-number">3</span><h3>もう一度SEARCH</h3><p>新しいグループがあれば連鎖数を増やし、なければ手を終えます。</p></article>
 </div>
 
-      <div class="motion-lab" data-lab="turn"><div><p class="eyebrow">CHAIN LOOP LAB</p><h2>処理の輪を1段ずつ進める</h2><p>SEARCH → CLEAR → GRAVITY → SEARCH の順序を動かし、再探索が連鎖を生む場所を確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">SEARCHから始めよう</p><button type="button" class="lab-action">次の段階へ</button></div>
+      <div class="motion-lab" data-lab="turn" data-states="探索,消去,落下,再探索"><div><p class="eyebrow">CHAIN LOOP LAB</p><h2>処理の輪を1段ずつ進める</h2><p>SEARCH → CLEAR → GRAVITY → SEARCH の順序を動かし、再探索が連鎖を生む場所を確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">SEARCHから始めよう</p><button type="button" class="lab-action">次の段階へ</button></div>
 <div class="lab-go-block">
 <p class="eyebrow">TRY IT · GO</p>
 <pre class="lab-go" tabindex="0" aria-label="Go snippet"><span data-go-line="state">switch phase {</span>
