@@ -33,12 +33,12 @@
 <!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>衝突イベントから時間差の演出を始める</h2><p>2個を消して次の実を作る瞬間は、ゲームのいちばん大切なごほうびです。同じ座標から大きさの脈動、粒子、短い揺れを始めると合体が読みやすくなります。</p><div class="concept-row"><article><b>01</b><h3>EVENT</h3><p>合体した場所から脈動・粒子・揺れを始め、連続合体をコンボとして見せます。</p></article><article><b>02</b><h3>TIME</h3><p>接触判定 → 同tier確認 → 合体確定 → 大きさの脈動 → 粒子と揺れ をこの順で、1tickごとに実行します。</p></article><article><b>03</b><h3>REPLAY</h3><p>得点と目標で次の挑戦を作ります。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="接触判定,同tier確認,合体確定,大きさの脈動,粒子と揺れ"><div><p class="eyebrow">SYSTEM LAB</p><h2>衝突イベントから時間差の演出を始める</h2><p>接触判定 → 同tier確認 → 合体確定 → 大きさの脈動 → 粒子と揺れ の順で進みます。NEXTで1段ずつ止めて、どの段階が新しい値を書くのか確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
-  <h2>数字を決める場所と、絵にする場所を分けよう</h2>
+  <h2>ゲーム状態を更新する責務と、画面へ投影する責務の分離</h2>
   <div class="concept-row">
-    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キー・タッチを読み、位置・HP・ゲージ・タイマー・盤面を変えます。判定やキュー操作もこちらです。</p><code>入力 → ルール → game を更新</code></article>
-    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>できあがった game の値を読んで、絵・文字・エフェクトを置きます。game の値は変えません。</p><code>game を読む → ピクセルへ投影</code></article>
+    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キーやタッチ入力を検知し、位置・HP・ゲージ・タイマー・盤面などのゲーム状態を更新します。当たり判定やキューの処理もすべて Update が担います。</p><code>入力検知 → ルール計算 → 状態更新</code></article>
+    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>確定した game 構造体の状態を読み取り、図形・文字・エフェクトを画面ピクセルとして描画します。ゲーム状態の変更は一切行いません。</p><code>状態読取 → 画面ピクセルへ投影</code></article>
   </div>
-  <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
+  <p class="update-draw-note">ゲームルールは Update（または Update から呼び出す純粋関数）に実装し、Draw はその結果を画面へ投影する処理に徹します。</p>
 </section>
 <!-- update-draw-contract:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>衝突イベントから時間差の演出を始める</h2><p>合体した場所から脈動・粒子・揺れを始め、連続合体をコンボとして見せます。</p></div><pre><code>spawnMerged(nextTier, contactX, contactY)

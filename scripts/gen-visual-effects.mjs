@@ -62,7 +62,7 @@ const basicLessons = [
       lead: "画像を1枚、画面の好きな場所に置きます。位置を決めるのは DrawImageOptions の GeoM.Translate。この章の (x, y) は画像の左上です。中心に置く方法は次の章で学びます。",
       deepEyebrow: "DEEP DIVE / DRAW ONE IMAGE",
       deepH: "絵はどうやって<br>その場所に出る？",
-      deepLead: "Ebitengine では、描く絵に「変換」を持たせてから screen.DrawImage します。いちばん基本の変換が平行移動 Translate。同じ絵を、Translate の数字を変えるだけで何個でも置けます。",
+      deepLead: "Ebitengine では、描画対象の画像に対して幾何変換（GeoM）を設定したうえで screen.DrawImage を呼び出します。最も基本的な変換が平行移動（Translate）です。同一の画像であっても、Translate の座標値を変更することで画面上の任意の位置へ繰り返し描画できます。",
       concepts: [
         { h: "オプション", p: "描き方をまとめる箱を用意します。", code: "&op{}" },
         { h: "移動", p: "左上を (x, y) までずらします。", code: "GeoM.Translate" },
@@ -327,7 +327,7 @@ for i, p := range trail {
       lead: "ふつうの合成は「手前が奥を隠す」。加算合成 BlendLighter は「色を足す」。だから光が重なるほど明るくなり、真ん中は白く輝きます。炎も魔法もここから。",
       deepEyebrow: "DEEP DIVE / ADDITIVE",
       deepH: "なぜ光は<br>重なると白い？",
-      deepLead: "現実の光と同じで、光は足し算です。赤い光と緑の光が重なれば黄色、さらに青が乗れば白。op.Blend = ebiten.BlendLighter にすると、Ebitengine が色を上に足していきます。",
+      deepLead: "加算合成は、光の混色と同様に描画色同士を加算する描画手法です。赤と緑の光が重なると黄色になり、青が加わると白になります。op.Blend に ebiten.BlendLighter を指定すると、Ebitengine は背景色へ描画色を加算して合成します。",
       concepts: [
         { h: "通常合成", p: "手前の絵が奥を隠します。", code: "BlendSourceOver" },
         { h: "加算合成", p: "色を足して明るくします。", code: "BlendLighter" },

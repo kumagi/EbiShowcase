@@ -39,12 +39,12 @@
 <!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>車体角度・加速・チェックポイント</h2><p>Ebitengineで無理に3Dをまねず、見下ろし2Dでレースの核を学びます。角度から進行方向を求め、ゲート列でショートカットを防ぎます。</p><div class="concept-row"><article><b>01</b><h3>加速と摩擦</h3><p>アクセルで増やし、tickごとに少し減速します。</p></article><article><b>02</b><h3>角度から移動</h3><p>sinとcosで車体の前へ進みます。</p></article><article><b>03</b><h3>周回判定</h3><p>次のゲートだけを有効にして順番を守ります。</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="カウントダウン,周回走行,ゲート判定,ライバル比較,リザルト"><div><p class="eyebrow">SYSTEM LAB</p><h2>車体角度・加速・チェックポイント</h2><p>カウントダウン → 周回走行 → ゲート判定 → ライバル比較 → リザルト の順で進みます。NEXTで1段ずつ止めて、どの段階が新しい値を書くのか確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
-  <h2>数字を決める場所と、絵にする場所を分けよう</h2>
+  <h2>ゲーム状態を更新する責務と、画面へ投影する責務の分離</h2>
   <div class="concept-row">
-    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キー・タッチを読み、位置・HP・ゲージ・タイマー・盤面を変えます。判定やキュー操作もこちらです。</p><code>入力 → ルール → game を更新</code></article>
-    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>できあがった game の値を読んで、絵・文字・エフェクトを置きます。game の値は変えません。</p><code>game を読む → ピクセルへ投影</code></article>
+    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キーやタッチ入力を検知し、位置・HP・ゲージ・タイマー・盤面などのゲーム状態を更新します。当たり判定やキューの処理もすべて Update が担います。</p><code>入力検知 → ルール計算 → 状態更新</code></article>
+    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>確定した game 構造体の状態を読み取り、図形・文字・エフェクトを画面ピクセルとして描画します。ゲーム状態の変更は一切行いません。</p><code>状態読取 → 画面ピクセルへ投影</code></article>
   </div>
-  <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
+  <p class="update-draw-note">ゲームルールは Update（または Update から呼び出す純粋関数）に実装し、Draw はその結果を画面へ投影する処理に徹します。</p>
 </section>
 <!-- update-draw-contract:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>車体角度・加速・チェックポイント</h2><p>実ゲームで使っている中心ルールを小さく抜き出します。</p></div><pre><code>speed += acceleration

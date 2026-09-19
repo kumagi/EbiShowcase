@@ -89,13 +89,13 @@
 <div class="lesson-intro">
 <p class="eyebrow">DEEP DIVE / DROP TIMER</p>
 <h2>tickごとに動かさず、「時計」が満ちた時だけ落とす。</h2>
-<p class="lesson-lead">EbitengineのUpdateは1秒におよそ60回呼ばれます。でもブロックを毎回1マス落とすと一瞬で床へ着きます。そこで<strong>何回待ったかをtimerで数え</strong>、決めた回数で1マスだけ進めます。</p>
+<p class="lesson-lead">Ebitengine の <code>Update</code> は既定値で毎秒およそ60回呼び出されます。毎回の <code>Update</code> でブロックを1マス落下させると、わずか数十ミリ秒で床に到達してしまいます。そのため、<strong>経過 tick 数を変数 <code>timer</code> で計測し</strong>、規定の tick 数に達したときだけブロックを1マス進めます。</p>
 </div>
 <div class="concept-row">
 <article>
 <span class="concept-number">1</span>
 <h3>待った回数を数える</h3>
-<p>Updateのたびにtimerへ1を足します。画面下の黄色い棒は、次の落下までの残り時間を見える形にしたものです。</p>
+<p><code>Update</code> が呼ばれるたびに <code>timer</code> に 1 を加算します。画面下の黄色いゲージは、次の落下までの残り時間を可視化したものです。</p>
 <code>timer++</code>
 </article>
 <article>

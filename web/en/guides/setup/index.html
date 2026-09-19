@@ -170,20 +170,20 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-// Game holds the three methods Ebitengine expects.
+// Game implements Ebitengine's Game interface (Update, Draw, Layout).
 type Game struct{}
 
-// Update reads input and advances numbers. State changes belong here.
+// Update handles input and advances game state. All state mutations belong here.
 func (g *Game) Update() error {
 	return nil
 }
 
-// Draw only projects current state. It never mutates state.
+// Draw paints the current game state to the screen. It never mutates state.
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{20, 28, 48, 255})
 }
 
-// Layout returns the game's internal resolution.
+// Layout returns the game's internal logical resolution (width and height).
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return 640, 480
 }

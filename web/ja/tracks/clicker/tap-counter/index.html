@@ -62,7 +62,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / INPUT</p>
         <h2>なぜタップした瞬間だけ、<br>数が増えるの？</h2>
-        <p class="lesson-lead">Ebitengine の <strong>inpututil.IsMouseButtonJustPressed</strong> は、そのフレームで初めてボタンが押されたときだけ <code>true</code> を返します。長押しでもtickごとに増えない理由はここにあります。</p>
+        <p class="lesson-lead">Ebitengine の <strong>inpututil.IsMouseButtonJustPressed</strong> は、直前の tick で離されており、その tick で初めてマウスボタンが押されたときだけ <code>true</code> を返します。ボタンを押し続けていても次回以降の tick では <code>false</code> になるため、長押しによる連続加算を防げます。</p>
       </div>
 
       <div class="concept-row">

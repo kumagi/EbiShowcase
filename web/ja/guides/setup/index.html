@@ -54,7 +54,7 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>go.modは『このゲームの名前と使う部品』を書いた目次ファイル。PowerShell/ターミナルは文字で命令する同じ役目の窓です。まずは空のゲーム画面を出すところまで進みます。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>func (g *Game) Update() error { return nil }</code></pre></div></section>
 <!-- feedback-note:guides/setup:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-guides-setup"><div><p class="eyebrow">はじめての見取り図</p><h2 id="feedback-note-guides-setup">文字を入力する窓と、ゲームの窓は別もの</h2><p>PowerShellとターミナルは名前や色が違っても、文字で命令を出す同じ役割です。go.modはゲームの名前（モジュール名）と借りる部品を書いた目次。実行すると、今度はEbitengineのゲーム画面が開きます。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="命令を入力する窓からゲーム画面へ"><span>PowerShell / ターミナル</span><b>→ go run . →</b><strong>中身のないゲーム画面</strong></div></div></section>
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-guides-setup"><div><p class="eyebrow">はじめての見取り図</p><h2 id="feedback-note-guides-setup">文字を入力する窓と、ゲームの窓は別もの</h2><p>PowerShellとターミナルは外観が異なっても、文字列でコマンドを発行する同一の役割を持ちます。go.modはモジュール名と依存ライブラリを記述する設定ファイルです。go run を実行すると、独立したEbitengineのゲーム画面が開きます。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="命令を入力する窓からゲーム画面へ"><span>PowerShell / ターミナル</span><b>→ go run . →</b><strong>空のゲーム画面</strong></div></div></section>
 <!-- feedback-note:guides/setup:end -->
 <!-- END BEGINNER BRIDGE -->
 
@@ -87,7 +87,7 @@
   <section class="setup-step" id="install-go">
     <p class="setup-n">STEP 01</p>
     <h2>Go をインストールする</h2>
-    <p class="setup-lead">Ebitengine は Go で書かれたゲームエンジンです。先に Go 本体が必要です。このリポジトリは Go 1.25 以降を使います。</p>
+    <p class="setup-lead">Ebitengine は Go で書かれた2Dゲームエンジンです。Ebitengine を動かすには、先に Go の実行環境をインストールする必要があります。本教材では Go 1.25 以降を前提とします。</p>
     <div class="setup-os-grid">
       <article class="setup-os"><h3>Windows</h3><ol class="setup-ol"><li>ブラウザで <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a> を開く</li><li>「Microsoft Windows」の <strong>.msi</strong> を選ぶ（だいたい一番上の安定版）</li><li>ダウンロードしたファイルを開き、画面の指示どおり「次へ」で進む</li><li>終わったら PowerShell（さっき開いた命令の窓）を<strong>いったん閉じて、もう一度開き直す</strong>（パスを読み直すため）</li></ol></article>
       <article class="setup-os"><h3>macOS</h3><ol class="setup-ol"><li>ブラウザで <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a> を開く</li><li>自分の Mac に合うパッケージを選ぶ。<strong>Apple Silicon（M1/M2/M3…）</strong>なら ARM64、<strong>Intel</strong> なら x86-64 の <strong>.pkg</strong></li><li>ダウンロードした .pkg を開き、画面の指示どおりインストールする</li><li>終わったらターミナルを<strong>いったん閉じて、もう一度開き直す</strong></li></ol></article>
@@ -98,7 +98,7 @@
   <section class="setup-step" id="compiler">
     <p class="setup-n">STEP 02</p>
     <h2>Mac だけ：C コンパイラを入れる</h2>
-    <p class="setup-lead">Ebitengine は中で C の部品も使います。<strong>Windows の学校 PC はこのステップを飛ばして大丈夫</strong>です。Mac だけ、無料の「コマンドラインツール」——プログラムを作るときに裏側で使う道具一式——を入れます。長い名前を覚える必要はありません。教室の PC が Windows なら、すぐ「3. 動作確認」へ進んでください。</p>
+    <p class="setup-lead">macOS 上で Ebitengine を実行するには、C言語のビルド環境（Command Line Tools）が必要です。Windows 環境では本手順は不要です。Windows を使用している場合は、本ステップを省略して「3. 動作確認」へ進んでください。</p>
     <p class="setup-skip">Windows の人はこのステップを飛ばして「3. 動作確認」へ進んでください。</p>
     <div class="full-code setup-full-code">
   <div class="full-code-head">
@@ -142,7 +142,7 @@
     <h2>ゲーム用のフォルダを作る</h2>
     <p class="setup-lead">デスクトップでもドキュメントでも構いません。ここでは例として home の直下に ebi-empty を作ります。</p>
     <ol class="setup-cmd-list"><li><code>mkdir ebi-empty</code><span>フォルダを作る</span><button type="button" class="setup-command-copy" data-copy-command data-copied-label="コピーしました" aria-label="コマンドをコピー">コピー</button></li><li><code>cd ebi-empty</code><span>その中へ入る</span><button type="button" class="setup-command-copy" data-copy-command data-copied-label="コピーしました" aria-label="コマンドをコピー">コピー</button></li><li><code>go mod init example.com/ebi-empty</code><span>このフォルダの目次 go.mod を作る</span><button type="button" class="setup-command-copy" data-copy-command data-copied-label="コピーしました" aria-label="コマンドをコピー">コピー</button></li></ol>
-    <p class="setup-ok">go.mod は、このゲームの名前（モジュール名）と、外から借りる部品（Ebitengine など）を Go が管理するための『プロジェクトの目次ノート』です。モジュール名は、コードの部品をどの名前で呼ぶかを決める住所のようなもの。これがあることで、Go は必要な外部パッケージを同じ組み合わせで用意できます。小さな go.mod ができていれば OK。名前は後から変えられます。</p>
+    <p class="setup-ok">go.mod は、プロジェクトの名前（モジュールパス）と、依存する外部ライブラリ（Ebitengine など）のバージョンを Go が管理するための設定ファイルです。これによって、どの環境でも同じバージョンのライブラリを再現して実行できます。小さな go.mod が生成されていれば準備完了です。モジュール名は後から変更できます。</p>
   </section>
 
   <section class="setup-step" id="code">
@@ -170,20 +170,20 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-// Game は Ebitengine が求める3つのメソッドを持つ箱です。
+// Game は Ebitengine の Game インターフェース（Update, Draw, Layout）を実装する構造体です。
 type Game struct{}
 
-// Update は入力と数字を進める場所。状態を書き換えるならここです。
+// Update は入力の検知とゲーム状態の更新を行います。ゲーム状態の変更はすべてここで行います。
 func (g *Game) Update() error {
 	return nil
 }
 
-// Draw は今の状態を画面へ写すだけ。状態は書き換えません。
+// Draw は現在のゲーム状態を画面に描画します。ゲーム状態の変更は行いません。
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{20, 28, 48, 255})
 }
 
-// Layout はゲーム内部の解像度（幅×高さ）を返します。
+// Layout はゲーム内部の論理解像度（幅×高さ）を返します。
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 	return 640, 480
 }
@@ -217,7 +217,7 @@ func main() {
       <p class="setup-ok">一覧に <code>go.mod</code> と <code>main.go</code> の2つが見えれば成功です。<code>main.go.txt</code> と出たら、ファイル名を <code>main.go</code> に直します。</p>
     </div>
     <div class="setup-explain">
-      <div><code>Update</code><span>tickごとの入力・数字・状態更新担当。今は空。</span></div><div><code>Draw</code><span>呼ばれた時の投影担当。色を一塗りし、状態は変えない。</span></div><div><code>Layout</code><span>ゲーム内部の幅と高さ。</span></div><div><code>RunGame</code><span>このくり返しを起動するスイッチ。</span></div>
+      <div><code>Update</code><span>tickごとに呼ばれ、入力の検知とゲーム状態の更新を担当します。</span></div><div><code>Draw</code><span>描画要求ごとに呼ばれ、現在のゲーム状態を画面へ投影します。状態の変更は行いません。</span></div><div><code>Layout</code><span>ウィンドウの大きさに応じた、ゲーム内部の論理解像度（幅と高さ）を返します。</span></div><div><code>RunGame</code><span>ゲームループを開始し、ウィンドウを表示する関数です。</span></div>
     </div>
   </section>
 

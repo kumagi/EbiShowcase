@@ -55,16 +55,16 @@
     <section class="learn" id="basics">
       <p class="eyebrow">WHAT'S INSIDE / BEFORE ANYTHING ELSE</p>
       <h2>Ebitengine calls three methods:<br>Update, Draw, and Layout.</h2>
-      <p class="lesson-lead">Split the game you just played into three jobs. <strong>Update</strong> reads input and advances rules and state—“a hit adds one point” and “move the target”—at the engine's configured tick rate. <strong>Draw</strong> reads the latest state when called and presents it. No matter how often Draw is called, it must not secretly change the score or target position. <strong>Layout</strong> answers the game's logical size. In Go, a job attached to Game like this is called a <strong>method</strong>.</p>
+      <p class="lesson-lead">An Ebitengine game is implemented by satisfying the three methods required by the <code>Game</code> interface: <code>Update</code>, <code>Draw</code>, and <code>Layout</code>. <strong>Update</strong> polls input and mutates game state such as score and position at each configured tick. <strong>Draw</strong> reads the game state at the instant of invocation and projects it into screen pixels; whether Draw is called or skipped under load, it never mutates game state. <strong>Layout</strong> accepts outside window dimensions and returns the internal logical resolution used by the game.</p>
       <div class="steps" style="grid-template-columns:repeat(3,1fr)">
-        <article><b>01</b><h3>UPDATE</h3><p>Read input and advance the <strong>numbers</strong>—score, positions, timers. Do not draw here.</p><code>func (g *Game) Update() error</code></article>
-        <article><b>02</b><h3>DRAW</h3><p>Paint circles and text from the current numbers. Do not read input, run game math, or mutate state here.</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
-        <article><b>03</b><h3>LAYOUT</h3><p>Return the game's logical size. Let the engine scale it for the real screen.</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article>
+        <article><b>01</b><h3>UPDATE</h3><p>Polls input and <strong>mutates game state</strong> such as score and position. It contains no rendering commands.</p><code>func (g *Game) Update() error</code></article>
+        <article><b>02</b><h3>DRAW</h3><p>Reads the current game state and <strong>projects it to the screen</strong>. It never mutates state or processes input.</p><code>func (g *Game) Draw(screen *ebiten.Image)</code></article>
+        <article><b>03</b><h3>LAYOUT</h3><p>Returns the <strong>internal logical resolution</strong> (width and height). Scaling to the window is handled by the engine.</p><code>func (g *Game) Layout(w, h int) (int, int)</code></article>
       </div>
       <div class="formula" id="tick">
         <p class="eyebrow">NEW WORD / TICK</p>
         <div class="formula-lines"><code>1 tick = one Update call</code><span>different from</span><code>1 frame = one picture</code></div>
-        <p>A <strong>tick</strong> is one call to Update: one step of the game's numbers. The default is commonly about 60 ticks per second, but it is configurable. A <strong>frame</strong> is one picture produced by Draw. Draw may be delayed or skipped while Update ticks continue, so this course uses “tick” for that operation and reserves “frame” for a picture.</p>
+        <p>A <strong>tick</strong> is the unit by which Ebitengine executes <code>Update</code> once to advance logical game state (configured by default to approximately 60 ticks per second, but customizable). A <strong>frame</strong> is a single screen picture produced by <code>Draw</code>. Because <code>Update</code> ticks advance independently even if <code>Draw</code> invocations are delayed or skipped under heavy rendering load, this curriculum strictly distinguishes tick from frame.</p>
       </div>
 
       <div class="motion-lab" data-lab="loop" data-update="UPDATE" data-draw="DRAW" data-update-note="Change numbers (score, positions, timers)" data-draw-note="Paint the current numbers on screen" aria-labelledby="loop-lab-title">
@@ -120,11 +120,11 @@
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_input-coordinate.svg" alt="Input to canvas coordinates" loading="lazy" decoding="async"><figcaption>A visual map of Input to canvas coordinates. Trace the numbers and pictures before reading the code.</figcaption></figure>
 <!-- diagram-lesson:end -->
 <!-- feedback-note:games/tap-target:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-tap-target"><div><p class="eyebrow">Game facts → presentation</p><h2 id="feedback-note-games-tap-target">Advance the game first; presentation reads those facts</h2><p>Update advances game facts such as score and position. Draw does not change them; it presents them whenever called. The live example below shows one game state through different presentations at the same time.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="game facts and presentation">UPDATE: score / position
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-tap-target"><div><p class="eyebrow">Game state → screen projection</p><h2 id="feedback-note-games-tap-target">Update advances state; Draw projects that state</h2><p>Update updates game state such as score and position. Draw never mutates game state; it projects the state at the moment it is called into screen pixels. The demo below renders one identical game state through different Draw projections simultaneously.</p></div><div class="feedback-note-visual"><pre class="feedback-note-code" aria-label="game state and visual projection">UPDATE: score / position
           ↓
         game
           ↓
-DRAW: choose how to present it</pre></div></section>
+DRAW: project onto screen</pre></div></section>
 <!-- feedback-note:games/tap-target:end -->
 <!-- renderer-freedom:start -->
 <section class="renderer-freedom" aria-label="Renderer independence">
@@ -192,8 +192,8 @@ DRAW: choose how to present it</pre></div></section>
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
-          <h3>Put the check inside<br><code>Update</code></h3>
-          <p>Only read the position on the press frame, then check distance. <code>Draw</code> just paints the circle and score—the same split you learned above.</p>
+          <h3>Place the check inside<br><code>Update</code></h3>
+          <p>Read coordinates and evaluate distance strictly on the tick the press occurs. The return value of <code>Update() error</code> returns an error value when halting the game loop, or <code>return nil</code> to proceed normally. In contrast, <code>Draw</code> handles only projecting onto the screen and returns no value.</p>
         </div>
         <pre><code><span>func</span> (g *game) Update() error {
     px, py, pressed := pressedPosition()

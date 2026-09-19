@@ -33,12 +33,12 @@
 <!-- diagram-lesson:end --><section class="lesson-section" id="learn"><p class="eyebrow">DEEP DIVE</p><h2>確率の答えを短い演出シーケンスで見せる</h2><p>成功判定は投げた瞬間に一度だけ行い、結果をphaseに保存します。その後は同じ答えを、軌道、揺れ、粒子の順で見せます。tickごとに抽選し直さないことが大切です。</p><div class="concept-row"><article><b>01</b><h3>DATA</h3><p>投げる、飛ぶ、3回揺れる、成功して弾ける、という中間フレームで捕獲を待ちたくなる時間にします。</p></article><article><b>02</b><h3>STATE</h3><p>狙いを定める → 投げて一度だけ判定 → 軌道を見せる → 揺れと粒子 → 捕獲結果 をこの順で、1tickごとに実行します。</p></article><article><b>03</b><h3>REPLAY</h3><p>訪問順や捕獲連続記録を変えて、もう一度挑戦できます。</p></article></div></section><section class="motion-lab" data-lab="pipeline" data-steps="choose,meet,act,feedback,record" data-loop="next encounter"><div><p class="eyebrow">SYSTEM LAB</p><h2>確率の答えを短い演出シーケンスで見せる</h2><p>成功判定は投げた瞬間に一度だけ行い、結果をphaseに保存します。その後は同じ答えを、軌道、揺れ、粒子の順で見せます。tickごとに抽選し直さないことが大切です。</p></div><div class="lab-stage"><div class="lab-entities" data-count="5"></div><p class="lab-readout">READY</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
-  <h2>数字を決める場所と、絵にする場所を分けよう</h2>
+  <h2>ゲーム状態を更新する責務と、画面へ投影する責務の分離</h2>
   <div class="concept-row">
-    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キー・タッチを読み、位置・HP・ゲージ・タイマー・盤面を変えます。判定やキュー操作もこちらです。</p><code>入力 → ルール → game を更新</code></article>
-    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>できあがった game の値を読んで、絵・文字・エフェクトを置きます。game の値は変えません。</p><code>game を読む → ピクセルへ投影</code></article>
+    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キーやタッチ入力を検知し、位置・HP・ゲージ・タイマー・盤面などのゲーム状態を更新します。当たり判定やキューの処理もすべて Update が担います。</p><code>入力検知 → ルール計算 → 状態更新</code></article>
+    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>確定した game 構造体の状態を読み取り、図形・文字・エフェクトを画面ピクセルとして描画します。ゲーム状態の変更は一切行いません。</p><code>状態読取 → 画面ピクセルへ投影</code></article>
   </div>
-  <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
+  <p class="update-draw-note">ゲームルールは Update（または Update から呼び出す純粋関数）に実装し、Draw はその結果を画面へ投影する処理に徹します。</p>
 </section>
 <!-- update-draw-contract:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>確率の答えを短い演出シーケンスで見せる</h2><p>投げる、飛ぶ、3回揺れる、成功して弾ける、という中間フレームで捕獲を待ちたくなる時間にします。</p></div><pre><code>success := rng.Intn(100) &lt; chance

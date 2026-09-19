@@ -33,12 +33,12 @@
 <!-- diagram-lesson:end --><section class="physics" id="learn"><div class="lesson-intro"><p class="eyebrow">DEEP DIVE</p><h2>Tower roles and upgrades</h2><p class="lesson-lead">Use kind to choose projectile effects and level to change range, damage, and cooldown. Q/W/E or touch selects a role that fits the enemy group.</p></div><div class="concept-row"><article><span class="concept-number">1</span><h3>DATA</h3><p>Path, tower, enemy, and wave tables hold the world's truth.</p><code>Path / Tower / Wave</code></article><article><span class="concept-number">2</span><h3>UPDATE</h3><p>Enemy progress, targeting, shots, and damage update in order.</p><code>move → target → hit</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>State projects into route, circles, HP, and coins.</p><code>state → board</code></article></div><div class="motion-lab" data-lab="turn" data-states="pick tower kind,switch effect,raise level,slow or splash"><div class="lab-copy"><p class="eyebrow">SYSTEM LAB</p><h3>Tower roles and upgrades</h3><p>Phases run pick tower kind → switch effect → raise level → slow or splash. Step one at a time and find which phase writes the new values.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></div><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="THE UPDATE / DRAW BOUNDARY">
   <p class="eyebrow">THE UPDATE / DRAW BOUNDARY</p>
-  <h2>Decide the numbers first, then paint them</h2>
+  <h2>Separate State Updates from Screen Projections</h2>
   <div class="concept-row">
-    <article><span class="concept-number">1</span><h3>Update owns</h3><p>Read keys and touch, then change positions, HP, gauges, timers, boards, and queues. Rules and decisions live here too.</p><code>input → rule → change game</code></article>
-    <article><span class="concept-number">2</span><h3>Draw owns</h3><p>Read the finished game state and place pictures, text, and effects. It never changes game state.</p><code>read game → project pixels</code></article>
+    <article><span class="concept-number">1</span><h3>Update owns state mutation</h3><p>Detects key and touch inputs, and updates game state—positions, HP, gauges, timers, boards, and queues. Collision resolution and queue logic live here.</p><code>detect input → evaluate rules → mutate state</code></article>
+    <article><span class="concept-number">2</span><h3>Draw owns visual projection</h3><p>Reads the current game state and projects figures, text, and effects into screen pixels. It never mutates game state.</p><code>read state → project pixels</code></article>
   </div>
-  <p class="update-draw-note">For this lesson, put a new rule in Update (or a pure helper called by Update). Draw only shows the result of that rule.</p>
+  <p class="update-draw-note">Implement gameplay rules in Update (or pure helpers called by Update). Keep Draw strictly as a projection of that state.</p>
 </section>
 <!-- update-draw-contract:end -->
 <section class="code-lesson">

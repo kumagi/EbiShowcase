@@ -39,12 +39,12 @@
 <!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Ebi Relic Dungeon</h2><p>完成版は各部屋を同時に動かさず、stage番号から必要なデータとルールだけを読み込みます。攻撃、被弾、鍵、仕掛け、ボスは同じgame状態を受け渡し、勝敗・得点・BESTまで一周します。</p><div class="concept-row"><article><span class="concept-number">1</span><h3>DATA</h3><p>このSTEPを選ぶ入口は lesson 番号だけを渡します。部屋とルールは共有ゲームがデータとして選びます。</p><code>Run(8)</code></article><article><span class="concept-number">2</span><h3>UPDATE</h3><p>入力・移動・攻撃・部屋の判定を Update の順に解決します。</p><code>Update → resolve room</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>Draw は現在の部屋と状態を絵にします。状態そのものを Draw で変えません。</p><code>Draw(state)</code></article></div></section><section class="motion-lab" data-lab="turn" data-states="部屋データ読込,攻撃と被弾,鍵と仕掛け,ボス,リザルト"><div><p class="eyebrow">SYSTEM DIAGRAM / TRY IT</p><h2>攻撃・被弾・解錠・仕掛けを同じ更新順で解決する</h2><p>部屋データ読込 → 攻撃と被弾 → 鍵と仕掛け → ボス → リザルト の順で進みます。NEXTで1段ずつ止めて、どの段階が新しい値を書くのか確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">INPUT</p><button type="button" class="lab-action">NEXT</button></div></section><section class="formula"><p class="eyebrow">STATE FLOW</p><div class="formula-lines"><code>input</code><span>→</span><code>update state</code><span>→</span><code>resolve result</code><span>→</span><code>draw feedback</code></div><p>ボス撃破後の得点とBESTで再挑戦する</p></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
-  <h2>数字を決める場所と、絵にする場所を分けよう</h2>
+  <h2>ゲーム状態を更新する責務と、画面へ投影する責務の分離</h2>
   <div class="concept-row">
-    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キー・タッチを読み、位置・HP・ゲージ・タイマー・盤面を変えます。判定やキュー操作もこちらです。</p><code>入力 → ルール → game を更新</code></article>
-    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>できあがった game の値を読んで、絵・文字・エフェクトを置きます。game の値は変えません。</p><code>game を読む → ピクセルへ投影</code></article>
+    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キーやタッチ入力を検知し、位置・HP・ゲージ・タイマー・盤面などのゲーム状態を更新します。当たり判定やキューの処理もすべて Update が担います。</p><code>入力検知 → ルール計算 → 状態更新</code></article>
+    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>確定した game 構造体の状態を読み取り、図形・文字・エフェクトを画面ピクセルとして描画します。ゲーム状態の変更は一切行いません。</p><code>状態読取 → 画面ピクセルへ投影</code></article>
   </div>
-  <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
+  <p class="update-draw-note">ゲームルールは Update（または Update から呼び出す純粋関数）に実装し、Draw はその結果を画面へ投影する処理に徹します。</p>
 </section>
 <!-- update-draw-contract:end -->
 <section class="code-lesson">

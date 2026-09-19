@@ -1,6 +1,6 @@
 {
   "origin": "https://kumagi.github.io/EbiShowcase",
-  "generatedAt": "2026-08-24T08:01:24.500Z",
+  "generatedAt": "2026-09-19T05:47:14.531Z",
   "pages": [
     {
       "file": "web/en/build/empty-loop/index.html",
@@ -5910,9 +5910,9 @@
       "title": "Ebi Showcase – LEVEL 01〜12のUpdateをユニットテストする",
       "h1": "Drawを試す前に、 Updateのルールを守る。",
       "eyebrow": "SPECIAL GUIDE / UNIT TESTING",
-      "description": "LEVEL 01〜12のUpdateをユニットテストする — Drawは現在のgameを画面へ投影するだけなので、原則としてユニットテストの対象にしません。入力・時間・乱数・衝突・得点を持つUpdateを、薄い接続役と純粋なルールへ分けます。下の12章では実際のUpdateを読み、AAAを小さな判定から物理…",
+      "description": "LEVEL 01〜12のUpdateをユニットテストする — Draw は現在のゲーム状態（game）を画面へ投影する処理であり、描画結果は状態とアセットから一意に定まります。そのため、原則としてユニットテストの対象にしません。入力検知・時間経過・乱数・衝突判定・得点計算を担う Update を、薄い入出力…",
       "image": "assets/og/ja--guides--testing.png",
-      "hook": "LEVEL 01〜12のUpdateをユニットテストする — Drawは現在のgameを画面へ投影するだけなので、原則としてユ…",
+      "hook": "LEVEL 01〜12のUpdateをユニットテストする — Draw は現在のゲーム状態（game）を画面へ投影する処理であ…",
       "action": "読んで試す · 自分のゲームへ持ち帰る",
       "preview": "assets/home-thumbnails/games--tap-target.webp",
       "previewMode": "related",

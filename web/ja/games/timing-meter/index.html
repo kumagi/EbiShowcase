@@ -54,7 +54,7 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>状態は『狙っている・判定を見ている・再挑戦待ち』のような今の場面。switchは状態ごとの処理をif/elseより読みやすく並べます。%は割り算の余りです。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>phase := frame % 120</code></pre></div></section>
 <!-- feedback-note:games/timing-meter:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-timing-meter"><div><p class="eyebrow">Updateの刻みと状態</p><h2 id="feedback-note-games-timing-meter">同じボタンでも、今の状態で意味が変わる</h2><p>Updateは設定された一定の刻みで状態を少しずつ進めます。状態機械は「動く／止める／結果」の札を持ち、ラウンドごとに左右を交代すると同じタイミングの暗記ゲームになりません。Drawの回数はこのルールを変えません。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="状態の移り変わり"><span>動く</span><b>→ ボタン →</b><strong>止める</strong><b>→ 次のラウンド →</b><span>動く</span><code>round % 2</code></div></div></section>
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-timing-meter"><div><p class="eyebrow">Updateの刻みと状態</p><h2 id="feedback-note-games-timing-meter">同じボタンでも、今の状態で意味が変わる</h2><p>Updateは設定された一定の刻み（tick）で状態を少しずつ進めます。状態機械は「動く／止める／結果」の札を持ち、ラウンドごとに左右を交代すると同じタイミングの暗記ゲームになりません。Drawの回数はこのルールを変えません。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="状態の移り変わり"><span>動く</span><b>→ ボタン →</b><strong>止める</strong><b>→ 次のラウンド →</b><span>動く</span><code>round % 2</code></div></div></section>
 <!-- feedback-note:games/timing-meter:end -->
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_bpm-timing.svg" alt="BPMとフレーム" loading="lazy" decoding="async"><figcaption>BPMとフレームの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
@@ -66,13 +66,13 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / TIME &amp; STATE</p>
         <h2>どうして線は、<br>行ったり来たりするの？</h2>
-        <p class="lesson-lead">Updateのたびに <strong>位置 = 位置 + 速さ</strong> を計算します。端に着いたら速さの符号をひっくり返すと、行ったり来たりになります。止めるときは「動かない状態」へ切り替え、Drawはその時点の位置を表示します。</p>
+        <p class="lesson-lead"><code>Update</code> のたびに <strong>位置 = 位置 + 速度</strong> を計算します。端に達したときに速度の符号を反転させることで、左右の往復運動が実現します。停止時は状態フラグを切り替えて位置の更新を止め、<code>Draw</code> はその時点のゲーム状態を画面に描画します。</p>
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>Updateの刻み</h3><p>Ebitengineは設定された一定の刻みで <code>Update</code> を呼びます。位置へ少しずつ速さを足すので、動きがつながります。</p><code>marker += speed</code></article>
-        <article><span class="concept-number">2</span><h3>反射</h3><p>左端や右端へ着いたら <code>speed = -speed</code>。向きだけ変えて、同じ速さで戻ります。</p><code>speed = -speed</code></article>
-        <article><span class="concept-number">3</span><h3>状態</h3><p>動いているか、止まっているか。止まっているあいだは位置を進めず、中央との距離だけ採点します。</p><code>stopped bool</code></article>
+        <article><span class="concept-number">1</span><h3>Update の刻み</h3><p>Ebitengine は設定された一定の刻み（tick）ごとに <code>Update</code> を呼び出します。毎回の tick で位置に速度を加算することで、滑らかな連続運動を表現できます。</p><code>marker += speed</code></article>
+        <article><span class="concept-number">2</span><h3>反射</h3><p>左端または右端に達したとき <code>speed = -speed</code> で速度の符号を反転させます。大きさ（速さ）を維持したまま進行方向のみが逆向きになります。</p><code>speed = -speed</code></article>
+        <article><span class="concept-number">3</span><h3>状態フラグ</h3><p>移動中か停止中かを表す真偽値です。停止中は位置の更新を行わず、停止位置と目標中央との距離に基づいて得点を算出します。</p><code>stopped bool</code></article>
       </div>
 
       <div class="motion-lab" data-lab="meter" data-moving="動いている" data-stopped="止まっている" aria-labelledby="meter-lab-title">

@@ -59,7 +59,7 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>画面は上がY=0で、下へ行くほどYが増えます。加速度は『Updateの刻みごとに速さがどれだけ変わるか』。羽ばたき時の負の速度は上向き、正の重力が少しずつ下向きへ戻します。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>vy = -7.4; vy += gravity; y += vy</code></pre></div></section>
 <!-- feedback-note:games/flappy:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-flappy"><div><p class="eyebrow">重力を感じる</p><h2 id="feedback-note-games-flappy">重力は、Updateのたびに下向きの速さを少し足す</h2><p>速度が整数だけだと動きが急に見えます。0.42のような小数を使うと、細かなUpdateの刻みが積み重なり、なめらかな落下の弧になります。順番は速度を変える→位置を変えるです。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="重力が速度へ加わる順番"><span>速度 -7.4</span><b>+ 重力 0.42</b><strong>速度 -6.98</strong><b>→ 位置を更新</b><span>次のUpdate</span></div></div></section>
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-flappy"><div><p class="eyebrow">重力を計算する</p><h2 id="feedback-note-games-flappy">重力は、Updateのたびに下向きの速さを加算する</h2><p>速度を整数だけで扱うと動きが粗くなります。0.42のような浮動小数点数を使うことで、細かなUpdateのtickが積み重なり、滑らかな放物線軌道を描きます。実行順序は必ず「重力加速度を速度に加算 → 速度を位置に加算」です。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="重力が速度へ加わる順番"><span>速度 -7.4</span><b>+ 重力 0.42</b><strong>速度 -6.98</strong><b>→ 位置を更新</b><span>次のUpdate</span></div></div></section>
 <!-- feedback-note:games/flappy:end -->
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_velocity-vector.svg" alt="速度ベクトル" loading="lazy" decoding="async"><figcaption>速度ベクトルの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>
@@ -105,24 +105,24 @@
 <p class="lab-go-caption" data-lab-go-caption>—</p>
 </div>
 </div>
-      <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>速度 = 速度 + 重力</code><span>つぎに</span><code>位置 = 位置 + 速度</code></div><p>Updateの中では順番が大切です。まず重力で速度を変え、次にその速度で位置を変えます。Updateごとに繰り返すと、自然なジャンプの曲線が生まれます。Yは下方向がプラスなので、上へ飛ぶには速度をマイナスにします。</p>
+      <div class="formula"><p class="eyebrow">THE TWO-LINE RULE</p><div class="formula-lines"><code>速度 = 速度 + 重力</code><span>つぎに</span><code>位置 = 位置 + 速度</code></div><p><code>Update</code> 内では実行順序が決定的な意味を持ちます。まず重力によって速度を更新し、その更新後の速度を用いて位置を更新します。毎回の tick でこの計算を反復することで、滑らかな放物線を描く跳躍が成立します。画面の Y 座標は下向きが正であるため、上方へ飛翔するには負の速度を与えます。</p>
       <p>スタート前に主人公がふわふわ揺れているのは <code>math.Sin(...)</code>（サイン、なめらかな波の形を作る関数）を使っているからです。中学ではまだ習わない関数ですが、「時間とともになめらかに上下する値の表」だと思えば十分です。これは<strong>「待っている感」を出すための飾り（発展・任意）</strong>で、加速度や当たり判定の仕組みとは関係ありません。省いて動かない位置のままにしても、ゲームは同じように遊べます。</p>
       <p>パイプとの当たりは距離（円）ではなく、<strong>Xが重なり、かつYが穴の外</strong>ならヒット、という四角形どうしの判定です。見た目が丸くても、まずは箱判定で十分なことが多いです。</p></div>
       <div class="code-lesson">
-        <div><p class="eyebrow">IN THE REAL GAME</p><h3>Ebitengineでは<br><code>Update</code>に書く</h3><p><code>Update</code>はゲームの状態を進める場所です。入力を調べ、速度を変え、位置を動かします。<code>Draw</code>は計算後の位置に主人公を描きます。</p></div>
+        <div><p class="eyebrow">IN THE REAL GAME</p><h3>Ebitengineでは<br><code>Update</code>に書く</h3><p><code>Update</code> は入力の検知とゲーム状態の更新を担う関数です。入力を判定し、速度を更新し、位置を前進させます。一方、<code>Draw</code> は計算完了後のゲーム状態を受け取り、その位置に主人公を描画（投影）します。</p></div>
         <pre><code><span>const</span> gravity = 0.42
 <span>const</span> flapSpeed = -7.4
 
 <span>func</span> (g *game) Update() error {
-    <i>// 押した瞬間、上向きの速さにする</i>
+    <i>// 入力を検知した tick で上向きの初速を与える</i>
     <span>if</span> justPressed() {
         g.velocity = flapSpeed
     }
 
-    <i>// 1. 重力で速度を変える</i>
+    <i>// 1. 重力加速度を速度に加算する</i>
     g.velocity += gravity
 
-    <i>// 2. 速度で位置を変える</i>
+    <i>// 2. 速度を位置に加算する</i>
     g.birdY += g.velocity
     <span>return</span> nil
 }</code></pre>

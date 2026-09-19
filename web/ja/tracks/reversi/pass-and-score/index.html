@@ -33,12 +33,12 @@
 <!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>ターン・パス・スコア</h2><p>合法手が空ならターンだけを交代します。2回連続のパス、または満杯を終了条件にして、黒と白の石数を数えます。</p><div class="concept-row"><article><span class="concept-number">1</span><h3>DATA</h3><p>盤面、手、CPU設定が局面の真実を持つ。</p><code>Board / Move / CPU</code></article><article><span class="concept-number">2</span><h3>UPDATE</h3><p>合法手、反転、パス、ターンを順に決める。</p><code>legal → apply → turn</code></article><article><span class="concept-number">3</span><h3>DRAW</h3><p>盤面と評価を石、印、文字へ写す。</p><code>board → pixels</code></article></div></section><section class="motion-lab" data-lab="turn" data-states="BOARD,SCAN,FLIP,SCORE"><div><p class="eyebrow">SYSTEM LAB</p><h2>ターン・パス・スコア</h2><p>ボタンを押して、データが次の処理へ渡る順番を確かめます。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout" aria-live="polite">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
-  <h2>数字を決める場所と、絵にする場所を分けよう</h2>
+  <h2>ゲーム状態を更新する責務と、画面へ投影する責務の分離</h2>
   <div class="concept-row">
-    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キー・タッチを読み、位置・HP・ゲージ・タイマー・盤面を変えます。判定やキュー操作もこちらです。</p><code>入力 → ルール → game を更新</code></article>
-    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>できあがった game の値を読んで、絵・文字・エフェクトを置きます。game の値は変えません。</p><code>game を読む → ピクセルへ投影</code></article>
+    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キーやタッチ入力を検知し、位置・HP・ゲージ・タイマー・盤面などのゲーム状態を更新します。当たり判定やキューの処理もすべて Update が担います。</p><code>入力検知 → ルール計算 → 状態更新</code></article>
+    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>確定した game 構造体の状態を読み取り、図形・文字・エフェクトを画面ピクセルとして描画します。ゲーム状態の変更は一切行いません。</p><code>状態読取 → 画面ピクセルへ投影</code></article>
   </div>
-  <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
+  <p class="update-draw-note">ゲームルールは Update（または Update から呼び出す純粋関数）に実装し、Draw はその結果を画面へ投影する処理に徹します。</p>
 </section>
 <!-- update-draw-contract:end -->
 <section class="code-lesson">

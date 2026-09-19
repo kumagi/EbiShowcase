@@ -43,12 +43,12 @@
 <section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Ebi Maze Marathon</h2><p>The final game links three differently shaped mazes. Labels show each guard's current AI state, and both Ebi Tenjiroh and guards bob while moving. Pearl particles, damage flash, shake, and clear bursts communicate results, while a total based on lives and speed becomes the best score for the next route.</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>Clear three mazes with distinct paths and AI teams</p></article><article><b>02</b><h3>DECIDE</h3><p>Make movement, collection, and damage readable with motion</p></article><article><b>03</b><h3>REPLAY</h3><p>Reconsider safety and speed against the best total</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="maze 1: patrol vs search,maze 2: read ambush,maze 3: mixed minds,adjust plan on results"><div><p class="eyebrow">SYSTEM LAB</p><h2>Make movement, collection, and damage readable with motion</h2><p>Phases run maze 1: patrol vs search → maze 2: read ambush → maze 3: mixed minds → adjust plan on results. Step one at a time and find which phase writes the new values.</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="THE UPDATE / DRAW BOUNDARY">
   <p class="eyebrow">THE UPDATE / DRAW BOUNDARY</p>
-  <h2>Decide the numbers first, then paint them</h2>
+  <h2>Separate State Updates from Screen Projections</h2>
   <div class="concept-row">
-    <article><span class="concept-number">1</span><h3>Update owns</h3><p>Read keys and touch, then change positions, HP, gauges, timers, boards, and queues. Rules and decisions live here too.</p><code>input → rule → change game</code></article>
-    <article><span class="concept-number">2</span><h3>Draw owns</h3><p>Read the finished game state and place pictures, text, and effects. It never changes game state.</p><code>read game → project pixels</code></article>
+    <article><span class="concept-number">1</span><h3>Update owns state mutation</h3><p>Detects key and touch inputs, and updates game state—positions, HP, gauges, timers, boards, and queues. Collision resolution and queue logic live here.</p><code>detect input → evaluate rules → mutate state</code></article>
+    <article><span class="concept-number">2</span><h3>Draw owns visual projection</h3><p>Reads the current game state and projects figures, text, and effects into screen pixels. It never mutates game state.</p><code>read state → project pixels</code></article>
   </div>
-  <p class="update-draw-note">For this lesson, put a new rule in Update (or a pure helper called by Update). Draw only shows the result of that rule.</p>
+  <p class="update-draw-note">Implement gameplay rules in Update (or pure helpers called by Update). Keep Draw strictly as a projection of that state.</p>
 </section>
 <!-- update-draw-contract:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>Make movement, collection, and damage readable with motion</h2><p>Ebi Tenjiroh runs three mazes, reading patrol, search, and ambush modes while collecting pearls.</p></div><pre><code>stage := stages[stageIndex]

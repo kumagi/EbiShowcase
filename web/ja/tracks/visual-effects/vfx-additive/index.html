@@ -81,7 +81,7 @@
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / ADDITIVE</p>
         <h2>なぜ光は<br>重なると白い？</h2>
-        <p class="lesson-lead">現実の光と同じで、光は足し算です。赤い光と緑の光が重なれば黄色、さらに青が乗れば白。op.Blend = ebiten.BlendLighter にすると、Ebitengine が色を上に足していきます。</p>
+        <p class="lesson-lead">加算合成は、光の混色と同様に描画色同士を加算する描画手法です。赤と緑の光が重なると黄色になり、青が加わると白になります。op.Blend に ebiten.BlendLighter を指定すると、Ebitengine は背景色へ描画色を加算して合成します。</p>
       </div>
 
       <div class="concept-row">

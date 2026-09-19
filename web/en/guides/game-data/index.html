@@ -42,7 +42,7 @@
 <div class="composition-flow" role="img" aria-label="Asset data is loaded into a game world, played through Update and Draw, and stored as save state">
 <div class="flow-sources"><span>MAP</span><span>SCENARIO</span><span>EVENT</span><span>IMAGE</span><span>AUDIO</span></div><b>↓ LOAD</b><div class="flow-loader">ASSET LOADER<small>JSON, images, and audio into typed data</small></div><b>↓ RUN THE GAME</b><div class="flow-runtime"><span>UPDATE</span><span>DRAW</span><span>SAVE</span></div></div>
 <div class="layer-grid">
-<article><b>01</b><h3>Game loop</h3><p>Ebitengine <code>Update</code>, <code>Draw</code>, and <code>Layout</code> form the foundation.</p></article>
+<article><b>01</b><h3>Game loop</h3><p>Ebitengine's <code>Game</code> interface methods (<code>Update</code>, <code>Draw</code>, <code>Layout</code>) form the structural foundation, driving logical ticks and input/output.</p></article>
 <article><b>02</b><h3>Systems</h3><p>Go code defines how movement, combat, dialogue, and collision work.</p></article>
 <article><b>03</b><h3>Content data</h3><p>Maps, lines, enemy stats, and event conditions describe what exists.</p></article>
 <article><b>04</b><h3>Presentation assets</h3><p>Images, animations, fonts, sound effects, and music are referenced by ID.</p></article>

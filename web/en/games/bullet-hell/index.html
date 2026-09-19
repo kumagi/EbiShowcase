@@ -118,10 +118,10 @@
       <div class="code-lesson">
         <div>
           <p class="eyebrow">IN THE REAL GAME</p>
-          <h3>Three patterns, timed<br>by frame modulo</h3>
-          <p>Check the frame counter modulo a period to decide when to fire each pattern. Change the period to shift difficulty without touching the pattern logic. <code>float64(...)</code> only converts ints so Go can do real-number math.</p>
+          <h3>Three patterns, timed<br>by tick modulo</h3>
+          <p>Check the tick counter modulo a period to decide when to fire each pattern. Change the period to shift difficulty without touching the pattern logic. <code>float64(...)</code> only converts ints so Go can do real-number math.</p>
         </div>
-        <pre><code><i>// circular burst every 38 frames (with spin)</i>
+        <pre><code><i>// circular burst every 38 ticks (with spin)</i>
 <span>if</span> g.frame%38 == 0 {
     count := 18
     spin := float64(g.frame) * .017
@@ -132,7 +132,7 @@
             bullet{240, 128, math.Cos(a)*speed, math.Sin(a)*speed, 6, true})
     }
 }
-<i>// aimed spread every 91 frames</i>
+<i>// aimed spread every 91 ticks</i>
 <span>if</span> g.frame%91 == 0 {
     base := math.Atan2(g.py-128, g.px-240) <i>// angle toward player</i>
     <span>for</span> i := -3; i &lt;= 3; i++ {

@@ -54,7 +54,7 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">はじめて読む人へ</p><h2>ここを先に見よう</h2><p>スライスは星を何個でも入れられる順番付きリスト。天次郎が星を受け止め、3個落とすとゲームオーバーです。</p></div><div class="beginner-code"><p><strong>このページの1本</strong><br>説明と次のコードを対応させてから、ゲームで変化を確かめよう。</p><pre><code>stars = append(stars, newStar())</code></pre></div></section>
 <!-- feedback-note:games/catch-stars:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-catch-stars"><div><p class="eyebrow">見えない箱</p><h2 id="feedback-note-games-catch-stars">矩形判定は、星とカゴの箱が重なったかを見る</h2><p>見た目が丸い星でも、最初は四角い箱で十分です。カゴは左右に動かすゲームなのでXだけを変え、Yは落ち着いた高さに固定すると判定を考えやすくなります。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="星とカゴの矩形が重なる図"><span>★ 星の箱</span><b>重なる？</b><strong>▰ カゴの箱 = HIT</strong><code>basket.xだけ変える</code></div></div></section>
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-catch-stars"><div><p class="eyebrow">見えない箱</p><h2 id="feedback-note-games-catch-stars">矩形判定は、星とカゴの箱が重なったかを見る</h2><p>見た目が丸い星でも、最初は四角い箱（AABB）で判定すれば十分です。カゴは左右に動かすゲームなのでX座標だけを更新し、Y座標は固定すると判定ロジックが単純明快になります。</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="星とカゴの矩形が重なる図"><span>★ 星の箱</span><b>重なる？</b><strong>▰ カゴの箱 = HIT</strong><code>basket.xだけ変える</code></div></div></section>
 <!-- feedback-note:games/catch-stars:end -->
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/ja_collision-rect.svg" alt="矩形の重なり" loading="lazy" decoding="async"><figcaption>矩形の重なりの見取り図です。コードを読む前に、数字と絵の関係を目で追ってみましょう。</figcaption></figure>

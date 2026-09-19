@@ -43,12 +43,12 @@
 <section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>Ebi Maze Marathon</h2><p>完成版は形の異なる3迷路を連続で遊びます。敵の頭上に今のAI状態を表示し、海老・天次郎と敵は走行中に上下します。真珠の粒子、被弾点滅、画面揺れ、面クリア演出が結果を伝え、命と速さを含む合計得点とベスト記録が次の走り方を作ります。</p><div class="concept-row"><article><b>01</b><h3>STATE</h3><p>3迷路を異なる通路とAI構成で攻略する</p></article><article><b>02</b><h3>DECIDE</h3><p>移動・収集・被弾を動きと粒子で読ませる</p></article><article><b>03</b><h3>REPLAY</h3><p>合計得点とBESTを見て安全と速さを選び直す</p></article></div></section><section class="motion-lab" data-lab="turn" data-states="迷路1:巡回と捜索を見分ける,迷路2:先回りを読む,迷路3:総合力勝負,リザルトで作戦替え"><div><p class="eyebrow">SYSTEM LAB</p><h2>移動・収集・被弾を動きと粒子で読ませる</h2><p>迷路1:巡回と捜索を見分ける → 迷路2:先回りを読む → 迷路3:総合力勝負 → リザルトで作戦替え の順で進みます。NEXTで1段ずつ止めて、どの段階が新しい値を書くのか確かめましょう。</p></div><div class="lab-stage"><div class="lab-entities" data-count="4"></div><p class="lab-readout">START</p><button type="button" class="lab-action">NEXT</button></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
-  <h2>数字を決める場所と、絵にする場所を分けよう</h2>
+  <h2>ゲーム状態を更新する責務と、画面へ投影する責務の分離</h2>
   <div class="concept-row">
-    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キー・タッチを読み、位置・HP・ゲージ・タイマー・盤面を変えます。判定やキュー操作もこちらです。</p><code>入力 → ルール → game を更新</code></article>
-    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>できあがった game の値を読んで、絵・文字・エフェクトを置きます。game の値は変えません。</p><code>game を読む → ピクセルへ投影</code></article>
+    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キーやタッチ入力を検知し、位置・HP・ゲージ・タイマー・盤面などのゲーム状態を更新します。当たり判定やキューの処理もすべて Update が担います。</p><code>入力検知 → ルール計算 → 状態更新</code></article>
+    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>確定した game 構造体の状態を読み取り、図形・文字・エフェクトを画面ピクセルとして描画します。ゲーム状態の変更は一切行いません。</p><code>状態読取 → 画面ピクセルへ投影</code></article>
   </div>
-  <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
+  <p class="update-draw-note">ゲームルールは Update（または Update から呼び出す純粋関数）に実装し、Draw はその結果を画面へ投影する処理に徹します。</p>
 </section>
 <!-- update-draw-contract:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>移動・収集・被弾を動きと粒子で読ませる</h2><p>海老・天次郎が3つの迷路を走り、巡回・捜索・先回りを見分けて真珠を集めます。</p></div><pre><code>stage := stages[stageIndex]

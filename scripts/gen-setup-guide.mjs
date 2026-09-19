@@ -17,20 +17,20 @@ import (
 \t"github.com/hajimehoshi/ebiten/v2"
 )
 
-// Game は Ebitengine が求める3つのメソッドを持つ箱です。
+// Game は Ebitengine の Game インターフェース（Update, Draw, Layout）を実装する構造体です。
 type Game struct{}
 
-// Update は入力と数字を進める場所。状態を書き換えるならここです。
+// Update は入力の検知とゲーム状態の更新を行います。ゲーム状態の変更はすべてここで行います。
 func (g *Game) Update() error {
 \treturn nil
 }
 
-// Draw は今の状態を画面へ写すだけ。状態は書き換えません。
+// Draw は現在のゲーム状態を画面に描画します。ゲーム状態の変更は行いません。
 func (g *Game) Draw(screen *ebiten.Image) {
 \tscreen.Fill(color.RGBA{20, 28, 48, 255})
 }
 
-// Layout はゲーム内部の解像度（幅×高さ）を返します。
+// Layout はゲーム内部の論理解像度（幅×高さ）を返します。
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 \treturn 640, 480
 }
@@ -52,20 +52,20 @@ import (
 \t"github.com/hajimehoshi/ebiten/v2"
 )
 
-// Game holds the three methods Ebitengine expects.
+// Game implements Ebitengine's Game interface (Update, Draw, Layout).
 type Game struct{}
 
-// Update reads input and advances numbers. State changes belong here.
+// Update handles input and advances game state. All state mutations belong here.
 func (g *Game) Update() error {
 \treturn nil
 }
 
-// Draw only projects current state. It never mutates state.
+// Draw paints the current game state to the screen. It never mutates state.
 func (g *Game) Draw(screen *ebiten.Image) {
 \tscreen.Fill(color.RGBA{20, 28, 48, 255})
 }
 
-// Layout returns the game's internal resolution.
+// Layout returns the game's internal logical resolution (width and height).
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 \treturn 640, 480
 }
@@ -157,7 +157,7 @@ function page(lang) {
           id: "install-go",
           n: "01",
           h: "Go をインストールする",
-          p: "Ebitengine は Go で書かれたゲームエンジンです。先に Go 本体が必要です。このリポジトリは Go 1.25 以降を使います。",
+          p: "Ebitengine は Go で書かれた2Dゲームエンジンです。Ebitengine を動かすには、先に Go の実行環境をインストールする必要があります。本教材では Go 1.25 以降を前提とします。",
           winTitle: "Windows",
           winBody: [
             'ブラウザで <a href="https://go.dev/dl/" rel="noreferrer">https://go.dev/dl/</a> を開く',
@@ -178,7 +178,7 @@ function page(lang) {
           id: "compiler",
           n: "02",
           h: "Mac だけ：C コンパイラを入れる",
-          p: "Ebitengine は中で C の部品も使います。<strong>Windows の学校 PC はこのステップを飛ばして大丈夫</strong>です。Mac だけ、無料の「コマンドラインツール」——プログラムを作るときに裏側で使う道具一式——を入れます。長い名前を覚える必要はありません。教室の PC が Windows なら、すぐ「3. 動作確認」へ進んでください。",
+          p: "macOS 上で Ebitengine を実行するには、C言語のビルド環境（Command Line Tools）が必要です。Windows 環境では本手順は不要です。Windows を使用している場合は、本ステップを省略して「3. 動作確認」へ進んでください。",
           winSkip: "Windows の人はこのステップを飛ばして「3. 動作確認」へ進んでください。",
           macCmd: "xcode-select --install",
           macBody: [
@@ -210,7 +210,7 @@ function page(lang) {
             ["cd ebi-empty", "その中へ入る"],
             ["go mod init example.com/ebi-empty", "このフォルダの目次 go.mod を作る"],
           ],
-          after: "go.mod は、このゲームの名前（モジュール名）と、外から借りる部品（Ebitengine など）を Go が管理するための『プロジェクトの目次ノート』です。モジュール名は、コードの部品をどの名前で呼ぶかを決める住所のようなもの。これがあることで、Go は必要な外部パッケージを同じ組み合わせで用意できます。小さな go.mod ができていれば OK。名前は後から変えられます。",
+          after: "go.mod は、プロジェクトの名前（モジュールパス）と、依存する外部ライブラリ（Ebitengine など）のバージョンを Go が管理するための設定ファイルです。これによって、どの環境でも同じバージョンのライブラリを再現して実行できます。小さな go.mod が生成されていれば準備完了です。モジュール名は後から変更できます。",
         },
         step5: {
           id: "code",
@@ -234,10 +234,10 @@ function page(lang) {
           macCheck: "ls",
           checkOk: "一覧に <code>go.mod</code> と <code>main.go</code> の2つが見えれば成功です。<code>main.go.txt</code> と出たら、ファイル名を <code>main.go</code> に直します。",
           explain: [
-            ["Update", "tickごとの入力・数字・状態更新担当。今は空。"],
-            ["Draw", "呼ばれた時の投影担当。色を一塗りし、状態は変えない。"],
-            ["Layout", "ゲーム内部の幅と高さ。"],
-            ["RunGame", "このくり返しを起動するスイッチ。"],
+            ["Update", "tickごとに呼ばれ、入力の検知とゲーム状態の更新を担当します。"],
+            ["Draw", "描画要求ごとに呼ばれ、現在のゲーム状態を画面へ投影します。状態の変更は行いません。"],
+            ["Layout", "ウィンドウの大きさに応じた、ゲーム内部の論理解像度（幅と高さ）を返します。"],
+            ["RunGame", "ゲームループを開始し、ウィンドウを表示する関数です。"],
           ],
         },
         step6: {

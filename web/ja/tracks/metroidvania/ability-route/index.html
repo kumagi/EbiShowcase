@@ -33,12 +33,12 @@
 <!-- diagram-lesson:end --><section class="lesson-section"><p class="eyebrow">DEEP DIVE</p><h2>取得順と戻り道を設計する</h2><p>能力と対応するゲートを交互に配置します。新能力を得た直後に古い場所を思い出させると、世界が広がったと感じられます。</p><div class="concept-row"><article><b>01</b><h3>WORLD</h3><p>地図、ダッシュ、高跳びを順に取得し、以前見た障害へ戻って奥へ進みます。</p></article><article><b>02</b><h3>STATE</h3><p>能力を取得 → 過去の障害へ戻る → フラグで通過判定 → 新しい道が開く をこの順で、1tickごとに実行します。</p></article><article><b>03</b><h3>RETURN</h3><p>前に見た場所へ意味を足します。</p></article></div></section><section class="motion-lab metroid-lab" data-lab="ability-gate" data-lang="ja" aria-labelledby="ability-lab-title"><div><p class="eyebrow">ABILITY LAB</p><h2 id="ability-lab-title">二段ジャンプで高台へ</h2><p>左の高台は最初のジャンプだけでは届きません。まず右の羽を拾い、同じジャンプをもう一度押して高台へ戻ります。</p></div><div class="ability-lab-board" data-lab-board><div class="ability-lab-world"><span class="ability-lab-player" data-lab-player></span><span class="ability-lab-ledge" data-lab-ledge>高台</span><span class="ability-lab-wings" data-lab-wings>✦</span><span class="ability-lab-relic">◆</span></div><p class="lab-readout" data-lab-status aria-live="polite">右の羽を拾おう</p><div class="lab-actions"><button type="button" data-ability-move="left">← 戻る</button><button type="button" data-ability-jump>ジャンプ</button><button type="button" data-ability-move="right">進む →</button><button type="button" data-ability-reset>最初から</button></div><p class="lab-readout" data-lab-ability>能力: なし</p></div></section><!-- update-draw-contract:start -->
 <section class="update-draw-contract" aria-label="UPDATE と DRAW の境界">
   <p class="eyebrow">UPDATE と DRAW の境界</p>
-  <h2>数字を決める場所と、絵にする場所を分けよう</h2>
+  <h2>ゲーム状態を更新する責務と、画面へ投影する責務の分離</h2>
   <div class="concept-row">
-    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キー・タッチを読み、位置・HP・ゲージ・タイマー・盤面を変えます。判定やキュー操作もこちらです。</p><code>入力 → ルール → game を更新</code></article>
-    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>できあがった game の値を読んで、絵・文字・エフェクトを置きます。game の値は変えません。</p><code>game を読む → ピクセルへ投影</code></article>
+    <article><span class="concept-number">1</span><h3>Update が担当</h3><p>キーやタッチ入力を検知し、位置・HP・ゲージ・タイマー・盤面などのゲーム状態を更新します。当たり判定やキューの処理もすべて Update が担います。</p><code>入力検知 → ルール計算 → 状態更新</code></article>
+    <article><span class="concept-number">2</span><h3>Draw が担当</h3><p>確定した game 構造体の状態を読み取り、図形・文字・エフェクトを画面ピクセルとして描画します。ゲーム状態の変更は一切行いません。</p><code>状態読取 → 画面ピクセルへ投影</code></article>
   </div>
-  <p class="update-draw-note">このページのルールは Update 側（または Update が呼ぶ純粋な関数）へ置き、Draw はその結果を表示するだけにします。</p>
+  <p class="update-draw-note">ゲームルールは Update（または Update から呼び出す純粋関数）に実装し、Draw はその結果を画面へ投影する処理に徹します。</p>
 </section>
 <!-- update-draw-contract:end -->
 <section class="code-lesson"><div><p class="eyebrow">GO + EBITENGINE</p><h2>取得順と戻り道を設計する</h2><p>地図、ダッシュ、高跳びを順に取得し、以前見た障害へ戻って奥へ進みます。</p></div><pre><code>if hasWings &amp;&amp; pressedJump &amp;&amp; !onGround { jumpsLeft-- }

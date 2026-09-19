@@ -54,7 +54,7 @@
 <!-- BEGIN BEGINNER BRIDGE -->
 <section class="beginner-bridge"><div><p class="eyebrow">FIRST-TIME READER</p><h2>Trace one rule first</h2><p>Find where this one line is used, then follow how its value changes on screen. This is the shared game-state boundary: add rules in Update, then choose an independent presentation in Draw. The numbered steps below add one system at a time.</p></div><div class="beginner-code"><p><strong>ONE RULE TO TRACE</strong><br>Match the explanation to this line, then test the change in the game.</p><pre><code>stars = append(stars, newStar())</code></pre></div></section>
 <!-- feedback-note:games/catch-stars:start -->
-<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-catch-stars"><div><p class="eyebrow">Invisible boxes</p><h2 id="feedback-note-games-catch-stars">A box hit checks whether the star and basket overlap</h2><p>Even a round-looking star can start as a simple rectangle. The basket only needs horizontal movement, so keep Y at a steady height and change X with the pointer or keys.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="star and basket boxes overlap"><span>★ star box</span><b>overlap?</b><strong>▰ basket box = HIT</strong><code>change basket.x only</code></div></div></section>
+<section class="feedback-teaching-note" aria-labelledby="feedback-note-games-catch-stars"><div><p class="eyebrow">Invisible bounding boxes</p><h2 id="feedback-note-games-catch-stars">AABB hit testing checks whether star and basket boxes intersect</h2><p>Even a round-looking star can be evaluated with an axis-aligned bounding box (AABB). Because the basket moves only horizontally, keep Y fixed and update X via pointer or key inputs.</p></div><div class="feedback-note-visual"><div class="feedback-note-flow" role="img" aria-label="star and basket boxes overlap"><span>★ star box</span><b>overlap?</b><strong>▰ basket box = HIT</strong><code>change basket.x only</code></div></div></section>
 <!-- feedback-note:games/catch-stars:end -->
 <!-- diagram-lesson:start -->
 <figure class="diagram-figure lesson-concept-diagram"><img src="../../../assets/diagrams/en_collision-rect.svg" alt="Rectangle overlap" loading="lazy" decoding="async"><figcaption>A visual map of Rectangle overlap. Trace the numbers and pictures before reading the code.</figcaption></figure>
@@ -65,14 +65,14 @@
 <section class="physics" id="learn">
       <div class="lesson-intro">
         <p class="eyebrow">DEEP DIVE / MOVEMENT &amp; BOX HITS</p>
-        <h2>How does the game know<br>the star landed in the basket?</h2>
-        <p class="lesson-lead">Treat the star and basket as invisible rectangles. If those boxes overlap, the catch succeeds. You do not need the acronym—just “do the boxes overlap?”</p>
+        <h2>How does the game know<br>the star was caught?</h2>
+        <p class="lesson-lead">Treat both the star and the basket as invisible axis-aligned rectangles (AABB). When the two rectangles overlap on both the horizontal and vertical axes, the catch succeeds.</p>
       </div>
 
       <div class="concept-row">
-        <article><span class="concept-number">1</span><h3>Movement</h3><p>Stars add speed to Y on each Update. The basket only changes X from keys or a pointer.</p><code>star.y += speed</code></article>
-        <article><span class="concept-number">2</span><h3>Many stars</h3><p>Stars live in a slice (list), not one variable. New stars are appended on a timer.</p><code>stars []star</code></article>
-        <article><span class="concept-number">3</span><h3>Overlap</h3><p>If left/right and top/bottom both overlap, it is a hit. Separated on any side means a miss.</p><code>overlaps(a, b)</code></article>
+        <article><span class="concept-number">1</span><h3>Movement</h3><p>Stars add speed to Y on each <code>Update</code> tick. The basket updates only its X position from keys or pointer input.</p><code>star.y += speed</code></article>
+        <article><span class="concept-number">2</span><h3>Multiple entities</h3><p>Stars are managed in a slice (dynamic array). New star structs are appended at regular tick intervals.</p><code>stars []star</code></article>
+        <article><span class="concept-number">3</span><h3>AABB overlap</h3><p>An intersection occurs only when intervals overlap along both X and Y axes simultaneously. Separation on any side is a miss.</p><code>overlaps(a, b)</code></article>
       </div>
 
       <div class="motion-lab" data-lab="aabb" data-yes="OVERLAP!" data-no="not yet" aria-labelledby="aabb-lab-title">

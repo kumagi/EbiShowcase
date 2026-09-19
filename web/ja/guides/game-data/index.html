@@ -42,7 +42,7 @@
 <div class="composition-flow" role="img" aria-label="アセットデータをローダーが読み、ゲーム世界を組み立て、UpdateとDrawが再生し、進行状態をセーブする流れ">
 <div class="flow-sources"><span>MAP</span><span>SCENARIO</span><span>EVENT</span><span>IMAGE</span><span>AUDIO</span></div><b>↓ 読み込む</b><div class="flow-loader">ASSET LOADER<small>JSON・画像・音を型のあるデータへ</small></div><b>↓ 組み立てる</b><div class="flow-world">GAME WORLD<small>マップ・登場人物・イベントを配置</small></div><b>↓ tickごとに再生</b><div class="flow-runtime"><span>UPDATE</span><span>DRAW</span><span>SAVE</span></div></div>
 <div class="layer-grid">
-<article><b>01</b><h3>ゲームループ</h3><p>Ebitengineの<code>Update</code>、<code>Draw</code>、<code>Layout</code>。すべてを動かす土台です。</p></article>
+<article><b>01</b><h3>ゲームループ</h3><p>Ebitengine の <code>Game</code> インターフェース（<code>Update</code>、<code>Draw</code>、<code>Layout</code>）です。ゲームループの駆動と入出力の基盤を担います。</p></article>
 <article><b>02</b><h3>仕組み</h3><p>移動、戦闘、会話、当たり判定など、「どう動くか」を決めるGoコードです。</p></article>
 <article><b>03</b><h3>コンテンツデータ</h3><p>マップ、セリフ、敵の能力、イベント条件など、「何があるか」を表します。</p></article>
 <article><b>04</b><h3>表現アセット</h3><p>画像、アニメーション、フォント、効果音、音楽。データからIDで参照します。</p></article>
@@ -139,7 +139,7 @@
 
 <section class="programmer-done" id="done"><div><p class="eyebrow">DEFINITION OF DONE</p><h2>ここまでやれば、<br><em>プログラマとしての仕事は一通り完成。</em></h2><p>「完成」とは全コンテンツを自分で作り終えた状態ではありません。ゲームデザイナー、アーティスト、ライターが、コードを触らずに安全に作品を作り、試し、直し、出荷できる制作ラインを渡した状態です。</p></div><ol><li><b>01</b><span><strong>語彙がデータになっている</strong>面・技・ウェーブ・イベントを、コードから独立した型で表せる。</span></li><li><b>02</b><span><strong>ゲームが忠実に再生する</strong>エディタと製品が同じローダー・座標系・検査を使う。</span></li><li><b>03</b><span><strong>視覚的に編集できる</strong>対象を見ながら配置し、時間や空間を直感的に調整できる。</span></li><li><b>04</b><span><strong>安全に試行錯誤できる</strong>Undo/Redo、初期値、制約、具体的なエラーがある。</span></li><li><b>05</b><span><strong>保存が往復する</strong>読み込み→編集→保存で意味が変わらず、差分もレビューできる。</span></li><li><b>06</b><span><strong>実際のゲームで試せる</strong>ワンクリックでその場面を起動し、プレイ感を確認できる。</span></li><li><b>07</b><span><strong>自動で壊れ方を防ぐ</strong>全アセットのschema、参照、境界、往復をテストする。</span></li><li><b>08</b><span><strong>次の作り手へ渡せる</strong>操作、制約、公開方法を説明し、プログラマ不在でも制作が進む。</span></li></ol></section>
 
-<section class="composition-summary"><p class="eyebrow">THE BIG IDEA</p><h2>ゲームは「書き切る」ものではない。<br><em>作品を作れる環境まで設計するもの。</em></h2><p>Ebitengineがtickごとに世界を動かし、仕組みのコードが可能な行動を決め、アセットデータが体験の順序を与え、専用エディタが人の判断を作品へ変えます。この制作ラインを作り切って初めて、ゲームは一人のプログラマの手を離れて育ち続けられます。</p><p class="data-track-lead">同じ原則が、空間・時間・経路・物語という異なるゲームの語彙に変わります。</p><div class="data-track-links"><a class="cta" href="../../games/platformer/">横スクロールのレベル <b>→</b></a><a class="cta" href="../../tracks/fighting/ebi-fighters/">格闘ゲームの技 <b>→</b></a><a class="cta" href="../../tracks/tower-defense/ebi-defense/">防衛ゲームの経路と波 <b>→</b></a><a class="cta" href="../../tracks/rpg/">RPGの会話とイベント <b>→</b></a></div></section>
+<section class="composition-summary"><p class="eyebrow">THE BIG IDEA</p><h2>ゲームは「書き切る」ものではない。<br><em>作品を作れる環境まで設計するもの。</em></h2><p>Ebitengine が tick ごとにゲームループを進行させ、ルールのコードが可能な行動を決定し、アセットデータが体験の順序を規定し、専用エディタが制作者の意図をデータへと変換します。この制作ラインを構築して初めて、ゲームは一人のプログラマの手を離れて発展し続けられます。</p><p class="data-track-lead">同じ原則が、空間・時間・経路・物語という異なるゲームの語彙に変わります。</p><div class="data-track-links"><a class="cta" href="../../games/platformer/">横スクロールのレベル <b>→</b></a><a class="cta" href="../../tracks/fighting/ebi-fighters/">格闘ゲームの技 <b>→</b></a><a class="cta" href="../../tracks/tower-defense/ebi-defense/">防衛ゲームの経路と波 <b>→</b></a><a class="cta" href="../../tracks/rpg/">RPGの会話とイベント <b>→</b></a></div></section>
 
     <section class="feedback-section" aria-labelledby="feedback-title">
       <div class="feedback-card">
